@@ -111,7 +111,7 @@ export const OthersTemplate7: React.FC<OthersTemplate7Props> = ({
                 onChange={val =>
                   handleItemUpdate(index, "description", val as string)
                 }
-                as="span"
+                as="p"
                 className="text-gray-600"
                 isEditable={isEditable}
                 multiline

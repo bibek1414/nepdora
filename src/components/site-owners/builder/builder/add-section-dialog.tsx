@@ -907,6 +907,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Banner Style 7",
         image: "/images/site-owners/banner/banner7.png",
       },
+      {
+        id: "banner-8",
+        name: "Banner Style 8",
+        image: "/images/site-owners/banner/banner8.png",
+      },
     ],
     blog: [
       {

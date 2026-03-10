@@ -104,9 +104,9 @@ export function CustomersList() {
                 ))
               ) : customers.length > 0 ? (
                 customers.map(customer => (
-                  <TableRow
+                   <TableRow
                     key={customer.id}
-                    className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                    className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
                   >
                     <TableCell className="px-6 py-4">
                       <div className="font-medium text-gray-900">

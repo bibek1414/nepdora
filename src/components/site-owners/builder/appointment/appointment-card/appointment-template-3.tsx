@@ -105,16 +105,6 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const daysOfWeek = [
-    { key: "monday", label: "Monday" },
-    { key: "tuesday", label: "Tuesday" },
-    { key: "wednesday", label: "Wednesday" },
-    { key: "thursday", label: "Thursday" },
-    { key: "friday", label: "Friday" },
-    { key: "saturday", label: "Saturday" },
-    { key: "sunday", label: "Sunday" },
-  ];
-
   return (
     <div className="mx-auto max-w-4xl">
       <div
@@ -135,25 +125,6 @@ export const AppointmentForm3: React.FC<AppointmentForm3Props> = ({
           ></div>
 
           {/* Header */}
-          <div className="relative mb-8 text-center">
-            <div
-              className="mb-4 inline-flex items-center justify-center rounded-full p-3"
-              style={{ backgroundColor: theme.colors.primary }}
-            >
-              <Sparkles className="h-6 w-6 text-white" />
-            </div>
-            <h3
-              className="mb-2 bg-clip-text text-3xl font-bold text-transparent"
-              style={{
-                backgroundImage: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.primary}99)`,
-              }}
-            >
-              Schedule Your Visit
-            </h3>
-            <p className="text-gray-600">
-              Fill in your details and we&apos;ll get back to you shortly
-            </p>
-          </div>
 
           <form onSubmit={handleSubmit} className="relative space-y-6">
             {/* Full Name */}

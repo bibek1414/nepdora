@@ -255,7 +255,11 @@ const AppointmentReasonsList = () => {
                 </TableHeader>
                 <TableBody>
                   {reasons.map((reason: AppointmentReason) => (
-                    <TableRow key={reason.id}>
+                    <TableRow
+                      key={reason.id}
+                      className="cursor-pointer transition-colors hover:bg-gray-50/50"
+                      onClick={() => handleEditClick(reason)}
+                    >
                       <TableCell className="font-medium">{reason.id}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">

@@ -144,8 +144,7 @@ export const defaultCTATemplate4Data: CTATemplate4Data = {
       text: "Start Building Your Competitive Advantage",
     },
   ],
-  imageUrl:
-    "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1374&auto=format&fit=crop",
+  imageUrl: "https://picsum.photos/id/1011/800/800",
   imageAlt: "Working together",
   backgroundColor: "#1D4ED8",
   showOverlay: true,

@@ -143,8 +143,8 @@ export const HeroTemplate16: React.FC<HeroTemplate16Props> = ({
                 "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered."
               }
               onChange={handleTextUpdate("description")}
-              as="span"
-              className="max-w-xl !text-xl text-gray-500 md:text-3xl"
+              as="p"
+              className="max-w-xl text-xl text-gray-500 md:text-3xl"
               isEditable={isEditable}
               multiline
             />

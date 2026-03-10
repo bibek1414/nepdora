@@ -214,7 +214,8 @@ export const PricingList: React.FC = () => {
                 pricings.map(pricing => (
                   <TableRow
                     key={pricing.id}
-                    className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                    className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                    onClick={e => handleRowClick(pricing, e)}
                   >
                     <TableCell className="px-6 py-4 font-medium">
                       <div className="flex items-center gap-2 text-black">

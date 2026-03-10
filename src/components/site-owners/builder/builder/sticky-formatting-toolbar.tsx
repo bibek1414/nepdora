@@ -348,6 +348,7 @@ export const StickyFormattingToolbar: React.FC = () => {
               closeAllDropdowns();
               setShowFontPicker(!showFontPicker);
             }}
+            onMouseDown={e => e.preventDefault()}
             className="flex min-w-[120px] items-center gap-1 rounded border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
             title="Font Family"
           >
@@ -366,6 +367,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 <button
                   key={font}
                   onClick={() => applyFontFamily(font)}
+                  onMouseDown={e => e.preventDefault()}
                   className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
                   style={{ fontFamily: font }}
                 >
@@ -390,6 +392,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 setFontSizeInput((current - 2).toString());
               }
             }}
+            onMouseDown={e => e.preventDefault()}
             className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
             title="Decrease font size"
           >
@@ -438,6 +441,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 closeAllDropdowns();
                 setShowFontSizePicker(!showFontSizePicker);
               }}
+              onMouseDown={e => e.preventDefault()}
               className="absolute right-0 flex h-full items-center px-1 text-gray-400 hover:text-gray-600"
             >
               <ChevronDown className="h-3 w-3" />
@@ -454,6 +458,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                       setFontSizeInput(parseInt(size).toString());
                       setShowFontSizePicker(false);
                     }}
+                    onMouseDown={e => e.preventDefault()}
                     className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
                   >
                     {parseInt(size)}px
@@ -473,6 +478,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 setFontSizeInput((current + 2).toString());
               }
             }}
+            onMouseDown={e => e.preventDefault()}
             className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
             title="Increase font size"
           >
@@ -485,6 +491,7 @@ export const StickyFormattingToolbar: React.FC = () => {
         {/* Formatting Buttons */}
         <button
           onClick={() => handleFormatting("bold")}
+          onMouseDown={e => e.preventDefault()}
           className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
           title="Bold (Ctrl+B)"
         >
@@ -493,6 +500,7 @@ export const StickyFormattingToolbar: React.FC = () => {
 
         <button
           onClick={() => handleFormatting("italic")}
+          onMouseDown={e => e.preventDefault()}
           className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
           title="Italic (Ctrl+I)"
         >
@@ -501,6 +509,7 @@ export const StickyFormattingToolbar: React.FC = () => {
 
         <button
           onClick={() => handleFormatting("underline")}
+          onMouseDown={e => e.preventDefault()}
           className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
           title="Underline (Ctrl+U)"
         >
@@ -509,6 +518,7 @@ export const StickyFormattingToolbar: React.FC = () => {
 
         <button
           onClick={() => handleFormatting("strikeThrough")}
+          onMouseDown={e => e.preventDefault()}
           className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100 active:bg-gray-200"
           title="Strikethrough"
         >
@@ -525,6 +535,7 @@ export const StickyFormattingToolbar: React.FC = () => {
               closeAllDropdowns();
               setShowColorPicker(!showColorPicker);
             }}
+            onMouseDown={e => e.preventDefault()}
             className={`rounded border border-gray-300 p-1.5 transition-colors ${
               showColorPicker ? "bg-gray-100" : "hover:bg-gray-100"
             }`}
@@ -557,6 +568,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 />
                 <button
                   onClick={() => handleColorApply(selectionColor)}
+                  onMouseDown={e => e.preventDefault()}
                   className="hover:bg-primary rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors"
                 >
                   Apply
@@ -567,6 +579,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                   <button
                     key={color}
                     onClick={() => handleColorApply(color)}
+                    onMouseDown={e => e.preventDefault()}
                     className="h-7 w-7 rounded border-2 border-gray-300 transition-all hover:scale-110 hover:border-blue-500"
                     style={{ backgroundColor: color }}
                     title={color}
@@ -585,6 +598,7 @@ export const StickyFormattingToolbar: React.FC = () => {
               closeAllDropdowns();
               setShowHighlightPicker(!showHighlightPicker);
             }}
+            onMouseDown={e => e.preventDefault()}
             className={`rounded border border-gray-300 p-1.5 transition-colors ${
               showHighlightPicker ? "bg-gray-100" : "hover:bg-gray-100"
             }`}
@@ -617,6 +631,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                 />
                 <button
                   onClick={() => applyHighlight(selectionHighlight)}
+                  onMouseDown={e => e.preventDefault()}
                   className="hover:bg-primary rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white transition-colors"
                 >
                   Apply
@@ -627,6 +642,7 @@ export const StickyFormattingToolbar: React.FC = () => {
                   <button
                     key={color}
                     onClick={() => applyHighlight(color)}
+                    onMouseDown={e => e.preventDefault()}
                     className="h-7 w-7 rounded border-2 border-gray-300 transition-all hover:scale-110 hover:border-blue-500"
                     style={{ backgroundColor: color }}
                     title={color}
@@ -647,6 +663,7 @@ export const StickyFormattingToolbar: React.FC = () => {
               closeAllDropdowns();
               setShowAlignPicker(!showAlignPicker);
             }}
+            onMouseDown={e => e.preventDefault()}
             className={`rounded border border-gray-300 p-1.5 transition-colors ${
               showAlignPicker ? "bg-gray-100" : "hover:bg-gray-100"
             }`}
@@ -659,6 +676,7 @@ export const StickyFormattingToolbar: React.FC = () => {
             <div className="absolute top-full left-0 z-50 mt-1 w-32 rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
               <button
                 onClick={() => applyAlignment("left")}
+                onMouseDown={e => e.preventDefault()}
                 className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
                 <AlignLeft className="h-4 w-4 shrink-0" />
@@ -667,6 +685,7 @@ export const StickyFormattingToolbar: React.FC = () => {
 
               <button
                 onClick={() => applyAlignment("center")}
+                onMouseDown={e => e.preventDefault()}
                 className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
                 <AlignCenter className="h-4 w-4 shrink-0" />
@@ -675,6 +694,7 @@ export const StickyFormattingToolbar: React.FC = () => {
 
               <button
                 onClick={() => applyAlignment("right")}
+                onMouseDown={e => e.preventDefault()}
                 className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
                 <AlignRight className="h-4 w-4 shrink-0" />
@@ -683,6 +703,7 @@ export const StickyFormattingToolbar: React.FC = () => {
 
               <button
                 onClick={() => applyAlignment("justify")}
+                onMouseDown={e => e.preventDefault()}
                 className="hover:text-primary flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-blue-50"
               >
                 <AlignJustify className="h-4 w-4 shrink-0" />

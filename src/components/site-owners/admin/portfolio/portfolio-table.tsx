@@ -83,7 +83,8 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
           {portfolios.map(portfolio => (
             <TableRow
               key={portfolio.id}
-              className="group border-b border-black/5 transition-colors hover:bg-black/2"
+              className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+              onClick={() => onEdit(portfolio)}
             >
               <TableCell className="px-6 py-4">
                 <div className="flex flex-col gap-0.5">

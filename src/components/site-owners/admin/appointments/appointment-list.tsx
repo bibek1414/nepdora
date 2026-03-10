@@ -270,7 +270,7 @@ export default function AppointmentList() {
                     setStatusFilter(tab.id);
                     setSearchTerm("");
                   }}
-                  className={`rounded-full px-4 py-1 text-xs font-medium transition-colors ${
+                  className={`rounded-full cursor-pointer px-4 py-1 text-xs font-medium transition-colors ${
                     isActive
                       ? "bg-black text-white"
                       : "bg-black/5 text-black/60 hover:bg-black/10"
@@ -347,7 +347,7 @@ export default function AppointmentList() {
                     {paginatedBookings.map(item => (
                       <TableRow
                         key={item.id}
-                        className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                        className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
                         onClick={e => handleRowClick(item, e)}
                       >
                         <TableCell className="px-6 py-4">

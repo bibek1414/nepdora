@@ -46,17 +46,6 @@ export const AppointmentStyle3: React.FC<AppointmentStyleProps> = ({
             isEditable={isEditable}
             placeholder="Enter title..."
           />
-          {subtitle !== undefined && (
-            <EditableText
-              value={subtitle || ""}
-              onChange={handleSubtitleChange}
-              as="p"
-              className="text-muted-foreground mx-auto max-w-3xl text-xl"
-              isEditable={isEditable}
-              placeholder="Enter subtitle..."
-              multiline={true}
-            />
-          )}
         </div>
 
         <AppointmentForm3

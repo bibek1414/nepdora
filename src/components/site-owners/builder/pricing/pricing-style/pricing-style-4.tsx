@@ -19,10 +19,14 @@ export const PricingStyle4: React.FC<PricingStyleProps> = ({
   onPricingClick,
 }) => {
   const { data: pricingsData, isLoading, error } = usePricings();
-  const pricings = pricingsData?.results || [];
+  const pricings = React.useMemo(() => {
+    return [...(pricingsData?.results || [])].sort(
+      (a, b) => parseFloat(String(a.price)) - parseFloat(String(b.price))
+    );
+  }, [pricingsData?.results]);
 
   return (
-    <section className="bg-background mx-auto max-w-5xl py-12 md:py-16">
+    <section className="bg-background mx-auto max-w-6xl py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         {isLoading && (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

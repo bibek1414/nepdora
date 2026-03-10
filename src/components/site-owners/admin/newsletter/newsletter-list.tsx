@@ -125,7 +125,7 @@ export function NewsletterList() {
                       {data.results.map((newsletter, index) => (
                         <TableRow
                           key={newsletter.id}
-                          className="transition-colors hover:bg-gray-50/50"
+                          className="cursor-pointer transition-colors hover:bg-gray-50/50"
                         >
                           <TableCell>
                             <span className="text-sm text-gray-600">

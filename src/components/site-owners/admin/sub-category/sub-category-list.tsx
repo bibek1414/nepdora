@@ -207,7 +207,8 @@ export const SubCategoryList: React.FC = () => {
                         return (
                           <TableRow
                             key={subCategory.id}
-                            className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                            className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                            onClick={() => handleEdit(subCategory)}
                           >
                             <TableCell className="px-6 py-4">
                               {subCategory.image ? (

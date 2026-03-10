@@ -59,15 +59,14 @@ export const ServicesStyle1: React.FC<ServicesStyleProps> = ({
             value={subtitle || ""}
             onChange={handleSubtitleChange}
             as="p"
-            className="text-muted-foreground mx-auto max-w-3xl text-xl"
+            className="text-xl text-gray-600"
             isEditable={isEditable}
             placeholder="Enter subtitle..."
-            multiline={true}
           />
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex flex-col space-y-4">
                 <Skeleton className="h-[280px] w-full rounded-lg" />
@@ -93,7 +92,7 @@ export const ServicesStyle1: React.FC<ServicesStyleProps> = ({
         )}
 
         {!isLoading && !error && services.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {services.slice(0, pageSize).map(service => (
               <div
                 key={service.id}

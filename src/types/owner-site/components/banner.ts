@@ -59,8 +59,34 @@ export const defaultBannerData: BannerData = {
 };
 
 export const DEFAULT_BANNER_MAP: Record<BannerData["template"], BannerData> = {
-  "banner-1": { ...defaultBannerData, template: "banner-1" },
-  "banner-2": { ...defaultBannerData, template: "banner-2" },
+  "banner-1": {
+    ...defaultBannerData,
+    template: "banner-1",
+    images: [
+      {
+        id: 1,
+        image:
+          "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg",
+        image_alt_description: "New full screen banner image",
+        link: "#",
+        is_active: true,
+      },
+    ],
+  },
+  "banner-2": {
+    ...defaultBannerData,
+    template: "banner-2",
+    images: [
+      {
+        id: 1,
+        image:
+          "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg",
+        image_alt_description: "New full screen banner image",
+        link: "#",
+        is_active: true,
+      },
+    ],
+  },
   "banner-3": { ...defaultBannerData, template: "banner-3" },
   "banner-4": { ...defaultBannerData, template: "banner-4" },
   "banner-5": { ...defaultBannerData, template: "banner-5" },

@@ -86,8 +86,14 @@ export const PricingCard3: React.FC<PricingCard3Props> = ({
             {pricing.name}
           </h3>
           <div className="mb-4 flex items-baseline justify-center gap-1">
-            <span className="text-muted-foreground text-2xl">Rs.</span>
-            <span className="text-6xl font-bold">{pricing.price}</span>
+            <span className="text-muted-foreground text-2xl">
+              {Number(pricing.price) !== 0 && "Rs."}
+            </span>
+            <span className="text-6xl font-bold">
+              {Number(pricing.price) === 0
+                ? "Free"
+                : Number(pricing.price).toLocaleString("en-IN")}
+            </span>
             <span className="text-muted-foreground text-xl">/month</span>
           </div>
           <p className="text-muted-foreground">{pricing.description}</p>

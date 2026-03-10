@@ -308,7 +308,8 @@ export function CollectionDataManagement({
               {collectionDataResponse.results.map(data => (
                 <TableRow
                   key={data.id}
-                  className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                  className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                  onClick={() => handleEdit(data)}
                 >
                   {imageField && (
                     <TableCell className="px-6 py-4">
@@ -337,8 +338,7 @@ export function CollectionDataManagement({
                   {displayFields.map(field => (
                     <TableCell
                       key={field.name}
-                      className="cursor-pointer px-6 py-4 text-gray-900"
-                      onClick={() => handleEdit(data)}
+                      className="px-6 py-4 text-gray-900"
                     >
                       <div
                         dangerouslySetInnerHTML={{

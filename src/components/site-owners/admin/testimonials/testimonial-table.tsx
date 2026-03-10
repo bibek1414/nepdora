@@ -90,7 +90,8 @@ export const TestimonialsTable = ({
           {testimonials.map(testimonial => (
             <TableRow
               key={testimonial.id}
-              className="group border-b border-black/5 transition-colors hover:bg-black/2"
+              className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+              onClick={() => onEdit(testimonial)}
             >
               <TableCell className="px-6 py-4">
                 <TableUserCell

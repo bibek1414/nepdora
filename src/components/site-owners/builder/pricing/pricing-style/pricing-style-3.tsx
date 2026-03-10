@@ -23,7 +23,11 @@ export const PricingStyle3: React.FC<PricingStyleProps> = ({
 }) => {
   const { title = "Our Pricing Plans", subtitle } = data || {};
   const { data: pricingsData, isLoading, error } = usePricings();
-  const pricings = pricingsData?.results || [];
+  const pricings = React.useMemo(() => {
+    return [...(pricingsData?.results || [])].sort(
+      (a, b) => parseFloat(String(a.price)) - parseFloat(String(b.price))
+    );
+  }, [pricingsData?.results]);
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -34,7 +38,7 @@ export const PricingStyle3: React.FC<PricingStyleProps> = ({
   };
 
   return (
-    <section className="bg-background mx-auto max-w-5xl py-12 md:py-16">
+    <section className="bg-background mx-auto max-w-6xl py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-12 text-center">
           <EditableText

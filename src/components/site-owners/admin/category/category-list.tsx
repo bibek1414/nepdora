@@ -192,7 +192,8 @@ export const CategoryList: React.FC = () => {
                       {categories.map(category => (
                         <TableRow
                           key={category.id}
-                          className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                          className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                          onClick={() => handleEdit(category)}
                         >
                           <TableCell className="px-6 py-4">
                             {category.image ? (

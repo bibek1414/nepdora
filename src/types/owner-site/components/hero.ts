@@ -416,8 +416,7 @@ export const defaultHeroTemplate1Data: HeroTemplate1Data = {
   ],
   layout: "text-center",
   showImage: true,
-  imageUrl:
-    "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  imageUrl: "/hero-students.webp",
   imageAlt: "Hero image",
 };
 
@@ -436,7 +435,7 @@ export const defaultHeroTemplate2Data: HeroTemplate2Data = {
   sliderImages: [
     {
       id: "1",
-      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 1",
     },
     {
@@ -451,14 +450,14 @@ export const defaultHeroTemplate2Data: HeroTemplate2Data = {
     },
     {
       id: "4",
-      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 3",
     },
   ],
   backgroundType: "image",
   backgroundColor: "#FFFFFF",
   backgroundImageUrl:
-    "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.pexels.com/photos/695644/pexels-photo-695644.jpeg",
 };
 
 export const defaultHeroTemplate3Data: HeroTemplate3Data = {
@@ -489,8 +488,7 @@ export const defaultHeroTemplate4Data: HeroTemplate4Data = {
     { id: "1", text: "Shop Collection", variant: "primary", href: "#" },
   ],
   showImage: true,
-  imageUrl:
-    "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1327&auto=format&fit=crop",
+  imageUrl: "https://images.pexels.com/photos/813787/pexels-photo-813787.jpeg",
   imageAlt: "Fashion collection",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -510,7 +508,7 @@ export const defaultHeroTemplate5Data: HeroTemplate5Data = {
   ],
   backgroundType: "image",
   backgroundImageUrl:
-    "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1327&auto=format&fit=crop",
   showOverlay: true,
   overlayOpacity: 0.7,
   imageAlt: "Minimalist design",
@@ -527,17 +525,17 @@ export const defaultHeroTemplate6Data: HeroTemplate6Data = {
   sliderImages: [
     {
       id: "1",
-      url: "https://images.unsplash.com/photo-1545151414-8a948e1ea54f?q=80&w=987&auto=format&fit=crop",
+      url: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop",
       alt: "Workout attire collection",
     },
     {
       id: "2",
-      url: "https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?q=80&w=1920&auto=format&fit=crop",
+      url: "https://images.unsplash.com/photo-1545151414-8a948e1ea54f?q=80&w=987&auto=format&fit=crop",
       alt: "Fitness clothing",
     },
     {
       id: "3",
-      url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1600&auto=format&fit=crop",
+      url: "https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?q=80&w=1920&auto=format&fit=crop",
       alt: "Activewear selection",
     },
   ],
@@ -557,7 +555,7 @@ export const defaultHeroTemplate7Data: HeroTemplate7Data = {
       subtitle: "NEW COLLECTION",
       badge: "WOMEN",
       imageUrl:
-        "https://images.unsplash.com/photo-1683509231125-5c487afaa453?q=80&w=1364&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1600&auto=format&fit=crop",
       imageAlt: "Woman in yellow sportswear stretching on stairs",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",
@@ -568,7 +566,7 @@ export const defaultHeroTemplate7Data: HeroTemplate7Data = {
       subtitle: "SAVE 50% OFF",
       badge: "MEN",
       imageUrl:
-        "https://images.unsplash.com/photo-1725653811863-8ca1776e126a?q=80&w=764&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1683509231125-5c487afaa453?q=80&w=1364&auto=format&fit=crop",
       imageAlt: "Man in red t-shirt resting after a workout",
       buttonText: "DISCOVER MORE",
       buttonHref: "#",
@@ -598,10 +596,10 @@ export const defaultHeroTemplate8Data: HeroTemplate8Data = {
     customerText: "Trusted by 1000+ customers worldwide",
   },
   leftImageUrl:
-    "https://images.unsplash.com/photo-1758640920659-0bb864175983?q=80&w=1171&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1725653811863-8ca1776e126a?q=80&w=764&auto=format&fit=crop",
   leftImageAlt: "Left rug image",
   rightImageUrl:
-    "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1758640920659-0bb864175983?q=80&w=1171&auto=format&fit=crop",
   rightImageAlt: "Right rug image",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -616,7 +614,7 @@ export const defaultHeroTemplate9Data: HeroTemplate9Data = {
   sliderImages: [
     {
       id: "1",
-      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 1",
     },
     {
@@ -631,7 +629,7 @@ export const defaultHeroTemplate9Data: HeroTemplate9Data = {
     },
     {
       id: "4",
-      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 3",
     },
   ],
@@ -650,7 +648,7 @@ export const defaultHeroTemplate10Data: HeroTemplate10Data = {
   sliderImages: [
     {
       id: "1",
-      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 1",
     },
     {
@@ -665,27 +663,27 @@ export const defaultHeroTemplate10Data: HeroTemplate10Data = {
     },
     {
       id: "4",
-      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 3",
     },
     {
       id: "5",
-      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1756134904044-1cf7868cb9de?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 4",
     },
     {
       id: "6",
-      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 3",
     },
     {
       id: "7",
-      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 4",
     },
     {
       id: "8",
-      url: "https://images.unsplash.com/photo-1756134904044-1cf7868cb9de?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Images 3",
     },
   ],
@@ -702,7 +700,7 @@ export const defaultHeroTemplate11Data: HeroTemplate11Data = {
     { id: "1", text: "Get started today", variant: "primary", href: "#" },
   ],
   imageUrl:
-    "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2080&auto=format&fit=crop",
   imageAlt: "Business strategy meeting",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
@@ -716,7 +714,7 @@ export const defaultHeroTemplate12Data: HeroTemplate12Data = {
     { id: "2", text: "Watch Our Videos", variant: "secondary", href: "#" },
   ],
   imageUrl:
-    "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2940&auto=format&fit=crop",
   imageAlt: "Happy traveler in Paris",
   backgroundType: "color",
   backgroundColor: "#013D2F",
@@ -732,8 +730,7 @@ export const defaultHeroTemplate13Data: HeroTemplate13Data = {
     { id: "1", text: "Book a Free Call", variant: "secondary", href: "#" },
   ],
   backgroundType: "image",
-  backgroundImageUrl:
-    "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  backgroundImageUrl: "https://picsum.photos/seed/office1/1920/1080",
   imageAlt: "Office meeting background",
 };
 
@@ -743,7 +740,7 @@ export const defaultHeroTemplate14Data: HeroTemplate14Data = {
   title: "MIDNIGHT SERIES",
   buttons: [{ id: "1", text: "Shop The Look", variant: "primary", href: "#" }],
   backgroundImageUrl:
-    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2080&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop",
   imageAlt: "Featured Collection",
 };
 
@@ -754,8 +751,7 @@ export const defaultHeroTemplate15Data: HeroTemplate15Data = {
   description:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed sodales auctor orci, sit amet vulputate velit molestie.",
   buttons: [{ id: "1", text: "Order Now", variant: "primary", href: "#" }],
-  imageUrl:
-    "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2940&auto=format&fit=crop",
+  imageUrl: "/hero.webp",
   imageAlt: "Delicious food plate",
   priceLabel: "Price",
   priceValue: "$ 10.03",
@@ -784,7 +780,7 @@ export const defaultHeroTemplate16Data: HeroTemplate16Data = {
     { id: "3", text: "100+ Partner Universities" },
   ],
   imageUrl:
-    "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1523240715639-9942f1476d06?q=80&w=2070&auto=format&fit=crop",
   imageAlt: "Students graduating",
 };
 
@@ -815,7 +811,7 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
       subtitle: "",
       badge: "",
       imageUrl:
-        "https://images.unsplash.com/photo-1523240715639-9942f1476d06?q=80&w=2070&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
       imageAlt: "Men's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -826,7 +822,7 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
       subtitle: "",
       badge: "",
       imageUrl:
-        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
       imageAlt: "Women's collection",
       buttonText: "Shop Now",
       buttonHref: "#",
@@ -851,7 +847,7 @@ export const defaultHeroTemplate19Data: HeroTemplate19Data = {
     { id: "2", text: "Our Story", variant: "outline", href: "#" },
   ],
   imageUrl:
-    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800",
   imageAlt: "NepGlass Premium Sunglasses",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",

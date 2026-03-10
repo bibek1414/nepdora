@@ -507,7 +507,7 @@ export const defaultAboutUs5Data: AboutUs5Data = {
   image1Alt: "Woman with laptop",
   image1Tag: "Tech Blog",
   image2Url:
-    "https://plus.unsplash.com/premium_photo-1661627374844-11ca6ddb3633?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1709715357520-5e1047a2b691?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   image2Alt: "Team meeting",
   image2Tag: "Trends",
   teamImageUrl:
@@ -525,7 +525,7 @@ export const defaultAboutUs5Data: AboutUs5Data = {
     {
       id: "1",
       imageUrl:
-        "https://images.unsplash.com/photo-1709715357520-5e1047a2b691?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Avatar A",
     },
     {
@@ -537,7 +537,7 @@ export const defaultAboutUs5Data: AboutUs5Data = {
     {
       id: "3",
       imageUrl:
-        "https://plus.unsplash.com/premium_photo-1677529496297-fd0174d65941?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1061&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       alt: "Avatar C",
     },
   ],
@@ -568,13 +568,13 @@ export const defaultAboutUs6Data: AboutUs6Data = {
     },
   ],
   image1Url:
-    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   image1Alt: "A female barista smiling while holding a coffee cup",
   centerImageUrl:
-    "https://plus.unsplash.com/premium_photo-1678197937465-bdbc4ed95815?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1464979681340-bdd28a61699e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   centerImageAlt: "A close-up of coffee beans being roasted",
   image2Url:
-    "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1061&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   image2Alt: "A female barista smiling while holding a coffee cup",
 };
 
@@ -588,28 +588,28 @@ export const defaultAboutUs7Data: AboutUs7Data = {
       id: "1",
       title: "Speed & Endurance Training",
       imageUrl:
-        "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       imageAlt: "Athlete running on track",
     },
     {
       id: "2",
       title: "Agility & Quickness Drills",
       imageUrl:
-        "https://images.unsplash.com/photo-1464979681340-bdd28a61699e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       imageAlt: "Athlete doing agility drills",
     },
     {
       id: "3",
       title: "Jump & Plyometric Training",
       imageUrl:
-        "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1526676317768-d9b14f15615a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       imageAlt: "Athlete doing jump training",
     },
     {
       id: "4",
       title: "Strength & Power Training",
       imageUrl:
-        "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1526676317768-d9b14f15615a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       imageAlt: "Athlete lifting weights",
     },
   ],
@@ -684,7 +684,7 @@ export const defaultAboutUs9Data: AboutUs9Data = {
   buttonLink: "#",
   media: {
     type: "image",
-    url: "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    url: "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Businessman in office",
   },
 };
@@ -714,7 +714,7 @@ export const defaultAboutUs10Data: AboutUs10Data = {
   supportText: "Need help?",
   supportNumber: "(808) 555-0111",
   imageUrl:
-    "https://images.unsplash.com/photo-1526676317768-d9b14f15615a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
   imageAlt: "Traveler with backpack",
   circularStampText: "World Wide Access • Immigration Agency •",
 };
@@ -727,8 +727,7 @@ export const defaultAboutUs11Data: AboutUs11Data = {
     "At Optimo, We help businesses navigate complexity unlock to growth achieve lasting transformation with a team of experienced consultations, We can combine for strategic instant.",
   featuredStatValue: "150+",
   featuredStatLabel: "Successful Projects Delivered",
-  imageUrl:
-    "https://images.unsplash.com/photo-1526676317768-d9b14f15615a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  imageUrl: "https://picsum.photos/seed/team1/1200/900",
   imageAlt: "Team collaborating",
   bulletPoints: [
     { id: "bp-1", text: "Strategic Planning" },
@@ -780,7 +779,7 @@ export const defaultAboutUs12Data: AboutUs12Data = {
     { id: "3", name: "Albert Flores", role: "Web Designer" },
   ],
   imageUrl:
-    "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-01.jpg",
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2776&auto=format&fit=crop",
   imageAlt: "Professional Team Member",
 };
 
@@ -792,8 +791,7 @@ export const defaultAboutUs13Data: AboutUs13Data = {
     "At Optimo, Our partnership goes beyond delivering solutions—it's about building trust, aligning with your goals. We go beyond consulting to become your strategic partner—delivering tailored solutions, expert insight, and measurable results.",
   highlightValue: "150+",
   highlightLabel: "Successful Projects Delivered",
-  imageUrl:
-    "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-02.jpg",
+  imageUrl: "https://picsum.photos/seed/creative/800/800",
   imageAlt: "Creative Partnership",
   ctaText: "Get In Touch",
   ctaLink: "#",
@@ -803,8 +801,7 @@ export const defaultAboutUs13Data: AboutUs13Data = {
       title: "Deep Collaboration",
       description:
         "We work as an extension of your team—immersing ourselves in your goals, challenges, and vision to ensure aligned outcomes.",
-      imageUrl:
-        "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-03.jpg",
+      imageUrl: "https://picsum.photos/seed/creative/800/800",
       imageAlt: "Deep Collaboration",
     },
     {
@@ -812,8 +809,7 @@ export const defaultAboutUs13Data: AboutUs13Data = {
       title: "Expertise",
       description:
         "Our multidisciplinary team brings decades of experience across strategy, design, and technology.",
-      imageUrl:
-        "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-04.jpg",
+      imageUrl: "https://picsum.photos/seed/expertise/800/800",
       imageAlt: "Expertise discussion",
     },
     {
@@ -821,8 +817,7 @@ export const defaultAboutUs13Data: AboutUs13Data = {
       title: "Tailored Solutions",
       description:
         "Every engagement is customized to deliver the right mix of insights, execution, and long-term support.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      imageUrl: "https://picsum.photos/seed/solutions/800/800",
       imageAlt: "Tailored solutions workshop",
     },
   ],
@@ -852,8 +847,7 @@ export const defaultAboutUs14Data: AboutUs14Data = {
         "Investment & Portfolio Guidance",
         "Risk Management & Wealth Protection",
       ],
-      image:
-        "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
+      image: "https://picsum.photos/id/1059/800/800",
     },
     {
       id: "02",
@@ -865,8 +859,7 @@ export const defaultAboutUs14Data: AboutUs14Data = {
         "Consumer Behavior Analysis",
         "Trend Forecasting",
       ],
-      image:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2776&auto=format&fit=crop",
+      image: "https://picsum.photos/id/1060/800/800",
     },
     {
       id: "03",
@@ -874,8 +867,7 @@ export const defaultAboutUs14Data: AboutUs14Data = {
       description:
         "Comprehensive financial structures to optimize tax efficiency and capital allocation.",
       points: ["Capital Allocation", "Tax Optimization", "M&A Advisory"],
-      image:
-        "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: "https://picsum.photos/id/1070/800/800",
     },
     {
       id: "04",
@@ -887,8 +879,7 @@ export const defaultAboutUs14Data: AboutUs14Data = {
         "Digital Workflow Integration",
         "Data Security",
       ],
-      image:
-        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: "https://picsum.photos/id/118/800/800",
     },
   ],
 };
@@ -925,7 +916,7 @@ export const defaultAboutUs15Data: AboutUs15Data = {
     },
   ],
   imageUrl:
-    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+    "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   imageAlt: "Senior Consultant",
 };
 
@@ -942,11 +933,11 @@ export const defaultAboutUs16Data: AboutUs16Data = {
   buttonText: "Explore More",
   buttonLink: "#",
   mainImage:
-    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+    "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
   smallImage1:
-    "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
   smallImage2:
-    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
 };
 
 export const defaultAboutUs17Data: AboutUs17Data = {
@@ -965,7 +956,7 @@ export const defaultAboutUs17Data: AboutUs17Data = {
   button2Text: "Read More Stories",
   button2Link: "#",
   imageUrl:
-    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
   imageAlt: "Visa approval document",
 };
 
@@ -992,10 +983,10 @@ export const defaultAboutUs18Data: AboutUs18Data = {
   buttonText: "Read More",
   buttonLink: "#",
   mainImageUrl:
-    "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
   mainImageAlt: "Wooden boat on turquoise mountain lake",
   secondaryImageUrl:
-    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1770&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
   secondaryImageAlt: "Travel essentials flat lay with map and camera",
 };
 

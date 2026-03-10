@@ -52,7 +52,11 @@ export const PricingCard1: React.FC<PricingCard1Props> = ({
           {pricing.name}
         </h3>
         <div className="mb-4">
-          <span className="text-4xl font-bold">Rs.{pricing.price}</span>
+          <span className="text-4xl font-bold">
+            {Number(pricing.price) === 0
+              ? "Free"
+              : `Rs.${Number(pricing.price).toLocaleString("en-IN")}`}
+          </span>
           <span className="text-muted-foreground">/month</span>
         </div>
         <p className="text-muted-foreground mb-6">{pricing.description}</p>

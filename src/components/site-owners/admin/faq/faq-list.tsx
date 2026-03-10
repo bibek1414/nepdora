@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { SimplePagination } from "@/components/ui/simple-pagination";
 
 import { useFAQs, useDeleteFAQ } from "@/hooks/owner-site/admin/use-faq";
-import { FAQFormTrigger } from "./faq-form";
+import { FAQFormTrigger, FAQForm } from "./faq-form";
 import { FAQ } from "@/types/owner-site/admin/faq";
 import { toast } from "sonner";
 import {
@@ -51,6 +51,18 @@ export function FAQList() {
 
   const { data, isLoading, error } = useFAQs();
   const deleteFAQ = useDeleteFAQ();
+  const [editingFAQ, setEditingFAQ] = useState<FAQ | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleEdit = (faq: FAQ) => {
+    setEditingFAQ(faq);
+    setIsFormOpen(true);
+  };
+
+  const handleAdd = () => {
+    setEditingFAQ(null);
+    setIsFormOpen(true);
+  };
 
   const handleDeleteClick = (faq: FAQ, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -133,12 +145,13 @@ export function FAQList() {
             )}
           </div>
 
-          <FAQFormTrigger mode="create">
-            <Button className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
-              <Plus className="mr-2 h-4 w-4" />
-              Add FAQ
-            </Button>
-          </FAQFormTrigger>
+          <Button
+            onClick={handleAdd}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add FAQ
+          </Button>
         </div>
 
         {/* FAQ Table */}
@@ -169,7 +182,8 @@ export function FAQList() {
                     {paginatedFAQs.map(faq => (
                       <TableRow
                         key={faq.id}
-                        className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                        className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                        onClick={() => handleEdit(faq)}
                       >
                         <TableCell className="px-6 py-4 align-top">
                           <span className="text-sm font-normal text-black">
@@ -183,15 +197,17 @@ export function FAQList() {
                         </TableCell>
                         <TableCell className="px-6 py-4 text-right align-top">
                           <div className="flex items-center justify-end gap-1">
-                            <FAQFormTrigger mode="edit" faq={faq}>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 rounded-full text-black/20 hover:text-black/60"
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </FAQFormTrigger>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-full text-black/20 hover:text-black/60"
+                              onClick={e => {
+                                e.stopPropagation();
+                                handleEdit(faq);
+                              }}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
                             <TableActionButtons
                               onDelete={() => {
                                 setFaqToDelete(faq);
@@ -204,7 +220,7 @@ export function FAQList() {
                     ))}
                   </TableBody>
                 </Table>
-                <SimplePagination
+            <SimplePagination
                   currentPage={page}
                   totalPages={totalPages}
                   onPageChange={setPage}
@@ -222,6 +238,12 @@ export function FAQList() {
             )}
           </div>
         </div>
+        <FAQForm
+          open={isFormOpen}
+          onOpenChange={setIsFormOpen}
+          faq={editingFAQ || undefined}
+          mode={editingFAQ ? "edit" : "create"}
+        />
       </div>
 
       {/* Delete Confirmation Dialog */}

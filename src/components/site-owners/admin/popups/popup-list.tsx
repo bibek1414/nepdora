@@ -36,7 +36,6 @@ import {
   useUpdatePopup,
 } from "@/hooks/owner-site/admin/use-popup";
 import { PopUp } from "@/types/owner-site/admin/popup";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -268,7 +267,8 @@ const PopupListPage: React.FC = () => {
                     {paginatedPopups.map(popup => (
                       <TableRow
                         key={popup.id}
-                        className="group border-b border-black/5 transition-colors hover:bg-black/2"
+                        className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                        onClick={() => handleOpenEditModal(popup)}
                       >
                         <TableCell className="px-6 py-4">
                           <div className="flex flex-col gap-0.5">

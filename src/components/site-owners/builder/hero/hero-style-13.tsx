@@ -13,6 +13,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { toast } from "sonner";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate13Props {
   heroData: HeroTemplate13Data;
@@ -21,29 +22,11 @@ interface HeroTemplate13Props {
   onUpdate?: (updatedData: Partial<HeroTemplate13Data>) => void;
 }
 
-type CTAButtonVariant = "primary" | "white" | "outline";
-
 const CTA_BUTTON_BASE =
   "group/cta relative inline-flex items-center justify-between rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2";
 
-const CTA_BUTTON_VARIANTS: Record<CTAButtonVariant, string> = {
-  primary: "bg-primary text-white hover:bg-primary/90 focus:ring-primary",
-  white: "bg-white text-slate-900 hover:bg-gray-50 focus:ring-gray-200",
-  outline:
-    "border border-white/30 text-white hover:bg-white/10 focus:ring-white/40",
-};
-
 const CTA_ARROW_BASE =
   "flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover/cta:rotate-45";
-
-const CTA_ARROW_VARIANTS: Record<CTAButtonVariant, string> = {
-  primary:
-    "bg-white text-primary group-hover/cta:rotate-45 transition-transform duration-300",
-  white:
-    "bg-primary text-white group-hover/cta:rotate-45 transition-transform duration-300",
-  outline:
-    "bg-white text-slate-900 group-hover/cta:rotate-45 transition-transform duration-300",
-};
 
 const DEFAULT_BUTTON: HeroButton = {
   id: "btn-1",
@@ -60,7 +43,23 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
 }) => {
   const componentId = useId();
   const [isUploadingBackground, setIsUploadingBackground] = useState(false);
+  const { data: themeResponse } = useThemeQuery();
 
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   const {
     data,
     setData,
@@ -99,7 +98,9 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
     onUpdate?.(update);
   };
 
-  const getButtonVariant = (variant?: string): CTAButtonVariant => {
+  const getButtonVariant = (
+    variant?: string
+  ): "primary" | "white" | "outline" => {
     switch (variant) {
       case "outline":
         return "outline";
@@ -107,6 +108,46 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
         return "white";
       default:
         return "primary";
+    }
+  };
+
+  const getButtonStyle = (variant: "primary" | "white" | "outline") => {
+    switch (variant) {
+      case "primary":
+        return {
+          backgroundColor: theme.colors.primary,
+          color: theme.colors.primaryForeground,
+        };
+      case "white":
+        return {
+          backgroundColor: theme.colors.primary,
+          color: theme.colors.secondaryForeground,
+        };
+      case "outline":
+        return {
+          border: `1px solid ${theme.colors.text}4D`,
+          color: theme.colors.text,
+        };
+    }
+  };
+
+  const getArrowStyle = (variant: "primary" | "white" | "outline") => {
+    switch (variant) {
+      case "primary":
+        return {
+          backgroundColor: theme.colors.primaryForeground,
+          color: theme.colors.primary,
+        };
+      case "white":
+        return {
+          backgroundColor: theme.colors.secondaryForeground,
+          color: theme.colors.secondary,
+        };
+      case "outline":
+        return {
+          backgroundColor: theme.colors.text,
+          color: theme.colors.background,
+        };
     }
   };
 
@@ -175,7 +216,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
 
   return (
     <motion.section
-      className="relative h-screen min-h-[700px] w-full overflow-hidden bg-gray-900"
+      className="relative h-[800px] w-full overflow-hidden bg-gray-900"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -240,13 +281,13 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             text: "Upload hero background",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
       </motion.div>
 
       {/* Content */}
       <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 md:px-6">
         <motion.div
-          className="max-w-3xl text-white"
+          className="max-w-3xl"
+          style={{ color: theme.colors.text }}
           variants={fadeInUp}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
@@ -254,7 +295,8 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={titleContent}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mb-6 font-sans text-5xl leading-tight font-semibold md:text-7xl"
+            className="mb-6 text-5xl leading-tight font-semibold md:text-7xl"
+            style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter hero title..."
             multiline
@@ -264,7 +306,8 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={descriptionContent}
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mb-10 max-w-xl text-lg leading-relaxed text-gray-200"
+            className="mb-10 max-w-xl text-lg leading-relaxed opacity-90"
+            style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter hero description..."
             multiline
@@ -282,14 +325,19 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
               onChange={handlePrimaryButtonUpdate}
               isEditable={isEditable}
               siteUser={siteUser}
-              className={`${CTA_BUTTON_BASE} ${CTA_BUTTON_VARIANTS[buttonVariant]}`}
+              className={CTA_BUTTON_BASE}
+              style={{
+                ...getButtonStyle(buttonVariant),
+                fontFamily: theme.fonts.body,
+              }}
               textPlaceholder="Button text..."
               hrefPlaceholder="Enter URL..."
             >
               <>
                 <span className="mr-4">{primaryButtonText}</span>
                 <span
-                  className={`${CTA_ARROW_BASE} ${CTA_ARROW_VARIANTS[buttonVariant]}`}
+                  className={CTA_ARROW_BASE}
+                  style={getArrowStyle(buttonVariant)}
                 >
                   <ArrowUpRight size={16} />
                 </span>

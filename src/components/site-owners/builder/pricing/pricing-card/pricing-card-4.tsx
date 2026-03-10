@@ -50,8 +50,11 @@ export const PricingCard4: React.FC<PricingCard4Props> = ({
             className="text-4xl font-bold"
             style={{ color: theme.colors.primary }}
           >
-            Rs.{pricing.price}
+            {Number(pricing.price) === 0
+              ? "Free"
+              : `Rs.${Number(pricing.price).toLocaleString("en-IN")}`}
           </span>
+          
           <span
             className="ml-1 text-xl font-medium"
             style={{ color: theme.colors.primary }}

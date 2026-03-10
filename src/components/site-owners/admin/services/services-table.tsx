@@ -84,7 +84,8 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
           {services.map(service => (
             <TableRow
               key={service.id}
-              className="group border-b border-black/5 transition-colors hover:bg-black/2"
+              className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+              onClick={() => onEdit(service)}
             >
               <TableCell className="px-6 py-4">
                 <div className="flex items-center gap-3">

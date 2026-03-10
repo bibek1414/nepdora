@@ -10,8 +10,8 @@ import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
-import { FooterLogo } from "./shared/footer-logo";
 import Image from "next/image";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface FooterStyle10Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -27,6 +27,22 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
   siteUser,
 }) => {
   const { data, getImageUrl } = useBuilderLogic(footerData, onUpdate);
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const [email, setEmail] = useState("");
   const [subscriptionStatus, setSubscriptionStatus] = useState<
@@ -84,12 +100,33 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
   return (
     <footer className="w-full overflow-hidden border-t border-gray-200 bg-gray-50 px-6 pt-16 pb-8 font-sans text-gray-900 transition-colors duration-300 md:px-12 lg:px-24 dark:border-white/5 dark:bg-[#020205] dark:text-white">
       <div className="mx-auto max-w-7xl">
+        {/* Big Title Section */}
+        {(data.logoType === "text" || data.logoType === "both") &&
+          data.logoText && (
+            <div className="relative mb-12 flex w-full justify-center">
+              {/* Subtle glow effect behind the text */}
+              <div className="pointer-events-none absolute top-1/2 left-1/2 h-24 w-3/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/5 blur-[80px] transition-colors duration-300 dark:bg-blue-900/10" />
+
+              <h1 className="bg-linear-to-b from-gray-900 via-gray-400 to-gray-50 bg-clip-text text-center font-serif text-[13.5vw] leading-[0.8] font-medium tracking-tighter text-transparent transition-all duration-300 select-none dark:from-white dark:via-gray-500 dark:to-[#020205]">
+                {data.logoText}
+              </h1>
+            </div>
+          )}
+
         {/* Main Content Grid */}
-        <div className="mt-8 mb-16 grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <div className="mb-16 grid grid-cols-1 gap-10 lg:grid-cols-12">
           {/* Column 1: Info & Address */}
 
           <div className="flex flex-col items-start space-y-6 pr-0 text-left lg:col-span-4 lg:pr-12">
-            <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+            {data.logoType === "image" || data.logoType === "both" ? (
+              <Image
+                src={getImageUrl(data.logoImage)}
+                alt={data.companyName}
+                width={100}
+                height={100}
+                className="max-h-[50px] w-auto"
+              />
+            ) : null}
 
             <p className="max-w-sm text-sm leading-relaxed text-gray-600 transition-colors duration-300 dark:text-gray-400">
               {data.description ||
@@ -175,7 +212,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                   <Input
                     type="email"
                     placeholder="Enter your email address"
-                    className="w-full rounded-full border border-gray-200 bg-white px-6 py-3 text-sm text-gray-900 transition-all outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500 dark:border-transparent dark:bg-white"
+                    className="w-full rounded-full border border-gray-200 bg-white px-6 py-3 text-sm text-gray-900 transition-all outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-transparent dark:bg-white"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     disabled={isEditable || createNewsletterMutation.isPending}
@@ -183,7 +220,11 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
 
                   <Button
                     type="submit"
-                    className="group hover:bg-primary flex w-fit items-center space-x-3 rounded-full bg-[#2f45ff] py-2 pr-2 pl-6 text-white shadow-md shadow-blue-500/20 transition-all duration-300"
+                    className="group flex w-fit items-center space-x-3 rounded-full py-2 pr-2 pl-6 shadow-md transition-all duration-300"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                    }}
                     disabled={isEditable || createNewsletterMutation.isPending}
                   >
                     <span className="text-sm font-medium">
@@ -191,11 +232,10 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                         ? "Subscribing..."
                         : "Subscribe"}
                     </span>
-                    <div className="rounded-full bg-white p-2 transition-transform duration-300 group-hover:rotate-45">
-                      <ArrowUpRight size={16} className="text-[#2f45ff]" />
+                    <div className="rounded-full p-2 transition-transform duration-300 group-hover:rotate-45">
+                      <ArrowUpRight size={16} />
                     </div>
                   </Button>
-
                   {subscriptionStatus === "error" && errorMessage && (
                     <div className="flex items-center gap-2 text-sm text-red-500">
                       <AlertCircle className="h-4 w-4" />
@@ -230,18 +270,6 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                       isEditable
                     )}
                     className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
-                    target={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
                     onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
@@ -293,16 +321,6 @@ const FooterLink: React.FC<{
   return (
     <Link
       href={href || "#"}
-      target={
-        href?.startsWith("http") || href?.startsWith("mailto:")
-          ? "_blank"
-          : undefined
-      }
-      rel={
-        href?.startsWith("http") || href?.startsWith("mailto:")
-          ? "noopener noreferrer"
-          : undefined
-      }
       className="w-fit text-sm text-gray-500 transition-colors hover:text-black dark:text-gray-400 dark:hover:text-white"
     >
       {children}

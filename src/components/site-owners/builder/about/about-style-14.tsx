@@ -114,7 +114,7 @@ export function AboutUsTemplate14({
               <EditableText
                 value={data.title}
                 onChange={handleTextUpdate("title")}
-                as="span"
+                as="h3"
                 isEditable={isEditable}
                 placeholder="Enter title..."
               />
