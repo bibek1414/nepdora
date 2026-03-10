@@ -190,7 +190,7 @@ export const defaultOthersTemplate1Data: OthersTemplate1Data = {
   buttons: [
     {
       id: "btn-1",
-      text: "Read More →",
+      text: "Read More",
       variant: "primary",
       href: "#",
     },

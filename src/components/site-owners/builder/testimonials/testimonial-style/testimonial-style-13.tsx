@@ -66,7 +66,7 @@ export const TestimonialStyle13: React.FC<TestimonialStyleProps> = ({
 
         <div className="relative z-10 container mx-auto px-4">
           {/* Header */}
-          <div className="mx-auto mb-16 max-w-3xl text-center">
+          <div className="mx-auto mb-16  text-center">
             <EditableText
               value={title}
               onChange={handleUpdate("title")}
