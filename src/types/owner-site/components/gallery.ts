@@ -86,6 +86,45 @@ export const defaultGalleryData: GalleryData = {
   template: "gallery-1",
 };
 
+export const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
+  {
+    id: "gallery6-case-1",
+    image: "https://picsum.photos/id/1033/400/600",
+    image_alt_description: "Revive & Rise showcase",
+    title: "Revive & Rise",
+    description:
+      "We step in to assess what’s holding you back, reshape your strategy, and breathe.",
+    is_active: true,
+  },
+  {
+    id: "gallery6-case-2",
+    image: "https://picsum.photos/id/101/400/600",
+    image_alt_description: "Scaling Made Simple showcase",
+    title: "Scaling Made Simple",
+    description:
+      "We simplify the scaling process by identifying what’s working, removing what’s not, and building systems...",
+    is_active: true,
+  },
+  {
+    id: "gallery6-case-3",
+    image: "https://picsum.photos/id/1031/400/600",
+    image_alt_description: "Fast-Track Growth showcase",
+    title: "Fast-Track Growth",
+    description:
+      "When time is critical and growth is essential, our focused strategies help you accelerate progress with...",
+    is_active: true,
+  },
+  {
+    id: "gallery6-case-4",
+    image: "https://picsum.photos/id/1029/400/600",
+    image_alt_description: "Future-Proofing showcase",
+    title: "Future-Proofing",
+    description:
+      "We help organizations future-proof their operations with adaptable strategies, smart technologies.",
+    is_active: true,
+  },
+];
+
 export const DEFAULT_GALLERY_MAP: Record<GalleryData["template"], GalleryData> =
   {
     "gallery-1": { ...defaultGalleryData, template: "gallery-1" },
@@ -93,6 +132,13 @@ export const DEFAULT_GALLERY_MAP: Record<GalleryData["template"], GalleryData> =
     "gallery-3": { ...defaultGalleryData, template: "gallery-3" },
     "gallery-4": { ...defaultGalleryData, template: "gallery-4" },
     "gallery-5": { ...defaultGalleryData, template: "gallery-5" },
-    "gallery-6": { ...defaultGalleryData, template: "gallery-6" },
+    "gallery-6": {
+      ...defaultGalleryData,
+      title: "How We Helped Clients Grow Smarter",
+      subtitle:
+        "Stories of transformation across industries, from revitalized brands to future-proof strategies.",
+      images: TEMPLATE6_DEFAULT_IMAGES,
+      template: "gallery-6",
+    },
     "gallery-7": { ...defaultGalleryData, template: "gallery-7" },
   };

@@ -182,7 +182,7 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                     onClick={() =>
                       setOpenIndex(openIndex === faq.id ? null : faq.id)
                     }
-                    className="flex w-full items-center justify-between p-6 text-left transition-colors duration-200 hover:bg-gray-50"
+                    className="flex w-full cursor-pointer items-center justify-between p-6 text-left transition-colors duration-200 hover:bg-gray-50"
                   >
                     <span className="font-medium text-gray-900">
                       {faq.question}

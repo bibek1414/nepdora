@@ -176,7 +176,7 @@ export const FAQCard4: React.FC<FAQCard4Props> = ({
                       }
                       aria-expanded={expandedCard === faq.id}
                       onClick={() => toggleCard(faq.id)}
-                      className="ml-1 h-8 w-8 md:h-9 md:w-9"
+                      className="ml-1 h-8 w-8 cursor-pointer md:h-9 md:w-9"
                     >
                       {expandedCard === faq.id ? (
                         <ChevronUp className="h-4 w-4 md:h-5 md:w-5" />

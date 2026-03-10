@@ -51,7 +51,7 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
 
   return (
     <CardWrapper>
-      <div className="bg-background-light h-full overflow-hidden rounded-lg shadow-md dark:bg-zinc-800">
+      <div className="bg-background-light h-full overflow-hidden rounded-lg border dark:bg-zinc-800">
         <div className="relative h-56 w-full">
           <Image
             src={servicesImage}

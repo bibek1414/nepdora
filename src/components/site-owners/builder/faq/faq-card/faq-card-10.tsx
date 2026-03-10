@@ -21,7 +21,7 @@ export const FAQCard10: React.FC<FAQCard10Props> = ({ faqs }) => {
           value={`item-${index}`}
           className="overflow-hidden rounded-xl border border-gray-200 bg-white px-6 shadow-sm"
         >
-          <AccordionTrigger className="py-5 text-left text-base font-medium text-gray-900 hover:no-underline sm:text-lg">
+          <AccordionTrigger className="cursor-pointer py-5 text-left text-base font-medium text-gray-900 hover:no-underline sm:text-lg">
             {faq.question}
             <ChevronDown className="h-5 w-5 shrink-0 text-gray-500 transition-transform duration-200" />
           </AccordionTrigger>

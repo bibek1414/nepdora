@@ -4,6 +4,7 @@ import {
   GalleryData,
   GalleryImage,
   defaultGalleryData,
+  TEMPLATE6_DEFAULT_IMAGES,
 } from "@/types/owner-site/components/gallery";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -13,48 +14,6 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
-const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
-  {
-    id: "gallery6-case-1",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-    image_alt_description: "Revive & Rise showcase",
-    title: "Revive & Rise",
-    description:
-      "We step in to assess what’s holding you back, reshape your strategy, and breathe.",
-    is_active: true,
-  },
-  {
-    id: "gallery6-case-2",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-    image_alt_description: "Scaling Made Simple showcase",
-    title: "Scaling Made Simple",
-    description:
-      "We simplify the scaling process by identifying what’s working, removing what’s not, and building systems...",
-    is_active: true,
-  },
-  {
-    id: "gallery6-case-3",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-    image_alt_description: "Fast-Track Growth showcase",
-    title: "Fast-Track Growth",
-    description:
-      "When time is critical and growth is essential, our focused strategies help you accelerate progress with...",
-    is_active: true,
-  },
-  {
-    id: "gallery6-case-4",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-    image_alt_description: "Future-Proofing showcase",
-    title: "Future-Proofing",
-    description:
-      "We help organizations future-proof their operations with adaptable strategies, smart technologies.",
-    is_active: true,
-  },
-];
 
 const buildInitialData = (galleryData: GalleryData): GalleryData => {
   if (galleryData.template !== "gallery-6") {
@@ -250,25 +209,23 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
           variants={fadeInUp}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <div className="max-w-2xl space-y-3">
-            <h2 className="text-2xl font-semibold text-gray-900 md:text-3xl">
-              <EditableText
-                value={data.title || "How We Helped Clients Grow Smarter"}
-                onChange={handleTextUpdate("title")}
-                isEditable={isEditable}
-                className="leading-tight"
-              />
-            </h2>
-            <p className="text-sm text-gray-600 md:text-base">
-              <EditableText
-                value={
-                  data.subtitle ||
-                  "Stories of transformation across industries, from revitalized brands to future-proof strategies."
-                }
-                onChange={handleTextUpdate("subtitle")}
-                isEditable={isEditable}
-              />
-            </p>
+          <div className="space-y-3">
+            <EditableText
+              value={data.title || "How We Helped Clients Grow Smarter"}
+              onChange={handleTextUpdate("title")}
+              as="h3"
+              isEditable={isEditable}
+              className="leading-tight"
+            />
+            <EditableText
+              value={
+                data.subtitle ||
+                "Stories of transformation across industries, from revitalized brands to future-proof strategies."
+              }
+              as="p"
+              onChange={handleTextUpdate("subtitle")}
+              isEditable={isEditable}
+            />
           </div>
 
           <div className="flex gap-2">

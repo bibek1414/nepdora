@@ -48,7 +48,7 @@ export const FaqCard8: React.FC<FaqCard8Props> = ({
       >
         <button
           onClick={() => setOpenIndex(isOpen ? null : faq.id)}
-          className="flex w-full items-center justify-between p-6 text-left"
+          className="flex w-full cursor-pointer items-center justify-between p-6 text-left"
         >
           <span
             className="text-lg font-medium"

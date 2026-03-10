@@ -37,7 +37,7 @@ export const FAQCard11: React.FC<FAQCard11Props> = ({ faqs, theme }) => {
             }}
           >
             <button
-              className="flex w-full items-center justify-between px-6 py-5 text-left focus:outline-none"
+              className="flex w-full cursor-pointer items-center justify-between px-6 py-5 text-left focus:outline-none"
               onClick={() => setOpenIndex(isOpen ? null : index)}
               aria-expanded={isOpen}
             >

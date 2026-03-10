@@ -47,7 +47,7 @@ export const FAQCard2: React.FC<FAQCard2Props> = ({ faqs }) => {
           <CardContent className="p-0">
             <button
               onClick={() => toggleItem(faq.id)}
-              className="flex w-full items-center justify-between p-2 text-left transition-colors duration-200 hover:bg-gray-50 sm:p-3 md:p-4"
+              className="flex w-full cursor-pointer items-center justify-between p-2 text-left transition-colors duration-200 hover:bg-gray-50 sm:p-3 md:p-4"
             >
               <h3 className="pr-2 text-sm font-semibold text-gray-900 sm:pr-4 sm:text-base">
                 {faq.question}

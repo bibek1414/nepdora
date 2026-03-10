@@ -120,7 +120,7 @@ export const FaqCard6: React.FC<FAQCard6Props> = ({
                       onClick={() =>
                         setOpenId(openId === faq.id ? null : faq.id)
                       }
-                      className="flex w-full items-center justify-between bg-transparent px-6 py-4 transition-all duration-300 hover:bg-slate-800/30"
+                      className="flex w-full cursor-pointer items-center justify-between bg-transparent px-6 py-4 transition-all duration-300 hover:bg-slate-800/30"
                     >
                       <h3 className="text-left text-lg font-bold text-white">
                         {faq.question}
