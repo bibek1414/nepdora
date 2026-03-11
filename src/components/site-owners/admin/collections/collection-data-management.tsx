@@ -320,9 +320,11 @@ export function CollectionDataManagement({
                           className="h-12 w-12 rounded object-cover"
                         />
                       ) : (
-                        <div className="bg-muted text-muted-foreground flex h-12 w-12 items-center justify-center rounded text-xs">
-                          No image
-                        </div>
+                        <img
+                          src="/fallback/image-not-found.png"
+                          alt="Preview"
+                          className="h-12 w-12 rounded object-cover"
+                        />
                       )}
                     </TableCell>
                   )}

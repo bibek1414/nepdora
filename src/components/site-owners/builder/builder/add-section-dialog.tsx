@@ -101,7 +101,9 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     categoryFilter || null
   );
-  const [selectedCollectionSlug, setSelectedCollectionSlug] = useState<string | null>(null);
+  const [selectedCollectionSlug, setSelectedCollectionSlug] = useState<
+    string | null
+  >(null);
 
   const { data: collectionsData } = useCollections();
 
@@ -1433,6 +1435,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       icon: Database,
       keywords: ["dynamic", "database", "custom", "data"],
       hasTemplates: true,
+      isSpecialized: true,
       templates: [], // Will be handled dynamically
       type: "section",
     },
