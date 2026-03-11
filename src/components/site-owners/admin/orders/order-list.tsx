@@ -352,7 +352,7 @@ export default function OrdersPage() {
               <button
                 key={option.value}
                 onClick={() => setStatusFilter(option.value as any)}
-                className={`rounded-full cursor-pointer px-4 py-1 text-xs font-medium transition-colors ${
+                className={`cursor-pointer rounded-full px-4 py-1 text-xs font-medium transition-colors ${
                   statusFilter === option.value
                     ? "bg-black text-white"
                     : "bg-black/5 text-black/60 hover:bg-black/10"
@@ -364,7 +364,7 @@ export default function OrdersPage() {
             <button
               onClick={handleManualOrdersToggle}
               disabled={isLoading}
-              className={`rounded-full px-4 cursor-pointer py-1 text-xs font-medium transition-colors ${
+              className={`cursor-pointer rounded-full px-4 py-1 text-xs font-medium transition-colors ${
                 showManualOnly
                   ? "bg-black text-white"
                   : "bg-black/5 text-black/60 hover:bg-black/10"

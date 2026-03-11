@@ -270,7 +270,7 @@ export default function AppointmentList() {
                     setStatusFilter(tab.id);
                     setSearchTerm("");
                   }}
-                  className={`rounded-full cursor-pointer px-4 py-1 text-xs font-medium transition-colors ${
+                  className={`cursor-pointer rounded-full px-4 py-1 text-xs font-medium transition-colors ${
                     isActive
                       ? "bg-black text-white"
                       : "bg-black/5 text-black/60 hover:bg-black/10"

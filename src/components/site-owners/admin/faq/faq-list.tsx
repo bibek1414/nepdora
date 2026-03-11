@@ -220,7 +220,7 @@ export function FAQList() {
                     ))}
                   </TableBody>
                 </Table>
-            <SimplePagination
+                <SimplePagination
                   currentPage={page}
                   totalPages={totalPages}
                   onPageChange={setPage}

@@ -236,11 +236,11 @@ export const PromoCodeList: React.FC = () => {
                           : 0;
 
                         return (
-                             <TableRow
-                             key={promoCode.id}
-                             className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
-                             onClick={e => handleRowClick(promoCode, e)}
-                           >
+                          <TableRow
+                            key={promoCode.id}
+                            className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+                            onClick={e => handleRowClick(promoCode, e)}
+                          >
                             <TableCell className="px-6 py-4">
                               <span className="text-sm font-bold text-[#003d79]">
                                 {promoCode.code}

@@ -52,14 +52,15 @@ export const ServicesStyle7: React.FC<ServicesStyleProps> = ({
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error Loading Services</AlertTitle>
           <AlertDescription>
-            {error instanceof Error ? error.message : "Failed to load services."}
+            {error instanceof Error
+              ? error.message
+              : "Failed to load services."}
           </AlertDescription>
         </Alert>
       )}
 
       {!isLoading && !error && services.length > 0 && (
         <div className="relative">
-
           <ServicesCard7
             component={component}
             services={services}
@@ -73,10 +74,11 @@ export const ServicesStyle7: React.FC<ServicesStyleProps> = ({
 
       {!isLoading && !error && services.length === 0 && (
         <div className="py-16 text-center">
-          <Briefcase className="mx-auto mb-6 h-20 w-20 opacity-50 text-gray-400" />
+          <Briefcase className="mx-auto mb-6 h-20 w-20 text-gray-400 opacity-50" />
           <h3 className="mb-4 text-2xl font-semibold">No Services Available</h3>
           <p className="mx-auto max-w-md text-lg opacity-70">
-            We&apos;re currently working on new services. Please check back soon.
+            We&apos;re currently working on new services. Please check back
+            soon.
           </p>
         </div>
       )}

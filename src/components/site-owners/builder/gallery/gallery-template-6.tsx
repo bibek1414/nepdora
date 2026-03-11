@@ -14,7 +14,6 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
-
 const buildInitialData = (galleryData: GalleryData): GalleryData => {
   if (galleryData.template !== "gallery-6") {
     return galleryData;

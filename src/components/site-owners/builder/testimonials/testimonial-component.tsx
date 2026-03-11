@@ -33,7 +33,6 @@ import { TestimonialStyle12 } from "./testimonial-style/testimonial-style-12";
 import { TestimonialStyle13 } from "./testimonial-style/testimonial-style-13";
 import { TestimonialStyle14 } from "./testimonial-style/testimonial-style-14";
 
-
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
   isEditable?: boolean;
