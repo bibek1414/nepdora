@@ -16,22 +16,6 @@ export const Footer = () => {
   return (
     <footer className="w-full overflow-hidden border-t border-gray-200 bg-gray-50 px-4 pt-12 pb-6 font-sans text-gray-900 sm:px-6 sm:pt-16 sm:pb-8 md:px-10 lg:px-20">
       <div className="mx-auto max-w-6xl">
-        {/* Big Title Section - Made more compact (reduced margins) */}
-        <motion.div
-          className="relative mb-10 flex w-full justify-center sm:mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          {/* Subtle glow effect behind the text */}
-          <div className="bg-primary-500/5 pointer-events-none absolute top-1/2 left-1/2 h-24 w-3/4 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[80px]"></div>
-
-          <h1 className="xs:text-[15vw] bg-linear-to-b from-indigo-600 via-[#ea18c3] to-white bg-clip-text text-center font-serif text-[17vw] leading-[0.85] font-medium tracking-tighter text-transparent select-none sm:text-[13.5vw] sm:leading-[0.8]">
-            NEPDORA
-          </h1>
-        </motion.div>
-
         {/* Main Content Grid - Reduced gap and bottom margin */}
         <motion.div
           className="mb-12 grid grid-cols-1 gap-8 sm:mb-16 sm:gap-10 lg:grid-cols-12"
