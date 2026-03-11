@@ -126,6 +126,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                   )}
                   <PortfolioCard4
                     portfolio={portfolios[currentProjectIndex]}
+                    index={currentProjectIndex}
                     siteUser={isEditable ? undefined : siteUser}
                     onClick={() =>
                       onPortfolioClick?.(portfolios[currentProjectIndex].slug)

@@ -91,7 +91,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
             width={600}
             height={400}
-            className="aspect-4/3 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="aspect-4/3 w-full object-cover transition-transform duration-500"
           />
 
           {/* Hover overlay */}
@@ -102,7 +102,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="rounded-full bg-white p-2 text-gray-900 transition hover:scale-110 dark:bg-gray-800 dark:text-gray-100"
+                className="h rounded-full bg-white p-2 text-gray-900 transition dark:bg-gray-800 dark:text-gray-100"
               >
                 <ExternalLink className="h-5 w-5" />
               </a>
@@ -113,7 +113,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="rounded-full bg-white p-2 text-gray-900 transition hover:scale-110 dark:bg-gray-800 dark:text-gray-100"
+                className="rounded-full bg-white p-2 text-gray-900 transition dark:bg-gray-800 dark:text-gray-100"
               >
                 <Github className="h-5 w-5" />
               </a>

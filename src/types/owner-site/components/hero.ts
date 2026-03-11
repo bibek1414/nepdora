@@ -910,7 +910,7 @@ export const defaultHeroTemplate21Data: HeroTemplate21Data = {
   title: "I'm Sam, and I am a senior industrial designer",
   description:
     "Lorem ipsum dolor sit amet consectetur adipiscing elit lectus etiam malesuada nunc lacus velit vitae egestas integer urna phasellu.",
-  imageUrl: "https://picsum.photos/seed/picsum/200/200",
+  imageUrl: "https://cdn.prod.website-files.com/60e640d00fdb1e0bd76fae59/60ecd8896b60ff2782eeee29_sam-moore-avatar-home-v3-portfolio-x-webflow-template%20(1).jpeg",
   imageAlt: "Sam Profile",
   buttons: [],
 };

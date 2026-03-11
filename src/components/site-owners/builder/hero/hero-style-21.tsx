@@ -20,10 +20,8 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { data, handleTextUpdate, handleAltUpdate, getImageUrl } = useBuilderLogic(
-    heroData,
-    onUpdate
-  );
+  const { data, handleTextUpdate, handleAltUpdate, getImageUrl } =
+    useBuilderLogic(heroData, onUpdate);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -58,7 +56,11 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
           {/* Profile Image */}
           <div className="mb-8 h-40 w-40 overflow-hidden rounded-full border-4 border-white shadow-xl lg:h-48 lg:w-48">
             <EditableImage
-              src={getImageUrl(data.imageUrl, { width: 400, height: 400, crop: "fill" })}
+              src={getImageUrl(data.imageUrl, {
+                width: 400,
+                height: 400,
+                crop: "fill",
+              })}
               alt={data.imageAlt || "Profile Image"}
               onImageChange={handleImageUpdate}
               onAltChange={handleAltUpdate("imageAlt")}
@@ -79,10 +81,9 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mb-6 max-w-4xl text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-7xl"
+            className="mx-auto mb-6 text-4xl leading-tight font-bold tracking-tight"
             style={{
               fontFamily: theme.fonts.heading,
-              color: theme.colors.text,
             }}
             isEditable={isEditable}
             placeholder="Enter your name and role..."
@@ -97,7 +98,6 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
             className="mx-auto max-w-2xl text-lg opacity-70 md:text-xl"
             style={{
               fontFamily: theme.fonts.body,
-              color: theme.colors.text,
             }}
             isEditable={isEditable}
             placeholder="Enter a brief description..."

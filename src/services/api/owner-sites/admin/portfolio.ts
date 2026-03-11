@@ -190,4 +190,66 @@ export const portfolioApi = {
 
     await handleApiError(response);
   },
+
+  updateCategory: async (
+    id: number,
+    categoryData: CreatePortfolioCategory
+  ): Promise<PortfolioCategory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/portfolio/category/${id}/`, {
+      method: "PATCH",
+      headers: {
+        ...createHeaders(),
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: JSON.stringify(categoryData),
+    });
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  deleteCategory: async (id: number): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/portfolio/category/${id}/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    });
+
+    await handleApiError(response);
+  },
+
+  updateTag: async (
+    id: number,
+    tagData: CreatePortfolioTag
+  ): Promise<PortfolioTag> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
+      method: "PATCH",
+      headers: {
+        ...createHeaders(),
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      body: JSON.stringify(tagData),
+    });
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  deleteTag: async (id: number): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    });
+
+    await handleApiError(response);
+  },
 };

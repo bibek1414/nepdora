@@ -27,6 +27,7 @@ import {
 import { SimplePagination } from "@/components/ui/simple-pagination";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const PortfoliosManagement = () => {
   const router = useRouter();
@@ -120,13 +121,23 @@ const PortfoliosManagement = () => {
             <PortfoliosSearch onSearch={handleSearch} />
           </div>
 
-          <Button
-            onClick={handleCreateNew}
-            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Project
-          </Button>
+          <div className="flex items-center gap-3">
+            <Link href="/admin/portfolio/categories">
+              <Button
+                variant="outline"
+                className="h-9 rounded-lg border-slate-200 px-4 font-semibold text-slate-700 transition-all hover:bg-slate-50"
+              >
+                Manage Categories
+              </Button>
+            </Link>
+            <Button
+              onClick={handleCreateNew}
+              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Project
+            </Button>
+          </div>
         </div>
 
         <PortfoliosTable

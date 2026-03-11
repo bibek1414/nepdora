@@ -253,33 +253,18 @@ function enhanceSpacingAndLists(
   // Apply list styling enhancements
   if (enableListStyling) {
     enhanced = enhanced
-      // Ensure ordered lists have proper styling
-      .replace(
-        /<ol(?![^>]*style)/g,
-        '<ol style="list-style-type: decimal; padding-left: 1.5rem; margin: 1rem 0;"'
-      )
+      // Ensure ordered lists have proper styling metadata
+      .replace(/<ol(?![^>]*style)/g, '<ol style="list-style-type: decimal;"')
       .replace(
         /<ol([^>]*style="[^"]*?)"/g,
-        '<ol$1; list-style-type: decimal; padding-left: 1.5rem; margin: 1rem 0;"'
+        '<ol$1; list-style-type: decimal;"'
       )
-      // Ensure unordered lists have proper styling
-      .replace(
-        /<ul(?![^>]*style)/g,
-        '<ul style="list-style-type: disc; padding-left: 1.5rem; margin: 1rem 0;"'
-      )
-      .replace(
-        /<ul([^>]*style="[^"]*?)"/g,
-        '<ul$1; list-style-type: disc; padding-left: 1.5rem; margin: 1rem 0;"'
-      )
-      // Ensure list items have proper styling
-      .replace(
-        /<li(?![^>]*style)/g,
-        '<li style="margin: 0.25rem 0; display: list-item;"'
-      )
-      .replace(
-        /<li([^>]*style="[^"]*?)"/g,
-        '<li$1; margin: 0.25rem 0; display: list-item;"'
-      );
+      // Ensure unordered lists have proper styling metadata
+      .replace(/<ul(?![^>]*style)/g, '<ul style="list-style-type: disc;"')
+      .replace(/<ul([^>]*style="[^"]*?)"/g, '<ul$1; list-style-type: disc;"')
+      // Ensure list items have proper styling metadata
+      .replace(/<li(?![^>]*style)/g, '<li style="display: list-item;"')
+      .replace(/<li([^>]*style="[^"]*?)"/g, '<li$1; display: list-item;"');
   }
 
   // Apply spacing preservation enhancements

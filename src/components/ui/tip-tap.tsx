@@ -1122,7 +1122,7 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
         <div className="relative flex-1 overflow-y-auto">
           <EditorContent
             editor={editor}
-            className="h-full p-3 focus-within:outline-none"
+            className="h-full focus-within:outline-none"
           />
           {editor && editor.isEmpty && (
             <div className="pointer-events-none absolute top-3 left-3 text-gray-400">

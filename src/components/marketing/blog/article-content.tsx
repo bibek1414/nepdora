@@ -48,6 +48,7 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ post }) => {
       </div>
 
       <div
+        className="rich-text"
         dangerouslySetInnerHTML={{
           __html: sanitizeHtmlContent(post.content),
         }}

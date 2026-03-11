@@ -95,7 +95,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
             {/* Project Title */}
             <div className="mb-4">
               <h3
-                className="mb-4 text-2xl font-semibold transition-colors duration-300 group-hover:text-blue-400 md:text-3xl lg:text-4xl"
+                className="group-hover: mb-4 text-2xl font-semibold transition-colors duration-300 md:text-3xl lg:text-4xl"
                 style={{ fontFamily: theme.fonts.heading }}
               >
                 {portfolio.title}
@@ -116,7 +116,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
             {portfolio.tags?.length > 0 && (
               <div className="mb-6">
                 <p
-                  className="text-sm font-medium text-blue-400 md:text-base"
+                  className="text-sm font-medium md:text-base"
                   style={{ fontFamily: theme.fonts.body }}
                 >
                   {portfolio.tags.map(tag => tag.name).join(", ")}
@@ -138,7 +138,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
                   className="group/icon transition-transform duration-300 hover:scale-110"
                   title="Live Project"
                 >
-                  <ExternalLink className="h-8 w-8 text-blue-400 transition-colors duration-300 group-hover/icon:text-blue-300" />
+                  <ExternalLink className="h-8 w-8 transition-colors duration-300 group-hover/icon:text-blue-300" />
                 </a>
               )}
               {portfolio.github_url && (
@@ -150,7 +150,7 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
                   className="group/icon transition-transform duration-300 hover:scale-110"
                   title="GitHub Repository"
                 >
-                  <Github className="h-8 w-8 text-blue-400 transition-colors duration-300 group-hover/icon:text-blue-300" />
+                  <Github className="h-8 w-8 transition-colors duration-300 group-hover/icon:text-blue-300" />
                 </a>
               )}
             </div>
@@ -175,8 +175,12 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
               {portfolio.category?.name && (
                 <div className="absolute top-4 left-4">
                   <span
-                    className="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase"
-                    style={{ fontFamily: theme.fonts.body }}
+                    className="rounded-full px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase"
+                    style={{
+                      fontFamily: theme.fonts.body,
+                      background: theme.colors.background,
+                      color: theme.colors.text,
+                    }}
                   >
                     {portfolio.category.name}
                   </span>

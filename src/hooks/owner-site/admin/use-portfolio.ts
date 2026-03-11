@@ -160,3 +160,50 @@ export function useDeletePortfolio() {
     },
   });
 }
+
+export function useUpdatePortfolioCategory() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+      categoryData,
+    }: {
+      id: number;
+      categoryData: CreatePortfolioCategory;
+    }) => portfolioApi.updateCategory(id, categoryData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.categories() });
+    },
+  });
+}
+
+export function useDeletePortfolioCategory() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id }: { id: number }) => portfolioApi.deleteCategory(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.categories() });
+    },
+  });
+}
+
+export function useUpdatePortfolioTag() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, tagData }: { id: number; tagData: CreatePortfolioTag }) =>
+      portfolioApi.updateTag(id, tagData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.tags() });
+    },
+  });
+}
+
+export function useDeletePortfolioTag() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id }: { id: number }) => portfolioApi.deleteTag(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.tags() });
+    },
+  });
+}
