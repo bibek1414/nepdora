@@ -33,6 +33,7 @@ import { DEFAULT_ORDER_CONFIRMATION_MAP } from "./order-confirmation-map";
 import { DEFAULT_LOGIN_MAP, DEFAULT_SIGNUP_MAP } from "./auth-form-map";
 import { DEFAULT_EXPERIENCE_MAP } from "./experience";
 import { DEFAULT_COLLECTIONS_MAP } from "./collections";
+import { DEFAULT_SOCIALS_MAP } from "./socials";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -69,6 +70,7 @@ import { OrderConfirmationComponent } from "@/components/site-owners/builder/ord
 import { CollectionsComponent } from "@/components/site-owners/builder/collections/collections-component";
 import SkillsComponent from "@/components/site-owners/builder/skills/skills-component";
 import { ExperienceComponent } from "@/components/site-owners/builder/experience/experience-component";
+import { SocialsComponent } from "@/components/site-owners/builder/socials/socials-component";
 
 export type ComponentCategory =
   | "basic"
@@ -419,5 +421,14 @@ export const COMPONENT_REGISTRY: {
       DEFAULT_EXPERIENCE_MAP[variant as keyof typeof DEFAULT_EXPERIENCE_MAP] ||
       DEFAULT_EXPERIENCE_MAP["experience-1"],
     component: ExperienceComponent,
+  },
+  socials: {
+    type: "socials",
+    displayName: "Socials",
+    category: "basic",
+    getDefaultData: (variant) =>
+      DEFAULT_SOCIALS_MAP[variant as keyof typeof DEFAULT_SOCIALS_MAP] ||
+      DEFAULT_SOCIALS_MAP["socials-style-1"],
+    component: SocialsComponent,
   },
 }

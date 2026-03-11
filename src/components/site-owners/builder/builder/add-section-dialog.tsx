@@ -25,6 +25,7 @@ import {
   Star,
   Shield,
   Type,
+  Share2,
   Navigation,
   Square,
   Calendar,
@@ -1124,6 +1125,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/videos/videos-1.png",
       },
     ],
+    socials: [
+      {
+        id: "socials-style-1",
+        name: "Socials Style 1",
+        image: "/images/site-owners/socials/socials1.png",
+      },
+    ],
     policies: [
       {
         id: "policies-1",
@@ -1485,6 +1493,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       isSpecialized: true,
       templates: [], // Will be handled dynamically
+      type: "section",
+    },
+    {
+      id: "socials-sections",
+      label: "Socials",
+      icon: Share2,
+      keywords: ["socials", "links", "facebook", "instagram", "twitter"],
+      hasTemplates: true,
+      templates: templates.socials,
       type: "section",
     },
     {

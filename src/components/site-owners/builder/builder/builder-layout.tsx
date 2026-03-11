@@ -1025,6 +1025,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       "collections-sections": "collections",
       "skills-sections": "skills",
       "experience-sections": "experience",
+      "socials-sections": "socials",
     };
 
     const type = sectionToType[sectionId];
