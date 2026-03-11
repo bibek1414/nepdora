@@ -30,6 +30,7 @@ import { DEFAULT_SERVICE_DETAILS_MAP } from "./service-details-map";
 import { DEFAULT_CHECKOUT_MAP } from "./checkout-map";
 import { DEFAULT_ORDER_CONFIRMATION_MAP } from "./order-confirmation-map";
 import { DEFAULT_LOGIN_MAP, DEFAULT_SIGNUP_MAP } from "./auth-form-map";
+import { DEFAULT_COLLECTIONS_MAP } from "./collections";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -63,6 +64,7 @@ import { PortfolioDetailsComponent } from "@/components/site-owners/builder/port
 import { ServiceDetailsComponent } from "@/components/site-owners/builder/services/services-details-component";
 import { CheckoutComponent } from "@/components/site-owners/builder/checkout/checkout-component";
 import { OrderConfirmationComponent } from "@/components/site-owners/builder/order-confirmation/order-confirmation-component";
+import { CollectionsComponent } from "@/components/site-owners/builder/collections/collections-component";
 
 export type ComponentCategory =
   | "basic"
@@ -377,5 +379,23 @@ export const COMPONENT_REGISTRY: {
       return DEFAULT_SIGNUP_MAP[styleKey] || DEFAULT_SIGNUP_MAP["style-1"];
     },
     component: SignupForm,
+  },
+  collections: {
+    type: "collections",
+    displayName: "Collections",
+    category: "dynamic",
+    getDefaultData: variant => {
+      const [style, slug] = (variant || "").split(":");
+      const baseData =
+        DEFAULT_COLLECTIONS_MAP[
+          style as keyof typeof DEFAULT_COLLECTIONS_MAP
+        ] || DEFAULT_COLLECTIONS_MAP["collections-style-1"];
+      return {
+        ...baseData,
+        collectionSlug: slug || "",
+        style: (style as any) || "collections-style-1",
+      };
+    },
+    component: CollectionsComponent,
   },
 };

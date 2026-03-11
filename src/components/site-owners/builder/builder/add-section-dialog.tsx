@@ -31,9 +31,11 @@ import {
   DollarSign,
   Users,
   LogIn,
+  Database,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
+import { useCollections } from "@/hooks/owner-site/admin/use-collections";
 
 interface AddSectionDialogProps {
   open: boolean;
@@ -99,6 +101,9 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     categoryFilter || null
   );
+  const [selectedCollectionSlug, setSelectedCollectionSlug] = useState<string | null>(null);
+
+  const { data: collectionsData } = useCollections();
 
   // Reset selected category and query when the dialog is opened
   React.useEffect(() => {
@@ -1423,6 +1428,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       type: "section",
     },
     {
+      id: "collections-sections",
+      label: "Collections",
+      icon: Database,
+      keywords: ["dynamic", "database", "custom", "data"],
+      hasTemplates: true,
+      templates: [], // Will be handled dynamically
+      type: "section",
+    },
+    {
       id: "banner-sections",
       label: "Banner",
       icon: ImageIcon,
@@ -1736,6 +1750,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     } else if (component?.type === "footer" && onFooterSelect) {
       const footerStyle = getFooterStyle(templateId);
       onFooterSelect(footerStyle);
+    } else if (componentId === "collections-sections") {
+      if (templateId.startsWith("collection:")) {
+        setSelectedCollectionSlug(templateId.replace("collection:", ""));
+        return; // Don't close dialog yet
+      } else {
+        onComponentClick(componentId, templateId);
+      }
     } else {
       onComponentClick(componentId, templateId);
     }
@@ -1776,6 +1797,52 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     const component = filteredComponents.find(
       comp => comp.id === selectedCategory
     );
+
+    if (selectedCategory === "collections-sections") {
+      if (!selectedCollectionSlug) {
+        // Return collections as "templates"
+        return (collectionsData || []).map(col => ({
+          component: component!,
+          template: {
+            id: `collection:${col.slug}`,
+            name: col.name,
+            image: "/images/site-owners/placeholders/collection.png", // Fallback image
+            description: `Collection with ${col.all_fields.length} fields`,
+            componentId: "collections-sections",
+          },
+        }));
+      } else {
+        // Return styles for the selected collection
+        return [
+          {
+            id: "collections-style-1",
+            name: "Style 1 (Grid)",
+            image: "/images/site-owners/collections/style1.png",
+            description: "List of items in grid format",
+          },
+          {
+            id: "collections-style-2",
+            name: "Style 2 (List)",
+            image: "/images/site-owners/collections/style2.png",
+            description: "Detailed list of items",
+          },
+          {
+            id: "collections-style-3",
+            name: "Style 3 (Card)",
+            image: "/images/site-owners/collections/style3.png",
+            description: "Visual cards with overlays",
+          },
+        ].map(style => ({
+          component: component!,
+          template: {
+            ...style,
+            id: `${style.id}:${selectedCollectionSlug}`,
+            componentId: "collections-sections",
+          },
+        }));
+      }
+    }
+
     if (component?.templates) {
       return component.templates
         .filter(
@@ -1995,7 +2062,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
               ) : (
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => setSelectedCategory(null)}
+                    onClick={() => {
+                      if (selectedCollectionSlug) {
+                        setSelectedCollectionSlug(null);
+                      } else {
+                        setSelectedCategory(null);
+                      }
+                    }}
                     className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
                   >
                     <ChevronRight className="h-4 w-4 rotate-180" />
