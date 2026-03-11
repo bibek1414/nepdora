@@ -21,4 +21,10 @@ export const DEFAULT_SKILLS_MAP: Record<string, SkillsData> = {
     resume_text: "Browse resume",
     style: "skills-style-1",
   },
+  "skills-style-2": {
+    title: "Skills",
+    resume_link: "#",
+    resume_text: "Browse resume",
+    style: "skills-style-2",
+  },
 };

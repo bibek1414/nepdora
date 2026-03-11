@@ -161,6 +161,14 @@ export interface OthersTemplate9Data {
   backgroundImageUrl?: string;
 }
 
+export interface OthersTemplate10Data {
+  template: "others-10";
+  title: string;
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
+}
+
 // Union type for all others templates
 export type OthersData =
   | OthersTemplate1Data
@@ -171,7 +179,8 @@ export type OthersData =
   | OthersTemplate6Data
   | OthersTemplate7Data
   | OthersTemplate8Data
-  | OthersTemplate9Data;
+  | OthersTemplate9Data
+  | OthersTemplate10Data;
 
 // Component and API interfaces
 export interface OthersComponentData {
@@ -504,6 +513,13 @@ export const defaultOthersTemplate9Data: OthersTemplate9Data = {
   backgroundColor: "#FFFFFF",
 };
 
+export const defaultOthersTemplate10Data: OthersTemplate10Data = {
+  template: "others-10",
+  title: "Experience",
+  backgroundType: "color",
+  backgroundColor: "#FFFFFF",
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -515,6 +531,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-7": defaultOthersTemplate7Data,
   "others-8": defaultOthersTemplate8Data,
   "others-9": defaultOthersTemplate9Data,
+  "others-10": defaultOthersTemplate10Data,
 };
 
 // Type guards
@@ -553,3 +570,7 @@ export const isOthersTemplate8 = (
 export const isOthersTemplate9 = (
   data: OthersData
 ): data is OthersTemplate9Data => data.template === "others-9";
+
+export const isOthersTemplate10 = (
+  data: OthersData
+): data is OthersTemplate10Data => data.template === "others-10";

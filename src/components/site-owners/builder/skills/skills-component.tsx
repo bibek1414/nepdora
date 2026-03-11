@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SkillsComponentData } from "@/types/owner-site/components/skills";
 import SkillsStyle1 from "./skills-style/skills-style-1";
+import SkillsStyle2 from "./skills-style/skills-style-2";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -84,8 +85,10 @@ const SkillsComponent: React.FC<SkillsComponentProps> = ({
 
     switch (style) {
       case "skills-style-1":
-      default:
         return <SkillsStyle1 {...commonProps} />;
+      case "skills-style-2":
+        return <SkillsStyle2 {...commonProps} />;
+      default:
     }
   };
 
