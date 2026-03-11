@@ -28,7 +28,10 @@ interface CollectionsComponentProps {
   isEditable?: boolean;
   siteUser?: string;
   pageSlug?: string;
-  onUpdate?: (componentId: string, newData: ComponentResponse<"collections">) => void;
+  onUpdate?: (
+    componentId: string,
+    newData: ComponentResponse<"collections">
+  ) => void;
   onReplace?: (componentId: string) => void;
 }
 
@@ -51,9 +54,7 @@ export const CollectionsComponent: React.FC<CollectionsComponentProps> = ({
     "collections"
   );
 
-  const handleUpdate = (
-    updatedData: Partial<CollectionsData>
-  ) => {
+  const handleUpdate = (updatedData: Partial<CollectionsData>) => {
     if (!pageSlug) return;
     const componentId = component.component_id;
 
@@ -105,7 +106,11 @@ export const CollectionsComponent: React.FC<CollectionsComponentProps> = ({
     <div className="group relative">
       {isEditable && (
         <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-          <Link href={`/admin/collections/${component.data.collectionSlug}/data`} target="_blank" rel="noopener">
+          <Link
+            href={`/admin/collections/${component.data.collectionSlug}`}
+            target="_blank"
+            rel="noopener"
+          >
             <Button
               size="sm"
               variant="outline"
@@ -142,10 +147,12 @@ export const CollectionsComponent: React.FC<CollectionsComponentProps> = ({
             </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete Collections Component</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Delete Collections Component
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this collections component? This
-                  action cannot be undone.
+                  Are you sure you want to delete this collections component?
+                  This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

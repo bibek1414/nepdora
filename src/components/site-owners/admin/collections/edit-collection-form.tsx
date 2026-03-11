@@ -356,14 +356,16 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
                   >
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium">Field {index + 1}</h4>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeField(index)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {field.name !== "name" && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeField(index)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -375,8 +377,14 @@ export function EditCollectionForm({ slug }: EditCollectionFormProps) {
                           onChange={e =>
                             updateField(index, { name: e.target.value })
                           }
+                          disabled={field.name === "name"}
                           required
                         />
+                        {field.name === "name" && (
+                          <p className="text-muted-foreground text-[10px]">
+                            This is a core field and cannot be renamed or deleted.
+                          </p>
+                        )}
                         {field.type === "json" && (
                           <div className="rounded-md border border-blue-200 bg-blue-50 p-2">
                             <p className="text-muted-foreground text-xs">
