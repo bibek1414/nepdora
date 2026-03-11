@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { OurClients5 } from "./our-clients-5";
+import { OurClients5 } from "../our-clients-card/our-clients-5";
 import { EditableText } from "@/components/ui/editable-text";
 import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
 

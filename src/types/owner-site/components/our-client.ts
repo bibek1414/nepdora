@@ -6,7 +6,8 @@ export interface OurClientsData {
     | "our-clients-2"
     | "our-clients-3"
     | "our-clients-4"
-    | "our-clients-5";
+    | "our-clients-5"
+    | "our-clients-6";
   title: string;
   subtitle?: string;
   description?: string;
@@ -75,6 +76,16 @@ export const defaultOurClientsData5: OurClientsData = {
   limit: 6,
 };
 
+export const defaultOurClientsData6: OurClientsData = {
+  component_type: "our_clients",
+  style: "our-clients-6",
+  title: "Some of the brands we work with",
+  subtitle: "",
+  description: "",
+  show_all: true,
+  limit: 8,
+};
+
 export const DEFAULT_OUR_CLIENTS_MAP: Record<
   OurClientsData["style"],
   OurClientsData
@@ -84,4 +95,5 @@ export const DEFAULT_OUR_CLIENTS_MAP: Record<
   "our-clients-3": defaultOurClientsData3,
   "our-clients-4": defaultOurClientsData4,
   "our-clients-5": defaultOurClientsData5,
+  "our-clients-6": defaultOurClientsData6,
 };

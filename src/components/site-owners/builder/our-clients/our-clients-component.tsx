@@ -18,11 +18,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { OurClientsStyle1 } from "./our-clients-style-1";
-import { OurClientsStyle2 } from "./our-clients-style-2";
-import { OurClientsStyle3 } from "./our-clients-style-3";
-import { OurClientsStyle4 } from "./our-clients-style-4";
-import { OurClientsStyle5 } from "./our-clients-style-5";
+import { OurClientsStyle1 } from "./our-clients-style/our-clients-style-1";
+import { OurClientsStyle2 } from "./our-clients-style/our-clients-style-2";
+import { OurClientsStyle3 } from "./our-clients-style/our-clients-style-3";
+import { OurClientsStyle4 } from "./our-clients-style/our-clients-style-4";
+import { OurClientsStyle5 } from "./our-clients-style/our-clients-style-5";
+import { OurClientsStyle6 } from "./our-clients-style/our-clients-style-6";
 
 interface OurClientsComponentProps {
   component: OurClientsComponentData;
@@ -91,6 +92,8 @@ export const OurClientsComponent: React.FC<OurClientsComponentProps> = ({
     };
 
     switch (style) {
+      case "our-clients-6":
+        return <OurClientsStyle6 {...commonProps} />;
       case "our-clients-5":
         return <OurClientsStyle5 {...commonProps} />;
       case "our-clients-4":

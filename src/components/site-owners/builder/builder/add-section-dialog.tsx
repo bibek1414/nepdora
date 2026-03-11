@@ -284,6 +284,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Our Clients Style 5",
         image: "/images/site-owners/our-clients/ourclients5.png",
       },
+      {
+        id: "our-clients-6",
+        name: "Our Clients Style 6",
+        image: "/images/site-owners/our-clients/ourclients6.png",
+      },
     ],
 
     cta: [
@@ -671,6 +676,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "services-6",
         name: "Services Style 6",
         image: "/images/site-owners/services/services-6.png",
+      },
+      {
+        id: "services-7",
+        name: "Services Style 7",
+        image: "/images/site-owners/services/services-7.png",
       },
     ],
     contact: [

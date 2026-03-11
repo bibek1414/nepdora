@@ -7,7 +7,8 @@ export interface ServicesData {
     | "services-3"
     | "services-4"
     | "services-5"
-    | "services-6";
+    | "services-6"
+    | "services-7";
   title: string;
   subtitle?: string;
   order?: number;
@@ -42,4 +43,5 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
     "services-4": { ...defaultServicesData, style: "services-4" },
     "services-5": { ...defaultServicesData, style: "services-5" },
     "services-6": { ...defaultServicesData, style: "services-6" },
+    "services-7": { ...defaultServicesData, style: "services-7" },
   };

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { OurClients4 } from "./our-clients-4";
+import { OurClients4 } from "../our-clients-card/our-clients-4";
 import { OurClientsComponentData } from "@/types/owner-site/components/our-client";
 
 interface OurClientsStyleProps {
