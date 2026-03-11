@@ -12,7 +12,6 @@ interface SocialsStyle1Props {
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<SocialsData>) => void;
   siteUser?: string;
-  
 }
 
 export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
@@ -25,21 +24,36 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
 
   const socials = [
     { platform: "facebook", href: siteConfig?.facebook_url, label: "Facebook" },
-    { platform: "instagram", href: siteConfig?.instagram_url, label: "Instagram" },
+    {
+      platform: "instagram",
+      href: siteConfig?.instagram_url,
+      label: "Instagram",
+    },
     { platform: "twitter", href: siteConfig?.twitter_url, label: "Twitter" },
     { platform: "linkedin", href: siteConfig?.linkedin_url, label: "LinkedIn" },
     { platform: "youtube", href: siteConfig?.youtube_url, label: "YouTube" },
     { platform: "tiktok", href: siteConfig?.tiktok_url, label: "TikTok" },
-    { platform: "mail", href: siteConfig?.email ? `mailto:${siteConfig.email}` : null, label: "Email" },
-  ].filter((s) => s.href);
+    {
+      platform: "mail",
+      href: siteConfig?.email ? `mailto:${siteConfig.email}` : null,
+      label: "Email",
+    },
+  ].filter(s => s.href);
 
   // If no socials found in site config, show some defaults for preview/builder
-  const displaySocials = socials.length > 0 ? socials : [
-    { platform: "github", href: "#", label: "GitHub" },
-    { platform: "linkedin", href: "#", label: "LinkedIn" },
-    { platform: "twitter", href: "#", label: "Twitter" },
-    { platform: "mail", href: "mailto:hello@example.com", label: "Email" },
-  ];
+  const displaySocials =
+    socials.length > 0
+      ? socials
+      : [
+          { platform: "github", href: "#", label: "GitHub" },
+          { platform: "linkedin", href: "#", label: "LinkedIn" },
+          { platform: "twitter", href: "#", label: "Twitter" },
+          {
+            platform: "mail",
+            href: "mailto:hello@example.com",
+            label: "Email",
+          },
+        ];
 
   const handleUpdate = (field: keyof SocialsData, value: string) => {
     if (!isEditable) return;
@@ -47,13 +61,14 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
   };
 
   return (
-    <section 
-      className="py-16 md:py-24 bg-secondary/10 dark:bg-secondary/5"
+    <section
+      className="bg-secondary/10 dark:bg-secondary/5 py-16 md:py-24"
       style={{
-        backgroundColor: data.backgroundType === "color" ? data.backgroundColor : undefined,
+        backgroundColor:
+          data.backgroundType === "color" ? data.backgroundColor : undefined,
       }}
     >
-      <div className="container mx-auto px-4 max-w-4xl text-center">
+      <div className="container mx-auto max-w-4xl px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -62,18 +77,18 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
         >
           <EditableText
             as="p"
-            className="font-mono text-primary text-sm tracking-widest uppercase mb-4"
+            className="text-primary mb-4 font-mono text-sm tracking-widest uppercase"
             value={data.title || ""}
-            onChange={(val) => handleUpdate("title", val)}
+            onChange={val => handleUpdate("title", val)}
             isEditable={isEditable}
             placeholder="GET IN TOUCH"
           />
 
           <EditableText
             as="h2"
-            className="text-3xl md:text-4xl font-bold tracking-tight mb-6"
+            className="mb-6 text-3xl font-bold tracking-tight md:text-4xl"
             value={data.subtitle || ""}
-            onChange={(val) => handleUpdate("subtitle", val)}
+            onChange={val => handleUpdate("subtitle", val)}
             isEditable={isEditable}
             placeholder="Let's build something together"
             multiline
@@ -81,9 +96,9 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
 
           <EditableText
             as="p"
-            className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed"
+            className="text-muted-foreground mx-auto mb-10 max-w-xl text-lg leading-relaxed"
             value={data.description || ""}
-            onChange={(val) => handleUpdate("description", val)}
+            onChange={val => handleUpdate("description", val)}
             isEditable={isEditable}
             placeholder="I'm always open to discussing new projects, creative ideas, or opportunities..."
             multiline
@@ -104,16 +119,16 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                onClick={(e) => {
+                onClick={e => {
                   if (isEditable) {
                     e.preventDefault();
                   }
                 }}
-                className="flex items-center justify-center w-14 h-14 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-300"
+                className="hover:border-primary/50 dark:hover:border-primary/50 flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
               >
-                <SocialIcon 
-                  platform={s.platform} 
-                  className="w-6 h-6 text-zinc-600 dark:text-zinc-400 transition-colors" 
+                <SocialIcon
+                  platform={s.platform}
+                  className="h-6 w-6 text-zinc-600 transition-colors dark:text-zinc-400"
                 />
               </a>
             </motion.div>

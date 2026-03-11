@@ -21,10 +21,10 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
   const { data: skills = [], isLoading } = useSkills();
 
   return (
-    <section className="py-20 px-6 md:px-8 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+    <section className="bg-white px-6 py-20 md:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-center">
+          <h2 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
             <EditableText
               value={data.title}
               onChange={title => onUpdate({ title })}
@@ -32,7 +32,7 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
               as="span"
             />
           </h2>
-          <div className="flex items-center gap-1 group cursor-pointer text-lg font-medium text-slate-800 hover:text-[#003d79] transition-colors">
+          <div className="group flex cursor-pointer items-center gap-1 text-lg font-medium text-slate-800 transition-colors hover:text-[#003d79]">
             <EditableLink
               href={data.resume_link}
               text={data.resume_text}
@@ -46,25 +46,25 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+          <div className="grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
             {[1, 2, 3, 4].map(i => (
               <div key={i} className="animate-pulse">
-                <div className="h-8 bg-slate-100 rounded w-1/2 mb-4"></div>
-                <div className="h-4 bg-slate-100 rounded w-full mb-2"></div>
-                <div className="h-4 bg-slate-100 rounded w-3/4"></div>
+                <div className="mb-4 h-8 w-1/2 rounded bg-slate-100"></div>
+                <div className="mb-2 h-4 w-full rounded bg-slate-100"></div>
+                <div className="h-4 w-3/4 rounded bg-slate-100"></div>
                 <div className="mt-8 border-t border-slate-100"></div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+          <div className="grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2">
             {skills.length > 0 ? (
               skills.map(skill => (
                 <div key={skill.id} className="flex flex-col">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                  <h3 className="mb-4 text-2xl font-bold text-slate-900">
                     {skill.name}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed text-lg">
+                  <p className="text-lg leading-relaxed text-slate-600">
                     {skill.description}
                   </p>
                   <div className="mt-8 border-t border-slate-100"></div>

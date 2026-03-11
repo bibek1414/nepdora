@@ -17,32 +17,33 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
 }) => {
   const { data, handleTextUpdate } = useBuilderLogic(aboutUsData, onUpdate);
 
-  const handleStatUpdate = (id: string, field: "label" | "value") => (newValue: string) => {
-    const updatedStats = data.stats.map(stat => 
-      stat.id === id ? { ...stat, [field]: newValue } : stat
-    );
-    onUpdate?.({ stats: updatedStats });
-  };
+  const handleStatUpdate =
+    (id: string, field: "label" | "value") => (newValue: string) => {
+      const updatedStats = data.stats.map(stat =>
+        stat.id === id ? { ...stat, [field]: newValue } : stat
+      );
+      onUpdate?.({ stats: updatedStats });
+    };
 
   return (
-    <section className="section-padding bg-white text-black h-150 py-20">
-      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+    <section className="section-padding bg-white py-32 text-black">
+      <div className="mx-auto grid max-w-5xl items-center gap-16 md:grid-cols-2">
         <div>
           <EditableText
             value={data.eyebrow}
             onChange={handleTextUpdate("eyebrow")}
             as="p"
-            className="font-mono text-sm tracking-widest uppercase mb-4 opacity-70"
+            className="mb-4 font-mono text-sm tracking-widest uppercase opacity-70"
             isEditable={isEditable}
           />
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="text-3xl md:text-4xl font-bold tracking-tight mb-6"
+            className="mb-6 text-3xl font-bold tracking-tight md:text-4xl"
             isEditable={isEditable}
           />
-          <div className="space-y-4 opacity-80 leading-relaxed">
+          <div className="space-y-4 leading-relaxed opacity-80">
             <EditableText
               value={data.description1}
               onChange={handleTextUpdate("description1")}
@@ -67,9 +68,12 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
           </div>
         </div>
 
-        <div className="border border-black p-8 space-y-6">
-          {data.stats.map((stat) => (
-            <div key={stat.id} className="flex items-center justify-between border-b border-black/10 pb-4 last:border-0 last:pb-0">
+        <div className="space-y-6 border border-black p-8">
+          {data.stats.map(stat => (
+            <div
+              key={stat.id}
+              className="flex items-center justify-between border-b border-black/10 pb-4 last:border-0 last:pb-0"
+            >
               <EditableText
                 value={stat.label}
                 onChange={handleStatUpdate(stat.id, "label")}
@@ -81,7 +85,7 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
                 value={stat.value}
                 onChange={handleStatUpdate(stat.id, "value")}
                 as="span"
-                className="text-2xl font-bold font-mono"
+                className="font-mono text-2xl font-bold"
                 isEditable={isEditable}
               />
             </div>

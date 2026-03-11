@@ -52,8 +52,14 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
   onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteExperienceMutation = useDeleteComponentMutation(pageSlug, "experience");
-  const updateExperienceMutation = useUpdateComponentMutation(pageSlug, "experience");
+  const deleteExperienceMutation = useDeleteComponentMutation(
+    pageSlug,
+    "experience"
+  );
+  const updateExperienceMutation = useUpdateComponentMutation(
+    pageSlug,
+    "experience"
+  );
 
   const handleUpdate = (updatedData: Partial<ExperienceData>) => {
     const componentId = component.component_id || component.id.toString();
@@ -95,11 +101,15 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
     };
 
     if (isExperienceTemplate1(component.data)) {
-      return <ExperienceStyle1 experienceData={component.data} {...commonProps} />;
+      return (
+        <ExperienceStyle1 experienceData={component.data} {...commonProps} />
+      );
     }
 
     if (isExperienceTemplate2(component.data)) {
-      return <ExperienceStyle2 experienceData={component.data} {...commonProps} />;
+      return (
+        <ExperienceStyle2 experienceData={component.data} {...commonProps} />
+      );
     }
 
     // Fallback for unknown templates
@@ -164,7 +174,9 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deleteExperienceMutation.isPending}
                 >
-                  {deleteExperienceMutation.isPending ? "Deleting..." : "Delete"}
+                  {deleteExperienceMutation.isPending
+                    ? "Deleting..."
+                    : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

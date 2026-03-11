@@ -26,7 +26,7 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
           <div className="md:col-span-4 lg:col-span-3">
             <EditableText
               value={data.title}
-              onChange={(title) => onUpdate({ title })}
+              onChange={title => onUpdate({ title })}
               isEditable={isEditable}
               as="h2"
               className="text-5xl font-bold tracking-tight md:text-6xl"
@@ -37,8 +37,11 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
           <div className="space-y-12 md:col-span-8 lg:col-span-9">
             {isLoading ? (
               <div className="flex w-full flex-col gap-12">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="w-full animate-pulse border-b pb-12 last:border-0">
+                {[1, 2, 3].map(i => (
+                  <div
+                    key={i}
+                    className="w-full animate-pulse border-b pb-12 last:border-0"
+                  >
                     <div className="mb-6 h-10 w-1/3 rounded bg-slate-100"></div>
                     <div className="mb-3 h-5 w-full rounded bg-slate-100"></div>
                     <div className="h-5 w-4/5 rounded bg-slate-100"></div>
@@ -46,7 +49,7 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
                 ))}
               </div>
             ) : skills.length > 0 ? (
-              skills.map((skill) => (
+              skills.map(skill => (
                 <div
                   key={skill.id}
                   className="space-y-6 border-b border-gray-100 pb-12 last:border-0"

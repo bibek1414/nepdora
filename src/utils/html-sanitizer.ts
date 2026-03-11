@@ -106,7 +106,13 @@ const buildAllowedAttributes = (
   attributes["td"] = [...commonAttrs, "colspan", "rowspan", "style"];
   attributes["th"] = [...commonAttrs, "colspan", "rowspan", "scope", "style"];
   attributes["tr"] = [...commonAttrs, "style"];
-  attributes["table"] = [...commonAttrs, "border", "cellspacing", "cellpadding", "style"];
+  attributes["table"] = [
+    ...commonAttrs,
+    "border",
+    "cellspacing",
+    "cellpadding",
+    "style",
+  ];
   attributes["ol"] = [...commonAttrs, "start", "type", "reversed"];
   attributes["time"] = [...commonAttrs, "datetime"];
 
@@ -257,10 +263,7 @@ function enhanceSpacingAndLists(
     enhanced = enhanced
       // Ensure ordered lists have proper styling metadata
       .replace(/<ol(?![^>]*style)/g, '<ol style="list-style-type: decimal;"')
-      .replace(
-        /<ol([^>]*style="[^"]*?)"/g,
-        '<ol$1; list-style-type: decimal;"'
-      )
+      .replace(/<ol([^>]*style="[^"]*?)"/g, '<ol$1; list-style-type: decimal;"')
       // Ensure unordered lists have proper styling metadata
       .replace(/<ul(?![^>]*style)/g, '<ul style="list-style-type: disc;"')
       .replace(/<ul([^>]*style="[^"]*?)"/g, '<ul$1; list-style-type: disc;"')

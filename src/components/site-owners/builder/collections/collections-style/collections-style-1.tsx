@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
 import { CollectionsData } from "@/types/owner-site/components/collections";
-import { useCollectionData, useCollection } from "@/hooks/owner-site/admin/use-collections";
+import {
+  useCollectionData,
+  useCollection,
+} from "@/hooks/owner-site/admin/use-collections";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,32 +36,40 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
   const getField = (itemData: any, type: string) => {
     const fieldDef = collectionDef?.all_fields.find(f => f.type === type);
     if (fieldDef) return itemData[fieldDef.name];
-    
+
     // Fallback search
     const entries = Object.entries(itemData);
     if (type === "image") {
-       return entries.find(([key, val]) => typeof val === "string" && (val.startsWith("http") || val.includes("cloudinary"))) ?.[1];
+      return entries.find(
+        ([key, val]) =>
+          typeof val === "string" &&
+          (val.startsWith("http") || val.includes("cloudinary"))
+      )?.[1];
     }
     return null;
   };
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="bg-gray-50 py-16">
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
-          <h2 
+          <h2
             className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
             contentEditable={isEditable}
-            onBlur={(e) => onUpdate?.({ title: e.currentTarget.textContent || "" })}
+            onBlur={e =>
+              onUpdate?.({ title: e.currentTarget.textContent || "" })
+            }
             suppressContentEditableWarning
           >
             {data.title}
           </h2>
           {data.subtitle && (
-            <p 
+            <p
               className="mt-4 text-lg text-gray-600"
               contentEditable={isEditable}
-              onBlur={(e) => onUpdate?.({ subtitle: e.currentTarget.textContent || "" })}
+              onBlur={e =>
+                onUpdate?.({ subtitle: e.currentTarget.textContent || "" })
+              }
               suppressContentEditableWarning
             >
               {data.subtitle}
@@ -76,10 +87,16 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item: any) => {
               const image = getField(item.data, "image");
-              const name = item.data.name || item.data.title || Object.values(item.data)[0];
-              
+              const name =
+                item.data.name ||
+                item.data.title ||
+                Object.values(item.data)[0];
+
               return (
-                <Card key={item.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <Card
+                  key={item.id}
+                  className="overflow-hidden shadow-sm transition-shadow hover:shadow-md"
+                >
                   {image && (
                     <div className="relative h-48 w-full">
                       <Image
@@ -91,19 +108,32 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
                     </div>
                   )}
                   <CardHeader>
-                    <CardTitle className="text-xl line-clamp-1">{String(name)}</CardTitle>
+                    <CardTitle className="line-clamp-1 text-xl">
+                      {String(name)}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      {Object.entries(item.data).slice(0, 3).map(([key, val]) => {
-                         if (typeof val === "string" && val.length > 50) return null;
-                         if (key.toLowerCase().includes("image") || key.toLowerCase().includes("slug")) return null;
-                         return (
-                           <Badge key={key} variant="secondary" className="text-xs">
-                             {key}: {String(val)}
-                           </Badge>
-                         );
-                      })}
+                      {Object.entries(item.data)
+                        .slice(0, 3)
+                        .map(([key, val]) => {
+                          if (typeof val === "string" && val.length > 50)
+                            return null;
+                          if (
+                            key.toLowerCase().includes("image") ||
+                            key.toLowerCase().includes("slug")
+                          )
+                            return null;
+                          return (
+                            <Badge
+                              key={key}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {key}: {String(val)}
+                            </Badge>
+                          );
+                        })}
                     </div>
                   </CardContent>
                 </Card>
@@ -111,7 +141,7 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
             })}
           </div>
         ) : (
-          <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+          <div className="rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center">
             <p className="text-gray-500">No items found in this collection.</p>
           </div>
         )}

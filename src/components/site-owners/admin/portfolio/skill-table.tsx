@@ -84,7 +84,7 @@ const SkillTable: React.FC<SkillTableProps> = ({
                 </span>
               </TableCell>
               <TableCell className="px-6 py-4">
-                <span className="text-xs text-black/50 line-clamp-1">
+                <span className="line-clamp-1 text-xs text-black/50">
                   {skill.description}
                 </span>
               </TableCell>

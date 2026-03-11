@@ -408,7 +408,7 @@ export const COMPONENT_REGISTRY: {
     type: "skills",
     displayName: "Skills",
     category: "dynamic",
-    getDefaultData: (variant) =>
+    getDefaultData: variant =>
       DEFAULT_SKILLS_MAP[variant as keyof typeof DEFAULT_SKILLS_MAP] ||
       DEFAULT_SKILLS_MAP["skills-style-1"],
     component: SkillsComponent,
@@ -417,7 +417,7 @@ export const COMPONENT_REGISTRY: {
     type: "experience",
     displayName: "Experience",
     category: "dynamic",
-    getDefaultData: (variant) =>
+    getDefaultData: variant =>
       DEFAULT_EXPERIENCE_MAP[variant as keyof typeof DEFAULT_EXPERIENCE_MAP] ||
       DEFAULT_EXPERIENCE_MAP["experience-1"],
     component: ExperienceComponent,
@@ -426,9 +426,9 @@ export const COMPONENT_REGISTRY: {
     type: "socials",
     displayName: "Socials",
     category: "basic",
-    getDefaultData: (variant) =>
+    getDefaultData: variant =>
       DEFAULT_SOCIALS_MAP[variant as keyof typeof DEFAULT_SOCIALS_MAP] ||
       DEFAULT_SOCIALS_MAP["socials-style-1"],
     component: SocialsComponent,
   },
-}
+};

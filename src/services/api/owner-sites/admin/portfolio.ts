@@ -196,15 +196,18 @@ export const portfolioApi = {
     categoryData: CreatePortfolioCategory
   ): Promise<PortfolioCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/category/${id}/`, {
-      method: "PATCH",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-      body: JSON.stringify(categoryData),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/portfolio/category/${id}/`,
+      {
+        method: "PATCH",
+        headers: {
+          ...createHeaders(),
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(categoryData),
+      }
+    );
 
     await handleApiError(response);
     return response.json();
@@ -212,12 +215,15 @@ export const portfolioApi = {
 
   deleteCategory: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/category/${id}/`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/portfolio/category/${id}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      }
+    );
 
     await handleApiError(response);
   },

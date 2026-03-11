@@ -190,8 +190,13 @@ export function useDeletePortfolioCategory() {
 export function useUpdatePortfolioTag() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, tagData }: { id: number; tagData: CreatePortfolioTag }) =>
-      portfolioApi.updateTag(id, tagData),
+    mutationFn: ({
+      id,
+      tagData,
+    }: {
+      id: number;
+      tagData: CreatePortfolioTag;
+    }) => portfolioApi.updateTag(id, tagData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: portfolioKeys.tags() });
     },

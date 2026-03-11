@@ -397,7 +397,8 @@ export function CreateCollectionDialog({
                             />
                             {field.name === "name" && (
                               <p className="text-muted-foreground text-[10px]">
-                                This is a core field and cannot be renamed or deleted.
+                                This is a core field and cannot be renamed or
+                                deleted.
                               </p>
                             )}
                             {field.type === "json" && (

@@ -156,7 +156,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                   size="icon"
                   onClick={goToNextProject}
                   disabled={isAnimating}
-                  className="h-12 w-12 rounded-full border-2 te"
+                  className="te h-12 w-12 rounded-full border-2"
                 >
                   <ChevronRight className="h-6 w-6" />
                 </Button>

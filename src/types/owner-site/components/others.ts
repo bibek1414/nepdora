@@ -161,7 +161,6 @@ export interface OthersTemplate9Data {
   backgroundImageUrl?: string;
 }
 
-
 // Union type for all others templates
 export type OthersData =
   | OthersTemplate1Data
@@ -505,7 +504,6 @@ export const defaultOthersTemplate9Data: OthersTemplate9Data = {
   backgroundColor: "#FFFFFF",
 };
 
-
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -555,4 +553,3 @@ export const isOthersTemplate8 = (
 export const isOthersTemplate9 = (
   data: OthersData
 ): data is OthersTemplate9Data => data.template === "others-9";
-

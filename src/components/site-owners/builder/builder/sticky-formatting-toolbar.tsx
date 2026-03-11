@@ -585,7 +585,7 @@ export const StickyFormattingToolbar: React.FC = () => {
               <div className="absolute top-full left-0 z-50 mt-1 max-h-60 w-32 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
                 <div className="flex items-center gap-2 border-b border-gray-100 px-4 py-2">
                   <ArrowUpDown className="h-3 w-3 text-gray-400" />
-                  <span className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider">
+                  <span className="text-[10px] font-semibold tracking-wider text-gray-400 uppercase">
                     Line Height
                   </span>
                 </div>

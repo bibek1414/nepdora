@@ -19,7 +19,16 @@ export const DEFAULT_COLLECTIONS_MAP: Record<
   CollectionsData["style"],
   CollectionsData
 > = {
-  "collections-style-1": { ...defaultCollectionsData, style: "collections-style-1" },
-  "collections-style-2": { ...defaultCollectionsData, style: "collections-style-2" },
-  "collections-style-3": { ...defaultCollectionsData, style: "collections-style-3" },
+  "collections-style-1": {
+    ...defaultCollectionsData,
+    style: "collections-style-1",
+  },
+  "collections-style-2": {
+    ...defaultCollectionsData,
+    style: "collections-style-2",
+  },
+  "collections-style-3": {
+    ...defaultCollectionsData,
+    style: "collections-style-3",
+  },
 };
