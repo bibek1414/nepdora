@@ -12,6 +12,10 @@ import Image from "@tiptap/extension-image";
 import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -454,6 +458,15 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
             class: "max-w-full h-auto rounded-lg",
           },
         }),
+        Table.configure({
+          resizable: true,
+          HTMLAttributes: {
+            class: "rich-text-table",
+          },
+        }),
+        TableRow,
+        TableHeader,
+        TableCell,
       ],
       []
     );

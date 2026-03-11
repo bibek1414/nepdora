@@ -311,6 +311,65 @@ body {
   margin: 2rem 0;
 }
 
+/* Table Styling */
+.rich-text table,
+.tiptap.ProseMirror table {
+  width: 100% !important;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.rich-text th,
+.tiptap.ProseMirror th {
+  background-color: #1a56a0 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 15px;
+  border: 1px solid #164a8a;
+}
+
+.rich-text td,
+.tiptap.ProseMirror td {
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.rich-text tr:nth-child(even),
+.tiptap.ProseMirror tr:nth-child(even) {
+  background-color: #f5f7fa;
+}
+
+.rich-text tr:hover,
+.tiptap.ProseMirror tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* TipTap specific table handles */
+.tiptap.ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: var(--primary);
+  pointer-events: none;
+}
+
+.tiptap.ProseMirror .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(var(--primary-rgb), 0.1);
+  pointer-events: none;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

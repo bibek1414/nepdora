@@ -122,6 +122,14 @@ const PortfoliosManagement = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link href="/admin/portfolio/skills">
+              <Button
+                variant="outline"
+                className="h-9 rounded-lg border-slate-200 px-4 font-semibold text-slate-700 transition-all hover:bg-slate-50"
+              >
+                Manage Skills
+              </Button>
+            </Link>
             <Link href="/admin/portfolio/categories">
               <Button
                 variant="outline"

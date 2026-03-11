@@ -103,8 +103,10 @@ const buildAllowedAttributes = (
     "height",
     "loading",
   ];
-  attributes["td"] = [...commonAttrs, "colspan", "rowspan"];
-  attributes["th"] = [...commonAttrs, "colspan", "rowspan", "scope"];
+  attributes["td"] = [...commonAttrs, "colspan", "rowspan", "style"];
+  attributes["th"] = [...commonAttrs, "colspan", "rowspan", "scope", "style"];
+  attributes["tr"] = [...commonAttrs, "style"];
+  attributes["table"] = [...commonAttrs, "border", "cellspacing", "cellpadding", "style"];
   attributes["ol"] = [...commonAttrs, "start", "type", "reversed"];
   attributes["time"] = [...commonAttrs, "datetime"];
 
@@ -145,8 +147,8 @@ const DEFAULT_ALLOWED_STYLES: Record<string, Record<string, RegExp[]>> = {
     "font-weight": [/^(bold|normal|\d+)$/],
     "font-style": [/^(italic|normal)$/],
     "text-decoration": [/^(underline|line-through|none)$/],
-    color: [/^#[0-9a-f]{3,6}$/i],
-    "background-color": [/^#[0-9a-f]{3,6}$/i],
+    color: [/^#[0-9a-f]{3,6}$/i, /^rgba?\(.*\)$/i, /^white$/i, /^black$/i],
+    "background-color": [/^#[0-9a-f]{3,6}$/i, /^rgba?\(.*\)$/i],
     margin: [/^[\d\s.%px-]+$/],
     padding: [/^[\d\s.%px-]+$/],
     "list-style-type": [

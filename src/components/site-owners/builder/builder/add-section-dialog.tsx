@@ -1083,6 +1083,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/newsletter/newsletter4.png",
       },
     ],
+    skills: [
+      {
+        id: "skills-style-1",
+        name: "Skills Style 1",
+        image: "/images/site-owners/skills/skills-1.png",
+      },
+    ],
     videos: [
       {
         id: "videos-1",
@@ -1692,6 +1699,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.text_editor,
       popular: true,
+      type: "section",
+    },
+    {
+      id: "skills-sections",
+      label: "Skills",
+      icon: Crown,
+      keywords: ["skills", "expertise", "competencies", "resume"],
+      hasTemplates: true,
+      templates: templates.skills,
       type: "section",
     },
     {

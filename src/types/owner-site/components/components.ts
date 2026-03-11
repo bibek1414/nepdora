@@ -13,6 +13,7 @@ import { PortfolioData } from "./portfolio";
 import { BannerData } from "./banner";
 import { NewsletterData } from "./newsletter";
 import { VideosData } from "./videos";
+import { SkillsData } from "./skills";
 import { ServicesData } from "./services";
 import { GalleryData } from "./gallery";
 import { PolicyData } from "./policies";
@@ -63,6 +64,7 @@ export interface ComponentTypeMap {
   login_form: AuthFormData;
   signup_form: AuthFormData;
   collections: CollectionsData;
+  skills: SkillsData;
 }
 
 // Generic interfaces

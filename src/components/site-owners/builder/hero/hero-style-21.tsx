@@ -49,7 +49,6 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      style={{ backgroundColor: theme.colors.background }}
     >
       <div className="container mx-auto px-4 text-center">
         <div className="flex flex-col items-center">

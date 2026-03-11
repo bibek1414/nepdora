@@ -1023,6 +1023,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       "login-sections": "login_form",
       "signup-sections": "signup_form",
       "collections-sections": "collections",
+      "skills-sections": "skills",
     };
 
     const type = sectionToType[sectionId];

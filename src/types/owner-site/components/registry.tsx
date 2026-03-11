@@ -23,6 +23,7 @@ import { DEFAULT_OUR_CLIENTS_MAP } from "./our-client";
 import { DEFAULT_OTHERS_MAP } from "./others";
 import { DEFAULT_CATEGORY_MAP } from "./category";
 import { DEFAULT_SUB_CATEGORY_MAP } from "./sub-category";
+import { DEFAULT_SKILLS_MAP } from "./skills";
 import { DEFAULT_PRODUCT_DETAILS_MAP } from "./product-details-map";
 import { DEFAULT_BLOG_DETAILS_MAP } from "./blog-details-map";
 import { DEFAULT_PORTFOLIO_DETAILS_MAP } from "./portfolio-details-map";
@@ -65,6 +66,7 @@ import { ServiceDetailsComponent } from "@/components/site-owners/builder/servic
 import { CheckoutComponent } from "@/components/site-owners/builder/checkout/checkout-component";
 import { OrderConfirmationComponent } from "@/components/site-owners/builder/order-confirmation/order-confirmation-component";
 import { CollectionsComponent } from "@/components/site-owners/builder/collections/collections-component";
+import SkillsComponent from "@/components/site-owners/builder/skills/skills-component";
 
 export type ComponentCategory =
   | "basic"
@@ -397,5 +399,14 @@ export const COMPONENT_REGISTRY: {
       };
     },
     component: CollectionsComponent,
+  },
+  skills: {
+    type: "skills",
+    displayName: "Skills",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_SKILLS_MAP[variant as keyof typeof DEFAULT_SKILLS_MAP] ||
+      DEFAULT_SKILLS_MAP["skills-style-1"],
+    component: SkillsComponent,
   },
 };
