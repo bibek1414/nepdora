@@ -1,22 +1,22 @@
 "use client";
 
 import React from "react";
-import { OthersTemplate10Data } from "@/types/owner-site/components/others";
+import { ExperienceTemplate1Data } from "@/types/owner-site/components/experience";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/editable-text";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useCollectionData } from "@/hooks/owner-site/admin/use-collections";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface OthersTemplate10Props {
-  othersData: OthersTemplate10Data;
+interface ExperienceStyle1Props {
+  experienceData: ExperienceTemplate1Data;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<OthersTemplate10Data>) => void;
+  onUpdate?: (updatedData: Partial<ExperienceTemplate1Data>) => void;
 }
 
-export const OthersTemplate10: React.FC<OthersTemplate10Props> = ({
-  othersData,
+export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
+  experienceData,
   siteUser,
   isEditable = false,
   onUpdate,
@@ -37,15 +37,15 @@ export const OthersTemplate10: React.FC<OthersTemplate10Props> = ({
     },
   };
 
-  const { data, handleTextUpdate } = useBuilderLogic(othersData, onUpdate);
+  const { data, handleTextUpdate } = useBuilderLogic(experienceData, onUpdate);
 
   const {
-    data: experienceData,
+    data: collectionResponse,
     isLoading,
     error,
   } = useCollectionData("experience");
 
-  const experiences = experienceData?.results || [];
+  const experiences = collectionResponse?.results || [];
 
   return (
     <section className="relative mx-auto max-w-7xl overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8">

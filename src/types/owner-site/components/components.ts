@@ -28,6 +28,7 @@ import { PortfolioDetailsData } from "./portfolio-details";
 import { ServiceDetailsData } from "./service-details";
 import { CheckoutData } from "./checkout";
 import { OrderConfirmationData } from "./order-confirmation";
+import { ExperienceData } from "./experience";
 import { AuthFormData } from "./auth-form-map";
 import { CollectionsData } from "./collections";
 
@@ -65,6 +66,7 @@ export interface ComponentTypeMap {
   signup_form: AuthFormData;
   collections: CollectionsData;
   skills: SkillsData;
+  experience: ExperienceData;
 }
 
 // Generic interfaces

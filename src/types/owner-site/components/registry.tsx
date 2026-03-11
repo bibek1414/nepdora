@@ -31,6 +31,7 @@ import { DEFAULT_SERVICE_DETAILS_MAP } from "./service-details-map";
 import { DEFAULT_CHECKOUT_MAP } from "./checkout-map";
 import { DEFAULT_ORDER_CONFIRMATION_MAP } from "./order-confirmation-map";
 import { DEFAULT_LOGIN_MAP, DEFAULT_SIGNUP_MAP } from "./auth-form-map";
+import { DEFAULT_EXPERIENCE_MAP } from "./experience";
 import { DEFAULT_COLLECTIONS_MAP } from "./collections";
 
 // Component Imports
@@ -67,6 +68,7 @@ import { CheckoutComponent } from "@/components/site-owners/builder/checkout/che
 import { OrderConfirmationComponent } from "@/components/site-owners/builder/order-confirmation/order-confirmation-component";
 import { CollectionsComponent } from "@/components/site-owners/builder/collections/collections-component";
 import SkillsComponent from "@/components/site-owners/builder/skills/skills-component";
+import { ExperienceComponent } from "@/components/site-owners/builder/experience/experience-component";
 
 export type ComponentCategory =
   | "basic"
@@ -404,9 +406,18 @@ export const COMPONENT_REGISTRY: {
     type: "skills",
     displayName: "Skills",
     category: "dynamic",
-    getDefaultData: variant =>
+    getDefaultData: (variant) =>
       DEFAULT_SKILLS_MAP[variant as keyof typeof DEFAULT_SKILLS_MAP] ||
       DEFAULT_SKILLS_MAP["skills-style-1"],
     component: SkillsComponent,
   },
-};
+  experience: {
+    type: "experience",
+    displayName: "Experience",
+    category: "dynamic",
+    getDefaultData: (variant) =>
+      DEFAULT_EXPERIENCE_MAP[variant as keyof typeof DEFAULT_EXPERIENCE_MAP] ||
+      DEFAULT_EXPERIENCE_MAP["experience-1"],
+    component: ExperienceComponent,
+  },
+}

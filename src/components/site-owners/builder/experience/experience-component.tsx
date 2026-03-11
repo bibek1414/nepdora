@@ -14,51 +14,37 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import {
-  OthersData,
-  isOthersTemplate1,
-  isOthersTemplate2,
-  isOthersTemplate3,
-  isOthersTemplate4,
-  isOthersTemplate5,
-  isOthersTemplate6,
-  isOthersTemplate7,
-  isOthersTemplate8,
-  isOthersTemplate9,
-} from "@/types/owner-site/components/others";
-import { OthersTemplate1 } from "./others-style-1";
-import { OthersTemplate2 } from "./others-style-2";
-import { OthersTemplate3 } from "./others-style-3";
-import { OthersTemplate4 } from "./others-style-4";
-import { OthersTemplate5 } from "./others-style-5";
-import { OthersTemplate6 } from "./others-style-6";
-import { OthersTemplate7 } from "./others-style-7";
-import { OthersTemplate8 } from "./others-style-8";
-import { OthersTemplate9 } from "./others-style-9";
+  ExperienceData,
+  isExperienceTemplate1,
+  isExperienceTemplate2,
+} from "@/types/owner-site/components/experience";
+import { ExperienceStyle1 } from "./experience-style-1";
+import { ExperienceStyle2 } from "./experience-style-2";
 
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
 
-interface OthersComponentData {
+interface ExperienceComponentData {
   id: string | number;
   component_id?: string;
-  component_type?: "others";
-  data: OthersData;
-  type?: "others";
+  component_type?: "experience";
+  data: ExperienceData;
+  type?: "experience";
   order: number;
   page?: number;
 }
 
-interface OthersComponentProps {
-  component: OthersComponentData;
+interface ExperienceComponentProps {
+  component: ExperienceComponentData;
   isEditable?: boolean;
   pageSlug: string;
   siteUser: string;
   onReplace?: (componentId: string) => void;
 }
 
-export const OthersComponent: React.FC<OthersComponentProps> = ({
+export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
@@ -66,13 +52,13 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
   onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteOthersMutation = useDeleteComponentMutation(pageSlug, "others");
-  const updateOthersMutation = useUpdateComponentMutation(pageSlug, "others");
+  const deleteExperienceMutation = useDeleteComponentMutation(pageSlug, "experience");
+  const updateExperienceMutation = useUpdateComponentMutation(pageSlug, "experience");
 
-  const handleUpdate = (updatedData: Partial<OthersData>) => {
+  const handleUpdate = (updatedData: Partial<ExperienceData>) => {
     const componentId = component.component_id || component.id.toString();
 
-    updateOthersMutation.mutate({
+    updateExperienceMutation.mutate({
       componentId,
       data: updatedData,
     });
@@ -81,20 +67,20 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
 
-    deleteOthersMutation.mutate(componentId, {
+    deleteExperienceMutation.mutate(componentId, {
       onSuccess: () => {
         setIsDeleteDialogOpen(false);
       },
     });
   };
 
-  const renderOthersTemplate = () => {
+  const renderExperienceTemplate = () => {
     if (!component.data) {
       return (
         <div className="flex min-h-[20vh] items-center justify-center border border-red-200 bg-red-50 px-4 py-10">
           <div className="text-center">
             <h2 className="text-xl font-bold text-red-600">
-              Error: Missing Others Data
+              Error: Missing Experience Data
             </h2>
             <p className="mt-2 text-red-500">Component ID: {component.id}</p>
           </div>
@@ -108,32 +94,12 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
       onUpdate: handleUpdate,
     };
 
-    if (isOthersTemplate1(component.data)) {
-      return <OthersTemplate1 othersData={component.data} {...commonProps} />;
+    if (isExperienceTemplate1(component.data)) {
+      return <ExperienceStyle1 experienceData={component.data} {...commonProps} />;
     }
-    if (isOthersTemplate2(component.data)) {
-      return <OthersTemplate2 othersData={component.data} {...commonProps} />;
-    }
-    if (isOthersTemplate3(component.data)) {
-      return <OthersTemplate3 othersData={component.data} {...commonProps} />;
-    }
-    if (isOthersTemplate4(component.data)) {
-      return <OthersTemplate4 othersData={component.data} {...commonProps} />;
-    }
-    if (isOthersTemplate5(component.data)) {
-      return <OthersTemplate5 othersData={component.data} {...commonProps} />;
-    }
-    if (isOthersTemplate6(component.data)) {
-      return <OthersTemplate6 othersData={component.data} {...commonProps} />;
-    }
-    if (isOthersTemplate7(component.data)) {
-      return <OthersTemplate7 othersData={component.data} {...commonProps} />;
-    }
-    if (isOthersTemplate8(component.data)) {
-      return <OthersTemplate8 othersData={component.data} {...commonProps} />;
-    }
-    if (isOthersTemplate9(component.data)) {
-      return <OthersTemplate9 othersData={component.data} {...commonProps} />;
+
+    if (isExperienceTemplate2(component.data)) {
+      return <ExperienceStyle2 experienceData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates
@@ -141,8 +107,7 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
       <div className="flex min-h-[20vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-10">
         <div className="text-center">
           <h2 className="text-xl font-bold text-yellow-700">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            Unknown Others Template: {(component.data as any).template}
+            Unknown Experience Template: {(component.data as any).template}
           </h2>
           <p className="mt-2 text-yellow-600">
             Please select a valid template.
@@ -161,11 +126,11 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
-              disabled={deleteOthersMutation.isPending}
+              disabled={deleteExperienceMutation.isPending}
               className="h-8 w-fit justify-start px-3"
             >
               <Trash2 className="mr-1 h-4 w-4" />
-              {deleteOthersMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteExperienceMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
             <Button
               size="sm"
@@ -197,9 +162,9 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
                 <AlertDialogAction
                   onClick={handleDelete}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteOthersMutation.isPending}
+                  disabled={deleteExperienceMutation.isPending}
                 >
-                  {deleteOthersMutation.isPending ? "Deleting..." : "Delete"}
+                  {deleteExperienceMutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -207,7 +172,7 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
         </>
       )}
 
-      {renderOthersTemplate()}
+      {renderExperienceTemplate()}
     </div>
   );
 };

@@ -331,6 +331,16 @@ export interface HeroTemplate21Data {
   buttons: HeroButton[];
 }
 
+export interface HeroTemplate22Data {
+  template: "hero-22";
+  eyebrow: string;
+  title: string;
+  spanText: string;
+  description: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -353,7 +363,8 @@ export type HeroData =
   | HeroTemplate18Data
   | HeroTemplate19Data
   | HeroTemplate20Data
-  | HeroTemplate21Data;
+  | HeroTemplate21Data
+  | HeroTemplate22Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -910,9 +921,22 @@ export const defaultHeroTemplate21Data: HeroTemplate21Data = {
   title: "I'm Sam, and I am a senior industrial designer",
   description:
     "Lorem ipsum dolor sit amet consectetur adipiscing elit lectus etiam malesuada nunc lacus velit vitae egestas integer urna phasellu.",
-  imageUrl: "https://cdn.prod.website-files.com/60e640d00fdb1e0bd76fae59/60ecd8896b60ff2782eeee29_sam-moore-avatar-home-v3-portfolio-x-webflow-template%20(1).jpeg",
+  imageUrl:
+    "https://cdn.prod.website-files.com/60e640d00fdb1e0bd76fae59/60ecd8896b60ff2782eeee29_sam-moore-avatar-home-v3-portfolio-x-webflow-template%20(1).jpeg",
   imageAlt: "Sam Profile",
   buttons: [],
+};
+
+export const defaultHeroTemplate22Data: HeroTemplate22Data = {
+  template: "hero-22",
+  eyebrow: "About Me",
+  title: "I craft digital experiences",
+  spanText: "digital",
+  description:
+    "Full-stack developer passionate about building elegant, performant, and user-centric applications that make a difference.",
+  imageUrl:
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop",
+  imageAlt: "Developer workspace",
 };
 
 // Default data map for all hero templates
@@ -938,6 +962,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-19": defaultHeroTemplate19Data,
   "hero-20": defaultHeroTemplate20Data,
   "hero-21": defaultHeroTemplate21Data,
+  "hero-22": defaultHeroTemplate22Data,
 };
 
 // Type guards for each template
@@ -1002,3 +1027,6 @@ export const isHeroTemplate20 = (data: HeroData): data is HeroTemplate20Data =>
 
 export const isHeroTemplate21 = (data: HeroData): data is HeroTemplate21Data =>
   data.template === "hero-21";
+
+export const isHeroTemplate22 = (data: HeroData): data is HeroTemplate22Data =>
+  data.template === "hero-22";

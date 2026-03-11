@@ -19,40 +19,44 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
   const { data: skills = [], isLoading } = useSkills();
 
   return (
-    <section className="bg-white px-6 py-24 md:px-12">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row">
+    <section className="relative mx-auto max-w-7xl overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8">
+      <div className="container mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           {/* Left Column: Title */}
-          <div className="md:w-1/3">
+          <div className="md:col-span-4 lg:col-span-3">
             <EditableText
               value={data.title}
-              onChange={title => onUpdate({ title })}
+              onChange={(title) => onUpdate({ title })}
               isEditable={isEditable}
               as="h2"
+              className="text-5xl font-bold tracking-tight md:text-6xl"
             />
           </div>
 
           {/* Right Column: Skills List */}
-          <div className="flex flex-col">
+          <div className="space-y-12 md:col-span-8 lg:col-span-9">
             {isLoading ? (
-              <div className="flex w-full flex-col gap-16">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="w-full animate-pulse">
+              <div className="flex w-full flex-col gap-12">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="w-full animate-pulse border-b pb-12 last:border-0">
                     <div className="mb-6 h-10 w-1/3 rounded bg-slate-100"></div>
                     <div className="mb-3 h-5 w-full rounded bg-slate-100"></div>
-                    <div className="mb-8 h-5 w-4/5 rounded bg-slate-100"></div>
-                    <div className="border-t border-slate-200"></div>
+                    <div className="h-5 w-4/5 rounded bg-slate-100"></div>
                   </div>
                 ))}
               </div>
             ) : skills.length > 0 ? (
-              skills.map(skill => (
-                <div key={skill.id} className="flex w-full flex-col">
-                  <h3 className="mb-6 text-3xl text-slate-900">{skill.name}</h3>
-                  <p className="max-w-2xl text-xl leading-relaxed text-slate-600">
+              skills.map((skill) => (
+                <div
+                  key={skill.id}
+                  className="space-y-6 border-b border-gray-100 pb-12 last:border-0"
+                >
+                  <h3 className="text-2xl font-normal md:text-3xl">
+                    {skill.name}
+                  </h3>
+                  <p className="prose prose-sm max-w-none leading-relaxed text-gray-500">
                     {skill.description}
                   </p>
-                  <div className="mt-12 w-full border-t border-slate-200"></div>
                 </div>
               ))
             ) : (

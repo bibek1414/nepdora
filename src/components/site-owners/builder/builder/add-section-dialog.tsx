@@ -222,6 +222,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 21",
         image: "/images/site-owners/hero/hero21.png",
       },
+      {
+        id: "hero-22",
+        name: "Hero Style 22",
+        image: "/images/site-owners/hero/hero22.png",
+      },
     ],
     others: [
       {
@@ -269,10 +274,17 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Others Style 9",
         image: "/images/site-owners/others/others9.png",
       },
+    ],
+    experience: [
       {
-        id: "others-10",
-        name: "Others Style 10",
+        id: "experience-1",
+        name: "Experience Style 1",
         image: "/images/site-owners/others/others10.png",
+      },
+      {
+        id: "experience-2",
+        name: "Experience Style 2",
+        image: "/images/site-owners/experience/experience2.png",
       },
     ],
     our_clients: [
@@ -446,6 +458,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "about-19",
         name: "About Style 19",
         image: "/images/site-owners/about/about19.png",
+      },
+      {
+        id: "about-20",
+        name: "About Style 20",
+        image: "/images/site-owners/about/about20.png",
       },
     ],
     products: [
@@ -1409,6 +1426,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.about,
       popular: true,
+      type: "section",
+    },
+    {
+      id: "experience-sections",
+      label: "Experience",
+      icon: Database,
+      keywords: ["experience", "work", "history", "career"],
+      hasTemplates: true,
+      templates: templates.experience,
       type: "section",
     },
     {

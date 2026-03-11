@@ -326,6 +326,22 @@ export interface AboutUs18Data {
   secondaryImageAlt: string;
 }
 
+export interface AboutUs20Stat {
+  id: string;
+  label: string;
+  value: string;
+}
+
+export interface AboutUs20Data {
+  template: "about-20";
+  eyebrow: string;
+  title: string;
+  description1: string;
+  description2: string;
+  description3: string;
+  stats: AboutUs20Stat[];
+}
+
 // Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
 export type AboutUsData =
   | AboutUs1Data
@@ -348,7 +364,8 @@ export type AboutUsData =
   | AboutUs16Data
   | AboutUs17Data
   | AboutUs18Data
-  | AboutUs19Data;
+  | AboutUs19Data
+  | AboutUs20Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -405,11 +422,10 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs13Data>
     | Partial<AboutUs14Data>
     | Partial<AboutUs13Data>
-    | Partial<AboutUs14Data>
-    | Partial<AboutUs15Data>
-    | Partial<AboutUs16Data>
     | Partial<AboutUs17Data>
-    | Partial<AboutUs18Data>;
+    | Partial<AboutUs18Data>
+    | Partial<AboutUs19Data>
+    | Partial<AboutUs20Data>;
   order?: number;
 }
 
@@ -1040,6 +1056,24 @@ export const defaultAboutUs19Data: AboutUs19Data = {
   ],
 };
 
+export const defaultAboutUs20Data: AboutUs20Data = {
+  template: "about-20",
+  eyebrow: "My Story",
+  title: "From curiosity to code",
+  description1:
+    "My journey into software development began with a simple curiosity about how things work on the web. What started as tweaking HTML pages quickly evolved into a deep passion for creating full-scale applications.",
+  description2:
+    "Over the years, I've honed my skills across the entire stack — from crafting pixel-perfect interfaces to designing robust backend architectures. I believe great software is invisible: it just works, beautifully.",
+  description3:
+    "When I'm not coding, you'll find me exploring new technologies, contributing to open source, or sharing knowledge with the developer community.",
+  stats: [
+    { id: "1", label: "Years of Experience", value: "5+" },
+    { id: "2", label: "Projects Completed", value: "40+" },
+    { id: "3", label: "Technologies Mastered", value: "15+" },
+    { id: "4", label: "Cups of Coffee", value: "∞" },
+  ],
+};
+
 // Default data map for all about us templates
 export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-1": defaultAboutUs1Data,
@@ -1061,6 +1095,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-17": defaultAboutUs17Data,
   "about-18": defaultAboutUs18Data,
   "about-19": defaultAboutUs19Data,
+  "about-20": defaultAboutUs20Data,
 };
 
 // Type guards for each template
@@ -1120,3 +1155,6 @@ export const isAboutUsTemplate18 = (data: AboutUsData): data is AboutUs18Data =>
 
 export const isAboutUsTemplate19 = (data: AboutUsData): data is AboutUs19Data =>
   data.template === "about-19";
+
+export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
+  data.template === "about-20";
