@@ -45,7 +45,7 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
 
   return (
     <motion.section
-      className="relative w-full py-20 lg:py-32"
+      className="relative flex h-200 w-full items-center justify-center"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
