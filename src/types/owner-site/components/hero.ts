@@ -322,6 +322,15 @@ export interface HeroTemplate20Data {
   backgroundImageUrl?: string;
 }
 
+export interface HeroTemplate21Data {
+  template: "hero-21";
+  title: string;
+  description: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  buttons: HeroButton[];
+}
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -343,7 +352,8 @@ export type HeroData =
   | HeroTemplate17Data
   | HeroTemplate18Data
   | HeroTemplate19Data
-  | HeroTemplate20Data;
+  | HeroTemplate20Data
+  | HeroTemplate21Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -895,6 +905,16 @@ export const defaultHeroTemplate20Data: HeroTemplate20Data = {
   backgroundColor: "#000000",
 };
 
+export const defaultHeroTemplate21Data: HeroTemplate21Data = {
+  template: "hero-21",
+  title: "I'm Sam, and I am a senior industrial designer",
+  description:
+    "Lorem ipsum dolor sit amet consectetur adipiscing elit lectus etiam malesuada nunc lacus velit vitae egestas integer urna phasellu.",
+  imageUrl: "https://picsum.photos/seed/picsum/200/200",
+  imageAlt: "Sam Profile",
+  buttons: [],
+};
+
 // Default data map for all hero templates
 export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-1": defaultHeroTemplate1Data,
@@ -917,6 +937,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-18": defaultHeroTemplate18Data,
   "hero-19": defaultHeroTemplate19Data,
   "hero-20": defaultHeroTemplate20Data,
+  "hero-21": defaultHeroTemplate21Data,
 };
 
 // Type guards for each template
@@ -978,3 +999,6 @@ export const isHeroTemplate19 = (data: HeroData): data is HeroTemplate19Data =>
 
 export const isHeroTemplate20 = (data: HeroData): data is HeroTemplate20Data =>
   data.template === "hero-20";
+
+export const isHeroTemplate21 = (data: HeroData): data is HeroTemplate21Data =>
+  data.template === "hero-21";
