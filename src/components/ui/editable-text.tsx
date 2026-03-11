@@ -192,6 +192,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
       // Extract styles from the selection
       let fontSize = undefined;
       let color = undefined;
+      let lineHeight = undefined;
 
       const container = range.startContainer;
       const parentElement =
@@ -200,9 +201,28 @@ export const EditableText: React.FC<EditableTextProps> = ({
           : container.parentElement;
 
       if (parentElement) {
+        // Prefer inline style if available (usually unitless multiplier)
+        lineHeight = parentElement.style.lineHeight;
+
         const style = window.getComputedStyle(parentElement);
         fontSize = style.fontSize;
         color = style.color;
+
+        // If no inline style, fallback to computed and try to convert back to multiplier
+        if (!lineHeight || lineHeight === "normal") {
+          const computedLH = style.lineHeight;
+          if (computedLH.includes("px") && fontSize.includes("px")) {
+            const lh = parseFloat(computedLH);
+            const fs = parseFloat(fontSize);
+            if (!isNaN(lh) && !isNaN(fs) && fs > 0) {
+              lineHeight = (lh / fs).toFixed(1);
+            } else {
+              lineHeight = computedLH;
+            }
+          } else {
+            lineHeight = computedLH;
+          }
+        }
       }
 
       setSelection({
@@ -211,6 +231,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         element: textRef.current || undefined,
         fontSize,
         color,
+        lineHeight,
       });
     } else {
       setSelection(null);

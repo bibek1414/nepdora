@@ -39,8 +39,13 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
     },
   };
 
-  const { data, setData, handleTextUpdate, handleImageUpdate, handleAltUpdate } =
-    useBuilderLogic(heroData, onUpdate);
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+  } = useBuilderLogic(heroData, onUpdate);
 
   const handleBackgroundFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -139,8 +144,8 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
         <EditableText
           value={data.eyebrow}
           onChange={handleTextUpdate("eyebrow")}
-          as="p"
-          className="text-primary mb-6 font-mono text-sm tracking-widest uppercase"
+          as="h1"
+          className="text-primary mb-6 font-mono text-sm"
           style={{ color: theme.colors.primary }}
           isEditable={isEditable}
         />
@@ -153,14 +158,6 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
               as="h1"
               isEditable={isEditable}
             />
-            <div className="text-sm opacity-50">
-              <EditableText
-                value={data.spanText}
-                onChange={handleTextUpdate("spanText")}
-                as="p"
-                isEditable={isEditable}
-              />
-            </div>
           </div>
         </div>
 
@@ -168,7 +165,6 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
           value={data.description}
           onChange={handleTextUpdate("description")}
           as="p"
-          className="text-muted-foreground mx-auto max-w-2xl text-lg leading-relaxed md:text-xl"
           isEditable={isEditable}
           multiline
         />

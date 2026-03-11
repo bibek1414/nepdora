@@ -8,6 +8,7 @@ interface TextSelection {
   element?: HTMLElement;
   fontSize?: string;
   color?: string;
+  lineHeight?: string;
 }
 
 interface TextSelectionContextType {
@@ -17,6 +18,7 @@ interface TextSelectionContextType {
   applyFormatting: (command: string, value?: string) => void;
   applyColor: (color: string) => void;
   applyFontSize: (fontSize: string) => void;
+  applyLineHeight: (lineHeight: string) => void;
 }
 
 const TextSelectionContext = createContext<
@@ -192,7 +194,96 @@ export const TextSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
         console.warn("Font size application failed:", error);
       }
     },
-    [selection] // Removed clearSelection from dependencies as we might not want to clear immediately
+    [selection]
+  );
+
+  const applyLineHeight = useCallback(
+    (lineHeight: string) => {
+      if (!selection) return;
+
+      const sel = window.getSelection();
+      if (!sel) return;
+
+      try {
+        // Restore selection
+        sel.removeAllRanges();
+        sel.addRange(selection.range.cloneRange());
+
+        const range = sel.getRangeAt(0);
+        if (range.collapsed) return;
+
+        // Check for existing ancestor span to update
+        const common = range.commonAncestorContainer;
+        let ancestor =
+          common.nodeType === 1
+            ? (common as HTMLElement)
+            : common.parentElement;
+        let fontAncestor: HTMLElement | null = null;
+
+        while (ancestor) {
+          if (
+            ancestor.tagName === "SPAN" &&
+            ancestor.style &&
+            (ancestor.style.fontSize || ancestor.style.lineHeight)
+          ) {
+            fontAncestor = ancestor;
+            break;
+          }
+          if (
+            ancestor.tagName === "DIV" ||
+            ancestor.tagName === "P" ||
+            ancestor.contentEditable === "true"
+          ) {
+            break;
+          }
+          ancestor = ancestor.parentElement;
+        }
+
+        if (fontAncestor) {
+          const rangeText = range.toString().trim();
+          const ancestorText = fontAncestor.textContent?.trim() || "";
+
+          if (rangeText === ancestorText && rangeText.length > 0) {
+            fontAncestor.style.lineHeight = lineHeight;
+
+            const newRange = document.createRange();
+            newRange.selectNodeContents(fontAncestor);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+
+            setSelection({ ...selection, range: newRange, lineHeight });
+            return;
+          }
+        }
+
+        try {
+          const content = range.extractContents();
+          const tempDiv = document.createElement("div");
+          tempDiv.appendChild(content);
+
+          const wrapper = document.createElement("span");
+          wrapper.style.lineHeight = lineHeight;
+
+          while (tempDiv.firstChild) {
+            wrapper.appendChild(tempDiv.firstChild);
+          }
+
+          range.insertNode(wrapper);
+
+          const newRange = document.createRange();
+          newRange.selectNodeContents(wrapper);
+          sel.removeAllRanges();
+          sel.addRange(newRange);
+
+          setSelection({ ...selection, range: newRange, lineHeight });
+        } catch (e) {
+          console.warn("Manual line height wrapping failed:", e);
+        }
+      } catch (error) {
+        console.warn("Line height application failed:", error);
+      }
+    },
+    [selection]
   );
 
   return (
@@ -204,6 +295,7 @@ export const TextSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
         applyFormatting,
         applyColor,
         applyFontSize,
+        applyLineHeight,
       }}
     >
       {children}

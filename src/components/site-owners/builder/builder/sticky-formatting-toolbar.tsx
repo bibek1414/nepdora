@@ -19,6 +19,7 @@ import {
   List,
   ListOrdered,
   ChevronDown,
+  ArrowUpDown,
 } from "lucide-react";
 import { useTextSelection } from "@/contexts/text-selection-context";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -31,6 +32,7 @@ export const StickyFormattingToolbar: React.FC = () => {
     applyFormatting,
     applyColor,
     applyFontSize,
+    applyLineHeight,
   } = useTextSelection();
 
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -38,12 +40,15 @@ export const StickyFormattingToolbar: React.FC = () => {
   const [showFontSizePicker, setShowFontSizePicker] = useState(false);
   const [showFontPicker, setShowFontPicker] = useState(false);
   const [showAlignPicker, setShowAlignPicker] = useState(false);
+  const [showLineHeightPicker, setShowLineHeightPicker] = useState(false);
 
   const [selectionColor, setSelectionColor] = useState("#000000");
   const [selectionHighlight, setSelectionHighlight] = useState("#FFFF00");
   const [selectionFontSize, setSelectionFontSize] = useState("16px");
   const [selectedFont, setSelectedFont] = useState("Inter");
   const [fontSizeInput, setFontSizeInput] = useState("16");
+  const [selectionLineHeight, setSelectionLineHeight] = useState("1.2");
+  const [lineHeightInput, setLineHeightInput] = useState("1.2");
 
   const toolbarRef = useRef<HTMLDivElement>(null);
 
@@ -98,6 +103,19 @@ export const StickyFormattingToolbar: React.FC = () => {
     "60px",
     "72px",
     "96px",
+  ];
+
+  // Quick line height options
+  const quickLineHeights = [
+    "1.0",
+    "1.1",
+    "1.2",
+    "1.3",
+    "1.4",
+    "1.5",
+    "1.6",
+    "1.8",
+    "2.0",
   ];
 
   // Font options
@@ -283,6 +301,11 @@ export const StickyFormattingToolbar: React.FC = () => {
         setSelectionFontSize(selection.fontSize);
         setFontSizeInput(size.toString());
       }
+      if (selection.lineHeight) {
+        const cleanLH = selection.lineHeight.replace("px", "");
+        setSelectionLineHeight(cleanLH);
+        setLineHeightInput(cleanLH);
+      }
       if (selection.color) {
         // Convert RGB to HEX for the color picker if needed
         if (selection.color.startsWith("rgb")) {
@@ -314,6 +337,7 @@ export const StickyFormattingToolbar: React.FC = () => {
         setShowFontSizePicker(false);
         setShowFontPicker(false);
         setShowAlignPicker(false);
+        setShowLineHeightPicker(false);
       }
     };
 
@@ -328,6 +352,7 @@ export const StickyFormattingToolbar: React.FC = () => {
     setShowFontSizePicker(false);
     setShowFontPicker(false);
     setShowAlignPicker(false);
+    setShowLineHeightPicker(false);
   };
 
   if (!selection) return null;
@@ -481,6 +506,121 @@ export const StickyFormattingToolbar: React.FC = () => {
             onMouseDown={e => e.preventDefault()}
             className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
             title="Increase font size"
+          >
+            <Plus className="h-4 w-4 text-gray-700" />
+          </button>
+        </div>
+
+        <div className="h-6 w-px bg-gray-300" />
+
+        {/* Line Height Control */}
+        <div className="flex items-center gap-0.5">
+          <button
+            onClick={() => {
+              const current = parseFloat(selectionLineHeight) || 1.2;
+              if (current > 0.5) {
+                const newHeight = (current - 0.1).toFixed(1);
+                setSelectionLineHeight(newHeight);
+                applyLineHeight(newHeight);
+                setLineHeightInput(newHeight);
+              }
+            }}
+            onMouseDown={e => e.preventDefault()}
+            className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
+            title="Decrease line height"
+          >
+            <Minus className="h-4 w-4 text-gray-700" />
+          </button>
+
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              value={lineHeightInput}
+              onClick={e => {
+                e.stopPropagation();
+                const willShow = !showLineHeightPicker;
+                closeAllDropdowns();
+                setShowLineHeightPicker(willShow);
+              }}
+              onChange={e => {
+                const value = e.target.value.replace(/[^0-9.]/g, "");
+                setLineHeightInput(value);
+              }}
+              onBlur={() => {
+                if (lineHeightInput) {
+                  const val = parseFloat(lineHeightInput);
+                  if (!isNaN(val)) {
+                    const clamped = Math.min(Math.max(val, 0.1), 5.0).toFixed(
+                      1
+                    );
+                    setSelectionLineHeight(clamped);
+                    applyLineHeight(clamped);
+                    setLineHeightInput(clamped);
+                  }
+                } else {
+                  setLineHeightInput(selectionLineHeight);
+                }
+              }}
+              onKeyDown={e => {
+                if (e.key === "Enter") {
+                  (e.target as HTMLInputElement).blur();
+                }
+              }}
+              className="w-12 cursor-text rounded border border-gray-300 px-1 py-1.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:border-blue-400 focus:outline-none"
+              title="Line Height"
+            />
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                closeAllDropdowns();
+                setShowLineHeightPicker(!showLineHeightPicker);
+              }}
+              onMouseDown={e => e.preventDefault()}
+              className="absolute right-0 flex h-full items-center px-1 text-gray-400 hover:text-gray-600"
+            >
+              <ChevronDown className="h-3 w-3" />
+            </button>
+
+            {showLineHeightPicker && (
+              <div className="absolute top-full left-0 z-50 mt-1 max-h-60 w-32 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+                <div className="flex items-center gap-2 border-b border-gray-100 px-4 py-2">
+                  <ArrowUpDown className="h-3 w-3 text-gray-400" />
+                  <span className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider">
+                    Line Height
+                  </span>
+                </div>
+                {quickLineHeights.map(height => (
+                  <button
+                    key={height}
+                    onClick={() => {
+                      applyLineHeight(height);
+                      setLineHeightInput(height);
+                      setSelectionLineHeight(height);
+                      setShowLineHeightPicker(false);
+                    }}
+                    onMouseDown={e => e.preventDefault()}
+                    className="hover:text-primary block w-full px-4 py-2 text-left text-sm transition-colors hover:bg-blue-50"
+                  >
+                    {height}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={() => {
+              const current = parseFloat(selectionLineHeight) || 1.2;
+              if (current < 5.0) {
+                const newHeight = (current + 0.1).toFixed(1);
+                setSelectionLineHeight(newHeight);
+                applyLineHeight(newHeight);
+                setLineHeightInput(newHeight);
+              }
+            }}
+            onMouseDown={e => e.preventDefault()}
+            className="rounded border border-gray-300 p-1.5 transition-colors hover:bg-gray-100"
+            title="Increase line height"
           >
             <Plus className="h-4 w-4 text-gray-700" />
           </button>
