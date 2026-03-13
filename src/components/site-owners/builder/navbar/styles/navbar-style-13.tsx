@@ -138,7 +138,7 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <header
-        className={`border-b border-gray-100 bg-white shadow-sm ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
+        className={`border-b border-gray-100 bg-white ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
       >
         {/* Main Header */}
         <div className="bg-white py-4 md:py-6">
@@ -212,7 +212,7 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
                     {/* Account Dropdown */}
                     {isAuthenticated && !disableClicks && !isEditable && (
                       <div
-                        className={`absolute top-full right-0 z-50 mt-2 w-56 rounded-2xl border border-gray-100 bg-white py-2 shadow-xl transition-all duration-200 ${isAccountOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"}`}
+                        className={`absolute top-full right-0 z-50 mt-2 w-56 rounded-2xl border border-gray-100 bg-white py-2 transition-all duration-200 ${isAccountOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"}`}
                       >
                         <div
                           onClick={() => handleProfileAction("profile")}
@@ -340,7 +340,7 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
                   />
                 </div>
                 {/* Dropdown Menu */}
-                <div className="invisible absolute top-full left-0 z-40 w-64 translate-y-2 transform rounded-b-lg border border-gray-100 bg-white opacity-0 shadow-xl transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="invisible absolute top-full left-0 z-40 w-64 translate-y-2 transform rounded-b-lg border border-gray-100 bg-white opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                   <div className="px-5 py-2">
                     {categories.map(category => (
                       <Link

@@ -345,7 +345,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        <header className="relative bg-white shadow-sm">
+        <header className="relative bg-white">
           <nav
             aria-label="Top"
             className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${

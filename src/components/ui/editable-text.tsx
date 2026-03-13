@@ -70,7 +70,7 @@ const getDefaultLineHeight = (tag: string): string => {
     case "h6":
       return "1.4";
     case "p":
-      return "1.2";
+      return "1.4";
     default:
       return "";
   }

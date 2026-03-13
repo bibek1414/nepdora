@@ -66,7 +66,7 @@ export function AboutUsTemplate12({
             <EditableText
               value={data.sectionTag}
               onChange={handleTextUpdate("sectionTag")}
-              as="span"
+              as="p"
               isEditable={isEditable}
               placeholder="OUR COACHING"
             />

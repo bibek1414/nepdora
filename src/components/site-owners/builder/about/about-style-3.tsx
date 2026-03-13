@@ -81,32 +81,25 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
                 }}
               ></div>
 
-              <h2 className="text-3xl leading-tight font-light text-black sm:text-4xl lg:text-5xl xl:text-6xl">
-                <EditableText
-                  value={data.title}
-                  onChange={handleTextUpdate("title")}
-                  as="span"
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.heading,
-                  }}
-                  isEditable={isEditable}
-                  placeholder="Enter title..."
-                />
-                <br />
-                <EditableText
-                  value={data.subtitle}
-                  onChange={handleTextUpdate("subtitle")}
-                  as="span"
-                  className="block bg-clip-text font-normal text-transparent"
-                  style={{
-                    color: theme.colors.secondary,
-                    fontFamily: theme.fonts.heading,
-                  }}
-                  isEditable={isEditable}
-                  placeholder="Enter subtitle..."
-                />
-              </h2>
+              <EditableText
+                value={data.title}
+                onChange={handleTextUpdate("title")}
+                as="h1"
+                isEditable={isEditable}
+                placeholder="Enter title..."
+              />
+              <EditableText
+                value={data.subtitle}
+                onChange={handleTextUpdate("subtitle")}
+                as="div"
+                className="block bg-clip-text font-normal text-transparent"
+                style={{
+                  color: theme.colors.secondary,
+                  fontFamily: theme.fonts.heading,
+                }}
+                isEditable={isEditable}
+                placeholder="Enter subtitle..."
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-6 sm:gap-8">
@@ -178,7 +171,7 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
                     <EditableText
                       value={feature.text}
                       onChange={handleFeatureUpdate(feature.id)}
-                      as="span"
+                      as="p"
                       className="text-sm text-gray-700 sm:text-base"
                       isEditable={isEditable}
                       placeholder="Enter feature..."
@@ -193,7 +186,7 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
                 <EditableText
                   value={data.stats.unitsAvailable}
                   onChange={handleStatsUpdate("unitsAvailable")}
-                  as="span"
+                  as="p"
                   isEditable={isEditable}
                   placeholder="Number"
                 />

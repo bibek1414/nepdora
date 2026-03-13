@@ -82,16 +82,14 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
               {/* Image 1 */}
               <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-gray-800">
                 <div className="absolute top-4 right-4 z-50">
-                  <span className="rounded-full bg-black/80 px-3 py-2 text-xs text-white backdrop-blur-sm">
-                    <EditableText
-                      value={data.image1Tag}
-                      onChange={handleTextUpdate("image1Tag")}
-                      as="span"
-                      className="text-xs"
-                      isEditable={isEditable}
-                      placeholder="Tech Blog"
-                    />
-                  </span>
+                  <EditableText
+                    value={data.image1Tag}
+                    onChange={handleTextUpdate("image1Tag")}
+                    as="p"
+                    className="text-xs"
+                    isEditable={isEditable}
+                    placeholder="Tech Blog"
+                  />
                 </div>
                 <EditableImage
                   src={data.image1Url}
@@ -116,16 +114,14 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
               {/* Image 2 */}
               <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-gray-800">
                 <div className="absolute top-4 right-4 z-50">
-                  <span className="rounded-full bg-black/80 px-3 py-2 text-xs text-white backdrop-blur-sm">
-                    <EditableText
-                      value={data.image2Tag}
-                      onChange={handleTextUpdate("image2Tag")}
-                      as="span"
-                      className="text-xs"
-                      isEditable={isEditable}
-                      placeholder="Trends"
-                    />
-                  </span>
+                  <EditableText
+                    value={data.image2Tag}
+                    onChange={handleTextUpdate("image2Tag")}
+                    as="p"
+                    className="text-xs"
+                    isEditable={isEditable}
+                    placeholder="Trends"
+                  />
                 </div>
                 <EditableImage
                   src={data.image2Url}

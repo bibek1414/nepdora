@@ -137,7 +137,7 @@ export function AboutUsTemplate10({
                           "World Wide Access • Immigration Agency •"
                         }
                         onChange={handleStampTextUpdate}
-                        as="span"
+                        as="p"
                         isEditable={isEditable}
                         placeholder="Circular stamp text"
                       />
@@ -150,12 +150,12 @@ export function AboutUsTemplate10({
 
           {/* Right Side Content */}
           <div className="space-y-4 sm:space-y-6 md:space-y-8">
-            <div className="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase sm:gap-2 sm:text-xs">
+            <div className="flex items-center font-semibold tracking-widest sm:gap-2 sm:text-xs">
               <Map size={12} className="sm:size-4" />
               <EditableText
                 value={data.sectionTag}
                 onChange={handleTextUpdate("sectionTag")}
-                as="span"
+                as="p"
                 isEditable={isEditable}
                 placeholder="WHY CHOOSE US"
               />
@@ -171,7 +171,6 @@ export function AboutUsTemplate10({
               value={data.description}
               onChange={handleTextUpdate("description")}
               as="p"
-              className="leading-relaxed"
               isEditable={isEditable}
               placeholder="Description..."
               multiline={true}
@@ -213,7 +212,7 @@ export function AboutUsTemplate10({
                             "items",
                             itemIndex
                           )}
-                          as="span"
+                          as="p"
                           isEditable={isEditable}
                           placeholder="Feature Item"
                         />
