@@ -16,7 +16,7 @@ export const Footer = () => {
   return (
     <footer className="w-full overflow-hidden border-t border-gray-200 bg-gray-50 px-4 pt-12 pb-6 font-sans text-gray-900 sm:px-6 sm:pt-16 sm:pb-8 md:px-10 lg:px-20">
       <div className="mx-auto max-w-6xl">
-        {/* Main Content Grid - Reduced gap and bottom margin */}
+        {/* Main Content Grid - Original Design */}
         <motion.div
           className="mb-12 grid grid-cols-1 gap-8 sm:mb-16 sm:gap-10 lg:grid-cols-12"
           initial={{ opacity: 0, y: 24 }}
@@ -110,6 +110,106 @@ export const Footer = () => {
           </motion.div>
         </motion.div>
 
+        {/* New Resources Section - Linked Features */}
+        <motion.div
+          className="mb-12 border-t border-gray-200 pt-10"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+            {/* Platforms */}
+            <div>
+              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+                Platforms
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/ecommerce-website">
+                  Ecommerce Website
+                </FooterLink>
+                <FooterLink href="/agency-website">Agency Website</FooterLink>
+                <FooterLink href="/booking-website">Booking Website</FooterLink>
+                <FooterLink href="/restaurant-website">
+                  Restaurant Website
+                </FooterLink>
+                <FooterLink href="/clinic-website">Clinic Website</FooterLink>
+                <FooterLink href="/dental-website">Dental Website</FooterLink>
+              </div>
+            </div>
+
+            {/* Tools */}
+            <div>
+              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+                Free Tools
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/free-website-analyzer">
+                  Website Analyzer
+                </FooterLink>
+                <FooterLink href="/invoice-builder">Invoice Builder</FooterLink>
+              </div>
+            </div>
+
+            {/* Templates */}
+            <div>
+              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+                Templates
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/website-templates">All Templates</FooterLink>
+                <FooterLink href="/website-templates">Portfolio</FooterLink>
+                <FooterLink href="/website-templates">Business</FooterLink>
+                <FooterLink href="/website-templates">E-commerce</FooterLink>
+              </div>
+            </div>
+
+            {/* Compare */}
+            <div>
+              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+                Compare
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/compare/shopify-and-nepdora">
+                  Shopify vs Nepdora
+                </FooterLink>
+                <FooterLink href="/compare/webflow-and-nepdora">
+                  Webflow vs Nepdora
+                </FooterLink>
+                <FooterLink href="/compare/wordpress-and-nepdora">
+                  WordPress vs Nepdora
+                </FooterLink>
+                <FooterLink href="/compare/wix-and-nepdora">
+                  Wix vs Nepdora
+                </FooterLink>
+              </div>
+            </div>
+
+            {/* Cities */}
+            <div>
+              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+                Popular Cities
+              </h4>
+              <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+                <FooterLink href="/agency-website/kathmandu">
+                  Kathmandu
+                </FooterLink>
+                <FooterLink href="/agency-website/pokhara">Pokhara</FooterLink>
+                <FooterLink href="/agency-website/lalitpur">
+                  Lalitpur
+                </FooterLink>
+                <FooterLink href="/agency-website/bharatpur">
+                  Bharatpur
+                </FooterLink>
+                <FooterLink href="/agency-website/birgunj">Birgunj</FooterLink>
+                <FooterLink href="/agency-website/biratnagar">
+                  Biratnagar
+                </FooterLink>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Bottom Bar */}
         <motion.div
           className="flex flex-col items-center justify-between space-y-3 border-t border-gray-200 pt-5 sm:space-y-0 sm:pt-6 md:flex-row"
@@ -151,6 +251,7 @@ const NewsletterForm = () => {
     mutate(email, {
       onSuccess: () => {
         setEmail("");
+        toast.success("Successfully subscribed!");
       },
     });
   };

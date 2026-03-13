@@ -7,12 +7,12 @@ import CTA from "@/components/marketing/cta-section/cta-section";
 import { capitalizeWords } from "@/lib/string-utils";
 import { motion } from "framer-motion";
 
-interface SEOLandingPageProps {
+interface CitiesLandingPageProps {
   category: string;
   city: string;
 }
 
-export const SEOLandingPage: React.FC<SEOLandingPageProps> = ({
+export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
   category,
   city,
 }) => {

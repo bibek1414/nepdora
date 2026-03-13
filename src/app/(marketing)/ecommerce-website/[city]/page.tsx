@@ -1,4 +1,4 @@
-import { SEOLandingPage } from "@/components/marketing/cities/cities-landing-page";
+import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { NEPAL_CITIES } from "@/constants/nepal-cities";
 import { Metadata } from "next";
 
@@ -36,5 +36,5 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: Props) {
   const { city } = await params;
-  return <SEOLandingPage category="ecommerce-website" city={city} />;
+  return <CitiesLandingPage category="ecommerce-website" city={city} />;
 }
