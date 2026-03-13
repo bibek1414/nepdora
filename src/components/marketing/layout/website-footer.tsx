@@ -110,11 +110,11 @@ export const WebsiteFooter = () => {
             Explore Website Solutions by Region
           </h4>
           <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {NEPAL_CITIES.slice(0, 48).map(city => (
+            {NEPAL_CITIES.slice(0, 198).map(city => (
               <Link
                 key={city}
                 href={`/${activeCategory.slug}/${city.toLowerCase()}`}
-                className="text-[11px] font-medium text-gray-400 hover:text-gray-900"
+                className="text-[11px] font-medium text-gray-400 hover:underline"
               >
                 {activeCategory.name} in {city}
               </Link>
