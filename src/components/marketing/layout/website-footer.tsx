@@ -79,7 +79,7 @@ export const WebsiteFooter = () => {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
               >
-                <h4 className="mb-4 flex items-center font-bold text-gray-900">
+                <h4 className="mb-4 -ml-1 flex items-center font-bold text-gray-900">
                   {category.name} in Cities
                 </h4>
                 <ul className="space-y-2">
@@ -87,12 +87,8 @@ export const WebsiteFooter = () => {
                     <li key={`${category.slug}-${city}`}>
                       <Link
                         href={`/${category.slug}/${city.toLowerCase()}`}
-                        className="hover:text-primary group flex items-center text-xs text-gray-500 hover:underline"
+                        className="group flex items-center text-xs text-gray-500 hover:underline"
                       >
-                        <ChevronRight
-                          size={12}
-                          className="-ml-4 opacity-0 transition-all group-hover:opacity-100"
-                        />
                         {category.name} in {city}
                       </Link>
                     </li>

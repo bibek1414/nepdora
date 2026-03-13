@@ -22,9 +22,9 @@ export const TemplatesHero = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="mb-10 text-lg text-slate-600 md:text-xl"
         >
-          Build a professional website tailored for the Nepalese market with our 
-          AI-powered templates — fully customizable, responsive, and 
-          ready for your business with zero coding required.
+          Build a professional website tailored for the Nepalese market with our
+          AI-powered templates — fully customizable, responsive, and ready for
+          your business with zero coding required.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -3,7 +3,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Best eCommerce Website in Nepal | Nepdora",
-  description: "Start your online store in Nepal today. Powerful eCommerce features, inventory management, and payment gateway integration with Nepdora.",
+  description:
+    "Start your online store in Nepal today. Powerful eCommerce features, inventory management, and payment gateway integration with Nepdora.",
   keywords: [
     "ecommerce website Nepal",
     "online store Nepal",

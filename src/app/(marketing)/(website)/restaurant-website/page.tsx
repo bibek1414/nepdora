@@ -3,7 +3,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Best Restaurant Website in Nepal | Nepdora",
-  description: "Grow your restaurant business in Nepal. Online ordering, menu management, and table reservations with your own branded website from Nepdora.",
+  description:
+    "Grow your restaurant business in Nepal. Online ordering, menu management, and table reservations with your own branded website from Nepdora.",
   keywords: [
     "restaurant website Nepal",
     "food ordering system Nepal",

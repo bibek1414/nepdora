@@ -3,7 +3,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Best Booking Website in Nepal | Nepdora",
-  description: "Build a powerful booking system for your business in Nepal. Online appointments, scheduling, and payment integration with Nepdora.",
+  description:
+    "Build a powerful booking system for your business in Nepal. Online appointments, scheduling, and payment integration with Nepdora.",
   keywords: [
     "booking website Nepal",
     "appointment system Nepal",

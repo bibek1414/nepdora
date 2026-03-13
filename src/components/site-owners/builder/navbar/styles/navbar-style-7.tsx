@@ -140,7 +140,7 @@ export const NavbarStyle7: React.FC<NavbarStyleProps> = ({
 
   return (
     <>
-      <div className="bg-white -md">
+      <div className="-md bg-white">
         <header className="relative bg-white">
           <nav
             aria-label="Top"

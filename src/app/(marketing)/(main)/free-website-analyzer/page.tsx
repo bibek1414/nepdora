@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Free Website Analyzer | Audit Your Site in Nepal | Nepdora";
-  const description = 
+  const description =
     "Audit your website's SEO, speed, and mobile responsiveness for the Nepalese market. Get actionable insights to beat your local competitors.";
   const url = "https://www.nepdora.com/free-website-analyzer";
   const imageUrl = "https://www.nepdora.com/nepdora-tool-og.jpg"; // Placeholder or use a real tool image if available

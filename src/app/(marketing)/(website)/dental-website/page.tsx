@@ -3,7 +3,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Best Dental Website in Nepal | Nepdora",
-  description: "Professional dental clinic website builder in Nepal. Get more patients with a stunning, SEO-optimized website for your dental practice.",
+  description:
+    "Professional dental clinic website builder in Nepal. Get more patients with a stunning, SEO-optimized website for your dental practice.",
   keywords: [
     "dental website Nepal",
     "dentist website Nepal",

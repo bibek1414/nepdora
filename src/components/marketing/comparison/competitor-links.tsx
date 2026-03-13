@@ -16,15 +16,15 @@ const CompetitorLinks = () => {
           viewport={{ once: true }}
           className="flex flex-col space-y-4"
         >
-          <h3 className="text-lg font-bold text-slate-900 border-l-4 border-primary pl-3">
+          <h3 className="border-primary border-l-4 pl-3 text-lg font-bold text-slate-900">
             {category.title}
           </h3>
           <div className="flex flex-wrap gap-2">
-            {category.competitors.map((competitor) => (
+            {category.competitors.map(competitor => (
               <Link
                 key={competitor.slug}
                 href={`/compare/${competitor.slug}-and-nepdora`}
-                className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-600 transition-all hover:border-primary hover:bg-slate-50 hover:text-primary"
+                className="hover:border-primary hover:text-primary inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-600 transition-all hover:bg-slate-50"
               >
                 {competitor.name} vs Nepdora
               </Link>

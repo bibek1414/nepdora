@@ -318,9 +318,7 @@ export default async function FeatureProcessPage({ params }: Props) {
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="mb-8 flex items-center gap-3 text-slate-500">
               <AlertCircle className="h-6 w-6 text-red-500" />
-              <h2 className="text-xl font-bold tracking-wider ">
-                The Hard Way
-              </h2>
+              <h2 className="text-xl font-bold tracking-wider">The Hard Way</h2>
             </div>
             <div className="space-y-6">
               {hardWay.map((step, idx) => (
@@ -350,12 +348,12 @@ export default async function FeatureProcessPage({ params }: Props) {
 
           {/* The Nepdora Way */}
           <div className="border-primary/20 shadow-primary/5 relative overflow-hidden rounded-3xl border-2 bg-white p-8 shadow-xl">
-            <div className="bg-primary absolute top-0 right-0 rounded-bl-3xl px-6 py-2 text-xs font-bold tracking-tighter text-white ">
+            <div className="bg-primary absolute top-0 right-0 rounded-bl-3xl px-6 py-2 text-xs font-bold tracking-tighter text-white">
               Integrated by Default
             </div>
             <div className="text-primary mb-8 flex items-center gap-3">
               <Zap className="fill-primary h-6 w-6" />
-              <h2 className="text-xl font-bold tracking-wider ">
+              <h2 className="text-xl font-bold tracking-wider">
                 The Nepdora Way
               </h2>
             </div>

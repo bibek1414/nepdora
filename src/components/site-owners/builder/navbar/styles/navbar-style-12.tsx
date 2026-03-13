@@ -321,7 +321,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
 
                 {/* Search Results Dropdown */}
                 {isSearchFocused && searchQuery.length > 0 && (
-                  <div className="absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-xl border border-gray-100 bg-white -lg">
+                  <div className="-lg absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-xl border border-gray-100 bg-white">
                     {isSearchLoading ? (
                       <div className="p-4 text-center text-sm text-gray-500">
                         Searching...
