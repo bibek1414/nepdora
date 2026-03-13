@@ -1,10 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Download, Plus, Trash2, FileText } from "lucide-react";
+import { Download, Plus, Trash2, FileText, Loader2 } from "lucide-react";
 import CTA from "@/components/marketing/cta-section/cta-section";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export const InvoiceBuilder = () => {
   const [items, setItems] = useState([
@@ -12,6 +14,8 @@ export const InvoiceBuilder = () => {
   ]);
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   const addItem = () =>
     setItems([...items, { description: "", quantity: 1, price: 0 }]);
@@ -22,6 +26,38 @@ export const InvoiceBuilder = () => {
     const newItems = [...items];
     (newItems[index] as any)[field] = value;
     setItems(newItems);
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!invoiceRef.current) return;
+    setIsGenerating(true);
+
+    try {
+      const element = invoiceRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`invoice-${new Date().getTime()}.pdf`);
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const total = items.reduce(
@@ -44,7 +80,10 @@ export const InvoiceBuilder = () => {
 
         <div className="mb-20 grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <div
+              ref={invoiceRef}
+              className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+            >
               <div className="mb-12 flex items-start justify-between">
                 <div className="space-y-4">
                   <h2 className="flex items-center gap-2 text-xl font-bold">
@@ -212,9 +251,15 @@ export const InvoiceBuilder = () => {
 
               <Button
                 className="flex h-12 w-full items-center justify-center gap-2 rounded-xl font-bold"
-                disabled={!clientEmail || !clientPhone}
+                disabled={!clientEmail || !clientPhone || isGenerating}
+                onClick={handleDownloadPDF}
               >
-                <Download className="h-4 w-4" /> Download PDF
+                {isGenerating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                {isGenerating ? "Generating..." : "Download PDF"}
               </Button>
 
               <p className="mt-4 text-center text-[10px] text-slate-400">
