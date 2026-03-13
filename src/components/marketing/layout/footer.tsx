@@ -75,7 +75,7 @@ export const Footer = () => {
             <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 sm:gap-x-8 sm:gap-y-3">
               <div className="flex flex-col space-y-3">
                 <FooterLink href="/">Home</FooterLink>
-                <FooterLink href="/services">Service</FooterLink>
+                <FooterLink href="/templates">Templates</FooterLink>
                 <FooterLink href="/about">About Us</FooterLink>
                 <FooterLink href="/blog">Blog</FooterLink>
                 <FooterLink href="/pricing">Pricing</FooterLink>
