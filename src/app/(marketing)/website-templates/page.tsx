@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import Script from "next/script";
 import { TemplatesHero } from "@/components/marketing/templates/templates-hero";
-import { PopularCategories } from "@/components/marketing/templates/popular-categories";
-import { TemplateSection } from "@/components/marketing/templates/template-section";
+import TemplatesPage from "@/components/marketing/templates/templates-page";
 
 export const metadata: Metadata = {
   title: "Website Templates — Customizable HTML Templates | Nepdora",
@@ -72,15 +71,7 @@ export default function WebsiteTemplatesPage() {
       <div className="bg-white">
         <TemplatesHero />
 
-        <div className="mx-auto max-w-6xl px-4">
-          <PopularCategories />
-
-          <TemplateSection
-            title="Top-Rated Nepdora Templates"
-            description="Hand-picked templates to help you launch your business faster."
-            pageSize={4}
-          />
-        </div>
+        <TemplatesPage />
       </div>
     </>
   );

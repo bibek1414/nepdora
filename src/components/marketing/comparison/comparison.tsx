@@ -3,12 +3,19 @@ import React from "react";
 import { motion } from "framer-motion";
 import { X, Check, Calculator } from "lucide-react";
 
-const Comparison: React.FC = () => {
+interface ComparisonProps {
+  platformName?: string;
+  city?: string;
+}
+
+const Comparison: React.FC<ComparisonProps> = ({ platformName = "Agency", city }) => {
+  const cityName = city ? city.charAt(0).toUpperCase() + city.slice(1) : "";
+  
   const rows = [
     { feature: "Time to Launch", trad: "3-6 Months", nep: "3 Minutes" },
     { feature: "Initial Cost", trad: "NPR 1,50,000+", nep: "NPR 0 Setup" },
     { feature: "Maintenance", trad: "NPR 5,000+/mo", nep: "NPR 1,500/mo" },
-    { feature: "SEO Strategy", trad: "Hire Agency", nep: "Automated AI" },
+    { feature: "SEO Strategy", trad: `Hire ${platformName}`, nep: "Automated AI" },
     { feature: "Updates", trad: "Billable Hours", nep: "Instant Prompt" },
   ];
 
@@ -30,7 +37,7 @@ const Comparison: React.FC = () => {
               </h2>
               <p className="mb-6 max-w-md text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg">
                 Traditional development is slow, expensive, and fragile. Nepdora
-                replaces agencies with intelligent automation. Get a website in
+                replaces {platformName.toLowerCase()} in {cityName || "Nepal"} with intelligent automation. Get a website in
                 minutes, not months.
               </p>
 
@@ -64,7 +71,7 @@ const Comparison: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full flex-1"
+            className="w-full flex-1 "
           >
             <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:rounded-2xl">
               <div className="grid grid-cols-3 gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
@@ -72,7 +79,7 @@ const Comparison: React.FC = () => {
                   Metric
                 </div>
                 <div className="text-[10px] font-semibold tracking-wide text-slate-500 uppercase sm:text-xs sm:tracking-widest">
-                  Agency
+                  {platformName}
                 </div>
                 <div className="text-[10px] font-semibold tracking-wide text-slate-700 uppercase sm:text-xs sm:tracking-widest">
                   Nepdora
