@@ -1,0 +1,87 @@
+import { Metadata } from "next";
+import Script from "next/script";
+import { TemplatesHero } from "@/components/marketing/templates/templates-hero";
+import { PopularCategories } from "@/components/marketing/templates/popular-categories";
+import { TemplateSection } from "@/components/marketing/templates/template-section";
+
+export const metadata: Metadata = {
+  title: "Website Templates — Customizable HTML Templates | Nepdora",
+  description:
+    "Explore our curated collection of professional HTML website templates. Fully customizable, responsive, and designed to help you launch your website in minutes with Nepdora.",
+  keywords: [
+    "website templates",
+    "HTML templates",
+    "responsive website design",
+    "customizable templates",
+    "Nepdora templates",
+    "portfolio templates",
+    "business templates",
+  ],
+  alternates: {
+    canonical: "https://www.nepdora.com/website-templates",
+  },
+  openGraph: {
+    title: "Website Templates — Customizable HTML Templates | Nepdora",
+    description:
+      "Modern, responsive, and fully customizable website templates for every industry. Start building with Nepdora today.",
+    url: "https://www.nepdora.com/website-templates",
+    images: [
+      {
+        url: "/nepdora-templates-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Nepdora Website Templates",
+      },
+    ],
+  },
+};
+
+export default function WebsiteTemplatesPage() {
+  const templateSchema = {
+    "@context": "https://schema.org/",
+    "@type": "ItemList",
+    name: "Nepdora Website Templates",
+    description:
+      "A collection of high-quality, customizable website templates.",
+    numberOfItems: 50,
+    itemListElement: [
+      {
+        "@type": "SoftwareApplication",
+        name: "Professional Portfolio Template",
+        applicationCategory: "Web Design Template",
+        operatingSystem: "Web",
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: "Business Landing Page Template",
+        applicationCategory: "Web Design Template",
+        operatingSystem: "Web",
+      },
+    ],
+  };
+
+  return (
+    <>
+      <Script
+        id="schema-templates"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(templateSchema) }}
+      />
+
+      <div className="bg-white">
+        <TemplatesHero />
+
+        <div className="mx-auto max-w-6xl px-4">
+          <PopularCategories />
+
+          <TemplateSection
+            title="Top-Rated Nepdora Templates"
+            description="Hand-picked templates to help you launch your business faster."
+            pageSize={4}
+          />
+        </div>
+      </div>
+    </>
+  );
+}
