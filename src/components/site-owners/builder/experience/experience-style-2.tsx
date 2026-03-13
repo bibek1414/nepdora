@@ -42,7 +42,7 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
     data: collectionResponse,
     isLoading,
     error,
-  } = useCollectionData("experience");
+  } = useCollectionData(experienceData.collectionSlug || "experience");
 
   const experiences = collectionResponse?.results || [];
 

@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2, RefreshCw } from "lucide-react";
+import { Trash2, RefreshCw, Settings } from "lucide-react";
+import Link from "next/link";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -132,6 +133,20 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
       {isEditable && (
         <>
           <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <Link
+              href={`/admin/collections/${(component.data as any).collectionSlug || "experience"}`}
+              target="_blank"
+              rel="noopener"
+            >
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full justify-start bg-white"
+              >
+                <Settings className="mr-1 h-4 w-4" />
+                Manage Data
+              </Button>
+            </Link>
             <Button
               size="sm"
               variant="destructive"

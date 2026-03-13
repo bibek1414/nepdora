@@ -43,7 +43,7 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
     data: collectionResponse,
     isLoading,
     error,
-  } = useCollectionData("experience");
+  } = useCollectionData(experienceData.collectionSlug || "experience");
 
   const experiences = collectionResponse?.results || [];
 
