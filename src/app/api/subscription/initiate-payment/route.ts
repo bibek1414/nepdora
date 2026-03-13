@@ -16,58 +16,64 @@ interface PaymentGatewayConfig {
   is_enabled: boolean;
 }
 
-function validateEnvironmentVariables(): {
-  isValid: boolean;
-  errors: string[];
-  gateways?: {
-    esewa: PaymentGatewayConfig;
-    khalti: PaymentGatewayConfig;
-  };
-} {
-  const errors: string[] = [];
+/**
+ * Fetch central Nepdora credentials from API if environment variables are missing
+ */
+async function fetchNepdoraCentralCredentials(
+  paymentType: "esewa" | "khalti"
+): Promise<{ secret_key: string; merchant_code: string | null }> {
+  try {
+    const centralApiUrl = "https://nepdora.baliyoventures.com/api/nepdora-payments/";
+    console.log(`Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`);
 
-  // Check required environment variables
-  if (!process.env.NEXT_PUBLIC_BASE_URL) {
-    errors.push("Secret key is required");
+    const response = await fetch(`${centralApiUrl}?payment_type=${paymentType}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch central credentials: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const centralGateway = data.find((g: any) => g.payment_type === paymentType);
+
+    if (!centralGateway) {
+      throw new Error(`Central credentials for ${paymentType} not found`);
+    }
+
+    return {
+      secret_key: centralGateway.secret_key,
+      merchant_code: centralGateway.merchant_code,
+    };
+  } catch (error) {
+    console.error("Error fetching central credentials:", error);
+    throw error;
   }
+}
 
-  if (!process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE) {
-    errors.push("Secret key is required");
-  }
-
-  if (!process.env.NEXT_PUBLIC_ESEWA_SECRET_KEY) {
-    errors.push("Secret key is required");
-  }
-
-  if (!process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY) {
-    errors.push("Secret key is required");
-  }
-
-  if (errors.length > 0) {
-    return { isValid: false, errors };
-  }
-
-  // Create gateway configurations from environment variables
-  const gateways = {
+async function getCredentials(paymentType: "esewa" | "khalti") {
+  const envMap = {
     esewa: {
-      payment_type: "esewa" as const,
-      secret_key: process.env.NEXT_PUBLIC_ESEWA_SECRET_KEY!,
-      merchant_code: process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE!,
-      is_enabled: true,
+      merchant_code: process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE,
+      secret_key: process.env.NEXT_PUBLIC_ESEWA_SECRET_KEY,
     },
     khalti: {
-      payment_type: "khalti" as const,
-      secret_key: process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY!,
       merchant_code: null,
-      is_enabled: true,
-    },
+      secret_key: process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY,
+    }
   };
 
-  return {
-    isValid: true,
-    errors: [],
-    gateways,
-  };
+  const creds = envMap[paymentType];
+
+  if (creds.secret_key && (paymentType !== "esewa" || creds.merchant_code)) {
+    return creds;
+  }
+
+  console.log(`Missing ${paymentType} env variables for subscription, fetching from central API...`);
+  return await fetchNepdoraCentralCredentials(paymentType);
 }
 
 function validatePaymentRequest(data: any): {
@@ -117,26 +123,6 @@ function validatePaymentRequest(data: any): {
   };
 }
 
-/**
- * Get payment gateway by type from environment variables
- */
-function getPaymentGateway(
-  paymentType: "esewa" | "khalti"
-): PaymentGatewayConfig {
-  const envValidation = validateEnvironmentVariables();
-
-  if (!envValidation.isValid) {
-    throw new Error(`Payment gateway configuration error`);
-  }
-
-  const gateway = envValidation.gateways![paymentType];
-
-  if (!gateway.is_enabled) {
-    throw new Error(`${paymentType} payment gateway is not enabled`);
-  }
-
-  return gateway;
-}
 
 /**
  * Build redirect URLs with subdomain for subscription flow
@@ -204,26 +190,6 @@ export async function POST(req: Request) {
   console.log("Received POST request to /api/initiate-payment");
 
   try {
-    // Validate environment variables first
-    const envValidation = validateEnvironmentVariables();
-    if (!envValidation.isValid) {
-      console.error("Environment configuration error:", envValidation.errors);
-
-      // Don't expose specific environment variable names in production
-      const errorMessage = isDevelopment()
-        ? `Environment configuration error: ${envValidation.errors.join(", ")}`
-        : "Payment service is currently unavailable. Please try again later.";
-
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Service configuration error",
-          details: isDevelopment() ? envValidation.errors : undefined,
-        },
-        { status: 500 }
-      );
-    }
-
     // Extract subdomain from request headers
     const subdomain = extractSubdomainFromRequest(req);
     console.log("Extracted subdomain:", subdomain);
@@ -251,15 +217,15 @@ export async function POST(req: Request) {
     // Get redirect URLs with /subscription/ path
     const { successUrl, failureUrl } = buildRedirectUrls(req, subdomain);
 
+    // Get credentials (with fallback)
+    const creds = await getCredentials(method as "esewa" | "khalti");
+
     switch (method as PaymentMethod) {
       case "esewa": {
-        // Get eSewa gateway config from environment variables
-        const esewaGateway = getPaymentGateway("esewa");
-
-        // Initialize eSewa API with credentials from environment
+        // Initialize eSewa API with credentials
         const esewaAPI_instance = esewaAPI.initialize({
-          merchantCode: esewaGateway.merchant_code!,
-          secretKey: esewaGateway.secret_key,
+          merchantCode: creds.merchant_code as string,
+          secretKey: creds.secret_key as string,
         });
 
         const esewaRequest: EsewaInitiateRequest = {
@@ -300,12 +266,9 @@ export async function POST(req: Request) {
       }
 
       case "khalti": {
-        // Get Khalti gateway config from environment variables
-        const khaltiGateway = getPaymentGateway("khalti");
-
-        // Initialize Khalti API with credentials from environment
+        // Initialize Khalti API with credentials
         const khaltiAPI_instance = khaltiAPI.initialize({
-          secretKey: khaltiGateway.secret_key,
+          secretKey: creds.secret_key as string,
         });
 
         const khaltiRequest: KhaltiInitiateRequest = {

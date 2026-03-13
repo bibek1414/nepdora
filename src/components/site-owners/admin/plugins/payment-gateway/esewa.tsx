@@ -6,12 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, CreditCard, Save } from "lucide-react";
+import { Loader2, CreditCard, Save, Wallet } from "lucide-react";
 import {
   usePaymentGatewaysEsewa,
   useCreatePaymentGateway,
   useUpdatePaymentGateway,
 } from "@/hooks/owner-site/admin/use-payment-gateway";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { PaymentGateway } from "@/types/owner-site/admin/payment-gateway";
 
@@ -26,6 +33,9 @@ function EsewaPage() {
     is_enabled: false,
   });
 
+  const [configType, setConfigType] = useState<"nepdora" | "own" | null>(null);
+  const [showChoiceModal, setShowChoiceModal] = useState(false);
+
   const esewaConfig = gateways.find(
     (g: PaymentGateway) => g.payment_type === "esewa"
   );
@@ -34,9 +44,17 @@ function EsewaPage() {
     if (esewaConfig) {
       setFormData({
         merchant_code: esewaConfig.merchant_code || "",
-        secret_key: esewaConfig.secret_key,
+        secret_key: esewaConfig.secret_key || "",
         is_enabled: esewaConfig.is_enabled,
       });
+
+      // If it's enabled but has no credentials (or generic ones), it might be Nepdora managed.
+      // For now, if both merchant_code and secret_key are empty but it's enabled, we treat it as Nepdora.
+      if (esewaConfig.is_enabled && !esewaConfig.merchant_code && !esewaConfig.secret_key) {
+        setConfigType("nepdora");
+      } else if (esewaConfig.merchant_code || esewaConfig.secret_key) {
+        setConfigType("own");
+      }
     }
   }, [esewaConfig]);
 
@@ -49,10 +67,52 @@ function EsewaPage() {
   };
 
   const handleSwitchChange = (checked: boolean) => {
+    if (checked) {
+      setShowChoiceModal(true);
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        is_enabled: false,
+      }));
+      setConfigType(null);
+    }
+  };
+
+  const handleChoiceSelect = async (type: "nepdora" | "own") => {
+    setConfigType(type);
     setFormData(prev => ({
       ...prev,
-      is_enabled: checked,
+      is_enabled: true,
     }));
+    setShowChoiceModal(false);
+
+    if (type === "nepdora") {
+      try {
+        if (esewaConfig) {
+          await updateMutation.mutateAsync({
+            id: esewaConfig.id,
+            data: {
+              payment_type: "esewa" as const,
+              merchant_code: "",
+              secret_key: "",
+              is_enabled: true,
+            },
+          });
+          toast.success("eSewa enabled with Nepdora Gateway");
+        } else {
+          await createMutation.mutateAsync({
+            payment_type: "esewa" as const,
+            merchant_code: "",
+            secret_key: "",
+            is_enabled: true,
+          });
+          toast.success("eSewa enabled with Nepdora Gateway");
+        }
+        refetch();
+      } catch (error) {
+        toast.error("Failed to enable Nepdora Gateway");
+      }
+    }
   };
 
   const handleSave = async () => {
@@ -62,8 +122,8 @@ function EsewaPage() {
           id: esewaConfig.id,
           data: {
             payment_type: "esewa" as const,
-            merchant_code: formData.merchant_code,
-            secret_key: formData.secret_key,
+            merchant_code: configType === "own" ? formData.merchant_code : "",
+            secret_key: configType === "own" ? formData.secret_key : "",
             is_enabled: formData.is_enabled,
           },
         });
@@ -71,8 +131,8 @@ function EsewaPage() {
       } else {
         await createMutation.mutateAsync({
           payment_type: "esewa" as const,
-          merchant_code: formData.merchant_code,
-          secret_key: formData.secret_key,
+          merchant_code: configType === "own" ? formData.merchant_code : "",
+          secret_key: configType === "own" ? formData.secret_key : "",
           is_enabled: formData.is_enabled,
         });
         toast.success("eSewa configuration created successfully");
@@ -127,76 +187,133 @@ function EsewaPage() {
               </div>
             </div>
 
-            <div className="mt-10 space-y-6">
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="merchant_code"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Merchant Code
-                    </Label>
-                    <div className="relative">
-                      <CreditCard className="absolute top-3 left-3 z-10 h-4 w-4 text-gray-400" />
+            {formData.is_enabled && configType === "own" && (
+              <div className="mt-10 space-y-6">
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="merchant_code"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Merchant Code
+                      </Label>
+                      <div className="relative">
+                        <CreditCard className="absolute top-3 left-3 z-10 h-4 w-4 text-gray-400" />
+                        <Input
+                          id="merchant_code"
+                          name="merchant_code"
+                          type="text"
+                          placeholder="Enter your eSewa merchant code"
+                          value={formData.merchant_code}
+                          onChange={handleInputChange}
+                          className="h-11 pl-10"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="secret_key"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Secret Key
+                      </Label>
                       <Input
-                        id="merchant_code"
-                        name="merchant_code"
-                        type="text"
-                        placeholder="Enter your eSewa merchant code"
-                        value={formData.merchant_code}
+                        id="secret_key"
+                        name="secret_key"
+                        type="password"
+                        placeholder="Enter your eSewa secret key"
+                        value={formData.secret_key}
                         onChange={handleInputChange}
-                        className="h-11 pl-10"
+                        className="h-11"
                         required
                       />
+                      <p className="text-xs text-gray-500">
+                        Keep your secret key secure and never share it publicly
+                      </p>
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="secret_key"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Secret Key
-                    </Label>
-                    <Input
-                      id="secret_key"
-                      name="secret_key"
-                      type="password"
-                      placeholder="Enter your eSewa secret key"
-                      value={formData.secret_key}
-                      onChange={handleInputChange}
-                      className="h-11"
-                      required
-                    />
-                    <p className="text-xs text-gray-500">
-                      Keep your secret key secure and never share it publicly
-                    </p>
-                  </div>
-
-                  <div className="pt-4">
-                    <Button
-                      onClick={handleSave}
-                      disabled={
-                        isSubmitting ||
-                        !formData.merchant_code ||
-                        !formData.secret_key
-                      }
-                      className="h-11 w-full bg-gray-600 text-white hover:bg-gray-700"
-                    >
-                      {isSubmitting && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      )}
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Settings
-                    </Button>
+                    <div className="pt-4">
+                      <Button
+                        onClick={handleSave}
+                        disabled={
+                          isSubmitting ||
+                          !formData.merchant_code ||
+                          !formData.secret_key
+                        }
+                        className="h-11 w-full bg-green-600 text-white hover:bg-green-700"
+                      >
+                        {isSubmitting && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Settings
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {formData.is_enabled && configType === "nepdora" && (
+              <div className="mt-10 flex flex-col items-center justify-center space-y-4 rounded-lg border border-dashed border-gray-300 p-8 text-center">
+                <div className="rounded-full bg-green-100 p-3">
+                  <CreditCard className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Nepdora Managed eSewa
+                  </h3>
+                  <p className="max-w-xs text-sm text-gray-500">
+                    Your payments are currently being processed via Nepdora's eSewa account.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={showChoiceModal} onOpenChange={setShowChoiceModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose eSewa Configuration</DialogTitle>
+            <DialogDescription>
+              Select how you want to handle eSewa payments for your store.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-1 gap-4 py-4">
+            <button
+              onClick={() => handleChoiceSelect("nepdora")}
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 text-left hover:border-green-600 hover:bg-accent transition-all duration-200"
+            >
+              <CreditCard className="mb-3 h-6 w-6 text-green-600" />
+              <div className="text-center">
+                <span className="block font-semibold">Use Nepdora Gateway</span>
+                <span className="text-xs text-muted-foreground mt-1">
+                  Hassle-free setup. Payments managed by Nepdora.
+                </span>
+              </div>
+            </button>
+            <button
+              onClick={() => handleChoiceSelect("own")}
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 text-left hover:border-green-600 hover:bg-accent transition-all duration-200"
+            >
+              <Wallet className="mb-3 h-6 w-6 text-green-600" />
+              <div className="text-center">
+                <span className="block font-semibold">Use Own Credentials</span>
+                <span className="text-xs text-muted-foreground mt-1">
+                  Connect your own eSewa merchant account.
+                </span>
+              </div>
+            </button>
+          </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

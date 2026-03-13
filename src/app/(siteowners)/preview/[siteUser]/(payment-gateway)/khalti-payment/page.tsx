@@ -90,6 +90,12 @@ export default function KhaltiPayment() {
         throw new Error("Payment URL not received from Khalti");
       }
 
+      // Store order ID in session storage for verification later
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(`order_id_${pidx}`, String(order.id));
+        console.log(`Stored order ID ${order.id} for pidx ${pidx}`);
+      }
+
       setPaymentState({
         isLoading: false,
         error: null,

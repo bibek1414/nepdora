@@ -132,6 +132,10 @@ export default function SuccessPage() {
       throw new Error("eSewa response data not found");
     }
 
+    const transactionKey = "esewa_transaction";
+    const storedTransaction = typeof window !== "undefined" ? sessionStorage.getItem(transactionKey) : null;
+    const products_purchased = storedTransaction ? [JSON.parse(storedTransaction)] : [];
+
     const response = await fetch("/api/subscription/verify-payment", {
       method: "POST",
       headers: {
@@ -140,6 +144,7 @@ export default function SuccessPage() {
       body: JSON.stringify({
         method: "esewa",
         data: data,
+        products_purchased: products_purchased,
       }),
     });
 
@@ -153,6 +158,10 @@ export default function SuccessPage() {
       throw new Error("Khalti payment identifier not found");
     }
 
+    const transactionKey = "khalti_transaction";
+    const storedTransaction = typeof window !== "undefined" ? sessionStorage.getItem(transactionKey) : null;
+    const products_purchased = storedTransaction ? [JSON.parse(storedTransaction)] : [];
+
     const response = await fetch("/api/subscription/verify-payment", {
       method: "POST",
       headers: {
@@ -161,6 +170,7 @@ export default function SuccessPage() {
       body: JSON.stringify({
         method: "khalti",
         pidx: pidx,
+        products_purchased: products_purchased,
       }),
     });
 

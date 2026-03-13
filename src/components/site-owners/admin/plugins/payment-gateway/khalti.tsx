@@ -6,12 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Wallet, Save } from "lucide-react";
+import { Loader2, Wallet, Save, CreditCard } from "lucide-react";
 import {
   usePaymentGatewaysKhalti,
   useCreatePaymentGateway,
   useUpdatePaymentGateway,
 } from "@/hooks/owner-site/admin/use-payment-gateway";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { PaymentGateway } from "@/types/owner-site/admin/payment-gateway";
 
@@ -29,6 +36,9 @@ function KhaltiPage() {
     is_enabled: false,
   });
 
+  const [configType, setConfigType] = useState<"nepdora" | "own" | null>(null);
+  const [showChoiceModal, setShowChoiceModal] = useState(false);
+
   const khaltiConfig = gateways.find(
     (g: PaymentGateway) => g.payment_type === "khalti"
   );
@@ -36,9 +46,15 @@ function KhaltiPage() {
   useEffect(() => {
     if (khaltiConfig) {
       setFormData({
-        secret_key: khaltiConfig.secret_key,
+        secret_key: khaltiConfig.secret_key || "",
         is_enabled: khaltiConfig.is_enabled,
       });
+
+      if (khaltiConfig.is_enabled && !khaltiConfig.secret_key) {
+        setConfigType("nepdora");
+      } else if (khaltiConfig.secret_key) {
+        setConfigType("own");
+      }
     }
   }, [khaltiConfig]);
 
@@ -51,10 +67,50 @@ function KhaltiPage() {
   };
 
   const handleSwitchChange = (checked: boolean) => {
+    if (checked) {
+      setShowChoiceModal(true);
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        is_enabled: false,
+      }));
+      setConfigType(null);
+    }
+  };
+
+  const handleChoiceSelect = async (type: "nepdora" | "own") => {
+    setConfigType(type);
     setFormData(prev => ({
       ...prev,
-      is_enabled: checked,
+      is_enabled: true,
     }));
+    setShowChoiceModal(false);
+
+    if (type === "nepdora") {
+      try {
+        if (khaltiConfig) {
+          await updateMutation.mutateAsync({
+            id: khaltiConfig.id,
+            data: {
+              payment_type: "khalti" as const,
+              secret_key: "",
+              is_enabled: true,
+            },
+          });
+          toast.success("Khalti enabled with Nepdora Gateway");
+        } else {
+          await createMutation.mutateAsync({
+            payment_type: "khalti" as const,
+            secret_key: "",
+            is_enabled: true,
+          });
+          toast.success("Khalti enabled with Nepdora Gateway");
+        }
+        refetch();
+      } catch (error) {
+        toast.error("Failed to enable Nepdora Gateway");
+      }
+    }
   };
 
   const handleSave = async () => {
@@ -64,7 +120,7 @@ function KhaltiPage() {
           id: khaltiConfig.id,
           data: {
             payment_type: "khalti" as const,
-            secret_key: formData.secret_key,
+            secret_key: configType === "own" ? formData.secret_key : "",
             is_enabled: formData.is_enabled,
           },
         });
@@ -72,7 +128,7 @@ function KhaltiPage() {
       } else {
         await createMutation.mutateAsync({
           payment_type: "khalti" as const,
-          secret_key: formData.secret_key,
+          secret_key: configType === "own" ? formData.secret_key : "",
           is_enabled: formData.is_enabled,
         });
         toast.success("Khalti configuration created successfully");
@@ -121,59 +177,116 @@ function KhaltiPage() {
                   <Switch
                     checked={formData.is_enabled}
                     onCheckedChange={handleSwitchChange}
-                    className="data-[state=checked]:bg-green-600"
+                    className="data-[state=checked]:bg-purple-600"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="mt-10 space-y-6">
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="secret_key"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Secret Key
-                    </Label>
-                    <div className="relative">
-                      <Wallet className="absolute top-3 left-3 z-10 h-4 w-4 text-gray-400" />
-                      <Input
-                        id="secret_key"
-                        name="secret_key"
-                        type="password"
-                        placeholder="Enter your Khalti secret key"
-                        value={formData.secret_key}
-                        onChange={handleInputChange}
-                        className="h-11 pl-10"
-                        required
-                      />
+            {formData.is_enabled && configType === "own" && (
+              <div className="mt-10 space-y-6">
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="secret_key"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Secret Key
+                      </Label>
+                      <div className="relative">
+                        <Wallet className="absolute top-3 left-3 z-10 h-4 w-4 text-gray-400" />
+                        <Input
+                          id="secret_key"
+                          name="secret_key"
+                          type="password"
+                          placeholder="Enter your Khalti secret key"
+                          value={formData.secret_key}
+                          onChange={handleInputChange}
+                          className="h-11 pl-10"
+                          required
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Keep your secret key secure and never share it publicly
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500">
-                      Keep your secret key secure and never share it publicly
-                    </p>
-                  </div>
 
-                  <div className="pt-4">
-                    <Button
-                      onClick={handleSave}
-                      disabled={isSubmitting || !formData.secret_key}
-                      className="h-11 w-full bg-gray-600 text-white hover:bg-gray-700"
-                    >
-                      {isSubmitting && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      )}
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Settings
-                    </Button>
+                    <div className="pt-4">
+                      <Button
+                        onClick={handleSave}
+                        disabled={isSubmitting || !formData.secret_key}
+                        className="h-11 w-full bg-purple-600 text-white hover:bg-purple-700"
+                      >
+                        {isSubmitting && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Settings
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {formData.is_enabled && configType === "nepdora" && (
+              <div className="mt-10 flex flex-col items-center justify-center space-y-4 rounded-lg border border-dashed border-gray-300 p-8 text-center">
+                <div className="rounded-full bg-purple-100 p-3">
+                  <Wallet className="h-6 w-6 text-purple-600" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Nepdora Managed Khalti
+                  </h3>
+                  <p className="max-w-xs text-sm text-gray-500">
+                    Your payments are currently being processed via Nepdora's Khalti account.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={showChoiceModal} onOpenChange={setShowChoiceModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose Khalti Configuration</DialogTitle>
+            <DialogDescription>
+              Select how you want to handle Khalti payments for your store.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-1 gap-4 py-4">
+            <button
+              onClick={() => handleChoiceSelect("nepdora")}
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 text-left hover:border-purple-600 hover:bg-accent transition-all duration-200"
+            >
+              <CreditCard className="mb-3 h-6 w-6 text-purple-600" />
+              <div className="text-center">
+                <span className="block font-semibold">Use Nepdora Gateway</span>
+                <span className="text-xs text-muted-foreground mt-1">
+                  Hassle-free setup. Payments managed by Nepdora.
+                </span>
+              </div>
+            </button>
+            <button
+              onClick={() => handleChoiceSelect("own")}
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 text-left hover:border-purple-600 hover:bg-accent transition-all duration-200"
+            >
+              <Wallet className="mb-3 h-6 w-6 text-purple-600" />
+              <div className="text-center">
+                <span className="block font-semibold">Use Own Credentials</span>
+                <span className="text-xs text-muted-foreground mt-1">
+                  Connect your own Khalti merchant account.
+                </span>
+              </div>
+            </button>
+          </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

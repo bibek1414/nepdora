@@ -34,11 +34,162 @@ function extractSubdomainFromRequest(req: Request): string | null {
   return null;
 }
 
-// Helper function to fetch payment gateway
+/**
+ * Fetch central Nepdora credentials if tenant has not provided theirs
+ */
+async function fetchNepdoraCentralCredentials(
+  paymentType: "esewa" | "khalti"
+): Promise<{ secret_key: string; merchant_code: string | null }> {
+  try {
+    const centralApiUrl = "https://nepdora.baliyoventures.com/api/nepdora-payments/";
+    console.log(`Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`);
+
+    const response = await fetch(`${centralApiUrl}?payment_type=${paymentType}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch central credentials: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const centralGateway = data.find((g: any) => g.payment_type === paymentType);
+
+    if (!centralGateway) {
+      throw new Error(`Central credentials for ${paymentType} not found`);
+    }
+
+    return {
+      secret_key: centralGateway.secret_key,
+      merchant_code: centralGateway.merchant_code,
+    };
+  } catch (error) {
+    console.error("Error fetching central credentials:", error);
+    throw error;
+  }
+}
+
+/**
+ * Report a successful "Nepdora Managed" transaction to central history
+ */
+async function reportToCentralPaymentHistory(data: {
+  subdomain: string;
+  payment_type: string;
+  pay_amount: string;
+  transaction_id: string;
+  products_purchased?: any;
+  additional_info?: any;
+}) {
+  try {
+    const centralApiUrl = "https://nepdora.baliyoventures.com/api/tenant-central-payments/";
+    console.log(`Reporting managed transaction for ${data.subdomain} to central history...`);
+
+    const response = await fetch(centralApiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Tenant": data.subdomain,
+      },
+      body: JSON.stringify({
+        tenant: data.subdomain, // Required field on backend
+        payment_type: data.payment_type,
+        pay_amount: data.pay_amount,
+        transaction_id: data.transaction_id,
+        products_purchased: data.products_purchased || {},
+        status: "received",
+        additional_info: {
+          ...data.additional_info,
+          reported_from: "nextjs-verify-payment",
+          tenant_subdomain: data.subdomain
+        }
+      }),
+    });
+
+    console.log("Central reporting payload:", JSON.stringify({
+      tenant: data.subdomain,
+      payment_type: data.payment_type,
+      pay_amount: data.pay_amount,
+      transaction_id: data.transaction_id,
+      products_count: data.products_purchased?.length || 0,
+      status: "received"
+    }, null, 2));
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.warn(`Central history reporting failed (${response.status}):`, errorText);
+    } else {
+      console.log("Central history reporting successful");
+    }
+  } catch (error) {
+    console.error("Error reporting to central payment history:", error);
+  }
+}
+
+/**
+ * Report a successful transaction to the tenant's own payment history
+ */
+async function reportToTenantPaymentHistory(data: {
+  subdomain: string;
+  payment_type: string;
+  pay_amount: string;
+  transaction_id: string;
+  products_purchased?: any;
+  additional_info?: any;
+}) {
+  try {
+    // Determine tenant API base URL
+    const baseUrl = buildPreviewApi(data.subdomain);
+    const historyUrl = `${baseUrl}/api/payment-gateway/history/`;
+    
+    console.log(`Reporting tenant transaction for ${data.subdomain} to ${historyUrl}...`);
+
+    const response = await fetch(historyUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        payment_type: data.payment_type,
+        pay_amount: data.pay_amount,
+        transaction_id: data.transaction_id,
+        status: "received",
+        additional_info: {
+          ...data.additional_info,
+          reported_from: "nextjs-verify-payment-tenant"
+        }
+      }),
+    });
+
+    console.log("Tenant reporting payload:", JSON.stringify({
+      subdomain: data.subdomain,
+      payment_type: data.payment_type,
+      pay_amount: data.pay_amount,
+      transaction_id: data.transaction_id,
+      products_count: data.products_purchased?.length || 0,
+      status: "received"
+    }, null, 2));
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.warn(`Tenant history reporting failed (${response.status}):`, errorText);
+    } else {
+      console.log("Tenant history reporting successful");
+    }
+  } catch (error) {
+    console.error("Error reporting to tenant payment history:", error);
+  }
+}
+
+/**
+ * Get payment gateway by type and handle fallback if credentials are missing
+ */
 async function getPaymentGateway(
   subdomain: string | null,
   paymentType: "esewa" | "khalti"
-): Promise<PaymentGatewayBackend> {
+): Promise<PaymentGatewayBackend & { is_fallback?: boolean }> {
   if (!subdomain) {
     throw new Error("Subdomain is required to fetch payment gateway");
   }
@@ -68,14 +219,29 @@ async function getPaymentGateway(
     );
   }
 
-  return gateway;
+  // Check if credentials are missing (fallback logic)
+  if (!gateway.secret_key || (paymentType === "esewa" && !gateway.merchant_code)) {
+    console.log(`${paymentType} credentials missing for tenant during verification. Falling back to Nepdora central credentials.`);
+    const centralCreds = await fetchNepdoraCentralCredentials(paymentType);
+    
+    return {
+      ...gateway,
+      secret_key: centralCreds.secret_key,
+      merchant_code: centralCreds.merchant_code,
+      is_fallback: true
+    };
+  }
+
+  return { ...gateway, is_fallback: false };
 }
 
 export async function POST(req: Request) {
   console.log("Received POST request to /api/verify-payment");
 
   try {
-    const { pidx, method, data } = await req.json();
+    const body = await req.json();
+    const { pidx, method, data, products_purchased } = body;
+    console.log("Verify payment request body:", JSON.stringify(body, null, 2));
 
     if (!method) {
       return NextResponse.json(
@@ -140,15 +306,39 @@ export async function POST(req: Request) {
           `Khalti payment verification completed. Status: ${paymentData.status}`
         );
 
+        const totalAmount = khaltiAPI_instance.formatAmountFromPaisa(
+          paymentData.total_amount
+        );
+
+        // Report to history
+        if (statusValidation.isSuccess && subdomain) {
+          const reportData = {
+            subdomain,
+            payment_type: "khalti",
+            pay_amount: totalAmount,
+            transaction_id: paymentData.transaction_id || pidx,
+            products_purchased: products_purchased,
+            additional_info: {
+              pidx: paymentData.pidx,
+              status: paymentData.status,
+              is_fallback: khaltiGateway.is_fallback,
+            }
+          };
+
+          if (khaltiGateway.is_fallback) {
+            reportToCentralPaymentHistory(reportData);
+          } else {
+            reportToTenantPaymentHistory(reportData);
+          }
+        }
+
         return NextResponse.json({
           success: true,
           data: {
             pidx: paymentData.pidx,
             status: paymentData.status,
             transaction_id: paymentData.transaction_id,
-            total_amount: khaltiAPI_instance.formatAmountFromPaisa(
-              paymentData.total_amount
-            ),
+            total_amount: totalAmount,
             fee: khaltiAPI_instance.formatAmountFromPaisa(paymentData.fee),
             refunded: paymentData.refunded,
             is_success: statusValidation.isSuccess,
@@ -204,6 +394,29 @@ export async function POST(req: Request) {
         console.log(
           `eSewa payment verification completed. Status: ${paymentData.status}`
         );
+
+        // Report to history
+        if (paymentData.is_success && subdomain) {
+          const reportData = {
+            subdomain,
+            payment_type: "esewa",
+            pay_amount: paymentData.total_amount.toString(),
+            transaction_id: paymentData.transaction_code || paymentData.transaction_uuid,
+            products_purchased: products_purchased,
+            additional_info: {
+              transaction_uuid: paymentData.transaction_uuid,
+              ref_id: paymentData.ref_id,
+              status: paymentData.status,
+              is_fallback: esewaGateway.is_fallback,
+            }
+          };
+
+          if (esewaGateway.is_fallback) {
+            reportToCentralPaymentHistory(reportData);
+          } else {
+            reportToTenantPaymentHistory(reportData);
+          }
+        }
 
         return NextResponse.json({
           success: true,

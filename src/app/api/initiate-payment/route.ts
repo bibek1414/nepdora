@@ -122,7 +122,45 @@ async function fetchPaymentGatewaysFromBackend(
 }
 
 /**
- * Get payment gateway by type
+ * Fetch central Nepdora credentials if tenant has not provided theirs
+ */
+async function fetchNepdoraCentralCredentials(
+  paymentType: "esewa" | "khalti"
+): Promise<{ secret_key: string; merchant_code: string | null }> {
+  try {
+    const centralApiUrl = "https://nepdora.baliyoventures.com/api/nepdora-payments/";
+    console.log(`Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`);
+
+    const response = await fetch(`${centralApiUrl}?payment_type=${paymentType}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch central credentials: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const centralGateway = data.find((g: any) => g.payment_type === paymentType);
+
+    if (!centralGateway) {
+      throw new Error(`Central credentials for ${paymentType} not found`);
+    }
+
+    return {
+      secret_key: centralGateway.secret_key,
+      merchant_code: centralGateway.merchant_code,
+    };
+  } catch (error) {
+    console.error("Error fetching central credentials:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get payment gateway by type and handle fallback if credentials are missing
  */
 async function getPaymentGateway(
   subdomain: string | null,
@@ -141,6 +179,18 @@ async function getPaymentGateway(
     throw new Error(
       `${paymentType} payment gateway is not enabled for this store`
     );
+  }
+
+  // Check if credentials are missing (fallback logic)
+  if (!gateway.secret_key || (paymentType === "esewa" && !gateway.merchant_code)) {
+    console.log(`${paymentType} credentials missing for tenant. Falling back to Nepdora central credentials.`);
+    const centralCreds = await fetchNepdoraCentralCredentials(paymentType);
+    
+    return {
+      ...gateway,
+      secret_key: centralCreds.secret_key,
+      merchant_code: centralCreds.merchant_code,
+    };
   }
 
   return gateway;
