@@ -121,7 +121,7 @@ export const Footer = () => {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
             {/* Categories */}
             <div>
-              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Categories
               </h4>
               <div className="flex flex-col space-y-2">
@@ -140,9 +140,7 @@ export const Footer = () => {
 
             {/* Features */}
             <div>
-              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
-                Features
-              </h4>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">Features</h4>
               <div className="flex flex-col space-y-2">
                 <FooterLink href="/features/esewa-integration">
                   eSewa Integration
@@ -163,7 +161,7 @@ export const Footer = () => {
 
             {/* Tools */}
             <div>
-              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Free Tools
               </h4>
               <div className="flex flex-col space-y-2">
@@ -176,7 +174,7 @@ export const Footer = () => {
 
             {/* Templates */}
             <div>
-              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Templates
               </h4>
               <div className="flex flex-col space-y-2">
@@ -189,9 +187,7 @@ export const Footer = () => {
 
             {/* Compare */}
             <div>
-              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
-                Compare
-              </h4>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">Compare</h4>
               <div className="flex flex-col space-y-2">
                 <FooterLink href="/compare/shopify-and-nepdora">
                   Shopify vs Nepdora
@@ -210,7 +206,7 @@ export const Footer = () => {
 
             {/* Cities */}
             <div>
-              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Popular Cities
               </h4>
               <div className="grid grid-cols-2 gap-x-2 gap-y-2">
