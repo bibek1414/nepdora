@@ -118,11 +118,11 @@ export const Footer = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-            {/* Platforms */}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+            {/* Categories */}
             <div>
               <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
-                Platforms
+                Categories
               </h4>
               <div className="flex flex-col space-y-2">
                 <FooterLink href="/ecommerce-website">
@@ -135,6 +135,29 @@ export const Footer = () => {
                 </FooterLink>
                 <FooterLink href="/clinic-website">Clinic Website</FooterLink>
                 <FooterLink href="/dental-website">Dental Website</FooterLink>
+              </div>
+            </div>
+
+            {/* Features */}
+            <div>
+              <h4 className="mb-4 text-sm font-bold tracking-widest text-gray-900 uppercase">
+                Features
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/features/esewa-integration">
+                  eSewa Integration
+                </FooterLink>
+                <FooterLink href="/features/khalti">
+                  Khalti Integration
+                </FooterLink>
+                <FooterLink href="/features/sms">SMS Integration</FooterLink>
+                <FooterLink href="/features/facebook-pixel">
+                  Facebook Pixel
+                </FooterLink>
+                <FooterLink href="/features/dash">Dash Logistics</FooterLink>
+                <FooterLink href="/features/pathao-parcel">
+                  Pathao Parcel
+                </FooterLink>
               </div>
             </div>
 

@@ -8,49 +8,169 @@
 
 <url>
   <loc>https://www.nepdora.com/</loc>
-  <lastmod>2025-11-13T10:57:19+00:00</lastmod>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://www.nepdora.com/features</loc>
-  <lastmod>2025-11-13T10:57:19+00:00</lastmod>
-  <priority>1.00</priority>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.90</priority>
 </url>
 <url>
   <loc>https://www.nepdora.com/templates</loc>
-  <lastmod>2025-11-13T10:57:19+00:00</lastmod>
-  <priority>1.00</priority>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.90</priority>
 </url>
 <url>
   <loc>https://www.nepdora.com/pricing</loc>
-  <lastmod>2025-11-13T10:57:19+00:00</lastmod>
-  <priority>1.00</priority>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.90</priority>
 </url>
 <url>
   <loc>https://www.nepdora.com/about</loc>
-  <lastmod>2025-11-13T10:57:19+00:00</lastmod>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/agency-website</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
+  <loc>https://www.nepdora.com/booking-website</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/clinic-website</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/dental-website</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/ecommerce-website</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/restaurant-website</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+
+<url>
+  <loc>https://www.nepdora.com/features/esewa-integration</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/features/khalti</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/features/sms</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/features/facebook-pixel</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/features/dash</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/features/pathao-parcel</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+<url>
+  <loc>https://www.nepdora.com/agency-website/kathmandu</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.70</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/agency-website/pokhara</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.70</priority>
+</url>
+
+<url>
+  <loc>https://www.nepdora.com/blog</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/faq</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.70</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/support</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.70</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/free-website-analyzer</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/invoice-builder</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/website-templates</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.90</priority>
+</url>
+
+<!-- Major Comparison Pages -->
+<url>
+  <loc>https://www.nepdora.com/compare/shopify-and-nepdora</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/compare/webflow-and-nepdora</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/compare/wordpress-and-nepdora</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.nepdora.com/compare/wix-and-nepdora</loc>
+  <lastmod>2026-03-13T12:54:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+<url>
   <loc>https://www.nepdora.com/terms</loc>
   <lastmod>2025-11-13T10:57:19+00:00</lastmod>
-  <priority>0.64</priority>
+  <priority>0.50</priority>
 </url>
 <url>
   <loc>https://www.nepdora.com/privacy-policy</loc>
   <lastmod>2025-11-13T10:57:19+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://www.nepdora.com/data-delete</loc>
-  <lastmod>2025-11-13T10:57:19+00:00</lastmod>
-  <priority>0.51</priority>
+  <priority>0.50</priority>
 </url>
 <url>
   <loc>https://www.nepdora.com/contact</loc>
   <lastmod>2025-11-13T10:57:19+00:00</lastmod>
-  <priority>0.41</priority>
+  <priority>0.60</priority>
 </url>
-
 
 </urlset>
