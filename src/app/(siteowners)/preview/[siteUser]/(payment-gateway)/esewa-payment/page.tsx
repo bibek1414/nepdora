@@ -86,8 +86,24 @@ export default function EsewaPayment() {
           `order_id_${esewaConfig.transaction_uuid}`,
           String(order.id)
         );
+        sessionStorage.setItem(
+          `order_number_${esewaConfig.transaction_uuid}`,
+          order.order_number
+        );
+        sessionStorage.setItem(
+          `customer_name_${esewaConfig.transaction_uuid}`,
+          order.customer_name
+        );
+        sessionStorage.setItem(
+          `mobile_number_${esewaConfig.transaction_uuid}`,
+          order.customer_phone
+        );
+        sessionStorage.setItem(
+          `products_${esewaConfig.transaction_uuid}`,
+          JSON.stringify(order.items || order.order_items || [])
+        );
         console.log(
-          `Stored order ID ${order.id} for transaction ${esewaConfig.transaction_uuid}`
+          `Stored order ID ${order.id}, customer name, and products for transaction ${esewaConfig.transaction_uuid}`
         );
       }
 

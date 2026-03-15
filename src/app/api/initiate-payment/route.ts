@@ -360,11 +360,7 @@ export async function POST(req: Request) {
           amount: khaltiAPI_instance.formatAmount(amount),
           purchase_order_id: transactionId,
           purchase_order_name: productName,
-          customer_info: {
-            name: "Test User",
-            email: "test@example.com",
-            phone: "9800000000",
-          },
+
           amount_breakdown: [
             {
               label: productName,

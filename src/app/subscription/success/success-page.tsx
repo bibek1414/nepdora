@@ -32,10 +32,14 @@ export default function SuccessPage() {
 
       try {
         // Prevent duplicate verification on page reload
-        if (sessionStorage.getItem("verified_subscription_payment") === "true") {
+        if (
+          sessionStorage.getItem("verified_subscription_payment") === "true"
+        ) {
           setStatus("success");
           setMessage("Your subscription has been activated successfully!");
-          setTimeout(() => { router.push("/admin"); }, 3000);
+          setTimeout(() => {
+            router.push("/admin");
+          }, 3000);
           return;
         }
 
@@ -159,6 +163,7 @@ export default function SuccessPage() {
         method: "esewa",
         data: data,
         products_purchased: products_purchased,
+        order_id: products_purchased[0]?.plan_id,
       }),
     });
 
@@ -190,6 +195,7 @@ export default function SuccessPage() {
         method: "khalti",
         pidx: pidx,
         products_purchased: products_purchased,
+        order_id: products_purchased[0]?.plan_id,
       }),
     });
 
@@ -316,6 +322,28 @@ export default function SuccessPage() {
                       {verificationData.total_amount}
                     </p>
                   )}
+                  {verificationData.products_purchased &&
+                    verificationData.products_purchased.length > 0 && (
+                      <div className="mt-2 border-t pt-2">
+                        <span className="mb-1 block text-gray-600">
+                          Products Purchased:
+                        </span>
+                        <ul className="space-y-1">
+                          {verificationData.products_purchased.map(
+                            (item: any, idx: number) => (
+                              <li
+                                key={idx}
+                                className="font-semibold text-gray-800"
+                              >
+                                {item.name ||
+                                  item.plan_name ||
+                                  "Subscription Plan"}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
                 </div>
               )}
 

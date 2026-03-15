@@ -72,6 +72,11 @@ export interface PaymentHistory {
     pidx?: string;
     status?: string;
     is_fallback: boolean;
+    order_id?: string;
+    mobile?: string;
+    customer_info?: {
+      name: string;
+    };
     [key: string]: any;
   };
   is_read: boolean;
@@ -87,6 +92,11 @@ export interface TenantCentralPayment extends Omit<PaymentHistory, "id"> {
     status: string;
     is_fallback: boolean;
     tenant_subdomain: string;
+    order_id?: string;
+    mobile?: string;
+    customer_info?: {
+      name: string;
+    };
     [key: string]: any;
   };
 }

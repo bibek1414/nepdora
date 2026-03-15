@@ -14,11 +14,6 @@ export interface KhaltiInitiateRequest {
   amount: number; // Amount in paisa
   purchase_order_id: string;
   purchase_order_name: string;
-  customer_info?: {
-    name: string;
-    email: string;
-    phone: string;
-  };
   amount_breakdown?: Array<{
     label: string;
     amount: number;
@@ -253,4 +248,5 @@ export interface PaymentVerification {
   transaction_code?: string; // For eSewa
   transaction_uuid?: string; // For eSewa
   ref_id?: string; // For eSewa
+  products_purchased?: any[];
 }

@@ -212,6 +212,14 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
               <div className="space-y-4">
                 <div>
                   <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Order ID
+                  </label>
+                  <p className="mt-1 font-mono font-bold text-[#003d79]">
+                    {currentPayment.additional_info?.order_id || "—"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                     Transaction ID
                   </label>
                   <p className="mt-1 font-mono text-gray-900">
@@ -237,6 +245,26 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
               </div>
 
               <div className="space-y-4">
+                {currentPayment.additional_info?.customer_info?.name && (
+                  <div>
+                    <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Customer Name
+                    </label>
+                    <p className="mt-1 font-medium text-gray-900">
+                      {currentPayment.additional_info.customer_info.name}
+                    </p>
+                  </div>
+                )}
+                {currentPayment.additional_info?.mobile && (
+                  <div>
+                    <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Customer Mobile
+                    </label>
+                    <p className="mt-1 font-medium text-gray-900">
+                      {currentPayment.additional_info.mobile}
+                    </p>
+                  </div>
+                )}
                 {currentPayment.additional_info?.pidx && (
                   <div>
                     <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">

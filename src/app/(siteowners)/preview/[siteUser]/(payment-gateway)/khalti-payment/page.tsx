@@ -93,7 +93,15 @@ export default function KhaltiPayment() {
       // Store order ID in session storage for verification later
       if (typeof window !== "undefined") {
         sessionStorage.setItem(`order_id_${pidx}`, String(order.id));
-        console.log(`Stored order ID ${order.id} for pidx ${pidx}`);
+        sessionStorage.setItem(`customer_name_${pidx}`, order.customer_name);
+        sessionStorage.setItem(`mobile_number_${pidx}`, order.customer_phone);
+        sessionStorage.setItem(
+          `products_${pidx}`,
+          JSON.stringify(order.items || order.order_items || [])
+        );
+        console.log(
+          `Stored order ID ${order.id}, customer name, and products for pidx ${pidx}`
+        );
       }
 
       setPaymentState({

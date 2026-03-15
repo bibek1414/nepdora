@@ -139,11 +139,13 @@ async function reportToCentralPaymentHistory(data: {
     if (!response.ok) {
       const errorText = await response.text();
       console.warn(
-        `Central history reporting failed (${response.status}):`,
+        `Central history reporting failed (${response.status}) for ${data.subdomain}:`,
         errorText
       );
     } else {
-      console.log("Central history reporting successful");
+      console.log(
+        `Central history reporting successful for ${data.subdomain} (ID: ${data.transaction_id}, Order: ${data.additional_info?.order_id})`
+      );
     }
   } catch (error) {
     console.error("Error reporting to central payment history:", error);
@@ -279,7 +281,15 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { pidx, method, data, products_purchased } = body;
+    const {
+      pidx,
+      method,
+      data,
+      products_purchased,
+      order_id,
+      customer_name,
+      mobile,
+    } = body;
     console.log("Verify payment request body:", JSON.stringify(body, null, 2));
 
     if (!method) {
@@ -361,13 +371,18 @@ export async function POST(req: Request) {
               pidx: paymentData.pidx,
               status: paymentData.status,
               is_fallback: khaltiGateway.is_fallback,
+              order_id,
+              customer_info: {
+                name: customer_name || "Customer",
+              },
+              mobile: mobile || body.mobile, // Khalti ID or mobile
             },
           };
 
           if (khaltiGateway.is_fallback) {
-            reportToCentralPaymentHistory(reportData);
+            await reportToCentralPaymentHistory(reportData);
           } else {
-            reportToTenantPaymentHistory(reportData);
+            await reportToTenantPaymentHistory(reportData);
           }
         }
 
@@ -382,6 +397,7 @@ export async function POST(req: Request) {
             refunded: paymentData.refunded,
             is_success: statusValidation.isSuccess,
             should_provide_service: statusValidation.shouldProvideService,
+            products_purchased: products_purchased,
           },
           message: statusValidation.message,
         });
@@ -448,13 +464,18 @@ export async function POST(req: Request) {
               ref_id: paymentData.ref_id,
               status: paymentData.status,
               is_fallback: esewaGateway.is_fallback,
+              order_id,
+              customer_info: {
+                name: customer_name || "Customer",
+              },
+              mobile, // eSewa username or mobile
             },
           };
 
           if (esewaGateway.is_fallback) {
-            reportToCentralPaymentHistory(reportData);
+            await reportToCentralPaymentHistory(reportData);
           } else {
-            reportToTenantPaymentHistory(reportData);
+            await reportToTenantPaymentHistory(reportData);
           }
         }
 
@@ -468,6 +489,7 @@ export async function POST(req: Request) {
             ref_id: paymentData.ref_id,
             is_success: paymentData.is_success,
             should_provide_service: paymentData.should_provide_service,
+            products_purchased: products_purchased,
           },
           message: verificationResponse.message,
         });

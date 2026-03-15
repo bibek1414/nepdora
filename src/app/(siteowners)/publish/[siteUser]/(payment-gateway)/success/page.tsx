@@ -147,6 +147,25 @@ function PaymentSuccessContent() {
                   sessionStorage.getItem(`products_${paymentId}`) || "[]"
                 )
               : [],
+          order_id:
+            purchaseOrderId ||
+            (purchaseOrderName?.startsWith("Order #")
+              ? purchaseOrderName
+              : undefined) ||
+            (typeof window !== "undefined"
+              ? sessionStorage.getItem(`order_number_${paymentId}`) ||
+                sessionStorage.getItem(`order_id_${paymentId}`)
+              : undefined),
+          customer_name:
+            typeof window !== "undefined"
+              ? sessionStorage.getItem(`customer_name_${paymentId}`) || ""
+              : "",
+          mobile:
+            mobile ||
+            (typeof window !== "undefined"
+              ? sessionStorage.getItem(`mobile_number_${paymentId}`) ||
+                sessionStorage.getItem(`customer_mobile_${paymentId}`)
+              : ""),
         }),
       });
 
@@ -211,6 +230,7 @@ function PaymentSuccessContent() {
         if (typeof window !== "undefined") {
           const decoded = JSON.parse(atob(encodedData));
           transactionUuid = decoded.transaction_uuid;
+          console.log("Full decoded eSewa response for verification:", decoded);
         }
       } catch (e) {
         console.warn(
@@ -233,6 +253,27 @@ function PaymentSuccessContent() {
                   sessionStorage.getItem(`products_${transactionUuid}`) || "[]"
                 )
               : [],
+          order_id:
+            purchaseOrderId ||
+            (purchaseOrderName?.startsWith("Order #")
+              ? purchaseOrderName
+              : undefined) ||
+            (typeof window !== "undefined" && transactionUuid
+              ? sessionStorage.getItem(`order_number_${transactionUuid}`) ||
+                sessionStorage.getItem(`order_id_${transactionUuid}`)
+              : undefined),
+
+          customer_name:
+            typeof window !== "undefined" && transactionUuid
+              ? sessionStorage.getItem(`customer_name_${transactionUuid}`) ||
+                (method === "esewa" ? "" : "Customer")
+              : "",
+          mobile:
+            mobile ||
+            (typeof window !== "undefined" && transactionUuid && method !== "esewa"
+              ? sessionStorage.getItem(`mobile_number_${transactionUuid}`) ||
+                sessionStorage.getItem(`customer_mobile_${transactionUuid}`)
+              : ""),
         }),
       });
 
@@ -382,7 +423,12 @@ function PaymentSuccessContent() {
           }
 
           console.log("Starting eSewa payment verification...");
-          if (decodedData.transaction_uuid && sessionStorage.getItem(`verified_esewa_${decodedData.transaction_uuid}`)) {
+          if (
+            decodedData.transaction_uuid &&
+            sessionStorage.getItem(
+              `verified_esewa_${decodedData.transaction_uuid}`
+            )
+          ) {
             console.log("eSewa payment already verified in this session");
             return;
           }
@@ -403,7 +449,11 @@ function PaymentSuccessContent() {
           is_success: true,
           status: "COMPLETE",
           transaction_id: pidx,
-          total_amount: totalAmount ? (parseInt(totalAmount) / 100).toString() : amount ? (parseInt(amount) / 100).toString() : undefined
+          total_amount: totalAmount
+            ? (parseInt(totalAmount) / 100).toString()
+            : amount
+              ? (parseInt(amount) / 100).toString()
+              : undefined,
         } as any);
         return;
       }
@@ -655,10 +705,53 @@ function PaymentSuccessContent() {
                 </div>
               )}
 
-              {purchaseOrderName && (
+              {(verificationResult?.products_purchased ||
+                purchaseOrderName) && (
+                <div className="border-b py-2">
+                  <span className="mb-1 block text-gray-600">
+                    Products Purchased:
+                  </span>
+                  {verificationResult?.products_purchased &&
+                  verificationResult.products_purchased.length > 0 ? (
+                    <ul className="space-y-1">
+                      {verificationResult.products_purchased.map(
+                        (item: any, idx: number) => {
+                          const itemName =
+                            item.name ||
+                            item.product_name ||
+                            item.product?.name ||
+                            `Product ${item.product_id || idx + 1}`;
+                          return (
+                            <li
+                              key={idx}
+                              className="flex justify-between text-sm"
+                            >
+                              <span className="font-semibold text-gray-800">
+                                {itemName} x {item.quantity || 1}
+                              </span>
+                              <span className="text-gray-600">
+                                Rs.{" "}
+                                {item.total_price || item.amount || item.price}
+                              </span>
+                            </li>
+                          );
+                        }
+                      )}
+                    </ul>
+                  ) : (
+                    <span className="font-semibold">{purchaseOrderName}</span>
+                  )}
+                </div>
+              )}
+
+              {typeof window !== "undefined" && (
                 <div className="flex items-center justify-between border-b py-2">
-                  <span className="text-gray-600">Product:</span>
-                  <span className="font-semibold">{purchaseOrderName}</span>
+                  <span className="text-gray-600">Customer Name:</span>
+                  <span className="font-semibold">
+                    {sessionStorage.getItem(
+                      `customer_name_${pidx || verificationResult?.transaction_uuid}`
+                    ) || "Customer"}
+                  </span>
                 </div>
               )}
 
@@ -721,21 +814,6 @@ function PaymentSuccessContent() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-4">
-          {((pidx && method === "khalti") ||
-            (esewaData && method === "esewa")) &&
-            !isVerifying &&
-            !isUpdatingOrder && (
-              <Button
-                variant="outline"
-                onClick={retryVerification}
-                className="w-full"
-                disabled={isVerifying || isUpdatingOrder}
-              >
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Verify Payment Again
-              </Button>
-            )}
-
           {method === "esewa" &&
             verificationResult?.status === "PENDING" &&
             verificationResult?.transaction_uuid &&

@@ -147,7 +147,7 @@ export default function PaymentsClient() {
         <TableHeader>
           <TableRow className="border-b border-black/5">
             <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
-              Transaction ID
+              Order Details
             </TableHead>
             <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Type
@@ -186,13 +186,11 @@ export default function PaymentsClient() {
                     !item.is_read ? "font-bold text-[#003d79]" : "text-black"
                   )}
                 >
-                  {item.transaction_id}
+                  {item.additional_info?.order_id || "No Order ID"}
                 </span>
-                {item.additional_info?.pidx && (
-                  <p className="text-[10px] text-black/40">
-                    PIDX: {item.additional_info.pidx}
-                  </p>
-                )}
+                <p className="text-[10px] text-black/40">
+                  TXN: {item.transaction_id}
+                </p>
               </TableCell>
               <TableCell className="px-6 py-4">
                 <span className="text-xs text-black/60 capitalize">

@@ -148,7 +148,8 @@ export async function POST(req: Request) {
       "Subscription verify request body:",
       JSON.stringify(requestData, null, 2)
     );
-    const { method, products_purchased } = requestData;
+    const { method, products_purchased, order_id, customer_name, mobile } =
+      requestData;
 
     if (!method || !["esewa", "khalti"].includes(method)) {
       return NextResponse.json(
@@ -218,13 +219,21 @@ export async function POST(req: Request) {
               transaction_uuid: response.data.transaction_uuid,
               status: response.data.status,
               is_fallback: (creds as any).is_fallback,
+              order_id,
+              customer_info: {
+                name: customer_name || user?.name || "Customer",
+              },
+              mobile,
             },
           });
         }
 
         return NextResponse.json({
           success: true,
-          data: response.data,
+          data: {
+            ...response.data,
+            products_purchased: products_purchased,
+          },
           message: response.message || "Payment verified successfully",
         });
       }
@@ -303,13 +312,21 @@ export async function POST(req: Request) {
               pidx: response.data.pidx,
               status: response.data.status,
               is_fallback: (creds as any).is_fallback,
+              order_id,
+              customer_info: {
+                name: customer_name || user?.name || "Customer",
+              },
+              mobile: mobile || requestData.mobile,
             },
           });
         }
 
         return NextResponse.json({
           success: true,
-          data: response.data,
+          data: {
+            ...response.data,
+            products_purchased: products_purchased,
+          },
           message: response.message || "Payment verified successfully",
         });
       }
