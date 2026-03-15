@@ -13,15 +13,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useTenants } from "@/hooks/super-admin/use-tenants";
-import { useCreateTransfer, useSuperAdminPaymentSummary } from "@/hooks/super-admin/use-payments";
+import {
+  useCreateTransfer,
+  useSuperAdminPaymentSummary,
+} from "@/hooks/super-admin/use-payments";
 import { cn } from "@/lib/utils";
+
+const formatTenantName = (name?: string) => {
+  if (!name) return "";
+  return name
+    .replace(/-/g, " ")
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
 
 interface ManualTransferDialogProps {
   isOpen: boolean;
@@ -39,12 +58,16 @@ export default function ManualTransferDialog({
   );
   const [note, setNote] = useState<string>("");
 
-  const { data: tenantsData } = useTenants(1, 100);
-  const { data: summaryData, isLoading: isLoadingSummary } = useSuperAdminPaymentSummary(tenant || undefined);
+  const [open, setOpen] = useState(false);
+
+  const { data: tenantsData } = useTenants(1, 100, true);
+  const { data: summaryData, isLoading: isLoadingSummary } =
+    useSuperAdminPaymentSummary(tenant || undefined);
   const createTransfer = useCreateTransfer();
 
   const currentPendingBalance = summaryData?.pending_balance ?? 0;
-  const isOverBalance = tenant && amount && parseFloat(amount) > currentPendingBalance;
+  const isOverBalance =
+    tenant && amount && parseFloat(amount) > currentPendingBalance;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,36 +101,87 @@ export default function ManualTransferDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="tenant" className="text-xs font-semibold text-gray-600">
-              Select Tenant
+            <Label
+              htmlFor="tenant"
+              className="text-xs font-semibold text-gray-600"
+            >
+              Select a tenant
             </Label>
-            <Select value={tenant} onValueChange={setTenant}>
-              <SelectTrigger className="border-gray-200">
-                <SelectValue placeholder="Select a tenant" />
-              </SelectTrigger>
-              <SelectContent>
-                {tenantsData?.results.map((domain) => (
-                  <SelectItem key={domain.tenant.id} value={domain.tenant.schema_name}>
-                    {domain.tenant.name} ({domain.tenant.schema_name})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-full justify-between border-gray-200 px-3 font-normal text-black"
+                >
+                  {tenant
+                    ? formatTenantName(
+                        tenantsData?.results.find(
+                          domain => domain.tenant.schema_name === tenant
+                        )?.tenant.name
+                      ) || "Select a tenant"
+                    : "Select a tenant"}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[375px] p-0">
+                <Command>
+                  <CommandInput placeholder="Search tenant..." />
+                  <CommandList>
+                    <CommandEmpty>No tenant found.</CommandEmpty>
+                    <CommandGroup>
+                      {tenantsData?.results.map(domain => (
+                        <CommandItem
+                          key={domain.tenant.id}
+                          value={`${domain.tenant.name} ${domain.tenant.schema_name}`}
+                          onSelect={() => {
+                            setTenant(domain.tenant.schema_name);
+                            setOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              tenant === domain.tenant.schema_name
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {formatTenantName(domain.tenant.name)}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
             {tenant && (
-              <div className="flex justify-between items-center px-1">
-                <span className="text-[10px] text-gray-500 font-medium">Pending Balance:</span>
-                <span className={cn(
-                  "text-[10px] font-bold",
-                  currentPendingBalance > 0 ? "text-emerald-600" : "text-gray-400"
-                )}>
-                  {isLoadingSummary ? "..." : `Rs. ${currentPendingBalance.toLocaleString()}`}
+              <div className="flex items-center justify-between px-1">
+                <span className="text-[10px] font-medium text-gray-500">
+                  Pending Balance:
+                </span>
+                <span
+                  className={cn(
+                    "text-[10px] font-bold",
+                    currentPendingBalance > 0
+                      ? "text-emerald-600"
+                      : "text-gray-400"
+                  )}
+                >
+                  {isLoadingSummary
+                    ? "..."
+                    : `Rs. ${currentPendingBalance.toLocaleString()}`}
                 </span>
               </div>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="amount" className="text-xs font-semibold text-gray-600">
+            <Label
+              htmlFor="amount"
+              className="text-xs font-semibold text-gray-600"
+            >
               Transfer Amount (Rs.)
             </Label>
             <Input
@@ -116,21 +190,26 @@ export default function ManualTransferDialog({
               placeholder="0.00"
               className={cn(
                 "border-gray-200 transition-colors",
-                isOverBalance && "border-red-500 focus-visible:ring-red-500 text-red-600"
+                isOverBalance &&
+                  "border-red-500 text-red-600 focus-visible:ring-red-500"
               )}
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={e => setAmount(e.target.value)}
               required
             />
             {isOverBalance && (
-              <p className="text-[10px] text-red-500 font-medium">
-                Amount exceeds pending balance (Rs. {currentPendingBalance.toLocaleString()})
+              <p className="text-[10px] font-medium text-red-500">
+                Amount exceeds pending balance (Rs.{" "}
+                {currentPendingBalance.toLocaleString()})
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date" className="text-xs font-semibold text-gray-600">
+            <Label
+              htmlFor="date"
+              className="text-xs font-semibold text-gray-600"
+            >
               Transfer Date
             </Label>
             <Input
@@ -138,13 +217,16 @@ export default function ManualTransferDialog({
               type="date"
               className="border-gray-200 text-sm"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={e => setDate(e.target.value)}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="note" className="text-xs font-semibold text-gray-600">
+            <Label
+              htmlFor="note"
+              className="text-xs font-semibold text-gray-600"
+            >
               Reference Note (Optional)
             </Label>
             <Textarea
@@ -152,7 +234,7 @@ export default function ManualTransferDialog({
               placeholder="e.g. Bank transfer reference ID..."
               className="min-h-[100px] resize-none border-gray-200"
               value={note}
-              onChange={(e) => setNote(e.target.value)}
+              onChange={e => setNote(e.target.value)}
             />
           </div>
 
@@ -168,7 +250,7 @@ export default function ManualTransferDialog({
             <Button
               type="submit"
               disabled={createTransfer.isPending}
-              className="bg-[#003d79] hover:bg-[#002d59] text-white"
+              className="bg-[#003d79] text-white hover:bg-[#002d59]"
             >
               {createTransfer.isPending ? "Recording..." : "Record Transfer"}
             </Button>

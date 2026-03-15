@@ -5,11 +5,17 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 
 export async function getDomains(
   page = 1,
-  pageSize = 10
+  pageSize = 10,
+  paymentEnabled?: boolean
 ): Promise<PaginatedResponse<Domain>> {
   try {
+    let url = `${API_BASE_URL}/api/domains/?page=${page}&page_size=${pageSize}`;
+    if (paymentEnabled) {
+      url += "&payment=enabled";
+    }
+
     const res = await fetch(
-      `${API_BASE_URL}/api/domains/?page=${page}&page_size=${pageSize}`,
+      url,
       {
         method: "GET",
         headers: {

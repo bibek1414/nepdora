@@ -22,12 +22,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import StatsCard from "@/components/super-admin/dashboard/statscard";
 import {
@@ -50,6 +57,15 @@ import Pagination from "@/components/ui/site-owners/pagination";
 const ITEMS_PER_PAGE = 30;
 type PaymentViewType = "payments" | "transfers";
 
+const formatTenantName = (name?: string) => {
+  if (!name) return "";
+  return name
+    .replace(/-/g, " ")
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 export default function PaymentsClient() {
   const [activeTab, setActiveTab] = useState<PaymentViewType>("payments");
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,8 +73,11 @@ export default function PaymentsClient() {
   const [paymentPage, setPaymentPage] = useState(1);
   const [transferPage, setTransferPage] = useState(1);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
-  const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(null);
+  const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(
+    null
+  );
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+  const [openTenantFilter, setOpenTenantFilter] = useState(false);
 
   const debouncedSearchTerm = useDebouncer(searchTerm, 500);
 
@@ -69,7 +88,7 @@ export default function PaymentsClient() {
   }, [debouncedSearchTerm, selectedTenant]);
 
   // Hooks
-  const { data: tenantsData } = useTenants(1, 100);
+  const { data: tenantsData } = useTenants(1, 100, true);
   const { data: summaryData, isLoading: loadingSummary } =
     useSuperAdminPaymentSummary(
       selectedTenant !== "all" ? selectedTenant : undefined
@@ -184,32 +203,87 @@ export default function PaymentsClient() {
 
           <div className="flex flex-col gap-2 sm:flex-row">
             <div className="relative w-full sm:w-64">
-              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <Input
-                placeholder="Search  ID or tenant name..."
-                className="h-9 border-gray-200 pl-9 text-sm placeholder:text-gray-400 focus:bg-gray-50"
+                placeholder="Search  Transaction ID...."
+                className="h-9 border-gray-200 pl-9 text-sm placeholder:text-gray-400"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
 
-            <Select value={selectedTenant} onValueChange={setSelectedTenant}>
-              <SelectTrigger className="h-9 w-full border-gray-200 text-sm sm:w-[200px]">
-                <Filter className="mr-2 h-3.5 w-3.5 text-gray-400" />
-                <SelectValue placeholder="All Tenants" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Tenants</SelectItem>
-                {tenantsData?.results.map(domain => (
-                  <SelectItem
-                    key={domain.tenant.id}
-                    value={domain.tenant.schema_name}
-                  >
-                    {domain.tenant.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Popover open={openTenantFilter} onOpenChange={setOpenTenantFilter}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openTenantFilter}
+                  className="h-9 w-full justify-between border-gray-200 px-3 text-sm font-normal sm:w-[200px]"
+                >
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-3.5 w-3.5 text-gray-400" />
+                    <span className="truncate text-black">
+                      {selectedTenant === "all"
+                        ? "All Tenants"
+                        : formatTenantName(
+                            tenantsData?.results.find(
+                              domain =>
+                                domain.tenant.schema_name === selectedTenant
+                            )?.tenant.name
+                          ) || "All Tenants"}
+                    </span>
+                  </div>
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 text-black opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[300px] p-0">
+                <Command>
+                  <CommandInput placeholder="Search tenant..." />
+                  <CommandList>
+                    <CommandEmpty>No tenant found.</CommandEmpty>
+                    <CommandGroup>
+                      <CommandItem
+                        value="all"
+                        onSelect={() => {
+                          setSelectedTenant("all");
+                          setOpenTenantFilter(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedTenant === "all"
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        All Tenants
+                      </CommandItem>
+                      {tenantsData?.results.map(domain => (
+                        <CommandItem
+                          key={domain.tenant.id}
+                          value={`${domain.tenant.name} ${domain.tenant.schema_name}`}
+                          onSelect={() => {
+                            setSelectedTenant(domain.tenant.schema_name);
+                            setOpenTenantFilter(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              selectedTenant === domain.tenant.schema_name
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {formatTenantName(domain.tenant.name)}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
@@ -252,7 +326,7 @@ export default function PaymentsClient() {
                     <TableCell className="py-4">
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-900">
-                          {item.tenant}
+                          {formatTenantName(item.tenant)}
                         </span>
                       </div>
                     </TableCell>
@@ -319,7 +393,7 @@ export default function PaymentsClient() {
                     className="transition-colors hover:bg-gray-50"
                   >
                     <TableCell className="py-4 font-medium text-gray-900">
-                      {transfer.tenant}
+                      {formatTenantName(transfer.tenant)}
                     </TableCell>
                     <TableCell className="text-sm font-bold text-green-600">
                       Rs. {transfer.amount}

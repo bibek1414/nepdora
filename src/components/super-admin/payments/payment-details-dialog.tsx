@@ -21,6 +21,15 @@ import {
 import { CentralPaymentHistory } from "@/types/super-admin/payment";
 import { cn } from "@/lib/utils";
 
+const formatTenantName = (name?: string) => {
+  if (!name) return "";
+  return name
+    .replace(/-/g, " ")
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 interface PaymentDetailsDialogProps {
   payments: CentralPaymentHistory[];
   currentPaymentId: number | null;
@@ -193,7 +202,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                   </label>
                   <p className="mt-1 flex items-center gap-2 font-semibold text-gray-900">
                     <Building2 className="h-3.5 w-3.5 text-gray-400" />
-                    {currentPayment.tenant || "—"}
+                    {formatTenantName(currentPayment.tenant) || "—"}
                   </p>
                 </div>
                 <div>
