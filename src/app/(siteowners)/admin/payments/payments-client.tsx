@@ -288,13 +288,13 @@ export default function PaymentsClient() {
               );
             })}
           </div>
-          <div className="relative w-full sm:w-64">
+          <div className="relative w-full sm:w-72">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search transactions..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+              className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:outline-none"
             />
           </div>
         </div>

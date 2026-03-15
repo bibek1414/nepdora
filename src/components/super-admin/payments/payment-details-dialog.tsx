@@ -36,7 +36,8 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
   onClose,
   onPaymentChange,
 }) => {
-  const [currentPayment, setCurrentPayment] = useState<CentralPaymentHistory | null>(null);
+  const [currentPayment, setCurrentPayment] =
+    useState<CentralPaymentHistory | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -176,7 +177,10 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                 Rs. {Number(currentPayment.pay_amount).toLocaleString("en-IN")}
               </h3>
               <p className="text-sm text-gray-500">
-                Transaction {currentPayment.status === "transferred" ? "Transferred" : "Pending"}
+                Transaction{" "}
+                {currentPayment.status === "transferred"
+                  ? "Transferred"
+                  : "Pending"}
               </p>
             </div>
 

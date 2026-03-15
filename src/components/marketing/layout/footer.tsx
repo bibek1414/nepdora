@@ -201,6 +201,9 @@ export const Footer = () => {
                 <FooterLink href="/compare/wix-and-nepdora">
                   Wix vs Nepdora
                 </FooterLink>
+                <FooterLink href="/compare/blanxer-and-nepdora">
+                  Blanxer vs Nepdora
+                </FooterLink>
               </div>
             </div>
 
