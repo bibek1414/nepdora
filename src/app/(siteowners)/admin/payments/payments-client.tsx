@@ -97,7 +97,7 @@ export default function PaymentsClient() {
       id: "nepdora" as PaymentViewType,
       label: "Nepdora Payment",
       icon: Wallet,
-      count: unreadCounts?.unread_tenant_transfers || 0,
+      count: unreadCounts?.unread_tenant_payments || 0,
     },
     {
       id: "own" as PaymentViewType,

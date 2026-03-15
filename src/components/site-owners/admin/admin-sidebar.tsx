@@ -143,6 +143,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           name: "Payment History",
           href: "/admin/payments",
           icon: History,
+          unreadCount: (unreadCounts?.unread_own_payment || 0) + (unreadCounts?.unread_tenant_payments || 0),
         },
       ],
       hideForService: true,

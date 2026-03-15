@@ -5,5 +5,5 @@ export interface UnreadCounts {
   unread_orders: number;
   unread_newsletters: number;
   unread_own_payment: number;
-  unread_tenant_transfers: number;
+  unread_tenant_payments: number;
 }
