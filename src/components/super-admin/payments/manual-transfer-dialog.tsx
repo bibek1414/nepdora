@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTenants } from "@/hooks/super-admin/use-tenants";
-import { useCreateTransfer } from "@/hooks/super-admin/use-payments";
+import { useCreateTransfer, useSuperAdminPaymentSummary } from "@/hooks/super-admin/use-payments";
+import { cn } from "@/lib/utils";
 
 interface ManualTransferDialogProps {
   isOpen: boolean;
@@ -39,7 +40,11 @@ export default function ManualTransferDialog({
   const [note, setNote] = useState<string>("");
 
   const { data: tenantsData } = useTenants(1, 100);
+  const { data: summaryData, isLoading: isLoadingSummary } = useSuperAdminPaymentSummary(tenant || undefined);
   const createTransfer = useCreateTransfer();
+
+  const currentPendingBalance = summaryData?.pending_balance ?? 0;
+  const isOverBalance = tenant && amount && parseFloat(amount) > currentPendingBalance;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +93,17 @@ export default function ManualTransferDialog({
                 ))}
               </SelectContent>
             </Select>
+            {tenant && (
+              <div className="flex justify-between items-center px-1">
+                <span className="text-[10px] text-gray-500 font-medium">Pending Balance:</span>
+                <span className={cn(
+                  "text-[10px] font-bold",
+                  currentPendingBalance > 0 ? "text-emerald-600" : "text-gray-400"
+                )}>
+                  {isLoadingSummary ? "..." : `Rs. ${currentPendingBalance.toLocaleString()}`}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -98,11 +114,19 @@ export default function ManualTransferDialog({
               id="amount"
               type="number"
               placeholder="0.00"
-              className="border-gray-200"
+              className={cn(
+                "border-gray-200 transition-colors",
+                isOverBalance && "border-red-500 focus-visible:ring-red-500 text-red-600"
+              )}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
             />
+            {isOverBalance && (
+              <p className="text-[10px] text-red-500 font-medium">
+                Amount exceeds pending balance (Rs. {currentPendingBalance.toLocaleString()})
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">

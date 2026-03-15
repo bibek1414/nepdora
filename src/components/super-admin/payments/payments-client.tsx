@@ -43,6 +43,7 @@ import {
 import { useTenants } from "@/hooks/super-admin/use-tenants";
 import { FiDollarSign, FiArrowUpRight, FiArrowDownLeft } from "react-icons/fi";
 import ManualTransferDialog from "./manual-transfer-dialog";
+import { PaymentDetailsDialog } from "./payment-details-dialog";
 import { useDebouncer } from "@/hooks/use-debouncer";
 import Pagination from "@/components/ui/site-owners/pagination";
 
@@ -56,6 +57,8 @@ export default function PaymentsClient() {
   const [paymentPage, setPaymentPage] = useState(1);
   const [transferPage, setTransferPage] = useState(1);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
+  const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(null);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
 
   const debouncedSearchTerm = useDebouncer(searchTerm, 500);
 
@@ -158,7 +161,7 @@ export default function PaymentsClient() {
             <button
               onClick={() => setActiveTab("payments")}
               className={cn(
-                "rounded-full px-4 py-1.5 text-xs font-medium transition-colors",
+                "cursor-pointer rounded-full px-4 py-1.5 text-xs font-medium transition-colors",
                 activeTab === "payments"
                   ? "bg-black text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -169,7 +172,7 @@ export default function PaymentsClient() {
             <button
               onClick={() => setActiveTab("transfers")}
               className={cn(
-                "rounded-full px-4 py-1.5 text-xs font-medium transition-colors",
+                "cursor-pointer rounded-full px-4 py-1.5 text-xs font-medium transition-colors",
                 activeTab === "transfers"
                   ? "bg-black text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -183,8 +186,8 @@ export default function PaymentsClient() {
             <div className="relative w-full sm:w-64">
               <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <Input
-                placeholder="Search transaction ID..."
-                className="h-9 border-gray-200 pl-9 text-sm focus:bg-gray-50"
+                placeholder="Search  ID or tenant name..."
+                className="h-9 border-gray-200 pl-9 text-sm placeholder:text-gray-400 focus:bg-gray-50"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
@@ -240,7 +243,11 @@ export default function PaymentsClient() {
                 {paymentsData?.results.map((item: CentralPaymentHistory) => (
                   <TableRow
                     key={item.id}
-                    className="transition-colors hover:bg-gray-50"
+                    className="cursor-pointer transition-colors hover:bg-gray-50"
+                    onClick={() => {
+                      setSelectedPaymentId(item.id);
+                      setIsDetailsDialogOpen(true);
+                    }}
                   >
                     <TableCell className="py-4">
                       <div className="flex flex-col">
@@ -345,13 +352,23 @@ export default function PaymentsClient() {
           totalPages={
             activeTab === "payments" ? paymentsTotalPages : transfersTotalPages
           }
-          onPageChange={activeTab === "payments" ? setPaymentPage : setTransferPage}
+          onPageChange={
+            activeTab === "payments" ? setPaymentPage : setTransferPage
+          }
         />
       </div>
 
       <ManualTransferDialog
         isOpen={isTransferDialogOpen}
         onClose={() => setIsTransferDialogOpen(false)}
+      />
+
+      <PaymentDetailsDialog
+        isOpen={isDetailsDialogOpen}
+        onClose={() => setIsDetailsDialogOpen(false)}
+        payments={paymentsData?.results || []}
+        currentPaymentId={selectedPaymentId}
+        onPaymentChange={setSelectedPaymentId}
       />
     </div>
   );

@@ -103,3 +103,9 @@ export interface TenantCentralPaymentListResponse {
   previous: string | null;
   results: TenantCentralPayment[];
 }
+
+export interface PaymentSummary {
+  total_received: number;
+  total_paid: number;
+  pending_balance: number;
+}

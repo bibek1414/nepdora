@@ -16,7 +16,7 @@ export default function StatsCard({
   color,
 }: StatsCardProps) {
   return (
-    <div className="rounded-lg bg-white p-6 shadow transition-shadow hover:shadow-lg">
+    <div className="rounded-lg border bg-white p-6">
       <div className="flex items-center">
         <div className={`rounded-full p-3 text-white ${color} mr-4`}>
           <Icon size={24} />

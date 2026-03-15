@@ -24,3 +24,11 @@ export const useTenantCentralPayments = (params: {
     enabled: !!params.tenant,
   });
 };
+
+export const useTenantPaymentSummary = (tenant: string) => {
+  return useQuery({
+    queryKey: ["tenant-payment-summary", tenant],
+    queryFn: () => paymentGatewayApi.getPaymentSummary(tenant),
+    enabled: !!tenant,
+  });
+};

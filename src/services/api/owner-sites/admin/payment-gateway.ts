@@ -11,6 +11,7 @@ import {
   GetPaymentGatewayResponse,
   PaymentHistoryListResponse,
   TenantCentralPaymentListResponse,
+  PaymentSummary,
 } from "@/types/owner-site/admin/payment-gateway";
 
 export const paymentGatewayApi = {
@@ -159,6 +160,20 @@ export const paymentGatewayApi = {
 
     const response = await fetch(
       `${CENTRAL_API_URL}/api/tenant-central-payments/?${queryParams.toString()}`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
+    await handleApiError(response);
+    return response.json();
+  },
+
+  // Get payment summary from central for this tenant
+  getPaymentSummary: async (tenant: string): Promise<PaymentSummary> => {
+    const CENTRAL_API_URL = "https://nepdora.baliyoventures.com";
+    const response = await fetch(
+      `${CENTRAL_API_URL}/api/payment-summary/?tenant=${tenant}`,
       {
         method: "GET",
         headers: createHeaders(),

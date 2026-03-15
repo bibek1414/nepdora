@@ -32,8 +32,10 @@ import {
 import { PaymentDetailsDialog } from "@/components/site-owners/admin/payments/payment-details-dialog";
 import { SimplePagination } from "@/components/ui/simple-pagination";
 import { Package } from "lucide-react";
+import { PaymentStatsCards } from "@/components/site-owners/admin/payments/stats-cards";
+import { useTenantPaymentSummary } from "@/hooks/owner-site/admin/use-payment-history";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 20;
 type PaymentViewType = "nepdora" | "own";
 
 export default function PaymentsClient() {
@@ -55,6 +57,10 @@ export default function PaymentsClient() {
   useEffect(() => {
     setPage(1);
   }, [selectedView, debouncedSearch]);
+
+  const { data: summary, isLoading: loadingSummary } = useTenantPaymentSummary(
+    user?.sub_domain || ""
+  );
 
   const { data: centralPaymentsData, isLoading: loadingCentral } =
     useTenantCentralPayments({
@@ -243,6 +249,13 @@ export default function PaymentsClient() {
             View and track all your transactions.
           </p>
         </div>
+
+        <PaymentStatsCards
+          totalReceived={summary?.total_received || 0}
+          totalPaid={summary?.total_paid || 0}
+          pendingBalance={summary?.pending_balance || 0}
+          isLoading={loadingSummary}
+        />
 
         <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           {/* Tabs */}
