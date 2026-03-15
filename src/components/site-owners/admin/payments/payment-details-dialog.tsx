@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   Dialog,
@@ -21,6 +21,10 @@ import {
 } from "lucide-react";
 import { PaymentHistory } from "@/types/owner-site/admin/payment-gateway";
 import { cn } from "@/lib/utils";
+import {
+  useUpdatePaymentHistory,
+  useUpdateTenantCentralPayment,
+} from "@/hooks/owner-site/admin/use-payment-history";
 
 interface PaymentDetailsDialogProps {
   payments: any[]; // Using any to support both PaymentHistory and TenantCentralPayment
@@ -28,6 +32,7 @@ interface PaymentDetailsDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onPaymentChange: (paymentId: number) => void;
+  type: "nepdora" | "own";
 }
 
 export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
@@ -36,9 +41,30 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
   isOpen,
   onClose,
   onPaymentChange,
+  type,
 }) => {
   const [currentPayment, setCurrentPayment] = useState<any | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const { mutate: updateOwn } = useUpdatePaymentHistory();
+  const { mutate: updateCentral } = useUpdateTenantCentralPayment();
+  const markedAsReadRef = useRef<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (
+      isOpen &&
+      currentPayment &&
+      !currentPayment.is_read &&
+      !markedAsReadRef.current.has(currentPayment.id)
+    ) {
+      markedAsReadRef.current.add(currentPayment.id);
+      if (type === "own") {
+        updateOwn({ id: currentPayment.id, is_read: true });
+      } else {
+        updateCentral({ id: currentPayment.id, is_read: true });
+      }
+    }
+  }, [isOpen, currentPayment, type, updateOwn, updateCentral]);
 
   useEffect(() => {
     if (currentPaymentId && payments.length > 0) {

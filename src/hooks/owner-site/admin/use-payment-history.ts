@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { paymentGatewayApi } from "@/services/api/owner-sites/admin/payment-gateway";
 
 export const usePaymentHistory = (params: {
@@ -30,5 +30,29 @@ export const useTenantPaymentSummary = (tenant: string) => {
     queryKey: ["tenant-payment-summary", tenant],
     queryFn: () => paymentGatewayApi.getPaymentSummary(tenant),
     enabled: !!tenant,
+  });
+};
+
+export const useUpdatePaymentHistory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, is_read }: { id: number; is_read: boolean }) =>
+      paymentGatewayApi.updatePaymentHistory(id, { is_read }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["payment-history"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
+    },
+  });
+};
+
+export const useUpdateTenantCentralPayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, is_read }: { id: number; is_read: boolean }) =>
+      paymentGatewayApi.updateTenantCentralPayment(id, { is_read }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tenant-central-payments"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
+    },
   });
 };

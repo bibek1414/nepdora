@@ -12,6 +12,8 @@ import {
   PaymentHistoryListResponse,
   TenantCentralPaymentListResponse,
   PaymentSummary,
+  PaymentHistory,
+  TenantCentralPayment,
 } from "@/types/owner-site/admin/payment-gateway";
 
 export const paymentGatewayApi = {
@@ -177,6 +179,42 @@ export const paymentGatewayApi = {
       {
         method: "GET",
         headers: createHeaders(),
+      }
+    );
+    await handleApiError(response);
+    return response.json();
+  },
+
+  // Update payment history (mark as read)
+  updatePaymentHistory: async (
+    id: number,
+    data: { is_read: boolean }
+  ): Promise<PaymentHistory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(
+      `${API_BASE_URL}/api/payment-gateway/history/${id}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
+    await handleApiError(response);
+    return response.json();
+  },
+
+  // Update central payment (mark as read)
+  updateTenantCentralPayment: async (
+    id: number,
+    data: { is_read: boolean }
+  ): Promise<TenantCentralPayment> => {
+    const CENTRAL_API_URL = "https://nepdora.baliyoventures.com";
+    const response = await fetch(
+      `${CENTRAL_API_URL}/api/tenant-central-payments/${id}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
       }
     );
     await handleApiError(response);

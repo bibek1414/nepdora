@@ -31,6 +31,14 @@ export default function SuccessPage() {
       }
 
       try {
+        // Prevent duplicate verification on page reload
+        if (sessionStorage.getItem("verified_subscription_payment") === "true") {
+          setStatus("success");
+          setMessage("Your subscription has been activated successfully!");
+          setTimeout(() => { router.push("/admin"); }, 3000);
+          return;
+        }
+
         // Step 1: Verify the payment
         setMessage("Verifying your payment...");
         const verificationResponse = await verifyPayment(method);
@@ -83,6 +91,7 @@ export default function SuccessPage() {
         // Clean up sessionStorage
         sessionStorage.removeItem(transactionKey);
         sessionStorage.removeItem("subscription_payment_data");
+        sessionStorage.setItem("verified_subscription_payment", "true");
 
         // Redirect to admin after 5 seconds
         setTimeout(

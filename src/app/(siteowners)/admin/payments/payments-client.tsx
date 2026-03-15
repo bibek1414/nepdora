@@ -34,6 +34,7 @@ import { SimplePagination } from "@/components/ui/simple-pagination";
 import { Package } from "lucide-react";
 import { PaymentStatsCards } from "@/components/site-owners/admin/payments/stats-cards";
 import { useTenantPaymentSummary } from "@/hooks/owner-site/admin/use-payment-history";
+import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
 
 const ITEMS_PER_PAGE = 20;
 type PaymentViewType = "nepdora" | "own";
@@ -87,6 +88,8 @@ export default function PaymentsClient() {
       ? centralPaymentsData?.count || 0
       : ownHistoryData?.count || 0;
 
+  const { data: unreadCounts } = useUnreadCounts();
+
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   const tabs = [
@@ -94,11 +97,13 @@ export default function PaymentsClient() {
       id: "nepdora" as PaymentViewType,
       label: "Nepdora Payment",
       icon: Wallet,
+      count: unreadCounts?.unread_tenant_transfers || 0,
     },
     {
       id: "own" as PaymentViewType,
       label: "Own History",
       icon: History,
+      count: unreadCounts?.unread_own_payment || 0,
     },
   ];
 
@@ -169,10 +174,18 @@ export default function PaymentsClient() {
                 setSelectedId(item.id);
                 setIsDialogOpen(true);
               }}
-              className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
+              className={cn(
+                "group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2",
+                !item.is_read && "bg-blue-50/50"
+              )}
             >
               <TableCell className="px-6 py-4">
-                <span className="text-sm font-bold text-[#003d79]">
+                <span
+                  className={cn(
+                    "text-sm font-normal",
+                    !item.is_read ? "font-bold text-[#003d79]" : "text-black"
+                  )}
+                >
                   {item.transaction_id}
                 </span>
                 {item.additional_info?.pidx && (
@@ -284,6 +297,18 @@ export default function PaymentsClient() {
                     )}
                   />
                   <span className="whitespace-nowrap">{tab.label}</span>
+                  {tab.count > 0 && (
+                    <span
+                      className={cn(
+                        "flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-medium transition-colors duration-200",
+                        isActive
+                          ? "bg-[#003d79]/10 text-[#003d79]"
+                          : "bg-black/10 text-black/60 group-hover:bg-black/15"
+                      )}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -324,6 +349,7 @@ export default function PaymentsClient() {
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onPaymentChange={setSelectedId}
+        type={selectedView}
       />
     </div>
   );

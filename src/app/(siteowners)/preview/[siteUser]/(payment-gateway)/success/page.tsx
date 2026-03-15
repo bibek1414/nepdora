@@ -150,6 +150,7 @@ function PaymentSuccessContent() {
 
       if (apiResponse.data.is_success) {
         toast.success("Payment verified successfully!");
+        sessionStorage.setItem(`verified_khalti_${paymentId}`, "true");
 
         // Get order ID from session storage
         const orderId = sessionStorage.getItem(`order_id_${paymentId}`);
@@ -216,6 +217,9 @@ function PaymentSuccessContent() {
 
         // Get order ID from session storage using transaction UUID
         const transactionUuid = apiResponse.data.transaction_uuid;
+        if (transactionUuid) {
+          sessionStorage.setItem(`verified_esewa_${transactionUuid}`, "true");
+        }
         const orderId = transactionUuid
           ? sessionStorage.getItem(`order_id_${transactionUuid}`)
           : null;
@@ -274,6 +278,7 @@ function PaymentSuccessContent() {
         apiResponse.data.status === "COMPLETE" &&
         apiResponse.data.is_success
       ) {
+        sessionStorage.setItem(`verified_esewa_${transactionUuid}`, "true");
         clearUserCart();
       }
     } catch (error) {
@@ -331,6 +336,10 @@ function PaymentSuccessContent() {
 
           // Always verify the payment to ensure integrity
           console.log("Starting eSewa payment verification...");
+          if (decodedData.transaction_uuid && sessionStorage.getItem(`verified_esewa_${decodedData.transaction_uuid}`)) {
+            console.log("eSewa payment already verified in this session");
+            return;
+          }
           verifyEsewaPayment(esewaData);
         } else {
           setError("Failed to decode eSewa response data");
@@ -345,6 +354,16 @@ function PaymentSuccessContent() {
 
     // Handle Khalti success callback
     else if (method === "khalti" && pidx && status === "Completed") {
+      if (sessionStorage.getItem(`verified_khalti_${pidx}`)) {
+        console.log("Khalti payment already verified in this session");
+        setVerificationResult({
+          is_success: true,
+          status: "COMPLETE",
+          transaction_id: pidx,
+          total_amount: totalAmount ? (parseInt(totalAmount) / 100).toString() : amount ? (parseInt(amount) / 100).toString() : undefined
+        } as any);
+        return;
+      }
       verifyKhaltiPayment(pidx);
     }
   }, [method, pidx, status, esewaData]);

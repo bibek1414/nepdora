@@ -74,6 +74,7 @@ export interface PaymentHistory {
     is_fallback: boolean;
     [key: string]: any;
   };
+  is_read: boolean;
   created_at: string;
   updated_at: string;
 }
