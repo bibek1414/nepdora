@@ -18,6 +18,7 @@ import {
   Mail,
   FileText,
   Newspaper,
+  Wallet,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuthContext } from "@/components/super-admin/auth-wrapper";
@@ -37,6 +38,7 @@ const navigationGroups = [
     title: "Management",
     items: [
       { name: "Domains", href: "/superadmin/domains", icon: Globe },
+      { name: "Payments", href: "/superadmin/payments", icon: Wallet },
       { name: "Templates", href: "/superadmin/template", icon: Layout },
       { name: "FAQ", href: "/superadmin/faq", icon: HelpCircle },
       { name: "Testimonials", href: "/superadmin/testimonial", icon: Shield },

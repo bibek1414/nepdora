@@ -1,6 +1,8 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { extractSubdomain } from "@/config/site";
+import { useEffect, useState } from "react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface PaginationProps {
@@ -23,7 +25,16 @@ const Pagination: React.FC<PaginationProps> = ({
   showFirstLast = true,
   maxVisiblePages = 7,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
+  const [subdomain, setSubdomain] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setSubdomain(extractSubdomain(new URL(window.location.href)));
+    }
+  }, []);
+
+  const hasSubdomain = Boolean(subdomain);
+  const { data: themeResponse } = useThemeQuery(hasSubdomain);
 
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {

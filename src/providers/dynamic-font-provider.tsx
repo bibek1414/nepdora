@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect } from "react";
+import { extractSubdomain } from "@/config/site";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface DynamicFontContextType {
   bodyFont: string;
@@ -20,7 +21,16 @@ export function DynamicFontProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: themeResponse } = useThemeQuery();
+  const [subdomain, setSubdomain] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setSubdomain(extractSubdomain(new URL(window.location.href)));
+    }
+  }, []);
+
+  const hasSubdomain = Boolean(subdomain);
+  const { data: themeResponse } = useThemeQuery(hasSubdomain);
 
   // Get theme fonts, fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
