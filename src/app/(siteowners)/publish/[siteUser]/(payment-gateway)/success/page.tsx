@@ -270,7 +270,9 @@ function PaymentSuccessContent() {
               : "",
           mobile:
             mobile ||
-            (typeof window !== "undefined" && transactionUuid && method !== "esewa"
+            (typeof window !== "undefined" &&
+            transactionUuid &&
+            method !== "esewa"
               ? sessionStorage.getItem(`mobile_number_${transactionUuid}`) ||
                 sessionStorage.getItem(`customer_mobile_${transactionUuid}`)
               : ""),

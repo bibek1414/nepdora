@@ -248,7 +248,8 @@ function PaymentSuccessContent() {
             (typeof window !== "undefined" && currentTransactionUuid
               ? sessionStorage.getItem(
                   `order_number_${currentTransactionUuid}`
-                ) || sessionStorage.getItem(`order_id_${currentTransactionUuid}`)
+                ) ||
+                sessionStorage.getItem(`order_id_${currentTransactionUuid}`)
               : undefined),
           mobile:
             mobile ||
