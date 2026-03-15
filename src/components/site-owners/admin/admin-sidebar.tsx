@@ -24,6 +24,7 @@ import {
   Database,
   BookOpen,
   Users,
+  History,
 } from "lucide-react";
 import { User } from "@/types/auth/auth";
 import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
@@ -132,6 +133,16 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           name: "Payment Gateway",
           href: "/admin/plugins/payment-gateway/esewa",
           icon: Wallet,
+        },
+      ],
+      hideForService: true,
+    },
+    {
+      items: [
+        {
+          name: "Payment History",
+          href: "/admin/payments",
+          icon: History,
         },
       ],
       hideForService: true,
