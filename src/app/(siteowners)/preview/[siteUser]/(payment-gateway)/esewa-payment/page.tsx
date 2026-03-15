@@ -82,8 +82,13 @@ export default function EsewaPayment() {
 
       // Store order ID in session storage for verification later
       if (typeof window !== "undefined") {
-        sessionStorage.setItem(`order_id_${esewaConfig.transaction_uuid}`, String(order.id));
-        console.log(`Stored order ID ${order.id} for transaction ${esewaConfig.transaction_uuid}`);
+        sessionStorage.setItem(
+          `order_id_${esewaConfig.transaction_uuid}`,
+          String(order.id)
+        );
+        console.log(
+          `Stored order ID ${order.id} for transaction ${esewaConfig.transaction_uuid}`
+        );
       }
 
       setPaymentState({

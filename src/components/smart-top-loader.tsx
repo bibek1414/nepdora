@@ -23,18 +23,18 @@ export function SmartTopLoader() {
 
   const isPreview = Boolean(
     hasSubdomain &&
-      (pathname?.startsWith("/preview") || pathname?.startsWith("/builder"))
+    (pathname?.startsWith("/preview") || pathname?.startsWith("/builder"))
   );
 
   // Dashboard routes usually start with /dashboard, /admin, /on-boarding, /superadmin
   const isPublished = Boolean(
     hasSubdomain &&
-      pathname &&
-      !pathname.startsWith("/dashboard") &&
-      !pathname.startsWith("/admin") &&
-      !pathname.startsWith("/on-boarding") &&
-      !pathname.startsWith("/superadmin") &&
-      !isPreview
+    pathname &&
+    !pathname.startsWith("/dashboard") &&
+    !pathname.startsWith("/admin") &&
+    !pathname.startsWith("/on-boarding") &&
+    !pathname.startsWith("/superadmin") &&
+    !isPreview
   );
 
   const { data: previewTheme } = useThemeQuery(isPreview);

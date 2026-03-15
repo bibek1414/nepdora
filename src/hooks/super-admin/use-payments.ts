@@ -40,10 +40,15 @@ export const useSuperAdminTransferHistory = (params?: {
 export const useCreateTransfer = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: CreateTransferRequest) => superAdminPaymentApi.createTransfer(data),
+    mutationFn: (data: CreateTransferRequest) =>
+      superAdminPaymentApi.createTransfer(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["superadmin", "transfer-history"] });
-      queryClient.invalidateQueries({ queryKey: ["superadmin", "payment-summary"] });
+      queryClient.invalidateQueries({
+        queryKey: ["superadmin", "transfer-history"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["superadmin", "payment-summary"],
+      });
       toast.success("Transfer recorded successfully");
     },
     onError: () => {
@@ -55,11 +60,20 @@ export const useCreateTransfer = () => {
 export const useUpdateCentralPaymentStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status }: { id: number; status: "pending" | "transferred" }) =>
-      superAdminPaymentApi.updateCentralPaymentStatus(id, status),
+    mutationFn: ({
+      id,
+      status,
+    }: {
+      id: number;
+      status: "pending" | "transferred";
+    }) => superAdminPaymentApi.updateCentralPaymentStatus(id, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["superadmin", "central-payments"] });
-      queryClient.invalidateQueries({ queryKey: ["superadmin", "payment-summary"] });
+      queryClient.invalidateQueries({
+        queryKey: ["superadmin", "central-payments"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["superadmin", "payment-summary"],
+      });
       toast.success("Payment status updated");
     },
     onError: () => {

@@ -133,8 +133,13 @@ export default function SuccessPage() {
     }
 
     const transactionKey = "esewa_transaction";
-    const storedTransaction = typeof window !== "undefined" ? sessionStorage.getItem(transactionKey) : null;
-    const products_purchased = storedTransaction ? [JSON.parse(storedTransaction)] : [];
+    const storedTransaction =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem(transactionKey)
+        : null;
+    const products_purchased = storedTransaction
+      ? [JSON.parse(storedTransaction)]
+      : [];
 
     const response = await fetch("/api/subscription/verify-payment", {
       method: "POST",
@@ -159,8 +164,13 @@ export default function SuccessPage() {
     }
 
     const transactionKey = "khalti_transaction";
-    const storedTransaction = typeof window !== "undefined" ? sessionStorage.getItem(transactionKey) : null;
-    const products_purchased = storedTransaction ? [JSON.parse(storedTransaction)] : [];
+    const storedTransaction =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem(transactionKey)
+        : null;
+    const products_purchased = storedTransaction
+      ? [JSON.parse(storedTransaction)]
+      : [];
 
     const response = await fetch("/api/subscription/verify-payment", {
       method: "POST",

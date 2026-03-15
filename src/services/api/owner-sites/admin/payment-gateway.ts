@@ -146,11 +146,11 @@ export const paymentGatewayApi = {
     // getApiBaseUrl() might return the subdomain URL if we are on one.
     // Let's use siteConfig.apiBaseUrl for central payments if it's supposed to be central.
     // Wait, the user said: https://nepdora.baliyoventures.com/api/tenant-central-payments/?tenant=here will be tenatn name according to the login
-    
+
     // Importing siteConfig to get the central base URL
     // Actually, let's just use a hardcoded or configurable base if needed, but usually siteConfig.apiBaseUrl is the central one.
-    
-    const CENTRAL_API_URL = "https://nepdora.baliyoventures.com"; 
+
+    const CENTRAL_API_URL = "https://nepdora.baliyoventures.com";
     const queryParams = new URLSearchParams();
     queryParams.append("tenant", params.tenant);
     if (params.page) queryParams.append("page", params.page.toString());

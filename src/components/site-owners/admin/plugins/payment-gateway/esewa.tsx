@@ -50,7 +50,11 @@ function EsewaPage() {
 
       // If it's enabled but has no credentials (or generic ones), it might be Nepdora managed.
       // For now, if both merchant_code and secret_key are empty but it's enabled, we treat it as Nepdora.
-      if (esewaConfig.is_enabled && !esewaConfig.merchant_code && !esewaConfig.secret_key) {
+      if (
+        esewaConfig.is_enabled &&
+        !esewaConfig.merchant_code &&
+        !esewaConfig.secret_key
+      ) {
         setConfigType("nepdora");
       } else if (esewaConfig.merchant_code || esewaConfig.secret_key) {
         setConfigType("own");
@@ -267,7 +271,8 @@ function EsewaPage() {
                     Nepdora Managed eSewa
                   </h3>
                   <p className="max-w-xs text-sm text-gray-500">
-                    Your payments are currently being processed via Nepdora's eSewa account.
+                    Your payments are currently being processed via Nepdora's
+                    eSewa account.
                   </p>
                 </div>
               </div>
@@ -285,32 +290,36 @@ function EsewaPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-1 gap-4 py-4">
-            <button
-              onClick={() => handleChoiceSelect("nepdora")}
-              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 text-left hover:border-green-600 hover:bg-accent transition-all duration-200"
-            >
-              <CreditCard className="mb-3 h-6 w-6 text-green-600" />
-              <div className="text-center">
-                <span className="block font-semibold">Use Nepdora Gateway</span>
-                <span className="text-xs text-muted-foreground mt-1">
-                  Hassle-free setup. Payments managed by Nepdora.
-                </span>
-              </div>
-            </button>
-            <button
-              onClick={() => handleChoiceSelect("own")}
-              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 text-left hover:border-green-600 hover:bg-accent transition-all duration-200"
-            >
-              <Wallet className="mb-3 h-6 w-6 text-green-600" />
-              <div className="text-center">
-                <span className="block font-semibold">Use Own Credentials</span>
-                <span className="text-xs text-muted-foreground mt-1">
-                  Connect your own eSewa merchant account.
-                </span>
-              </div>
-            </button>
-          </div>
+            <div className="grid grid-cols-1 gap-4 py-4">
+              <button
+                onClick={() => handleChoiceSelect("nepdora")}
+                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-green-600"
+              >
+                <CreditCard className="mb-3 h-6 w-6 text-green-600" />
+                <div className="text-center">
+                  <span className="block font-semibold">
+                    Use Nepdora Gateway
+                  </span>
+                  <span className="text-muted-foreground mt-1 text-xs">
+                    Hassle-free setup. Payments managed by Nepdora.
+                  </span>
+                </div>
+              </button>
+              <button
+                onClick={() => handleChoiceSelect("own")}
+                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-green-600"
+              >
+                <Wallet className="mb-3 h-6 w-6 text-green-600" />
+                <div className="text-center">
+                  <span className="block font-semibold">
+                    Use Own Credentials
+                  </span>
+                  <span className="text-muted-foreground mt-1 text-xs">
+                    Connect your own eSewa merchant account.
+                  </span>
+                </div>
+              </button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

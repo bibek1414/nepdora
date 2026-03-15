@@ -141,7 +141,12 @@ function PaymentSuccessContent() {
         body: JSON.stringify({
           pidx: paymentId,
           method: "khalti",
-          products_purchased: typeof window !== "undefined" ? JSON.parse(sessionStorage.getItem(`products_${paymentId}`) || "[]") : [],
+          products_purchased:
+            typeof window !== "undefined"
+              ? JSON.parse(
+                  sessionStorage.getItem(`products_${paymentId}`) || "[]"
+                )
+              : [],
         }),
       });
 
@@ -207,7 +212,10 @@ function PaymentSuccessContent() {
           transactionUuid = decoded.transaction_uuid;
         }
       } catch (e) {
-        console.warn("Failed to decode eSewa data for sessionStorage lookup:", e);
+        console.warn(
+          "Failed to decode eSewa data for sessionStorage lookup:",
+          e
+        );
       }
 
       const response = await fetch("/api/verify-payment", {
@@ -218,7 +226,12 @@ function PaymentSuccessContent() {
         body: JSON.stringify({
           method: "esewa",
           data: encodedData,
-          products_purchased: typeof window !== "undefined" && transactionUuid ? JSON.parse(sessionStorage.getItem(`products_${transactionUuid}`) || "[]") : [],
+          products_purchased:
+            typeof window !== "undefined" && transactionUuid
+              ? JSON.parse(
+                  sessionStorage.getItem(`products_${transactionUuid}`) || "[]"
+                )
+              : [],
         }),
       });
 

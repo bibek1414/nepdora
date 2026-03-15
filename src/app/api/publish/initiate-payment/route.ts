@@ -128,22 +128,32 @@ async function fetchNepdoraCentralCredentials(
   paymentType: "esewa" | "khalti"
 ): Promise<{ secret_key: string; merchant_code: string | null }> {
   try {
-    const centralApiUrl = "https://nepdora.baliyoventures.com/api/nepdora-payments/";
-    console.log(`Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`);
+    const centralApiUrl =
+      "https://nepdora.baliyoventures.com/api/nepdora-payments/";
+    console.log(
+      `Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`
+    );
 
-    const response = await fetch(`${centralApiUrl}?payment_type=${paymentType}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${centralApiUrl}?payment_type=${paymentType}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch central credentials: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch central credentials: ${response.statusText}`
+      );
     }
 
     const data = await response.json();
-    const centralGateway = data.find((g: any) => g.payment_type === paymentType);
+    const centralGateway = data.find(
+      (g: any) => g.payment_type === paymentType
+    );
 
     if (!centralGateway) {
       throw new Error(`Central credentials for ${paymentType} not found`);
@@ -182,10 +192,15 @@ async function getPaymentGateway(
   }
 
   // Check if credentials are missing (fallback logic)
-  if (!gateway.secret_key || (paymentType === "esewa" && !gateway.merchant_code)) {
-    console.log(`${paymentType} credentials missing for tenant. Falling back to Nepdora central credentials.`);
+  if (
+    !gateway.secret_key ||
+    (paymentType === "esewa" && !gateway.merchant_code)
+  ) {
+    console.log(
+      `${paymentType} credentials missing for tenant. Falling back to Nepdora central credentials.`
+    );
     const centralCreds = await fetchNepdoraCentralCredentials(paymentType);
-    
+
     return {
       ...gateway,
       secret_key: centralCreds.secret_key,

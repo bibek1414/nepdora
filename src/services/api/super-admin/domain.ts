@@ -14,16 +14,13 @@ export async function getDomains(
       url += "&payment=enabled";
     }
 
-    const res = await fetch(
-      url,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
 
     if (!res.ok) {
       throw new Error(`Failed to fetch domains: ${res.statusText}`);

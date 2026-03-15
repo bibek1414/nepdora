@@ -23,22 +23,32 @@ async function fetchNepdoraCentralCredentials(
   paymentType: "esewa" | "khalti"
 ): Promise<{ secret_key: string; merchant_code: string | null }> {
   try {
-    const centralApiUrl = "https://nepdora.baliyoventures.com/api/nepdora-payments/";
-    console.log(`Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`);
+    const centralApiUrl =
+      "https://nepdora.baliyoventures.com/api/nepdora-payments/";
+    console.log(
+      `Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`
+    );
 
-    const response = await fetch(`${centralApiUrl}?payment_type=${paymentType}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${centralApiUrl}?payment_type=${paymentType}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch central credentials: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch central credentials: ${response.statusText}`
+      );
     }
 
     const data = await response.json();
-    const centralGateway = data.find((g: any) => g.payment_type === paymentType);
+    const centralGateway = data.find(
+      (g: any) => g.payment_type === paymentType
+    );
 
     if (!centralGateway) {
       throw new Error(`Central credentials for ${paymentType} not found`);
@@ -63,7 +73,7 @@ async function getCredentials(paymentType: "esewa" | "khalti") {
     khalti: {
       merchant_code: null,
       secret_key: process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY,
-    }
+    },
   };
 
   const creds = envMap[paymentType];
@@ -72,7 +82,9 @@ async function getCredentials(paymentType: "esewa" | "khalti") {
     return creds;
   }
 
-  console.log(`Missing ${paymentType} env variables for subscription, fetching from central API...`);
+  console.log(
+    `Missing ${paymentType} env variables for subscription, fetching from central API...`
+  );
   return await fetchNepdoraCentralCredentials(paymentType);
 }
 
@@ -122,7 +134,6 @@ function validatePaymentRequest(data: any): {
       errors.length === 0 ? (data as PaymentRequestData) : undefined,
   };
 }
-
 
 /**
  * Build redirect URLs with subdomain for subscription flow
