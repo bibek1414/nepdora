@@ -92,7 +92,6 @@ async function reportToCentralPaymentHistory(data: {
         additional_info: {
           ...data.additional_info,
           is_subscription: true,
-          reported_from: "nextjs-subscription-verify",
           tenant_subdomain: data.subdomain,
         },
       }),
@@ -145,7 +144,10 @@ export async function POST(req: Request) {
     const subdomain = user?.sub_domain;
 
     const requestData = await req.json();
-    console.log("Subscription verify request body:", JSON.stringify(requestData, null, 2));
+    console.log(
+      "Subscription verify request body:",
+      JSON.stringify(requestData, null, 2)
+    );
     const { method, products_purchased } = requestData;
 
     if (!method || !["esewa", "khalti"].includes(method)) {
