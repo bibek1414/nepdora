@@ -61,7 +61,7 @@ const RecentBlogs = () => {
         >
           <div className="relative h-56 overflow-hidden">
             <Image
-              src={blog.thumbnail_image || "/images/placeholder.svg"}
+              src={blog.thumbnail_image || "/fallback/image-not-found.png"}
               alt={blog.thumbnail_image_alt_description || blog.title}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-110"

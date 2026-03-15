@@ -74,7 +74,7 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
         {/* Image - Taller aspect ratio [3/4] as requested */}
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-50">
           <Image
-            src={product.thumbnail_image || "/placeholder.png"}
+            src={product.thumbnail_image || "/fallback/image-not-found.png"}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"

@@ -198,7 +198,7 @@ export const RecentPosts = () => {
           >
             <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl">
               <Image
-                src={post.thumbnail_image || "/images/placeholder.svg"}
+                src={post.thumbnail_image || "/fallback/image-not-found.png"}
                 alt={post.title}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-110"

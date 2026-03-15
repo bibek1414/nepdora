@@ -354,7 +354,10 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
           >
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border">
               <Image
-                src={item.product.thumbnail_image || ""}
+                src={
+                  item.product.thumbnail_image ||
+                  "/fallback/image-not-found.png"
+                }
                 alt={item.product.name}
                 fill
                 className="object-cover"

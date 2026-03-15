@@ -333,7 +333,7 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
                   className="h-auto w-full rounded-lg"
                   onError={e => {
                     const target = e.currentTarget as HTMLImageElement;
-                    target.src = "/placeholder-image.png";
+                    target.src = "/fallback/image-not-found.png";
                   }}
                 />
               )}

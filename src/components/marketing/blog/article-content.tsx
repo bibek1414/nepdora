@@ -23,7 +23,7 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ post }) => {
     <div className="mx-auto max-w-7xl">
       <div className="mb-8">
         <Image
-          src={post.thumbnail_image || "/images/placeholder.svg"}
+          src={post.thumbnail_image || "/fallback/image-not-found.png"}
           alt={post.thumbnail_image_alt_description || post.title}
           width={1000}
           height={600}

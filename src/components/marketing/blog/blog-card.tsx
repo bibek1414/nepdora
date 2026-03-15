@@ -28,7 +28,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className = "" }) => {
       <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-xl">
         <Link href={`/blog/${post.slug}`}>
           <Image
-            src={post.thumbnail_image || "/images/placeholder.svg"}
+            src={post.thumbnail_image || "/fallback/image-not-found.png"}
             alt={post.thumbnail_image_alt_description || post.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
