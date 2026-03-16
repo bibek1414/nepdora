@@ -97,4 +97,21 @@ export const orderApi = {
     await handleApiError(response);
     return response.json();
   },
+
+  getOrderByNumber: async (orderNumber: string): Promise<Order> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(
+      `${API_BASE_URL}/api/get-order/${orderNumber}/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    await handleApiError(response);
+    const data = await response.json();
+    // Assuming the API returns a list and we need the first item
+    return Array.isArray(data.results) ? data.results[0] : data;
+  },
 };
