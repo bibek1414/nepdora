@@ -19,3 +19,12 @@ export interface CustomerFilters {
   page_size?: number;
   search?: string;
 }
+
+export interface CreateCustomerRequest {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address?: string;
+  website_type?: "ecommerce" | "service";
+}

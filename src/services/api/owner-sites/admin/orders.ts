@@ -31,6 +31,19 @@ export const orderApi = {
     await handleApiError(response);
     return response.json();
   },
+  createAdminOrder: async (orderData: CreateOrderRequest): Promise<Order> => {
+    const API_BASE_URL = getApiBaseUrl();
+
+    const headers = createHeaders();
+
+    const response = await fetch(`${API_BASE_URL}/api/admin-order/`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(orderData),
+    });
+    await handleApiError(response);
+    return response.json();
+  },
 
   getOrders: async (
     params: OrderPaginationParams = {}

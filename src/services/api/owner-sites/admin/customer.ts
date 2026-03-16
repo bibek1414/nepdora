@@ -1,8 +1,12 @@
 import {
+  CreateCustomerRequest,
+  Customer,
   CustomerFilters,
   PaginatedCustomers,
 } from "@/types/owner-site/admin/customer";
 import { getApiBaseUrl } from "@/config/site";
+import { createHeaders } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
 
 export const customerAPI = {
   getRegisteredCustomers: async (
@@ -21,17 +25,23 @@ export const customerAPI = {
 
     const response = await fetch(url.toString(), {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch registered customers: ${response.status}`
-      );
-    }
+    await handleApiError(response);
 
+    return await response.json();
+  },
+
+  registerCustomer: async (data: CreateCustomerRequest): Promise<Customer> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await fetch(`${API_BASE_URL}/api/customer/register/`, {
+      method: "POST",
+      headers: createHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    await handleApiError(response);
     return await response.json();
   },
 };

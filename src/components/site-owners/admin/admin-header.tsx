@@ -23,6 +23,7 @@ import {
   HelpCircle,
   Share,
   FileCheck,
+  LayoutGrid,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
@@ -99,6 +100,16 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   Complete Setup
                 </Button>
               )}
+              <Link href="/admin/pos">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+                >
+                  <LayoutGrid className="mr-2 h-4 w-4" />
+                  POS Mode
+                </Button>
+              </Link>
               <Link href={`/`} target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"

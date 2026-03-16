@@ -54,6 +54,7 @@ export interface CreateOrderRequest {
   promo_code?: number;
   discount_amount?: string;
   is_paid?: boolean;
+  customer?: number;
 }
 
 export interface Order {

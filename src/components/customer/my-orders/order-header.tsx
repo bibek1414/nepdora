@@ -20,13 +20,13 @@ const OrderHeader: React.FC<OrderHeaderProps> = ({ order }) => {
     const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
 
     if (isNaN(numAmount)) {
-      return "₹0.00";
+      return "Rs. 0.00";
     }
 
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-    }).format(numAmount);
+    return `Rs. ${numAmount.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   };
 
   return (

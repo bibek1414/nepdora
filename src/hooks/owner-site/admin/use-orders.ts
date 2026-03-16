@@ -22,6 +22,17 @@ export const useCreateOrder = () => {
   });
 };
 
+export const useCreateAdminOrder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (orderData: CreateOrderRequest) =>
+      orderApi.createAdminOrder(orderData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+};
+
 export const useOrders = (params: OrderPaginationParams = {}) => {
   return useQuery({
     queryKey: ["orders", params],

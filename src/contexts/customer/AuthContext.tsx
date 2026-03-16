@@ -55,7 +55,6 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
             last_name: decodedAccess.last_name,
             phone: decodedAccess.phone,
             address: decodedAccess.address,
-            website_type: decodedAccess.website_type,
           });
           setTokens(parsedTokens);
         } else {
@@ -141,7 +140,6 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
         last_name: decodedAccess.last_name,
         phone: decodedAccess.phone,
         address: decodedAccess.address,
-        website_type: decodedAccess.website_type,
       };
 
       handleAuthSuccess(loggedInUser, {
