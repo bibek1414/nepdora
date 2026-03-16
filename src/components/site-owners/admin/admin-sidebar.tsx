@@ -25,6 +25,7 @@ import {
   BookOpen,
   Users,
   History,
+  BarChart3,
 } from "lucide-react";
 import { User } from "@/types/auth/auth";
 import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
@@ -59,7 +60,10 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
   const navigationGroups: NavigationGroup[] = [
     {
-      items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
+      items: [
+        { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+        { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+      ],
     },
     {
       items: [
