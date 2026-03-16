@@ -62,9 +62,10 @@ export default function POSCart() {
       delivery_charge: "0",
       payment_type: "cash",
       is_paid: true,
-      order_status: "Delivered", // POS orders are usually completed immediately
+      status: "delivered", // POS orders are usually completed immediately
       discount_amount: discountAmount.toFixed(2),
       customer: selectedCustomer?.id || null,
+      pos_order: true,
       items: cartItems.map(item => ({
         product_id: item.product.id,
         variant_id: item.selectedVariant?.id || null,
@@ -262,7 +263,7 @@ export default function POSCart() {
         </div>
 
         <Button
-          className="h-14 w-full rounded-xl bg-[#10B981] text-lg font-bold text-white shadow-lg shadow-green-100 transition-all hover:bg-[#059669] active:scale-[0.98]"
+          className="bg-primary hover:bg-primary/80 h-14 w-full rounded-xl text-lg font-bold text-white shadow-lg shadow-green-100 transition-all active:scale-[0.98]"
           disabled={cartItems.length === 0 || createOrderMutation.isPending}
           onClick={handleCheckout}
         >

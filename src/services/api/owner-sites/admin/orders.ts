@@ -48,7 +48,7 @@ export const orderApi = {
   getOrders: async (
     params: OrderPaginationParams = {}
   ): Promise<OrdersResponse> => {
-    const { page = 1, page_size = 10, search, status, is_manual } = params;
+    const { page = 1, page_size = 10, search, status, is_manual, pos_order } = params;
     const API_BASE_URL = getApiBaseUrl();
 
     const queryParams = new URLSearchParams({
@@ -59,6 +59,8 @@ export const orderApi = {
     if (search) queryParams.append("search", search);
     if (status && status !== "all") queryParams.append("status", status);
     if (is_manual) queryParams.append("is_manual", "true");
+    if (pos_order === true) queryParams.append("pos_order", "true");
+    if (pos_order === false) queryParams.append("pos_order", "false");
 
     const response = await fetch(
       `${API_BASE_URL}/api/admin-order/?${queryParams.toString()}`,

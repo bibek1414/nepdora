@@ -55,6 +55,7 @@ export interface CreateOrderRequest {
   discount_amount?: string;
   is_paid?: boolean;
   customer?: number;
+  pos_order?: boolean;
 }
 
 export interface Order {
@@ -102,6 +103,7 @@ export interface OrderPaginationParams {
   status?: string;
 
   is_manual?: boolean;
+  pos_order?: boolean;
 }
 
 export interface UpdateOrderStatusRequest {

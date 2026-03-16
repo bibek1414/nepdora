@@ -103,7 +103,7 @@ const OrderTableSkeleton = () => {
 
 const ITEMS_PER_PAGE = 25;
 
-export default function OrdersPage() {
+export default function OrdersPage({ isPOS = false }: { isPOS?: boolean }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -140,8 +140,9 @@ export default function OrdersPage() {
       sortBy: "created_at",
       sortOrder: "desc",
       is_manual: showManualOnly ? true : undefined,
+      pos_order: isPOS ? true : undefined,
     }),
-    [currentPage, debouncedSearch, statusFilter, showManualOnly]
+    [currentPage, debouncedSearch, statusFilter, showManualOnly, isPOS]
   );
 
   const { data: ordersResponse, isLoading, error } = useOrders(queryParams);
@@ -272,11 +273,17 @@ export default function OrdersPage() {
 
   if (isLoading && !ordersResponse) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
-          <div className="mb-5">
-            <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
-          </div>
+      <div className={isPOS ? "w-full" : "min-h-screen bg-white"}>
+        <div
+          className={
+            isPOS ? "w-full" : "mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8"
+          }
+        >
+          {!isPOS && (
+            <div className="mb-5">
+              <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
+            </div>
+          )}
           <OrderTableSkeleton />
         </div>
       </div>
@@ -285,11 +292,17 @@ export default function OrdersPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
-          <div className="mb-5">
-            <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
-          </div>
+      <div className={isPOS ? "w-full" : "min-h-screen bg-white"}>
+        <div
+          className={
+            isPOS ? "w-full" : "mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8"
+          }
+        >
+          {!isPOS && (
+            <div className="mb-5">
+              <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
+            </div>
+          )}
           <Alert variant="destructive">
             <AlertDescription>
               Failed to load orders. Please try again later.
@@ -301,78 +314,77 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+    <div className={isPOS ? "w-full" : "min-h-screen bg-white"}>
+      <div
+        className={
+          isPOS ? "w-full" : "mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8"
+        }
+      >
         {/* Header */}
-        <div className="mb-5 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
+        {!isPOS && (
+          <div className="mb-5 flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-[#003d79]">Orders</h1>
+            </div>
+            <ManualOrderDialog />
           </div>
-          <ManualOrderDialog />
-        </div>
+        )}
 
         {/* Search and Filters */}
         <div className="mb-6 space-y-4">
           {/* Search Bar */}
           <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
             <div className="relative w-full sm:w-64">
-              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
+              <Search className="absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 text-black/40" />
               <Input
                 type="search"
                 placeholder="Search orders..."
-                className="h-9 bg-black/5 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:shadow-sm focus:outline-none"
+                className="h-9 pl-9 text-sm placeholder:text-black/40 focus:bg-white focus:outline-none"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
-              {searchTerm && (
-                <button
-                  type="button"
-                  onClick={() => setSearchTerm("")}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-black/40 transition hover:text-black/60"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
             </div>
           </div>
 
           {/* Status Filter Tabs */}
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setStatusFilter("all")}
-              className={`rounded-full px-4 py-1 text-xs font-medium transition-colors ${
-                statusFilter === "all"
-                  ? "bg-black text-white"
-                  : "bg-black/5 text-black/60 hover:bg-black/10"
-              }`}
-            >
-              All
-            </button>
-            {STATUS_OPTIONS.map(option => (
+          {!isPOS && (
+            <div className="flex flex-wrap gap-2">
               <button
-                key={option.value}
-                onClick={() => setStatusFilter(option.value as any)}
-                className={`cursor-pointer rounded-full px-4 py-1 text-xs font-medium transition-colors ${
-                  statusFilter === option.value
+                onClick={() => setStatusFilter("all")}
+                className={`rounded-full px-4 py-1 text-xs font-medium transition-colors ${
+                  statusFilter === "all"
                     ? "bg-black text-white"
                     : "bg-black/5 text-black/60 hover:bg-black/10"
                 }`}
               >
-                {option.label}
+                All
               </button>
-            ))}
-            <button
-              onClick={handleManualOrdersToggle}
-              disabled={isLoading}
-              className={`cursor-pointer rounded-full px-4 py-1 text-xs font-medium transition-colors ${
-                showManualOnly
-                  ? "bg-black text-white"
-                  : "bg-black/5 text-black/60 hover:bg-black/10"
-              }`}
-            >
-              {showManualOnly ? "Show All Orders" : "Manual Orders"}
-            </button>
-          </div>
+              {STATUS_OPTIONS.map(option => (
+                <button
+                  key={option.value}
+                  onClick={() => setStatusFilter(option.value as any)}
+                  className={`cursor-pointer rounded-full px-4 py-1 text-xs font-medium transition-colors ${
+                    statusFilter === option.value
+                      ? "bg-black text-white"
+                      : "bg-black/5 text-black/60 hover:bg-black/10"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+              <button
+                onClick={handleManualOrdersToggle}
+                disabled={isLoading}
+                className={`cursor-pointer rounded-full px-4 py-1 text-xs font-medium transition-colors ${
+                  showManualOnly
+                    ? "bg-black text-white"
+                    : "bg-black/5 text-black/60 hover:bg-black/10"
+                }`}
+              >
+                {showManualOnly ? "Show All Orders" : "Manual Orders"}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Orders Table */}
@@ -420,9 +432,11 @@ export default function OrdersPage() {
                       <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
                         Total
                       </TableHead>
-                      <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
-                        Status
-                      </TableHead>
+                      {!isPOS && (
+                        <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+                          Status
+                        </TableHead>
+                      )}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -455,37 +469,39 @@ export default function OrdersPage() {
                         </TableCell>
                         <TableCell className="px-6 py-4">
                           <span className="text-sm font-semibold text-black">
-                            रु {order.total_amount?.toLocaleString()}
+                            Rs. {order.total_amount?.toLocaleString()}
                           </span>
                         </TableCell>
-                        <TableCell className="px-6 py-4">
-                          <div
-                            ref={dropdownRef}
-                            onClick={e => e.stopPropagation()}
-                          >
-                            <Select
-                              value={order.status}
-                              onValueChange={value =>
-                                handleStatusChange(order.id, value)
-                              }
+                        {!isPOS && (
+                          <TableCell className="px-6 py-4">
+                            <div
+                              ref={dropdownRef}
+                              onClick={e => e.stopPropagation()}
                             >
-                              <SelectTrigger className="h-8 w-[130px] border-black/5 bg-black/5 text-xs font-medium focus:ring-0">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {STATUS_OPTIONS.map(option => (
-                                  <SelectItem
-                                    key={option.value}
-                                    value={option.value}
-                                    className="text-xs"
-                                  >
-                                    {option.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </TableCell>
+                              <Select
+                                value={order.status}
+                                onValueChange={value =>
+                                  handleStatusChange(order.id, value)
+                                }
+                              >
+                                <SelectTrigger className="h-8 w-[130px] border-black/5 bg-black/5 text-xs font-medium focus:ring-0">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {STATUS_OPTIONS.map(option => (
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}
+                                      className="text-xs"
+                                    >
+                                      {option.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>

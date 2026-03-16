@@ -33,7 +33,7 @@ const EcommerceSkeleton: React.FC = () => {
         <div className="ml-2 flex flex-1 items-center justify-between rounded-md bg-slate-100 px-3 py-1 text-[10px] text-slate-500">
           <span className="truncate">
             nepdora.myshop.com.np/
-            {step === 2 ? "admin/dashboard" : "product/backpack"}
+            {step === 2 ? "admin" : "product/backpack"}
           </span>
           <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
         </div>
