@@ -23,7 +23,7 @@ export const orderApi = {
           "Content-Type": "application/json",
         };
 
-    const response = await fetch(`${API_BASE_URL}/api/admin-order/`, {
+    const response = await fetch(`${API_BASE_URL}/api/order/`, {
       method: "POST",
       headers,
       body: JSON.stringify(orderData),

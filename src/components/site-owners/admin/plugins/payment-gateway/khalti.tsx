@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Wallet, Save, CreditCard } from "lucide-react";
+import { Loader2, Wallet, Save, CreditCard, Settings2 } from "lucide-react";
 import {
   usePaymentGatewaysKhalti,
   useCreatePaymentGateway,
@@ -167,6 +167,7 @@ function KhaltiPage() {
                       <span className="block font-medium text-gray-700">
                         Khalti Payment Gateway
                       </span>
+
                       <span className="text-sm text-gray-500">
                         {formData.is_enabled
                           ? "Currently active"
@@ -174,13 +175,26 @@ function KhaltiPage() {
                       </span>
                     </div>
                   </div>
-                  <Switch
-                    checked={formData.is_enabled}
-                    onCheckedChange={handleSwitchChange}
-                    className="data-[state=checked]:bg-purple-600"
-                  />
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={formData.is_enabled}
+                      onCheckedChange={handleSwitchChange}
+                      className="cursor-pointer data-[state=checked]:bg-purple-600"
+                    />
+                  </div>
                 </div>
               </div>
+              {formData.is_enabled && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowChoiceModal(true)}
+                  className="mt-2 mr-2 flex h-8 items-center gap-4 border-purple-200 text-purple-700 hover:bg-purple-50 hover:text-purple-800"
+                >
+                  <Settings2 className="h-4 w-4" />
+                  Change
+                </Button>
+              )}
             </div>
 
             {formData.is_enabled && configType === "own" && (
@@ -262,7 +276,7 @@ function KhaltiPage() {
             <div className="grid grid-cols-1 gap-4 py-4">
               <button
                 onClick={() => handleChoiceSelect("nepdora")}
-                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-purple-600"
+                className="border-muted bg-popover hover:bg-accent flex cursor-pointer flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-purple-600"
               >
                 <CreditCard className="mb-3 h-6 w-6 text-purple-600" />
                 <div className="text-center">
@@ -276,7 +290,7 @@ function KhaltiPage() {
               </button>
               <button
                 onClick={() => handleChoiceSelect("own")}
-                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-purple-600"
+                className="border-muted bg-popover hover:bg-accent flex cursor-pointer flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-purple-600"
               >
                 <Wallet className="mb-3 h-6 w-6 text-purple-600" />
                 <div className="text-center">

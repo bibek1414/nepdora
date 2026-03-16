@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, CreditCard, Save, Wallet } from "lucide-react";
+import { Loader2, CreditCard, Save, Wallet, Settings2 } from "lucide-react";
 import {
   usePaymentGatewaysEsewa,
   useCreatePaymentGateway,
@@ -182,13 +182,26 @@ function EsewaPage() {
                       </span>
                     </div>
                   </div>
-                  <Switch
-                    checked={formData.is_enabled}
-                    onCheckedChange={handleSwitchChange}
-                    className="data-[state=checked]:bg-green-600"
-                  />
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={formData.is_enabled}
+                      onCheckedChange={handleSwitchChange}
+                      className="data-[state=checked]:bg-green-600"
+                    />
+                  </div>
                 </div>
               </div>
+              {formData.is_enabled && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowChoiceModal(true)}
+                  className="flex h-8 items-center gap-2 border-green-200 text-green-700 hover:bg-green-50 hover:text-green-800"
+                >
+                  <Settings2 className="h-4 w-4" />
+                  Change
+                </Button>
+              )}
             </div>
 
             {formData.is_enabled && configType === "own" && (
@@ -293,7 +306,7 @@ function EsewaPage() {
             <div className="grid grid-cols-1 gap-4 py-4">
               <button
                 onClick={() => handleChoiceSelect("nepdora")}
-                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-green-600"
+                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-green-600 cursor-pointer"
               >
                 <CreditCard className="mb-3 h-6 w-6 text-green-600" />
                 <div className="text-center">
@@ -307,7 +320,7 @@ function EsewaPage() {
               </button>
               <button
                 onClick={() => handleChoiceSelect("own")}
-                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-green-600"
+                className="border-muted bg-popover hover:bg-accent flex flex-col items-center justify-between rounded-md border-2 p-4 text-left transition-all duration-200 hover:border-green-600 cursor-pointer"
               >
                 <Wallet className="mb-3 h-6 w-6 text-green-600" />
                 <div className="text-center">
