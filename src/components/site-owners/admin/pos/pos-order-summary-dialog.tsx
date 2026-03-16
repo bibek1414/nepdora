@@ -70,7 +70,7 @@ export function POSOrderSummaryDialog({
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-row">
           <Button
-            className="flex-1 gap-2 rounded-xl bg-primary hover:bg-primary"
+            className="bg-primary hover:bg-primary flex-1 gap-2 rounded-xl"
             onClick={onClose}
           >
             <Undo2 className="h-4 w-4" />

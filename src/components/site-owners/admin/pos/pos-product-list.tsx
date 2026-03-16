@@ -65,7 +65,7 @@ export default function POSProductList() {
             {productsData.results.map((product: any) => (
               <Card
                 key={product.id}
-                className="group cursor-pointer overflow-hidden border-gray-100 p-0 transition-all hover:border-primary hover:shadow-md"
+                className="group hover:border-primary cursor-pointer overflow-hidden border-gray-100 p-0 transition-all hover:shadow-md"
                 onClick={() => addToCart(product, 1)}
               >
                 <div className="relative aspect-square overflow-hidden bg-gray-50">
@@ -78,7 +78,7 @@ export default function POSProductList() {
                     className="object-cover transition-transform group-hover:scale-105"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-colors group-hover:bg-black/5 group-hover:opacity-100">
-                    <div className="flex h-10 w-10 translate-y-2 transform items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform group-hover:translate-y-0">
+                    <div className="bg-primary flex h-10 w-10 translate-y-2 transform items-center justify-center rounded-full text-white shadow-lg transition-transform group-hover:translate-y-0">
                       <Plus className="h-6 w-6" />
                     </div>
                   </div>
@@ -88,7 +88,7 @@ export default function POSProductList() {
                     {product.name}
                   </p>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-base font-bold text-primary">
+                    <span className="text-primary text-base font-bold">
                       Rs. {parseFloat(product.price).toLocaleString()}
                     </span>
                     {product.stock <= 5 && (

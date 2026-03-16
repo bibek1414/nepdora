@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useMemo, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  ReactNode,
+} from "react";
 import { Customer } from "@/types/owner-site/admin/customer";
 import { Product } from "@/types/owner-site/admin/product";
 import { OrderItem } from "@/types/owner-site/admin/orders";
@@ -28,7 +34,10 @@ interface POSContextType {
     type: "flat" | "percentage";
     value: number;
   };
-  setDiscount: (discount: { type: "flat" | "percentage"; value: number }) => void;
+  setDiscount: (discount: {
+    type: "flat" | "percentage";
+    value: number;
+  }) => void;
   subTotal: number;
   discountAmount: number;
   total: number;
@@ -37,24 +46,34 @@ interface POSContextType {
 const POSContext = createContext<POSContextType | undefined>(undefined);
 
 export function POSProvider({ children }: { children: ReactNode }) {
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null
+  );
   const [cartItems, setCartItems] = useState<POSCartItem[]>([]);
-  const [discount, setDiscount] = useState<{ type: "flat" | "percentage"; value: number }>({
+  const [discount, setDiscount] = useState<{
+    type: "flat" | "percentage";
+    value: number;
+  }>({
     type: "flat",
     value: 0,
   });
 
   const addToCart = (product: Product, quantity: number, variant?: any) => {
     const itemId = variant ? `${product.id}-${variant.id}` : `${product.id}`;
-    
+
     setCartItems(prev => {
       const existing = prev.find(item => item.id === itemId);
       if (existing) {
-        return prev.map(item => 
-          item.id === itemId ? { ...item, quantity: item.quantity + quantity } : item
+        return prev.map(item =>
+          item.id === itemId
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
         );
       }
-      return [...prev, { id: itemId, product, quantity, selectedVariant: variant }];
+      return [
+        ...prev,
+        { id: itemId, product, quantity, selectedVariant: variant },
+      ];
     });
   };
 
@@ -67,9 +86,9 @@ export function POSProvider({ children }: { children: ReactNode }) {
       removeFromCart(itemId);
       return;
     }
-    setCartItems(prev => prev.map(item => 
-      item.id === itemId ? { ...item, quantity } : item
-    ));
+    setCartItems(prev =>
+      prev.map(item => (item.id === itemId ? { ...item, quantity } : item))
+    );
   };
 
   const clearCart = () => {
@@ -80,7 +99,9 @@ export function POSProvider({ children }: { children: ReactNode }) {
 
   const subTotal = useMemo(() => {
     return cartItems.reduce((acc, item) => {
-      const price = item.selectedVariant ? parseFloat(item.selectedVariant.price) : parseFloat(item.product.price);
+      const price = item.selectedVariant
+        ? parseFloat(item.selectedVariant.price)
+        : parseFloat(item.product.price);
       return acc + price * item.quantity;
     }, 0);
   }, [cartItems]);

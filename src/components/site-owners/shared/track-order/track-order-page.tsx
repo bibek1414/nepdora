@@ -17,13 +17,12 @@ import {
   AlertCircle,
   CreditCard,
   FileText,
-  ArrowLeft,
+  ChevronLeft,
 } from "lucide-react";
 import { useTrackOrder } from "@/hooks/owner-site/use-track-order";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-
+import { Button } from "@/components/ui/site-owners/button";
 const statusConfig: Record<
   string,
   { key: string; label: string; color: string; icon: any }
@@ -149,7 +148,7 @@ export default function TrackOrderPage() {
             />
             <button
               type="submit"
-              className="mt-4 w-full rounded-2xl bg-indigo-600 py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-[0.98]"
+              className="mt-4 w-full cursor-pointer rounded-2xl py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition-all active:scale-[0.98]"
               style={{ backgroundColor: theme.colors.primary }}
             >
               Track Order
@@ -158,9 +157,9 @@ export default function TrackOrderPage() {
 
           <button
             onClick={() => router.back()}
-            className="mx-auto mt-6 flex items-center justify-center gap-2 font-medium text-slate-400 transition-colors hover:text-slate-600"
+            className="mx-auto mt-6 flex cursor-pointer items-center justify-center gap-2 font-medium text-slate-400 transition-colors hover:text-slate-600"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4" />
             Go Back
           </button>
         </motion.div>
@@ -189,7 +188,7 @@ export default function TrackOrderPage() {
               onClick={() => router.back()}
               className="rounded-full p-2 transition-colors hover:bg-slate-50"
             >
-              <ArrowLeft className="h-5 w-5 text-slate-600" />
+              <ChevronLeft className="h-5 w-5 text-slate-600" />
             </button>
             <span className="text-xl font-bold tracking-tight text-slate-900">
               Track
@@ -253,7 +252,7 @@ export default function TrackOrderPage() {
                   className={`rounded-full border px-4 py-2 ${statusInfo.color} flex items-center gap-2 self-start sm:self-center`}
                 >
                   <StatusIcon className="h-4 w-4" />
-                  <span className="text-xs font-bold tracking-wider ">
+                  <span className="text-xs font-bold tracking-wider">
                     {statusInfo.label}
                   </span>
                 </div>
@@ -366,16 +365,16 @@ export default function TrackOrderPage() {
                 <table className="w-full border-collapse text-left">
                   <thead>
                     <tr className="bg-slate-50/50">
-                      <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 ">
+                      <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500">
                         Product
                       </th>
-                      <th className="px-6 py-4 text-center text-xs font-bold tracking-wider text-slate-500 ">
+                      <th className="px-6 py-4 text-center text-xs font-bold tracking-wider text-slate-500">
                         Price
                       </th>
-                      <th className="px-6 py-4 text-center text-xs font-bold tracking-wider text-slate-500 ">
+                      <th className="px-6 py-4 text-center text-xs font-bold tracking-wider text-slate-500">
                         Qty
                       </th>
-                      <th className="px-6 py-4 text-right text-xs font-bold tracking-wider text-slate-500 ">
+                      <th className="px-6 py-4 text-right text-xs font-bold tracking-wider text-slate-500">
                         Total
                       </th>
                     </tr>
@@ -491,7 +490,7 @@ export default function TrackOrderPage() {
               className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm"
             >
               <div className="border-b border-slate-50 p-6">
-                <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-900 ">
+                <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-900">
                   <User
                     className="h-4 w-4 text-indigo-600"
                     style={{ color: theme.colors.primary }}
@@ -506,7 +505,7 @@ export default function TrackOrderPage() {
                       <User className="h-4 w-4 text-slate-400" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold tracking-widest text-slate-400 ">
+                      <p className="text-[10px] font-bold tracking-widest text-slate-400">
                         Name
                       </p>
                       <p className="text-sm font-bold text-slate-900">
@@ -519,7 +518,7 @@ export default function TrackOrderPage() {
                       <Mail className="h-4 w-4 text-slate-400" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold tracking-widest text-slate-400 ">
+                      <p className="text-[10px] font-bold tracking-widest text-slate-400">
                         Email
                       </p>
                       <p className="max-w-[180px] truncate text-sm font-bold text-slate-900">
@@ -532,7 +531,7 @@ export default function TrackOrderPage() {
                       <Phone className="h-4 w-4 text-slate-400" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold tracking-widest text-slate-400 ">
+                      <p className="text-[10px] font-bold tracking-widest text-slate-400">
                         Phone
                       </p>
                       <p className="text-sm font-bold text-slate-900">
@@ -543,7 +542,7 @@ export default function TrackOrderPage() {
                 </div>
 
                 <div className="border-t border-slate-50 pt-6">
-                  <h3 className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest text-slate-900 ">
+                  <h3 className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest text-slate-900">
                     <Truck
                       className="h-3.5 w-3.5 text-indigo-600"
                       style={{ color: theme.colors.primary }}
@@ -577,7 +576,7 @@ export default function TrackOrderPage() {
               className="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm"
             >
               <div className="border-b border-slate-50 p-6">
-                <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-900 ">
+                <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-900">
                   <FileText
                     className="h-4 w-4 text-indigo-600"
                     style={{ color: theme.colors.primary }}
@@ -611,19 +610,19 @@ export default function TrackOrderPage() {
                 </div>
 
                 <div className="mt-8 space-y-4 border-t border-slate-50 pt-6">
-                  <h3 className="mb-4 text-[10px] font-bold tracking-widest text-slate-400 ">
+                  <h3 className="mb-4 text-[10px] font-bold tracking-widest text-slate-400">
                     Payment Information
                   </h3>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-500">Method</span>
-                    <span className="rounded-md border border-slate-100 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-900 ">
+                    <span className="rounded-md border border-slate-100 bg-slate-50 px-2 py-1 text-xs font-bold text-slate-900">
                       {order.payment_type || "N/A"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-500">Status</span>
                     <span
-                      className={`rounded-md px-2 py-1 text-[10px] font-bold tracking-widest  ${order.is_paid ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                      className={`rounded-md px-2 py-1 text-[10px] font-bold tracking-widest ${order.is_paid ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
                     >
                       {order.is_paid ? "Paid" : "Unpaid"}
                     </span>
@@ -651,7 +650,7 @@ export default function TrackOrderPage() {
                 <div className="space-y-6">
                   {(order as any).promo_code && (
                     <div>
-                      <p className="mb-1 text-[10px] font-bold tracking-widest text-slate-400 ">
+                      <p className="mb-1 text-[10px] font-bold tracking-widest text-slate-400">
                         Promo Code
                       </p>
                       <p
@@ -667,7 +666,7 @@ export default function TrackOrderPage() {
                   )}
                   {order.note && (
                     <div>
-                      <p className="mb-1 text-[10px] font-bold tracking-widest text-slate-400 ">
+                      <p className="mb-1 text-[10px] font-bold tracking-widest text-slate-400">
                         Order Note
                       </p>
                       <p className="text-sm leading-relaxed text-slate-600 italic">
