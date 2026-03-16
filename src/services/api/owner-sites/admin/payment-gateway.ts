@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "@/config/site";
+import { getApiBaseUrl, siteConfig } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
@@ -143,16 +143,7 @@ export const paymentGatewayApi = {
     page_size?: number;
     search?: string;
   }): Promise<TenantCentralPaymentListResponse> => {
-    // Note: This API seems to be on the central Nepdora domain based on the request
-    // However, the example URL provided was https://nepdora.baliyoventures.com/api/tenant-central-payments/?tenant=sasto-bazzar
-    // getApiBaseUrl() might return the subdomain URL if we are on one.
-    // Let's use siteConfig.apiBaseUrl for central payments if it's supposed to be central.
-    // Wait, the user said: https://nepdora.baliyoventures.com/api/tenant-central-payments/?tenant=here will be tenatn name according to the login
-
-    // Importing siteConfig to get the central base URL
-    // Actually, let's just use a hardcoded or configurable base if needed, but usually siteConfig.apiBaseUrl is the central one.
-
-    const CENTRAL_API_URL = "https://nepdora.baliyoventures.com";
+    const CENTRAL_API_URL = siteConfig.apiBaseUrl;
     const queryParams = new URLSearchParams();
     queryParams.append("tenant", params.tenant);
     if (params.page) queryParams.append("page", params.page.toString());
@@ -173,7 +164,7 @@ export const paymentGatewayApi = {
 
   // Get payment summary from central for this tenant
   getPaymentSummary: async (tenant: string): Promise<PaymentSummary> => {
-    const CENTRAL_API_URL = "https://nepdora.baliyoventures.com";
+    const CENTRAL_API_URL = siteConfig.apiBaseUrl;
     const response = await fetch(
       `${CENTRAL_API_URL}/api/payment-summary/?tenant=${tenant}`,
       {
@@ -208,7 +199,7 @@ export const paymentGatewayApi = {
     id: number,
     data: { is_read: boolean }
   ): Promise<TenantCentralPayment> => {
-    const CENTRAL_API_URL = "https://nepdora.baliyoventures.com";
+    const CENTRAL_API_URL = siteConfig.apiBaseUrl;
     const response = await fetch(
       `${CENTRAL_API_URL}/api/tenant-central-payments/${id}/`,
       {
