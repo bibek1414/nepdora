@@ -10,15 +10,29 @@ import { usePOS } from "@/contexts/POSContext";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 
 export default function POSProductList() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const { addToCart } = usePOS();
+
+  const PAGE_SIZE = 20;
 
   const { data: productsData, isLoading } = useProducts({
     search: searchTerm,
-    page_size: 20,
+    page: currentPage,
+    page_size: PAGE_SIZE,
   });
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
+  };
+
+  const totalPages = productsData?.count
+    ? Math.ceil(productsData.count / PAGE_SIZE)
+    : 0;
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
@@ -30,7 +44,7 @@ export default function POSProductList() {
             placeholder="Search products by name..."
             className="h-12 border-none bg-gray-50 pl-10 text-base placeholder:text-gray-400 focus:bg-white"
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
           />
         </div>
       </div>
@@ -56,7 +70,9 @@ export default function POSProductList() {
               >
                 <div className="relative aspect-square overflow-hidden bg-gray-50">
                   <Image
-                    src={product.thumbnail_image || "/placeholder-product.png"}
+                    src={
+                      product.thumbnail_image || "/fallback/image-not-found.png"
+                    }
                     alt={product.name}
                     fill
                     className="object-cover transition-transform group-hover:scale-105"
@@ -95,6 +111,17 @@ export default function POSProductList() {
           </div>
         )}
       </ScrollArea>
+
+      {/* Pagination */}
+      {productsData?.results && productsData.results.length > 0 && (
+        <div className="border-t border-gray-100 bg-gray-50/50">
+          <SimplePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 }
