@@ -68,7 +68,7 @@ export const paymentGatewayApi = {
     data: CreatePaymentGatewayRequest
   ): Promise<CreatePaymentGatewayResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/payment-gateway/`, {
+    const response = await fetch(`${API_BASE_URL}/api/payment-gateway/list/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
