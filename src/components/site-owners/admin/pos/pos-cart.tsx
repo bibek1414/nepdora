@@ -58,21 +58,20 @@ export default function POSCart() {
       customer_address: selectedCustomer?.address || "Store Purchase",
       shipping_address: "In-store Pick-up",
       city: "Store",
-      total_amount: total.toString(),
+      total_amount: total.toFixed(2),
       delivery_charge: "0",
       payment_type: "cash",
       is_paid: true,
       order_status: "Delivered", // POS orders are usually completed immediately
-      discount_amount: discountAmount.toString(),
+      discount_amount: discountAmount.toFixed(2),
       customer: selectedCustomer?.id || null,
       items: cartItems.map(item => ({
         product_id: item.product.id,
         variant_id: item.selectedVariant?.id || null,
         quantity: item.quantity,
-        price: (item.selectedVariant
-          ? item.selectedVariant.price
-          : item.product.price
-        ).toString(),
+        price: parseFloat(
+          item.selectedVariant ? item.selectedVariant.price : item.product.price
+        ).toFixed(2),
       })),
     };
 
@@ -94,8 +93,8 @@ export default function POSCart() {
       // Clear cart and reset state immediately after success
       clearCart();
       setAmountPaid(0);
-    } catch (error) {
-      // Error handled by mutation
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create order");
     }
   };
 
