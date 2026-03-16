@@ -90,6 +90,10 @@ export default function POSCart() {
         change: change,
       });
       setShowSummary(true);
+
+      // Clear cart and reset state immediately after success
+      clearCart();
+      setAmountPaid(0);
     } catch (error) {
       // Error handled by mutation
     }
@@ -97,8 +101,6 @@ export default function POSCart() {
 
   const handleCloseSummary = () => {
     setShowSummary(false);
-    clearCart();
-    setAmountPaid(0);
   };
 
   const toggleDiscountType = () => {
@@ -196,7 +198,7 @@ export default function POSCart() {
             <span className="text-sm text-gray-600">Discount</span>
             <div className="ml-1 flex items-center gap-1.5">
               <span
-                className={`text-[10px] font-medium ${discount.type === "flat" ? "text-gray-400" : "text-[#4F46E5]"}`}
+                className={`text-[10px] font-medium ${discount.type === "flat" ? "text-gray-400" : "text-primary"}`}
               >
                 %
               </span>
@@ -206,7 +208,7 @@ export default function POSCart() {
                 className="scale-90"
               />
               <span
-                className={`text-[10px] font-medium ${discount.type === "percentage" ? "text-gray-400" : "text-[#4F46E5]"}`}
+                className={`text-[10px] font-medium ${discount.type === "percentage" ? "text-gray-400" : "text-primary"}`}
               >
                 Flat
               </span>
@@ -255,7 +257,7 @@ export default function POSCart() {
 
         <div className="flex items-center justify-between py-1">
           <span className="text-lg font-bold text-gray-800">Total</span>
-          <span className="text-xl font-black text-[#4F46E5]">
+          <span className="text-primary text-xl font-semibold">
             Rs. {total.toLocaleString()}
           </span>
         </div>

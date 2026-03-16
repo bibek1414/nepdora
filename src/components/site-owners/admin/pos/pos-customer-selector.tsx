@@ -49,7 +49,7 @@ export default function POSCustomerSelector() {
       {selectedCustomer ? (
         <div className="flex items-center justify-between rounded-lg border border-[#C7D2FE] bg-[#EEF2FF] p-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-[#4F46E5]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-primary">
               {selectedCustomer.first_name[0]}
               {selectedCustomer.last_name[0]}
             </div>
@@ -122,7 +122,7 @@ export default function POSCustomerSelector() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full text-xs text-[#4F46E5] hover:bg-transparent hover:text-[#4338CA]"
+                  className="w-full text-xs text-primary hover:bg-transparent hover:text-primary"
                   onClick={() => setIsDialogOpen(true)}
                 >
                   <UserPlus className="mr-1 h-3 w-3" />

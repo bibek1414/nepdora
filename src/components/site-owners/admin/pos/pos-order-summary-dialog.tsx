@@ -61,7 +61,7 @@ export function POSOrderSummaryDialog({
             <Separator className="my-2" />
             <div className="flex justify-between text-lg font-bold">
               <span className="text-gray-900">Change to Return</span>
-              <span className="text-[#4F46E5]">
+              <span className="text-primary">
                 Rs. {change.toLocaleString()}
               </span>
             </div>
@@ -70,7 +70,7 @@ export function POSOrderSummaryDialog({
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-row">
           <Button
-            className="flex-1 gap-2 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA]"
+            className="flex-1 gap-2 rounded-xl bg-primary hover:bg-primary"
             onClick={onClose}
           >
             <Undo2 className="h-4 w-4" />

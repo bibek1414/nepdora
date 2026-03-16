@@ -100,7 +100,9 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   Complete Setup
                 </Button>
               )}
-              <Link href="/admin/pos">
+             {
+              currentUser.website_type==="ecommerce" && (
+                 <Link href="/admin/pos">
                 <Button
                   variant="outline"
                   size="sm"
@@ -110,6 +112,8 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   POS Mode
                 </Button>
               </Link>
+              )
+             }
               <Link href={`/`} target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
