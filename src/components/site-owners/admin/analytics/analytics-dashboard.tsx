@@ -45,7 +45,7 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="flex flex-col gap-8 p-6">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between border-b pb-6">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between border-b pb-6 px-5">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Sales Overview</h1>
           <p className="text-sm text-muted-foreground mt-1">

@@ -32,7 +32,7 @@ export default function TopSellingProducts({
   if (isLoading) {
     return (
       <Card className="border-none shadow-sm">
-        <CardHeader>
+        <CardHeader className="px-0!">
           <CardTitle className="text-lg font-semibold">{title}</CardTitle>
         </CardHeader>
         <CardContent>
@@ -48,7 +48,7 @@ export default function TopSellingProducts({
 
   return (
     <Card className="border-none shadow-sm">
-      <CardHeader>
+      <CardHeader className="px-0!">
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
       </CardHeader>
       <CardContent>
