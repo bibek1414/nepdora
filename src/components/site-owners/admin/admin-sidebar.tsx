@@ -26,6 +26,7 @@ import {
   Users,
   History,
   BarChart3,
+  LayoutGrid,
 } from "lucide-react";
 import { User } from "@/types/auth/auth";
 import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
@@ -35,11 +36,14 @@ interface NavigationItem {
   href: string;
   icon: any;
   unreadCount?: number;
+  hideForEccomerce?: boolean;
+  hideForService?: boolean;
 }
 
 interface NavigationGroup {
   items: NavigationItem[];
   hideForService?: boolean;
+  hideForEccomerce?: boolean;
   showForBatoma?: boolean;
 }
 
@@ -60,10 +64,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
   const navigationGroups: NavigationGroup[] = [
     {
-      items: [
-        { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-        { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-      ],
+      items: [{ name: "Dashboard", href: "/admin", icon: LayoutDashboard }],
     },
     {
       items: [
@@ -73,6 +74,10 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     {
       items: [{ name: "Products", href: "/admin/products", icon: Package }],
       hideForService: true,
+    },
+    {
+      items: [{ name: "Services", href: "/admin/services", icon: LayoutGrid }],
+      hideForEccomerce: true,
     },
     {
       items: [
@@ -114,8 +119,10 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           href: "/admin/appointments",
           icon: Calendar,
           unreadCount: unreadCounts?.unread_appointments,
+          hideForEccomerce: true,
         },
       ],
+      hideForEccomerce: true,
     },
     {
       items: [
@@ -155,11 +162,17 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       hideForService: true,
     },
     {
+      items: [{ name: "Analytics", href: "/admin/analytics", icon: BarChart3 }],
+      hideForService: true,
+    },
+
+    {
       items: [
         {
           name: "Pricing",
           href: "/admin/pricing",
           icon: IndianRupee,
+          hideForEccomerce: true,
         },
       ],
     },
@@ -170,6 +183,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       items: [
         { name: "Collections", href: "/admin/collections", icon: Database },
       ],
+      hideForService: true,
     },
     {
       items: [{ name: "Customers", href: "/admin/customers", icon: Users }],
@@ -191,6 +205,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
   const filteredNavigationGroups = navigationGroups.filter(group => {
     if (user.website_type === "service" && group.hideForService) {
+      return false;
+    }
+    if (user.website_type === "ecommerce" && group.hideForEccomerce) {
       return false;
     }
     if (group.showForBatoma && user.sub_domain !== "batoma") {
@@ -248,7 +265,23 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           {filteredNavigationGroups.map((group, groupIndex) => (
             <div key={groupIndex}>
               <div className="grid gap-1">
-                {group.items.map(item => {
+                {group.items
+                  .filter(item => {
+                    if (
+                      user.website_type === "service" &&
+                      item.hideForService
+                    ) {
+                      return false;
+                    }
+                    if (
+                      user.website_type === "ecommerce" &&
+                      item.hideForEccomerce
+                    ) {
+                      return false;
+                    }
+                    return true;
+                  })
+                  .map(item => {
                   const isActive = pathname === item.href;
                   return (
                     <Link
