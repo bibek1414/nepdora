@@ -52,7 +52,7 @@ export default function DomainTable({
 
               return (
                 <TableRow
-                  key={domain.tenant.owner.id}
+                  key={domain.id}
                   className="hover:bg-gray-50"
                 >
                   <TableCell className="font-medium">{domain.domain}</TableCell>
@@ -102,7 +102,7 @@ export default function DomainTable({
                         size="sm"
                         onClick={e => {
                           e.stopPropagation();
-                          onDelete(domain.tenant.owner.id);
+                          onDelete(domain.id);
                         }}
                         className="h-8 w-8 p-0 text-red-600 hover:bg-red-100 hover:text-red-700"
                         title="Delete"
