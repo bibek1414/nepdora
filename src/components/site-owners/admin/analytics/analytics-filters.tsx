@@ -34,14 +34,14 @@ export default function AnalyticsFilters({
   const isFiltered = dateRange !== undefined || timeframe !== "monthly";
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
       {/* Timeframe Tabs */}
       <Tabs
         value={timeframe}
-        onValueChange={(value) => setTimeframe(value as Timeframe)}
+        onValueChange={value => setTimeframe(value as Timeframe)}
         className="w-full sm:w-auto"
       >
-        <TabsList className="w-full sm:w-auto border shadow-none bg-slate-50/50">
+        <TabsList className="w-full border bg-slate-50/50 shadow-none sm:w-auto">
           <TabsTrigger value="monthly">Monthly</TabsTrigger>
           <TabsTrigger value="yearly">Yearly</TabsTrigger>
         </TabsList>
@@ -53,7 +53,7 @@ export default function AnalyticsFilters({
           <Button
             variant="outline"
             className={cn(
-              "w-full sm:w-[300px] justify-start text-left font-normal bg-white shadow-none",
+              "w-full justify-start bg-white text-left font-normal shadow-none sm:w-[300px]",
               !dateRange && "text-muted-foreground"
             )}
           >
@@ -72,7 +72,7 @@ export default function AnalyticsFilters({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white border" align="start">
+        <PopoverContent className="w-auto border bg-white p-0" align="start">
           <Calendar
             mode="range"
             selected={dateRange}
@@ -88,7 +88,7 @@ export default function AnalyticsFilters({
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs h-9 px-3 text-gray-800 border bg-white shadow-none hover:bg-slate-50"
+          className="h-9 border bg-white px-3 text-xs text-gray-800 shadow-none hover:bg-slate-50"
           onClick={() => {
             setDateRange(undefined);
             setTimeframe("monthly");

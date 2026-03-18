@@ -48,7 +48,14 @@ export const orderApi = {
   getOrders: async (
     params: OrderPaginationParams = {}
   ): Promise<OrdersResponse> => {
-    const { page = 1, page_size = 10, search, status, is_manual, pos_order } = params;
+    const {
+      page = 1,
+      page_size = 10,
+      search,
+      status,
+      is_manual,
+      pos_order,
+    } = params;
     const API_BASE_URL = getApiBaseUrl();
 
     const queryParams = new URLSearchParams({

@@ -282,45 +282,45 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
                     return true;
                   })
                   .map(item => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={cn(
-                        "group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors",
-                        collapsed ? "justify-center" : "justify-start",
-                        isActive
-                          ? "bg-accent text-accent-foreground"
-                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground leading-tight"
-                      )}
-                      title={collapsed ? item.name : undefined}
-                    >
-                      <item.icon
+                    const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
                         className={cn(
-                          "h-4 w-4 shrink-0",
-                          collapsed ? "mr-0" : "mr-2"
+                          "group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors",
+                          collapsed ? "justify-center" : "justify-start",
+                          isActive
+                            ? "bg-accent text-accent-foreground"
+                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground leading-tight"
                         )}
-                      />
-                      {!collapsed && (
-                        <span className="truncate">{item.name}</span>
-                      )}
-                      {item.unreadCount !== undefined &&
-                        item.unreadCount > 0 && (
-                          <div
-                            className={cn(
-                              "flex items-center justify-center rounded-full bg-[#003d79] text-[10px] text-white",
-                              collapsed
-                                ? "absolute top-1 right-1 h-2 w-2"
-                                : "ml-auto h-5 min-w-[20px] px-1"
-                            )}
-                          >
-                            {!collapsed && item.unreadCount}
-                          </div>
+                        title={collapsed ? item.name : undefined}
+                      >
+                        <item.icon
+                          className={cn(
+                            "h-4 w-4 shrink-0",
+                            collapsed ? "mr-0" : "mr-2"
+                          )}
+                        />
+                        {!collapsed && (
+                          <span className="truncate">{item.name}</span>
                         )}
-                    </Link>
-                  );
-                })}
+                        {item.unreadCount !== undefined &&
+                          item.unreadCount > 0 && (
+                            <div
+                              className={cn(
+                                "flex items-center justify-center rounded-full bg-[#003d79] text-[10px] text-white",
+                                collapsed
+                                  ? "absolute top-1 right-1 h-2 w-2"
+                                  : "ml-auto h-5 min-w-[20px] px-1"
+                              )}
+                            >
+                              {!collapsed && item.unreadCount}
+                            </div>
+                          )}
+                      </Link>
+                    );
+                  })}
               </div>
               {collapsed &&
                 groupIndex > 0 &&

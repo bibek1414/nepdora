@@ -228,6 +228,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 22",
         image: "/images/site-owners/hero/hero22.png",
       },
+      {
+        id: "hero-23",
+        name: "Hero Style 23",
+        image: "/images/site-owners/hero/hero23.png",
+      },
     ],
     others: [
       {
@@ -463,6 +468,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "about-20",
         name: "About Style 20",
+        image: "/images/site-owners/about/about20.png",
+      },
+      {
+        id: "about-21",
+        name: "About Style 21",
         image: "/images/site-owners/about/about20.png",
       },
     ],
@@ -1259,6 +1269,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         description: "Includes language switcher",
         showForWebsiteTypes: ["ecommerce"],
       },
+      {
+        id: "navbar-14",
+        name: "Floating Premium Navbar",
+        image: "/images/site-owners/navbars/navbar14.png",
+        description: "Floating design with services dropdown",
+        showForWebsiteTypes: ["ecommerce", "service"],
+      },
     ],
     // FOOTER TEMPLATES
     footer: [
@@ -2029,6 +2046,20 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
               text: "Customer Service: +977-9860425440",
               href: "tel:+9779860425440",
             },
+          ],
+        };
+      case "14":
+        return {
+          ...baseData,
+          logoText: "INFIN",
+          links: [
+            { id: "1", text: "Home", href: "/" },
+            { id: "2", text: "About Us", href: "/about" },
+            { id: "3", text: "Blog", href: "/blog" },
+            { id: "4", text: "Pricing", href: "/pricing" },
+          ],
+          buttons: [
+            { id: "1", text: "Contact Us", variant: "primary", href: "#" },
           ],
         };
       default:

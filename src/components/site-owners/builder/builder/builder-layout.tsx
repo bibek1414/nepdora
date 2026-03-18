@@ -784,6 +784,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onSuccess: () => {
           setPendingCategoryFilter(undefined);
           setPendingReplaceId(null);
+          // Auto-create service details page if Navbar Style 14 is selected
+          if (finalData.style === "style-14") {
+            ensureServiceDetailsPageExists();
+          }
         },
         onError: error => {
           toast.error("Failed to replace navbar", { id: toastId });
@@ -791,7 +795,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       });
     } else {
       createNavbarMutation.mutate(payload, {
-        onSuccess: () => {},
+        onSuccess: () => {
+          // Auto-create service details page if Navbar Style 14 is selected
+          if (finalData.style === "style-14") {
+            ensureServiceDetailsPageExists();
+          }
+        },
         onError: error => {
           toast.error("Failed to create navbar", { id: toastId });
         },
@@ -838,6 +847,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     createNavbarMutation.mutate(payload, {
       onSuccess: () => {
         setIsNavbarDialogOpen(false);
+        // Auto-create service details page if Navbar Style 14 is selected
+        if (templateData.style === "style-14") {
+          ensureServiceDetailsPageExists();
+        }
       },
       onError: () => {
         toast.error("Failed to add navbar", { id: toastId });

@@ -25,10 +25,7 @@ export default async function POSLayout({
         {/* POS Header */}
         <header className="flex h-16 shrink-0 items-center justify-between border-b border-gray-100 bg-white px-6">
           <div className="flex items-center gap-4">
-            <Link
-              href="/admin"
-              className="group flex items-center gap-2"
-            >
+            <Link href="/admin" className="group flex items-center gap-2">
               <div className="group-hover:bg-primary flex h-10 w-10 items-center justify-center rounded-xl bg-gray-50 text-gray-400 transition-all group-hover:text-white group-active:scale-95">
                 <ChevronLeft className="h-5 w-5" />
               </div>

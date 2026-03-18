@@ -365,7 +365,8 @@ export type AboutUsData =
   | AboutUs17Data
   | AboutUs18Data
   | AboutUs19Data
-  | AboutUs20Data;
+  | AboutUs20Data
+  | AboutUs21Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -425,7 +426,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs17Data>
     | Partial<AboutUs18Data>
     | Partial<AboutUs19Data>
-    | Partial<AboutUs20Data>;
+    | Partial<AboutUs20Data>
+    | Partial<AboutUs21Data>;
   order?: number;
 }
 
@@ -1074,6 +1076,41 @@ export const defaultAboutUs20Data: AboutUs20Data = {
   ],
 };
 
+export interface AboutUs21Data {
+  template: "about-21";
+  title: string;
+  italicWord: string;
+  description: string;
+  statsValue: string;
+  statsLabel: string;
+  image: string;
+  imageAlt: string;
+  features: Array<{ id: string; text: string }>;
+  buttonText: string;
+  buttonLink: string;
+}
+
+export const defaultAboutUs21Data: AboutUs21Data = {
+  template: "about-21",
+  title:
+    "Since 2019, we’ve delivered finance and automation solutions that streamline operations and boost financial performance.",
+  italicWord: "finance and automation",
+  description:
+    "At Xinfin, We help businesses navigate complexity unlock to growth achieve lasting transformation with a team of experienced consultations, We can combine for strategic instant.",
+  statsValue: "150+",
+  statsLabel: "Successful Projects Delivered",
+  image: "https://picsum.photos/id/1001/800/800",
+  imageAlt: "Team Portrait",
+  features: [
+    { id: "1", text: "Financial Strategy & Planning" },
+    { id: "2", text: "Process Automation Solutions" },
+    { id: "3", text: "Real-Time Data Analytics" },
+    { id: "4", text: "Virtual CFO Services" },
+  ],
+  buttonText: "Book a Free Call",
+  buttonLink: "#",
+};
+
 // Default data map for all about us templates
 export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-1": defaultAboutUs1Data,
@@ -1096,6 +1133,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-18": defaultAboutUs18Data,
   "about-19": defaultAboutUs19Data,
   "about-20": defaultAboutUs20Data,
+  "about-21": defaultAboutUs21Data,
 };
 
 // Type guards for each template
@@ -1158,3 +1196,6 @@ export const isAboutUsTemplate19 = (data: AboutUsData): data is AboutUs19Data =>
 
 export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
   data.template === "about-20";
+
+export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
+  data.template === "about-21";

@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { format, subDays, startOfMonth, startOfYear, endOfMonth, endOfYear } from "date-fns";
+import {
+  format,
+  subDays,
+  startOfMonth,
+  startOfYear,
+  endOfMonth,
+  endOfYear,
+} from "date-fns";
 import AnalyticsFilters, { Timeframe } from "./analytics-filters";
 import AnalyticsSummaryCards from "./analytics-summary-cards";
 import AnalyticsCharts from "./analytics-charts";
@@ -32,10 +39,10 @@ export default function AnalyticsDashboard() {
     // If backend only uses start/end date, timeframe might just be for UI grouping
     // But user snippet suggested month/year params too
     if (timeframe === "monthly") {
-       params.month = (new Date().getMonth() + 1).toString();
+      params.month = (new Date().getMonth() + 1).toString();
     }
     if (timeframe === "yearly") {
-       params.year = new Date().getFullYear().toString();
+      params.year = new Date().getFullYear().toString();
     }
 
     return params;
@@ -45,10 +52,12 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="flex flex-col gap-8 p-6">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between border-b pb-6 px-5">
+      <div className="flex flex-col gap-6 border-b px-5 pb-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Sales Overview</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Sales Overview
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm">
             Monitor your business performance and sales trends.
           </p>
         </div>
