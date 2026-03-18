@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, ArrowUpRight } from "lucide-react";
 import { AboutUs22Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -75,45 +75,26 @@ export const AboutUsTemplate22: React.FC<AboutUsTemplate22Props> = ({
                 value={data.tag}
                 onChange={handleTextUpdate("tag")}
                 as="p"
-                className="mb-2 text-sm font-medium uppercase tracking-wider"
+                className="mb-2 text-sm font-medium tracking-wider uppercase"
                 style={{ color: primaryColor }}
                 isEditable={isEditable}
               />
-              {isEditable ? (
-                <div className="space-y-4">
-                  <EditableText
-                    value={data.title}
-                    onChange={handleTextUpdate("title")}
-                    as="h2"
-                    className="text-4xl font-bold text-gray-900 md:text-5xl"
-                    isEditable={isEditable}
-                  />
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-500">
-                      Italic Word:
-                    </span>
-                    <EditableText
-                      value={data.italicWord}
-                      onChange={handleTextUpdate("italicWord")}
-                      as="span"
-                      className="italic"
-                      style={{ color: primaryColor }}
-                      isEditable={isEditable}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <h2 className="text-4xl font-bold leading-tight text-gray-900 md:text-5xl">
-                  {renderTitle()}
-                </h2>
-              )}
+              <div className="space-y-4">
+                <EditableText
+                  value={data.title}
+                  onChange={handleTextUpdate("title")}
+                  as="h2"
+                  className="text-4xl font-bold text-gray-900 md:text-5xl"
+                  isEditable={isEditable}
+                />
+              </div>
             </motion.div>
 
             <EditableText
               value={data.description1}
               onChange={handleTextUpdate("description1")}
               as="p"
-              className="mb-6 text-xl font-medium leading-relaxed text-gray-900"
+              className="mb-6 text-xl leading-relaxed font-medium text-gray-900"
               isEditable={isEditable}
               multiline
             />
@@ -171,10 +152,19 @@ export const AboutUsTemplate22: React.FC<AboutUsTemplate22Props> = ({
                 handleTextUpdate("buttonText")(text);
                 handleTextUpdate("buttonLink")(href);
               }}
-              variant="outline"
+              className="inline-flex h-16! cursor-pointer items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-sm font-bold transition-all sm:text-base"
+              style={{
+                background: theme.colors.primary,
+                color: theme.colors.primaryForeground,
+              }}
               isEditable={isEditable}
               siteUser={siteUser}
-            />
+            >
+              {data.buttonText}
+              <div className="ml-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition-transform group-hover:scale-105">
+                <ArrowUpRight />
+              </div>
+            </EditableLink>
           </motion.div>
 
           {/* Right Image/Card */}
@@ -194,14 +184,10 @@ export const AboutUsTemplate22: React.FC<AboutUsTemplate22Props> = ({
                   if (alt) handleTextUpdate("imageAlt")(alt);
                 }}
                 isEditable={isEditable}
-                className="h-full w-full object-cover"
+                className="h-150 w-full object-cover"
                 width={1000}
                 height={1000}
               />
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ backgroundColor: `${primaryColor}1A` }}
-              ></div>
             </div>
 
             {/* Floating Card */}
@@ -215,7 +201,10 @@ export const AboutUsTemplate22: React.FC<AboutUsTemplate22Props> = ({
               <div className="flex items-start gap-4">
                 <div
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600"
-                  style={{ color: primaryColor, backgroundColor: `${primaryColor}1A` }}
+                  style={{
+                    color: primaryColor,
+                    backgroundColor: `${primaryColor}1A`,
+                  }}
                 >
                   <ShieldCheck size={20} />
                 </div>
@@ -224,14 +213,14 @@ export const AboutUsTemplate22: React.FC<AboutUsTemplate22Props> = ({
                     value={data.floatingCardTitle}
                     onChange={handleTextUpdate("floatingCardTitle")}
                     as="h4"
-                    className="mb-1 font-bold text-gray-900"
+                    className="z-50 mb-1 font-bold text-gray-900"
                     isEditable={isEditable}
                   />
                   <EditableText
                     value={data.floatingCardDescription}
                     onChange={handleTextUpdate("floatingCardDescription")}
                     as="p"
-                    className="text-xs text-gray-500"
+                    className="z-50 text-xs text-gray-500"
                     isEditable={isEditable}
                     multiline
                   />

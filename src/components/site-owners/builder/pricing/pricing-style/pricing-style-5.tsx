@@ -69,7 +69,7 @@ export const PricingStyle5: React.FC<PricingStyle5Props> = ({
   };
 
   return (
-    <section id="pricing-5" className="bg-gray-50/50 pb-16 pt-40">
+    <section id="pricing-5" className="py-20">
       <div className="container mx-auto px-4 md:px-8">
         <motion.div
           className="mx-auto mb-16 max-w-3xl text-center"
@@ -82,38 +82,20 @@ export const PricingStyle5: React.FC<PricingStyle5Props> = ({
             value={tag}
             onChange={handleTextUpdate("tag")}
             as="p"
-            className="mb-2 text-sm font-medium uppercase tracking-wider"
+            className="mb-2 text-sm font-medium tracking-wider uppercase"
             style={{ color: primaryColor }}
             isEditable={isEditable}
           />
           <div className="mb-8 text-3xl font-bold text-gray-900 md:text-5xl">
-            {isEditable ? (
-              <div className="space-y-4">
-                <EditableText
-                  value={title}
-                  onChange={handleTextUpdate("title")}
-                  as="h2"
-                  isEditable={isEditable}
-                  placeholder="Enter title..."
-                />
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-sm font-medium text-gray-500">
-                    Italic Word:
-                  </span>
-                  <EditableText
-                    value={italicWord}
-                    onChange={handleTextUpdate("italicWord")}
-                    as="span"
-                    className="italic"
-                    style={{ color: primaryColor }}
-                    isEditable={isEditable}
-                    placeholder="Enter italic word..."
-                  />
-                </div>
-              </div>
-            ) : (
-              <h2 className="leading-tight">{renderTitle()}</h2>
-            )}
+            <div className="space-y-4">
+              <EditableText
+                value={title}
+                onChange={handleTextUpdate("title")}
+                as="h2"
+                isEditable={isEditable}
+                placeholder="Enter title..."
+              />
+            </div>
           </div>
         </motion.div>
 
@@ -173,7 +155,7 @@ export const PricingStyle5: React.FC<PricingStyle5Props> = ({
                         </div>
                       </div>
 
-                      <div className="flex flex-1 flex-col px-8 py-4 space-y-6">
+                      <div className="flex flex-1 flex-col space-y-6 px-8 py-4">
                         <ul className="flex-1 space-y-4">
                           {plan.features.map((feature: any, idx: number) => (
                             <li
@@ -186,13 +168,19 @@ export const PricingStyle5: React.FC<PricingStyle5Props> = ({
                                     ? "bg-white/20"
                                     : "bg-[rgba(29,78,216,0.15)]"
                                 }`}
-                                style={!isMiddle ? { backgroundColor: `${primaryColor}26` } : {}}
+                                style={
+                                  !isMiddle
+                                    ? { backgroundColor: `${primaryColor}26` }
+                                    : {}
+                                }
                               >
                                 <Check
                                   className={`h-3 w-3 ${
                                     isMiddle ? "text-white" : ""
                                   }`}
-                                  style={!isMiddle ? { color: primaryColor } : {}}
+                                  style={
+                                    !isMiddle ? { color: primaryColor } : {}
+                                  }
                                 />
                               </div>
                               <span
@@ -206,13 +194,15 @@ export const PricingStyle5: React.FC<PricingStyle5Props> = ({
                           ))}
                         </ul>
                         <button
-                          className={`w-full px-4 py-2 rounded-full font-medium transition-all ${
+                          className={`w-full rounded-full px-4 py-2 font-medium transition-all ${
                             isMiddle
                               ? "bg-white text-gray-900 hover:bg-gray-100"
                               : "text-white hover:opacity-90"
                           }`}
-                          style={!isMiddle ? { backgroundColor: primaryColor } : {}}
-                          onClick={(e) => {
+                          style={
+                            !isMiddle ? { backgroundColor: primaryColor } : {}
+                          }
+                          onClick={e => {
                             e.stopPropagation();
                             if (!isEditable) router.push("/contact");
                           }}
