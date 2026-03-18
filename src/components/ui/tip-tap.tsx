@@ -402,7 +402,7 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
       onBlur,
       disabled = false,
       onImageUpload,
-      maxImageSize = 5,
+      maxImageSize = 0.5,
       acceptedImageTypes = [
         "image/jpeg",
         "image/png",
@@ -623,7 +623,11 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
       }
 
       if (file.size > maxImageSize * 1024 * 1024) {
-        setImageUploadError(`File size must be less than ${maxImageSize}MB`);
+        const sizeFormatted =
+          maxImageSize >= 1
+            ? `${maxImageSize}MB`
+            : `${Math.round(maxImageSize * 1024)}KB`;
+        setImageUploadError(`File size must be less than ${sizeFormatted}`);
         return;
       }
 

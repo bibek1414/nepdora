@@ -257,7 +257,6 @@ export default function BannerDialogForm({
                               handleImageFileSelect(index, file)
                             }
                             multiple={false}
-                            maxFileSize={10 * 1024 * 1024} // 10MB
                           />
                         </div>
 

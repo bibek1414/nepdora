@@ -6,6 +6,7 @@ import { UploadCloud, X, AlertCircle, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { DEFAULT_MAX_IMAGE_SIZE } from "@/utils/cloudinary";
 
 interface ImageUploaderProps {
   value: File[] | string[] | File | string | null | undefined;
@@ -22,7 +23,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   onChange,
   disabled = false,
   multiple = false,
-  maxFileSize = 5 * 1024 * 1024, // 5MB default
+  maxFileSize = DEFAULT_MAX_IMAGE_SIZE,
   maxFiles = multiple ? 10 : 1,
   hidePreview = false,
 }) => {
@@ -80,8 +81,12 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     files.forEach((file, index) => {
       // Check file size
       if (file.size > maxFileSize) {
+        const sizeFormatted =
+          maxFileSize >= 1024 * 1024
+            ? `${(maxFileSize / 1024 / 1024).toFixed(1)}MB`
+            : `${Math.round(maxFileSize / 1024)}KB`;
         errors.push(
-          `File ${file.name} is too large. Max size: ${(maxFileSize / 1024 / 1024).toFixed(1)}MB`
+          `File ${file.name} is too large. Max size: ${sizeFormatted}`
         );
         return;
       }
@@ -109,10 +114,34 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   };
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    (acceptedFiles: File[], fileRejections: any[]) => {
       setError(null);
 
-      if (acceptedFiles.length === 0) {
+      // Handle rejections first
+      if (fileRejections.length > 0) {
+        const rejectionErrors = fileRejections.map(rejection => {
+          const { file, errors } = rejection;
+          const errorMessages = errors.map((e: any) => {
+            if (e.code === "file-too-large") {
+              const sizeFormatted =
+                maxFileSize >= 1024 * 1024
+                  ? `${(maxFileSize / 1024 / 1024).toFixed(1)}MB`
+                  : `${Math.round(maxFileSize / 1024)}KB`;
+              return `File ${file.name} is too large. Max size: ${sizeFormatted}`;
+            }
+            if (e.code === "file-invalid-type") {
+              return `File ${file.name} is not a valid image`;
+            }
+            return e.message;
+          });
+          return errorMessages.join(", ");
+        });
+
+        setError(rejectionErrors.join("; "));
+        if (acceptedFiles.length === 0) return;
+      }
+
+      if (acceptedFiles.length === 0 && fileRejections.length === 0) {
         setError("No valid files selected");
         return;
       }
@@ -120,7 +149,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       const { validFiles, errors } = validateFiles(acceptedFiles);
 
       if (errors.length > 0) {
-        setError(errors.join(", "));
+        setError(prev => (prev ? `${prev}; ${errors.join(", ")}` : errors.join(", ")));
         if (validFiles.length === 0) return;
       }
 

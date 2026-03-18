@@ -191,7 +191,6 @@ const PopupForm: React.FC<PopupFormProps> = ({
                 onChange={handleImageChange}
                 disabled={isSubmitting}
                 multiple={false}
-                maxFileSize={10 * 1024 * 1024}
                 maxFiles={1}
               />
             </div>

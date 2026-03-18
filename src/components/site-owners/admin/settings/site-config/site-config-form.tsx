@@ -382,7 +382,6 @@ export const SiteConfigForm: React.FC = () => {
                   onChange={handleFaviconChange}
                   disabled={isSaving}
                   multiple={false}
-                  maxFileSize={5 * 1024 * 1024}
                 />
                 <p className="text-muted-foreground text-sm">
                   The favicon appears in browser tabs and bookmarks
@@ -412,7 +411,6 @@ export const SiteConfigForm: React.FC = () => {
                   onChange={handleLogoChange}
                   disabled={isSaving}
                   multiple={false}
-                  maxFileSize={5 * 1024 * 1024}
                 />
                 <p className="text-muted-foreground text-sm">
                   Your site logo displayed in the header

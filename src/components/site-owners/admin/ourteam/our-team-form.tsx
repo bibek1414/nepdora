@@ -288,7 +288,6 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
               onChange={handleImageChange}
               disabled={isLoading}
               multiple={false}
-              maxFileSize={5 * 1024 * 1024} // 5MB
             />
             {imageError && <p className="text-sm text-red-500">{imageError}</p>}
           </div>
