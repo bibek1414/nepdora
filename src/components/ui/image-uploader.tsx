@@ -149,7 +149,9 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       const { validFiles, errors } = validateFiles(acceptedFiles);
 
       if (errors.length > 0) {
-        setError(prev => (prev ? `${prev}; ${errors.join(", ")}` : errors.join(", ")));
+        setError(prev =>
+          prev ? `${prev}; ${errors.join(", ")}` : errors.join(", ")
+        );
         if (validFiles.length === 0) return;
       }
 

@@ -145,7 +145,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
           {links.map(link =>
             isEditable && onEditLink ? (
               <EditableItem key={link.id}>
-                <span 
+                <span
                   className={linkClass(link.href, pathname === link.href)}
                   style={pathname === link.href ? { color: primaryColor } : {}}
                 >
@@ -184,7 +184,9 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                   ? "font-semibold"
                   : "text-gray-600 hover:opacity-80"
               }`}
-              style={pathname.includes("/services") ? { color: primaryColor } : {}}
+              style={
+                pathname.includes("/services") ? { color: primaryColor } : {}
+              }
             >
               Services
               <ChevronDown
@@ -218,8 +220,13 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                       >
                         <Link
                           href={getDetailsUrl(service.slug)}
-                          className="hover:opacity-80 block px-6 py-3 text-sm text-gray-700 transition-colors duration-200"
-                          style={{ color: pathname === getDetailsUrl(service.slug) ? primaryColor : undefined }}
+                          className="block px-6 py-3 text-sm text-gray-700 transition-colors duration-200 hover:opacity-80"
+                          style={{
+                            color:
+                              pathname === getDetailsUrl(service.slug)
+                                ? primaryColor
+                                : undefined,
+                          }}
                           onClick={() => setIsServicesOpen(false)}
                         >
                           {service.title}
@@ -240,7 +247,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
               <EditableItem key={button.id}>
                 <div className="flex items-center gap-3 rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-6 text-gray-900">
                   <span className="text-sm font-semibold">{button.text}</span>
-                  <div 
+                  <div
                     className="flex h-9 w-9 items-center justify-center rounded-full text-white"
                     style={{ backgroundColor: primaryColor }}
                   >
@@ -262,7 +269,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                 onClick={e => handleLinkClick(e, button.href)}
               >
                 <span className="text-sm font-semibold">{button.text}</span>
-                <div 
+                <div
                   className="flex h-9 w-9 items-center justify-center rounded-full text-white transition-transform group-hover:scale-105"
                   style={{ backgroundColor: primaryColor }}
                 >
@@ -349,8 +356,13 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                         <Link
                           key={service.id}
                           href={getDetailsUrl(service.slug)}
-                          className="hover:opacity-80 block py-2 text-sm text-gray-600"
-                          style={{ color: pathname === getDetailsUrl(service.slug) ? primaryColor : undefined }}
+                          className="block py-2 text-sm text-gray-600 hover:opacity-80"
+                          style={{
+                            color:
+                              pathname === getDetailsUrl(service.slug)
+                                ? primaryColor
+                                : undefined,
+                          }}
                           onClick={() => {
                             setIsServicesOpen(false);
                             setIsOpen(false);
