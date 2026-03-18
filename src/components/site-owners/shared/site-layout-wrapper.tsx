@@ -94,13 +94,11 @@ export function SiteLayoutWrapper({
       {/* Sticky Navbar */}
       {navbarResponse?.data && (
         <div className="sticky top-0 z-40">
-          <div className="border-b bg-white">
-            <NavbarComponent
-              navbar={navbarResponse.data}
-              isEditable={false}
-              siteUser={siteUser}
-            />
-          </div>
+          <NavbarComponent
+            navbar={navbarResponse.data}
+            isEditable={false}
+            siteUser={siteUser}
+          />
         </div>
       )}
 
