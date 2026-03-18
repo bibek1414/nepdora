@@ -9,10 +9,12 @@ export interface TeamData {
     | "team-5"
     | "team-6"
     | "team-7"
-    | "team-8";
+    | "team-8"
+    | "team-9";
 
   title: string;
   subtitle?: string;
+  tag?: string;
   page_size: number;
   order?: number;
 }
@@ -43,4 +45,5 @@ export const DEFAULT_TEAM_MAP: Record<TeamData["style"], TeamData> = {
   "team-6": { ...defaultTeamData, style: "team-6" },
   "team-7": { ...defaultTeamData, style: "team-7" },
   "team-8": { ...defaultTeamData, style: "team-8" },
+  "team-9": { ...defaultTeamData, style: "team-9" },
 };
