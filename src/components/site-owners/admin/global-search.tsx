@@ -25,8 +25,6 @@ import {
   Video,
   PenTool,
   ClipboardList,
-  Gift,
-  Facebook,
   HelpCircle,
   Monitor,
   Package,
@@ -575,8 +573,8 @@ export function AdminGlobalSearch({ user }: AdminGlobalSearchProps) {
         onClick={() => setOpen(true)}
       >
         <Search className="mr-2 h-4 w-4" />
-        <span className="inline-flex">Search admin pages...</span>
-        <kbd className="pointer-events-none absolute top-[0.3rem] right-[0.3rem] hidden h-6 items-center gap-1 rounded border bg-white px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
+        <span className="inline-flex">Search anything...</span>
+        <kbd className="pointer-events-none absolute top-[0.3rem] right-[0.5rem] hidden h-6 items-center gap-1 rounded border bg-white px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
           <span className="text-xs">{isMac ? "⌘" : "Ctrl"}</span>K
         </kbd>
       </Button>
@@ -604,7 +602,7 @@ export function AdminGlobalSearch({ user }: AdminGlobalSearchProps) {
                 >
                   <Clock className="text-muted-foreground mr-2 h-4 w-4" />
                   <span>{item.title}</span>
-                  <span className="text-muted-foreground ml-auto text-[10px] tracking-widest uppercase">
+                  <span className="text-muted-foreground ml-auto text-[10px]">
                     {item.group}
                   </span>
                 </CommandItem>
