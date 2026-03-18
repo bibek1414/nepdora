@@ -475,6 +475,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "About Style 21",
         image: "/images/site-owners/about/about20.png",
       },
+      {
+        id: "about-22",
+        name: "About Style 22",
+        image: "/images/site-owners/about/about20.png",
+      },
     ],
     products: [
       {
@@ -726,6 +731,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "services-7",
         name: "Services Style 7",
         image: "/images/site-owners/services/services-7.png",
+      },
+      {
+        id: "services-8",
+        name: "Services Style 8",
+        image: "/images/site-owners/services/services-1.png",
       },
     ],
     contact: [
@@ -1170,6 +1180,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "pricing-4",
         name: "Pricing Style 4",
         image: "/images/site-owners/pricing/pricing4.png",
+      },
+      {
+        id: "pricing-5",
+        name: "Pricing Style 5",
+        image: "/images/site-owners/pricing/pricing1.png",
       },
     ],
     text_editor: [

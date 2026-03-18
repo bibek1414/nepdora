@@ -8,7 +8,8 @@ export interface ServicesData {
     | "services-4"
     | "services-5"
     | "services-6"
-    | "services-7";
+    | "services-7"
+    | "services-8";
   title: string;
   subtitle?: string;
   order?: number;
@@ -44,4 +45,11 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
     "services-5": { ...defaultServicesData, style: "services-5" },
     "services-6": { ...defaultServicesData, style: "services-6" },
     "services-7": { ...defaultServicesData, style: "services-7" },
+    "services-8": {
+      ...defaultServicesData,
+      style: "services-8",
+      tag: "[What We Offer]",
+      title: "Accounting & Finance Services for Your Business",
+      italicWord: "Business",
+    },
   };

@@ -22,6 +22,7 @@ import { PricingStyle1 } from "./pricing-style/pricing-style-1";
 import { PricingStyle2 } from "./pricing-style/pricing-style-2";
 import { PricingStyle3 } from "./pricing-style/pricing-style-3";
 import { PricingStyle4 } from "./pricing-style/pricing-style-4";
+import { PricingStyle5 } from "./pricing-style/pricing-style-5";
 
 interface PricingComponentProps {
   component: PricingComponentData;
@@ -99,6 +100,8 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
         return <PricingStyle3 {...commonProps} />;
       case "pricing-4":
         return <PricingStyle4 {...commonProps} />;
+      case "pricing-5":
+        return <PricingStyle5 {...commonProps} />;
       case "pricing-1":
       default:
         return <PricingStyle1 {...commonProps} />;

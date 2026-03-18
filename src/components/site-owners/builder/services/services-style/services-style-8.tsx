@@ -1,0 +1,154 @@
+"use client";
+
+import React, { useMemo } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import { useServices } from "@/hooks/owner-site/admin/use-services";
+import { EditableText } from "@/components/ui/editable-text";
+import { ServicesComponentData } from "@/types/owner-site/components/services";
+
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, "");
+
+interface ServicesStyle8Props {
+  data: ServicesComponentData["data"];
+  isEditable?: boolean;
+  siteUser?: string;
+  onUpdate?: (updatedData: Partial<ServicesComponentData["data"]>) => void;
+  onServiceClick?: (serviceSlug: string) => void;
+}
+
+export const ServicesStyle8: React.FC<ServicesStyle8Props> = ({
+  data,
+  isEditable = false,
+  siteUser,
+  onUpdate,
+  onServiceClick,
+}) => {
+  const {
+    title = "Accounting & Finance Services for Your Business",
+    tag = "[What We Offer]",
+    italicWord = "Business",
+  } = data || {};
+  const { data: servicesData, isLoading } = useServices({
+    page: 1,
+    page_size: 6,
+  });
+
+  const services = servicesData?.results || [];
+
+  const handleTitleChange = (newTitle: string) => {
+    onUpdate?.({ title: newTitle });
+  };
+
+  const handleTagChange = (newTag: string) => {
+    onUpdate?.({ tag: newTag });
+  };
+
+  const handleItalicWordChange = (newItalicWord: string) => {
+    onUpdate?.({ italicWord: newItalicWord });
+  };
+
+  const renderTitle = () => {
+    if (!italicWord || !title.includes(italicWord)) {
+      return title;
+    }
+    const parts = title.split(italicWord);
+    return (
+      <>
+        {parts[0]}
+        <em className="text-primary-600 italic">{italicWord}</em>
+        {parts[1]}
+      </>
+    );
+  };
+
+  return (
+    <section id="services-8" className="bg-gray-50/50 py-20">
+      <div className="container mx-auto px-4 md:px-8">
+        <motion.div
+          className="mx-auto mb-16 max-w-3xl text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <EditableText
+            value={tag}
+            onChange={handleTagChange}
+            as="p"
+            className="text-primary-600 mb-2 text-sm font-medium tracking-wider uppercase"
+            isEditable={isEditable}
+            placeholder="Enter tag..."
+          />
+          <div className="space-y-4">
+            <EditableText
+              value={title}
+              onChange={handleTitleChange}
+              as="h2"
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
+          </div>
+        </motion.div>
+
+        {isLoading ? (
+          <div className="py-10 text-center text-gray-500">
+            Loading services...
+          </div>
+        ) : services.length > 0 ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {services.map((service, idx) => {
+              const plainDescription = stripHtml(service.description || "");
+
+              return (
+                <div
+                  key={service.id}
+                  className="block"
+                  onClick={() => !isEditable && onServiceClick?.(service.slug)}
+                >
+                  <motion.div
+                    className="group h-full cursor-pointer rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{
+                      duration: 0.6,
+                      ease: "easeOut",
+                      delay: idx * 0.08,
+                    }}
+                  >
+                    {service.thumbnail_image && (
+                      <div className="relative mb-6 h-48 w-full overflow-hidden rounded-t-xl">
+                        <Image
+                          src={service.thumbnail_image}
+                          alt={
+                            service.thumbnail_image_alt_description ||
+                            service.title
+                          }
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      </div>
+                    )}
+                    <h3 className="group-hover:text-primary-600 mb-2 text-lg font-bold text-gray-900 transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="line-clamp-3 text-sm leading-relaxed text-gray-500">
+                      {plainDescription}
+                    </p>
+                  </motion.div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="py-10 text-center text-gray-500">
+            No services found.
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};

@@ -1,8 +1,10 @@
 export interface PricingData {
   component_id?: string;
-  style: "pricing-1" | "pricing-2" | "pricing-3" | "pricing-4";
+  style: "pricing-1" | "pricing-2" | "pricing-3" | "pricing-4" | "pricing-5";
   title: string;
   subtitle?: string;
+  tag?: string;
+  italicWord?: string;
   order?: number;
 }
 
@@ -26,4 +28,12 @@ export const DEFAULT_PRICING_MAP: Record<PricingData["style"], PricingData> = {
   "pricing-2": { ...defaultPricingData, style: "pricing-2" },
   "pricing-3": { ...defaultPricingData, style: "pricing-3" },
   "pricing-4": { ...defaultPricingData, style: "pricing-4" },
+  "pricing-5": {
+    ...defaultPricingData,
+    style: "pricing-5",
+    tag: "[Pricing]",
+    title: "Smart Solutions Transparent Pricing",
+    italicWord: "Pricing",
+    subtitle: "Choose the perfect plan for your needs",
+  },
 };

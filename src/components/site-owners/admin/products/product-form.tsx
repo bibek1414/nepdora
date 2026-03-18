@@ -24,8 +24,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   useCreateProduct,
   useUpdateProduct,
@@ -40,18 +38,7 @@ import type {
 } from "@/types/owner-site/admin/product";
 import { z } from "zod";
 import { toast } from "sonner";
-import {
-  Save,
-  X,
-  Package,
-  DollarSign,
-  Image as ImageIcon,
-  Settings,
-  Tag,
-  FileText,
-  Truck,
-  Check,
-} from "lucide-react";
+import { X } from "lucide-react";
 import Tiptap from "@/components/ui/tip-tap";
 import InventoryVariants from "./inventory-varient";
 import { Switch } from "@/components/ui/switch";

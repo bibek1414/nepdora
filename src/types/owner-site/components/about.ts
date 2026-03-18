@@ -366,7 +366,8 @@ export type AboutUsData =
   | AboutUs18Data
   | AboutUs19Data
   | AboutUs20Data
-  | AboutUs21Data;
+  | AboutUs21Data
+  | AboutUs22Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -427,7 +428,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs18Data>
     | Partial<AboutUs19Data>
     | Partial<AboutUs20Data>
-    | Partial<AboutUs21Data>;
+    | Partial<AboutUs21Data>
+    | Partial<AboutUs22Data>;
   order?: number;
 }
 
@@ -1111,6 +1113,29 @@ export const defaultAboutUs21Data: AboutUs21Data = {
   buttonLink: "#",
 };
 
+export const defaultAboutUs22Data: AboutUs22Data = {
+  template: "about-22",
+  tag: "[Who We Are]",
+  title: "Your Trusted Financial & Compliance Partner",
+  italicWord: "Partner",
+  description1:
+    "XInfin Consultants offers end-to-end financial, compliance, and business formation support designed for modern businesses.",
+  description2:
+    "With over 6+ years of cumulative experience and a portfolio of 250+ clients globally, we bring professionalism, integrity, and a client-centric approach to every engagement. Our mission is simple: to handle the complexities of finance and regulation so you can focus entirely on growth.",
+  experienceYears: "6+",
+  experienceLabel: "Years Experience",
+  clientsCount: "250+",
+  clientsLabel: "Global Clients",
+  buttonText: "Learn More About Us",
+  buttonLink: "/about",
+  image:
+    "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+  imageAlt: "Financial Analysis",
+  floatingCardTitle: "100% Compliant",
+  floatingCardDescription:
+    "We navigate complex regulatory landscapes so you don't have to.",
+};
+
 // Default data map for all about us templates
 export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-1": defaultAboutUs1Data,
@@ -1134,7 +1159,27 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-19": defaultAboutUs19Data,
   "about-20": defaultAboutUs20Data,
   "about-21": defaultAboutUs21Data,
+  "about-22": defaultAboutUs22Data,
 };
+
+export interface AboutUs22Data {
+  template: "about-22";
+  tag: string;
+  title: string;
+  italicWord: string;
+  description1: string;
+  description2: string;
+  experienceYears: string;
+  experienceLabel: string;
+  clientsCount: string;
+  clientsLabel: string;
+  buttonText: string;
+  buttonLink: string;
+  image: string;
+  imageAlt: string;
+  floatingCardTitle: string;
+  floatingCardDescription: string;
+}
 
 // Type guards for each template
 export const isAboutUsTemplate1 = (data: AboutUsData): data is AboutUs1Data =>
@@ -1199,3 +1244,6 @@ export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
 
 export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
   data.template === "about-21";
+
+export const isAboutUsTemplate22 = (data: AboutUsData): data is AboutUs22Data =>
+  data.template === "about-22";
