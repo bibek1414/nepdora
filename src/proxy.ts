@@ -135,7 +135,8 @@ function getSubdomainFromAuth(request: NextRequest): string | null {
  * ]
  */
 async function fetchTenantDomainsBySubdomain(
-  subdomain: string
+  subdomain: string,
+  hostname: string
 ): Promise<{ customDomain: string | null; subdomain: string } | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -143,7 +144,7 @@ async function fetchTenantDomainsBySubdomain(
   try {
     const tenantDomain = siteConfig.isDev
       ? `${subdomain}.localhost`
-      : window.location.host;
+      : hostname;
 
     const apiUrl = `${siteConfig.apiBaseUrl}/api/custom-domain/`;
     console.log(
@@ -392,7 +393,9 @@ export async function proxy(request: NextRequest) {
 
       if (!cacheEntry) {
         console.log(`[Cache Miss] Fetching domain info for "${subdomain}"`);
-        const result = await fetchTenantDomainsBySubdomain(subdomain);
+        const host = request.headers.get("host") || "";
+        const hostname = host.split(":")[0];
+        const result = await fetchTenantDomainsBySubdomain(subdomain, hostname);
         cacheEntry = {
           customDomain: result?.customDomain ?? null,
           subdomain,

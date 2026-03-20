@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import {
   User,
@@ -32,8 +32,6 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const storedTokens = localStorage.getItem("customer-authTokens");
@@ -150,9 +148,10 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
       toast.success("Login successful!");
 
       // Handle redirect
-      const isPreview = pathname?.startsWith("/preview");
-      const isPublish = pathname?.startsWith("/publish");
-      const pathSegments = pathname.split("/").filter(Boolean);
+      const currentPathname = window.location.pathname;
+      const isPreview = currentPathname?.startsWith("/preview");
+      const isPublish = currentPathname?.startsWith("/publish");
+      const pathSegments = currentPathname.split("/").filter(Boolean);
 
       let siteUser = null;
       if (isPreview) {
@@ -185,6 +184,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
         routePrefix = ``;
       }
 
+      const searchParams = new URLSearchParams(window.location.search);
       const redirect = searchParams.get("redirect");
 
       if (redirect) {
@@ -223,9 +223,10 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
 
       toast.success("Account created successfully! Please log in.");
 
-      const isPreview = pathname?.startsWith("/preview");
-      const isPublish = pathname?.startsWith("/publish");
-      const pathSegments = pathname.split("/").filter(Boolean);
+      const currentPathname = window.location.pathname;
+      const isPreview = currentPathname?.startsWith("/preview");
+      const isPublish = currentPathname?.startsWith("/publish");
+      const pathSegments = currentPathname.split("/").filter(Boolean);
 
       let siteUser = null;
       if (isPreview) {
@@ -238,6 +239,7 @@ export const CustomerAuthProvider = ({ children }: { children: ReactNode }) => {
           siteUser = pathSegments[publishIndex + 1];
       }
 
+      const searchParams = new URLSearchParams(window.location.search);
       const redirect = searchParams.get("redirect");
       let loginPath = "/login";
       if (isPreview && siteUser) {

@@ -69,7 +69,9 @@ export default function RootLayout({
               <QueryProvider>
                 <TextSelectionProvider>
                   <CartProvider>
-                    <TopLoader />
+                    <Suspense fallback={null}>
+                      <TopLoader />
+                    </Suspense>
                     {children}
                     <Analytics />
                     <Toaster

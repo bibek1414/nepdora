@@ -1,6 +1,7 @@
 import TemplatesPage from "@/components/marketing/templates/templates-page";
 import ContactSection from "@/components/marketing/contact-us/contact-us";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Nepdora : Professional Website Templates for Any Business in Nepal",
@@ -47,7 +48,9 @@ export const metadata: Metadata = {
 export default function Templates() {
   return (
     <>
-      <TemplatesPage />
+      <Suspense fallback={<div className="min-h-screen py-20" />}>
+        <TemplatesPage />
+      </Suspense>
       <div className="mb-40 py-20">
         <ContactSection />
       </div>

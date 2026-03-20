@@ -3,6 +3,7 @@ import { marketingBlogApi } from "@/services/api/marketing/blog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ContactSection from "@/components/marketing/contact-us/contact-us";
+import { Suspense } from "react";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -86,7 +87,9 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
             {/* Sidebar */}
             <aside className="w-full lg:w-96">
-              <DetailSidebar initialRecentPosts={recentPosts} />
+              <Suspense fallback={<div className="h-64 animate-pulse rounded-xl bg-gray-200" />}>
+                <DetailSidebar initialRecentPosts={recentPosts} />
+              </Suspense>
             </aside>
           </div>
         </div>

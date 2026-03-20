@@ -84,11 +84,7 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Output configuration
-  output: "standalone",
-
-  // PoweredBy header (remove for security)
-  poweredByHeader: false,
+  
 };
 
 export default nextConfig;
