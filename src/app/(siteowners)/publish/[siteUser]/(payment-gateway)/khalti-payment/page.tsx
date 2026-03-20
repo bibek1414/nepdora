@@ -27,7 +27,7 @@ interface KhaltiPaymentData {
   expires_in: number;
 }
 
-export default function KhaltiPayment() {
+function KhaltiPaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
@@ -416,5 +416,26 @@ export default function KhaltiPayment() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+import { Suspense } from "react";
+
+export default function KhaltiPayment() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+          <Card className="w-full max-w-md">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Loader2 className="mb-4 h-8 w-8 animate-spin text-purple-600" />
+              <p className="text-gray-600">Loading payment page...</p>
+            </CardContent>
+          </Card>
+        </div>
+      }
+    >
+      <KhaltiPaymentContent />
+    </Suspense>
   );
 }

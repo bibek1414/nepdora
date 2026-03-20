@@ -5,19 +5,7 @@ import { cookies } from "next/headers";
 import { handleApiError } from "@/utils/api-error";
 import { getServerUser } from "@/hooks/use-jwt-server";
 import type { FacebookIntegration } from "@/types/owner-site/admin/facebook";
-
-// Get the correct API base URL using user's subdomain
-async function getApiUrl(): Promise<string> {
-  const user = await getServerUser();
-
-  if (user?.domain) {
-    // Use the full domain from JWT (e.g., bibek.nepdora.baliyoventures.com/)
-    return `https://${user.domain}`;
-  }
-
-  // Fallback (shouldn't happen if user is authenticated)
-  throw new Error("Unable to determine API URL - user not authenticated");
-}
+import { getServerApiBaseUrl } from "@/config/server-site";
 
 // Create headers with tenant subdomain
 async function createServerHeaders(): Promise<HeadersInit> {
@@ -46,7 +34,7 @@ export async function getFacebookIntegrations(): Promise<
   FacebookIntegration[]
 > {
   try {
-    const API_BASE_URL = await getApiUrl();
+    const API_BASE_URL = await getServerApiBaseUrl();
     const url = `${API_BASE_URL}/api/facebook/`;
     const headers = await createServerHeaders();
     console.log("headers", headers);
@@ -74,7 +62,7 @@ export async function getFacebookIntegrations(): Promise<
 // DELETE: Remove integration
 export async function deleteFacebookIntegration(id: number) {
   try {
-    const API_BASE_URL = await getApiUrl();
+    const API_BASE_URL = await getServerApiBaseUrl();
     const headers = await createServerHeaders();
 
     const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {
@@ -106,7 +94,7 @@ export async function toggleFacebookIntegration(
   is_enabled: boolean
 ) {
   try {
-    const API_BASE_URL = await getApiUrl();
+    const API_BASE_URL = await getServerApiBaseUrl();
     const headers = await createServerHeaders();
 
     const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {

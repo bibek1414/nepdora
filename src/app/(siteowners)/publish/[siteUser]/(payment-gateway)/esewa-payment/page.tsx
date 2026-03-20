@@ -24,7 +24,7 @@ import { OrderItem } from "@/types/owner-site/admin/orders";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 
-export default function EsewaPayment() {
+function EsewaPaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
@@ -444,5 +444,26 @@ export default function EsewaPayment() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+import { Suspense } from "react";
+
+export default function EsewaPayment() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+          <Card className="w-full max-w-md">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Loader2 className="mb-4 h-8 w-8 animate-spin text-green-600" />
+              <p className="text-gray-600">Loading payment page...</p>
+            </CardContent>
+          </Card>
+        </div>
+      }
+    >
+      <EsewaPaymentContent />
+    </Suspense>
   );
 }
