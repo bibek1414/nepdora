@@ -6,9 +6,10 @@ export const serverSiteConfig = {
   description: "Nepdora Preview System",
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://sales-crm-8s09.onrender.com",
+    "https://chevy-biggest-assisted-platform.trycloudflare.com",
   baseDomain:
-    process.env.NEXT_PUBLIC_BASE_DOMAIN || "sales-crm-8s09.onrender.com/",
+    process.env.NEXT_PUBLIC_BASE_DOMAIN ||
+    "chevy-biggest-assisted-platform.trycloudflare.com",
   protocol: process.env.NEXT_PUBLIC_PROTOCOL || "https",
   isDev: process.env.NODE_ENV !== "production",
   frontendDevPort: Number(process.env.NEXT_PUBLIC_FRONTEND_PORT || 3000),

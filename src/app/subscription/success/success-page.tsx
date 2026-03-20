@@ -209,7 +209,7 @@ export default function SuccessPage() {
   }) => {
     try {
       const response = await fetch(
-        "https://sales-crm-8s09.onrender.com/api/upgrade/",
+        "https://chevy-biggest-assisted-platform.trycloudflare.com/api/upgrade/",
         {
           method: "POST",
           headers: createHeaders(),

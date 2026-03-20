@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.sales-crm-8s09.onrender.com/",
+        hostname: "*.chevy-biggest-assisted-platform.trycloudflare.com",
       },
       {
         protocol: "https",
@@ -27,11 +27,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "sales-crm-8s09.onrender.com/",
+        hostname: "chevy-biggest-assisted-platform.trycloudflare.com",
       },
       {
         protocol: "http",
-        hostname: "sales-crm-8s09.onrender.com/",
+        hostname: "chevy-biggest-assisted-platform.trycloudflare.com",
       },
       {
         protocol: "https",
@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "*.sales-crm-8s09.onrender.com/",
+        hostname: "*.chevy-biggest-assisted-platform.trycloudflare.com",
       },
       {
         protocol: "https",

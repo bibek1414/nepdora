@@ -3,7 +3,7 @@ export const siteConfig = {
   description: "Nepdora Preview System",
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://sales-crm-8s09.onrender.com",
+    "https://chevy-biggest-assisted-platform.trycloudflare.com",
   baseDomain: process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com",
   protocol: process.env.NEXT_PUBLIC_PROTOCOL || "https",
   isDev: process.env.NODE_ENV !== "production",
@@ -21,7 +21,7 @@ export const rootDomain = siteConfig.isDev
  * Build API URL for a subdomain
  */
 export const buildPreviewApi = (subdomain: string) =>
-  `https://${subdomain}.sales-crm-8s09.onrender.com/`;
+  `https://${subdomain}.chevy-biggest-assisted-platform.trycloudflare.com/`;
 
 /**
  * Extract subdomain from URL or query params

@@ -401,8 +401,8 @@ async function saveBusinessIntegration({
   const API_BASE_URL = getApiBaseUrl();
   const backendUrl = user.sub_domain
     ? API_BASE_URL.replace(
-        "sales-crm-8s09.onrender.com/",
-        `${user.sub_domain}.sales-crm-8s09.onrender.com/`
+        "chevy-biggest-assisted-platform.trycloudflare.com",
+        `${user.sub_domain}.chevy-biggest-assisted-platform.trycloudflare.com`
       )
     : API_BASE_URL;
 
@@ -503,8 +503,8 @@ async function saveUserIntegration({
   const API_BASE_URL = getApiBaseUrl();
   const backendUrl = user.sub_domain
     ? API_BASE_URL.replace(
-        "sales-crm-8s09.onrender.com/",
-        `${user.sub_domain}.sales-crm-8s09.onrender.com/`
+        "chevy-biggest-assisted-platform.trycloudflare.com",
+        `${user.sub_domain}.chevy-biggest-assisted-platform.trycloudflare.com`
       )
     : API_BASE_URL;
 
