@@ -21,7 +21,7 @@ export const rootDomain = siteConfig.isDev
  * Build API URL for a subdomain
  */
 export const buildPreviewApi = (subdomain: string) =>
-  `https://${subdomain}.unknown-kidney-technical-soft.trycloudflare.com`;
+  `https://${subdomain}.sales-crm-8s09.onrender.com/`;
 
 /**
  * Extract subdomain from URL or query params
