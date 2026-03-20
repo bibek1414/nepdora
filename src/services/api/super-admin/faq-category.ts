@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { siteConfig } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -23,7 +24,7 @@ export const faqCategoryApi = {
   getFAQCategories: async (): Promise<FAQCategory[]> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
     const url = `${API_BASE_URL}/api/support/faq-category/`;
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -34,7 +35,7 @@ export const faqCategoryApi = {
   // Get single FAQ category by ID
   getFAQCategory: async (id: number): Promise<GetFAQCategoryResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/faq-category/${id}/`,
       {
         method: "GET",
@@ -50,7 +51,7 @@ export const faqCategoryApi = {
     data: CreateFAQCategoryRequest
   ): Promise<CreateFAQCategoryResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(`${API_BASE_URL}/api/support/faq-category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/support/faq-category/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -65,7 +66,7 @@ export const faqCategoryApi = {
     data: UpdateFAQCategoryRequest
   ): Promise<UpdateFAQCategoryResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/faq-category/${id}/`,
       {
         method: "PATCH",
@@ -80,7 +81,7 @@ export const faqCategoryApi = {
   // Delete FAQ category
   deleteFAQCategory: async (id: number): Promise<DeleteFAQCategoryResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/faq-category/${id}/`,
       {
         method: "DELETE",
@@ -101,7 +102,7 @@ export const faqApi = {
   getFAQs: async (): Promise<FAQ[]> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
     const url = `${API_BASE_URL}/api/support/faq/`;
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -112,7 +113,7 @@ export const faqApi = {
   // Get single FAQ by ID
   getFAQ: async (id: number): Promise<GetFAQResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -123,7 +124,7 @@ export const faqApi = {
   // Create new FAQ
   createFAQ: async (data: CreateFAQRequest): Promise<CreateFAQResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(`${API_BASE_URL}/api/support/faq/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/support/faq/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -138,7 +139,7 @@ export const faqApi = {
     data: UpdateFAQRequest
   ): Promise<UpdateFAQResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -150,7 +151,7 @@ export const faqApi = {
   // Delete FAQ
   deleteFAQ: async (id: number): Promise<DeleteFAQResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await fetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

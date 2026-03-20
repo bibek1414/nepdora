@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { SiteConfig } from "@/types/owner-site/admin/site-config";
 import { handleApiError } from "@/utils/api-error";
@@ -7,7 +8,7 @@ export const siteConfigAPI = {
     try {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/site-config/`);
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +48,7 @@ export const siteConfigAPI = {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "POST",
         headers,
         body: configData,
@@ -90,7 +91,7 @@ export const siteConfigAPI = {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "PATCH",
         headers,
         body: configData,
@@ -132,7 +133,7 @@ export const siteConfigAPI = {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "DELETE",
         headers,
       }).catch(fetchError => {

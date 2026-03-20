@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   CreateCustomerRequest,
   Customer,
@@ -23,7 +24,7 @@ export const customerAPI = {
       url.searchParams.append("search", search.trim());
     }
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: createHeaders(),
     });
@@ -35,7 +36,7 @@ export const customerAPI = {
 
   registerCustomer: async (data: CreateCustomerRequest): Promise<Customer> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/customer/register/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/customer/register/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),

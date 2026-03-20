@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -15,7 +16,7 @@ export const logisticsApi = {
   // Get all logistics configs
   getLogistics: async (): Promise<Logistics[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/logistics/list/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/logistics/list/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -26,7 +27,7 @@ export const logisticsApi = {
   // Get Dash logistics
   getLogisticsDash: async (): Promise<Logistics[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/logistics/?logistic=Dash`,
       {
         method: "GET",
@@ -40,7 +41,7 @@ export const logisticsApi = {
   // Get YDM logistics
   getLogisticsYDM: async (): Promise<Logistics[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/logistics/?logistic=YDM`,
       {
         method: "GET",
@@ -54,7 +55,7 @@ export const logisticsApi = {
   // Get single logistics config by ID
   getLogistic: async (id: string): Promise<GetLogisticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/logistics/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/logistics/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -67,7 +68,7 @@ export const logisticsApi = {
     data: CreateLogisticsRequest
   ): Promise<CreateLogisticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/logistics/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/logistics/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -82,7 +83,7 @@ export const logisticsApi = {
     data: UpdateLogisticsRequest
   ): Promise<UpdateLogisticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/logistics/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/logistics/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -94,7 +95,7 @@ export const logisticsApi = {
   // Delete logistics config
   deleteLogistics: async (id: string): Promise<DeleteLogisticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/logistics/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/logistics/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

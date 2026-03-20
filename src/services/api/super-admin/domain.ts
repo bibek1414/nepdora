@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { siteConfig } from "@/config/site";
 import { Domain, PaginatedResponse } from "@/types/super-admin/domain";
 
@@ -13,7 +14,7 @@ export async function getDomains(
   let url = `${API_BASE_URL}/api/domains/?page=${page}&page_size=${pageSize}`;
   if (paymentEnabled) url += "&payment=enabled";
 
-  const res = await fetch(url, {
+  const res = await apiFetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -26,7 +27,7 @@ export async function getDomains(
 // ── GET (single) ──────────────────────────────────────────────────────────────
 
 export async function getDomainById(id: number): Promise<Domain> {
-  const res = await fetch(`${API_BASE_URL}/api/domains/${id}/`, {
+  const res = await apiFetch(`${API_BASE_URL}/api/domains/${id}/`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -47,7 +48,7 @@ export interface CreateDomainPayload {
 export async function createDomain(
   payload: CreateDomainPayload
 ): Promise<Domain> {
-  const res = await fetch(`${API_BASE_URL}/api/domains/`, {
+  const res = await apiFetch(`${API_BASE_URL}/api/domains/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -71,7 +72,7 @@ export async function updateDomain(
   id: number,
   payload: UpdateDomainPayload
 ): Promise<Domain> {
-  const res = await fetch(`${API_BASE_URL}/api/domains/${id}/`, {
+  const res = await apiFetch(`${API_BASE_URL}/api/domains/${id}/`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -87,7 +88,7 @@ export async function updateDomain(
 // ── DELETE ────────────────────────────────────────────────────────────────────
 
 export async function deleteDomain(id: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/domains/${id}/`, {
+  const res = await apiFetch(`${API_BASE_URL}/api/domains/${id}/`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
   });

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { LoginResponse, SignupResponse } from "@/types/auth/customer/auth";
 import { getApiBaseUrl } from "@/config/site";
 
@@ -19,7 +20,7 @@ interface LoginData {
 export async function signupUser(data: SignupData): Promise<SignupResponse> {
   const API_BASE_URL = getApiBaseUrl();
 
-  const response = await fetch(`${API_BASE_URL}/api/customer/register/`, {
+  const response = await apiFetch(`${API_BASE_URL}/api/customer/register/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -44,7 +45,7 @@ export async function signupUser(data: SignupData): Promise<SignupResponse> {
 export async function loginUser(data: LoginData): Promise<LoginResponse> {
   const API_BASE_URL = getApiBaseUrl();
 
-  const response = await fetch(`${API_BASE_URL}/api/customer/login/`, {
+  const response = await apiFetch(`${API_BASE_URL}/api/customer/login/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -14,7 +15,7 @@ export const useNavbarApi = {
   // Get navbar with preview status
   getNavbar: async (): Promise<GetNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/?status=preview`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/navbar/?status=preview`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -31,7 +32,7 @@ export const useNavbarApi = {
   // Get published navbar
   getNavbarPublished: async (): Promise<GetNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/navbar/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -50,7 +51,7 @@ export const useNavbarApi = {
     data: CreateNavbarRequest
   ): Promise<CreateNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/navbar/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify({
@@ -74,7 +75,7 @@ export const useNavbarApi = {
     data: UpdateNavbarRequest
   ): Promise<UpdateNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/${data.id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/navbar/${data.id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify({
@@ -94,7 +95,7 @@ export const useNavbarApi = {
   // Delete navbar - ID in URL
   deleteNavbar: async (id: string): Promise<DeleteNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/navbar/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });
@@ -111,7 +112,7 @@ export const useNavbarApi = {
     data: CreateNavbarRequest
   ): Promise<CreateNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/navbar/replace/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/navbar/replace/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify({

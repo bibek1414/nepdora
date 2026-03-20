@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
@@ -54,7 +55,7 @@ export const servicesApi = {
     }
 
     const url = `${API_BASE_URL}/api/service/${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -65,7 +66,7 @@ export const servicesApi = {
 
   getServiceBySlug: async (slug: string): Promise<ServicesPost> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/service/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/service/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -78,7 +79,7 @@ export const servicesApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildServicesFormData(serviceData);
 
-    const response = await fetch(`${API_BASE_URL}/api/service/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/service/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -98,7 +99,7 @@ export const servicesApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildServicesFormData(serviceData);
 
-    const response = await fetch(`${API_BASE_URL}/api/service/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/service/${slug}/`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -113,7 +114,7 @@ export const servicesApi = {
 
   delete: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/service/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/service/${slug}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -140,7 +141,7 @@ export const serviceCategoryApi = {
     }
 
     const url = `${API_BASE_URL}/api/service-category/${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -151,7 +152,7 @@ export const serviceCategoryApi = {
 
   getCategoryBySlug: async (slug: string): Promise<ServiceCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/service-category/${slug}/`,
       {
         method: "GET",
@@ -169,7 +170,7 @@ export const serviceCategoryApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildServicesFormData(categoryData as any);
 
-    const response = await fetch(`${API_BASE_URL}/api/service-category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/service-category/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -188,7 +189,7 @@ export const serviceCategoryApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildServicesFormData(categoryData as any);
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/service-category/${slug}/`,
       {
         method: "PATCH",
@@ -205,7 +206,7 @@ export const serviceCategoryApi = {
 
   delete: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/service-category/${slug}/`,
       {
         method: "DELETE",

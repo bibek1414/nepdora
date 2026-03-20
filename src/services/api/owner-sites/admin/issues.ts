@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -22,7 +23,7 @@ export const issuesApi = {
   // Issue Categories
   getIssueCategories: async (): Promise<IssueCategory[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/issue-category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue-category/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -33,7 +34,7 @@ export const issuesApi = {
 
   getIssueCategory: async (id: number): Promise<GetIssueCategoryResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/issue-category/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue-category/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -47,7 +48,7 @@ export const issuesApi = {
   ): Promise<CreateIssueCategoryResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/issue-category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue-category/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -63,7 +64,7 @@ export const issuesApi = {
   ): Promise<UpdateIssueCategoryResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/issue-category/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue-category/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -78,7 +79,7 @@ export const issuesApi = {
   ): Promise<DeleteIssueCategoryResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/issue-category/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue-category/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });
@@ -96,7 +97,7 @@ export const issuesApi = {
   // Issues
   getIssues: async (): Promise<Issue[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/issue/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -107,7 +108,7 @@ export const issuesApi = {
 
   getIssue: async (id: number): Promise<GetIssueResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/issue/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -121,7 +122,7 @@ export const issuesApi = {
   ): Promise<CreateIssueResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/issue/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -137,7 +138,7 @@ export const issuesApi = {
   ): Promise<UpdateIssueResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/issue/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -150,7 +151,7 @@ export const issuesApi = {
   deleteIssue: async (id: number): Promise<DeleteIssueResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/issue/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/issue/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

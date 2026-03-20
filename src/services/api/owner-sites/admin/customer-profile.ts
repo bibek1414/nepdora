@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeadersCustomer } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -7,7 +8,7 @@ import { CustomerProfile, ProfileResponse } from "@/types/customer/profile";
 export const profileApi = {
   getProfile: async (): Promise<CustomerProfile> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/customer/detail/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/customer/detail/`, {
       method: "GET",
       headers: createHeadersCustomer(),
     });
@@ -21,7 +22,7 @@ export const profileApi = {
     data: Partial<ProfileFormValues>
   ): Promise<ProfileResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/customer/detail/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/customer/detail/`, {
       method: "PATCH",
       headers: createHeadersCustomer(),
       body: JSON.stringify(data),

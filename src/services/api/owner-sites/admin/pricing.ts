@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -38,7 +39,7 @@ export const usePricingApi = {
       ? `${API_BASE_URL}/api/our-pricing/?${queryString}`
       : `${API_BASE_URL}/api/our-pricing/`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -57,7 +58,7 @@ export const usePricingApi = {
 
   getPricing: async (id: number): Promise<Pricing> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/our-pricing/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/our-pricing/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -71,7 +72,7 @@ export const usePricingApi = {
   ): Promise<CreatePricingResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/our-pricing/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/our-pricing/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -91,7 +92,7 @@ export const usePricingApi = {
   ): Promise<UpdatePricingResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/our-pricing/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/our-pricing/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -107,7 +108,7 @@ export const usePricingApi = {
 
   deletePricing: async (id: number): Promise<DeletePricingResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/our-pricing/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/our-pricing/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -15,7 +16,7 @@ export const deliveryChargesApi = {
     default_price: DefaultDeliveryCharge[];
   }> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/default-delivery-charges/`,
       {
         method: "GET",
@@ -36,7 +37,7 @@ export const deliveryChargesApi = {
     data: Omit<DefaultDeliveryCharge, "id" | "location_name" | "is_default">
   ): Promise<DefaultDeliveryCharge> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/delivery-charges/${id}/`,
       {
         method: "PATCH",
@@ -74,7 +75,7 @@ export const deliveryChargesApi = {
       params.append("search", search);
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/delivery-charges/?${params.toString()}`,
       {
         method: "GET",
@@ -92,7 +93,7 @@ export const deliveryChargesApi = {
   // Load default values
   loadDefaultValues: async (): Promise<DeliveryChargesResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/delivery-charges/load-default/`,
       {
         method: "POST",
@@ -114,7 +115,7 @@ export const deliveryChargesApi = {
   ): Promise<any> => {
     const API_BASE_URL = getApiBaseUrl();
     const { id, ...updateData } = data;
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/delivery-charges/${id}/`,
       {
         method: "PATCH",
@@ -144,7 +145,7 @@ export const deliveryChargesApi = {
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/delivery-charges/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/delivery-charges/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),

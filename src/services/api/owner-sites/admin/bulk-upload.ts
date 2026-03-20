@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { handleApiError } from "@/utils/api-error";
 
@@ -27,7 +28,7 @@ export const bulkUploadApi = {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "POST",
       body: formData,
     });
@@ -43,7 +44,7 @@ export const bulkUploadApi = {
 
     const token = localStorage.getItem("authToken");
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
     });
 

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -23,7 +24,7 @@ export const newsletterApi = {
     if (search) {
       params.append("search", search);
     }
-    const response = await fetch(`${API_BASE_URL}/api/newsletter/?${params}`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/newsletter/?${params}`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -36,7 +37,7 @@ export const newsletterApi = {
     data: CreateNewsletterRequest
   ): Promise<CreateNewsletterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/newsletter/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/newsletter/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -50,7 +51,7 @@ export const newsletterApi = {
     data: Partial<Newsletter>
   ): Promise<Newsletter> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/newsletter/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/newsletter/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),

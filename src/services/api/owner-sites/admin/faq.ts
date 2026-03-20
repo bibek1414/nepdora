@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -17,7 +18,7 @@ export const faqApi = {
     const API_BASE_URL = getApiBaseUrl();
     const url = `${API_BASE_URL}/api/faq/`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -29,7 +30,7 @@ export const faqApi = {
   // Get single FAQ by ID
   getFAQ: async (id: number): Promise<GetFAQResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/faq/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/faq/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -41,7 +42,7 @@ export const faqApi = {
   // Create new FAQ
   createFAQ: async (data: CreateFAQRequest): Promise<CreateFAQResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/faq/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/faq/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -57,7 +58,7 @@ export const faqApi = {
     data: UpdateFAQRequest
   ): Promise<UpdateFAQResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/faq/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/faq/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -70,7 +71,7 @@ export const faqApi = {
   // Delete FAQ
   deleteFAQ: async (id: number): Promise<DeleteFAQResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/faq/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/faq/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

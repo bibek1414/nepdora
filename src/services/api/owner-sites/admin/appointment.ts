@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   Appointment,
   AppointmentFormData,
@@ -45,7 +46,7 @@ export const appointmentAPI = {
       url.searchParams.append("time", time);
     }
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +62,7 @@ export const appointmentAPI = {
     appointmentData: AppointmentFormData
   ): Promise<Appointment> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(`${BASE_API_URL}/api/appointments/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/appointments/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +80,7 @@ export const appointmentAPI = {
     data: Partial<AppointmentFormData>
   ): Promise<Appointment> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(`${BASE_API_URL}/api/appointments/${id}/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/appointments/${id}/`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +95,7 @@ export const appointmentAPI = {
   // Delete appointment
   deleteAppointment: async (id: number): Promise<void> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(`${BASE_API_URL}/api/appointments/${id}/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/appointments/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +108,7 @@ export const appointmentAPI = {
   // Get all appointment reasons
   getAppointmentReasons: async (): Promise<AppointmentReason[]> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(`${BASE_API_URL}/api/appointment-reasons/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/appointment-reasons/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

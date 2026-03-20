@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -31,7 +32,7 @@ export const templateTokenApi = {
     clientId: number | string
   ): Promise<TemplateTokenResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/template-tokens/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/template-tokens/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify({ client_id: clientId }),

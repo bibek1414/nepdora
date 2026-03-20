@@ -21,7 +21,7 @@ export const rootDomain = siteConfig.isDev
  * Build API URL for a subdomain
  */
 export const buildPreviewApi = (subdomain: string) =>
-  `https://${subdomain}.nepdora.baliyoventures.com`;
+  `https://${subdomain}.unknown-kidney-technical-soft.trycloudflare.com`;
 
 /**
  * Extract subdomain from URL or query params
@@ -55,11 +55,29 @@ export const extractSubdomain = (url: URL): string | null => {
 };
 
 /**
+ * Extract tenant domain from URL or query params
+ */
+export const getTenantDomain = (): string | null => {
+  if (typeof window === "undefined") return null;
+
+  const url = new URL(window.location.href);
+  const hostname = url.hostname; // ⚠️ this already excludes port
+  const subdomain = extractSubdomain(url);
+
+  if (!subdomain) return null;
+
+  // ✅ Development
+  if (siteConfig.isDev) {
+    return `${subdomain}.localhost`;
+  }
+
+  // ✅ Production
+  return `${subdomain}.${siteConfig.baseDomain}`;
+};
+
+/**
  * Get API base URL
  */
 export const getApiBaseUrl = (): string => {
-  if (typeof window === "undefined") return siteConfig.apiBaseUrl;
-
-  const subdomain = extractSubdomain(new URL(window.location.href));
-  return subdomain ? buildPreviewApi(subdomain) : siteConfig.apiBaseUrl;
+  return siteConfig.apiBaseUrl;
 };

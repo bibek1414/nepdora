@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import {
   UserProfile,
@@ -20,7 +21,7 @@ export const userAPI = {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "GET",
         headers,
         cache: "no-store",
@@ -50,7 +51,7 @@ export const userAPI = {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "PATCH",
         headers,
         body: JSON.stringify(data),
@@ -80,7 +81,7 @@ export const userAPI = {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: "POST",
         headers,
         body: JSON.stringify(data),

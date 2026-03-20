@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -14,7 +15,7 @@ export const useFacebookApi = {
   getFacebookIntegrations: async (): Promise<FacebookIntegration[]> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/facebook/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/facebook/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -27,7 +28,7 @@ export const useFacebookApi = {
 
   getFacebookIntegration: async (id: number): Promise<FacebookIntegration> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/facebook/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -41,7 +42,7 @@ export const useFacebookApi = {
   ): Promise<CreateFacebookIntegrationResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/facebook/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/facebook/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -61,7 +62,7 @@ export const useFacebookApi = {
   ): Promise<UpdateFacebookIntegrationResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/facebook/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -79,7 +80,7 @@ export const useFacebookApi = {
     id: number
   ): Promise<DeleteFacebookIntegrationResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/facebook/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/facebook/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

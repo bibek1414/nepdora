@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -15,7 +16,7 @@ export const googleAnalyticsApi = {
   // Get all Google Analytics configs
   getGoogleAnalytics: async (): Promise<GoogleAnalytics[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/google-analytic/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -28,7 +29,7 @@ export const googleAnalyticsApi = {
     id: string
   ): Promise<GetGoogleAnalyticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -41,7 +42,7 @@ export const googleAnalyticsApi = {
     data: CreateGoogleAnalyticsRequest
   ): Promise<CreateGoogleAnalyticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/google-analytic/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -56,7 +57,7 @@ export const googleAnalyticsApi = {
     data: UpdateGoogleAnalyticsRequest
   ): Promise<UpdateGoogleAnalyticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -70,7 +71,7 @@ export const googleAnalyticsApi = {
     id: string
   ): Promise<DeleteGoogleAnalyticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
@@ -66,7 +67,7 @@ export const portfolioApi = {
     }
 
     const url = `${API_BASE_URL}/api/portfolio/${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -77,7 +78,7 @@ export const portfolioApi = {
 
   getPortfolioBySlug: async (slug: string): Promise<Portfolio> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -88,7 +89,7 @@ export const portfolioApi = {
 
   getTags: async (): Promise<PortfolioTag[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio-tags/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio-tags/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -100,7 +101,7 @@ export const portfolioApi = {
 
   getCategories: async (): Promise<PortfolioCategory[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio/category/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -112,7 +113,7 @@ export const portfolioApi = {
 
   createTag: async (tagData: CreatePortfolioTag): Promise<PortfolioTag> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio-tags/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio-tags/`, {
       method: "POST",
       headers: {
         ...createHeaders(),
@@ -130,7 +131,7 @@ export const portfolioApi = {
     categoryData: CreatePortfolioCategory
   ): Promise<PortfolioCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio/category/`, {
       method: "POST",
       headers: {
         ...createHeaders(),
@@ -148,7 +149,7 @@ export const portfolioApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildPortfolioFormData(portfolioData);
 
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -167,7 +168,7 @@ export const portfolioApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildPortfolioFormData(portfolioData);
 
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -181,7 +182,7 @@ export const portfolioApi = {
 
   delete: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -196,7 +197,7 @@ export const portfolioApi = {
     categoryData: CreatePortfolioCategory
   ): Promise<PortfolioCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/portfolio/category/${id}/`,
       {
         method: "PATCH",
@@ -215,7 +216,7 @@ export const portfolioApi = {
 
   deleteCategory: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/portfolio/category/${id}/`,
       {
         method: "DELETE",
@@ -233,7 +234,7 @@ export const portfolioApi = {
     tagData: CreatePortfolioTag
   ): Promise<PortfolioTag> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
       method: "PATCH",
       headers: {
         ...createHeaders(),
@@ -249,7 +250,7 @@ export const portfolioApi = {
 
   deleteTag: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,

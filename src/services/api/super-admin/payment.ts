@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -17,7 +18,7 @@ export const superAdminPaymentApi = {
     const params = new URLSearchParams();
     if (tenant && tenant !== "all") params.append("tenant", tenant);
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/payment-summary/?${params}`,
       {
         method: "GET",
@@ -43,7 +44,7 @@ export const superAdminPaymentApi = {
     if (params?.page_size)
       queryParams.append("page_size", params.page_size.toString());
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/tenant-central-payments/?${queryParams}`,
       {
         method: "GET",
@@ -67,7 +68,7 @@ export const superAdminPaymentApi = {
     if (params?.page_size)
       queryParams.append("page_size", params.page_size.toString());
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/tenant-transfers/?${queryParams}`,
       {
         method: "GET",
@@ -82,7 +83,7 @@ export const superAdminPaymentApi = {
     data: CreateTransferRequest
   ): Promise<TenantTransfer> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/tenant-transfers/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/tenant-transfers/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -96,7 +97,7 @@ export const superAdminPaymentApi = {
     status: "pending" | "transferred"
   ): Promise<CentralPaymentHistory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/tenant-central-payments/${id}/`,
       {
         method: "PATCH",

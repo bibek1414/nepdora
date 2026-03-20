@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import {
   Video,
@@ -12,7 +13,7 @@ export const videosAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const url = new URL(`${BASE_API_URL}/api/videos/`);
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -30,7 +31,7 @@ export const videosAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const url = new URL(`${BASE_API_URL}/api/videos/`);
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -49,7 +50,7 @@ export const videosAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const url = new URL(`${BASE_API_URL}/api/videos/${id}/`);
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -68,7 +69,7 @@ export const videosAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const url = new URL(`${BASE_API_URL}/api/videos/${id}/`);
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });

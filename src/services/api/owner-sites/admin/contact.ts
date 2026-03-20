@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   Contact,
   ContactFormData,
@@ -21,7 +22,7 @@ export const contactAPI = {
     if (search && search.trim()) {
       url.searchParams.append("search", search.trim());
     }
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +38,7 @@ export const contactAPI = {
 
   createContact: async (contactData: ContactFormData): Promise<Contact> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(`${BASE_API_URL}/api/contact/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/contact/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +60,7 @@ export const contactAPI = {
     data: Partial<Contact>
   ): Promise<Contact> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(`${BASE_API_URL}/api/contact/${id}/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/contact/${id}/`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

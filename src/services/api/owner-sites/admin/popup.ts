@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   PopUp,
   PopUpForm,
@@ -12,7 +13,7 @@ export const popupApi = {
   getPopups: async (): Promise<PopUp[]> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/`);
     if (!response.ok) throw new Error("Failed to fetch popups");
     return response.json();
   },
@@ -20,7 +21,7 @@ export const popupApi = {
   getPopup: async (id: number): Promise<PopUp> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup/${id}/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`);
     if (!response.ok) throw new Error("Failed to fetch popup");
     return response.json();
   },
@@ -28,7 +29,7 @@ export const popupApi = {
   createPopup: async (data: FormData): Promise<PopUp> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/`, {
       method: "POST",
       body: data,
     });
@@ -42,7 +43,7 @@ export const popupApi = {
   updatePopup: async (id: number, data: FormData): Promise<PopUp> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
       method: "PUT",
       body: data,
     });
@@ -56,7 +57,7 @@ export const popupApi = {
   deletePopup: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
       method: "DELETE",
     });
     if (!response.ok) throw new Error("Failed to delete popup");
@@ -78,7 +79,7 @@ export const popupApi = {
     const queryString = params.toString();
     const url = `${API_BASE_URL}/api/popup-form/${queryString ? `?${queryString}` : ""}`;
 
-    const response = await fetch(url);
+    const response = await apiFetch(url);
     if (!response.ok) throw new Error("Failed to fetch popup forms");
     return response.json();
   },
@@ -86,7 +87,7 @@ export const popupApi = {
   getPopupForm: async (id: number): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup-form/${id}/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`);
     if (!response.ok) throw new Error("Failed to fetch popup form");
     return response.json();
   },
@@ -94,7 +95,7 @@ export const popupApi = {
   createPopupForm: async (data: PopUpForm): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup-form/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +115,7 @@ export const popupApi = {
   ): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -131,7 +132,7 @@ export const popupApi = {
   deletePopupForm: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "DELETE",
     });
     if (!response.ok) throw new Error("Failed to delete form");
@@ -140,7 +141,7 @@ export const popupApi = {
   getActivePopup: async (): Promise<PopUp | null> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup/?is_active=true`);
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/?is_active=true`);
     if (!response.ok) throw new Error("Failed to fetch active popup");
     const data = await response.json();
 
@@ -156,7 +157,7 @@ export const popupApi = {
   ): Promise<{ success: boolean; message: string }> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/popup-form/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
