@@ -1,7 +1,7 @@
 // "use client";
 
 // import React, { createContext, useContext } from "react";
-// import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+// import { useThemeQuery } from "@/hooks/owner-site/components/use-websocket-theme";
 
 // interface ThemeContextType {
 //   colors: {

@@ -24,7 +24,7 @@ async function fetchNepdoraCentralCredentials(
 ): Promise<{ secret_key: string; merchant_code: string | null }> {
   try {
     const centralApiUrl =
-      "https://chevy-biggest-assisted-platform.trycloudflare.com/api/nepdora-payments/";
+      "https://nepdora.baliyoventures.com/api/nepdora-payments/";
     console.log(
       `Fetching central credentials for ${paymentType} from: ${centralApiUrl}?payment_type=${paymentType}`
     );

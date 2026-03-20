@@ -10,12 +10,15 @@ import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 const NAVBAR_QUERY_KEY = ["navbar"];
 
 export const useNavbarQuery = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: NAVBAR_QUERY_KEY,
     queryFn: () => {
+      if (!socket.enabled) {
+        return useNavbarApi.getNavbar();
+      }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = subscribe("navbar", message => {
+        const unsubscribe = socket.subscribe("navbar", message => {
           unsubscribe();
           resolve({
             data: message.data || null,
@@ -28,7 +31,7 @@ export const useNavbarQuery = () => {
           reject(new Error("Timeout waiting for navbar"));
         }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "get_navbar",
           status: "preview",
         });
@@ -40,12 +43,15 @@ export const useNavbarQuery = () => {
 };
 
 export const useNavbarQueryPublished = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: [...NAVBAR_QUERY_KEY, "published"],
     queryFn: () => {
+      if (!socket.enabled) {
+        return useNavbarApi.getNavbarPublished();
+      }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = subscribe("navbar", message => {
+        const unsubscribe = socket.subscribe("navbar", message => {
           unsubscribe();
           resolve({
             data: message.data || null,
@@ -58,7 +64,7 @@ export const useNavbarQueryPublished = () => {
           reject(new Error("Timeout waiting for published navbar"));
         }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "get_navbar",
           status: "published",
         });
@@ -71,20 +77,23 @@ export const useNavbarQueryPublished = () => {
 
 // use-navbar.ts updates
 export const useCreateNavbarMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateNavbarRequest) => {
+      if (!socket.enabled) {
+        return useNavbarApi.createNavbar(data);
+      }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = subscribe("navbar_created", message => {
+        const unsubscribe = socket.subscribe("navbar_created", message => {
           unsubscribe();
           resolve(message.data);
         });
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "create_navbar",
           ...data,
         });
@@ -124,20 +133,23 @@ export const useCreateNavbarMutation = () => {
 };
 
 export const useUpdateNavbarMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: UpdateNavbarRequest) => {
+      if (!socket.enabled) {
+        return useNavbarApi.updateNavbar(data);
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("navbar_updated", message => {
+        const unsubscribe = socket.subscribe("navbar_updated", message => {
           unsubscribe();
           resolve(message.data);
         });
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "update_navbar",
           ...data,
         });
@@ -170,13 +182,16 @@ export const useUpdateNavbarMutation = () => {
 };
 
 export const useDeleteNavbarMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
+      if (!socket.enabled) {
+        return useNavbarApi.deleteNavbar(id);
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("navbar_deleted", message => {
+        const unsubscribe = socket.subscribe("navbar_deleted", message => {
           const deletedId = message.id || message.data?.id;
           if (deletedId === id) {
             unsubscribe();
@@ -185,7 +200,7 @@ export const useDeleteNavbarMutation = () => {
         });
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "delete_navbar",
           id: id,
         });
@@ -203,19 +218,22 @@ export const useDeleteNavbarMutation = () => {
 };
 
 export const useReplaceNavbarMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateNavbarRequest) => {
+      if (!socket.enabled) {
+        return useNavbarApi.replaceNavbar(data);
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("navbar_replaced", message => {
+        const unsubscribe = socket.subscribe("navbar_replaced", message => {
           unsubscribe();
           resolve(message.data);
         });
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "replace_navbar",
           ...data,
         });

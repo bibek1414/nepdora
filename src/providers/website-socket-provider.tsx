@@ -5,6 +5,7 @@ import { useWebsiteSocket } from "@/hooks/owner-site/use-website-socket";
 
 type WebsiteSocketContextType = {
   isConnected: boolean;
+  enabled: boolean;
   sendMessage: (message: any) => void;
   subscribe: (action: string, callback: (data: any) => void) => () => void;
 };
@@ -26,19 +27,22 @@ export const useWebsiteSocketContext = () => {
 type WebsiteSocketProviderProps = {
   children: ReactNode;
   schema_name: string;
+  enabled?: boolean;
 };
 
 export const WebsiteSocketProvider: React.FC<WebsiteSocketProviderProps> = ({
   children,
   schema_name,
+  enabled = true,
 }) => {
   const { isConnected, sendMessage, subscribe } = useWebsiteSocket({
     schema_name,
+    enabled,
   });
 
   return (
     <WebsiteSocketContext.Provider
-      value={{ isConnected, sendMessage, subscribe }}
+      value={{ isConnected, enabled, sendMessage, subscribe }}
     >
       {children}
     </WebsiteSocketContext.Provider>

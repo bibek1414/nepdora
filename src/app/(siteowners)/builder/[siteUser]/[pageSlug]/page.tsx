@@ -24,7 +24,7 @@ export default function BuilderPage({ params }: BuilderPageProps) {
   const { siteUser, pageSlug } = use(params);
 
   return (
-    <WebsiteSocketProvider schema_name={siteUser}>
+    <WebsiteSocketProvider schema_name={siteUser} enabled={true}>
       <BuilderLayout params={{ siteUser, pageSlug }} />
     </WebsiteSocketProvider>
   );

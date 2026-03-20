@@ -37,7 +37,7 @@ export default async function PreviewLayout({
     <>
       <DynamicFavicon />
       <GoogleAnalytics />
-      <WebsiteSocketProvider schema_name={siteUser}>
+      <WebsiteSocketProvider schema_name={siteUser} enabled={true}>
         <DynamicFontProvider>
           <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
           <WhatsApp />

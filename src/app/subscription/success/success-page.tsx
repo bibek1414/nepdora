@@ -209,7 +209,7 @@ export default function SuccessPage() {
   }) => {
     try {
       const response = await fetch(
-        "https://chevy-biggest-assisted-platform.trycloudflare.com/api/upgrade/",
+        "https://nepdora.baliyoventures.com/api/upgrade/",
         {
           method: "POST",
           headers: createHeaders(),

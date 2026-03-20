@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { componentsApi } from "@/services/api/owner-sites/components/unified";
+import { componentsApi, componentOrdersApi } from "@/services/api/owner-sites/components/unified";
 import {
   ComponentTypeMap,
   ComponentResponse,
@@ -26,20 +26,28 @@ export const usePageComponentsQuery = <
   pageSlug: string,
   status: "preview" | "published" = "published"
 ) => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
 
   return useQuery({
     queryKey: ["pageComponents", pageSlug, status],
     queryFn: () => {
+      if (!socket.enabled) {
+        return status === "published"
+          ? componentsApi.getPageComponentsPublished(pageSlug)
+          : componentsApi.getPageComponents(pageSlug);
+      }
       return new Promise<ComponentResponse<T>[]>((resolve, reject) => {
-        const unsubscribe = subscribe("components_list", (message: any) => {
-          unsubscribe();
-          if (message.data) {
-            resolve(message.data as ComponentResponse<T>[]);
-          } else {
-            resolve([]);
+        const unsubscribe = socket.subscribe(
+          "components_list",
+          (message: any) => {
+            unsubscribe();
+            if (message.data) {
+              resolve(message.data as ComponentResponse<T>[]);
+            } else {
+              resolve([]);
+            }
           }
-        });
+        );
 
         // Timeout
         setTimeout(() => {
@@ -49,7 +57,7 @@ export const usePageComponentsQuery = <
           reject(new Error("Timeout waiting for components list"));
         }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "list_components",
           slug: pageSlug,
           status,
@@ -87,7 +95,7 @@ export const useComponentsByTypeQuery = <T extends keyof ComponentTypeMap>(
 
 // Generic hook that can handle multiple component types in one instance
 export const useCreateComponentMutation = (pageSlug: string) => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -105,10 +113,17 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       pageSlug?: string;
     }) => {
       const targetSlug = overrideSlug || pageSlug;
+      if (!socket.enabled) {
+        return componentsApi.createComponent(targetSlug, {
+          component_type: componentType,
+          data,
+          order: insertIndex,
+        });
+      }
       return new Promise<any>((resolve, reject) => {
         const expectedType = componentType;
         const expectedSlug = targetSlug;
-        const unsubscribe = subscribe("component_created", (message: any) => {
+        const unsubscribe = socket.subscribe("component_created", (message: any) => {
           if (
             message.data &&
             message.data.component_type === expectedType &&
@@ -123,7 +138,7 @@ export const useCreateComponentMutation = (pageSlug: string) => {
           unsubscribe();
         }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "create_component",
           slug: targetSlug,
           component_type: componentType,
@@ -262,7 +277,7 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
   componentType: T
 ) => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -273,9 +288,17 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
       componentId: string;
       data: Partial<ComponentTypeMap[T]>;
     }) => {
+      if (!socket.enabled) {
+        return componentsApi.updateComponent(
+          pageSlug,
+          componentId,
+          { data },
+          componentType
+        );
+      }
       return new Promise<any>(resolve => {
         const expectedComponentId = componentId;
-        const unsubscribe = subscribe("component_updated", message => {
+        const unsubscribe = socket.subscribe("component_updated", message => {
           const data = message.data;
           const component = Array.isArray(data)
             ? data.find((c: any) => c.component_id === expectedComponentId)
@@ -291,7 +314,7 @@ export const useUpdateComponentMutation = <T extends keyof ComponentTypeMap>(
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "update_component",
           slug: pageSlug,
           component_id: componentId,
@@ -361,13 +384,20 @@ export const useDeleteComponentMutation = (
   pageSlug: string,
   componentType: keyof ComponentTypeMap
 ) => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (componentId: string) => {
+      if (!socket.enabled) {
+        return componentsApi.deleteComponent(
+          pageSlug,
+          componentId,
+          componentType
+        );
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("component_deleted", message => {
+        const unsubscribe = socket.subscribe("component_deleted", message => {
           if (
             message.component_id === componentId ||
             (message.data && message.data.component_id === componentId)
@@ -379,7 +409,7 @@ export const useDeleteComponentMutation = (
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "delete_component",
           page_slug: pageSlug,
           component_id: componentId,
@@ -443,7 +473,7 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
   pageSlug: string,
   componentType: T
 ) => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -454,9 +484,15 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
       componentId: string;
       data: ComponentTypeMap[T];
     }) => {
+      if (!socket.enabled) {
+        return componentsApi.replaceComponent(pageSlug, componentId, {
+          component_type: componentType,
+          data,
+        });
+      }
       return new Promise<any>(resolve => {
         const expectedComponentId = componentId;
-        const unsubscribe = subscribe("component_replaced", message => {
+        const unsubscribe = socket.subscribe("component_replaced", message => {
           const data = message.data;
           const component = Array.isArray(data)
             ? data.find((c: any) => c.component_id === expectedComponentId)
@@ -472,7 +508,7 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "replace_component",
           page_slug: pageSlug,
           component_id: componentId,
@@ -544,7 +580,7 @@ export const useReplaceComponentMutation = <T extends keyof ComponentTypeMap>(
 
 // Generic replace mutation hook
 export const useGenericReplaceComponentMutation = (pageSlug: string) => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -559,9 +595,16 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
       data: ComponentTypeMap[keyof ComponentTypeMap];
       order?: number;
     }) => {
+      if (!socket.enabled) {
+        return componentsApi.replaceComponent(pageSlug, componentId, {
+          component_type: componentType,
+          data,
+          order,
+        });
+      }
       return new Promise<any>(resolve => {
         const expectedComponentId = componentId;
-        const unsubscribe = subscribe("component_replaced", message => {
+        const unsubscribe = socket.subscribe("component_replaced", message => {
           const data = message.data;
           const component = Array.isArray(data)
             ? data.find((c: any) => c.component_id === expectedComponentId)
@@ -577,7 +620,7 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "replace_component",
           page_slug: pageSlug,
           component_id: componentId,
@@ -660,7 +703,7 @@ export const useGenericReplaceComponentMutation = (pageSlug: string) => {
 
 // Deprecated or specific portfolio delete - map to generic delete
 export const useDeletePortfolioComponentMutation = () => {
-  const { sendMessage } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
 
   return useMutation({
     mutationFn: ({
@@ -670,7 +713,10 @@ export const useDeletePortfolioComponentMutation = () => {
       pageSlug: string;
       componentId: string;
     }) => {
-      sendMessage({
+      if (!socket.enabled) {
+        return componentsApi.deleteComponent(pageSlug, componentId, "portfolio");
+      }
+      socket.sendMessage({
         action: "delete_component",
         data: {
           page_slug: pageSlug,
@@ -701,13 +747,16 @@ export const useDeletePortfolioComponentMutation = () => {
 };
 
 export const useUpdateComponentOrderMutation = (pageSlug: string) => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ orderUpdates }: { orderUpdates: any[] }) => {
+      if (!socket.enabled) {
+        return componentOrdersApi.updateComponentOrders(pageSlug, orderUpdates);
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("component_order_updated", message => {
+        const unsubscribe = socket.subscribe("component_order_updated", message => {
           // Verify that this order update corresponds to the one we requested by checking pageSlug
           // If we had a specific request ID we'd use it, otherwise we check if a component matches
           if (
@@ -722,7 +771,7 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "update_component_order",
           slug: pageSlug,
           order_updates: orderUpdates,

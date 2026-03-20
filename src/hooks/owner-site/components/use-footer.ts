@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFooterApi } from "@/services/api/owner-sites/components/footer";
 import {
   CreateFooterRequest,
   UpdateFooterRequest,
@@ -9,12 +10,15 @@ import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 const FOOTER_QUERY_KEY = ["footer"];
 
 export const useFooterQuery = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: FOOTER_QUERY_KEY,
     queryFn: () => {
+      if (!socket.enabled) {
+        return useFooterApi.getFooter();
+      }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = subscribe("footer", message => {
+        const unsubscribe = socket.subscribe("footer", message => {
           unsubscribe();
           resolve({
             data: message.data || null,
@@ -27,7 +31,7 @@ export const useFooterQuery = () => {
           reject(new Error("Timeout waiting for footer"));
         }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "get_footer",
           status: "preview",
         });
@@ -39,12 +43,15 @@ export const useFooterQuery = () => {
 };
 
 export const useFooterQueryPublished = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: [...FOOTER_QUERY_KEY, "published"],
     queryFn: () => {
+      if (!socket.enabled) {
+        return useFooterApi.getFooterPublished();
+      }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = subscribe("footer", message => {
+        const unsubscribe = socket.subscribe("footer", message => {
           unsubscribe();
           resolve({
             data: message.data || null,
@@ -57,7 +64,7 @@ export const useFooterQueryPublished = () => {
           reject(new Error("Timeout waiting for published footer"));
         }, 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "get_footer",
           status: "published",
         });
@@ -69,20 +76,23 @@ export const useFooterQueryPublished = () => {
 };
 
 export const useCreateFooterMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
+      if (!socket.enabled) {
+        return useFooterApi.createFooter(data);
+      }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = subscribe("footer_created", message => {
+        const unsubscribe = socket.subscribe("footer_created", message => {
           unsubscribe();
           resolve(message.data);
         });
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "create_footer",
           ...data,
         });
@@ -122,20 +132,23 @@ export const useCreateFooterMutation = () => {
 };
 
 export const useUpdateFooterMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: UpdateFooterRequest) => {
+      if (!socket.enabled) {
+        return useFooterApi.updateFooter(data);
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("footer_updated", message => {
+        const unsubscribe = socket.subscribe("footer_updated", message => {
           unsubscribe();
           resolve(message.data);
         });
 
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "update_footer",
           ...data,
         });
@@ -168,13 +181,16 @@ export const useUpdateFooterMutation = () => {
 };
 
 export const useDeleteFooterMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
+      if (!socket.enabled) {
+        return useFooterApi.deleteFooter(id);
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("footer_deleted", message => {
+        const unsubscribe = socket.subscribe("footer_deleted", message => {
           const deletedId = message.id || message.data?.id;
           if (deletedId === id) {
             unsubscribe();
@@ -183,7 +199,7 @@ export const useDeleteFooterMutation = () => {
         });
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "delete_footer",
           id: id,
         });
@@ -201,19 +217,22 @@ export const useDeleteFooterMutation = () => {
 };
 
 export const useReplaceFooterMutation = () => {
-  const { sendMessage, subscribe } = useWebsiteSocketContext();
+  const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateFooterRequest) => {
+      if (!socket.enabled) {
+        return useFooterApi.replaceFooter(data);
+      }
       return new Promise<any>(resolve => {
-        const unsubscribe = subscribe("footer_replaced", message => {
+        const unsubscribe = socket.subscribe("footer_replaced", message => {
           unsubscribe();
           resolve(message.data);
         });
         setTimeout(() => unsubscribe(), 10000);
 
-        sendMessage({
+        socket.sendMessage({
           action: "replace_footer",
           ...data,
         });

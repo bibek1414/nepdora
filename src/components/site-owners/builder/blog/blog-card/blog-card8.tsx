@@ -44,17 +44,27 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
     }
   };
 
-  const blogImage =
-    blog.thumbnail_image ||
-    "/fallback/image-not-found.png";
+  const blogImage = blog.thumbnail_image || "/fallback/image-not-found.png";
 
   const ImageWrapper = siteUser
-    ? ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    ? ({
+        children,
+        className,
+      }: {
+        children: React.ReactNode;
+        className?: string;
+      }) => (
         <Link href={getDetailsUrl()} className={className}>
           {children}
         </Link>
       )
-    : ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    : ({
+        children,
+        className,
+      }: {
+        children: React.ReactNode;
+        className?: string;
+      }) => (
         <a href={getDetailsUrl()} onClick={handleClick} className={className}>
           {children}
         </a>
@@ -69,11 +79,11 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
           initial="rest"
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
         >
-          <motion.div 
+          <motion.div
             className="h-full w-full"
             variants={{
               rest: { scale: 1 },
-              hover: { scale: 1.02 }
+              hover: { scale: 1.02 },
             }}
           >
             <Image
@@ -86,19 +96,19 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
           </motion.div>
         </motion.div>
       </ImageWrapper>
-      
+
       <ImageWrapper className="block">
-        <h3 className="mb-3 line-clamp-2 text-lg font-bold leading-snug text-gray-900 transition-colors hover:text-primary">
+        <h3 className="hover:text-primary mb-3 line-clamp-2 text-lg leading-snug font-bold text-gray-900 transition-colors">
           {blog.title}
         </h3>
       </ImageWrapper>
-      
-      <p className="mb-4 flex-1 line-clamp-3 text-sm text-gray-500">
+
+      <p className="mb-4 line-clamp-3 flex-1 text-sm text-gray-500">
         {blog.meta_description || "Read the full article for more insights."}
       </p>
-      
+
       <div className="mt-auto pt-2">
-        <motion.div 
+        <motion.div
           className="inline-flex items-center"
           whileHover="hover"
           initial="rest"
@@ -106,7 +116,7 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
           <motion.div
             variants={{
               rest: { x: 0 },
-              hover: { x: 8 } // gap increase
+              hover: { x: 8 }, // gap increase
             }}
             className="flex items-center gap-2"
           >
@@ -115,7 +125,7 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
               href={getDetailsUrl()}
               isEditable={isEditable}
               onChange={() => {}} // Since "Read More" text is usually static across generated cards, changes won't persist here without passing onUpdate for each item's specific link details. Assuming standard EditableLink usage.
-              className="p-0 font-bold text-gray-900 h-auto"
+              className="h-auto p-0 font-bold text-gray-900"
             />
             <div
               className="rounded-full p-1 text-white transition-colors"

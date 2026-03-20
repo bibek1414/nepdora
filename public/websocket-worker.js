@@ -77,8 +77,7 @@ self.onconnect = event => {
 };
 
 function createSocket(schema_name, conn) {
-  const wsBaseUrl =
-    conn.wsBaseUrl || "wss://chevy-biggest-assisted-platform.trycloudflare.com";
+  const wsBaseUrl = conn.wsBaseUrl || "wss://nepdora.baliyoventures.com";
   const url = `${wsBaseUrl}/ws/website/${schema_name}/`;
 
   console.log(`[Worker] Attempting connection to: ${url}`);

@@ -30,8 +30,9 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
   onUpdate,
   onBlogClick,
 }) => {
-  const { title = "Strategic Insights That Drive Business Success" } = data || {};
-  
+  const { title = "Strategic Insights That Drive Business Success" } =
+    data || {};
+
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
   const primaryColor = theme?.colors?.primary || "#4f46e5";
@@ -73,34 +74,33 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
             value={title}
             onChange={handleTitleChange}
             as="h2"
-            className="mb-0 max-w-xl text-3xl font-bold tracking-tight text-foreground md:text-4xl"
+            className="text-foreground mb-0 max-w-xl text-3xl font-bold tracking-tight md:text-4xl"
             isEditable={isEditable}
             placeholder="Enter title..."
           />
 
-          <div className=" flex items-center gap-5!">
+          <div className="flex items-center gap-5!">
             <EditableLink
               text="View More Blogs"
               href={getBlogsUrl()}
               isEditable={isEditable}
-              onChange={() => {}} 
-              style={
-                {
-                  backgroundColor:primaryColor,
-                  color:              "#FFFFFF"  }
-              }
-              className="px-2! w-48! mr-2! font-bold text-gray-900"
+              onChange={() => {}}
+              style={{
+                backgroundColor: primaryColor,
+                color: "#FFFFFF",
+              }}
+              className="mr-2! w-48! px-2! font-bold text-gray-900"
             >
               View More Blogs
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-105"
-              style={{
-                backgroundColor: "white",
-                color: "black",
-              }}
-            >
-              <ArrowUpRight size={16} strokeWidth={2.5} />
-            </div>
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-105"
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                }}
+              >
+                <ArrowUpRight size={16} strokeWidth={2.5} />
+              </div>
             </EditableLink>
           </div>
         </motion.div>
@@ -108,7 +108,7 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
         {isLoading ? (
           <div className="flex items-center justify-center py-10">
             <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-              {[1, 2, 3, 4].map((i) => (
+              {[1, 2, 3, 4].map(i => (
                 <div key={i} className="flex flex-col gap-4">
                   <Skeleton className="h-48 w-full rounded-2xl" />
                   <Skeleton className="h-6 w-3/4" />
@@ -129,7 +129,7 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
         ) : featuredBlogs.length === 0 ? (
           <div className="bg-muted/50 rounded-lg py-12 text-center">
             <Rss className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-            <h3 className="mb-2 text-lg font-semibold text-foreground">
+            <h3 className="text-foreground mb-2 text-lg font-semibold">
               No Blog Posts Found
             </h3>
             <p className="text-muted-foreground">
@@ -144,7 +144,7 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            {featuredBlogs.map((blog) => (
+            {featuredBlogs.map(blog => (
               <div
                 key={blog.slug}
                 className="relative z-10 transition-transform duration-200"

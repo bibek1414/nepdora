@@ -11,7 +11,7 @@ async function getApiUrl(): Promise<string> {
   const user = await getServerUser();
 
   if (user?.domain) {
-    // Use the full domain from JWT (e.g., bibek.chevy-biggest-assisted-platform.trycloudflare.com/)
+    // Use the full domain from JWT (e.g., bibek.nepdora.baliyoventures.com/)
     return `https://${user.domain}`;
   }
 

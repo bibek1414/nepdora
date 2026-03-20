@@ -6,10 +6,9 @@ export const serverSiteConfig = {
   description: "Nepdora Preview System",
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://chevy-biggest-assisted-platform.trycloudflare.com",
+    "https://nepdora.baliyoventures.com",
   baseDomain:
-    process.env.NEXT_PUBLIC_BASE_DOMAIN ||
-    "chevy-biggest-assisted-platform.trycloudflare.com",
+    process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.baliyoventures.com",
   protocol: process.env.NEXT_PUBLIC_PROTOCOL || "https",
   isDev: process.env.NODE_ENV !== "production",
   frontendDevPort: Number(process.env.NEXT_PUBLIC_FRONTEND_PORT || 3000),

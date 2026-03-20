@@ -35,7 +35,7 @@ export default async function PublishLayout({
     <>
       <DynamicFavicon />
       <GoogleAnalytics />
-      <WebsiteSocketProvider schema_name={siteUser}>
+      <WebsiteSocketProvider schema_name={siteUser} enabled={false}>
         <DynamicFontProvider>
           <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
           <WhatsApp />

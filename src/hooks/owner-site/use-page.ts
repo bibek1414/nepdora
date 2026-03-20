@@ -25,7 +25,7 @@ export const usePages = (status: "preview" | "published" = "preview") => {
   return useQuery({
     queryKey: PAGES_QUERY_KEY(status),
     queryFn: () => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         return pageApi.getPages();
       }
       return new Promise<Page[]>((resolve, reject) => {
@@ -65,7 +65,7 @@ export const useCreatePage = () => {
 
   return useMutation({
     mutationFn: (pageData: CreatePageRequest) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         return pageApi.createPage(pageData);
       }
       return new Promise<Page>((resolve, reject) => {
@@ -110,7 +110,7 @@ export const useUpdatePage = () => {
       slug: string;
       data: UpdatePageRequest;
     }) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         return pageApi.updatePage(slug, data);
       }
       return new Promise<Page>((resolve, reject) => {
@@ -150,7 +150,7 @@ export const useDeletePage = () => {
 
   return useMutation({
     mutationFn: (slug: string) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         return pageApi.deletePage(slug);
       }
       return new Promise<any>((resolve, reject) => {
@@ -194,7 +194,7 @@ export const usePublishPage = () => {
 
   return useMutation({
     mutationFn: async (slug: string) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         // Fallback for publish if exists, but most likely builder only
         throw new Error("WebSocket context required for page publication");
       }

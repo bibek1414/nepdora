@@ -20,7 +20,7 @@ export const useThemeQuery = (enabled: boolean = true) => {
   return useQuery({
     queryKey: THEME_QUERY_KEY,
     queryFn: () => {
-      if (!socket || !enabled) {
+      if (!socket || !socket.enabled || !enabled) {
         return useThemeApi.getThemes();
       }
       return new Promise<GetThemeResponse>((resolve, reject) => {
@@ -55,7 +55,7 @@ export const useThemeQueryPublished = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ["themes", "published"],
     queryFn: () => {
-      if (!socket || !enabled) {
+      if (!socket || !socket.enabled || !enabled) {
         return useThemeApi.getThemesPublished();
       }
       return new Promise<GetThemeResponse>((resolve, reject) => {
@@ -90,7 +90,7 @@ export const useCreateThemeMutation = () => {
 
   return useMutation({
     mutationFn: async (data: CreateThemeRequest) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         return useThemeApi.createTheme(data);
       }
       return new Promise<any>((resolve, reject) => {
@@ -149,7 +149,7 @@ export const useUpdateThemeMutation = () => {
 
   return useMutation({
     mutationFn: async (data: UpdateThemeRequest) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         return useThemeApi.updateTheme(data);
       }
       return new Promise<any>((resolve, reject) => {
@@ -206,7 +206,7 @@ export const usePublishThemeMutation = () => {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         throw new Error("WebSocket context required for theme publication");
       }
       return new Promise<any>((resolve, reject) => {
@@ -245,7 +245,7 @@ export const useDeleteThemeMutation = () => {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      if (!socket) {
+      if (!socket || !socket.enabled) {
         throw new Error("WebSocket context required for theme deletion");
       }
       return new Promise<any>((resolve, reject) => {

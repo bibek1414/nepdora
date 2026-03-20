@@ -15,7 +15,7 @@ export const bookingAPI = {
 
     const { page = 1, page_size = 10, search } = filters;
 
-    // User provided URL: https://batoma.chevy-biggest-assisted-platform.trycloudflare.com//api/collections/booking/data/
+    // User provided URL: https://batoma.nepdora.baliyoventures.com//api/collections/booking/data/
     // Assuming BASE_API_URL handles the domain part or we should strictly use what's provided if it is tenant specific.
     // However, for generic implementation I should use BASE_API_URL.
     // I will append /api/collections/booking/data/

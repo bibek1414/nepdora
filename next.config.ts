@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.chevy-biggest-assisted-platform.trycloudflare.com",
+        hostname: "*.nepdora.baliyoventures.com",
       },
       {
         protocol: "https",
@@ -27,11 +27,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "chevy-biggest-assisted-platform.trycloudflare.com",
+        hostname: "nepdora.baliyoventures.com",
       },
       {
         protocol: "http",
-        hostname: "chevy-biggest-assisted-platform.trycloudflare.com",
+        hostname: "nepdora.baliyoventures.com",
       },
       {
         protocol: "https",
@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "*.chevy-biggest-assisted-platform.trycloudflare.com",
+        hostname: "*.nepdora.baliyoventures.com",
       },
       {
         protocol: "https",

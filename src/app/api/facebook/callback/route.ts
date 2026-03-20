@@ -401,8 +401,8 @@ async function saveBusinessIntegration({
   const API_BASE_URL = getApiBaseUrl();
   const backendUrl = user.sub_domain
     ? API_BASE_URL.replace(
-        "chevy-biggest-assisted-platform.trycloudflare.com",
-        `${user.sub_domain}.chevy-biggest-assisted-platform.trycloudflare.com`
+        "nepdora.baliyoventures.com",
+        `${user.sub_domain}.nepdora.baliyoventures.com`
       )
     : API_BASE_URL;
 
@@ -503,8 +503,8 @@ async function saveUserIntegration({
   const API_BASE_URL = getApiBaseUrl();
   const backendUrl = user.sub_domain
     ? API_BASE_URL.replace(
-        "chevy-biggest-assisted-platform.trycloudflare.com",
-        `${user.sub_domain}.chevy-biggest-assisted-platform.trycloudflare.com`
+        "nepdora.baliyoventures.com",
+        `${user.sub_domain}.nepdora.baliyoventures.com`
       )
     : API_BASE_URL;
 
