@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.unknown-kidney-technical-soft.trycloudflare.com",
+        hostname: "*.sales-crm-8s09.onrender.com/",
       },
       {
         protocol: "https",
@@ -27,11 +27,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "unknown-kidney-technical-soft.trycloudflare.com",
+        hostname: "sales-crm-8s09.onrender.com/",
       },
       {
         protocol: "http",
-        hostname: "unknown-kidney-technical-soft.trycloudflare.com",
+        hostname: "sales-crm-8s09.onrender.com/",
       },
       {
         protocol: "https",
@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "*.unknown-kidney-technical-soft.trycloudflare.com",
+        hostname: "*.sales-crm-8s09.onrender.com/",
       },
       {
         protocol: "https",
