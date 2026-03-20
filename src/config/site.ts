@@ -72,7 +72,7 @@ export const getTenantDomain = (): string | null => {
   }
 
   // ✅ Production
-  return `${subdomain}.${siteConfig.baseDomain}`;
+  return window.location.host;
 };
 
 /**
