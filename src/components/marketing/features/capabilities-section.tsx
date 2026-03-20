@@ -1,4 +1,3 @@
-import React from "react";
 import { CapabilitiesAnimations } from "./capabilities-animations";
 
 const Features: React.FC = () => {

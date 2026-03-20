@@ -1,4 +1,3 @@
-import React from "react";
 import WebsiteFooter from "@/components/marketing/layout/website-footer";
 
 type WebsiteLayoutProps = {

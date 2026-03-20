@@ -1,4 +1,3 @@
-import React from "react";
 import { X, Check, Calculator } from "lucide-react";
 import { CountUpAnimation, FadeInAnimation } from "./comparison-animations";
 
