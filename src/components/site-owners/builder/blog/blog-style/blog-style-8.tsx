@@ -4,8 +4,10 @@ import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
 import { BlogCard8 } from "../blog-card/blog-card8";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Rss } from "lucide-react";
+import { AlertCircle, Rss, ArrowUpRight } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
+import { EditableLink } from "@/components/ui/editable-link";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,11 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
   onBlogClick,
 }) => {
   const { title = "Strategic Insights That Drive Business Success" } = data || {};
+  
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme;
+  const primaryColor = theme?.colors?.primary || "#4f46e5";
+
   const pageSize = 4;
   const {
     data: blogsData,
@@ -71,11 +78,31 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
             placeholder="Enter title..."
           />
 
-          <Link href={getBlogsUrl()}>
-            <Button className="w-full justify-center md:w-auto">
+          <div className=" flex items-center gap-5!">
+            <EditableLink
+              text="View More Blogs"
+              href={getBlogsUrl()}
+              isEditable={isEditable}
+              onChange={() => {}} 
+              style={
+                {
+                  backgroundColor:primaryColor,
+                  color:              "#FFFFFF"  }
+              }
+              className="px-2! w-48! mr-2! font-bold text-gray-900"
+            >
               View More Blogs
-            </Button>
-          </Link>
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-105"
+              style={{
+                backgroundColor: "white",
+                color: "black",
+              }}
+            >
+              <ArrowUpRight size={16} strokeWidth={2.5} />
+            </div>
+            </EditableLink>
+          </div>
         </motion.div>
 
         {isLoading ? (

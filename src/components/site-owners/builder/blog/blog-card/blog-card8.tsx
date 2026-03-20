@@ -6,17 +6,21 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { motion } from "framer-motion";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { EditableLink } from "@/components/ui/editable-link";
+import { ArrowUpRight } from "lucide-react";
 
 interface BlogCard8Props {
   blog: BlogPost;
   siteUser?: string;
   onClick?: () => void;
+  isEditable?: boolean;
 }
 
 export const BlogCard8: React.FC<BlogCard8Props> = ({
   blog,
   siteUser,
   onClick,
+  isEditable = false,
 }) => {
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
@@ -44,72 +48,84 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
     blog.thumbnail_image ||
     "/fallback/image-not-found.png";
 
-  const ContentWrapper = siteUser
-    ? ({
-        children,
-        className,
-      }: {
-        children: React.ReactNode;
-        className?: string;
-      }) => (
+  const ImageWrapper = siteUser
+    ? ({ children, className }: { children: React.ReactNode; className?: string }) => (
         <Link href={getDetailsUrl()} className={className}>
           {children}
         </Link>
       )
-    : ({
-        children,
-        className,
-      }: {
-        children: React.ReactNode;
-        className?: string;
-      }) => (
+    : ({ children, className }: { children: React.ReactNode; className?: string }) => (
         <a href={getDetailsUrl()} onClick={handleClick} className={className}>
           {children}
         </a>
       );
 
   return (
-    <ContentWrapper className="group block h-full cursor-pointer">
-      <motion.div
-        className="relative mb-4 h-44 overflow-hidden rounded-2xl sm:mb-6 sm:h-48"
-        whileHover={{ scale: 1.02 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      >
-        <Image
-          src={blogImage}
-          alt={blog.thumbnail_image_alt_description || blog.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-        />
-      </motion.div>
-      <h3 className="mb-3 line-clamp-2 text-lg font-bold leading-snug text-gray-900 transition-colors">
-        {blog.title}
-      </h3>
-      <p className="mb-4 line-clamp-3 text-sm text-gray-500">
+    <div className="flex h-full flex-col">
+      <ImageWrapper className="block">
+        <motion.div
+          className="relative mb-4 h-44 overflow-hidden rounded-2xl sm:mb-6 sm:h-48"
+          whileHover="hover"
+          initial="rest"
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        >
+          <motion.div 
+            className="h-full w-full"
+            variants={{
+              rest: { scale: 1 },
+              hover: { scale: 1.02 }
+            }}
+          >
+            <Image
+              src={blogImage}
+              alt={blog.thumbnail_image_alt_description || blog.title}
+              fill
+              className="object-cover transition-transform duration-700 hover:scale-110"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            />
+          </motion.div>
+        </motion.div>
+      </ImageWrapper>
+      
+      <ImageWrapper className="block">
+        <h3 className="mb-3 line-clamp-2 text-lg font-bold leading-snug text-gray-900 transition-colors hover:text-primary">
+          {blog.title}
+        </h3>
+      </ImageWrapper>
+      
+      <p className="mb-4 flex-1 line-clamp-3 text-sm text-gray-500">
         {blog.meta_description || "Read the full article for more insights."}
       </p>
-      <div className="mt-auto flex items-center gap-2 pt-2 text-sm font-bold text-gray-900 transition-all group-hover:gap-4">
-        Read More{" "}
-        <div
-          className="rounded-full p-1 text-white"
-          style={{ backgroundColor: primaryColor }}
+      
+      <div className="mt-auto pt-2">
+        <motion.div 
+          className="inline-flex items-center"
+          whileHover="hover"
+          initial="rest"
         >
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <motion.div
+            variants={{
+              rest: { x: 0 },
+              hover: { x: 8 } // gap increase
+            }}
+            className="flex items-center gap-2"
           >
-            <line x1="7" y1="17" x2="17" y2="7"></line>
-            <polyline points="7 7 17 7 17 17"></polyline>
-          </svg>
-        </div>
+            <EditableLink
+              text="Read More"
+              href={getDetailsUrl()}
+              isEditable={isEditable}
+              onChange={() => {}} // Since "Read More" text is usually static across generated cards, changes won't persist here without passing onUpdate for each item's specific link details. Assuming standard EditableLink usage.
+              className="p-0 font-bold text-gray-900 h-auto"
+            />
+            <div
+              className="rounded-full p-1 text-white transition-colors"
+              style={{ backgroundColor: primaryColor }}
+            >
+              <ArrowUpRight size={14} strokeWidth={2.5} />
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </ContentWrapper>
+    </div>
   );
 };
