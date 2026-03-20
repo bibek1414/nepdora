@@ -143,13 +143,12 @@ async function fetchTenantDomainsBySubdomain(
   try {
     const tenantDomain = siteConfig.isDev
       ? `${subdomain}.localhost`
-      : `${subdomain}.${siteConfig.baseDomain}`;
+      : window.location.host;
 
     const apiUrl = `${siteConfig.apiBaseUrl}/api/custom-domain/`;
     console.log(
       `[API] Fetching domains for subdomain "${subdomain}" via ${apiUrl}`
     );
-
     const res = await apiFetch(apiUrl, {
       headers: {
         "Content-Type": "application/json",
