@@ -1,18 +1,14 @@
 "use client";
 import React from "react";
-import {
-  useTeamMembers,
-  useUpdateTeamMember,
-} from "@/hooks/owner-site/admin/use-team-member";
+import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Users } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { TeamComponentData } from "@/types/owner-site/components/team";
-import { TEAM } from "@/types/owner-site/admin/team-member";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { TeamCard9 } from "../team-member-card/team-card-9";
 
 interface TeamStyleProps {
   data: TeamComponentData["data"];
@@ -36,15 +32,6 @@ export const TeamStyle9: React.FC<TeamStyleProps> = ({
   const { title = "Meet Our Team", subtitle, tag = "[Our Team]" } = localData;
 
   const { data: members = [], isLoading, error } = useTeamMembers();
-  const updateTeamMember = useUpdateTeamMember();
-
-  const handleMemberUpdate = (memberId: number, memberData: Partial<TEAM>) => {
-    const formData = new FormData();
-    if (memberData.name) formData.append("name", memberData.name);
-    if (memberData.role) formData.append("role", memberData.role);
-    updateTeamMember.mutate({ id: memberId, memberData: formData });
-  };
-
 
   return (
     <section className="bg-white py-16 sm:py-20">
@@ -116,62 +103,16 @@ export const TeamStyle9: React.FC<TeamStyleProps> = ({
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
             {members.map((member, idx) => (
-              <motion.div
+              <TeamCard9
                 key={member.id ?? idx}
-                className="group relative aspect-4/5 cursor-pointer overflow-hidden rounded-2xl"
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                member={member}
+                isEditable={isEditable}
                 onClick={() => {
                   if (!isEditable && member.id) {
                     onMemberClick?.(member.id);
                   }
                 }}
-              >
-                {member.photo ? (
-                  <Image
-                    src={member.photo}
-                    alt={member.name}
-                    width={400}
-                    height={500}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-gray-200">
-                    <Users className="h-16 w-16 text-gray-400" />
-                  </div>
-                )}
-
-                {/* Gradient overlay on hover */}
-                <div className="absolute inset-0 bg-linear-to-t from-gray-900/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                {/* Name/Role card on hover */}
-                <div className="absolute right-6 bottom-6 left-6 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  <div className="flex items-center justify-between rounded-xl bg-gray-900/90 p-4 text-white backdrop-blur-sm">
-                    <div>
-                      <EditableText
-                        value={member.name}
-                        onChange={newName =>
-                          handleMemberUpdate(member.id, { name: newName })
-                        }
-                        as="h4"
-                        className="text-lg leading-tight font-bold text-white"
-                        isEditable={isEditable}
-                        placeholder="Member name..."
-                      />
-                      <EditableText
-                        value={member.role}
-                        onChange={newRole =>
-                          handleMemberUpdate(member.id, { role: newRole })
-                        }
-                        as="p"
-                        className="mt-0.5 text-xs text-gray-300"
-                        isEditable={isEditable}
-                        placeholder="Member role..."
-                      />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              />
             ))}
           </motion.div>
         )}
