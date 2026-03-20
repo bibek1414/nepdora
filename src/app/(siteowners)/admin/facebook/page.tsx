@@ -2,8 +2,9 @@ import FacebookPagesManagement from "@/components/site-owners/admin/facebook/fac
 import { FacebookToastHandler } from "@/components/site-owners/admin/facebook/facebook-toast-handler";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import { getFacebookIntegrations } from "@/lib/actions/facebook-actions";
-import type { Metadata } from "next";
+import { FacebookProvider } from "@/contexts/FacebookContext";
 import { Suspense } from "react";
+import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateAdminPageMetadata({
@@ -18,12 +19,14 @@ export default async function FacebookPage() {
   const pages = await getFacebookIntegrations();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Toast handler must be wrapped in Suspense since it uses useSearchParams */}
-      <Suspense fallback={null}>
-        <FacebookToastHandler />
-      </Suspense>
-      <FacebookPagesManagement initialPages={pages || []} />
-    </div>
+    <FacebookProvider>
+      <div className="container mx-auto px-4 py-8">
+        {/* Toast handler must be wrapped in Suspense since it uses useSearchParams */}
+        <Suspense fallback={null}>
+          <FacebookToastHandler />
+        </Suspense>
+        <FacebookPagesManagement initialPages={pages || []} />
+      </div>
+    </FacebookProvider>
   );
 }
