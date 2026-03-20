@@ -6,24 +6,21 @@ import { handleApiError } from "@/utils/api-error";
 import { getServerUser } from "@/hooks/use-jwt-server";
 import type { FacebookIntegration } from "@/types/owner-site/admin/facebook";
 import { getServerApiBaseUrl } from "@/config/server-site";
-
+import { getTenantDomain } from "@/config/site";
 // Create headers with tenant subdomain
 async function createServerHeaders(): Promise<HeadersInit> {
   const cookieStore = await cookies();
   const authToken = cookieStore.get("authToken")?.value;
   const user = await getServerUser();
+  const tenantDomain = getTenantDomain() ?? "";
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    "X-Tenant-Domain": tenantDomain,
   };
 
   if (authToken) {
     headers["Authorization"] = `Bearer ${authToken}`;
-  }
-
-  // CRITICAL: Add tenant subdomain for multi-tenant backend
-  if (user?.sub_domain) {
-    headers["X-Tenant"] = user.sub_domain;
   }
 
   return headers;

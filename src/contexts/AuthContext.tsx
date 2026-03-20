@@ -473,12 +473,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             path = "/";
           }
 
-          const protocol = siteConfig.isDev ? "http" : siteConfig.protocol;
-          const host = siteConfig.isDev
-            ? `${sub}.localhost:${siteConfig.frontendDevPort}`
-            : `${sub}.${siteConfig.baseDomain}`;
-
-          let url = `${protocol}://${host}${path}`;
+          let url = buildTenantFrontendUrl(sub, {
+            path,
+            isDev: siteConfig.isDev,
+            baseDomain: siteConfig.baseDomain,
+            port: siteConfig.frontendDevPort,
+          });
           const separator = url.includes("?") ? "&" : "?";
           url = `${url}${separator}auth_token=${encodeURIComponent(
             tokens.access_token
