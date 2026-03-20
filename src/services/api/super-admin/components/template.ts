@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -41,7 +42,7 @@ export const useTemplateApi = {
       params.append("search", search);
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/template-tenants/?${params.toString()}`,
       {
         method: "GET",
@@ -87,7 +88,7 @@ export const useTemplateApi = {
     payload: CreateTemplateRequest
   ): Promise<CreateTemplateResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/template-tenants/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/template-tenants/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(payload),
@@ -134,7 +135,7 @@ export const useTemplateApi = {
       formData.append("description", payload.description || "");
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/template-tenants/${ownerId}/`,
       {
         method: "PATCH",
@@ -158,7 +159,7 @@ export const useTemplateApi = {
 
   deleteTemplate: async (ownerId: number): Promise<DeleteTemplateResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/template-tenants/${ownerId}/`,
       {
         method: "DELETE",

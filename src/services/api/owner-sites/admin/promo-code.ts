@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -30,7 +31,7 @@ export const usePromoCodeApi = {
       queryParams.append("search", search);
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/promocode/?${queryParams.toString()}`,
       {
         method: "GET",
@@ -64,7 +65,7 @@ export const usePromoCodeApi = {
 
   getPromoCode: async (id: number): Promise<PromoCode> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/promocode/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/promocode/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -78,7 +79,7 @@ export const usePromoCodeApi = {
   ): Promise<CreatePromoCodeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/promocode/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/promocode/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -98,7 +99,7 @@ export const usePromoCodeApi = {
   ): Promise<UpdatePromoCodeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/promocode/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/promocode/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -114,7 +115,7 @@ export const usePromoCodeApi = {
 
   deletePromoCode: async (id: number): Promise<DeletePromoCodeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/promocode/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/promocode/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

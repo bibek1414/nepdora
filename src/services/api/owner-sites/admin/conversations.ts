@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   WebhookNewMessageEvent,
   SendMessageRequest,
@@ -44,7 +45,7 @@ export const useConversationsApi = {
    * 📨 Get all conversations for a given pageId
    */
   async getConversations(pageId: string) {
-    const res = await fetch(`${API_BASE_URL}/api/conversations/${pageId}`);
+    const res = await apiFetch(`${API_BASE_URL}/api/conversations/${pageId}`);
     return handleResponse(res);
   },
 
@@ -52,7 +53,7 @@ export const useConversationsApi = {
    * 💬 Get messages for a specific conversation
    */
   async getConversationMessages(conversationId: string) {
-    const res = await fetch(
+    const res = await apiFetch(
       `${API_BASE_URL}/api/conversation-messages/${conversationId}`
     );
     return handleResponse(res);
@@ -67,7 +68,7 @@ export const useConversationsApi = {
    */
   async getPageAccessToken(pageId?: string): Promise<string> {
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/facebook` // ✅ use your backend API base
       );
 
@@ -154,7 +155,7 @@ export const useConversationsApi = {
 
       formData.append("filedata", fileUpload);
 
-      const response = await fetch(
+      const response = await apiFetch(
         `https://graph.facebook.com/v17.0/me/messages?access_token=${encodeURIComponent(
           pageAccessToken
         )}`,
@@ -199,7 +200,7 @@ export const useConversationsApi = {
       messagePayload.message.attachment = attachment;
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `https://graph.facebook.com/v17.0/me/messages?access_token=${encodeURIComponent(
         pageAccessToken
       )}`,

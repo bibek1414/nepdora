@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -15,7 +16,7 @@ export const pageApi = {
   // Get all pages
   getPages: async (): Promise<Page[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/?status=preview`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/pages/?status=preview`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -26,7 +27,7 @@ export const pageApi = {
 
   getPage: async (slug: string): Promise<GetPageResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/pages/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -37,7 +38,7 @@ export const pageApi = {
 
   createPage: async (data: CreatePageRequest): Promise<CreatePageResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/pages/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -52,7 +53,7 @@ export const pageApi = {
     data: UpdatePageRequest
   ): Promise<UpdatePageResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/pages/${slug}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -64,7 +65,7 @@ export const pageApi = {
 
   deletePage: async (slug: string): Promise<DeletePageResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/pages/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/pages/${slug}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

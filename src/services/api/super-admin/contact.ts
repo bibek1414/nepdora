@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { siteConfig } from "@/config/site";
 import {
   ContactMessage,
@@ -24,7 +25,7 @@ export const superAdminContactApi = {
       params.append("search", search);
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-contact/?${params}`,
       {
         method: "GET",
@@ -42,7 +43,7 @@ export const superAdminContactApi = {
   deleteMessage: async (
     id: number
   ): Promise<{ success: boolean; message: string }> => {
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-contact/${id}/`,
       {
         method: "DELETE",

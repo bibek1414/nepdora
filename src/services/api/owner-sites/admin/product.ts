@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
@@ -182,7 +183,7 @@ export const productApi = {
 
     console.log(`Fetching products with params: ${queryParams.toString()}`);
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/product/?${queryParams.toString()}`,
       {
         method: "GET",
@@ -214,7 +215,7 @@ export const productApi = {
 
   getProduct: async (slug: string): Promise<Product> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/product/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -236,7 +237,7 @@ export const productApi = {
 
     const formData = buildProductFormData(data);
 
-    const response = await fetch(`${API_BASE_URL}/api/product/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/product/`, {
       method: "POST",
 
       body: formData,
@@ -264,7 +265,7 @@ export const productApi = {
 
     const formData = buildProductFormData(data);
 
-    const response = await fetch(`${API_BASE_URL}/api/product/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -283,7 +284,7 @@ export const productApi = {
 
   deleteProduct: async (slug: string): Promise<DeleteProductResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/product/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

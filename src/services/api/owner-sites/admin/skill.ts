@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
@@ -7,7 +8,7 @@ import { Skill, CreateSkill } from "@/types/owner-site/admin/skill";
 export const skillApi = {
   getSkills: async (): Promise<Skill[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/skills/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/skills/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -19,7 +20,7 @@ export const skillApi = {
 
   createSkill: async (skillData: CreateSkill): Promise<Skill> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/skills/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/skills/`, {
       method: "POST",
       headers: {
         ...createHeaders(),
@@ -35,7 +36,7 @@ export const skillApi = {
 
   updateSkill: async (id: number, skillData: CreateSkill): Promise<Skill> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/skills/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/skills/${id}/`, {
       method: "PATCH",
       headers: {
         ...createHeaders(),
@@ -51,7 +52,7 @@ export const skillApi = {
 
   deleteSkill: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/skills/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/skills/${id}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
@@ -42,7 +43,7 @@ export const useCategoryApi = {
       queryParams.append("sort_order", sortOrder);
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/category/?${queryParams.toString()}`,
       {
         method: "GET",
@@ -76,7 +77,7 @@ export const useCategoryApi = {
 
   getCategory: async (slug: string): Promise<Category> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/category/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/category/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -103,7 +104,7 @@ export const useCategoryApi = {
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/category/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -138,7 +139,7 @@ export const useCategoryApi = {
       headers = createHeaders();
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/category/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/category/${slug}/`, {
       method: "PATCH",
       headers,
       body,
@@ -154,7 +155,7 @@ export const useCategoryApi = {
 
   deleteCategory: async (slug: string): Promise<DeleteCategoryResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/category/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/category/${slug}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

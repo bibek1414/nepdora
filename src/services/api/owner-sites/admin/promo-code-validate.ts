@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 // services/api/owner-sites/admin/promo-code.ts
 
 import { getApiBaseUrl } from "@/config/site";
@@ -15,7 +16,7 @@ export const promoCodeApi = {
     data: ValidatePromoCodeRequest
   ): Promise<ValidatePromoCodeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/promocode/validate/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/promocode/validate/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),

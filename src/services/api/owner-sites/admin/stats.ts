@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -6,7 +7,7 @@ import { AnalyticsStats, UnreadCounts } from "@/types/owner-site/admin/stats";
 export const statsApi = {
   getUnreadCounts: async (): Promise<UnreadCounts> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/stats/unread-counts/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/stats/unread-counts/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -27,7 +28,7 @@ export const statsApi = {
     if (params?.month) queryParams.append("month", params.month);
     if (params?.year) queryParams.append("year", params.year.toString());
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/stats/stats/?${queryParams.toString()}`,
       {
         method: "GET",

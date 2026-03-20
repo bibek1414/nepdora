@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
@@ -42,7 +43,7 @@ export const useSubCategoryApi = {
       queryParams.append("sort_order", sortOrder);
     }
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/sub-category/?${queryParams.toString()}`,
       {
         method: "GET",
@@ -76,7 +77,7 @@ export const useSubCategoryApi = {
 
   getSubCategory: async (slug: string): Promise<SubCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -104,7 +105,7 @@ export const useSubCategoryApi = {
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/sub-category/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/sub-category/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -139,7 +140,7 @@ export const useSubCategoryApi = {
       headers = createHeaders();
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
       method: "PATCH",
       headers,
       body,
@@ -157,7 +158,7 @@ export const useSubCategoryApi = {
     slug: string
   ): Promise<DeleteSubCategoryResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

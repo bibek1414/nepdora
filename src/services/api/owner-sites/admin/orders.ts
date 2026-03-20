@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders, createHeadersCustomer } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -23,7 +24,7 @@ export const orderApi = {
           "Content-Type": "application/json",
         };
 
-    const response = await fetch(`${API_BASE_URL}/api/order/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/order/`, {
       method: "POST",
       headers,
       body: JSON.stringify(orderData),
@@ -36,7 +37,7 @@ export const orderApi = {
 
     const headers = createHeaders();
 
-    const response = await fetch(`${API_BASE_URL}/api/admin-order/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/admin-order/`, {
       method: "POST",
       headers,
       body: JSON.stringify(orderData),
@@ -69,7 +70,7 @@ export const orderApi = {
     if (pos_order === true) queryParams.append("pos_order", "true");
     if (pos_order === false) queryParams.append("pos_order", "false");
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/admin-order/?${queryParams.toString()}`,
       {
         method: "GET",
@@ -83,7 +84,7 @@ export const orderApi = {
 
   getOrderById: async (id: number): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -96,7 +97,7 @@ export const orderApi = {
     statusData: UpdateOrderStatusRequest
   ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(statusData),
@@ -111,7 +112,7 @@ export const orderApi = {
     paymentData: UpdateOrderPaymentRequest
   ): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/order/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/order/${id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(paymentData),
@@ -122,7 +123,7 @@ export const orderApi = {
 
   getOrderByNumber: async (orderNumber: string): Promise<Order> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/get-order/${orderNumber}/`,
       {
         method: "GET",

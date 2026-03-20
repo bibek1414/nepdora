@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -12,7 +13,7 @@ import {
 export const useThemeApi = {
   getThemes: async (): Promise<GetThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/theme/?status=preview`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/theme/?status=preview`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -28,7 +29,7 @@ export const useThemeApi = {
   },
   getThemesPublished: async (): Promise<GetThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/theme/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/theme/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -47,7 +48,7 @@ export const useThemeApi = {
     data: CreateThemeRequest
   ): Promise<CreateThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/theme/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/theme/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data),
@@ -70,7 +71,7 @@ export const useThemeApi = {
       data: data.data,
     };
 
-    const response = await fetch(`${API_BASE_URL}/api/theme/${data.id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/theme/${data.id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify(requestBody),

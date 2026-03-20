@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.nepdora.baliyoventures.com",
+        hostname: "*.unknown-kidney-technical-soft.trycloudflare.com",
       },
       {
         protocol: "https",
@@ -27,11 +27,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "nepdora.baliyoventures.com",
+        hostname: "unknown-kidney-technical-soft.trycloudflare.com",
       },
       {
         protocol: "http",
-        hostname: "nepdora.baliyoventures.com",
+        hostname: "unknown-kidney-technical-soft.trycloudflare.com",
       },
       {
         protocol: "https",
@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "*.nepdora.baliyoventures.com",
+        hostname: "*.unknown-kidney-technical-soft.trycloudflare.com",
       },
       {
         protocol: "https",

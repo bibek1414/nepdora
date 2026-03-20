@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import {
   Collection,
@@ -18,7 +19,7 @@ export const collectionAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/collections/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +42,7 @@ export const collectionAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/collections/${slug}/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +67,7 @@ export const collectionAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/collections/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +104,7 @@ export const collectionAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/collections/${slug}/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +138,7 @@ export const collectionAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/collections/${slug}/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "DELETE",
       }).catch(fetchError => {
         console.error("Network error:", fetchError);
@@ -175,7 +176,7 @@ export const collectionAPI = {
         });
       }
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -203,7 +204,7 @@ export const collectionAPI = {
         `${BASE_API_URL}/api/collections/${slug}/data/${id}/`
       );
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -229,7 +230,7 @@ export const collectionAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/collections/${slug}/data/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -269,7 +270,7 @@ export const collectionAPI = {
         `${BASE_API_URL}/api/collections/${slug}/data/${id}/`
       );
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -305,7 +306,7 @@ export const collectionAPI = {
         `${BASE_API_URL}/api/collections/${slug}/data/${id}/`
       );
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "DELETE",
       }).catch(fetchError => {
         console.error("Network error:", fetchError);

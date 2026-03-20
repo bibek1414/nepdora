@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { siteConfig } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -27,7 +28,7 @@ const createFormData = (
 export const testimonialsApi = {
   // Get all testimonials
   getAll: async (): Promise<TestimonialResponse> => {
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-testimonial/`,
       {
         method: "GET",
@@ -41,7 +42,7 @@ export const testimonialsApi = {
 
   // Get testimonial by ID
   getById: async (id: number): Promise<Testimonial> => {
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-testimonial/${id}/`,
       {
         method: "GET",
@@ -57,7 +58,7 @@ export const testimonialsApi = {
   create: async (data: CreateTestimonialData): Promise<Testimonial> => {
     const formData = createFormData(data);
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-testimonial/`,
       {
         method: "POST",
@@ -76,7 +77,7 @@ export const testimonialsApi = {
   ): Promise<Testimonial> => {
     const formData = createFormData(data);
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-testimonial/${id}/`,
       {
         method: "PATCH",
@@ -92,7 +93,7 @@ export const testimonialsApi = {
   delete: async (
     id: number
   ): Promise<{ success: boolean; message: string }> => {
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-testimonial/${id}/`,
       {
         method: "DELETE",

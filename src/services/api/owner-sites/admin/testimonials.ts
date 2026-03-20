@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -29,7 +30,7 @@ export const testimonialsApi = {
   // Get all testimonials
   getAll: async (): Promise<TestimonialResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/testimonial/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/testimonial/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -41,7 +42,7 @@ export const testimonialsApi = {
   // Get testimonial by ID
   getById: async (id: number): Promise<Testimonial> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/testimonial/${id}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -54,7 +55,7 @@ export const testimonialsApi = {
   create: async (data: CreateTestimonialData): Promise<Testimonial> => {
     const formData = createFormData(data);
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/testimonial/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/testimonial/`, {
       method: "POST",
       body: formData,
     });
@@ -70,7 +71,7 @@ export const testimonialsApi = {
   ): Promise<Testimonial> => {
     const formData = createFormData(data);
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/testimonial/${id}/`, {
       method: "PATCH",
       body: formData,
     });
@@ -84,7 +85,7 @@ export const testimonialsApi = {
     id: number
   ): Promise<{ success: boolean; message: string }> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/testimonial/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/testimonial/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });

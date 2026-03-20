@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { LoginResponse, SignupResponse } from "@/types/auth/auth";
 import { ErrorResponse, ApiErrorResponse } from "@/types/auth/error.types";
 import { siteConfig } from "@/config/site";
@@ -83,7 +84,7 @@ interface PasswordResetResponse {
 }
 
 export async function signupUser(data: SignupData): Promise<SignupResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/signup/`, {
+  const response = await apiFetch(`${API_BASE_URL}/api/signup/`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -103,7 +104,7 @@ export async function signupUser(data: SignupData): Promise<SignupResponse> {
 export async function createTemplateAccount(
   data: CreateTemplateAccountData
 ): Promise<TemplateAccountResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/signup/`, {
+  const response = await apiFetch(`${API_BASE_URL}/api/signup/`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -128,7 +129,7 @@ export async function createTemplateAccount(
 }
 
 export async function loginUser(data: LoginData): Promise<LoginResponse> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_BASE_URL}/_allauth/browser/v1/auth/login`,
     {
       method: "POST",
@@ -151,7 +152,7 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
 export async function resendVerificationEmail(
   data: ResendVerificationData
 ): Promise<ResendVerificationResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/resend-verification/`, {
+  const response = await apiFetch(`${API_BASE_URL}/api/resend-verification/`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -175,7 +176,7 @@ export async function resendVerificationEmail(
 export async function requestPasswordReset(
   data: PasswordResetRequestData
 ): Promise<PasswordResetRequestResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/reset-password-request/`, {
+  const response = await apiFetch(`${API_BASE_URL}/api/reset-password-request/`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -199,7 +200,7 @@ export async function requestPasswordReset(
 export async function resetPassword(
   data: PasswordResetData
 ): Promise<PasswordResetResponse> {
-  const response = await fetch(`${API_BASE_URL}/api/reset-password-confirm/`, {
+  const response = await apiFetch(`${API_BASE_URL}/api/reset-password-confirm/`, {
     method: "POST",
     credentials: "include",
     headers: {

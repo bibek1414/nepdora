@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -17,7 +18,7 @@ export const superAdminNewsletterApi = {
     if (search) {
       params.append("search", search);
     }
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-newsletter/?${params}`,
       {
         method: "GET",

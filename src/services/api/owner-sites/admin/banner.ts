@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import {
   CreateBannerWithImagesRequest,
@@ -52,7 +53,7 @@ export const bannerApi = {
   getBanners: async (): Promise<Banner[]> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/banners/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/banners/`);
     if (!response.ok) {
       throw new Error("Failed to fetch banners");
     }
@@ -63,7 +64,7 @@ export const bannerApi = {
   getBanner: async (id: number): Promise<Banner> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/banners/${id}/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/banners/${id}/`);
     if (!response.ok) {
       throw new Error("Failed to fetch banner");
     }
@@ -78,7 +79,7 @@ export const bannerApi = {
 
     const formData = prepareFormData(data, false);
 
-    const response = await fetch(`${API_BASE_URL}/api/banners/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/banners/`, {
       method: "POST",
       body: formData,
       // Don't set Content-Type header - let browser set it with boundary for multipart/form-data
@@ -107,7 +108,7 @@ export const bannerApi = {
 
     const formData = prepareFormData(data, true);
 
-    const response = await fetch(`${API_BASE_URL}/api/banners/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/banners/${id}/`, {
       method: "PATCH",
       body: formData,
       // Don't set Content-Type header - let browser set it with boundary for multipart/form-data
@@ -131,7 +132,7 @@ export const bannerApi = {
   deleteBanner: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/banners/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/banners/${id}/`, {
       method: "DELETE",
     });
 

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   Booking,
   PaginatedBookings,
@@ -14,7 +15,7 @@ export const bookingAPI = {
 
     const { page = 1, page_size = 10, search } = filters;
 
-    // User provided URL: https://batoma.nepdora.baliyoventures.com/api/collections/booking/data/
+    // User provided URL: https://batoma.unknown-kidney-technical-soft.trycloudflare.com/api/collections/booking/data/
     // Assuming BASE_API_URL handles the domain part or we should strictly use what's provided if it is tenant specific.
     // However, for generic implementation I should use BASE_API_URL.
     // I will append /api/collections/booking/data/
@@ -25,7 +26,7 @@ export const bookingAPI = {
     if (search && search.trim()) {
       url.searchParams.append("search", search.trim());
     }
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +42,7 @@ export const bookingAPI = {
 
   getBookingById: async (id: number): Promise<Booking> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${BASE_API_URL}/api/collections/booking/data/${id}/`,
       {
         // Assuming ID is part of path or query? Usually path.
@@ -63,7 +64,7 @@ export const bookingAPI = {
     data: Partial<BookingData>
   ): Promise<Booking> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${BASE_API_URL}/api/collections/booking/data/${id}/`,
       {
         method: "PATCH",

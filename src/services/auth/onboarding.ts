@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 
 export const onboardingAPI = {
@@ -7,7 +8,7 @@ export const onboardingAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/complete-onboarding/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,

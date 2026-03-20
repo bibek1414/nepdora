@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -5,7 +6,7 @@ import { handleApiError } from "@/utils/api-error";
 export const marketingNewsletterApi = {
   subscribe: async (email: string) => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/support/nepdora-newsletter/`,
       {
         method: "POST",

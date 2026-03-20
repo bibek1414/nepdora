@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -14,7 +15,7 @@ export const useFooterApi = {
   // Get footer with preview status
   getFooter: async (): Promise<GetFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/footer/?status=preview`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/footer/?status=preview`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -31,7 +32,7 @@ export const useFooterApi = {
   // Get published footer
   getFooterPublished: async (): Promise<GetFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/footer/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/footer/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -50,7 +51,7 @@ export const useFooterApi = {
     data: CreateFooterRequest
   ): Promise<CreateFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/footer/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/footer/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify({
@@ -83,7 +84,7 @@ export const useFooterApi = {
       ...(data.content && { content: data.content }),
     });
 
-    const response = await fetch(`${API_BASE_URL}/api/footer/${data.id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/footer/${data.id}/`, {
       method: "PATCH",
       headers: createHeaders(),
       body: JSON.stringify({
@@ -104,7 +105,7 @@ export const useFooterApi = {
   // Delete footer - ID in URL
   deleteFooter: async (id: string): Promise<DeleteFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/footer/${id}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/footer/${id}/`, {
       method: "DELETE",
       headers: createHeaders(),
     });
@@ -121,7 +122,7 @@ export const useFooterApi = {
     data: CreateFooterRequest
   ): Promise<CreateFooterResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/footer/replace/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/footer/replace/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify({

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 // services/api/owner-sites/admin/team-member.ts
 
 import { getApiBaseUrl } from "@/config/site";
@@ -10,7 +11,7 @@ export const teamAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/team-member/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +34,7 @@ export const teamAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/team-member/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "POST",
         body: memberData,
         // Don't set Content-Type header - let browser set it with boundary for FormData
@@ -67,7 +68,7 @@ export const teamAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/team-member/${id}/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "PUT",
         body: memberData,
         // Don't set Content-Type header - let browser set it with boundary for FormData
@@ -101,7 +102,7 @@ export const teamAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/team-member/${id}/`);
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         method: "DELETE",
       }).catch(fetchError => {
         // Handle network errors

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   Template,
   PaginatedTemplates,
@@ -23,7 +24,7 @@ export const templateAPI = {
       url.searchParams.append("search", search.trim());
     }
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +43,7 @@ export const templateAPI = {
   ): Promise<ImportTemplateResponse> => {
     const BASE_API_URL = getApiBaseUrl();
 
-    const response = await fetch(`${BASE_API_URL}/api/import-template/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/import-template/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

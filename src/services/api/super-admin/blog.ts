@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
@@ -63,7 +64,7 @@ export const superAdminBlogApi = {
     }
 
     const url = `${API_BASE_URL}/api/nepdora-blogs/${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -74,7 +75,7 @@ export const superAdminBlogApi = {
 
   getRecentBlogs: async (): Promise<BlogPost[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-recent-blogs/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-recent-blogs/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -86,7 +87,7 @@ export const superAdminBlogApi = {
 
   getBlogBySlug: async (slug: string): Promise<BlogPost> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -97,7 +98,7 @@ export const superAdminBlogApi = {
 
   getTags: async (): Promise<BlogTag[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-tags/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-tags/`, {
       method: "GET",
       headers: createHeaders(),
     });
@@ -110,7 +111,7 @@ export const superAdminBlogApi = {
 
   getCategories: async (): Promise<BlogCategory[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/nepdora-blog-categories/`,
       {
         method: "GET",
@@ -128,7 +129,7 @@ export const superAdminBlogApi = {
     name: string;
   }): Promise<BlogCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/nepdora-blog-categories/`,
       {
         method: "POST",
@@ -147,7 +148,7 @@ export const superAdminBlogApi = {
 
   createTag: async (tagData: CreateBlogTag): Promise<BlogTag> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-tags/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-tags/`, {
       method: "POST",
       headers: {
         ...createHeaders(),
@@ -165,7 +166,7 @@ export const superAdminBlogApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildBlogFormData(blogData);
 
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-blogs/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -185,7 +186,7 @@ export const superAdminBlogApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildBlogFormData(blogData);
 
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -200,7 +201,7 @@ export const superAdminBlogApi = {
 
   delete: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -215,7 +216,7 @@ export const superAdminBlogApi = {
     categoryData: { name: string }
   ): Promise<BlogCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/nepdora-blog-categories/${slug}/`,
       {
         method: "PATCH",
@@ -234,7 +235,7 @@ export const superAdminBlogApi = {
 
   deleteCategory: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/nepdora-blog-categories/${slug}/`,
       {
         method: "DELETE",
@@ -249,7 +250,7 @@ export const superAdminBlogApi = {
 
   updateTag: async (slug: string, tagData: CreateBlogTag): Promise<BlogTag> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
       method: "PATCH",
       headers: {
         ...createHeaders(),
@@ -265,7 +266,7 @@ export const superAdminBlogApi = {
 
   deleteTag: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,

@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import {
   OurClient,
   OurClientFormData,
@@ -18,7 +19,7 @@ export const ourClientAPI = {
     if (search && search.trim()) {
       url.searchParams.append("search", search.trim());
     }
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +47,7 @@ export const ourClientAPI = {
       formData.append("logo", clientData.logo);
     }
 
-    const response = await fetch(`${BASE_API_URL}/api/our-client/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/our-client/`, {
       method: "POST",
       body: formData,
     });
@@ -70,7 +71,7 @@ export const ourClientAPI = {
       formData.append("logo", clientData.logo);
     }
 
-    const response = await fetch(`${BASE_API_URL}/api/our-client/${id}/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/our-client/${id}/`, {
       method: "PATCH",
       body: formData,
     });
@@ -84,7 +85,7 @@ export const ourClientAPI = {
 
   deleteOurClient: async (id: number): Promise<void> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await fetch(`${BASE_API_URL}/api/our-client/${id}/`, {
+    const response = await apiFetch(`${BASE_API_URL}/api/our-client/${id}/`, {
       method: "DELETE",
     });
 

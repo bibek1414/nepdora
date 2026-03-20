@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { createHeaders } from "@/utils/headers";
 import { getAuthToken } from "@/utils/auth";
 import { handleApiError } from "@/utils/api-error";
@@ -14,7 +15,7 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 export const subscriptionApi = {
   // Get current subscription status
   getStatus: async (): Promise<SubscriptionStatus> => {
-    const response = await fetch(`${API_BASE_URL}/api/subscription-status/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/subscription-status/`, {
       method: "GET",
       headers: {
         ...createHeaders(),
@@ -30,7 +31,7 @@ export const subscriptionApi = {
   // Get available pricing plans - using your existing API
   getPlans: async (): Promise<PlansResponse> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/plans/`, {
+      const response = await apiFetch(`${API_BASE_URL}/api/plans/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +52,7 @@ export const subscriptionApi = {
 
   // Upgrade/Subscribe to a plan
   upgrade: async (data: UpgradeRequest): Promise<UpgradeResponse> => {
-    const response = await fetch(`${API_BASE_URL}/api/upgrade/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/upgrade/`, {
       method: "POST",
       headers: {
         ...createHeaders(),
@@ -67,7 +68,7 @@ export const subscriptionApi = {
 
   // Cancel subscription
   cancel: async (): Promise<{ success: boolean; message: string }> => {
-    const response = await fetch(`${API_BASE_URL}/api/subscription/cancel/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/subscription/cancel/`, {
       method: "POST",
       headers: {
         ...createHeaders(),

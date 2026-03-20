@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -27,7 +28,7 @@ export const componentsApi = {
     pageSlug: string
   ): Promise<ComponentResponse<T>[]> => {
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/?status=preview`,
         {
           method: "GET",
@@ -57,7 +58,7 @@ export const componentsApi = {
     pageSlug: string
   ): Promise<ComponentResponse<T>[]> => {
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
         {
           method: "GET",
@@ -135,7 +136,7 @@ export const componentsApi = {
         order,
       };
 
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/`,
         {
           method: "POST",
@@ -175,7 +176,7 @@ export const componentsApi = {
         ...(payload.order !== undefined && { order: payload.order }),
       };
 
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
         {
           method: "PATCH",
@@ -209,7 +210,7 @@ export const componentsApi = {
     componentType: keyof ComponentTypeMap
   ): Promise<void> => {
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/${componentId}/`,
         {
           method: "DELETE",
@@ -238,7 +239,7 @@ export const componentsApi = {
           payload.component_id || `${payload.component_type}-${Date.now()}`,
       };
 
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/pages/${pageSlug}/components/replace/${componentId}/`,
         {
           method: "POST",
@@ -304,7 +305,7 @@ export const componentOrdersApi = {
       const executing: Promise<void>[] = [];
 
       for (const update of orderUpdates) {
-        const p = fetch(
+        const p = apiFetch(
           `${API_BASE_URL}/api/pages/${pageSlug}/components/${update.componentId}/`,
           {
             method: "PATCH",

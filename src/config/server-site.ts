@@ -6,9 +6,10 @@ export const serverSiteConfig = {
   description: "Nepdora Preview System",
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://nepdora.baliyoventures.com",
+    "https://sales-crm-8s09.onrender.com",
   baseDomain:
-    process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.baliyoventures.com",
+    process.env.NEXT_PUBLIC_BASE_DOMAIN ||
+    "unknown-kidney-technical-soft.trycloudflare.com",
   protocol: process.env.NEXT_PUBLIC_PROTOCOL || "https",
   isDev: process.env.NODE_ENV !== "production",
   frontendDevPort: Number(process.env.NEXT_PUBLIC_FRONTEND_PORT || 3000),
@@ -22,28 +23,10 @@ export const buildServerPreviewApi = (subdomain: string) =>
 
 /**
  * Get API base URL for server components
- * Uses JWT to determine user's subdomain
+ * Returns the static base backend URL
  */
 export const getServerApiBaseUrl = async (): Promise<string> => {
-  try {
-    const user = await getServerUser();
-
-    // If user has a domain, use it directly
-    if (user?.domain) {
-      return `${serverSiteConfig.protocol}://${user.domain}`;
-    }
-
-    // If user has a subdomain, build the URL
-    if (user?.sub_domain) {
-      return buildServerPreviewApi(user.sub_domain);
-    }
-
-    // Fallback to base URL
-    return serverSiteConfig.apiBaseUrl;
-  } catch (error) {
-    console.error("Error getting server API URL:", error);
-    return serverSiteConfig.apiBaseUrl;
-  }
+  return serverSiteConfig.apiBaseUrl;
 };
 
 /**
@@ -75,9 +58,9 @@ export const createServerHeaders = async (): Promise<HeadersInit> => {
     headers["Authorization"] = `Bearer ${authToken}`;
   }
 
-  // Add tenant subdomain for multi-tenant backend
+  // Add tenant domain for multi-tenant backend
   if (user?.sub_domain) {
-    headers["X-Tenant"] = user.sub_domain;
+    headers["X-Tenant-Domain"] = `${user.sub_domain}.nepdora.com`;
   }
 
   return headers;

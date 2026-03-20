@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeadersCustomer } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -25,7 +26,7 @@ export const reviewsApi = {
 
     const url = `${API_BASE_URL}/api/product-review/?${params.toString()}`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeadersCustomer(),
     });
@@ -53,7 +54,7 @@ export const reviewsApi = {
 
     const url = `${API_BASE_URL}/api/product-review/?${params.toString()}`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeadersCustomer(),
     });
@@ -65,7 +66,7 @@ export const reviewsApi = {
   // Get a single review by ID
   getReview: async (reviewId: number): Promise<Review> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/product-review/${reviewId}/`,
       {
         method: "GET",
@@ -91,7 +92,7 @@ export const reviewsApi = {
       );
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/product-review/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/product-review/`, {
       method: "POST",
       headers: createHeadersCustomer(),
       body: JSON.stringify(reviewData),
@@ -108,7 +109,7 @@ export const reviewsApi = {
   ): Promise<Review> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/product-review/${reviewId}/`,
       {
         method: "PATCH",
@@ -125,7 +126,7 @@ export const reviewsApi = {
   deleteReview: async (reviewId: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/product-review/${reviewId}/`,
       {
         method: "DELETE",

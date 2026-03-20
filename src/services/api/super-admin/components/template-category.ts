@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -19,7 +20,7 @@ export const useTemplateCategoryApi = {
       url.searchParams.append("search", search);
     }
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: createHeaders(),
       cache: "no-store",
@@ -32,7 +33,7 @@ export const useTemplateCategoryApi = {
   // Get single category by slug
   getCategory: async (slug: string): Promise<TemplateCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/template-categories/${slug}/`,
       {
         method: "GET",
@@ -49,7 +50,7 @@ export const useTemplateCategoryApi = {
     payload: CreateTemplateCategoryRequest
   ): Promise<TemplateCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/template-categories/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/template-categories/`, {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(payload),
@@ -67,7 +68,7 @@ export const useTemplateCategoryApi = {
       url.searchParams.append("search", search);
     }
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: createHeaders(),
       cache: "no-store",
@@ -89,7 +90,7 @@ export const useTemplateCategoryApi = {
       url.searchParams.append("search", search);
     }
 
-    const response = await fetch(url.toString(), {
+    const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: createHeaders(),
       cache: "no-store",
@@ -102,7 +103,7 @@ export const useTemplateCategoryApi = {
   // Get single subcategory by slug
   getSubcategory: async (slug: string): Promise<TemplateSubcategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/template-subcategories/${slug}/`,
       {
         method: "GET",
@@ -119,7 +120,7 @@ export const useTemplateCategoryApi = {
     payload: CreateTemplateSubcategoryRequest
   ): Promise<TemplateSubcategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
+    const response = await apiFetch(
       `${API_BASE_URL}/api/template-subcategories/`,
       {
         method: "POST",

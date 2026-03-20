@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeadersCustomer } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -26,7 +27,7 @@ export const fetchMyOrders = async (
     const queryString = buildQueryParams(filters);
     const url = `${API_BASE_URL}/api/my-order/${queryString ? `?${queryString}` : ""}`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(url, {
       method: "GET",
       headers: createHeadersCustomer(), // Using standardized headers
     });
@@ -46,7 +47,7 @@ export const fetchOrderStatusCounts = async (): Promise<StatusCounts> => {
   try {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await fetch(`${API_BASE_URL}/api/my-order-status/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/my-order-status/`, {
       method: "GET",
       headers: createHeadersCustomer(), // Using standardized headers
     });
