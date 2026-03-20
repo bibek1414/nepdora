@@ -73,7 +73,11 @@ export const Footer = () => {
           </FooterSection>
 
           {/* Column 3: Newsletter */}
-          <FooterSection className="pl-0 lg:col-span-4 lg:pl-8" delay={0.1} direction="x">
+          <FooterSection
+            className="pl-0 lg:col-span-4 lg:pl-8"
+            delay={0.1}
+            direction="x"
+          >
             <h3 className="mb-3 text-lg font-semibold text-gray-900 sm:mb-4 sm:text-xl">
               Newsletter
             </h3>
@@ -180,24 +184,37 @@ export const Footer = () => {
             {/* Cities */}
             <div>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Popular Cities
+                Popular Locations
               </h4>
               <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-                <FooterLink href="/agency-website/kathmandu">
-                  Kathmandu
-                </FooterLink>
-                <FooterLink href="/agency-website/pokhara">Pokhara</FooterLink>
-                <FooterLink href="/agency-website/lalitpur">
-                  Lalitpur
-                </FooterLink>
-                <FooterLink href="/agency-website/bharatpur">
-                  Bharatpur
-                </FooterLink>
-                <FooterLink href="/agency-website/birgunj">Birgunj</FooterLink>
-                <FooterLink href="/agency-website/biratnagar">
-                  Biratnagar
-                </FooterLink>
+                {[
+                  "Kathmandu",
+                  "Pokhara",
+                  "Lalitpur",
+                  "Bharatpur",
+                  "Birgunj",
+                  "Biratnagar",
+                  "Itahari",
+                  "Dharan",
+                  "Butwal",
+                  "Hetauda",
+                  "Nepalgunj",
+                  "Dhangadhi",
+                ].map(city => (
+                  <FooterLink
+                    key={city}
+                    href={`/agency-website/${city.toLowerCase()}`}
+                  >
+                    {city}
+                  </FooterLink>
+                ))}
               </div>
+              <Link
+                href="/templates"
+                className="text-primary mt-4 inline-block text-xs font-semibold hover:underline"
+              >
+                View all templates
+              </Link>
             </div>
           </div>
         </FooterSection>
