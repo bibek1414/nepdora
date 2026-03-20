@@ -273,7 +273,7 @@ export const useWebSocketMessages = ({
       wsRef.current = null;
     }
 
-    const wsUrl = `wss://nepdora.baliyoventures.com/ws/facebook/${subDomain}/`;
+    const wsUrl = `wss://sales-crm-8s09.onrender.com/ws/facebook/${subDomain}/`;
     console.log(`🔌 Connecting to WebSocket: ${wsUrl}`);
 
     const ws = new WebSocket(wsUrl);

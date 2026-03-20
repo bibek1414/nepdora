@@ -3,7 +3,7 @@ export const siteConfig = {
   description: "Nepdora Preview System",
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://nepdora.baliyoventures.com",
+    "https://sales-crm-8s09.onrender.com",
   baseDomain: process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com",
   protocol: process.env.NEXT_PUBLIC_PROTOCOL || "https",
   isDev: process.env.NODE_ENV !== "production",

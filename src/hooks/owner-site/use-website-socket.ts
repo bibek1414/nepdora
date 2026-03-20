@@ -21,7 +21,7 @@ type ActionListener = (data: any) => void;
 
 // Fallback: BroadcastChannel for same-origin cross-tab sync without SharedWorker
 function getWsBaseUrl() {
-  const baseUrl = getApiBaseUrl() || "https://nepdora.baliyoventures.com";
+  const baseUrl = getApiBaseUrl() || "https://sales-crm-8s09.onrender.com";
   return baseUrl.replace(/^http/, "ws");
 }
 
@@ -462,7 +462,7 @@ export const useWebsiteSocket = ({
     if (!enabled || !schema_name || useSharedWorker.current) return;
     if (socketRef.current?.readyState === WebSocket.OPEN) return;
 
-    const baseUrl = getApiBaseUrl() || "https://nepdora.baliyoventures.com";
+    const baseUrl = getApiBaseUrl() || "https://sales-crm-8s09.onrender.com";
     const wsBaseUrl = baseUrl.replace(/^http/, "ws");
     const url = `${wsBaseUrl}/ws/website/${schema_name}/`;
 

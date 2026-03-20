@@ -6,7 +6,7 @@ export const serverSiteConfig = {
   description: "Nepdora Preview System",
   apiBaseUrl:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://nepdora.baliyoventures.com",
+    "https://sales-crm-8s09.onrender.com",
   baseDomain:
     process.env.NEXT_PUBLIC_BASE_DOMAIN ||
     "unknown-kidney-technical-soft.trycloudflare.com",

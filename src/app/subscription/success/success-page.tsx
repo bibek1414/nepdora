@@ -209,7 +209,7 @@ export default function SuccessPage() {
   }) => {
     try {
       const response = await fetch(
-        "https://nepdora.baliyoventures.com/api/upgrade/",
+        "https://sales-crm-8s09.onrender.com/api/upgrade/",
         {
           method: "POST",
           headers: createHeaders(),
