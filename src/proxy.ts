@@ -233,7 +233,7 @@ export async function proxy(request: NextRequest) {
 
     // Check custom domain redirect with caching
     try {
-      // In development, skip checking for a custom domain to avoid both the slow API call 
+      // In development, skip checking for a custom domain to avoid both the slow API call
       // and redirecting away from localhost.
       if (siteConfig.isDev) {
         console.log(`[Dev Mode] Skipping custom domain check for ${subdomain}`);
@@ -241,102 +241,101 @@ export async function proxy(request: NextRequest) {
         // Check cache first
         const cached = domainCache.get(subdomain);
         if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-        console.log(
-          `[Cache Hit] Found entry for ${subdomain}:`,
-          cached.domain || "No custom domain"
-        );
-
-        if (
-          cached.domain &&
-          !request.headers.get("host")?.includes(cached.domain)
-        ) {
-          const redirectUrl = new URL(request.url);
-          redirectUrl.hostname = cached.domain;
           console.log(
-            `[Redirect] Moving user to custom domain: ${redirectUrl.hostname}`
-          );
-          return NextResponse.redirect(redirectUrl, 301);
-        }
-      } else {
-        console.log(
-          `[Cache Miss] TTL expired or no entry for ${subdomain}. Fetching from API...`
-        );
-
-        // Fetch from API with timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-        try {
-          const tenantDomain = siteConfig.isDev
-            ? `${subdomain}.localhost`
-            : `${subdomain}.${siteConfig.baseDomain}`;
-          const apiUrl = `${siteConfig.apiBaseUrl}/api/custom-domain/`;
-
-          console.log(
-            `[API Call] URL: ${apiUrl} | X-Tenant-Domain: ${tenantDomain}`
+            `[Cache Hit] Found entry for ${subdomain}:`,
+            cached.domain || "No custom domain"
           );
 
-          const res = await apiFetch(apiUrl, {
-            headers: {
-              "Content-Type": "application/json",
-              "X-Tenant-Domain": tenantDomain,
-            },
-            cache: "no-store",
-            signal: controller.signal,
-          });
+          if (
+            cached.domain &&
+            !request.headers.get("host")?.includes(cached.domain)
+          ) {
+            const redirectUrl = new URL(request.url);
+            redirectUrl.hostname = cached.domain;
+            console.log(
+              `[Redirect] Moving user to custom domain: ${redirectUrl.hostname}`
+            );
+            return NextResponse.redirect(redirectUrl, 301);
+          }
+        } else {
+          console.log(
+            `[Cache Miss] TTL expired or no entry for ${subdomain}. Fetching from API...`
+          );
 
-          clearTimeout(timeoutId);
-          console.log(`[API Response] Status: ${res.status} ${res.statusText}`);
+          // Fetch from API with timeout
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-          if (res.ok) {
-            const domains = await res.json();
-            const primaryDomain = domains.find((d: any) => d.is_primary);
+          try {
+            const tenantDomain = siteConfig.isDev
+              ? `${subdomain}.localhost`
+              : `${subdomain}.${siteConfig.baseDomain}`;
+            const apiUrl = `${siteConfig.apiBaseUrl}/api/custom-domain/`;
 
             console.log(
-              `[Domain Info] Primary Domain Found:`,
-              primaryDomain?.domain || "None"
+              `[API Call] URL: ${apiUrl} | X-Tenant-Domain: ${tenantDomain}`
             );
 
-            // Cache the result (even if null)
-            domainCache.set(subdomain, {
-              domain: primaryDomain?.domain || null,
-              timestamp: Date.now(),
+            const res = await apiFetch(apiUrl, {
+              headers: {
+                "Content-Type": "application/json",
+                "X-Tenant-Domain": tenantDomain,
+              },
+              cache: "no-store",
+              signal: controller.signal,
             });
 
-            if (primaryDomain?.domain) {
-              const currentHost = request.headers.get("host") || "";
+            clearTimeout(timeoutId);
+            console.log(
+              `[API Response] Status: ${res.status} ${res.statusText}`
+            );
 
-              // Avoid infinite redirect
-              if (!currentHost.includes(primaryDomain.domain)) {
-                const redirectUrl = new URL(request.url);
-                redirectUrl.hostname = primaryDomain.domain;
-                console.log(
-                  `[Redirect] Triggering 301 to ${primaryDomain.domain}`
-                );
-                return NextResponse.redirect(redirectUrl, 301);
-              } else {
-                console.log(
-                  `[Host Match] Already on primary domain: ${currentHost}`
-                );
+            if (res.ok) {
+              const domains = await res.json();
+
+              // Find the custom domain (non-primary, non-nepdora domain)
+              const customDomain = domains.find(
+                (d: any) =>
+                  !d.is_primary &&
+                  !d.domain.endsWith(`.${siteConfig.baseDomain}`)
+              );
+
+              // Cache it
+              domainCache.set(subdomain, {
+                domain: customDomain?.domain || null,
+                timestamp: Date.now(),
+              });
+
+              if (customDomain?.domain) {
+                const currentHost = request.headers.get("host") || "";
+
+                // If visitor is on the subdomain, redirect to the custom domain
+                if (!currentHost.includes(customDomain.domain)) {
+                  const redirectUrl = new URL(request.url);
+                  redirectUrl.hostname = customDomain.domain;
+                  console.log(
+                    `[Redirect] Sending to custom domain: ${customDomain.domain}`
+                  );
+                  return NextResponse.redirect(redirectUrl, 301);
+                }
               }
+            } else {
+              console.warn(
+                `[API Error] Failed to fetch domains. Status: ${res.status}`
+              );
             }
-          } else {
-            console.warn(
-              `[API Error] Failed to fetch domains. Status: ${res.status}`
-            );
-          }
-        } catch (error: any) {
-          clearTimeout(timeoutId);
-          if (error.name === "AbortError") {
-            console.error(
-              "![Timeout] Custom domain check timed out for:",
-              subdomain
-            );
-          } else {
-            console.error("![Fetch Failed] Error:", error.message);
+          } catch (error: any) {
+            clearTimeout(timeoutId);
+            if (error.name === "AbortError") {
+              console.error(
+                "![Timeout] Custom domain check timed out for:",
+                subdomain
+              );
+            } else {
+              console.error("![Fetch Failed] Error:", error.message);
+            }
           }
         }
-      }
       } // Close the 'else' block for siteConfig.isDev
     } catch (error) {
       console.error("![Critical] Custom domain check logic error:", error);
