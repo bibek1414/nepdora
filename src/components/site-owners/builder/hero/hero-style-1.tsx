@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { HeroTemplate1Data } from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";

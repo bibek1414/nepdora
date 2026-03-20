@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -423,7 +424,7 @@ const AIBuilderDemo: React.FC = () => {
                             {feature.desc}
                           </p>
                           {/* Decorative gradient blob */}
-                          <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-gradient-to-br from-slate-50 to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+                          <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-linear-to-br from-slate-50 to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
                         </motion.div>
                       ))}
                     </div>

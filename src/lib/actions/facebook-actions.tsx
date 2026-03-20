@@ -49,7 +49,8 @@ export async function getFacebookIntegrations(): Promise<
     const API_BASE_URL = await getApiUrl();
     const url = `${API_BASE_URL}/api/facebook/`;
     const headers = await createServerHeaders();
-
+    console.log("headers", headers);
+    console.log("url", url);
     const response = await fetch(url, {
       method: "GET",
       headers,

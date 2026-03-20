@@ -1,11 +1,10 @@
-"use client";
 import React from "react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 
 export default function AboutUs() {
   return (
-    <div className="from-primary via-primary/90 to-secondary/90 bg-gradient-to-br">
+    <div className="from-primary via-primary/90 to-secondary/90 bg-linear-to-br">
       <div className="mx-auto max-w-7xl">
         {/* Hero Section */}
         <section className="relative px-6 py-20 lg:px-8">

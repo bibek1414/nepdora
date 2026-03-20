@@ -1,7 +1,6 @@
-"use client";
 import React from "react";
-import { motion } from "framer-motion";
 import { X, Check, Calculator } from "lucide-react";
+import { CountUpAnimation, FadeInAnimation } from "./comparison-animations";
 
 interface ComparisonProps {
   platformName?: string;
@@ -34,11 +33,7 @@ const Comparison: React.FC<ComparisonProps> = ({
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col items-center gap-10 md:flex-row md:gap-12 lg:gap-16">
           <div className="flex-1">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
+            <FadeInAnimation direction="x">
               <h2 className="mb-4 text-2xl leading-tight font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
                 Stop Paying More
               </h2>
@@ -63,86 +58,60 @@ const Comparison: React.FC<ComparisonProps> = ({
                     NPR
                   </span>
 
-                  <motion.span
-                    className="ml-2 text-3xl font-bold tracking-tight text-slate-700 sm:text-4xl md:text-5xl"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                  >
-                    <CountUp end={245000} duration={2} />
-                  </motion.span>
+                  <span className="ml-2 text-3xl font-bold tracking-tight text-slate-700 sm:text-4xl md:text-5xl">
+                    <CountUpAnimation end={245000} duration={2} />
+                  </span>
                 </div>
               </div>
-            </motion.div>
+            </FadeInAnimation>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full flex-1"
-          >
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:rounded-2xl">
-              <div className="grid grid-cols-3 gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
-                <div className="text-[10px] font-semibold tracking-wide text-slate-500 uppercase sm:text-xs sm:tracking-widest">
-                  Metric
-                </div>
-                <div className="text-[10px] font-semibold tracking-wide text-slate-500 uppercase sm:text-xs sm:tracking-widest">
-                  {platformName}
-                </div>
-                <div className="text-[10px] font-semibold tracking-wide text-slate-700 uppercase sm:text-xs sm:tracking-widest">
-                  Nepdora
-                </div>
-              </div>
-
-              <div className="px-4 py-2 sm:px-6">
-                {rows.map((row, idx) => (
-                  <div
-                    key={idx}
-                    className="grid grid-cols-3 items-center gap-3 border-b border-slate-100 py-4 last:border-0 sm:gap-4 sm:py-5"
-                  >
-                    <div className="text-xs font-medium text-slate-700 sm:text-sm">
-                      {row.feature}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500 sm:text-sm">
-                      <span className="line-through decoration-slate-300">
-                        {row.trad}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-900 sm:text-sm">
-                      <Check
-                        size={12}
-                        className="text-slate-700 sm:h-3.5 sm:w-3.5"
-                      />{" "}
-                      {row.nep}
-                    </div>
+          <div className="w-full flex-1">
+            <FadeInAnimation delay={0.2}>
+              <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm sm:rounded-2xl">
+                <div className="grid grid-cols-3 gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
+                  <div className="text-[10px] font-semibold tracking-wide text-slate-500 uppercase sm:text-xs sm:tracking-widest">
+                    Metric
                   </div>
-                ))}
+                  <div className="text-[10px] font-semibold tracking-wide text-slate-500 uppercase sm:text-xs sm:tracking-widest">
+                    {platformName}
+                  </div>
+                  <div className="text-[10px] font-semibold tracking-wide text-slate-700 uppercase sm:text-xs sm:tracking-widest">
+                    Nepdora
+                  </div>
+                </div>
+
+                <div className="px-4 py-2 sm:px-6">
+                  {rows.map((row, idx) => (
+                    <div
+                      key={idx}
+                      className="grid grid-cols-3 items-center gap-3 border-b border-slate-100 py-4 last:border-0 sm:gap-4 sm:py-5"
+                    >
+                      <div className="text-xs font-medium text-slate-700 sm:text-sm">
+                        {row.feature}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-slate-500 sm:text-sm">
+                        <span className="line-through decoration-slate-300">
+                          {row.trad}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-900 sm:text-sm">
+                        <Check
+                          size={12}
+                          className="text-slate-700 sm:h-3.5 sm:w-3.5"
+                        />{" "}
+                        {row.nep}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </FadeInAnimation>
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-const CountUp = ({ end, duration }: { end: number; duration: number }) => {
-  const [count, setCount] = React.useState(0);
-  React.useEffect(() => {
-    let start = 0;
-    const increment = end / (duration * 60);
-    const timer = setInterval(() => {
-      start += increment;
-      if (start > end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 1000 / 60);
-    return () => clearInterval(timer);
-  }, [end, duration]);
-  return <>{count.toLocaleString("en-IN")}</>;
 };
 
 export default Comparison;

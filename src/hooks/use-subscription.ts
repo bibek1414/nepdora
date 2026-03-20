@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import { subscriptionApi } from "@/services/api/subscription";
 import { toast } from "sonner";
 import type {
@@ -16,11 +16,14 @@ export const useSubscriptionStatus = () => {
   });
 };
 
-export const usePricingPlans = () => {
+export const usePricingPlans = (
+  options?: Omit<UseQueryOptions<PlansResponse, Error>, "queryKey" | "queryFn">
+) => {
   return useQuery<PlansResponse, Error>({
     queryKey: ["plans"],
     queryFn: subscriptionApi.getPlans,
     staleTime: 1000 * 60 * 30, // 30 minutes
+    ...options,
   });
 };
 

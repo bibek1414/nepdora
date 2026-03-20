@@ -10,6 +10,11 @@ import {
 } from "@/hooks/marketing/use-blogs";
 import Link from "next/link";
 import { format } from "date-fns";
+import {
+  BlogPost,
+  BlogCategory,
+  BlogTag,
+} from "@/types/super-admin/blog";
 
 export const SearchBar = () => {
   const router = useRouter();
@@ -22,10 +27,6 @@ export const SearchBar = () => {
     setSearchTerm(searchParams.get("search") || "");
   }, [searchParams]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
   const executeSearch = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -33,17 +34,12 @@ export const SearchBar = () => {
     } else {
       params.delete("search");
     }
-
-    // Reset page on search, but don't add page=1
     params.delete("page");
-
     router.push(`/blog?${params.toString()}`);
   };
 
-  // Simple debounce effect
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Only push if it's different (to avoid loop on initial load)
       if (searchTerm !== (searchParams.get("search") || "")) {
         executeSearch(searchTerm);
       }
@@ -72,15 +68,15 @@ export const SearchBar = () => {
         type="text"
         placeholder="Search..."
         value={searchTerm}
-        onChange={handleSearch}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full rounded-xl border-none bg-[#F4F6F8] py-4 pr-4 pl-12 text-sm transition-all outline-none focus:ring-2 focus:ring-indigo-100"
       />
     </div>
   );
 };
 
-export const CategoryList = () => {
-  const { data: categories } = useMarketingBlogCategories();
+export const CategoryList = ({ initialData }: { initialData?: BlogCategory[] }) => {
+  const { data: categories } = useMarketingBlogCategories({ initialData });
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category");
@@ -92,10 +88,7 @@ export const CategoryList = () => {
     } else {
       params.set("category", slug);
     }
-
-    // Reset page, don't add page=1
     params.delete("page");
-
     router.push(`/blog?${params.toString()}`);
   };
 
@@ -126,31 +119,23 @@ export const CategoryList = () => {
   );
 };
 
-export const TagList = () => {
-  const { data: tags } = useMarketingBlogTags();
+export const TagList = ({ initialData }: { initialData?: BlogTag[] }) => {
+  const { data: tags } = useMarketingBlogTags({ initialData });
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentTags = searchParams.getAll("tags");
 
   const handleTagClick = (slug: string) => {
     const params = new URLSearchParams(searchParams.toString());
-
-    // Toggle logic for tags
     if (currentTags.includes(slug)) {
-      // Remove tag
       params.delete("tags");
       currentTags
         .filter(t => t !== slug)
         .forEach(t => params.append("tags", t));
     } else {
-      // Add tag (using append to support multiple tags if backend supports it, derived from getAll)
-      // The backend logic for multiple values using same key 'tags'
       params.append("tags", slug);
     }
-
-    // Reset page
     params.delete("page");
-
     router.push(`/blog?${params.toString()}`);
   };
 
@@ -181,8 +166,8 @@ export const TagList = () => {
   );
 };
 
-export const RecentPosts = () => {
-  const { data: posts } = useMarketingRecentBlogs();
+export const RecentPosts = ({ initialData }: { initialData?: BlogPost[] }) => {
+  const { data: posts } = useMarketingRecentBlogs({ initialData });
 
   if (!posts || posts.length === 0) return null;
 
@@ -196,7 +181,7 @@ export const RecentPosts = () => {
             href={`/blog/${post.slug}`}
             className="group flex cursor-pointer gap-4"
           >
-            <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl">
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
               <Image
                 src={post.thumbnail_image || "/fallback/image-not-found.png"}
                 alt={post.title}
@@ -225,22 +210,29 @@ export const RecentPosts = () => {
   );
 };
 
-const Sidebar: React.FC = () => {
+export interface SidebarProps {
+  initialCategories?: BlogCategory[];
+  initialTags?: BlogTag[];
+  initialRecentPosts?: BlogPost[];
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ initialCategories, initialTags, initialRecentPosts }) => {
   return (
     <div className="sticky top-24 flex flex-col gap-12">
       <SearchBar />
-      <CategoryList />
-      <TagList />
-      <RecentPosts />
+      <CategoryList initialData={initialCategories} />
+      <TagList initialData={initialTags} />
+      <RecentPosts initialData={initialRecentPosts} />
     </div>
   );
 };
-const DetailSidebar = () => {
+
+const DetailSidebar = ({ initialRecentPosts }: { initialRecentPosts?: BlogPost[] }) => {
   return (
     <div className="sticky top-24 flex flex-col gap-12">
       <div className="space-y-6 lg:w-96">
         <SearchBar />
-        <RecentPosts />
+        <RecentPosts initialData={initialRecentPosts} />
       </div>
     </div>
   );

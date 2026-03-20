@@ -60,20 +60,26 @@ export const useMarketingBlog = (
   });
 };
 
-export function useMarketingBlogTags() {
+export function useMarketingBlogTags(
+  options?: Omit<UseQueryOptions<BlogTag[], Error>, "queryKey" | "queryFn">
+) {
   return useQuery<BlogTag[]>({
     queryKey: marketingBlogKeys.tags(),
     queryFn: marketingBlogApi.getTags,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    ...options,
   });
 }
 
-export function useMarketingBlogCategories() {
+export function useMarketingBlogCategories(
+  options?: Omit<UseQueryOptions<BlogCategory[], Error>, "queryKey" | "queryFn">
+) {
   return useQuery<BlogCategory[]>({
     queryKey: marketingBlogKeys.categories(),
     queryFn: marketingBlogApi.getCategories,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    ...options,
   });
 }

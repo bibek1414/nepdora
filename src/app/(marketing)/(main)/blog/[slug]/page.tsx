@@ -64,16 +64,34 @@ export async function generateMetadata({
   }
 }
 
+import { DetailSidebar } from "@/components/marketing/blog/sidebar";
+
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
 
   try {
-    const blog = await marketingBlogApi.getBlogBySlug(slug);
+    const [blog, recentPosts] = await Promise.all([
+      marketingBlogApi.getBlogBySlug(slug),
+      marketingBlogApi.getRecentBlogs(),
+    ]);
+
     return (
-      <>
-        <BlogDetailView blog={blog} />
+      <div className="bg-[#F4F6F8]">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-12 lg:flex-row">
+            {/* Blog Post Content */}
+            <div className="flex-1">
+              <BlogDetailView blog={blog} />
+            </div>
+
+            {/* Sidebar */}
+            <aside className="w-full lg:w-96">
+              <DetailSidebar initialRecentPosts={recentPosts} />
+            </aside>
+          </div>
+        </div>
         <ContactSection />
-      </>
+      </div>
     );
   } catch (error) {
     notFound();

@@ -1,4 +1,5 @@
-import PricingSection from "@/components/marketing/pricing-section/pricing-section";
+import PricingSectionHero from "@/components/marketing/pricing-section/pricing-section-hero";
+import { subscriptionApi } from "@/services/api/subscription";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -43,6 +44,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PricingPage() {
-  return <PricingSection />;
+export default async function PricingPage() {
+  const plans = await subscriptionApi.getPlans().catch(() => []);
+  
+  return <PricingSectionHero initialPlans={plans} />;
 }

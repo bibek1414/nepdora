@@ -442,6 +442,7 @@ export async function proxy(request: NextRequest) {
 
   // ── 4. Request on a fully custom domain (e.g. yachuindia.com) ─────────────
   if (isCustomDomain(request)) {
+    if (siteConfig.isDev) return NextResponse.next();
     const host = request.headers.get("host") || "";
     const hostname = host.split(":")[0];
     console.log(`\n[Custom Domain] "${hostname}" detected`);
@@ -486,36 +487,32 @@ export async function proxy(request: NextRequest) {
 
   // ── 5. Root domain ─────────────────────────────────────────────────────────
   if (isRootDomain(request)) {
-    const userSubdomain = getSubdomainFromAuth(request);
-
-    // Redirect authenticated users who land on /admin or /builder to their subdomain
-    if (
-      userSubdomain &&
-      (pathname.startsWith("/admin") || pathname.startsWith("/builder"))
-    ) {
-      const host = request.headers.get("host") || "";
-      const protocol = request.url.includes("localhost") ? "http" : "https";
-      const rootDomainFormatted = rootDomain.split(":")[0];
-
-      let subdomainUrl: string;
-      if (host.includes("localhost")) {
-        const port = host.split(":")[1] || "3000";
-        subdomainUrl = `${protocol}://${userSubdomain}.localhost:${port}${pathname}`;
-      } else {
-        subdomainUrl = `${protocol}://${userSubdomain}.${rootDomainFormatted}${pathname}`;
+    if (!siteConfig.isDev) {
+      const userSubdomain = getSubdomainFromAuth(request);
+      if (
+        userSubdomain &&
+        (pathname.startsWith("/admin") || pathname.startsWith("/builder"))
+      ) {
+        const host = request.headers.get("host") || "";
+        const protocol = request.url.includes("localhost") ? "http" : "https";
+        const rootDomainFormatted = rootDomain.split(":")[0];
+        let subdomainUrl: string;
+        if (host.includes("localhost")) {
+          const port = host.split(":")[1] || "3000";
+          subdomainUrl = `${protocol}://${userSubdomain}.localhost:${port}${pathname}`;
+        } else {
+          subdomainUrl = `${protocol}://${userSubdomain}.${rootDomainFormatted}${pathname}`;
+        }
+        if (request.nextUrl.search) {
+          subdomainUrl += request.nextUrl.search;
+        }
+        console.log(
+          `[Root→Subdomain] Redirecting authenticated user to ${subdomainUrl}`
+        );
+        return NextResponse.redirect(new URL(subdomainUrl));
       }
-
-      if (request.nextUrl.search) {
-        subdomainUrl += request.nextUrl.search;
-      }
-
-      console.log(
-        `[Root→Subdomain] Redirecting authenticated user to ${subdomainUrl}`
-      );
-      return NextResponse.redirect(new URL(subdomainUrl));
     }
   }
-
   return NextResponse.next();
 }
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { Metadata } from "next";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import DynamicPageClient from "./dynamic-page-client";

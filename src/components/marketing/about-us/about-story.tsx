@@ -1,17 +1,14 @@
-"use client";
 import React from "react";
-import { motion } from "framer-motion";
+import {
+  AboutStoryFadeInLeft,
+  AboutStoryFadeInUp,
+} from "./about-story-animations";
 
 const AboutStory: React.FC = () => {
   return (
     <section className="mx-auto mt-40 mb-24 px-4 sm:mb-40 sm:px-6 lg:max-w-7xl lg:px-20">
       <div className="flex flex-col gap-12 md:flex-row md:gap-20 lg:gap-32">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="md:w-1/3"
-        >
+        <AboutStoryFadeInLeft>
           <h2 className="sticky top-32 text-4xl font-bold text-neutral-900 sm:text-5xl">
             The Story.
             <br />
@@ -19,15 +16,9 @@ const AboutStory: React.FC = () => {
               Why we exist.
             </span>
           </h2>
-        </motion.div>
+        </AboutStoryFadeInLeft>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="space-y-8 text-neutral-600 md:w-2/3"
-        >
+        <AboutStoryFadeInUp>
           <p className="font-serif text-2xl text-neutral-900 sm:text-3xl lg:text-4xl">
             Why is it so hard to get online in Nepal?
           </p>
@@ -56,7 +47,7 @@ const AboutStory: React.FC = () => {
               build your empire.
             </p>
           </div>
-        </motion.div>
+        </AboutStoryFadeInUp>
       </div>
     </section>
   );

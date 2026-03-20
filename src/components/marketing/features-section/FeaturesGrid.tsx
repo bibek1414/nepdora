@@ -1,6 +1,4 @@
-"use client";
 import React from "react";
-import { motion } from "framer-motion";
 import {
   BarChart3,
   ShoppingBag,
@@ -8,7 +6,6 @@ import {
   Globe,
   Clock,
   Layout,
-  Layers,
   Sparkles,
 } from "lucide-react";
 import AnalyticsSkeleton from "./AnalyticsSkeleton";
@@ -19,6 +16,7 @@ import DomainSkeleton from "./DomainSkeleton";
 import CrmSmallSkeleton from "./CrmSmallSkeleton";
 import SetupSkeleton from "./SetupSkeleton";
 import AIBuilderDemo from "./AIBuilderDemo";
+import { FeatureCard } from "./FeatureCard";
 
 const features = [
   // ROW 1: Large Cards
@@ -91,13 +89,10 @@ const FeaturesGrid: React.FC = () => {
 
         <div className="grid grid-cols-1 gap-5 md:auto-rows-[200px] md:grid-cols-4">
           {features.map((feature, idx) => (
-            <motion.div
+            <FeatureCard
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: idx * 0.05, duration: 0.5 }}
-              className={`group relative flex flex-col overflow-hidden rounded-[2rem] border ${feature.className} ${feature.className.includes("bg-slate-900") ? "border-slate-800" : "border-slate-200"}`}
+              idx={idx}
+              className={`${feature.className} ${feature.className.includes("bg-slate-900") ? "border-slate-800" : "border-slate-200"}`}
             >
               {/* Animation/Skeleton Area */}
               <div className="relative flex-1 overflow-hidden">
@@ -124,7 +119,7 @@ const FeaturesGrid: React.FC = () => {
                   </h3>
                 </div>
               </div>
-            </motion.div>
+            </FeatureCard>
           ))}
         </div>
       </div>

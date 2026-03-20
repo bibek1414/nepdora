@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -25,7 +26,8 @@ const TemplateSkeleton = () => {
         ))}
       </div>
       {/* Overlay hint */}
-      <div className="absolute inset-x-0 bottom-0 flex h-8 items-end justify-center bg-gradient-to-t from-white via-white/80 to-transparent pb-1">
+      <div className="absolute inset-x-0 bottom-0 flex h-8 items-end justify-center pb-1">
+        <div className="absolute inset-0 bg-linear-to-t from-white via-transparent to-transparent"></div>
         <span className="text-[9px] font-bold text-slate-400">
           View Gallery
         </span>
