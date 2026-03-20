@@ -84,9 +84,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Production source maps (disable for faster builds)
-  productionBrowserSourceMaps: false,
-
   // Output configuration
   output: "standalone",
 
