@@ -60,18 +60,12 @@ export const extractSubdomain = (url: URL): string | null => {
 export const getTenantDomain = (): string | null => {
   if (typeof window === "undefined") return null;
 
-  const url = new URL(window.location.href);
-  const hostname = url.hostname; // ⚠️ this already excludes port
-  const subdomain = extractSubdomain(url);
-
-  if (!subdomain) return null;
-
-  // ✅ Development
+  // ✅ Dev
   if (siteConfig.isDev) {
-    return `${subdomain}.localhost`;
+    return window.location.host;
   }
 
-  // ✅ Production
+  // ✅ Prod
   return window.location.host;
 };
 
