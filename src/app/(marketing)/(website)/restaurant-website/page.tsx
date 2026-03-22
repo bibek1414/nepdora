@@ -60,7 +60,7 @@ export default function Page() {
   return (
     <>
       <JsonLd id="restaurant-schema" data={restaurantSchema} />
-      <CitiesLandingPage category="restaurant-website" city="nepal" />
+      <CitiesLandingPage category="restaurant" city="nepal" />
     </>
   );
 }

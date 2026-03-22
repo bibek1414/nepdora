@@ -60,7 +60,7 @@ export default function Page() {
   return (
     <>
       <JsonLd id="clinic-schema" data={clinicSchema} />
-      <CitiesLandingPage category="clinic-website" city="nepal" />
+      <CitiesLandingPage category="clinic" city="nepal" />
     </>
   );
 }

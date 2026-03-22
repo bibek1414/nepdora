@@ -59,7 +59,7 @@ export default function Page() {
   return (
     <>
       <JsonLd id="dental-schema" data={dentalSchema} />
-      <CitiesLandingPage category="dental-website" city="nepal" />
+      <CitiesLandingPage category="dental" city="nepal" />
     </>
   );
 }

@@ -9,11 +9,61 @@ interface CitiesLandingPageProps {
   city: string;
 }
 
+// MOCK LOCAL CONTEXT (In a real app, this would be from a local-business-db)
+const LOCAL_CONTEXT: Record<string, string> = {
+  kathmandu: "The bustling capital is competitive. Stand out in Kathmandu's digital marketplace.",
+  pokhara: "Capture Pokhara's tourism and retail boom with a stunning online presence.",
+  lalitpur: "Modernize your Lalitpur business for the tech-savvy local community.",
+  biratnagar: "Dominate the industrial and trade hub of Biratnagar with a professional site.",
+  butwal: "Connect with Butwal's growing consumer base through localized digital marketing.",
+  bharatpur: "Enhance your reach in the heart of Chitwan's healthcare and education center.",
+};
+
+const INDUSTRY_SPECIFIC_HIGHLIGHTS: Record<string, { title: string; desc: string; icon: string }[]> = {
+  restaurant: [
+    { title: "QR Digital Menu", desc: "No more paper menus. Let customers browse and order in seconds.", icon: "🍽️" },
+    { title: "Online Reservations", desc: "Manage your table bookings and reduce empty seats.", icon: "📅" },
+    { title: "Food Delivery Ready", desc: "Native Pathao and Foodmandu integration for your sales hub.", icon: "🛵" },
+  ],
+  ecommerce: [
+    { title: "eSewa Integration", desc: "Accept payments from millions of wallet users in Nepal instantly.", icon: "💳" },
+    { title: "Inventory Sync", desc: "Never oversell again with real-time stock tracking.", icon: "📦" },
+    { title: "Automated Shipping", desc: "Print delivery labels and track packages inside your dashboard.", icon: "🚚" },
+  ],
+  clinic: [
+    { title: "Patient Appointment Portal", desc: "Let patients book their checkups 24/7 without calling.", icon: "🩺" },
+    { title: "Doctor Profiles", desc: "Showcase your medical expertise and build patient trust.", icon: "👨‍⚕️" },
+    { title: "E-Health Records", desc: "Manage patient history and prescriptions securely online.", icon: "📋" },
+  ],
+  default: [
+    { title: "AI Site Wizard", desc: "Get a professional site launched in under 10 minutes.", icon: "⚡" },
+    { title: "Local SEO Ready", desc: "We handle the meta tags so you rank for local searches.", icon: "🔍" },
+    { title: "Mobile First Design", desc: "Your site will look amazing on every smartphone in Nepal.", icon: "📱" },
+  ]
+};
+
+const LOCALIZED_TESTIMONIALS: Record<string, { name: string; role: string; quote: string }[]> = {
+  kathmandu: [
+    { name: "Suman Shrestha", role: "Business Owner in Koteshwor", quote: "Nepdora helped our KTM showroom reach customers across the valley." },
+  ],
+  pokhara: [
+    { name: "Maya Gurung", role: "Cafe Owner in Lakeside", quote: "The best tool for businesses in Pokhara to attract tourists and locals alike." },
+  ],
+  default: [
+    { name: "Happy Client", role: "Entreprenur", quote: "Launch faster and grow bigger with Nepal's first AI website builder." }
+  ]
+};
+
 export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
   category,
   city,
 }) => {
   const cityName = capitalizeWords(city);
+  const cityLower = city.toLowerCase();
+  const localContext = LOCAL_CONTEXT[cityLower] || `Grow your ${category.replace("-", " ")} business in ${cityName} with localized digital solutions.`;
+  const dynamicHighlights = INDUSTRY_SPECIFIC_HIGHLIGHTS[category] || INDUSTRY_SPECIFIC_HIGHLIGHTS.default;
+  const testimonials = LOCALIZED_TESTIMONIALS[cityLower] || LOCALIZED_TESTIMONIALS.default;
+
   const content = INDUSTRY_CONTENT[category] || {
     title: `Best ${capitalizeWords(category.replace("-", " "))} in ${cityName}`,
     description: `Launch your professional ${category.toLowerCase()} in ${cityName} with Nepdora. The fastest, AI-powered way to grow your business online in Nepal.`,
@@ -38,12 +88,33 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
       {/* Custom SEO Hero */}
       <section className="mx-auto max-w-7xl py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 text-center">
+          <span className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary">
+            #1 Website Builder for {cityName}
+          </span>
           <h1 className="mb-6 text-4xl font-bold text-slate-900 md:text-6xl lg:text-5xl">
-            {content.title} <span className="text-primary">in {cityName}</span>
+            {content.title} <span className="text-primary truncate">in {cityName}</span>
           </h1>
           <p className="mx-auto max-w-3xl text-lg text-slate-600 md:text-xl lg:text-2xl">
-            {content.description}
+            {content.description} {localContext}
           </p>
+        </div>
+      </section>
+
+      {/* Dynamic Industry Highlights (Anti-Thin Content) */}
+      <section className="bg-white py-12">
+        <div className="mx-auto max-w-6xl px-4">
+            <h2 className="mb-12 text-center text-3xl font-bold text-slate-900">
+               Tailored for Your {capitalizeWords(category.replace("-", " "))} in {cityName}
+            </h2>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                {dynamicHighlights.map((h, i) => (
+                    <div key={i} className="rounded-3xl border border-slate-100 bg-slate-50 p-8 shadow-sm transition-all hover:scale-105">
+                        <div className="mb-6 text-4xl">{h.icon}</div>
+                        <h3 className="mb-3 text-xl font-bold text-slate-900">{h.title}</h3>
+                        <p className="text-slate-600">{h.desc}</p>
+                    </div>
+                ))}
+            </div>
         </div>
       </section>
 
@@ -53,14 +124,14 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
             <div>
               <h2 className="mb-8 text-3xl font-bold text-slate-900 md:text-4xl">
                 Why choose Nepdora for your{" "}
-                {capitalizeWords(category.replace("-", " "))}?
+                {capitalizeWords(category.replace("-", " "))} in {cityName}?
               </h2>
               <div className="space-y-6 text-lg text-slate-600">
                 <p>{content.whyUs}</p>
                 <p>
                   We ensure your {category.replace("-", " ")} is fully optimized
-                  for the Nepalese audience, with local payment gateways like
-                  eSewa and Khalti built-in.
+                  for the {cityName} audience, with local payment gateways like
+                  eSewa and Khalti built-in for {cityName}-based businesses.
                 </p>
                 <div className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2">
                   {content.benefits.map((item, i) => (
@@ -88,24 +159,26 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
                 </div>
               </div>
             </div>
-            <div className="group hover:shadow-primary/5 relative aspect-4/3 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl transition-all">
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 p-8 text-center transition-transform group-hover:scale-105">
-                <div className="bg-primary/10 text-primary mb-4 h-20 w-20 rounded-2xl p-4">
-                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                    />
-                  </svg>
+            {/* Visual Social Proof / Localized Testimonial */}
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 p-12 text-white shadow-2xl">
+                <div className="relative z-10">
+                    <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-2xl">
+                        "
+                    </div>
+                    <p className="mb-8 text-2xl font-medium leading-relaxed italic">
+                        {testimonials[0].quote}
+                    </p>
+                    <div className="flex items-center gap-4">
+                        <div className="h-14 w-14 rounded-full bg-slate-800 flex items-center justify-center font-bold text-primary text-xl">
+                            {testimonials[0].name[0]}
+                        </div>
+                        <div>
+                            <div className="font-bold text-lg">{testimonials[0].name}</div>
+                            <div className="text-slate-400">{testimonials[0].role}</div>
+                        </div>
+                    </div>
                 </div>
-                <span className="text-xl font-bold text-slate-900">
-                  Built for Nepal
-                </span>
-                <p className="mt-2 text-slate-500">{content.heroImageAlt}</p>
-              </div>
-              <div className="from-primary/5 pointer-events-none absolute inset-0 bg-linear-to-tr to-transparent" />
+                <div className="pointer-events-none absolute -bottom-12 -right-12 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
             </div>
           </div>
         </div>
@@ -114,7 +187,7 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-4 text-center">
           <h2 className="mb-12 text-3xl font-bold text-slate-900 md:text-4xl">
-            Key Features Included
+            Key Features Included for {cityName} Businesses
           </h2>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {content.features.map((feature, i) => (

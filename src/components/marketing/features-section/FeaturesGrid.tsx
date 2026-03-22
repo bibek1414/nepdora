@@ -7,6 +7,9 @@ import {
   Clock,
   Layout,
   Sparkles,
+  Wallet,
+  MessageSquare,
+  Search,
 } from "lucide-react";
 import AnalyticsSkeleton from "./AnalyticsSkeleton";
 import OrdersSkeleton from "./OrdersSkeleton";
@@ -16,17 +19,33 @@ import DomainSkeleton from "./DomainSkeleton";
 import CrmSmallSkeleton from "./CrmSmallSkeleton";
 import SetupSkeleton from "./SetupSkeleton";
 import AIBuilderDemo from "./AIBuilderDemo";
+import NepalPaymentSkeleton from "./NepalPaymentSkeleton";
+import SmsLogisticsSkeleton from "./SmsLogisticsSkeleton";
+import SeoSkeleton from "./SeoSkeleton";
 import { FeatureCard } from "./FeatureCard";
 
 const features = [
-  // ROW 1: Large Cards
+  // ROW 1
   {
     title: "Instant ROI Analytics",
     className: "md:col-span-2 md:row-span-2 bg-white",
     skeleton: <AnalyticsSkeleton />,
     icon: BarChart3,
   },
-  // ROW 2: Small Cards (Aligned)
+  {
+    title: "eSewa & Khalti",
+    className: "md:col-span-1 md:row-span-1 bg-white",
+    skeleton: <NepalPaymentSkeleton />,
+    icon: Wallet,
+  },
+  {
+    title: "5-Minute Setup",
+    className: "md:col-span-1 md:row-span-1 bg-white",
+    skeleton: <SetupSkeleton />,
+    icon: Clock,
+  },
+  
+  // ROW 2
   {
     title: "100+ Templates",
     className: "md:col-span-1 md:row-span-1 bg-white",
@@ -46,12 +65,13 @@ const features = [
     icon: Users,
   },
   {
-    title: "5-Minute Setup",
+    title: "SMS & Logistics",
     className: "md:col-span-1 md:row-span-1 bg-white",
-    skeleton: <SetupSkeleton />,
-    icon: Clock,
+    skeleton: <SmsLogisticsSkeleton />,
+    icon: MessageSquare,
   },
-  // ROW 3: Large Cards
+
+  // ROW 3
   {
     title: "Omnichannel Orders",
     className: "md:col-span-2 md:row-span-2 bg-white",
@@ -59,8 +79,14 @@ const features = [
     icon: ShoppingBag,
   },
   {
+    title: "SEO & Marketing",
+    className: "md:col-span-2 md:row-span-1 bg-white",
+    skeleton: <SeoSkeleton />,
+    icon: Search,
+  },
+  {
     title: "Global Payments & Logistics",
-    className: "md:col-span-2 md:row-span-2 bg-white",
+    className: "md:col-span-2 md:row-span-1 bg-white",
     skeleton: <GlobalSalesSkeleton />,
     icon: Globe,
   },
@@ -90,7 +116,7 @@ const FeaturesGrid: React.FC = () => {
         <div className="grid grid-cols-1 gap-5 md:auto-rows-[200px] md:grid-cols-4">
           {features.map((feature, idx) => (
             <FeatureCard
-              key={idx}
+              key={feature.title} // Changed to title for better key uniqueness
               idx={idx}
               className={`${feature.className} ${feature.className.includes("bg-slate-900") ? "border-slate-800" : "border-slate-200"}`}
             >

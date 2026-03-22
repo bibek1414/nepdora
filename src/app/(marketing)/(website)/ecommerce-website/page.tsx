@@ -88,7 +88,7 @@ export default function Page() {
   return (
     <>
       <JsonLd id="ecommerce-schema" data={ecommerceSchema} />
-      <CitiesLandingPage category="ecommerce-website" city="nepal" />
+      <CitiesLandingPage category="ecommerce" city="nepal" />
     </>
   );
 }
