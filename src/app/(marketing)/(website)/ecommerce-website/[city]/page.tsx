@@ -50,10 +50,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+import { MAJOR_CITIES } from "@/lib/seo-data";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export async function generateStaticParams() {
-  return NEPAL_CITIES.map(city => ({
+  return MAJOR_CITIES.map(city => ({
     city: city.toLowerCase(),
   }));
 }

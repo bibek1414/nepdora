@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { industries, cities, INDUSTRY_LABELS } from "@/lib/seo-data";
+import { industries, MAJOR_CITIES, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
@@ -13,7 +13,7 @@ interface Props {
 
 export async function generateStaticParams() {
   return industries.flatMap((industry) =>
-    cities.map((city) => ({
+    MAJOR_CITIES.map((city) => ({
       industry,
       city,
     }))
