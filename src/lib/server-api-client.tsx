@@ -25,19 +25,26 @@ export async function serverGet<T>(
   const baseHeaders = await createServerHeaders();
 
   const url = `${baseUrl}${endpoint}`;
+  
+  const headers = {
+    ...baseHeaders,
+    ...options?.headers,
+  };
+
+  console.log(`[serverGet] ${url}`);
+  console.log(`[serverGet] X-Tenant-Domain:`, (headers as any)["X-Tenant-Domain"] || (headers as any)["x-tenant-domain"]);
 
   const response = await fetch(url, {
     method: "GET",
     ...options,
-    headers: {
-      ...baseHeaders,
-      ...options?.headers,
-    },
+    headers,
     cache: options?.cache || "no-store",
   });
 
   await handleApiError(response);
-  return response.json();
+  const data = await response.json();
+  console.log(`[serverGet] Response:`, data);
+  return data;
 }
 
 /**
@@ -53,19 +60,27 @@ export async function serverPost<T>(
   const baseHeaders = await createServerHeaders();
 
   const url = `${baseUrl}${endpoint}`;
+  
+  const headers = {
+    ...baseHeaders,
+    ...options?.headers,
+  };
+
+  console.log(`[serverPost] ${url}`);
+  console.log(`[serverPost] X-Tenant-Domain:`, (headers as any)["X-Tenant-Domain"] || (headers as any)["x-tenant-domain"]);
+  console.log(`[serverPost] Body:`, data);
 
   const response = await fetch(url, {
     method: "POST",
     ...options,
-    headers: {
-      ...baseHeaders,
-      ...options?.headers,
-    },
+    headers,
     body: data ? JSON.stringify(data) : undefined,
   });
 
   await handleApiError(response);
-  return response.json();
+  const responseData = await response.json();
+  console.log(`[serverPost] Response:`, responseData);
+  return responseData;
 }
 
 /**

@@ -71,6 +71,7 @@
     "critters": "^0.0.25",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
+    "dns-query": "^0.11.2",
     "dompurify": "^3.3.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.12",
