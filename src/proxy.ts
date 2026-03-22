@@ -340,7 +340,7 @@ export async function proxy(request: NextRequest) {
       secure: isProd,
       sameSite: "lax" as const,
       maxAge,
-      httpOnly: true,
+      httpOnly: false,
     };
 
     response.cookies.set("authToken", authToken, cookieOptions);
