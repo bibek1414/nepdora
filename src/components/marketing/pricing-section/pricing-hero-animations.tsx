@@ -3,7 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export const PricingHeaderAnimation: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PricingHeaderAnimation: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -15,7 +17,10 @@ export const PricingHeaderAnimation: React.FC<{ children: React.ReactNode }> = (
   );
 };
 
-export const PricingToggleAnimation: React.FC<{ isYearly: boolean; children: React.ReactNode }> = ({ isYearly, children }) => {
+export const PricingToggleAnimation: React.FC<{
+  isYearly: boolean;
+  children: React.ReactNode;
+}> = ({ isYearly, children }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -28,7 +33,10 @@ export const PricingToggleAnimation: React.FC<{ isYearly: boolean; children: Rea
   );
 };
 
-export const SavingsBadgeAnimation: React.FC<{ isYearly: boolean; children: React.ReactNode }> = ({ isYearly, children }) => {
+export const SavingsBadgeAnimation: React.FC<{
+  isYearly: boolean;
+  children: React.ReactNode;
+}> = ({ isYearly, children }) => {
   return (
     <motion.span
       initial={{ scale: 0, opacity: 0 }}
@@ -44,14 +52,18 @@ export const SavingsBadgeAnimation: React.FC<{ isYearly: boolean; children: Reac
   );
 };
 
-export const PricingCardAnimation: React.FC<{ index: number; isCenter: boolean; children: React.ReactNode }> = ({ index, isCenter, children }) => {
+export const PricingCardAnimation: React.FC<{
+  index: number;
+  isCenter: boolean;
+  children: React.ReactNode;
+}> = ({ index, isCenter, children }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
       whileHover={{ scale: 1.05 }}
-      className={`relative flex h-full flex-col rounded-2xl overflow-hidden ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-2xl ${
         isCenter ? "scale-105" : "mt-15 scale-100"
       } duration-300`}
     >

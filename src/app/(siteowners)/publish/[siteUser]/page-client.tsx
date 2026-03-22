@@ -12,8 +12,11 @@ interface PublishPageClientProps {
   siteUser: string;
 }
 
-export default function PublishPageClient({ siteUser }: PublishPageClientProps) {
-  const { data: pagesData = [], isLoading: isPagesLoading } = usePages("published");
+export default function PublishPageClient({
+  siteUser,
+}: PublishPageClientProps) {
+  const { data: pagesData = [], isLoading: isPagesLoading } =
+    usePages("published");
 
   const homePage = React.useMemo(() => {
     if (isPagesLoading) return null;

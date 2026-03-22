@@ -3,7 +3,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export const AISectionFadeIn: React.FC<{ children: React.ReactNode; delay?: number; x?: number; y?: number }> = ({ children, delay = 0, x = 0, y = 0 }) => {
+export const AISectionFadeIn: React.FC<{
+  children: React.ReactNode;
+  delay?: number;
+  x?: number;
+  y?: number;
+}> = ({ children, delay = 0, x = 0, y = 0 }) => {
   return (
     <motion.div
       initial={{ opacity: 0, x, y }}
@@ -16,7 +21,9 @@ export const AISectionFadeIn: React.FC<{ children: React.ReactNode; delay?: numb
   );
 };
 
-export const AISectionImageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AISectionImageWrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}

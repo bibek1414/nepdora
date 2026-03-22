@@ -8,10 +8,15 @@ interface PricingToggleProps {
   onToggle: (val: boolean) => void;
 }
 
-export const PricingToggle: React.FC<PricingToggleProps> = ({ isYearly, onToggle }) => {
+export const PricingToggle: React.FC<PricingToggleProps> = ({
+  isYearly,
+  onToggle,
+}) => {
   return (
     <div className="mb-6 flex items-center justify-center gap-3">
-      <span className={`text-sm font-medium transition-colors ${!isYearly ? "text-gray-900" : "text-gray-500"}`}>
+      <span
+        className={`text-sm font-medium transition-colors ${!isYearly ? "text-gray-900" : "text-gray-500"}`}
+      >
         Monthly
       </span>
       <button
@@ -27,7 +32,9 @@ export const PricingToggle: React.FC<PricingToggleProps> = ({ isYearly, onToggle
           }`}
         />
       </button>
-      <span className={`text-sm font-medium transition-colors ${isYearly ? "text-gray-900" : "text-gray-500"}`}>
+      <span
+        className={`text-sm font-medium transition-colors ${isYearly ? "text-gray-900" : "text-gray-500"}`}
+      >
         Yearly
       </span>
       {isYearly && (
@@ -39,7 +46,9 @@ export const PricingToggle: React.FC<PricingToggleProps> = ({ isYearly, onToggle
   );
 };
 
-export const BillingDisplay: React.FC<{ isYearly: boolean }> = ({ isYearly }) => {
+export const BillingDisplay: React.FC<{ isYearly: boolean }> = ({
+  isYearly,
+}) => {
   return (
     <p className="text-start text-xs text-gray-500">
       {isYearly ? "Billed annually" : "Billed monthly"}

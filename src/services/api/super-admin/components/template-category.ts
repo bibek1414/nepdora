@@ -50,11 +50,14 @@ export const useTemplateCategoryApi = {
     payload: CreateTemplateCategoryRequest
   ): Promise<TemplateCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/template-categories/`, {
-      method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify(payload),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/template-categories/`,
+      {
+        method: "POST",
+        headers: createHeaders(),
+        body: JSON.stringify(payload),
+      }
+    );
     await handleApiError(response);
     const json = await response.json();
     return (json as TemplateCategoryResponse)?.data || json;

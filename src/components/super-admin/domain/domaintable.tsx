@@ -51,10 +51,7 @@ export default function DomainTable({
               const frontendUrl = `${domain.tenant.schema_name}.nepdora.com`;
 
               return (
-                <TableRow
-                  key={domain.id}
-                  className="hover:bg-gray-50"
-                >
+                <TableRow key={domain.id} className="hover:bg-gray-50">
                   <TableCell className="font-medium">{domain.domain}</TableCell>
                   <TableCell>
                     <Button

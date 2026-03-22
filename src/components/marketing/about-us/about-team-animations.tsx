@@ -14,7 +14,9 @@ interface AboutTeamClientProps {
   teamMembers: TeamMember[];
 }
 
-export const AboutTeamAnimations: React.FC<AboutTeamClientProps> = ({ teamMembers }) => {
+export const AboutTeamAnimations: React.FC<AboutTeamClientProps> = ({
+  teamMembers,
+}) => {
   return (
     <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-4">
       {teamMembers.map((member, index) => (
@@ -43,7 +45,9 @@ export const AboutTeamAnimations: React.FC<AboutTeamClientProps> = ({ teamMember
   );
 };
 
-export const AboutTeamHeaderFadeIn: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AboutTeamHeaderFadeIn: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -57,7 +61,9 @@ export const AboutTeamHeaderFadeIn: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const AboutTeamSectionWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AboutTeamSectionWrapper: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}

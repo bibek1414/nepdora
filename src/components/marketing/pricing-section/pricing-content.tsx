@@ -149,8 +149,10 @@ const PricingContent: React.FC = () => {
                   } ${plan.isPopular ? "scale-105 lg:scale-101" : ""}`}
                 >
                   {plan.isPopular && (
-                    <div className="absolute -top-4 right-0 left-0 mx-auto w-max z-10">
-                      <div className={`rounded-full ${colors.badge} px-4 py-1.5 text-xs font-bold text-white shadow-lg`}>
+                    <div className="absolute -top-4 right-0 left-0 z-10 mx-auto w-max">
+                      <div
+                        className={`rounded-full ${colors.badge} px-4 py-1.5 text-xs font-bold text-white shadow-lg`}
+                      >
                         MOST POPULAR
                       </div>
                     </div>
@@ -158,7 +160,9 @@ const PricingContent: React.FC = () => {
 
                   <div className="p-6">
                     <div className="mb-5">
-                      <div className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg ${colors.iconBg}`}>
+                      <div
+                        className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg ${colors.iconBg}`}
+                      >
                         <Icon className={`h-5 w-5 ${colors.iconColor}`} />
                       </div>
                       <h3 className="mb-1.5 text-xl font-bold text-gray-900">

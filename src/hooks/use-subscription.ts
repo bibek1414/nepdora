@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import { subscriptionApi } from "@/services/api/subscription";
 import { toast } from "sonner";
 import type {

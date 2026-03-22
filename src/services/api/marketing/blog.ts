@@ -44,10 +44,13 @@ export const marketingBlogApi = {
 
   getRecentBlogs: async (): Promise<BlogPost[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-recent-blogs/`, {
-      method: "GET",
-      headers: createHeaders(false),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-recent-blogs/`,
+      {
+        method: "GET",
+        headers: createHeaders(false),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();
@@ -56,10 +59,13 @@ export const marketingBlogApi = {
 
   getBlogBySlug: async (slug: string): Promise<BlogPost> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
-      method: "GET",
-      headers: createHeaders(false),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-blogs/${slug}/`,
+      {
+        method: "GET",
+        headers: createHeaders(false),
+      }
+    );
 
     await handleApiError(response);
     return response.json();

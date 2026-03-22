@@ -13,7 +13,13 @@ interface CaseStudy {
   link: string;
 }
 
-export const CaseStudyCard = ({ study, index }: { study: CaseStudy; index: number }) => {
+export const CaseStudyCard = ({
+  study,
+  index,
+}: {
+  study: CaseStudy;
+  index: number;
+}) => {
   return (
     <motion.article
       initial={{ opacity: 0, y: 30 }}

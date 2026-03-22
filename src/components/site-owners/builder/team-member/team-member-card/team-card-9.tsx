@@ -42,12 +42,12 @@ export const TeamCard9: React.FC<TeamCard9Props> = ({
 
       {/* Name/Role card on hover */}
       <div className="absolute right-6 bottom-6 left-6 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-        <div className="flex items-center justify-between rounded-xl bg-gray-900/90 p-4 text-white backdrop-blur-sm shadow-lg border border-white/10">
+        <div className="flex items-center justify-between rounded-xl border border-white/10 bg-gray-900/90 p-4 text-white shadow-lg backdrop-blur-sm">
           <div>
             <h4 className="text-lg leading-tight font-bold text-white">
               {member.name}
             </h4>
-            <p className="mt-0.5 text-xs text-gray-300 font-medium">
+            <p className="mt-0.5 text-xs font-medium text-gray-300">
               {member.role}
             </p>
           </div>

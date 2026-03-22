@@ -13,7 +13,9 @@ async function createServerHeaders(): Promise<HeadersInit> {
   const authToken = cookieStore.get("authToken")?.value;
   const user = await getServerUser();
   const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
-  const tenantDomain = user?.sub_domain ? `${user.sub_domain}.${baseDomain}` : "";
+  const tenantDomain = user?.sub_domain
+    ? `${user.sub_domain}.${baseDomain}`
+    : "";
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",

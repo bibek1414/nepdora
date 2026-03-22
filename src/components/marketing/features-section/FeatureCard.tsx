@@ -9,7 +9,11 @@ interface FeatureCardProps {
   idx: number;
 }
 
-export const FeatureCard: React.FC<FeatureCardProps> = ({ children, className, idx }) => {
+export const FeatureCard: React.FC<FeatureCardProps> = ({
+  children,
+  className,
+  idx,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

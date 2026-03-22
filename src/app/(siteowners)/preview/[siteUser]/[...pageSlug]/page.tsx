@@ -1,4 +1,8 @@
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { pageApi } from "@/services/api/owner-sites/page";
 import { componentsApi } from "@/services/api/owner-sites/components/unified";
 import { useNavbarApi } from "@/services/api/owner-sites/components/navbar";
@@ -19,13 +23,14 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 
   try {
     // Pre-fetch pages
-    await queryClient.prefetchQuery({ 
-      queryKey: ["pages", "preview"], 
-      queryFn: () => pageApi.getPages() 
+    await queryClient.prefetchQuery({
+      queryKey: ["pages", "preview"],
+      queryFn: () => pageApi.getPages(),
     });
-    
+
     // Determine the slug that will be fetched by the client
-    const pagesData = queryClient.getQueryData<any[]>(["pages", "preview"]) || [];
+    const pagesData =
+      queryClient.getQueryData<any[]>(["pages", "preview"]) || [];
     const slugFromUrl = pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
 
     const matchingPage = pagesData.find(
@@ -35,10 +40,22 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 
     // Pre-fetch components, navbar, footer, themes
     await Promise.all([
-      queryClient.prefetchQuery({ queryKey: ["pageComponents", currentPageSlug, "preview"], queryFn: () => componentsApi.getPageComponents(currentPageSlug) }),
-      queryClient.prefetchQuery({ queryKey: ["navbar"], queryFn: () => useNavbarApi.getNavbar() }),
-      queryClient.prefetchQuery({ queryKey: ["footer"], queryFn: () => useFooterApi.getFooter() }),
-      queryClient.prefetchQuery({ queryKey: ["themes"], queryFn: () => useThemeApi.getThemes() })
+      queryClient.prefetchQuery({
+        queryKey: ["pageComponents", currentPageSlug, "preview"],
+        queryFn: () => componentsApi.getPageComponents(currentPageSlug),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["navbar"],
+        queryFn: () => useNavbarApi.getNavbar(),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["footer"],
+        queryFn: () => useFooterApi.getFooter(),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["themes"],
+        queryFn: () => useThemeApi.getThemes(),
+      }),
     ]);
   } catch (error) {
     console.error("Failed to prefetch preview dynamic data on server:", error);

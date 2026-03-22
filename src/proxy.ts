@@ -142,9 +142,7 @@ async function fetchTenantDomainsBySubdomain(
   const timeoutId = setTimeout(() => controller.abort(), 5000);
 
   try {
-    const tenantDomain = siteConfig.isDev
-      ? `${subdomain}.localhost`
-      : hostname;
+    const tenantDomain = siteConfig.isDev ? `${subdomain}.localhost` : hostname;
 
     const apiUrl = `${siteConfig.apiBaseUrl}/api/custom-domain/`;
     console.log(

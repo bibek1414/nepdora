@@ -12,7 +12,9 @@ const fadeInUp: Variants = {
   },
 };
 
-export const ContactAnimations: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ContactAnimations: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <motion.section
       className="bg-background relative space-y-8 overflow-hidden px-4 py-8 md:space-y-12 md:px-4 md:py-20"

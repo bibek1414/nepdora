@@ -15,10 +15,13 @@ export const useNavbarApi = {
   // Get navbar with preview status
   getNavbar: async (): Promise<GetNavbarResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/navbar/?status=preview`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/navbar/?status=preview`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();

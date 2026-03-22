@@ -108,12 +108,15 @@ export const appointmentAPI = {
   // Get all appointment reasons
   getAppointmentReasons: async (): Promise<AppointmentReason[]> => {
     const BASE_API_URL = getApiBaseUrl();
-    const response = await apiFetch(`${BASE_API_URL}/api/appointment-reasons/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await apiFetch(
+      `${BASE_API_URL}/api/appointment-reasons/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     await handleApiError(response);
     return await response.json();

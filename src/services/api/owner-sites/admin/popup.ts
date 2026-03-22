@@ -141,7 +141,9 @@ export const popupApi = {
   getActivePopup: async (): Promise<PopUp | null> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await apiFetch(`${API_BASE_URL}/api/popup/?is_active=true`);
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/popup/?is_active=true`
+    );
     if (!response.ok) throw new Error("Failed to fetch active popup");
     const data = await response.json();
 

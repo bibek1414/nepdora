@@ -12,8 +12,12 @@ interface DynamicPageClientProps {
   pageSlug?: string[];
 }
 
-export default function DynamicPageClient({ siteUser, pageSlug }: DynamicPageClientProps) {
-  const { data: pagesData = [], isLoading: isPagesLoading } = usePages("preview");
+export default function DynamicPageClient({
+  siteUser,
+  pageSlug,
+}: DynamicPageClientProps) {
+  const { data: pagesData = [], isLoading: isPagesLoading } =
+    usePages("preview");
 
   const currentPageData = React.useMemo(() => {
     const slugFromUrl = pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
@@ -80,7 +84,8 @@ export default function DynamicPageClient({ siteUser, pageSlug }: DynamicPageCli
             {/* Heading */}
             <h1 className="text-6xl font-bold text-gray-800">404</h1>
             <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Oops! The &apos;{currentPageData.pageSlug}&apos; page you’re looking for doesn’t exist.
+              Oops! The &apos;{currentPageData.pageSlug}&apos; page you’re
+              looking for doesn’t exist.
             </h3>
 
             <Button

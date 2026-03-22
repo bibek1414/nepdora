@@ -145,7 +145,9 @@ export const HeroAnimations = () => {
                       <div className="mb-1 text-base font-semibold text-slate-900">
                         E-commerce
                       </div>
-                      <div className="text-xs text-slate-500">Sell products</div>
+                      <div className="text-xs text-slate-500">
+                        Sell products
+                      </div>
                     </div>
                   </motion.div>
 
@@ -160,7 +162,14 @@ export const HeroAnimations = () => {
                         strokeLinejoin="round"
                         className="h-7 w-7 text-slate-900"
                       >
-                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                        <rect
+                          x="2"
+                          y="7"
+                          width="20"
+                          height="14"
+                          rx="2"
+                          ry="2"
+                        />
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                       </svg>
                     </div>
@@ -168,7 +177,9 @@ export const HeroAnimations = () => {
                       <div className="mb-1 text-base font-semibold text-slate-900">
                         Service
                       </div>
-                      <div className="text-xs text-slate-500">Showcase work</div>
+                      <div className="text-xs text-slate-500">
+                        Showcase work
+                      </div>
                     </div>
                   </div>
                 </div>

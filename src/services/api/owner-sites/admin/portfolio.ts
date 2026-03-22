@@ -234,15 +234,18 @@ export const portfolioApi = {
     tagData: CreatePortfolioTag
   ): Promise<PortfolioTag> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
-      method: "PATCH",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-      body: JSON.stringify(tagData),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/portfolio-tags/${id}/`,
+      {
+        method: "PATCH",
+        headers: {
+          ...createHeaders(),
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(tagData),
+      }
+    );
 
     await handleApiError(response);
     return response.json();
@@ -250,12 +253,15 @@ export const portfolioApi = {
 
   deleteTag: async (id: number): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/portfolio-tags/${id}/`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/portfolio-tags/${id}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      }
+    );
 
     await handleApiError(response);
   },

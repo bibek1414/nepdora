@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { componentsApi, componentOrdersApi } from "@/services/api/owner-sites/components/unified";
+import {
+  componentsApi,
+  componentOrdersApi,
+} from "@/services/api/owner-sites/components/unified";
 import {
   ComponentTypeMap,
   ComponentResponse,
@@ -123,16 +126,19 @@ export const useCreateComponentMutation = (pageSlug: string) => {
       return new Promise<any>((resolve, reject) => {
         const expectedType = componentType;
         const expectedSlug = targetSlug;
-        const unsubscribe = socket.subscribe("component_created", (message: any) => {
-          if (
-            message.data &&
-            message.data.component_type === expectedType &&
-            message.data.page_slug === expectedSlug
-          ) {
-            unsubscribe();
-            resolve(message.data);
+        const unsubscribe = socket.subscribe(
+          "component_created",
+          (message: any) => {
+            if (
+              message.data &&
+              message.data.component_type === expectedType &&
+              message.data.page_slug === expectedSlug
+            ) {
+              unsubscribe();
+              resolve(message.data);
+            }
           }
-        });
+        );
 
         setTimeout(() => {
           unsubscribe();
@@ -714,7 +720,11 @@ export const useDeletePortfolioComponentMutation = () => {
       componentId: string;
     }) => {
       if (!socket.enabled) {
-        return componentsApi.deleteComponent(pageSlug, componentId, "portfolio");
+        return componentsApi.deleteComponent(
+          pageSlug,
+          componentId,
+          "portfolio"
+        );
       }
       socket.sendMessage({
         action: "delete_component",
@@ -756,18 +766,21 @@ export const useUpdateComponentOrderMutation = (pageSlug: string) => {
         return componentOrdersApi.updateComponentOrders(pageSlug, orderUpdates);
       }
       return new Promise<any>(resolve => {
-        const unsubscribe = socket.subscribe("component_order_updated", message => {
-          // Verify that this order update corresponds to the one we requested by checking pageSlug
-          // If we had a specific request ID we'd use it, otherwise we check if a component matches
-          if (
-            message.data &&
-            message.data.length > 0 &&
-            message.data[0].page_slug === pageSlug
-          ) {
-            unsubscribe();
-            resolve(message.data);
+        const unsubscribe = socket.subscribe(
+          "component_order_updated",
+          message => {
+            // Verify that this order update corresponds to the one we requested by checking pageSlug
+            // If we had a specific request ID we'd use it, otherwise we check if a component matches
+            if (
+              message.data &&
+              message.data.length > 0 &&
+              message.data[0].page_slug === pageSlug
+            ) {
+              unsubscribe();
+              resolve(message.data);
+            }
           }
-        });
+        );
 
         setTimeout(() => unsubscribe(), 10000);
 

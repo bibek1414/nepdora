@@ -77,10 +77,13 @@ export const useSubCategoryApi = {
 
   getSubCategory: async (slug: string): Promise<SubCategory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/sub-category/${slug}/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     return response.json();
@@ -140,11 +143,14 @@ export const useSubCategoryApi = {
       headers = createHeaders();
     }
 
-    const response = await apiFetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
-      method: "PATCH",
-      headers,
-      body,
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/sub-category/${slug}/`,
+      {
+        method: "PATCH",
+        headers,
+        body,
+      }
+    );
 
     await handleApiError(response);
     const responseData = await response.json();
@@ -158,10 +164,13 @@ export const useSubCategoryApi = {
     slug: string
   ): Promise<DeleteSubCategoryResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sub-category/${slug}/`, {
-      method: "DELETE",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/sub-category/${slug}/`,
+      {
+        method: "DELETE",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     return {

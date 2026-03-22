@@ -2,11 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Check,
-  Sparkles,
-  ChevronRight,
-} from "lucide-react";
+import { Check, Sparkles, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const QuickBuilderClient = () => {
@@ -95,8 +91,8 @@ export const QuickBuilderClient = () => {
             Site Structure Ready
           </h3>
           <p className="mb-6 text-sm text-slate-600 sm:mb-8 sm:text-base">
-            We&apos;ve prepared the store &quot;<b>{input}</b>&quot; with
-            local payments integrated.
+            We&apos;ve prepared the store &quot;<b>{input}</b>&quot; with local
+            payments integrated.
           </p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
             <Button variant="default" className="text-sm sm:text-base">

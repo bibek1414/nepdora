@@ -51,11 +51,14 @@ export const faqCategoryApi = {
     data: CreateFAQCategoryRequest
   ): Promise<CreateFAQCategoryResponse> => {
     const API_BASE_URL = siteConfig.apiBaseUrl;
-    const response = await apiFetch(`${API_BASE_URL}/api/support/faq-category/`, {
-      method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/support/faq-category/`,
+      {
+        method: "POST",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },

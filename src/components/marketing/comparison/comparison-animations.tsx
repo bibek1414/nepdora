@@ -3,7 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export const CountUpAnimation = ({ end, duration }: { end: number; duration: number }) => {
+export const CountUpAnimation = ({
+  end,
+  duration,
+}: {
+  end: number;
+  duration: number;
+}) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -24,10 +30,22 @@ export const CountUpAnimation = ({ end, duration }: { end: number; duration: num
   return <>{count.toLocaleString("en-IN")}</>;
 };
 
-export const FadeInAnimation = ({ children, delay = 0, direction = "y" }: { children: React.ReactNode, delay?: number, direction?: "x" | "y" }) => {
+export const FadeInAnimation = ({
+  children,
+  delay = 0,
+  direction = "y",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  direction?: "x" | "y";
+}) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: direction === "x" ? -20 : 0, y: direction === "y" ? 20 : 0 }}
+      initial={{
+        opacity: 0,
+        x: direction === "x" ? -20 : 0,
+        y: direction === "y" ? 20 : 0,
+      }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       transition={{ duration: 0.6, delay }}
     >

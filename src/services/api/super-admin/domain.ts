@@ -56,7 +56,9 @@ export async function createDomain(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.detail || `Failed to create domain: ${res.statusText}`);
+    throw new Error(
+      err?.detail || `Failed to create domain: ${res.statusText}`
+    );
   }
   return res.json();
 }
@@ -80,7 +82,9 @@ export async function updateDomain(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.detail || `Failed to update domain: ${res.statusText}`);
+    throw new Error(
+      err?.detail || `Failed to update domain: ${res.statusText}`
+    );
   }
   return res.json();
 }
@@ -95,6 +99,8 @@ export async function deleteDomain(id: number): Promise<void> {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.detail || `Failed to delete domain: ${res.statusText}`);
+    throw new Error(
+      err?.detail || `Failed to delete domain: ${res.statusText}`
+    );
   }
 }

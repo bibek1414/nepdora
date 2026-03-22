@@ -24,10 +24,7 @@ export const TeamStyle9: React.FC<TeamStyleProps> = ({
   onUpdate,
   onMemberClick,
 }) => {
-  const { data: localData, handleTextUpdate } = useBuilderLogic(
-    data,
-    onUpdate
-  );
+  const { data: localData, handleTextUpdate } = useBuilderLogic(data, onUpdate);
 
   const { title = "Meet Our Team", subtitle, tag = "[Our Team]" } = localData;
 

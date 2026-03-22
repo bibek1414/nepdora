@@ -68,14 +68,17 @@ export const subscriptionApi = {
 
   // Cancel subscription
   cancel: async (): Promise<{ success: boolean; message: string }> => {
-    const response = await apiFetch(`${API_BASE_URL}/api/subscription/cancel/`, {
-      method: "POST",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/subscription/cancel/`,
+      {
+        method: "POST",
+        headers: {
+          ...createHeaders(),
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      }
+    );
 
     await handleApiError(response);
     return response.json();

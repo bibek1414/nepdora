@@ -97,14 +97,12 @@ const getPlanColors = (type: Plan["type"], isPopular: boolean): PlanColors => {
 };
 
 const PricingSection: React.FC = () => {
-  // We'll use a local state for the toggle by creating a client wrapper if needed, 
-  // but for this "Coming Soon" version, let's just make the section a Client Component 
-  // inside the Server Page, OR split it. 
+  // We'll use a local state for the toggle by creating a client wrapper if needed,
+  // but for this "Coming Soon" version, let's just make the section a Client Component
+  // inside the Server Page, OR split it.
   // Let's stick to the split: the outer section remains server-rendered.
-  
-  return (
-    <PricingContent />
-  );
+
+  return <PricingContent />;
 };
 
 // Moving the interactive part to a client component

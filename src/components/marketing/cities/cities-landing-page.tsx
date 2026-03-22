@@ -36,17 +36,20 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:items-center">
             <div>
               <h2 className="mb-6 text-3xl font-bold text-slate-900">
-                Why build your {categoryName.toLowerCase()} in {cityName} with Nepdora?
+                Why build your {categoryName.toLowerCase()} in {cityName} with
+                Nepdora?
               </h2>
               <div className="space-y-4 text-slate-600">
                 <p>
-                  At Nepdora, we understand the unique business landscape of {cityName}. 
-                  Whether you are a startup or an established enterprise, our platform 
-                  provides the specific tools you need to succeed in the local {cityName} market.
+                  At Nepdora, we understand the unique business landscape of{" "}
+                  {cityName}. Whether you are a startup or an established
+                  enterprise, our platform provides the specific tools you need
+                  to succeed in the local {cityName} market.
                 </p>
                 <p>
-                  From integrated local payment gateways like eSewa and Khalti to 
-                  partnership with local logistics providers, we ensure your {categoryName.toLowerCase()} 
+                  From integrated local payment gateways like eSewa and Khalti
+                  to partnership with local logistics providers, we ensure your{" "}
+                  {categoryName.toLowerCase()}
                   is fully optimized for the Nepalese audience.
                 </p>
                 <ul className="mt-6 space-y-3">
@@ -57,17 +60,19 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
                     "24/7 Local support and onboarding",
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      <div className="bg-primary h-1.5 w-1.5 rounded-full" />
                       <span className="text-sm font-medium">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
-            <div className="relative aspect-video overflow-hidden rounded-2xl bg-white shadow-xl border border-slate-200">
-               <div className="absolute inset-0 flex items-center justify-center bg-slate-100">
-                 <span className="text-slate-400 font-medium italic">Empowering {cityName} Businesses</span>
-               </div>
+            <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+              <div className="absolute inset-0 flex items-center justify-center bg-slate-100">
+                <span className="font-medium text-slate-400 italic">
+                  Empowering {cityName} Businesses
+                </span>
+              </div>
             </div>
           </div>
         </div>

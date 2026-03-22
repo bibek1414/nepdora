@@ -33,8 +33,13 @@ export function useCreateDomain() {
 export function useUpdateDomain() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, payload }: { id: number; payload: UpdateDomainPayload }) =>
-      updateDomain(id, payload),
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: number;
+      payload: UpdateDomainPayload;
+    }) => updateDomain(id, payload),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["domains"] }),
   });
 }

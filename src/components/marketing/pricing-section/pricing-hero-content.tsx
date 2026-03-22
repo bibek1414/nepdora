@@ -17,7 +17,9 @@ interface PricingHeroContentProps {
   initialPlans?: Plan[];
 }
 
-const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans }) => {
+const PricingHeroContent: React.FC<PricingHeroContentProps> = ({
+  initialPlans,
+}) => {
   const { data: plans } = usePricingPlans({ initialData: initialPlans });
   const [isYearly, setIsYearly] = useState(false);
 
@@ -53,8 +55,10 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans })
   const sortPlans = (plans: Plan[]) => {
     const order = { free: 1, premium: 2, pro: 3 };
     return [...plans].sort((a, b) => {
-      const orderA = order[a.plan_type.toLowerCase() as keyof typeof order] || 999;
-      const orderB = order[b.plan_type.toLowerCase() as keyof typeof order] || 999;
+      const orderA =
+        order[a.plan_type.toLowerCase() as keyof typeof order] || 999;
+      const orderB =
+        order[b.plan_type.toLowerCase() as keyof typeof order] || 999;
       return orderA - orderB;
     });
   };
@@ -70,12 +74,15 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans })
               Pick a plan that&apos;s right for you
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
-              All of our plans are customized to fit the needs of small and large teams.
+              All of our plans are customized to fit the needs of small and
+              large teams.
             </p>
           </PricingHeaderAnimation>
 
           <PricingToggleAnimation isYearly={isYearly}>
-            <span className={`font-medium transition-colors duration-200 ${!isYearly ? "text-gray-900" : "text-gray-500"}`}>
+            <span
+              className={`font-medium transition-colors duration-200 ${!isYearly ? "text-gray-900" : "text-gray-500"}`}
+            >
               Monthly
             </span>
             <button
@@ -90,7 +97,9 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans })
                 className="absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow-md"
               />
             </button>
-            <span className={`font-medium transition-colors duration-200 ${isYearly ? "text-gray-900" : "text-gray-500"}`}>
+            <span
+              className={`font-medium transition-colors duration-200 ${isYearly ? "text-gray-900" : "text-gray-500"}`}
+            >
               Yearly
             </span>
             <SavingsBadgeAnimation isYearly={isYearly}>
@@ -111,14 +120,22 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans })
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-8 lg:grid-cols-3">
           {sortedPlans.map((plan, index) => {
             const colors = getPlanColors(plan.plan_type);
-            const availableFeatures = [...plan.features].sort((a, b) => a.order - b.order);
+            const availableFeatures = [...plan.features].sort(
+              (a, b) => a.order - b.order
+            );
             const isCenterCard = plan.plan_type.toLowerCase() === "premium";
             const displayPrice = calculatePrice(plan.price);
             const savings = calculateSavings(plan.price);
 
             return (
-              <PricingCardAnimation key={plan.id} index={index} isCenter={isCenterCard}>
-                <div className={`relative flex h-full flex-col ${colors.background}`}>
+              <PricingCardAnimation
+                key={plan.id}
+                index={index}
+                isCenter={isCenterCard}
+              >
+                <div
+                  className={`relative flex h-full flex-col ${colors.background}`}
+                >
                   {plan.is_popular && (
                     <div className="absolute top-0 left-0 z-10 w-full -translate-y-1/2">
                       <div className="bg-primary mt-10 w-full px-6 py-2 text-center text-sm font-bold text-white shadow-lg">
@@ -126,12 +143,16 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans })
                       </div>
                     </div>
                   )}
-                  
-                  <div className={`mt-6 p-6 text-center ${isCenterCard ? "pb-8" : "pb-6"}`}>
-                    <h3 className={`font-bold ${isCenterCard ? "text-2xl" : "text-xl"}`}>
+
+                  <div
+                    className={`mt-6 p-6 text-center ${isCenterCard ? "pb-8" : "pb-6"}`}
+                  >
+                    <h3
+                      className={`font-bold ${isCenterCard ? "text-2xl" : "text-xl"}`}
+                    >
                       {plan.name}
                     </h3>
-                    <p className="text-sm text-black/90 mt-2">
+                    <p className="mt-2 text-sm text-black/90">
                       {plan.plan_type.toLowerCase() === "free"
                         ? "Get organized and set up simple sales processes"
                         : plan.plan_type.toLowerCase() === "premium"
@@ -140,10 +161,14 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans })
                     </p>
                   </div>
 
-                  <div className={`border-b border-gray-200 p-2 text-center ${isCenterCard ? "pb-8" : "pb-6"}`}>
+                  <div
+                    className={`border-b border-gray-200 p-2 text-center ${isCenterCard ? "pb-8" : "pb-6"}`}
+                  >
                     <div className="mb-4 flex items-baseline justify-center gap-1">
                       <span className="font-medium text-gray-600">Rs.</span>
-                      <span className={`text-primary font-mono font-bold ${isCenterCard ? "text-4xl" : "text-4xl"}`}>
+                      <span
+                        className={`text-primary font-mono font-bold ${isCenterCard ? "text-4xl" : "text-4xl"}`}
+                      >
                         {formatPrice(displayPrice)}
                       </span>
                       <span className="font-medium text-gray-600">
@@ -158,18 +183,29 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({ initialPlans })
                     )}
 
                     <Link href="/admin/signup">
-                      <button className={`rounded-full px-10 font-semibold transition-all duration-200 ${colors.buttonBg} py-3`}>
-                        {plan.plan_type.toLowerCase() === "free" ? "Get Started Free" : "Try for Free"}
+                      <button
+                        className={`rounded-full px-10 font-semibold transition-all duration-200 ${colors.buttonBg} py-3`}
+                      >
+                        {plan.plan_type.toLowerCase() === "free"
+                          ? "Get Started Free"
+                          : "Try for Free"}
                       </button>
                     </Link>
                   </div>
 
-                  <div className={`flex-1 p-6 ${isCenterCard ? "pb-8" : "pb-6"}`}>
+                  <div
+                    className={`flex-1 p-6 ${isCenterCard ? "pb-8" : "pb-6"}`}
+                  >
                     <div className="space-y-4">
-                      {availableFeatures.map((feature) => (
-                        <div key={feature.id} className="flex items-start gap-3">
-                          <Check className="h-5 w-5 text-primary shrink-0" />
-                          <span className="text-sm text-gray-700">{feature.feature}</span>
+                      {availableFeatures.map(feature => (
+                        <div
+                          key={feature.id}
+                          className="flex items-start gap-3"
+                        >
+                          <Check className="text-primary h-5 w-5 shrink-0" />
+                          <span className="text-sm text-gray-700">
+                            {feature.feature}
+                          </span>
                         </div>
                       ))}
                     </div>

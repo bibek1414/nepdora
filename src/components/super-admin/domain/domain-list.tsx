@@ -61,7 +61,9 @@ export default function DomainsPage() {
       toast.success("Domain deleted successfully");
       refetch(); // Only explicit refresh if you want, but mutate invalidates list anyway
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Failed to delete domain");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to delete domain"
+      );
     } finally {
       setDeleteDomainId(null);
     }
@@ -132,7 +134,7 @@ export default function DomainsPage() {
       {/* Delete Confirmation Alert */}
       <AlertDialog
         open={!!deleteDomainId}
-        onOpenChange={(op) => {
+        onOpenChange={op => {
           if (!op) setDeleteDomainId(null);
         }}
       >
@@ -149,7 +151,7 @@ export default function DomainsPage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault();
                 handleDeleteStatus();
               }}

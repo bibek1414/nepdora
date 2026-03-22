@@ -3,7 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export const AboutStoryFadeInLeft: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AboutStoryFadeInLeft: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -16,7 +18,9 @@ export const AboutStoryFadeInLeft: React.FC<{ children: React.ReactNode }> = ({ 
   );
 };
 
-export const AboutStoryFadeInUp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AboutStoryFadeInUp: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

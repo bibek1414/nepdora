@@ -7,10 +7,13 @@ import { AnalyticsStats, UnreadCounts } from "@/types/owner-site/admin/stats";
 export const statsApi = {
   getUnreadCounts: async (): Promise<UnreadCounts> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/stats/unread-counts/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/stats/unread-counts/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },

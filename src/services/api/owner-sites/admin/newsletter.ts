@@ -24,10 +24,13 @@ export const newsletterApi = {
     if (search) {
       params.append("search", search);
     }
-    const response = await apiFetch(`${API_BASE_URL}/api/newsletter/?${params}`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/newsletter/?${params}`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },

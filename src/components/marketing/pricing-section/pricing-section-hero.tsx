@@ -6,7 +6,9 @@ interface PricingSectionHeroProps {
   initialPlans?: Plan[];
 }
 
-const PricingSectionHero: React.FC<PricingSectionHeroProps> = ({ initialPlans }) => {
+const PricingSectionHero: React.FC<PricingSectionHeroProps> = ({
+  initialPlans,
+}) => {
   return <PricingHeroContent initialPlans={initialPlans} />;
 };
 

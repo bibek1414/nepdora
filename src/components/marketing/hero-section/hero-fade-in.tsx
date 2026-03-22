@@ -20,4 +20,5 @@ export const HeroFadeIn = ({
       {children}
     </motion.div>
   );
-};export default HeroFadeIn;
+};
+export default HeroFadeIn;

@@ -21,10 +21,13 @@ export const paymentGatewayApi = {
   // Get all payment gateway configs
   getPaymentGateways: async (): Promise<PaymentGateway[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/payment-gateway/list/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/payment-gateway/list/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -56,10 +59,13 @@ export const paymentGatewayApi = {
   // Get single payment gateway config by ID
   getPaymentGateway: async (id: string): Promise<GetPaymentGatewayResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/payment-gateway/${id}/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/payment-gateway/${id}/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -69,11 +75,14 @@ export const paymentGatewayApi = {
     data: CreatePaymentGatewayRequest
   ): Promise<CreatePaymentGatewayResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/payment-gateway/list/`, {
-      method: "POST",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/payment-gateway/list/`,
+      {
+        method: "POST",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -84,11 +93,14 @@ export const paymentGatewayApi = {
     data: UpdatePaymentGatewayRequest
   ): Promise<UpdatePaymentGatewayResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/payment-gateway/${id}/`, {
-      method: "PATCH",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/payment-gateway/${id}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -98,10 +110,13 @@ export const paymentGatewayApi = {
     id: string
   ): Promise<DeletePaymentGatewayResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/payment-gateway/${id}/`, {
-      method: "DELETE",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/payment-gateway/${id}/`,
+      {
+        method: "DELETE",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {

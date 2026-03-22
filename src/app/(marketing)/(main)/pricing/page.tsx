@@ -46,6 +46,6 @@ export const metadata: Metadata = {
 
 export default async function PricingPage() {
   const plans = await subscriptionApi.getPlans().catch(() => []);
-  
+
   return <PricingSectionHero initialPlans={plans} />;
 }

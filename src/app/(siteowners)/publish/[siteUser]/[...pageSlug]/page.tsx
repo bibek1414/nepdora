@@ -1,4 +1,8 @@
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { pageApi } from "@/services/api/owner-sites/page";
 import { componentsApi } from "@/services/api/owner-sites/components/unified";
 import { useNavbarApi } from "@/services/api/owner-sites/components/navbar";
@@ -43,31 +47,48 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
     // Pre-fetch domains
     await queryClient.prefetchQuery({
       queryKey: ["domains", 1, 100],
-      queryFn: () => getDomains(1, 100)
+      queryFn: () => getDomains(1, 100),
     });
 
     // Pre-fetch pages (published)
-    await queryClient.prefetchQuery({ 
-      queryKey: ["pages", "published"], 
-      queryFn: () => pageApi.getPages("published") 
+    await queryClient.prefetchQuery({
+      queryKey: ["pages", "published"],
+      queryFn: () => pageApi.getPages("published"),
     });
-    
+
     // Determine exact slug to fetch components
-    const pagesData = queryClient.getQueryData<any[]>(["pages", "published"]) || [];
+    const pagesData =
+      queryClient.getQueryData<any[]>(["pages", "published"]) || [];
     const matchingPage = pagesData.find(
-      (p: any) => p.slug === currentPageSlug || p.slug === `${currentPageSlug}-draft`
+      (p: any) =>
+        p.slug === currentPageSlug || p.slug === `${currentPageSlug}-draft`
     );
     const targetSlug = matchingPage?.slug || currentPageSlug;
 
     // Pre-fetch components, navbar, footer, themes for PUBLISHED data
     await Promise.all([
-      queryClient.prefetchQuery({ queryKey: ["pageComponents", targetSlug, "published"], queryFn: () => componentsApi.getPageComponentsPublished(targetSlug) }),
-      queryClient.prefetchQuery({ queryKey: ["navbar", "published"], queryFn: () => useNavbarApi.getNavbarPublished() }),
-      queryClient.prefetchQuery({ queryKey: ["footer", "published"], queryFn: () => useFooterApi.getFooterPublished() }),
-      queryClient.prefetchQuery({ queryKey: ["themes", "published"], queryFn: () => useThemeApi.getThemesPublished() })
+      queryClient.prefetchQuery({
+        queryKey: ["pageComponents", targetSlug, "published"],
+        queryFn: () => componentsApi.getPageComponentsPublished(targetSlug),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["navbar", "published"],
+        queryFn: () => useNavbarApi.getNavbarPublished(),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["footer", "published"],
+        queryFn: () => useFooterApi.getFooterPublished(),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["themes", "published"],
+        queryFn: () => useThemeApi.getThemesPublished(),
+      }),
     ]);
   } catch (error) {
-    console.error("Failed to prefetch dynamic published data on server:", error);
+    console.error(
+      "Failed to prefetch dynamic published data on server:",
+      error
+    );
   }
 
   return (

@@ -3,7 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export const AboutValuesSectionWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AboutValuesSectionWrapper: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -17,7 +19,9 @@ export const AboutValuesSectionWrapper: React.FC<{ children: React.ReactNode }> 
   );
 };
 
-export const AboutValuesImageGrid: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AboutValuesImageGrid: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
@@ -31,7 +35,12 @@ export const AboutValuesImageGrid: React.FC<{ children: React.ReactNode }> = ({ 
   );
 };
 
-export const AboutValuesImage: React.FC<{ src: string; alt: string; delay?: number; className?: string }> = ({ src, alt, delay = 0, className = "" }) => {
+export const AboutValuesImage: React.FC<{
+  src: string;
+  alt: string;
+  delay?: number;
+  className?: string;
+}> = ({ src, alt, delay = 0, className = "" }) => {
   return (
     <motion.img
       initial={{ opacity: 0, y: 20 }}
@@ -45,7 +54,9 @@ export const AboutValuesImage: React.FC<{ src: string; alt: string; delay?: numb
   );
 };
 
-export const AboutValuesContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AboutValuesContent: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: 50 }}
@@ -59,7 +70,11 @@ export const AboutValuesContent: React.FC<{ children: React.ReactNode }> = ({ ch
   );
 };
 
-export const AboutValuesBadge: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({ children, delay = 0, className = "" }) => {
+export const AboutValuesBadge: React.FC<{
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}> = ({ children, delay = 0, className = "" }) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}

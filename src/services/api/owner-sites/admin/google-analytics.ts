@@ -29,10 +29,13 @@ export const googleAnalyticsApi = {
     id: string
   ): Promise<GetGoogleAnalyticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/google-analytic/${id}/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -57,11 +60,14 @@ export const googleAnalyticsApi = {
     data: UpdateGoogleAnalyticsRequest
   ): Promise<UpdateGoogleAnalyticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
-      method: "PATCH",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/google-analytic/${id}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -71,10 +77,13 @@ export const googleAnalyticsApi = {
     id: string
   ): Promise<DeleteGoogleAnalyticsResponse> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/google-analytic/${id}/`, {
-      method: "DELETE",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/google-analytic/${id}/`,
+      {
+        method: "DELETE",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {

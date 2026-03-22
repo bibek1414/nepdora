@@ -14,12 +14,17 @@ import {
 
 export const pageApi = {
   // Get all pages
-  getPages: async (status: "preview" | "published" = "preview"): Promise<Page[]> => {
+  getPages: async (
+    status: "preview" | "published" = "preview"
+  ): Promise<Page[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/pages/?status=${status}`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/pages/?status=${status}`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     return response.json();

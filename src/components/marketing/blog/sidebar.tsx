@@ -10,11 +10,7 @@ import {
 } from "@/hooks/marketing/use-blogs";
 import Link from "next/link";
 import { format } from "date-fns";
-import {
-  BlogPost,
-  BlogCategory,
-  BlogTag,
-} from "@/types/super-admin/blog";
+import { BlogPost, BlogCategory, BlogTag } from "@/types/super-admin/blog";
 
 export const SearchBar = () => {
   const router = useRouter();
@@ -68,14 +64,18 @@ export const SearchBar = () => {
         type="text"
         placeholder="Search..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={e => setSearchTerm(e.target.value)}
         className="w-full rounded-xl border-none bg-[#F4F6F8] py-4 pr-4 pl-12 text-sm transition-all outline-none focus:ring-2 focus:ring-indigo-100"
       />
     </div>
   );
 };
 
-export const CategoryList = ({ initialData }: { initialData?: BlogCategory[] }) => {
+export const CategoryList = ({
+  initialData,
+}: {
+  initialData?: BlogCategory[];
+}) => {
   const { data: categories } = useMarketingBlogCategories({ initialData });
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -216,7 +216,11 @@ export interface SidebarProps {
   initialRecentPosts?: BlogPost[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ initialCategories, initialTags, initialRecentPosts }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  initialCategories,
+  initialTags,
+  initialRecentPosts,
+}) => {
   return (
     <div className="sticky top-24 flex flex-col gap-12">
       <SearchBar />
@@ -227,7 +231,11 @@ const Sidebar: React.FC<SidebarProps> = ({ initialCategories, initialTags, initi
   );
 };
 
-const DetailSidebar = ({ initialRecentPosts }: { initialRecentPosts?: BlogPost[] }) => {
+const DetailSidebar = ({
+  initialRecentPosts,
+}: {
+  initialRecentPosts?: BlogPost[];
+}) => {
   return (
     <div className="sticky top-24 flex flex-col gap-12">
       <div className="space-y-6 lg:w-96">

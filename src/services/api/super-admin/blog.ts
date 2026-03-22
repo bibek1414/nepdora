@@ -75,10 +75,13 @@ export const superAdminBlogApi = {
 
   getRecentBlogs: async (): Promise<BlogPost[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-recent-blogs/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-recent-blogs/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     const data = await response.json();
@@ -87,10 +90,13 @@ export const superAdminBlogApi = {
 
   getBlogBySlug: async (slug: string): Promise<BlogPost> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-blogs/${slug}/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
 
     await handleApiError(response);
     return response.json();
@@ -186,14 +192,17 @@ export const superAdminBlogApi = {
     const API_BASE_URL = getApiBaseUrl();
     const formData = buildBlogFormData(blogData);
 
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-        // Don't set Content-Type header - let the browser set it with boundary
-      },
-      body: formData,
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-blogs/${slug}/`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+          // Don't set Content-Type header - let the browser set it with boundary
+        },
+        body: formData,
+      }
+    );
 
     await handleApiError(response);
     return response.json();
@@ -201,12 +210,15 @@ export const superAdminBlogApi = {
 
   delete: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-blogs/${slug}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      }
+    );
 
     await handleApiError(response);
   },
@@ -250,15 +262,18 @@ export const superAdminBlogApi = {
 
   updateTag: async (slug: string, tagData: CreateBlogTag): Promise<BlogTag> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
-      method: "PATCH",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-      body: JSON.stringify(tagData),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-tags/${slug}/`,
+      {
+        method: "PATCH",
+        headers: {
+          ...createHeaders(),
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        body: JSON.stringify(tagData),
+      }
+    );
 
     await handleApiError(response);
     return response.json();
@@ -266,12 +281,15 @@ export const superAdminBlogApi = {
 
   deleteTag: async (slug: string): Promise<void> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-tags/${slug}/`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/nepdora-tags/${slug}/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      }
+    );
 
     await handleApiError(response);
   },
