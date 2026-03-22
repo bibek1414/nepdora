@@ -43,6 +43,53 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from "@/components/shared/json-ld";
+
+const featuresSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Nepdora Platform Features",
+  "description":
+    "Comprehensive suite of digital tools including a drag-and-drop website builder, e-commerce solutions, and centralized social media management.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Nepdora",
+    "url": "https://www.nepdora.com",
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Digital Solutions",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Website Builder",
+        },
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "E-commerce System",
+        },
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Social Media Management",
+        },
+      },
+    ],
+  },
+};
+
 export default function FeaturesPage() {
-  return <FeaturesGrid />;
+  return (
+    <>
+      <JsonLd id="features-schema" data={featuresSchema} />
+      <FeaturesGrid />
+    </>
+  );
 }

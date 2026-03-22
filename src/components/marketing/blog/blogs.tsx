@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useMarketingBlogs } from "@/hooks/marketing/use-blogs";
 import { SimplePagination } from "@/components/ui/simple-pagination";
 import { BlogFilters } from "@/types/super-admin/blog";
+import { PaginatedBlogResponse } from "@/types/super-admin/blog";
 import BlogCard from "./blog-card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -25,7 +26,11 @@ export const BlogCardSkeleton = () => (
   </div>
 );
 
-const Blogs = () => {
+interface BlogsProps {
+  initialData?: PaginatedBlogResponse;
+}
+
+const Blogs = ({ initialData }: BlogsProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -48,7 +53,13 @@ const Blogs = () => {
     [page, search, category, tags]
   );
 
-  const { data: blogData, isLoading, error } = useMarketingBlogs(queryFilters);
+  const {
+    data: blogData,
+    isLoading,
+    error,
+  } = useMarketingBlogs(queryFilters, {
+    initialData: initialData,
+  });
 
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());

@@ -12,6 +12,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Restaurant Website in ${cityName} | Nepdora`;
   const description = `Create a stunning restaurant website in ${cityName} with Nepdora. Showcase your menu, accept online orders, and manage table bookings with ease.`;
 
+  const url = `https://www.nepdora.com/restaurant-website/` + city.toLowerCase();
+
   return {
     title,
     description,
@@ -22,11 +24,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "menu template Nepal",
     ],
     alternates: {
-      canonical:
-        `https://www.nepdora.com/restaurant-website/` + city.toLowerCase(),
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "Nepdora",
+      images: [
+        {
+          url: "/nepdora-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: `Best Restaurant Website in ${cityName}`,
+        },
+      ],
+      locale: "en_NP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/nepdora-image.jpg"],
     },
   };
 }
+
+import { JsonLd } from "@/components/shared/json-ld";
 
 export async function generateStaticParams() {
   return NEPAL_CITIES.map(city => ({
@@ -36,5 +61,29 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: Props) {
   const { city } = await params;
-  return <CitiesLandingPage category="restaurant-website" city={city} />;
+  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
+
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `Restaurant Website in ${cityName}`,
+    description: `Professional restaurant website and online ordering solutions in ${cityName} powered by Nepdora.`,
+    provider: {
+      "@type": "Organization",
+      name: "Nepdora",
+      url: "https://www.nepdora.com",
+    },
+    areaServed: {
+      "@type": "City",
+      name: cityName,
+      addressCountry: "NP",
+    },
+  };
+
+  return (
+    <>
+      <JsonLd id="restaurant-city-schema" data={serviceSchema} />
+      <CitiesLandingPage category="restaurant-website" city={city} />
+    </>
+  );
 }

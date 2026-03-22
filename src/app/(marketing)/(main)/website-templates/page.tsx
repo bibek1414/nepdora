@@ -35,38 +35,43 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from "@/components/shared/json-ld";
+
 export default function WebsiteTemplatesPage() {
   const templateSchema = {
     "@context": "https://schema.org/",
     "@type": "ItemList",
     name: "Nepdora Website Templates",
     description:
-      "A collection of high-quality, customizable website templates.",
+      "A collection of high-quality, customizable website templates for every industry.",
     numberOfItems: 50,
     itemListElement: [
       {
-        "@type": "SoftwareApplication",
-        name: "Professional Portfolio Template",
-        applicationCategory: "Web Design Template",
-        operatingSystem: "Web",
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": "Professional Portfolio Template",
+          "applicationCategory": "Web Design Template",
+          "operatingSystem": "Web",
+        }
       },
       {
-        "@type": "SoftwareApplication",
-        name: "Business Landing Page Template",
-        applicationCategory: "Web Design Template",
-        operatingSystem: "Web",
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": "Business Landing Page Template",
+          "applicationCategory": "Web Design Template",
+          "operatingSystem": "Web",
+        }
       },
     ],
   };
 
   return (
     <>
-      <Script
-        id="schema-templates"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(templateSchema) }}
-      />
+      <JsonLd id="schema-templates" data={templateSchema} />
 
       <div className="bg-white">
         <TemplatesHero />

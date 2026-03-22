@@ -45,9 +45,40 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from "@/components/shared/json-ld";
+
+const templatesSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Website Templates | Nepdora",
+  description:
+    "Explore professionally designed website templates for restaurants, agencies, and e-commerce stores in Nepal.",
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "E-commerce Templates",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Restaurant Templates",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Agency Templates",
+      },
+    ],
+  },
+};
+
 export default function Templates() {
   return (
     <>
+      <JsonLd id="templates-schema" data={templatesSchema} />
       <Suspense fallback={<div className="min-h-screen py-20" />}>
         <TemplatesPage />
       </Suspense>

@@ -7,7 +7,7 @@ import HowItWorks from "@/components/marketing/website-developer-nepal/HowItWork
 import WhoItsBuiltFor from "@/components/marketing/website-developer-nepal/WhoItsBuiltFor";
 import FAQSection from "@/components/marketing/website-developer-nepal/FAQSection";
 import CTASection from "@/components/marketing/website-developer-nepal/CTASection";
-
+import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
   title:
@@ -24,6 +24,30 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "https://www.nepdora.com/website-developer-nepal",
+  },
+  openGraph: {
+    title: "Website Developer in Nepal? Build It Yourself with Nepdora",
+    description:
+      "Looking for a website developer in Nepal? Skip the wait and high cost. Build a professional website in minutes with Nepdora. Try free.",
+    url: "https://www.nepdora.com/website-developer-nepal",
+    siteName: "Nepdora",
+    images: [
+      {
+        url: "/nepdora-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Build your website in Nepal with Nepdora",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Website Developer in Nepal? Build It Yourself with Nepdora",
+    description:
+      "Skip the wait and high cost. Build a professional website in minutes with Nepdora. Try free.",
+    images: ["/nepdora-image.jpg"],
   },
 };
 
@@ -77,11 +101,7 @@ export default function WebsiteDeveloperNepalPage() {
 
   return (
     <div className="bg-white">
-      <Script
-        id="faq-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      <JsonLd id="faq-schema" data={faqSchema} />
 
       <Hero />
       <EmpathySection />

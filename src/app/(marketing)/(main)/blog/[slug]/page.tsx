@@ -3,6 +3,7 @@ import { marketingBlogApi } from "@/services/api/marketing/blog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ContactSection from "@/components/marketing/contact-us/contact-us";
+import { JsonLd } from "@/components/shared/json-ld";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -75,8 +76,36 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       marketingBlogApi.getRecentBlogs(),
     ]);
 
+    const blogPostingSchema = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: blog.title,
+      description: blog.meta_description || blog.title,
+      image: blog.thumbnail_image,
+      author: {
+        "@type": "Organization",
+        name: "Nepdora",
+        url: "https://www.nepdora.com",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Nepdora",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://www.nepdora.com/nepdora-logooo.svg",
+        },
+      },
+      datePublished: blog.created_at,
+      dateModified: blog.updated_at,
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": `https://www.nepdora.com/blog/${blog.slug}`,
+      },
+    };
+
     return (
       <>
+        <JsonLd id="blog-posting-schema" data={blogPostingSchema} />
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-12 lg:flex-row">
             {/* Blog Post Content */}

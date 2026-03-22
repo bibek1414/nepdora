@@ -44,9 +44,24 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from "@/components/shared/json-ld";
+
+const supportSchema = {
+  "@context": "https://schema.org",
+  "@type": "HelpPage",
+  name: "Nepdora Support Center",
+  description:
+    "Find answers to common questions about web development, e-commerce, and digital marketing in Nepal.",
+  mainEntity: {
+    "@type": "FAQPage",
+    name: "Frequently Asked Questions",
+  },
+};
+
 export default function SupportPage() {
   return (
     <>
+      <JsonLd id="support-schema" data={supportSchema} />
       <SupportHeader />
       <div className="mx-auto max-w-6xl">
         <SupportFAQ />

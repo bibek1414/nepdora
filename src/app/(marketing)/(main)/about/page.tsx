@@ -49,9 +49,26 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from "@/components/shared/json-ld";
+
+const aboutSchema = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: "About Nepdora",
+  description:
+    "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management in Nepal.",
+  mainEntity: {
+    "@type": "Organization",
+    name: "Nepdora",
+    url: "https://www.nepdora.com",
+    logo: "https://www.nepdora.com/nepdora-logooo.svg",
+  },
+};
+
 export default function AboutPage() {
   return (
     <div className="bg-white">
+      <JsonLd id="about-schema" data={aboutSchema} />
       <AboutHero />
       <AboutStory />
       <div className="space-y-24 pb-24 sm:space-y-32 sm:pb-32 lg:space-y-48 lg:pb-48">

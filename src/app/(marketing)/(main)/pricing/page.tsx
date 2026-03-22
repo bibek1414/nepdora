@@ -46,8 +46,31 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from "@/components/shared/json-ld";
+
+const pricingSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Nepdora Pricing Plans",
+  "description": "Compare Nepdora's affordable and transparent pricing plans for businesses of all sizes in Nepal.",
+  "mainEntity": {
+    "@type": "Offer",
+    "priceCurrency": "NPR",
+    "offeredBy": {
+      "@type": "Organization",
+      "name": "Nepdora",
+      "url": "https://www.nepdora.com"
+    }
+  }
+};
+
 export default async function PricingPage() {
   const plans = await subscriptionApi.getPlans().catch(() => []);
 
-  return <PricingSectionHero initialPlans={plans} />;
+  return (
+    <>
+      <JsonLd id="pricing-schema" data={pricingSchema} />
+      <PricingSectionHero initialPlans={plans} />
+    </>
+  );
 }

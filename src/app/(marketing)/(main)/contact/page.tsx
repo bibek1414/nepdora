@@ -43,6 +43,33 @@ export const metadata: Metadata = {
   },
 };
 
+import { JsonLd } from "@/components/shared/json-ld";
+
+const contactSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact Nepdora",
+  description:
+    "Get in touch with the Nepdora team for web development and e-commerce support in Nepal.",
+  mainEntity: {
+    "@type": "Organization",
+    name: "Nepdora",
+    telephone: "+977 986-6316114",
+    email: "support@nepdora.com",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Kathmandu, Nepal",
+      addressLocality: "Kathmandu",
+      addressCountry: "NP",
+    },
+  },
+};
+
 export default function ContactPage() {
-  return <ContactSection />;
+  return (
+    <>
+      <JsonLd id="contact-schema" data={contactSchema} />
+      <ContactSection />
+    </>
+  );
 }

@@ -41,11 +41,27 @@ export const metadata: Metadata = {
     images: ["https://www.nepdora.com/nepdora-image.jpg"],
   },
 };
+
+import { JsonLd } from "@/components/shared/json-ld";
+
+const privacySchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Nepdora Privacy Policy",
+  "description": "Information about how Nepdora handles user data and privacy.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Nepdora",
+    "url": "https://www.nepdora.com"
+  }
+};
+
 export default function PrivacyPolicyPage() {
   const lastUpdated = "October 29, 2025";
 
   return (
     <div className="bg-background min-h-screen">
+      <JsonLd id="privacy-schema" data={privacySchema} />
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">

@@ -39,6 +39,28 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { JsonLd } from "@/components/shared/json-ld";
+
+const analyzerSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Nepdora Website Analyzer",
+  operatingSystem: "Web",
+  applicationCategory: "BusinessApplication",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "NPR",
+  },
+  description:
+    "A free tool to audit your website's SEO, speed, and mobile responsiveness for the Nepalese market.",
+};
+
 export default function FreeWebsiteAnalyzerPage() {
-  return <WebsiteAnalyzer />;
+  return (
+    <>
+      <JsonLd id="analyzer-schema" data={analyzerSchema} />
+      <WebsiteAnalyzer />
+    </>
+  );
 }

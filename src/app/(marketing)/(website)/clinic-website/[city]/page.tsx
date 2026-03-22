@@ -12,6 +12,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Clinic Website in ${cityName} | Nepdora`;
   const description = `Launch a professional clinic website in ${cityName} with Nepdora. Manage patient appointments, display services, and grow your practice online.`;
 
+  const url = `https://www.nepdora.com/clinic-website/` + city.toLowerCase();
+
   return {
     title,
     description,
@@ -22,10 +24,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "medical website Nepal",
     ],
     alternates: {
-      canonical: `https://www.nepdora.com/clinic-website/` + city.toLowerCase(),
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "Nepdora",
+      images: [
+        {
+          url: "/nepdora-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: `Best Clinic Website in ${cityName}`,
+        },
+      ],
+      locale: "en_NP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/nepdora-image.jpg"],
     },
   };
 }
+
+import { JsonLd } from "@/components/shared/json-ld";
 
 export async function generateStaticParams() {
   return NEPAL_CITIES.map(city => ({
@@ -35,5 +61,29 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: Props) {
   const { city } = await params;
-  return <CitiesLandingPage category="clinic-website" city={city} />;
+  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
+
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `Clinic Website in ${cityName}`,
+    description: `Professional healthcare website solutions in ${cityName} powered by Nepdora.`,
+    provider: {
+      "@type": "Organization",
+      name: "Nepdora",
+      url: "https://www.nepdora.com",
+    },
+    areaServed: {
+      "@type": "City",
+      name: cityName,
+      addressCountry: "NP",
+    },
+  };
+
+  return (
+    <>
+      <JsonLd id="clinic-city-schema" data={serviceSchema} />
+      <CitiesLandingPage category="clinic-website" city={city} />
+    </>
+  );
 }
