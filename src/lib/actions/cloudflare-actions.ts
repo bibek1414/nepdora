@@ -1,9 +1,72 @@
 "use server";
 
+export async function getAccountNameservers() {
+  try {
+    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+    let accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+
+    if (!apiToken || !accountId) {
+      console.error("Cloudflare Configuration Missing:", {
+        hasToken: !!apiToken,
+        hasAccountId: !!accountId,
+      });
+      return {
+        success: false,
+        error: "Cloudflare API Token or Account ID is not configured.",
+      };
+    }
+
+    // Strip any surrounding quotes that might be in the .env file
+    accountId = accountId.replace(/^["']|["']$/g, "");
+
+    console.log("Fetching account nameservers for account:", accountId);
+
+    const response = await fetch(
+      `https://api.cloudflare.com/client/v4/zones?account.id=${accountId}&per_page=1`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      return {
+        success: false,
+        error: data.errors?.[0]?.message || "Failed to fetch zones.",
+      };
+    }
+
+    if (data.result && data.result.length > 0) {
+      const zone = data.result[0];
+      const nameservers = zone.name_servers || zone.nameservers;
+      if (nameservers && nameservers.length > 0) {
+        return { success: true, nameservers };
+      }
+    }
+
+    // Fallback if no zones or nameservers are available in the account yet
+    return {
+      success: true,
+      nameservers: ["cleo.ns.cloudflare.com", "vivienne.ns.cloudflare.com"],
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || "Failed to fetch account nameservers.",
+    };
+  }
+}
+
 export async function addDomainToCloudflare(domainName: string) {
   try {
     const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+    let accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 
     if (!apiToken || !accountId) {
       return {
@@ -11,6 +74,9 @@ export async function addDomainToCloudflare(domainName: string) {
         error: "Cloudflare API Token or Account ID is not configured.",
       };
     }
+
+    // Strip any surrounding quotes that might be in the .env file
+    accountId = accountId.replace(/^["']|["']$/g, "");
 
     // Step 1: Create the zone
     const createZoneResponse = await fetch(
@@ -27,6 +93,7 @@ export async function addDomainToCloudflare(domainName: string) {
             id: accountId,
           },
         }),
+        cache: "no-store",
       }
     );
 
@@ -53,6 +120,7 @@ export async function addDomainToCloudflare(domainName: string) {
           Authorization: `Bearer ${apiToken}`,
           "Content-Type": "application/json",
         },
+        cache: "no-store",
       }
     );
 
@@ -99,6 +167,7 @@ export async function checkDomainVerificationStatus(domainName: string) {
           Authorization: `Bearer ${apiToken}`,
           "Content-Type": "application/json",
         },
+        cache: "no-store",
       }
     );
 
@@ -112,7 +181,16 @@ export async function checkDomainVerificationStatus(domainName: string) {
     }
 
     if (!data.result || data.result.length === 0) {
-      return { success: false, error: "Zone not found" };
+      const accountNsResult = await getAccountNameservers();
+      const defaultNameservers = accountNsResult.success
+        ? accountNsResult.nameservers
+        : ["cleo.ns.cloudflare.com", "vivienne.ns.cloudflare.com"];
+
+      return {
+        success: false,
+        error: "Zone not found",
+        nameservers: defaultNameservers,
+      };
     }
 
     const zone = data.result[0];
@@ -144,14 +222,12 @@ export async function checkDnsAndAddToCloudflare(domainName: string) {
         cache: "no-store",
       }
     );
-
     if (!response.ok) {
       return { success: false, error: "Failed to securely query DNS." };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dnsData: any = await response.json();
-
     if (!dnsData.Answer || dnsData.Answer.length === 0) {
       return {
         success: false,

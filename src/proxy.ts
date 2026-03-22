@@ -384,47 +384,8 @@ export async function proxy(request: NextRequest) {
   if (subdomain) {
     console.log(`\n[Subdomain] "${subdomain}" detected`);
 
-    // In dev mode, skip the custom-domain redirect and just rewrite
-    if (!siteConfig.isDev) {
-      // Check whether this tenant has a custom domain
-      let cacheEntry = getCached(subdomain);
-
-      if (!cacheEntry) {
-        console.log(`[Cache Miss] Fetching domain info for "${subdomain}"`);
-        const host = request.headers.get("host") || "";
-        const hostname = host.split(":")[0];
-        const result = await fetchTenantDomainsBySubdomain(subdomain, hostname);
-        cacheEntry = {
-          customDomain: result?.customDomain ?? null,
-          subdomain,
-          timestamp: Date.now(),
-        };
-        setCached(subdomain, cacheEntry);
-      } else {
-        console.log(
-          `[Cache Hit] "${subdomain}" → custom domain: ${cacheEntry.customDomain ?? "none"}`
-        );
-      }
-
-      /**
-       * If a custom domain exists → redirect the visitor there.
-       * e.g.  bibek.nepdora.com  →  yachuindia.com
-       */
-      if (cacheEntry.customDomain) {
-        const currentHost = request.headers.get("host") || "";
-        if (
-          !currentHost.includes("localhost") &&
-          !currentHost.includes("127.0.0.1") &&
-          !currentHost.includes(cacheEntry.customDomain)
-        ) {
-          const redirectUrl = new URL(request.url);
-          redirectUrl.hostname = cacheEntry.customDomain;
-          console.log(`[Redirect] ${currentHost} → ${cacheEntry.customDomain}`);
-          return NextResponse.redirect(redirectUrl, 302); // Use 302 to avoid permanent cache traps locally
-        }
-        // Already on custom domain — fall through to rewrite below
-      }
-    }
+    // We no longer redirect subdomains to custom domains.
+    // Both bibek.nepdora.com and yachuindia.com will serve the same content independently.
 
     // Bypass admin / builder routes
     if (allowedPaths.some(p => pathname.startsWith(p))) {

@@ -14,9 +14,6 @@ import {
 } from "@/lib/actions/custom-domain-actions";
 import { Edit2 } from "lucide-react";
 
-// Replace these with your actual Cloudflare nameservers for your account
-const CLOUDFLARE_NAMESERVERS = ["ns1.cloudflare.com", "ns2.cloudflare.com"];
-
 function DomainStatusItem({
   domainItem,
   onDelete,
@@ -49,7 +46,13 @@ function DomainStatusItem({
           // If the zone is not found, it means it hasn't been added to CF yet.
           if (result.error?.includes("Zone not found")) {
             setStatus("dns_pending");
-            setNameservers(CLOUDFLARE_NAMESERVERS);
+            setNameservers(
+              result.nameservers || [
+                "cleo.ns.cloudflare.com",
+                "vivienne.ns.cloudflare.com",
+              ]
+            );
+            console.log("Nameservers:", result.nameservers);
           } else {
             setStatus("error");
             setError(result.error || "Failed to verify status");
@@ -266,8 +269,10 @@ export default function CloudflareDomainForm({
     setNewDomainAdded(false);
 
     const saveResult = await saveCustomDomain(domain);
-
     if (saveResult.success && saveResult.domain) {
+      // PROACTIVE: Add to Cloudflare immediately so we get real nameservers
+      await addDomainToCloudflare(domain);
+
       setNewDomainAdded(true);
       setLocalDomains([...localDomains, saveResult.domain]);
       setDomain("");
