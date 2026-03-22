@@ -64,6 +64,7 @@ export const Footer = () => {
               </div>
               <div className="flex flex-col space-y-3">
                 <FooterLink href="/contact">Contact Us</FooterLink>
+                <FooterLink href="/partners">Partners</FooterLink>
                 <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
                 <FooterLink href="/terms">Terms and Conditions</FooterLink>
                 <FooterLink href="/support">Support</FooterLink>
@@ -147,6 +148,12 @@ export const Footer = () => {
                 <FooterLink href="/features/pathao-parcel">
                   Logistics (Pathao)
                 </FooterLink>
+                <FooterLink href="/esewa-integration-guide-nepal">
+                  eSewa Setup Guide
+                </FooterLink>
+                <FooterLink href="/khalti-payment-gateway-nepal">
+                  Khalti Setup Guide
+                </FooterLink>
               </div>
             </div>
 
@@ -179,6 +186,7 @@ export const Footer = () => {
                 Resources
               </h4>
               <div className="flex flex-col space-y-2">
+                <FooterLink href="/learn">Learning Hub</FooterLink>
                 <FooterLink href="/learn/how-to-start-online-business-in-nepal">
                   Start Online Business
                 </FooterLink>
