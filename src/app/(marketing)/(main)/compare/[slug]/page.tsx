@@ -1,7 +1,5 @@
-import React from "react";
 import { Metadata } from "next";
 import Comparison from "@/components/marketing/comparison/comparison";
-import CTA from "@/components/marketing/cta-section/cta-section";
 import { capitalizeWords } from "@/lib/string-utils";
 
 interface Props {

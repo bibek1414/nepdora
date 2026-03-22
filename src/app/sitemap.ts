@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/blog",
     "/faq",
     "/support",
+    "/website-developer-nepal",
     "/free-website-analyzer",
     "/invoice-builder",
     "/website-templates",

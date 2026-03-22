@@ -1,5 +1,6 @@
-import { X, Check, Calculator } from "lucide-react";
+import { X, Check, Calculator, ArrowRight } from "lucide-react";
 import { CountUpAnimation, FadeInAnimation } from "./comparison-animations";
+import Link from "next/link";
 
 interface ComparisonProps {
   platformName?: string;
@@ -61,6 +62,18 @@ const Comparison: React.FC<ComparisonProps> = ({
                     <CountUpAnimation end={245000} duration={2} />
                   </span>
                 </div>
+              </div>
+              <div className="mt-8">
+                <Link
+                  href="/website-developer-nepal"
+                  className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-900 transition-colors hover:text-primary"
+                >
+                  Detailed Comparison: Nepdora vs Hiring a Developer
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </Link>
               </div>
             </FadeInAnimation>
           </div>

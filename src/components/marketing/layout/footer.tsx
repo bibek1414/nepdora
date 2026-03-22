@@ -145,7 +145,16 @@ export const Footer = () => {
                 <FooterLink href="/invoice-builder">Invoice Builder</FooterLink>
               </div>
             </div>
-
+            <div>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
+                Resources
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/website-developer-nepal">
+                  Website Developer in Nepal
+                </FooterLink>
+              </div>
+            </div>
             {/* Templates */}
             <div>
               <h4 className="mb-4 text-lg font-bold text-gray-900">

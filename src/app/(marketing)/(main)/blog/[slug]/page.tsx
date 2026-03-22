@@ -3,7 +3,6 @@ import { marketingBlogApi } from "@/services/api/marketing/blog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ContactSection from "@/components/marketing/contact-us/contact-us";
-import { Suspense } from "react";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;

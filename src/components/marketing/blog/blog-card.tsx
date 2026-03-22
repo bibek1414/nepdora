@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import { BlogPost } from "@/types/super-admin/blog";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -11,7 +8,7 @@ interface BlogCardProps {
   className?: string;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({ post, className = "" }) => {
+export default function BlogCard({ post, className = "" }: BlogCardProps) {
   const formattedDate = new Date(post.created_at);
   const formattedDateString = format(formattedDate, "dd MMM yyyy");
 
@@ -19,7 +16,6 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className = "" }) => {
     post.author?.first_name && post.author?.last_name
       ? `${post.author.first_name} ${post.author.last_name}`
       : post.author?.username || "Team Nepdora";
-  const authorRole = post.author?.email ? "" : "Team Nepdora";
   const authorAvatar = "https://avatars.githubusercontent.com/u/57863199?v=4";
 
   return (
@@ -67,6 +63,4 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, className = "" }) => {
       </div>
     </div>
   );
-};
-
-export default BlogCard;
+}
