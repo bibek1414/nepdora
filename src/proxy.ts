@@ -414,11 +414,15 @@ export async function proxy(request: NextRequest) {
        */
       if (cacheEntry.customDomain) {
         const currentHost = request.headers.get("host") || "";
-        if (!currentHost.includes(cacheEntry.customDomain)) {
+        if (
+          !currentHost.includes("localhost") &&
+          !currentHost.includes("127.0.0.1") &&
+          !currentHost.includes(cacheEntry.customDomain)
+        ) {
           const redirectUrl = new URL(request.url);
           redirectUrl.hostname = cacheEntry.customDomain;
           console.log(`[Redirect] ${currentHost} → ${cacheEntry.customDomain}`);
-          return NextResponse.redirect(redirectUrl, 301);
+          return NextResponse.redirect(redirectUrl, 302); // Use 302 to avoid permanent cache traps locally
         }
         // Already on custom domain — fall through to rewrite below
       }

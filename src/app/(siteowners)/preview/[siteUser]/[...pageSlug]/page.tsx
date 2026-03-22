@@ -1,12 +1,10 @@
-"use client";
-
-import React from "react";
-import { Button } from "@/components/ui/site-owners/button";
-import { use } from "react";
-import { usePageData } from "@/hooks/owner-site/use-page-data";
-import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
-import { PageSkeleton } from "@/components/site-owners/shared/page-skeleton";
-import { usePages } from "@/hooks/owner-site/use-page";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { pageApi } from "@/services/api/owner-sites/page";
+import { componentsApi } from "@/services/api/owner-sites/components/unified";
+import { useNavbarApi } from "@/services/api/owner-sites/components/navbar";
+import { useFooterApi } from "@/services/api/owner-sites/components/footer";
+import { useThemeApi } from "@/services/api/owner-sites/components/theme";
+import DynamicPageClient from "./page-client";
 
 interface DynamicPageProps {
   params: Promise<{
@@ -15,92 +13,40 @@ interface DynamicPageProps {
   }>;
 }
 
-export default function DynamicPage({ params }: DynamicPageProps) {
-  const { siteUser, pageSlug } = use(params);
+export default async function DynamicPage({ params }: DynamicPageProps) {
+  const { siteUser, pageSlug } = await params;
+  const queryClient = new QueryClient();
 
-  const { data: pagesData = [], isLoading: isPagesLoading } =
-    usePages("preview");
-
-  const currentPageData = React.useMemo(() => {
+  try {
+    // Pre-fetch pages
+    await queryClient.prefetchQuery({ 
+      queryKey: ["pages", "preview"], 
+      queryFn: () => pageApi.getPages() 
+    });
+    
+    // Determine the slug that will be fetched by the client
+    const pagesData = queryClient.getQueryData<any[]>(["pages", "preview"]) || [];
     const slugFromUrl = pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
-    const contentSlug =
-      pageSlug && pageSlug.length > 1 ? pageSlug[1] : undefined;
 
-    if (isPagesLoading) return { pageSlug: slugFromUrl, contentSlug };
-
-    // Find if there's a draft version or exact match
     const matchingPage = pagesData.find(
-      p => p.slug === slugFromUrl || p.slug === `${slugFromUrl}-draft`
+      (p: any) => p.slug === slugFromUrl || p.slug === `${slugFromUrl}-draft`
     );
+    const currentPageSlug = matchingPage?.slug || slugFromUrl;
 
-    return {
-      pageSlug: matchingPage?.slug || slugFromUrl,
-      contentSlug,
-    };
-  }, [pageSlug, pagesData, isPagesLoading]);
-
-  const {
-    pageComponents,
-    isLoading: isComponentsLoading,
-    handleBacktoHome,
-    handleProductClick,
-    handleBlogClick,
-    handleServiceClick,
-    handleCategoryClick,
-    handleSubCategoryClick,
-    handlePortfolioClick,
-  } = usePageData(siteUser, currentPageData.pageSlug);
-
-  const handleComponentUpdate = () => {
-    // Component update handlers (not used in preview mode)
-  };
-
-  if (isComponentsLoading) {
-    return <PageSkeleton />;
+    // Pre-fetch components, navbar, footer, themes
+    await Promise.all([
+      queryClient.prefetchQuery({ queryKey: ["pageComponents", currentPageSlug, "preview"], queryFn: () => componentsApi.getPageComponents(currentPageSlug) }),
+      queryClient.prefetchQuery({ queryKey: ["navbar"], queryFn: () => useNavbarApi.getNavbar() }),
+      queryClient.prefetchQuery({ queryKey: ["footer"], queryFn: () => useFooterApi.getFooter() }),
+      queryClient.prefetchQuery({ queryKey: ["themes"], queryFn: () => useThemeApi.getThemes() })
+    ]);
+  } catch (error) {
+    console.error("Failed to prefetch preview dynamic data on server:", error);
   }
 
-  const hasContent = pageComponents.length > 0;
-
   return (
-    <>
-      <PageComponentRenderer
-        components={pageComponents}
-        siteUser={siteUser}
-        pageSlug={currentPageData.pageSlug}
-        onProductClick={handleProductClick}
-        onBlogClick={handleBlogClick}
-        onComponentUpdate={handleComponentUpdate}
-        onServiceClick={handleServiceClick}
-        onCategoryClick={handleCategoryClick}
-        onSubCategoryClick={handleSubCategoryClick}
-        onPortfolioClick={handlePortfolioClick}
-        productSlug={currentPageData.contentSlug}
-        blogSlug={currentPageData.contentSlug}
-        serviceSlug={currentPageData.contentSlug}
-        portfolioSlug={currentPageData.contentSlug}
-      />
-
-      <div className="p-8">
-        {!hasContent ? (
-          <div className="py-20 text-center">
-            {/* Heading */}
-            <h1 className="text-6xl font-bold text-gray-800">404</h1>
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Oops! The &apos;
-              {currentPageData.pageSlug}&apos; page you’re looking for doesn’t
-              exist.
-            </h3>
-
-            <Button
-              onClick={handleBacktoHome}
-              className="mt-4"
-              variant="default"
-            >
-              Go back home
-            </Button>
-          </div>
-        ) : null}
-      </div>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <DynamicPageClient siteUser={siteUser} pageSlug={pageSlug} />
+    </HydrationBoundary>
   );
 }

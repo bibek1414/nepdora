@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 import { ComponentTypeMap } from "@/types/owner-site/components/components";
 

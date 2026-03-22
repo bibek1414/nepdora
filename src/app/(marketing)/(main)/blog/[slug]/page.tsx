@@ -77,24 +77,17 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     ]);
 
     return (
-      <div className="bg-[#F4F6F8]">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <>
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-12 lg:flex-row">
             {/* Blog Post Content */}
             <div className="flex-1">
               <BlogDetailView blog={blog} />
             </div>
-
-            {/* Sidebar */}
-            <aside className="w-full lg:w-96">
-              <Suspense fallback={<div className="h-64 animate-pulse rounded-xl bg-gray-200" />}>
-                <DetailSidebar initialRecentPosts={recentPosts} />
-              </Suspense>
-            </aside>
           </div>
         </div>
         <ContactSection />
-      </div>
+      </>
     );
   } catch (error) {
     notFound();

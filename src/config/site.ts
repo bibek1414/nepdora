@@ -57,16 +57,22 @@ export const extractSubdomain = (url: URL): string | null => {
 /**
  * Extract tenant domain from URL or query params
  */
-export const getTenantDomain = (): string | null => {
-  if (typeof window === "undefined") return null;
-
-  // ✅ Dev
-  if (siteConfig.isDev) {
+export const getTenantDomain = async (): Promise<string | null> => {
+  if (typeof window !== "undefined") {
     return window.location.host;
   }
 
-  // ✅ Prod
-  return window.location.host;
+  if (typeof process !== "undefined" && process.release?.name === "node") {
+    try {
+      const { headers } = require("next/headers");
+      const headersList = await headers();
+      return headersList.get("x-forwarded-host") || headersList.get("host");
+    } catch (error) {
+      return null;
+    }
+  }
+
+  return null;
 };
 
 /**

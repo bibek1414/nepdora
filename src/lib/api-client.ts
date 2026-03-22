@@ -6,7 +6,7 @@ import { getTenantDomain } from "@/config/site";
  */
 export const apiFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   const customHeaders = new Headers(init?.headers);
-  const tenantDomain = getTenantDomain();
+  const tenantDomain = await getTenantDomain();
 
   if (tenantDomain) {
     customHeaders.set("X-Tenant-Domain", tenantDomain);

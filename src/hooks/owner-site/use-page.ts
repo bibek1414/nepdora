@@ -26,7 +26,7 @@ export const usePages = (status: "preview" | "published" = "preview") => {
     queryKey: PAGES_QUERY_KEY(status),
     queryFn: () => {
       if (!socket || !socket.enabled) {
-        return pageApi.getPages();
+        return pageApi.getPages(status);
       }
       return new Promise<Page[]>((resolve, reject) => {
         const unsubscribe = socket.subscribe("pages_list", (message: any) => {
