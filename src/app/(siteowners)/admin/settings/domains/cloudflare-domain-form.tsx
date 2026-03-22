@@ -125,7 +125,7 @@ function DomainStatusItem({
               <button
                 onClick={handleSaveEdit}
                 disabled={isSaving}
-                className="text-sm cursor-pointer font-medium text-green-600 hover:text-green-700 disabled:opacity-50"
+                className="cursor-pointer text-sm font-medium text-green-600 hover:text-green-700 disabled:opacity-50"
               >
                 {isSaving ? "Saving..." : "Save"}
               </button>
@@ -135,7 +135,7 @@ function DomainStatusItem({
                   setEditDomainVal(domainItem.domain);
                 }}
                 disabled={isSaving}
-                className="text-sm cursor-pointer text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50"
               >
                 Cancel
               </button>

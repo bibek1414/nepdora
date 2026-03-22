@@ -68,7 +68,8 @@ export async function addDomainToCloudflare(domainName: string) {
       };
     }
 
-    const nameServers = getZoneData.result.name_servers || getZoneData.result.nameservers;
+    const nameServers =
+      getZoneData.result.name_servers || getZoneData.result.nameservers;
 
     return {
       success: true,
@@ -104,7 +105,10 @@ export async function checkDomainVerificationStatus(domainName: string) {
     const data = await response.json();
 
     if (!response.ok || !data.success) {
-      return { success: false, error: data.errors?.[0]?.message || "Check failed" };
+      return {
+        success: false,
+        error: data.errors?.[0]?.message || "Check failed",
+      };
     }
 
     if (!data.result || data.result.length === 0) {
@@ -121,68 +125,74 @@ export async function checkDomainVerificationStatus(domainName: string) {
       nameservers,
     };
   } catch (error: any) {
-    return { success: false, error: error.message || "Failed to verify status" };
+    return {
+      success: false,
+      error: error.message || "Failed to verify status",
+    };
   }
 }
 
 export async function checkDnsAndAddToCloudflare(domainName: string) {
   try {
     // 1. Resolve NS records securely using Cloudflare DNS-over-HTTPS (DoH)
-    const response = await fetch(`https://cloudflare-dns.com/dns-query?name=${domainName}&type=NS`, {
-      headers: {
-        'Accept': 'application/dns-json'
-      },
-      cache: 'no-store'
-    });
-    
+    const response = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${domainName}&type=NS`,
+      {
+        headers: {
+          Accept: "application/dns-json",
+        },
+        cache: "no-store",
+      }
+    );
+
     if (!response.ok) {
-       return { success: false, error: "Failed to securely query DNS." };
+      return { success: false, error: "Failed to securely query DNS." };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dnsData: any = await response.json();
-    
+
     if (!dnsData.Answer || dnsData.Answer.length === 0) {
-      return { 
-        success: false, 
-        error: `DNS check failed. No nameservers found recursively for ${domainName}. Please update them to the Cloudflare nameservers provided in the UI.` 
+      return {
+        success: false,
+        error: `DNS check failed. No nameservers found recursively for ${domainName}. Please update them to the Cloudflare nameservers provided in the UI.`,
       };
     }
 
     // Extract the nameserver targets
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nsRecords: string[] = dnsData.Answer.map((ans: any) => ans.data);
-    
+
     // 2. Check if cloudflare is in any of the NS records
-    const hasCloudflareNs = nsRecords.some(ns => ns.toLowerCase().includes("cloudflare.com"));
-    
+    const hasCloudflareNs = nsRecords.some(ns =>
+      ns.toLowerCase().includes("cloudflare.com")
+    );
+
     if (!hasCloudflareNs) {
-      return { 
-        success: false, 
-        error: `DNS check failed. We found nameservers: ${nsRecords.join(", ") || "None"}. Please update them to the Cloudflare nameservers provided in the UI.` 
+      return {
+        success: false,
+        error: `DNS check failed. We found nameservers: ${nsRecords.join(", ") || "None"}. Please update them to the Cloudflare nameservers provided in the UI.`,
       };
     }
-    
+
     // 3. DNS is valid! Proceed to add to Cloudflare.
     const addResult = await addDomainToCloudflare(domainName);
-    
+
     if (!addResult.success) {
       return addResult; // Pass through CF error
     }
-    
+
     return {
       success: true,
       nameservers: addResult.nameservers,
-      message: "Domain added and automatically verified by Cloudflare."
+      message: "Domain added and automatically verified by Cloudflare.",
     };
-    
   } catch (error: any) {
     console.error("DNS Resolution Error:", error);
-    return { 
-      success: false, 
-      error: "Failed to resolve DNS securely via DoH. Make sure the domain is registered." 
+    return {
+      success: false,
+      error:
+        "Failed to resolve DNS securely via DoH. Make sure the domain is registered.",
     };
   }
 }
-
-

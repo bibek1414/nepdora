@@ -25,14 +25,17 @@ export async function serverGet<T>(
   const baseHeaders = await createServerHeaders();
 
   const url = `${baseUrl}${endpoint}`;
-  
+
   const headers = {
     ...baseHeaders,
     ...options?.headers,
   };
 
   console.log(`[serverGet] ${url}`);
-  console.log(`[serverGet] X-Tenant-Domain:`, (headers as any)["X-Tenant-Domain"] || (headers as any)["x-tenant-domain"]);
+  console.log(
+    `[serverGet] X-Tenant-Domain:`,
+    (headers as any)["X-Tenant-Domain"] || (headers as any)["x-tenant-domain"]
+  );
 
   const response = await fetch(url, {
     method: "GET",
@@ -60,14 +63,17 @@ export async function serverPost<T>(
   const baseHeaders = await createServerHeaders();
 
   const url = `${baseUrl}${endpoint}`;
-  
+
   const headers = {
     ...baseHeaders,
     ...options?.headers,
   };
 
   console.log(`[serverPost] ${url}`);
-  console.log(`[serverPost] X-Tenant-Domain:`, (headers as any)["X-Tenant-Domain"] || (headers as any)["x-tenant-domain"]);
+  console.log(
+    `[serverPost] X-Tenant-Domain:`,
+    (headers as any)["X-Tenant-Domain"] || (headers as any)["x-tenant-domain"]
+  );
   console.log(`[serverPost] Body:`, data);
 
   const response = await fetch(url, {
