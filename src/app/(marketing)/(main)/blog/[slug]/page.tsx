@@ -103,9 +103,35 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       },
     };
 
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.nepdora.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: "https://www.nepdora.com/blog",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: blog.title,
+          item: `https://www.nepdora.com/blog/${blog.slug}`,
+        },
+      ],
+    };
+
     return (
       <>
         <JsonLd id="blog-posting-schema" data={blogPostingSchema} />
+        <JsonLd id="breadcrumb-schema" data={breadcrumbSchema} />
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-12 lg:flex-row">
             {/* Blog Post Content */}

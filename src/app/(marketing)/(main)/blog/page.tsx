@@ -81,9 +81,29 @@ const BlogPage = async () => {
     })),
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.nepdora.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: "https://www.nepdora.com/blog",
+      },
+    ],
+  };
+
   return (
     <div className="">
       <JsonLd id="blog-schema" data={enhancedBlogSchema} />
+      <JsonLd id="breadcrumb-schema" data={breadcrumbSchema} />
       <section className="mb-20 py-20">
         <div className="mx-auto max-w-6xl">
           {/* Main Feed */}
