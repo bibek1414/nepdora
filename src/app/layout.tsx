@@ -18,6 +18,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL ||
+      `https://${process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com"}`
+  ),
   title: "Nepdora : Website Builder - Create a Free Website In Minutes",
   icons: {
     icon: "https://nepdora.com/favicon.ico",

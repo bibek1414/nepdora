@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import PricingSectionHero from "@/components/marketing/pricing-section/pricing-section-hero";
 import { subscriptionApi } from "@/services/api/subscription";
 import type { Metadata } from "next";

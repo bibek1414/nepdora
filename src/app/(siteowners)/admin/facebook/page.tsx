@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import FacebookPagesManagement from "@/components/site-owners/admin/facebook/facebook-page-management";
 import { FacebookToastHandler } from "@/components/site-owners/admin/facebook/facebook-toast-handler";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
