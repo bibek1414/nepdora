@@ -1,5 +1,5 @@
-export const DEFAULT_MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+export const DEFAULT_MAX_IMAGE_SIZE = 500 * 1024; // 500kb
+import { S3Client } from "@aws-sdk/client-s3";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION || "ap-south-1",
@@ -39,9 +39,11 @@ export const uploadToS3 = async (
 export const getS3Url = (path: string): string => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  
-  const customDomain = process.env.NEXT_PUBLIC_AWS_S3_CUSTOM_DOMAIN || "himalayancrm.sgp1.digitaloceanspaces.com";
-  
+
+  const customDomain =
+    process.env.NEXT_PUBLIC_AWS_S3_CUSTOM_DOMAIN ||
+    "himalayancrm.sgp1.digitaloceanspaces.com";
+
   // Format: https://custom-domain/path
   return `https://${customDomain}/${path}`;
 };
