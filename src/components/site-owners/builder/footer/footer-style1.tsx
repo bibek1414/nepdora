@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
+import { NewsletterForm } from "./shared/newsletter-form";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -50,55 +50,7 @@ export function FooterStyle1({
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
-
-  // Function to generate the correct href for links
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    try {
-      await createNewsletterMutation.mutateAsync({
-        email: email.trim(),
-        is_subscribed: true,
-      });
-
-      setSubscriptionStatus("success");
-      setEmail("");
-      setErrorMessage("");
-
-      setTimeout(() => {
-        setSubscriptionStatus("idle");
-      }, 3000);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Newsletter subscription error:", error);
-      setErrorMessage(
-        error?.message || "Failed to subscribe. Please try again."
-      );
-      setSubscriptionStatus("error");
-    }
-  };
 
   return (
     <div className="group relative">
@@ -223,50 +175,7 @@ export function FooterStyle1({
                 <p className="text-muted-foreground mb-4 text-sm">
                   {data.newsletter.description}
                 </p>
-
-                {subscriptionStatus === "success" ? (
-                  <div className="flex items-center justify-center gap-2 text-green-600">
-                    <CheckCircle className="h-5 w-5" />
-                    <span className="text-sm">Successfully subscribed!</span>
-                  </div>
-                ) : (
-                  <form onSubmit={handleNewsletterSubmit}>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex gap-2">
-                        <Input
-                          type="email"
-                          placeholder="Enter your email"
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                          className="flex-1"
-                          disabled={
-                            isEditable || createNewsletterMutation.isPending
-                          }
-                        />
-                        <Button
-                          type="submit"
-                          style={{
-                            backgroundColor: theme.colors.primary,
-                          }}
-                          disabled={
-                            isEditable || createNewsletterMutation.isPending
-                          }
-                        >
-                          {createNewsletterMutation.isPending
-                            ? "Subscribing..."
-                            : "Subscribe"}
-                        </Button>
-                      </div>
-
-                      {subscriptionStatus === "error" && errorMessage && (
-                        <div className="flex items-center justify-center gap-2 text-red-600">
-                          <AlertCircle className="h-4 w-4" />
-                          <span className="text-sm">{errorMessage}</span>
-                        </div>
-                      )}
-                    </div>
-                  </form>
-                )}
+                <NewsletterForm isEditable={isEditable} theme={theme} />
               </div>
             </div>
           )}

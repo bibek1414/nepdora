@@ -11,10 +11,12 @@ import { FooterStyle8 } from "./footer-style8";
 import { FooterStyle9 } from "./footer-style9";
 import { FooterStyle10 } from "./footer-style10";
 import { FooterStyle11 } from "./footer-style11";
+import { FooterStyle12 } from "./footer-style12";
 import { FooterEditorDialog } from "./footer-editor-dialog";
 import {
   Footer as FooterType,
   FooterData,
+  SocialLink,
 } from "@/types/owner-site/components/footer";
 import {
   useUpdateFooterMutation,
@@ -33,14 +35,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Music2,
-} from "lucide-react";
 
 interface FooterProps {
   footer: FooterType;
@@ -127,17 +121,47 @@ export function Footer({
   const footerData = React.useMemo(() => {
     const rawData = footer.data || defaultFooterData;
 
+    // Merge social links from site config
+    const mergedSocialLinks: SocialLink[] = [];
+    const platforms = [
+      { name: "Facebook", field: "facebook_url" },
+      { name: "Twitter", field: "twitter_url" },
+      { name: "Instagram", field: "instagram_url" },
+      { name: "LinkedIn", field: "linkedin_url" },
+      { name: "YouTube", field: "youtube_url" },
+      { name: "TikTok", field: "tiktok_url" },
+    ] as const;
+
+    platforms.forEach(p => {
+      const href = siteConfig?.[p.field as keyof typeof siteConfig];
+      if (typeof href === "string" && href) {
+        mergedSocialLinks.push({
+          id: p.field,
+          platform: p.name,
+          href: href,
+        });
+      }
+    });
+
     // Fallback to site config for logo and company name if they are missing in the footer data
     return {
       ...rawData,
       companyName:
         rawData.companyName || siteConfig?.business_name || "Your Company",
-      logoImage: rawData.logoImage || siteConfig?.logo || "",
+      logoImage: siteConfig?.logo || rawData.logoImage || "",
       logoText:
         rawData.logoText ||
         rawData.companyName ||
         siteConfig?.business_name ||
         "",
+      socialLinks:
+        mergedSocialLinks.length > 0 ? mergedSocialLinks : rawData.socialLinks,
+      contactInfo: {
+        ...rawData.contactInfo,
+        email: siteConfig?.email || rawData.contactInfo.email || "",
+        phone: siteConfig?.phone || rawData.contactInfo.phone || "",
+        address: siteConfig?.address || rawData.contactInfo.address || "",
+      },
     };
   }, [footer.data, siteConfig]);
 
@@ -180,6 +204,8 @@ export function Footer({
         return FooterStyle10;
       case "style-11":
         return FooterStyle11;
+      case "style-12":
+        return FooterStyle12;
       default:
         return FooterStyle1;
     }

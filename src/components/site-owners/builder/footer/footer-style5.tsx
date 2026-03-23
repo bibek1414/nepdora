@@ -12,6 +12,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { NewsletterForm } from "./shared/newsletter-form";
 
 interface FooterStyle5Props {
   footerData: FooterData;
@@ -44,56 +45,7 @@ export function FooterStyle5({
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const deleteFooterMutation = useDeleteFooterMutation();
-  const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
-
-  // Function to generate the correct href for links
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    try {
-      await createNewsletterMutation.mutateAsync({
-        email: email.trim(),
-        is_subscribed: true,
-      });
-
-      setSubscriptionStatus("success");
-      setEmail("");
-      setErrorMessage("");
-
-      setTimeout(() => {
-        setSubscriptionStatus("idle");
-      }, 3000);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Newsletter subscription error:", error);
-      setErrorMessage(
-        error?.message || "Failed to subscribe. Please try again."
-      );
-      setSubscriptionStatus("error");
-    }
-  };
 
   // Get available sections, fallback to creating sections if none exist
   const availableSections =
@@ -228,6 +180,20 @@ export function FooterStyle5({
                   </ul>
                 </div>
               ))}
+            {/* Newsletter Section */}
+            {data.newsletter?.enabled && (
+              <div className="mt-12 border-t border-gray-300 pt-8 dark:border-gray-700">
+                <div className="mx-auto max-w-md text-center">
+                  <h4 className="text-heading-light dark:text-heading-dark mb-2 font-semibold">
+                    {data.newsletter.title}
+                  </h4>
+                  <p className="text-text-light dark:text-text-dark mb-4 text-sm">
+                    {data.newsletter.description}
+                  </p>
+                  <NewsletterForm isEditable={isEditable} theme={theme} />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Copyright */}

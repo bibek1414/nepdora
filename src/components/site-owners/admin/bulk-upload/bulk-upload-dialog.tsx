@@ -32,7 +32,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
 
   // Validate file type (CSV or Excel)
   const isValidFileType = (fileName: string): boolean => {
-    const validExtensions = [".csv", ".xlsx", ".xls"];
+    const validExtensions = [".xlsx", ".xls"];
     return validExtensions.some(ext => fileName.toLowerCase().endsWith(ext));
   };
 
@@ -41,7 +41,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
     if (file) {
       // Validate file type
       if (!isValidFileType(file.name)) {
-        toast.error("Please select a CSV or Excel file (.csv, .xlsx, .xls)");
+        toast.error("Please select a Excel file (.xlsx, .xls)");
         return;
       }
       setSelectedFile(file);
@@ -57,7 +57,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
     const file = event.dataTransfer.files?.[0];
     if (file) {
       if (!isValidFileType(file.name)) {
-        toast.error("Please select a CSV or Excel file (.csv, .xlsx, .xls)");
+        toast.error("Please select a Excel file ( .xlsx, .xls)");
         return;
       }
       setSelectedFile(file);
@@ -116,7 +116,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Import products by CSV or Excel
+            Import products by Excel
           </DialogTitle>
         </DialogHeader>
 
@@ -130,7 +130,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv,.xlsx,.xls"
+              accept=".xlsx,.xls"
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -166,10 +166,10 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
                   + Add file
                 </Button>
                 <p className="mt-3 text-sm text-gray-500">
-                  or drag and drop your CSV or Excel file here
+                  or drag and drop your Excel file here
                 </p>
                 <p className="mt-1 text-xs text-gray-400">
-                  Supported formats: .csv, .xlsx, .xls
+                  Supported formats: .xlsx, .xls
                 </p>
               </div>
             )}
@@ -186,7 +186,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
               <FileDown className="h-4 w-4" />
               {downloadTemplateMutation.isPending
                 ? "Downloading..."
-                : "Download sample CSV"}
+                : "Download sample Excel"}
             </button>
           </div>
 

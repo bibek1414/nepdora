@@ -1,5 +1,6 @@
 import React from "react";
 import { FooterData } from "@/types/owner-site/components/footer";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 
 interface FooterLogoProps {
   footerData: FooterData;
@@ -8,17 +9,20 @@ interface FooterLogoProps {
 }
 
 export const FooterLogo = ({ footerData, getImageUrl }: FooterLogoProps) => {
+  const { data: siteConfig } = useSiteConfig();
   const { logoType, logoImage, logoText, companyName } = footerData;
-  const displayText = logoText || companyName;
+  const displayText = logoText || companyName || siteConfig?.business_name;
+
+  const currentLogoImage = siteConfig?.logo || logoImage;
 
   const renderLogo = () => {
     switch (logoType) {
       case "image":
         return (
           <div className="flex items-center justify-start">
-            {logoImage ? (
+            {currentLogoImage ? (
               <img
-                src={getImageUrl(logoImage, {
+                src={getImageUrl(currentLogoImage, {
                   height: 40,
                   quality: "auto",
                   format: "auto",
@@ -39,9 +43,9 @@ export const FooterLogo = ({ footerData, getImageUrl }: FooterLogoProps) => {
       case "both":
         return (
           <div className="flex items-center justify-start gap-2 sm:gap-2.5 md:gap-3">
-            {logoImage ? (
+            {currentLogoImage ? (
               <img
-                src={getImageUrl(logoImage, {
+                src={getImageUrl(currentLogoImage, {
                   height: 32,
                   quality: "auto",
                   format: "auto",

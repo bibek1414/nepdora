@@ -8,6 +8,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { NewsletterForm } from "./shared/newsletter-form";
 
 interface FooterStyle8Props {
   footerData: FooterData;
@@ -57,6 +58,18 @@ export function FooterStyle8({
             <p className="max-w-md text-lg leading-relaxed text-gray-400">
               {data.description}
             </p>
+
+            {data.newsletter?.enabled && (
+              <div className="mt-12">
+                <h3 className="mb-6 text-lg font-medium text-white">
+                  {data.newsletter.title}
+                </h3>
+                <p className="mb-6 text-sm leading-relaxed text-gray-400">
+                  {data.newsletter.description}
+                </p>
+                <NewsletterForm isEditable={isEditable} theme={theme} />
+              </div>
+            )}
           </div>
 
           {/* Column 2 & 3 & 4 Container */}

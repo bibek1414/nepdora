@@ -569,20 +569,12 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
 
                     {navbarData.logoImage && (
                       <div className="flex items-center gap-3 rounded-lg border p-3">
-                        <div className="overflow-hidden border">
+                        <div className="mx-auto overflow-hidden">
                           <img
                             src={navbarData.logoImage}
                             alt="Logo preview"
                             className="h-full w-full object-cover"
                           />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">Logo uploaded</p>
-                          <p className="text-muted-foreground text-xs">
-                            {siteConfig?.logo
-                              ? "Saved to site configuration"
-                              : "Ready to use"}
-                          </p>
                         </div>
                       </div>
                     )}

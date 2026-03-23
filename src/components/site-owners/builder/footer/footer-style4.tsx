@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Mail, Phone, MapPin, CheckCircle, AlertCircle } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
+import { NewsletterForm } from "./shared/newsletter-form";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -43,53 +43,7 @@ export function FooterStyle4({
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
 
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    try {
-      await createNewsletterMutation.mutateAsync({
-        email: email.trim(),
-        is_subscribed: true,
-      });
-
-      setSubscriptionStatus("success");
-      setEmail("");
-      setErrorMessage("");
-
-      setTimeout(() => {
-        setSubscriptionStatus("idle");
-      }, 3000);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Newsletter subscription error:", error);
-      setErrorMessage(
-        error?.message || "Failed to subscribe. Please try again."
-      );
-      setSubscriptionStatus("error");
-    }
-  };
 
   return (
     <div className="group relative">
@@ -203,49 +157,8 @@ export function FooterStyle4({
                   </p>
                 </div>
 
-                {subscriptionStatus === "success" ? (
-                  <div className="flex items-center justify-center gap-3 text-green-300 md:justify-end">
-                    <CheckCircle className="h-6 w-6" />
-                    <span className="text-lg">Successfully subscribed!</span>
-                  </div>
-                ) : (
-                  <form onSubmit={handleNewsletterSubmit}>
-                    <div className="flex flex-col gap-3">
-                      <div className="flex flex-col gap-3 sm:flex-row">
-                        <Input
-                          type="email"
-                          placeholder="Enter your email"
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                          className="flex-1 rounded-full border-none bg-white/20 px-6 py-4 text-white placeholder-white/60 backdrop-blur-sm focus:bg-white/30 focus:text-white focus:ring-2 focus:ring-white/50"
-                          disabled={
-                            isEditable || createNewsletterMutation.isPending
-                          }
-                        />
-                        <Button
-                          type="submit"
-                          style={{
-                            backgroundColor: theme.colors.secondary,
-                          }}
-                          className="rounded-full px-8 py-4 font-semibold text-white transition-all hover:scale-105 hover:shadow-lg"
-                          disabled={
-                            isEditable || createNewsletterMutation.isPending
-                          }
-                        >
-                          {createNewsletterMutation.isPending
-                            ? "Subscribing..."
-                            : "Subscribe Now"}
-                        </Button>
-                      </div>
-
-                      {subscriptionStatus === "error" && errorMessage && (
-                        <div className="flex items-center gap-2 text-red-300">
-                          <AlertCircle className="h-4 w-4" />
-                          <span className="text-sm">{errorMessage}</span>
-                        </div>
-                      )}
-                    </div>
-                  </form>
+                {data.newsletter.enabled && (
+                  <NewsletterForm isEditable={isEditable} theme={theme} />
                 )}
               </div>
             </div>

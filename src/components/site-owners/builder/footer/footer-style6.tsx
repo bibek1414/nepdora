@@ -7,6 +7,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { NewsletterForm } from "./shared/newsletter-form";
 
 interface FooterStyle6Props {
   footerData: FooterData;
@@ -87,6 +88,21 @@ export function FooterStyle6({
         <div className="mb-4">
           <FooterLogo footerData={data} getImageUrl={getImageUrl} />
         </div>
+
+        {/* Newsletter Section */}
+        {data.newsletter?.enabled && (
+          <div className="mb-8 w-full max-w-md px-4">
+            <div className="text-center">
+              <h4 className="mb-2 font-semibold text-white">
+                {data.newsletter.title}
+              </h4>
+              <p className="mb-4 text-sm text-white/70">
+                {data.newsletter.description}
+              </p>
+              <NewsletterForm isEditable={isEditable} theme={theme} />
+            </div>
+          </div>
+        )}
 
         {/* Copyright */}
         <p className="mt-4 text-center">{copyrightText}</p>

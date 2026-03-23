@@ -61,8 +61,8 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
   };
 
   return (
-    <section id="blog" className="bg-gray-50/50 py-16 sm:py-20">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+    <section id="blog" className="py-16 sm:py-20">
+      <div className="mx-auto max-w-360 px-4 sm:px-6 md:px-8">
         <motion.div
           className="mb-10 flex flex-col items-start justify-between gap-4 md:mb-16 md:flex-row md:items-end md:gap-0"
           initial={{ opacity: 0, y: 25 }}
@@ -70,16 +70,16 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="text-foreground mb-0 max-w-xl text-3xl font-bold tracking-tight md:text-4xl"
-            isEditable={isEditable}
-            placeholder="Enter title..."
-          />
+          <div className="flex w-full items-center justify-between gap-5">
+            <EditableText
+              value={title}
+              onChange={handleTitleChange}
+              as="h2"
+              className="text-foreground mb-0 max-w-xl text-3xl font-bold tracking-tight md:text-4xl"
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
 
-          <div className="flex items-center gap-5!">
             <EditableLink
               text="View More Blogs"
               href={getBlogsUrl()}
@@ -89,7 +89,7 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
                 backgroundColor: primaryColor,
                 color: "#FFFFFF",
               }}
-              className="mr-2! w-48! px-2! font-bold text-gray-900"
+              className="mr-2 w-48 px-2 font-bold text-gray-900"
             >
               View More Blogs
               <div

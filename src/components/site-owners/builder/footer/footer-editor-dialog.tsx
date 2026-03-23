@@ -72,6 +72,7 @@ import {
 import { uploadToCloudinary } from "@/utils/cloudinary";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { useDebouncer } from "@/hooks/use-debouncer";
 
 interface FooterEditorDialogProps {
   open: boolean;
@@ -235,9 +236,41 @@ export function FooterEditorDialog({
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [uploadLogoError, setUploadLogoError] = useState<string | null>(null);
 
+  const debouncedContactInfo = useDebouncer(editingData.contactInfo, 1000);
+
   // Use site config hooks for logo and social links
   const { data: siteConfig, isLoading: isSiteConfigLoading } = useSiteConfig();
   const patchSiteConfigMutation = usePatchSiteConfig();
+
+  // Sync contact info to site configuration
+  useEffect(() => {
+    const syncContactInfo = async () => {
+      if (!siteConfig?.id || !debouncedContactInfo) return;
+
+      const hasChanged =
+        debouncedContactInfo.email !== siteConfig.email ||
+        debouncedContactInfo.phone !== siteConfig.phone ||
+        debouncedContactInfo.address !== siteConfig.address;
+
+      if (hasChanged) {
+        try {
+          const formData = new FormData();
+          formData.append("email", debouncedContactInfo.email || "");
+          formData.append("phone", debouncedContactInfo.phone || "");
+          formData.append("address", debouncedContactInfo.address || "");
+
+          await patchSiteConfigMutation.mutateAsync({
+            id: siteConfig.id,
+            data: formData,
+          });
+        } catch (error) {
+          console.error("Failed to sync contact info:", error);
+        }
+      }
+    };
+
+    syncContactInfo();
+  }, [debouncedContactInfo, siteConfig, patchSiteConfigMutation]);
 
   // Check if newsletter should be shown (not for FooterStyle5)
   const showNewsletter = footerStyle !== "FooterStyle5";
@@ -284,6 +317,26 @@ export function FooterEditorDialog({
         setEditingData(prev => ({
           ...prev,
           socialLinks: updatedSocialLinks,
+        }));
+      }
+
+      // Sync contact info
+      if (
+        (siteConfig.email &&
+          siteConfig.email !== editingData.contactInfo.email) ||
+        (siteConfig.phone &&
+          siteConfig.phone !== editingData.contactInfo.phone) ||
+        (siteConfig.address &&
+          siteConfig.address !== editingData.contactInfo.address)
+      ) {
+        setEditingData(prev => ({
+          ...prev,
+          contactInfo: {
+            ...prev.contactInfo,
+            email: siteConfig.email || prev.contactInfo.email || "",
+            phone: siteConfig.phone || prev.contactInfo.phone || "",
+            address: siteConfig.address || prev.contactInfo.address || "",
+          },
         }));
       }
     }
@@ -585,16 +638,11 @@ export function FooterEditorDialog({
     field: string,
     value: string
   ) => {
-    const updatedSocialLinks = editingData.socialLinks.map(link => {
-      if (link.id === linkId) {
-        const updatedLink = { ...link, [field]: value };
-        if (field === "platform") {
-          const platform = socialPlatforms.find(p => p.name === value);
-          // Platform name is enough as SocialIcon resolves the icon
-        }
-        return updatedLink;
+    const updatedSocialLinks = editingData.socialLinks.map(socialLink => {
+      if (socialLink.id === linkId) {
+        return { ...socialLink, [field]: value };
       }
-      return link;
+      return socialLink;
     });
 
     setEditingData(prev => ({
@@ -608,7 +656,6 @@ export function FooterEditorDialog({
         await updateSiteConfigSocialLinks(updatedSocialLinks);
       } catch (error) {
         console.error("Failed to update site config:", error);
-        // Optionally show error message to user
       }
     }
   };
@@ -698,9 +745,6 @@ export function FooterEditorDialog({
             <TabsTrigger value="logo" className="flex items-center gap-1">
               <ImageIcon className="h-4 w-4" />
               Logo
-              {siteConfig?.logo && (
-                <span className="ml-1 h-2 w-2 rounded-full bg-green-500" />
-              )}
             </TabsTrigger>
             <TabsTrigger value="company" className="flex items-center gap-1">
               <Building className="h-4 w-4" />
@@ -730,9 +774,6 @@ export function FooterEditorDialog({
             <TabsTrigger value="social" className="flex items-center gap-1">
               <Share2 className="h-4 w-4" />
               Social
-              {siteConfig && (
-                <span className="ml-1 h-2 w-2 rounded-full bg-green-500" />
-              )}
             </TabsTrigger>
           </TabsList>
 
@@ -817,21 +858,13 @@ export function FooterEditorDialog({
                     />
 
                     {editingData.logoImage && (
-                      <div className="flex items-center gap-3 rounded-lg border p-3">
-                        <div className="overflow-hidden rounded border">
+                      <div className="flex items-center gap-3 rounded-lg p-3">
+                        <div className="mx-auto overflow-hidden rounded">
                           <img
                             src={editingData.logoImage}
                             alt="Logo preview"
                             className="h-full w-full object-cover"
                           />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">Logo uploaded</p>
-                          <p className="text-muted-foreground text-xs">
-                            {siteConfig?.logo
-                              ? "Saved to site configuration"
-                              : "Ready to use"}
-                          </p>
                         </div>
                       </div>
                     )}
@@ -991,7 +1024,7 @@ export function FooterEditorDialog({
                         updateContactInfo("address", e.target.value)
                       }
                       className="text-sm"
-                      placeholder="Sankhapur, Kathmandu, Nepal"
+                      placeholder="Sankhamul, Lalitpur, Nepal"
                       rows={2}
                       disabled={isLoading}
                     />
@@ -1336,11 +1369,24 @@ export function FooterEditorDialog({
                               isLoading || patchSiteConfigMutation.isPending
                             }
                           >
-                            {socialPlatforms.map(platform => (
-                              <option key={platform.name} value={platform.name}>
-                                {platform.name}
-                              </option>
-                            ))}
+                            {socialPlatforms.map(platform => {
+                              const isUsedByAnother =
+                                editingData.socialLinks.some(
+                                  link =>
+                                    link.platform === platform.name &&
+                                    link.id !== social.id
+                                );
+                              if (isUsedByAnother) return null;
+
+                              return (
+                                <option
+                                  key={platform.name}
+                                  value={platform.name}
+                                >
+                                  {platform.name}
+                                </option>
+                              );
+                            })}
                           </select>
                         </div>
                         <Input

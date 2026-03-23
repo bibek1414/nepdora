@@ -8,6 +8,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { NewsletterForm } from "./shared/newsletter-form";
 
 interface FooterStyle9Props {
   footerData: FooterData;
@@ -203,6 +204,21 @@ export function FooterStyle9({
             <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-linear-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
           </div>
         </div>
+
+        {/* Newsletter Section */}
+        {data.newsletter?.enabled && (
+          <div className="mb-12 border-t border-gray-800 pt-12">
+            <div className="mx-auto max-w-md text-center">
+              <h3 className="mb-4 text-xl font-bold uppercase tracking-wide text-white">
+                {data.newsletter.title}
+              </h3>
+              <p className="mb-6 text-sm text-gray-400">
+                {data.newsletter.description}
+              </p>
+              <NewsletterForm isEditable={isEditable} theme={theme} />
+            </div>
+          </div>
+        )}
 
         {/* Separator */}
         <div className="mb-8 h-px w-full bg-gray-800" />

@@ -1,6 +1,7 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { handleApiError } from "@/utils/api-error";
+import { createHeaders } from "@/utils/headers";
 
 export interface BulkUploadResponse {
   success: boolean;
@@ -37,18 +38,17 @@ export const bulkUploadApi = {
     return response.json();
   },
 
-  // Download CSV template
-  downloadTemplate: async (): Promise<Blob> => {
+  downloadTemplate: async () => {
     const API_BASE_URL = getApiBaseUrl();
-    const url = `${API_BASE_URL}/api/download-template/`;
-
-    const token = localStorage.getItem("authToken");
-
-    const response = await apiFetch(url, {
-      method: "GET",
+    const response = await apiFetch(`${API_BASE_URL}/api/download-template/`, {
+      headers: createHeaders(),
     });
-
-    await handleApiError(response);
-    return response.blob();
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "product_bulk_upload_template.xlsx";
+    a.click();
+    URL.revokeObjectURL(url);
   },
 };

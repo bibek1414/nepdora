@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
+import { NewsletterForm } from "./shared/newsletter-form";
 import { EditableText } from "@/components/ui/editable-text";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -56,13 +56,7 @@ export function FooterStyle7({
     onUpdate
   );
 
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const createNewsletterMutation = useCreateNewsletter();
+  const pathname = usePathname();
 
   // Get colors from theme with fallbacks
   const primaryColor = theme.colors?.primary || "#3B82F6";
@@ -82,48 +76,6 @@ export function FooterStyle7({
     extendedFooterData.ctaText1 || "Need Any Support For\nTour And Visa?";
   const ctaText2 =
     extendedFooterData.ctaText2 || "Are You Ready For Get\nStarted Travelling?";
-  const pathname = usePathname();
-
-  // Function to generate the correct href for links
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    try {
-      await createNewsletterMutation.mutateAsync({
-        email: email.trim(),
-        is_subscribed: true,
-      });
-
-      setSubscriptionStatus("success");
-      setEmail("");
-      setErrorMessage("");
-
-      setTimeout(() => {
-        setSubscriptionStatus("idle");
-      }, 3000);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Newsletter subscription error:", error);
-      setErrorMessage(
-        error?.message || "Failed to subscribe. Please try again."
-      );
-      setSubscriptionStatus("error");
-    }
-  };
 
   // Find sections by title
   const servicesSection = data.sections.find(
@@ -374,52 +326,8 @@ export function FooterStyle7({
               {data.newsletter.description}
             </p>
 
-            {data.newsletter.enabled ? (
-              subscriptionStatus === "success" ? (
-                <div className="flex items-center justify-center gap-2 text-green-400">
-                  <CheckCircle className="h-5 w-5" />
-                  <span className="text-sm">Successfully subscribed!</span>
-                </div>
-              ) : (
-                <form onSubmit={handleNewsletterSubmit}>
-                  <div className="relative">
-                    <Input
-                      type="email"
-                      placeholder="Enter Email"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      className="w-full rounded-full border px-3 py-2 pr-12 text-xs text-white focus:outline-none sm:px-4 sm:py-2.5 sm:pr-14 sm:text-sm"
-                      disabled={
-                        isEditable || createNewsletterMutation.isPending
-                      }
-                    />
-                    <Button
-                      type="submit"
-                      className="absolute top-1/2 right-1 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full p-0 transition-colors sm:right-1.5 sm:h-9 sm:w-9"
-                      style={{
-                        backgroundColor: secondaryColor,
-                        color: secondaryForeground,
-                      }}
-                      disabled={
-                        isEditable || createNewsletterMutation.isPending
-                      }
-                    >
-                      <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                    </Button>
-                  </div>
-
-                  {subscriptionStatus === "error" && errorMessage && (
-                    <div className="mt-2 flex items-center justify-center gap-2 text-red-400">
-                      <AlertCircle className="h-4 w-4" />
-                      <span className="text-sm">{errorMessage}</span>
-                    </div>
-                  )}
-                </form>
-              )
-            ) : (
-              <div className="text-sm text-gray-400">
-                Newsletter subscription is currently disabled.
-              </div>
+            {data.newsletter.enabled && (
+              <NewsletterForm isEditable={isEditable} theme={theme} />
             )}
           </div>
         </div>

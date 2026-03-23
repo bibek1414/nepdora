@@ -54,6 +54,9 @@ interface AddSectionDialogProps {
       | "style-7"
       | "style-8"
       | "style-9"
+      | "style-10"
+      | "style-11"
+      | "style-12"
   ) => void;
   websiteType?: string;
   categoryFilter?: string;
@@ -1370,6 +1373,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/footers/footer11.png",
         description: "Footer with social media links",
         showForWebsiteTypes: ["ecommerce"],
+      },
+      {
+        id: "footer-12",
+        name: "Footer Style 12",
+        image: "/images/site-owners/footers/footer12.png",
+        description: "Footer with social media links",
       },
     ],
     login_form: [

@@ -6,6 +6,7 @@ import {
   MapPin,
   CheckCircle,
   AlertCircle,
+  LucideIcon,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,13 +14,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import Image from "next/image";
 import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
+import { NewsletterForm } from "./shared/newsletter-form";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface FooterStyle11Props {
   footerData: FooterData;
@@ -47,42 +49,23 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
       : []) ||
     [];
 
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const createNewsletterMutation = useCreateNewsletter();
-  const pathname = usePathname();
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    try {
-      await createNewsletterMutation.mutateAsync({
-        email: email.trim(),
-        is_subscribed: true,
-      });
-
-      setSubscriptionStatus("success");
-      setEmail("");
-      setErrorMessage("");
-
-      setTimeout(() => setSubscriptionStatus("idle"), 3000);
-    } catch (error: any) {
-      setErrorMessage(
-        error?.message || "Failed to subscribe. Please try again."
-      );
-      setSubscriptionStatus("error");
-    }
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
   };
+
+  const pathname = usePathname();
 
   const companySection = data.sections[0];
   const helpSection = data.sections[1];
@@ -103,139 +86,29 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
             {/* Newsletter */}
             {data.newsletter.enabled && (
               <div className="mt-2 w-full max-w-[320px]">
-                {subscriptionStatus === "success" ? (
-                  <div className="flex items-center gap-2 py-3 text-sm text-green-600">
-                    <CheckCircle className="h-4 w-4" />
-                    <span>Successfully subscribed!</span>
-                  </div>
-                ) : (
-                  <form
-                    onSubmit={handleNewsletterSubmit}
-                    className="relative w-full"
-                  >
-                    <Input
-                      type="email"
-                      placeholder="Enter your email..."
-                      className="h-14 w-full rounded-full border-none bg-gray-50 px-6 pr-14 text-sm text-gray-900 placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-gray-200 dark:bg-white/5 dark:text-white dark:focus-visible:ring-gray-700"
-                      value={email}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setEmail(e.target.value)
-                      }
-                      disabled={
-                        isEditable || createNewsletterMutation.isPending
-                      }
-                    />
-                    <button
-                      type="submit"
-                      className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-gray-900 transition-colors hover:text-gray-600 disabled:opacity-50 dark:text-white dark:hover:text-gray-300"
-                      disabled={
-                        isEditable || createNewsletterMutation.isPending
-                      }
-                    >
-                      <ArrowRight className="h-5 w-5" />
-                    </button>
-                  </form>
-                )}
-                {subscriptionStatus === "error" && errorMessage && (
-                  <div className="mt-2 flex items-center gap-2 text-sm text-red-500">
-                    <AlertCircle className="h-4 w-4" />
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
+                <NewsletterForm isEditable={isEditable} theme={theme} />
               </div>
             )}
 
             {/* Social Links */}
             <div className="mt-4 flex items-center gap-4">
-              {siteConfig?.facebook_url && (
+              {data.socialLinks.map((social: any) => (
                 <Link
-                  href={siteConfig.facebook_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
+                  key={social.id}
+                  href={social.href || "#"}
+                  className="text-gray-900 transition-colors hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
+                  target={
+                    social.href?.startsWith("http") ? "_blank" : undefined
+                  }
+                  rel={
+                    social.href?.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                 >
-                  <SocialIcon platform="facebook" className="h-4 w-4" />
+                  <SocialIcon platform={social.platform} className="h-4 w-4" />
                 </Link>
-              )}
-              {siteConfig?.instagram_url && (
-                <Link
-                  href={siteConfig.instagram_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
-                >
-                  <SocialIcon platform="instagram" className="h-4 w-4" />
-                </Link>
-              )}
-              {siteConfig?.youtube_url && (
-                <Link
-                  href={siteConfig.youtube_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
-                >
-                  <SocialIcon platform="youtube" className="h-4 w-4" />
-                </Link>
-              )}
-              {siteConfig?.twitter_url && (
-                <Link
-                  href={siteConfig.twitter_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
-                >
-                  <SocialIcon platform="twitter" className="h-4 w-4" />
-                </Link>
-              )}
-              {siteConfig?.linkedin_url && (
-                <Link
-                  href={siteConfig.linkedin_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
-                >
-                  <SocialIcon platform="linkedin" className="h-4 w-4" />
-                </Link>
-              )}
-              {siteConfig?.tiktok_url && (
-                <Link
-                  href={siteConfig.tiktok_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
-                >
-                  <SocialIcon platform="tiktok" className="h-4 w-4" />
-                </Link>
-              )}
-
-              {/* Fallback to data.socialLinks if no config links */}
-              {(!siteConfig ||
-                (!siteConfig.facebook_url &&
-                  !siteConfig.instagram_url &&
-                  !siteConfig.twitter_url &&
-                  !siteConfig.youtube_url &&
-                  !siteConfig.linkedin_url &&
-                  !siteConfig.tiktok_url)) &&
-                data.socialLinks.map((social: any) => (
-                  <Link
-                    key={social.id}
-                    href={social.href || "#"}
-                    className="text-gray-900 transition-colors hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
-                    target={
-                      social.href?.startsWith("http") ? "_blank" : undefined
-                    }
-                    rel={
-                      social.href?.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                  >
-                    <SocialIcon
-                      platform={social.platform}
-                      className="h-4 w-4"
-                    />
-                  </Link>
-                ))}
+              ))}
             </div>
           </div>
 

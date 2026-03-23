@@ -98,7 +98,7 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
       </ImageWrapper>
 
       <ImageWrapper className="block">
-        <h3 className="hover:text-primary mb-3 line-clamp-2 text-lg leading-snug font-bold text-gray-900 transition-colors">
+        <h3 className="mb-3 line-clamp-2 text-lg leading-snug font-bold text-gray-900 transition-colors">
           {blog.title}
         </h3>
       </ImageWrapper>

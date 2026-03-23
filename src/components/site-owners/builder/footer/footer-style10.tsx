@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,12 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import Image from "next/image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { NewsletterForm } from "./shared/newsletter-form";
 interface FooterStyle10Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -44,55 +43,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
     },
   };
 
-  const [email, setEmail] = useState("");
-  const [subscriptionStatus, setSubscriptionStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const createNewsletterMutation = useCreateNewsletter();
   const pathname = usePathname();
-
-  // Function to generate the correct href for links
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage("Please enter a valid email address");
-      setSubscriptionStatus("error");
-      return;
-    }
-
-    try {
-      await createNewsletterMutation.mutateAsync({
-        email: email.trim(),
-        is_subscribed: true,
-      });
-
-      setSubscriptionStatus("success");
-      setEmail("");
-      setErrorMessage("");
-
-      setTimeout(() => {
-        setSubscriptionStatus("idle");
-      }, 3000);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Newsletter subscription error:", error);
-      setErrorMessage(
-        error?.message || "Failed to subscribe. Please try again."
-      );
-      setSubscriptionStatus("error");
-    }
-  };
 
   const mainSection1 = data.sections[0];
   const mainSection2 = data.sections[1];
@@ -198,56 +149,8 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                 "Let's transform your vision into results and discuss your vision with us."}
             </p>
 
-            {data.newsletter.enabled ? (
-              subscriptionStatus === "success" ? (
-                <div className="flex items-center gap-2 text-sm text-green-600">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>Successfully subscribed!</span>
-                </div>
-              ) : (
-                <form
-                  className="flex flex-col space-y-3"
-                  onSubmit={handleNewsletterSubmit}
-                >
-                  <Input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="w-full rounded-full border border-gray-200 bg-white px-6 py-3 text-sm text-gray-900 transition-all outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-gray-500 dark:border-transparent dark:bg-white"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    disabled={isEditable || createNewsletterMutation.isPending}
-                  />
-
-                  <Button
-                    type="submit"
-                    className="group flex w-fit items-center space-x-3 rounded-full py-2 pr-2 pl-6 shadow-md transition-all duration-300"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                    }}
-                    disabled={isEditable || createNewsletterMutation.isPending}
-                  >
-                    <span className="text-sm font-medium">
-                      {createNewsletterMutation.isPending
-                        ? "Subscribing..."
-                        : "Subscribe"}
-                    </span>
-                    <div className="rounded-full p-2 transition-transform duration-300 group-hover:rotate-45">
-                      <ArrowUpRight size={16} />
-                    </div>
-                  </Button>
-                  {subscriptionStatus === "error" && errorMessage && (
-                    <div className="flex items-center gap-2 text-sm text-red-500">
-                      <AlertCircle className="h-4 w-4" />
-                      <span>{errorMessage}</span>
-                    </div>
-                  )}
-                </form>
-              )
-            ) : (
-              <div className="text-sm text-gray-500">
-                Newsletter subscription is currently disabled.
-              </div>
+            {data.newsletter.enabled && (
+              <NewsletterForm isEditable={isEditable} theme={theme} />
             )}
           </div>
         </div>
