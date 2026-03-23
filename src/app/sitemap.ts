@@ -1,8 +1,21 @@
 import { MetadataRoute } from "next";
-import { NEPAL_CITIES, SERVICE_CATEGORIES } from "@/constants/nepal-cities";
+import { SERVICE_CATEGORIES } from "@/constants/nepal-cities";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://www.nepdora.com";
+
+  const TOP_CITIES = [
+    "kathmandu",
+    "pokhara",
+    "lalitpur",
+    "bhaktapur",
+    "biratnagar",
+    "birgunj",
+    "dharan",
+    "butwal",
+    "hetauda",
+    "janakpur",
+  ];
 
   // Base pages (High Priority)
   const baseRoutes = [
@@ -41,7 +54,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "accept-esewa-payments-online",
     "inventory-management-nepal",
     "nepali-language-website-support",
-    "local-delivery-integration-pathao"
+    "local-delivery-integration-pathao",
   ].map(slug => ({
     url: `${baseUrl}/solutions/${slug}`,
     lastModified: new Date(),
@@ -90,7 +103,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "nepdora-vs-wordpress",
     "nepdora-vs-wix",
     "shopify-price-in-nepal",
-    "wix-cost-in-nepal"
+    "wix-cost-in-nepal",
   ].map(slug => ({
     url: `${baseUrl}/compare/${slug}`,
     lastModified: new Date(),
@@ -104,7 +117,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "wix-nepal",
     "wordpress-nepal",
     "squarespace-nepal",
-    "webflow-nepal"
+    "webflow-nepal",
   ].map(slug => ({
     url: `${baseUrl}/alternative/${slug}`,
     lastModified: new Date(),
@@ -118,7 +131,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "register-company-in-nepal-online",
     "pan-vs-vat-for-online-shops-nepal",
     "best-payment-gateways-nepal",
-    "seo-guide-for-nepali-businesses"
+    "seo-guide-for-nepali-businesses",
   ].map(slug => ({
     url: `${baseUrl}/learn/${slug}`,
     lastModified: new Date(),
@@ -136,7 +149,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "educational",
     "travel",
     "grocery",
-    "medical"
+    "medical",
   ].map(slug => ({
     url: `${baseUrl}/templates/${slug}`,
     lastModified: new Date(),
@@ -146,10 +159,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Programmatic Industry & City pages (Lower priority to save crawl budget)
   const dynamicIndustryCities: MetadataRoute.Sitemap = [];
-  const industries = ["restaurant", "clothing-store", "gym", "school", "clinic", "travel-agency", "real-estate", "salon", "educational-consultancy", "grocery"];
-  
+  const industries = [
+    "restaurant",
+    "clothing-store",
+    "gym",
+    "school",
+    "clinic",
+    "travel-agency",
+    "real-estate",
+    "salon",
+    "educational-consultancy",
+    "grocery",
+  ];
+
   industries.forEach(industry => {
-    NEPAL_CITIES.forEach(city => {
+    TOP_CITIES.forEach(city => {
       const citySlug = city.toLowerCase();
       // industry/city
       dynamicIndustryCities.push({
@@ -171,7 +195,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Original City pages
   const cityPages: MetadataRoute.Sitemap = [];
   SERVICE_CATEGORIES.forEach(category => {
-    NEPAL_CITIES.forEach(city => {
+    TOP_CITIES.forEach(city => {
       cityPages.push({
         url: `${baseUrl}/${category.slug}/${city.toLowerCase()}`,
         lastModified: new Date(),
