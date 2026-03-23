@@ -145,9 +145,11 @@ export const Footer = () => {
                 <FooterLink href="/features/facebook-pixel">
                   Facebook Pixel
                 </FooterLink>
-                <FooterLink href="/features/pathao-parcel">
-                  Logistics (Pathao)
+                <FooterLink href="/features/logistics">
+                  Logistics (Pathao, YDM & Dash)
                 </FooterLink>
+
+                <FooterLink href="/features/pos-system">POS System</FooterLink>
                 <FooterLink href="/esewa-integration-guide-nepal">
                   eSewa Setup Guide
                 </FooterLink>
@@ -224,12 +226,22 @@ export const Footer = () => {
                 Top Cities
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/ecommerce-website/kathmandu">Kathmandu</FooterLink>
-                <FooterLink href="/restaurant-website/pokhara">Pokhara</FooterLink>
-                <FooterLink href="/clinic-website/lalitpur">Lalitpur</FooterLink>
+                <FooterLink href="/ecommerce-website/kathmandu">
+                  Kathmandu
+                </FooterLink>
+                <FooterLink href="/restaurant-website/pokhara">
+                  Pokhara
+                </FooterLink>
+                <FooterLink href="/clinic-website/lalitpur">
+                  Lalitpur
+                </FooterLink>
                 <FooterLink href="/agency-website/butwal">Butwal</FooterLink>
-                <FooterLink href="/dental-website/biratnagar">Biratnagar</FooterLink>
-                <FooterLink href="/booking-website/bhaktapur">Bhaktapur</FooterLink>
+                <FooterLink href="/dental-website/biratnagar">
+                  Biratnagar
+                </FooterLink>
+                <FooterLink href="/booking-website/bhaktapur">
+                  Bhaktapur
+                </FooterLink>
               </div>
             </div>
             {/* Compare & Locations */}

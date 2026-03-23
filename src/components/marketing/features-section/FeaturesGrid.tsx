@@ -22,6 +22,7 @@ import AIBuilderDemo from "./AIBuilderDemo";
 import NepalPaymentSkeleton from "./NepalPaymentSkeleton";
 import SmsLogisticsSkeleton from "./SmsLogisticsSkeleton";
 import SeoSkeleton from "./SeoSkeleton";
+import PosSkeleton from "./PosSkeleton";
 import { FeatureCard } from "./FeatureCard";
 
 const features = [
@@ -89,6 +90,19 @@ const features = [
     className: "md:col-span-2 md:row-span-1 bg-white",
     skeleton: <GlobalSalesSkeleton />,
     icon: Globe,
+  },
+
+  {
+    title: "Payment History",
+    className: "md:col-span-1 md:row-span-1 bg-white",
+    skeleton: <NepalPaymentSkeleton />,
+    icon: Wallet,
+  },
+  {
+    title: "POS System",
+    className: "md:col-span-1 md:row-span-1 bg-white",
+    skeleton: <PosSkeleton />,
+    icon: ShoppingBag,
   },
 
   {

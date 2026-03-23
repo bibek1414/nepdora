@@ -1,11 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { siteConfig } from "@/config/site";
-import {
-  ContactMessage,
-  PaginatedContactResponse,
-} from "@/types/super-admin/contact";
-import { getAuthToken } from "@/utils/auth";
-import { createHeaders } from "@/utils/headers";
+import { PaginatedContactResponse } from "@/types/super-admin/contact";
 import { handleApiError } from "@/utils/api-error";
 
 const API_BASE_URL = siteConfig.apiBaseUrl;
@@ -29,10 +24,6 @@ export const superAdminContactApi = {
       `${API_BASE_URL}/api/support/nepdora-contact/?${params}`,
       {
         method: "GET",
-        headers: {
-          ...createHeaders(),
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
       }
     );
 
@@ -47,10 +38,6 @@ export const superAdminContactApi = {
       `${API_BASE_URL}/api/support/nepdora-contact/${id}/`,
       {
         method: "DELETE",
-        headers: {
-          ...createHeaders(),
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
       }
     );
 

@@ -14,11 +14,13 @@ import { toast } from "sonner";
 interface ProductCard11Props {
   product: Product;
   siteUser?: string;
+  isEditable?: boolean;
 }
 
 export const ProductCard11: React.FC<ProductCard11Props> = ({
   product,
   siteUser,
+  isEditable = false,
 }) => {
   const pathname = usePathname();
   const { addToCart } = useCart();
@@ -35,6 +37,7 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isEditable) return;
     if (e.nativeEvent) {
       e.nativeEvent.preventDefault();
       e.nativeEvent.stopPropagation();
@@ -58,6 +61,7 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
   return (
     <div
       onClick={e => {
+        if (isEditable) return;
         const target = e.target as HTMLElement;
         if (
           target.closest("button") ||
@@ -103,8 +107,8 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
           <div className="mt-4 md:mt-6">
             <button
               onClick={handleAddToCart}
-              disabled={isAdded || product.stock === 0}
-              className="flex w-full items-center justify-center gap-2 rounded-full py-2 text-xs font-medium transition-all active:scale-95 disabled:opacity-50 md:py-2.5 md:text-sm"
+              disabled={isAdded || product.stock === 0 || isEditable}
+              className={`flex w-full items-center justify-center gap-2 rounded-full py-2 text-xs font-medium transition-all active:scale-95 disabled:opacity-50 md:py-2.5 md:text-sm ${isEditable ? "cursor-not-allowed" : ""}`}
               style={{
                 backgroundColor: isAdded ? "#10B981" : theme.colors.primary,
                 color: theme.colors.primaryForeground || "#fff",

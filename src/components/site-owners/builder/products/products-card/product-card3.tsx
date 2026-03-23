@@ -359,7 +359,7 @@ export const ProductCard3: React.FC<ProductCard3Props> = ({
                     data-cart-action="true"
                   >
                     <ShoppingCart className="mr-2 h-4 w-4" />
-                    {product.stock > 0 ? "Add to Cart" : "Notify Me"}
+                    {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
                   </SOButton>
 
                   <Button

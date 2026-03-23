@@ -46,7 +46,6 @@ export const useTemplateApi = {
       `${API_BASE_URL}/api/template-tenants/?${params.toString()}`,
       {
         method: "GET",
-        headers: createHeaders(),
         cache: "no-store",
       }
     );
@@ -90,7 +89,6 @@ export const useTemplateApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/template-tenants/`, {
       method: "POST",
-      headers: createHeaders(),
       body: JSON.stringify(payload),
     });
     await handleApiError(response);
@@ -163,7 +161,6 @@ export const useTemplateApi = {
       `${API_BASE_URL}/api/template-tenants/${ownerId}/`,
       {
         method: "DELETE",
-        headers: createHeaders(),
       }
     );
     await handleApiError(response);

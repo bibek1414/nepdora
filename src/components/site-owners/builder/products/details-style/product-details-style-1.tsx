@@ -35,6 +35,13 @@ import { usePathname } from "next/navigation";
 import { useRecentlyViewed } from "@/hooks/customer/use-recently-viewed";
 import { ProductRecommendations } from "../product-recommendations";
 import { sanitizeContent } from "@/utils/html-sanitizer";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductDetailProps {
   slug: string;
@@ -324,7 +331,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
   return (
     <div className="bg-background pt-8 pb-32">
-      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-12">
+      <div className="mx-auto max-w-7xl px-8 py-8 md:py-12">
         {/* Breadcrumb Navigation */}
         <Breadcrumb className="mb-10 text-sm font-medium">
           <BreadcrumbList>
@@ -400,14 +407,13 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
         <div className="grid items-start gap-12 md:grid-cols-12 lg:gap-16">
           {/* Left Column: Traditional Image Gallery */}
-          <div className="flex flex-col gap-4 md:col-span-6 lg:col-span-7">
-            <div className="bg-card relative w-full overflow-hidden">
+          <div className="flex flex-col gap-6 md:col-span-6 lg:col-span-7">
+            <div className="bg-card relative aspect-square max-h-[600px] w-full overflow-hidden rounded-2xl border">
               <Image
                 src={selectedImage || defaultImage}
                 alt={product.thumbnail_alt_description || product.name}
-                height={600}
-                width={600}
-                className="object-cover"
+                fill
+                className="object-contain"
                 onError={e => {
                   const target = e.currentTarget as HTMLImageElement;
                   target.src = defaultImage;
@@ -423,29 +429,46 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               )}
             </div>
             {productImages.length > 1 && (
-              <div className="grid grid-cols-5 gap-3">
-                {productImages.slice(0, 5).map((img, idx) => (
-                  <button
-                    key={idx}
-                    className={`relative aspect-square w-full overflow-hidden rounded-xl border-2 transition-all focus:outline-none ${
-                      selectedImage === img
-                        ? "border-black shadow-sm"
-                        : "border-transparent opacity-70 hover:opacity-100"
-                    }`}
-                    onClick={() => setSelectedImage(img)}
-                  >
-                    <Image
-                      src={img}
-                      alt={`${product.name} view ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      onError={e => {
-                        const target = e.currentTarget as HTMLImageElement;
-                        target.src = defaultImage;
-                      }}
-                    />
-                  </button>
-                ))}
+              <div className="relative px-2">
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2">
+                    {productImages.map((img, idx) => (
+                      <CarouselItem key={idx} className="basis-1/4 pl-2">
+                        <button
+                          className={`relative aspect-square w-full overflow-hidden rounded-xl border-2 transition-all focus:outline-none ${
+                            selectedImage === img
+                              ? "border-black shadow-sm"
+                              : "border-transparent opacity-70 hover:opacity-100"
+                          }`}
+                          onClick={() => setSelectedImage(img)}
+                        >
+                          <Image
+                            src={img}
+                            alt={`${product.name} view ${idx + 1}`}
+                            fill
+                            className="object-cover"
+                            onError={e => {
+                              const target =
+                                e.currentTarget as HTMLImageElement;
+                              target.src = defaultImage;
+                            }}
+                          />
+                        </button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  {productImages.length > 4 && (
+                    <>
+                      <CarouselPrevious className="absolute -left-10 h-8 w-8 border border-black! text-black! shadow-sm hover:bg-white" />
+                      <CarouselNext className="absolute -right-10 h-8 w-8 border border-black! text-black! shadow-sm hover:bg-white" />
+                    </>
+                  )}
+                </Carousel>
               </div>
             )}
           </div>

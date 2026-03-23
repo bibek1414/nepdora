@@ -344,7 +344,7 @@ export const ProductCard2: React.FC<ProductCard2Props> = ({
                   ADD TO CART
                 </>
               ) : (
-                "NOTIFY WHEN AVAILABLE"
+                "OUT OF STOCK"
               )}
             </SOButton>
           </div>

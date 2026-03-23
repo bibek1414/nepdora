@@ -31,6 +31,7 @@ interface ProductCard8Props {
   siteUser?: string;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
   onClick?: () => void;
+  isEditable?: boolean;
 }
 
 export const ProductCard8: React.FC<ProductCard8Props> = ({
@@ -38,6 +39,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
   siteUser,
   onWishlistToggle,
   onClick,
+  isEditable = false,
 }) => {
   const pathname = usePathname();
   const { addToCart } = useCart();
@@ -90,6 +92,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
   const handleAddToCart = (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
+    if (isEditable) return;
     if (e?.nativeEvent) {
       e.nativeEvent.preventDefault();
       e.nativeEvent.stopPropagation();
@@ -101,6 +104,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isEditable) return;
     if (e.nativeEvent) {
       e.nativeEvent.preventDefault();
       e.nativeEvent.stopPropagation();
@@ -148,6 +152,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
     <Card className="w-[260px] overflow-hidden border-none shadow-none transition-shadow duration-200 sm:w-[280px]">
       <div
         onClick={e => {
+          if (isEditable) return;
           const target = e.target as HTMLElement;
           if (
             target.closest("button") ||
@@ -176,7 +181,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
               size="icon"
               onClick={handleFavorite}
               className="absolute top-3 right-3 z-10 h-8 w-8 bg-white/80 backdrop-blur-sm hover:bg-white"
-              disabled={isWishlistLoading}
+              disabled={isWishlistLoading || isEditable}
             >
               <Heart
                 size={18}
@@ -234,7 +239,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.primaryForeground,
               }}
-              disabled={product.stock === 0}
+              disabled={product.stock === 0 || isEditable}
               onClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -250,7 +255,7 @@ export const ProductCard8: React.FC<ProductCard8Props> = ({
               }}
             >
               <ShoppingCart className="mr-2 h-4 w-4" />
-              Add to Cart
+              {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
             </Button>
           </div>
         </CardFooter>

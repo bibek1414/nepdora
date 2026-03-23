@@ -20,6 +20,7 @@ interface ProductCard10Props {
   siteUser?: string;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
+  isEditable?: boolean;
 }
 
 export const ProductCard10: React.FC<ProductCard10Props> = ({
@@ -27,6 +28,7 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
   siteUser,
   onClick,
   onWishlistToggle,
+  isEditable = false,
 }) => {
   const pathname = usePathname();
   const { addToCart } = useCart();
@@ -77,6 +79,7 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isEditable) return;
     if (e.nativeEvent) {
       e.nativeEvent.preventDefault();
       e.nativeEvent.stopPropagation();
@@ -93,6 +96,7 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isEditable) return;
     if (e.nativeEvent) {
       e.nativeEvent.preventDefault();
       e.nativeEvent.stopPropagation();
@@ -120,6 +124,7 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
   const detailsUrl = getDetailsUrl();
 
   const handleClickWrapper = (e: React.MouseEvent) => {
+    if (isEditable) return;
     const target = e.target as HTMLElement;
     if (
       target.closest("button") ||
@@ -228,16 +233,19 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
               isAdded
                 ? "border-green-600 bg-green-600 text-white"
                 : "bg-white hover:bg-gray-50"
-            } `}
+            } ${isEditable ? "opacity-50 cursor-not-allowed" : ""}`}
+            disabled={isEditable || product.stock === 0}
           >
             {isAdded ? (
               <>
                 <Check size={14} /> ADDED
               </>
-            ) : (
+            ) : product.stock > 0 ? (
               <>
                 <Plus size={14} /> ADD
               </>
+            ) : (
+              "OUT OF STOCK"
             )}
           </button>
         </div>

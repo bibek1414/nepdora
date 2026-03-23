@@ -1,25 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { ProductDetailsData } from "@/types/owner-site/components/product-details";
 import { ProductDetail as Style1 } from "./details-style/product-details-style-1";
 import { ProductDetail as Style2 } from "./details-style/product-details-style-2";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Trash2, RefreshCw } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  useDeleteComponentMutation,
-  useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/use-unified";
+import { RefreshCw } from "lucide-react";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
 
 interface ProductDetailsComponentProps {

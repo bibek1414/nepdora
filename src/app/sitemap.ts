@@ -34,7 +34,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/website-templates", priority: 0.8 },
     { path: "/privacy-policy", priority: 0.5 },
     { path: "/terms", priority: 0.5 },
-    // New Trust & High-Volume Pages
     { path: "/khalti-payment-gateway-nepal", priority: 0.9 },
     { path: "/esewa-integration-guide-nepal", priority: 0.9 },
     { path: "/website-registration-nepal", priority: 0.8 },

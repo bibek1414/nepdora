@@ -36,18 +36,41 @@ const SmsLogisticsSkeleton = () => {
       <div className="mt-auto border-t border-slate-200 pt-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Truck size={14} className="text-orange-500" />
-            <span className="text-[10px] font-bold text-slate-700">Pathao Logistics</span>
+            <Truck size={14} className="text-blue-600" />
+            <span className="text-[10px] font-bold text-slate-700">Multi-Carrier Logistics</span>
           </div>
-          <div className="h-4 w-12 bg-orange-100 rounded-full flex items-center justify-center text-[8px] font-bold text-orange-600">Active</div>
+          <div className="h-4 w-12 bg-blue-50 rounded-full flex items-center justify-center text-[8px] font-bold text-blue-600">Active</div>
         </div>
-        <div className="flex items-center gap-3 bg-white p-2 rounded-lg border border-slate-100 shadow-sm">
-          <div className="h-8 w-8 rounded bg-slate-100 flex items-center justify-center">
-            <CheckCircle2 size={16} className="text-emerald-500" />
+        
+        <div className="space-y-1.5">
+          {/* Pathao */}
+          <div className="flex items-center gap-2 bg-white px-2 py-1.5 rounded border border-slate-100 shadow-sm">
+            <div className="h-4 w-4 rounded-full bg-orange-100 flex items-center justify-center text-[8px] font-bold text-orange-600">P</div>
+            <div className="flex-1">
+              <div className="h-1.5 w-12 bg-slate-200 rounded mb-0.5" />
+              <div className="h-1 w-16 bg-slate-100 rounded" />
+            </div>
+            <div className="h-2 w-8 bg-orange-50 rounded text-[6px] flex items-center justify-center text-orange-600 font-bold">Pathao</div>
           </div>
-          <div className="flex-1">
-            <div className="h-2 w-16 bg-slate-200 rounded mb-1" />
-            <div className="h-1.5 w-24 bg-slate-100 rounded" />
+          
+          {/* YDM */}
+          <div className="flex items-center gap-2 bg-white px-2 py-1.5 rounded border border-slate-100 shadow-sm">
+            <div className="h-4 w-4 rounded-full bg-red-100 flex items-center justify-center text-[8px] font-bold text-red-600">Y</div>
+            <div className="flex-1">
+              <div className="h-1.5 w-12 bg-slate-200 rounded mb-0.5" />
+              <div className="h-1 w-16 bg-slate-100 rounded" />
+            </div>
+            <div className="h-2 w-8 bg-red-50 rounded text-[6px] flex items-center justify-center text-red-600 font-bold">YDM</div>
+          </div>
+
+          {/* Dash */}
+          <div className="flex items-center gap-2 bg-white px-2 py-1.5 rounded border border-slate-100 shadow-sm">
+            <div className="h-4 w-4 rounded-full bg-indigo-100 flex items-center justify-center text-[8px] font-bold text-indigo-600">D</div>
+            <div className="flex-1">
+              <div className="h-1.5 w-12 bg-slate-200 rounded mb-0.5" />
+              <div className="h-1 w-16 bg-slate-100 rounded" />
+            </div>
+            <div className="h-2 w-8 bg-indigo-50 rounded text-[6px] flex items-center justify-center text-indigo-600 font-bold">Dash</div>
           </div>
         </div>
       </div>

@@ -16,12 +16,14 @@ interface ProductCard9Props {
   product: Product;
   siteUser?: string;
   onClick?: () => void;
+  isEditable?: boolean;
 }
 
 export const ProductCard9: React.FC<ProductCard9Props> = ({
   product,
   siteUser,
   onClick,
+  isEditable = false,
 }) => {
   const pathname = usePathname();
   const { addToCart } = useCart();
@@ -51,6 +53,7 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isEditable) return;
     if (e.nativeEvent) {
       e.nativeEvent.preventDefault();
       e.nativeEvent.stopPropagation();
@@ -83,6 +86,7 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
     return (
       <div
         onClick={e => {
+          if (isEditable) return;
           // If they clicked a button or something interactive inside, don't navigate
           const target = e.target as HTMLElement;
           if (
@@ -159,7 +163,7 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
             <Button
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gray-600 bg-transparent p-0 hover:border-none!"
               variant="primary"
-              disabled={product.stock === 0}
+              disabled={product.stock === 0 || isEditable}
               onClick={handleAddToCart}
               data-cart-action="true"
             >

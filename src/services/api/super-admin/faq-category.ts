@@ -26,7 +26,6 @@ export const faqCategoryApi = {
     const url = `${API_BASE_URL}/api/support/faq-category/`;
     const response = await apiFetch(url, {
       method: "GET",
-      headers: createHeaders(),
     });
     await handleApiError(response);
     return response.json();
@@ -39,7 +38,6 @@ export const faqCategoryApi = {
       `${API_BASE_URL}/api/support/faq-category/${id}/`,
       {
         method: "GET",
-        headers: createHeaders(),
       }
     );
     await handleApiError(response);
@@ -55,7 +53,6 @@ export const faqCategoryApi = {
       `${API_BASE_URL}/api/support/faq-category/`,
       {
         method: "POST",
-        headers: createHeaders(),
         body: JSON.stringify(data),
       }
     );
@@ -73,7 +70,6 @@ export const faqCategoryApi = {
       `${API_BASE_URL}/api/support/faq-category/${id}/`,
       {
         method: "PATCH",
-        headers: createHeaders(),
         body: JSON.stringify(data),
       }
     );
@@ -88,7 +84,6 @@ export const faqCategoryApi = {
       `${API_BASE_URL}/api/support/faq-category/${id}/`,
       {
         method: "DELETE",
-        headers: createHeaders(),
       }
     );
     await handleApiError(response);
@@ -107,7 +102,6 @@ export const faqApi = {
     const url = `${API_BASE_URL}/api/support/faq/`;
     const response = await apiFetch(url, {
       method: "GET",
-      headers: createHeaders(),
     });
     await handleApiError(response);
     return response.json();
@@ -144,7 +138,6 @@ export const faqApi = {
     const API_BASE_URL = siteConfig.apiBaseUrl;
     const response = await apiFetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
       method: "PATCH",
-      headers: createHeaders(),
       body: JSON.stringify(data),
     });
     await handleApiError(response);
@@ -156,7 +149,6 @@ export const faqApi = {
     const API_BASE_URL = siteConfig.apiBaseUrl;
     const response = await apiFetch(`${API_BASE_URL}/api/support/faq/${id}/`, {
       method: "DELETE",
-      headers: createHeaders(),
     });
     await handleApiError(response);
     const contentType = response.headers.get("content-type");

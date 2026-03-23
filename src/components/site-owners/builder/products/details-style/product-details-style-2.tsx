@@ -22,6 +22,13 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
 import { useRecentlyViewed } from "@/hooks/customer/use-recently-viewed";
 import { ProductRecommendations } from "../product-recommendations";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductDetailProps {
   slug: string;
@@ -315,8 +322,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
         <div className="grid gap-12 md:grid-cols-2 lg:gap-16">
           {/* Left Side - Images */}
-          <div className="flex flex-col gap-4">
-            <div className="border-border relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl bg-[#F6F6F6]">
+          <div className="flex flex-col gap-6">
+            <div className="border-border relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-[#F6F6F6]">
               <Image
                 src={selectedImage || defaultImage}
                 alt={product.thumbnail_alt_description || product.name}
@@ -329,26 +336,46 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               />
             </div>
 
-            <div className="flex gap-4 overflow-x-auto pb-2">
-              {productImages.map((img, idx) => (
-                <button
-                  key={idx}
-                  className={`relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border-2 transition-all ${selectedImage === img ? "border-black" : "border-transparent"}`}
-                  onClick={() => setSelectedImage(img)}
-                >
-                  <div className="absolute inset-0 -z-10 bg-[#F6F6F6]" />
-                  <Image
-                    src={img}
-                    alt={`${product.name} view ${idx + 1}`}
-                    fill
-                    className="object-contain p-1"
-                    onError={e => {
-                      const target = e.currentTarget as HTMLImageElement;
-                      target.src = defaultImage;
-                    }}
-                  />
-                </button>
-              ))}
+            <div className="relative px-2">
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-2">
+                  {productImages.map((img, idx) => (
+                    <CarouselItem key={idx} className="basis-1/4 pl-2">
+                      <button
+                        className={`relative aspect-square w-full overflow-hidden rounded-2xl border-2 transition-all ${
+                          selectedImage === img
+                            ? "border-black shadow-sm"
+                            : "border-transparent opacity-70 hover:opacity-100"
+                        }`}
+                        onClick={() => setSelectedImage(img)}
+                      >
+                        <div className="absolute inset-0 -z-10 bg-[#F6F6F6]" />
+                        <Image
+                          src={img}
+                          alt={`${product.name} view ${idx + 1}`}
+                          fill
+                          className="object-contain p-1"
+                          onError={e => {
+                            const target = e.currentTarget as HTMLImageElement;
+                            target.src = defaultImage;
+                          }}
+                        />
+                      </button>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {productImages.length > 4 && (
+                  <>
+                    <CarouselPrevious className="absolute -left-10 h-8 w-8 border border-black! text-black! shadow-sm hover:bg-white" />
+                    <CarouselNext className="absolute -right-10 h-8 w-8 border border-black! text-black! shadow-sm hover:bg-white" />
+                  </>
+                )}
+              </Carousel>
             </div>
           </div>
 
