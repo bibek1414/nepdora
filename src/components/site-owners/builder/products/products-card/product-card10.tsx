@@ -233,7 +233,7 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
               isAdded
                 ? "border-green-600 bg-green-600 text-white"
                 : "bg-white hover:bg-gray-50"
-            } ${isEditable ? "opacity-50 cursor-not-allowed" : ""}`}
+            } ${isEditable ? "cursor-not-allowed opacity-50" : ""}`}
             disabled={isEditable || product.stock === 0}
           >
             {isAdded ? (

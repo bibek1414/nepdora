@@ -10,7 +10,7 @@ export const industries = [
   "real-estate",
   "salon",
   "educational-consultancy",
-  "grocery"
+  "grocery",
 ];
 
 // Top 15 major cities for pre-rendering to optimize build size
@@ -44,5 +44,5 @@ export const INDUSTRY_LABELS: Record<string, string> = {
   "real-estate": "Real Estate",
   salon: "Beauty Salon",
   "educational-consultancy": "Educational Consultancy",
-  grocery: "Grocery Store"
+  grocery: "Grocery Store",
 };

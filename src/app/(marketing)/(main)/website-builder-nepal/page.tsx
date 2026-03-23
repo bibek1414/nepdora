@@ -9,8 +9,14 @@ import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
   title: "Best Website Builder in Nepal | Create Your Site in 5 Minutes",
-  description: "Nepdora is the #1 website builder in Nepal. Build professional websites for e-commerce, restaurants, and agencies with eSewa & Khalti integration. Start free today!",
-  keywords: ["website builder nepal", "create website nepal", "best website builder nepal", "ecommerce website nepal"],
+  description:
+    "Nepdora is the #1 website builder in Nepal. Build professional websites for e-commerce, restaurants, and agencies with eSewa & Khalti integration. Start free today!",
+  keywords: [
+    "website builder nepal",
+    "create website nepal",
+    "best website builder nepal",
+    "ecommerce website nepal",
+  ],
   alternates: {
     canonical: "https://www.nepdora.com/website-builder-nepal",
   },
@@ -20,21 +26,22 @@ export default function WebsiteBuilderNepal() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Nepdora Website Builder",
-    "description": "All-in-one website builder for Nepali businesses with local payment and delivery integration.",
-    "url": "https://www.nepdora.com",
-    "applicationCategory": "DesignApplication",
-    "operatingSystem": "Web",
-    "offers": {
+    name: "Nepdora Website Builder",
+    description:
+      "All-in-one website builder for Nepali businesses with local payment and delivery integration.",
+    url: "https://www.nepdora.com",
+    applicationCategory: "DesignApplication",
+    operatingSystem: "Web",
+    offers: {
       "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "NPR"
+      price: "0",
+      priceCurrency: "NPR",
     },
-    "provider": {
-        "@type": "Organization",
-        "name": "Nepdora",
-        "url": "https://www.nepdora.com"
-    }
+    provider: {
+      "@type": "Organization",
+      name: "Nepdora",
+      url: "https://www.nepdora.com",
+    },
   };
 
   return (
@@ -42,14 +49,21 @@ export default function WebsiteBuilderNepal() {
       <JsonLd id="software-schema" data={schema} />
       <Hero />
       <div className="container mx-auto px-4 py-16 text-center">
-        <h2 className="mb-6 text-3xl font-bold md:text-5xl">Why Nepdora is the Best Website Builder in Nepal</h2>
+        <h2 className="mb-6 text-3xl font-bold md:text-5xl">
+          Why Nepdora is the Best Website Builder in Nepal
+        </h2>
         <p className="mx-auto max-w-3xl text-lg text-slate-600">
-            Unlike global platforms like Wix or Shopify, Nepdora is built specifically for the Nepalese market. 
-            We provide native integration with eSewa, Khalti, and IME Pay, plus local logistics support for your e-commerce business.
+          Unlike global platforms like Wix or Shopify, Nepdora is built
+          specifically for the Nepalese market. We provide native integration
+          with eSewa, Khalti, and IME Pay, plus local logistics support for your
+          e-commerce business.
         </p>
       </div>
       <FeaturesSection />
-      <TemplateSection title="Start with a Professional Template" description="Choose from our library of high-converting designs for any business." />
+      <TemplateSection
+        title="Start with a Professional Template"
+        description="Choose from our library of high-converting designs for any business."
+      />
       <PricingSection />
       <FAQSection />
       <CTASection />

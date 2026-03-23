@@ -9,7 +9,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return industries.map((industry) => ({ industry }));
+  return industries.map(industry => ({ industry }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -34,13 +34,13 @@ export default async function IndustryPage({ params }: Props) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "name": `Nepdora ${industryLabel} Website Builder`,
-    "description": `Professional website building solutions for ${industryLabel.toLowerCase()}s in Nepal.`,
-    "provider": {
+    name: `Nepdora ${industryLabel} Website Builder`,
+    description: `Professional website building solutions for ${industryLabel.toLowerCase()}s in Nepal.`,
+    provider: {
       "@type": "Organization",
-      "name": "Nepdora",
-      "url": "https://www.nepdora.com"
-    }
+      name: "Nepdora",
+      url: "https://www.nepdora.com",
+    },
   };
 
   return (

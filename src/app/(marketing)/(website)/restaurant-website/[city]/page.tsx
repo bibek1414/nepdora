@@ -12,7 +12,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Restaurant Website in ${cityName} | Nepdora`;
   const description = `Create a stunning restaurant website in ${cityName} with Nepdora. Showcase your menu, accept online orders, and manage table bookings with ease.`;
 
-  const url = `https://www.nepdora.com/restaurant-website/` + city.toLowerCase();
+  const url =
+    `https://www.nepdora.com/restaurant-website/` + city.toLowerCase();
 
   return {
     title,

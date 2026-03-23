@@ -209,7 +209,7 @@ export function FooterStyle9({
         {data.newsletter?.enabled && (
           <div className="mb-12 border-t border-gray-800 pt-12">
             <div className="mx-auto max-w-md text-center">
-              <h3 className="mb-4 text-xl font-bold uppercase tracking-wide text-white">
+              <h3 className="mb-4 text-xl font-bold tracking-wide text-white uppercase">
                 {data.newsletter.title}
               </h3>
               <p className="mb-6 text-sm text-gray-400">

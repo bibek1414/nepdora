@@ -69,7 +69,6 @@ export const AboutUsTemplate23: React.FC<AboutUsTemplate23Props> = ({
     </ul>
   );
 
-
   return (
     <section className="bg-white py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 md:px-8">

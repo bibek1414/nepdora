@@ -38,14 +38,14 @@ export const NewsletterForm = ({ isEditable, theme }: NewsletterFormProps) => {
           placeholder="Enter your email"
           className="w-full rounded-l-md border border-black/10 bg-white px-4 py-3 text-sm text-black transition-colors outline-none placeholder:text-slate-500 focus:border-black/30 disabled:opacity-50"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           required
           disabled={isEditable || mutation.isPending}
         />
         <button
           type="submit"
           disabled={isEditable || mutation.isPending}
-          className="whitespace-nowrap flex min-w-[110px] items-center justify-center rounded-r-md px-6 py-3 text-sm font-bold transition-colors duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex min-w-[110px] items-center justify-center rounded-r-md px-6 py-3 text-sm font-bold whitespace-nowrap transition-colors duration-200 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
           style={{
             backgroundColor: theme?.colors?.primary || "#000000",
             color: theme?.colors?.primaryForeground || "#FFFFFF",
@@ -55,7 +55,7 @@ export const NewsletterForm = ({ isEditable, theme }: NewsletterFormProps) => {
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             "Subscribe"
-          ) }
+          )}
         </button>
       </form>
     </div>

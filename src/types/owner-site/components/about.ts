@@ -1146,9 +1146,18 @@ export const defaultAboutUs23Data: AboutUs23Data = {
   missionDescription:
     "At XInfin, our mission is to empower businesses worldwide with innovative financial solutions that streamline operations, enhance decision-making, and drive sustainable growth.",
   missionFeatures: [
-    { id: "m1", text: "Deliver accurate, real-time financial insights for better decisions" },
-    { id: "m2", text: "Automate processes to reduce costs and improve efficiency" },
-    { id: "m3", text: "Build lasting partnerships founded on trust and measurable results" },
+    {
+      id: "m1",
+      text: "Deliver accurate, real-time financial insights for better decisions",
+    },
+    {
+      id: "m2",
+      text: "Automate processes to reduce costs and improve efficiency",
+    },
+    {
+      id: "m3",
+      text: "Build lasting partnerships founded on trust and measurable results",
+    },
   ],
   missionButtonText: "Get Started",
   missionButtonLink: "/contact",
@@ -1161,9 +1170,18 @@ export const defaultAboutUs23Data: AboutUs23Data = {
   visionDescription:
     "We envision becoming the global partner of choice for businesses seeking intelligent financial solutions, where technology and expertise converge to create lasting competitive advantages.",
   visionFeatures: [
-    { id: "v1", text: "Pioneer innovative technologies that transform financial management" },
-    { id: "v2", text: "Expand our global reach while maintaining personalized service" },
-    { id: "v3", text: "Create a world where every business has access to CFO-level insights" },
+    {
+      id: "v1",
+      text: "Pioneer innovative technologies that transform financial management",
+    },
+    {
+      id: "v2",
+      text: "Expand our global reach while maintaining personalized service",
+    },
+    {
+      id: "v3",
+      text: "Create a world where every business has access to CFO-level insights",
+    },
   ],
   visionButtonText: "Get Started",
   visionButtonLink: "/contact",

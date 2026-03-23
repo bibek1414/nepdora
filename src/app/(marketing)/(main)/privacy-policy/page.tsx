@@ -47,13 +47,13 @@ import { JsonLd } from "@/components/shared/json-ld";
 const privacySchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Nepdora Privacy Policy",
-  "description": "Information about how Nepdora handles user data and privacy.",
-  "publisher": {
+  name: "Nepdora Privacy Policy",
+  description: "Information about how Nepdora handles user data and privacy.",
+  publisher: {
     "@type": "Organization",
-    "name": "Nepdora",
-    "url": "https://www.nepdora.com"
-  }
+    name: "Nepdora",
+    url: "https://www.nepdora.com",
+  },
 };
 
 export default function PrivacyPolicyPage() {

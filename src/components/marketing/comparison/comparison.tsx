@@ -66,7 +66,7 @@ const Comparison: React.FC<ComparisonProps> = ({
               <div className="mt-8">
                 <Link
                   href="/website-developer-nepal"
-                  className="group inline-flex items-center gap-2 text-sm font-semibold text-slate-900 transition-colors hover:text-primary"
+                  className="group hover:text-primary inline-flex items-center gap-2 text-sm font-semibold text-slate-900 transition-colors"
                 >
                   Detailed Comparison: Nepdora vs Hiring a Developer
                   <ArrowRight

@@ -46,13 +46,13 @@ import { JsonLd } from "@/components/shared/json-ld";
 const termsSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Nepdora Terms of Service",
-  "description": "Rules and regulations for using the Nepdora platform.",
-  "publisher": {
+  name: "Nepdora Terms of Service",
+  description: "Rules and regulations for using the Nepdora platform.",
+  publisher: {
     "@type": "Organization",
-    "name": "Nepdora",
-    "url": "https://www.nepdora.com"
-  }
+    name: "Nepdora",
+    url: "https://www.nepdora.com",
+  },
 };
 
 export default function TermsOfServicePage() {

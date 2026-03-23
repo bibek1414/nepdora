@@ -12,8 +12,8 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return industries.flatMap((industry) =>
-    MAJOR_CITIES.map((city) => ({
+  return industries.flatMap(industry =>
+    MAJOR_CITIES.map(city => ({
       industry,
       city,
     }))
@@ -39,57 +39,74 @@ export default async function CreateWebsiteForPage({ params }: Props) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "name": `Create ${industryLabel} Website in ${cityName}`,
-    "description": `Professional website building services for ${industryLabel.toLowerCase()}s in ${cityName}, Nepal.`,
-    "areaServed": {
+    name: `Create ${industryLabel} Website in ${cityName}`,
+    description: `Professional website building services for ${industryLabel.toLowerCase()}s in ${cityName}, Nepal.`,
+    areaServed: {
       "@type": "City",
-      "name": cityName
+      name: cityName,
     },
-    "provider": {
+    provider: {
       "@type": "Organization",
-      "name": "Nepdora"
-    }
+      name: "Nepdora",
+    },
   };
 
   return (
     <main>
       <JsonLd id="pseo-schema" data={schema} />
-      <section className="bg-slate-50 py-16 md:py-24 border-b border-slate-100">
-          <div className="container mx-auto px-4 text-center">
-              <h1 className="text-4xl md:text-6xl font-extrabold mb-8 tracking-tight text-slate-900">
-                  Create <span className="text-primary">{industryLabel}</span> Website in <span className="text-primary">{cityName}</span>
-              </h1>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-12">
-                  Launch your {industryLabel.toLowerCase()} business online in {cityName} with Nepdora. 
-                  Accept payments via eSewa & Khalti and reach thousands of customers in your local area.
-              </p>
-              <div className="flex justify-center">
-                   <Link href="/create-website" className="px-10 py-5 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-all text-lg underline-offset-4 decoration-primary">
-                    Start Building in {cityName}
-                   </Link>
-              </div>
+      <section className="border-b border-slate-100 bg-slate-50 py-16 md:py-24">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="mb-8 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
+            Create <span className="text-primary">{industryLabel}</span> Website
+            in <span className="text-primary">{cityName}</span>
+          </h1>
+          <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-600">
+            Launch your {industryLabel.toLowerCase()} business online in{" "}
+            {cityName} with Nepdora. Accept payments via eSewa & Khalti and
+            reach thousands of customers in your local area.
+          </p>
+          <div className="flex justify-center">
+            <Link
+              href="/create-website"
+              className="decoration-primary rounded-full bg-slate-900 px-10 py-5 text-lg font-bold text-white underline-offset-4 transition-all hover:bg-slate-800"
+            >
+              Start Building in {cityName}
+            </Link>
           </div>
+        </div>
       </section>
 
       <div className="container mx-auto px-4 py-20 text-center">
-        <h2 className="mb-6 text-3xl font-bold md:text-5xl">Why Choose Nepdora for your {industryLabel} in {cityName}?</h2>
+        <h2 className="mb-6 text-3xl font-bold md:text-5xl">
+          Why Choose Nepdora for your {industryLabel} in {cityName}?
+        </h2>
         <p className="mx-auto max-w-3xl text-lg text-slate-600">
-            Nepdora provides the most localized website builder platform in Nepal. 
-            We handle everything—from design to payments—tailored specifically for businesses in {cityName}.
+          Nepdora provides the most localized website builder platform in Nepal.
+          We handle everything—from design to payments—tailored specifically for
+          businesses in {cityName}.
         </p>
-        <div className="grid md:grid-cols-3 gap-8 mt-16 text-left">
-            <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm">
-                <h3 className="text-xl font-bold mb-4">Local Payments</h3>
-                <p className="text-slate-600">Integrated eSewa, Khalti, and FonePay support for your customers in {cityName}.</p>
-            </div>
-            <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm">
-                <h3 className="text-xl font-bold mb-4">Local Logistics</h3>
-                <p className="text-slate-600">Ship your products across {cityName} with our integrated delivery partners.</p>
-            </div>
-            <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm">
-                <h3 className="text-xl font-bold mb-4">Nepali SEO</h3>
-                <p className="text-slate-600">Rank #1 in Google when customers in {cityName} search for your services.</p>
-            </div>
+        <div className="mt-16 grid gap-8 text-left md:grid-cols-3">
+          <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
+            <h3 className="mb-4 text-xl font-bold">Local Payments</h3>
+            <p className="text-slate-600">
+              Integrated eSewa, Khalti, and FonePay support for your customers
+              in {cityName}.
+            </p>
+          </div>
+          <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
+            <h3 className="mb-4 text-xl font-bold">Local Logistics</h3>
+            <p className="text-slate-600">
+              Ship your products across {cityName} with our integrated delivery
+              partners.
+            </p>
+          </div>
+          <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
+            <h3 className="mb-4 text-xl font-bold">Nepali SEO</h3>
+            <p className="text-slate-600">
+              Rank #1 in Google when customers in {cityName} search for your
+              services.
+            </p>
+          </div>
         </div>
       </div>
 

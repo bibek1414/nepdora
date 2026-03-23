@@ -45,7 +45,7 @@ const features = [
     skeleton: <SetupSkeleton />,
     icon: Clock,
   },
-  
+
   // ROW 2
   {
     title: "100+ Templates",

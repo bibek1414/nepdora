@@ -48,23 +48,23 @@ export default function WebsiteTemplatesPage() {
     itemListElement: [
       {
         "@type": "ListItem",
-        "position": 1,
-        "item": {
+        position: 1,
+        item: {
           "@type": "SoftwareApplication",
-          "name": "Professional Portfolio Template",
-          "applicationCategory": "Web Design Template",
-          "operatingSystem": "Web",
-        }
+          name: "Professional Portfolio Template",
+          applicationCategory: "Web Design Template",
+          operatingSystem: "Web",
+        },
       },
       {
         "@type": "ListItem",
-        "position": 2,
-        "item": {
+        position: 2,
+        item: {
           "@type": "SoftwareApplication",
-          "name": "Business Landing Page Template",
-          "applicationCategory": "Web Design Template",
-          "operatingSystem": "Web",
-        }
+          name: "Business Landing Page Template",
+          applicationCategory: "Web Design Template",
+          operatingSystem: "Web",
+        },
       },
     ],
   };

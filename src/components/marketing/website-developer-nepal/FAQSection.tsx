@@ -9,7 +9,7 @@ import {
 
 const FAQSection: React.FC = () => {
   return (
-    <section className=" py-24 sm:py-32">
+    <section className="py-24 sm:py-32">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="mb-16 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">

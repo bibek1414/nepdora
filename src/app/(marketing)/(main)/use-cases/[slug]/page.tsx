@@ -14,11 +14,11 @@ const USE_CASES = [
   "website-for-small-business",
   "website-for-freelancers",
   "sell-products-online-nepal",
-  "start-online-business-nepal"
+  "start-online-business-nepal",
 ];
 
 export async function generateStaticParams() {
-  return USE_CASES.map((slug) => ({ slug }));
+  return USE_CASES.map(slug => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -38,56 +38,72 @@ export default async function UseCasePage({ params }: Props) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "name": title,
-    "provider": {
+    name: title,
+    provider: {
       "@type": "Organization",
-      "name": "Nepdora"
+      name: "Nepdora",
     },
-    "areaServed": {
+    areaServed: {
       "@type": "Country",
-      "name": "Nepal"
-    }
+      name: "Nepal",
+    },
   };
 
   return (
     <main>
       <JsonLd id="use-case-schema" data={schema} />
       <div className="bg-white py-16 md:py-24">
-        <div className="container mx-auto px-4 max-w-5xl text-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-8 tracking-tight text-slate-900 leading-tight">
-                {title}
-            </h1>
-            <p className="text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Whether you are a solo freelancer or a growing small business in Nepal, 
-                Nepdora provides the perfect set of tools to achieve your goals online. 
-                Focus on your passion, while we handle the pixels.
-            </p>
-            <Link href="/create-website" className="px-10 py-5 bg-primary text-white rounded-full font-bold hover:bg-primary/90 transition-all text-lg inline-block">
-                Get Started Now
-            </Link>
+        <div className="container mx-auto max-w-5xl px-4 text-center">
+          <h1 className="mb-8 text-4xl leading-tight font-extrabold tracking-tight text-slate-900 md:text-6xl">
+            {title}
+          </h1>
+          <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-600">
+            Whether you are a solo freelancer or a growing small business in
+            Nepal, Nepdora provides the perfect set of tools to achieve your
+            goals online. Focus on your passion, while we handle the pixels.
+          </p>
+          <Link
+            href="/create-website"
+            className="bg-primary hover:bg-primary/90 inline-block rounded-full px-10 py-5 text-lg font-bold text-white transition-all"
+          >
+            Get Started Now
+          </Link>
         </div>
       </div>
 
       <FeaturesSection />
 
-      <section className="py-20 bg-slate-50 border-y border-slate-100">
-          <div className="container mx-auto px-4">
-              <h2 className="text-3xl font-bold mb-12 text-center">Specifically Designed for Your Success</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <div className="p-10 rounded-3xl bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-xl font-bold mb-4">Local Payment Gateway</h3>
-                      <p className="text-slate-600">Native support for eSewa, Khalti, and IME Pay. Sell to anyone, anywhere in Nepal.</p>
-                  </div>
-                  <div className="p-10 rounded-3xl bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-xl font-bold mb-4">Nepali Language Support</h3>
-                      <p className="text-slate-600">Build your website in Nepali or English. Our builder handles font and layout seamlessly.</p>
-                  </div>
-                  <div className="p-10 rounded-3xl bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <h3 className="text-xl font-bold mb-4">No Coding Required</h3>
-                      <p className="text-slate-600">If you can use Facebook or WhatsApp, you can build a professional website with Nepdora.</p>
-                  </div>
-              </div>
+      <section className="border-y border-slate-100 bg-slate-50 py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="mb-12 text-center text-3xl font-bold">
+            Specifically Designed for Your Success
+          </h2>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-3xl bg-white p-10 shadow-sm transition-shadow hover:shadow-md">
+              <h3 className="mb-4 text-xl font-bold">Local Payment Gateway</h3>
+              <p className="text-slate-600">
+                Native support for eSewa, Khalti, and IME Pay. Sell to anyone,
+                anywhere in Nepal.
+              </p>
+            </div>
+            <div className="rounded-3xl bg-white p-10 shadow-sm transition-shadow hover:shadow-md">
+              <h3 className="mb-4 text-xl font-bold">
+                Nepali Language Support
+              </h3>
+              <p className="text-slate-600">
+                Build your website in Nepali or English. Our builder handles
+                font and layout seamlessly.
+              </p>
+            </div>
+            <div className="rounded-3xl bg-white p-10 shadow-sm transition-shadow hover:shadow-md">
+              <h3 className="mb-4 text-xl font-bold">No Coding Required</h3>
+              <p className="text-slate-600">
+                If you can use Facebook or WhatsApp, you can build a
+                professional website with Nepdora.
+              </p>
+            </div>
           </div>
+        </div>
       </section>
 
       <FAQSection />

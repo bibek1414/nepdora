@@ -83,15 +83,18 @@ export const useCreatePage = () => {
         });
 
         // Also subscribe to generic socket_error in case action is missing on error
-        const unsubscribeError = socket.subscribe("socket_error", (message: any) => {
-          // If we can correlate the error (e.g., it contains the title we tried to create)
-          // Based on user log: {"error": {"non_field_errors": [...]}} - it might not have the title.
-          // But if it's the only thing we're waiting for, we might have to assume it's this.
-          // However, if the server sent an action in the error message, the first listener would catch it.
-          unsubscribeError();
-          unsubscribe();
-          reject(message.error || message);
-        });
+        const unsubscribeError = socket.subscribe(
+          "socket_error",
+          (message: any) => {
+            // If we can correlate the error (e.g., it contains the title we tried to create)
+            // Based on user log: {"error": {"non_field_errors": [...]}} - it might not have the title.
+            // But if it's the only thing we're waiting for, we might have to assume it's this.
+            // However, if the server sent an action in the error message, the first listener would catch it.
+            unsubscribeError();
+            unsubscribe();
+            reject(message.error || message);
+          }
+        );
 
         // Set a timeout in case of failure
         const timeout = setTimeout(() => {

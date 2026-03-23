@@ -76,7 +76,9 @@ const BlogPage = async () => {
       datePublished: blog.created_at,
       author: {
         "@type": "Person",
-        name: blog.author ? `${blog.author.first_name} ${blog.author.last_name}`.trim() : "Nepdora Team",
+        name: blog.author
+          ? `${blog.author.first_name} ${blog.author.last_name}`.trim()
+          : "Nepdora Team",
       },
     })),
   };

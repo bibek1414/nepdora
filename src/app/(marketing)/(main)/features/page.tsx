@@ -48,37 +48,37 @@ import { JsonLd } from "@/components/shared/json-ld";
 const featuresSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  "name": "Nepdora Platform Features",
-  "description":
+  name: "Nepdora Platform Features",
+  description:
     "Comprehensive suite of digital tools including a drag-and-drop website builder, e-commerce solutions, and centralized social media management.",
-  "provider": {
+  provider: {
     "@type": "Organization",
-    "name": "Nepdora",
-    "url": "https://www.nepdora.com",
+    name: "Nepdora",
+    url: "https://www.nepdora.com",
   },
-  "hasOfferCatalog": {
+  hasOfferCatalog: {
     "@type": "OfferCatalog",
-    "name": "Digital Solutions",
-    "itemListElement": [
+    name: "Digital Solutions",
+    itemListElement: [
       {
         "@type": "Offer",
-        "itemOffered": {
+        itemOffered: {
           "@type": "Service",
-          "name": "Website Builder",
+          name: "Website Builder",
         },
       },
       {
         "@type": "Offer",
-        "itemOffered": {
+        itemOffered: {
           "@type": "Service",
-          "name": "E-commerce System",
+          name: "E-commerce System",
         },
       },
       {
         "@type": "Offer",
-        "itemOffered": {
+        itemOffered: {
           "@type": "Service",
-          "name": "Social Media Management",
+          name: "Social Media Management",
         },
       },
     ],

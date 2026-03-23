@@ -110,7 +110,6 @@ export default function WebsiteDeveloperNepalPage() {
       <WhoItsBuiltFor />
       <FAQSection />
       <CTASection />
-     
     </div>
   );
 }

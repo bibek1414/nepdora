@@ -12,13 +12,17 @@ const PosSkeleton = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col p-4 bg-slate-50 overflow-hidden">
-      <div className="flex items-center justify-between mb-4">
+    <div className="flex h-full w-full flex-col overflow-hidden bg-slate-50 p-4">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Calculator size={14} className="text-indigo-600" />
-          <span className="text-[10px] font-bold text-slate-700">POS System</span>
+          <span className="text-[10px] font-bold text-slate-700">
+            POS System
+          </span>
         </div>
-        <div className="h-4 w-12 bg-indigo-100 rounded-full flex items-center justify-center text-[8px] font-bold text-indigo-600">Terminal 01</div>
+        <div className="flex h-4 w-12 items-center justify-center rounded-full bg-indigo-100 text-[8px] font-bold text-indigo-600">
+          Terminal 01
+        </div>
       </div>
 
       <div className="flex-1 space-y-2">
@@ -28,25 +32,29 @@ const PosSkeleton = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-100 shadow-sm"
+            className="flex items-center justify-between rounded-lg border border-slate-100 bg-white p-2 shadow-sm"
           >
             <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded bg-slate-100 flex items-center justify-center">
+              <div className="flex h-6 w-6 items-center justify-center rounded bg-slate-100">
                 <ShoppingCart size={10} className="text-slate-400" />
               </div>
-              <span className="text-[10px] text-slate-600 font-medium">{item.name}</span>
+              <span className="text-[10px] font-medium text-slate-600">
+                {item.name}
+              </span>
             </div>
-            <span className="text-[10px] font-bold text-slate-900">{item.price}</span>
+            <span className="text-[10px] font-bold text-slate-900">
+              {item.price}
+            </span>
           </motion.div>
         ))}
       </div>
 
-      <div className="mt-4 bg-indigo-600 p-3 rounded-xl text-white">
-        <div className="flex justify-between items-center mb-1">
+      <div className="mt-4 rounded-xl bg-indigo-600 p-3 text-white">
+        <div className="mb-1 flex items-center justify-between">
           <span className="text-[10px] opacity-80">Total Amount</span>
           <span className="text-xs font-bold">Rs. 1,050</span>
         </div>
-        <button className="w-full bg-white/20 hover:bg-white/30 py-1.5 rounded-lg text-[10px] font-bold flex items-center justify-center gap-2 transition-colors">
+        <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-white/20 py-1.5 text-[10px] font-bold transition-colors hover:bg-white/30">
           <CreditCard size={12} />
           Complete Sale
         </button>

@@ -51,17 +51,18 @@ import { JsonLd } from "@/components/shared/json-ld";
 const pricingSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Nepdora Pricing Plans",
-  "description": "Compare Nepdora's affordable and transparent pricing plans for businesses of all sizes in Nepal.",
-  "mainEntity": {
+  name: "Nepdora Pricing Plans",
+  description:
+    "Compare Nepdora's affordable and transparent pricing plans for businesses of all sizes in Nepal.",
+  mainEntity: {
     "@type": "Offer",
-    "priceCurrency": "NPR",
-    "offeredBy": {
+    priceCurrency: "NPR",
+    offeredBy: {
       "@type": "Organization",
-      "name": "Nepdora",
-      "url": "https://www.nepdora.com"
-    }
-  }
+      name: "Nepdora",
+      url: "https://www.nepdora.com",
+    },
+  },
 };
 
 export default async function PricingPage() {

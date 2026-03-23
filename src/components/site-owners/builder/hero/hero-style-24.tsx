@@ -132,7 +132,7 @@ export const HeroTemplate24: React.FC<HeroTemplate24Props> = ({
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="mb-4 wrap-break-word text-4xl font-semibold leading-tight tracking-tight sm:mb-6 sm:text-5xl md:text-7xl lg:text-8xl">
+          <h1 className="mb-4 text-4xl leading-tight font-semibold tracking-tight wrap-break-word sm:mb-6 sm:text-5xl md:text-7xl lg:text-8xl">
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
