@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, ArrowUpRight } from "lucide-react";
 import { AboutUs23Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
@@ -69,21 +69,6 @@ export const AboutUsTemplate23: React.FC<AboutUsTemplate23Props> = ({
     </ul>
   );
 
-  const renderTitle = (title: string, italicWord: string) => {
-    if (!italicWord || !title.includes(italicWord)) {
-      return title;
-    }
-    const parts = title.split(italicWord);
-    return (
-      <>
-        {parts[0]}
-        <span className="italic" style={{ color: primaryColor }}>
-          {italicWord}
-        </span>
-        {parts[1]}
-      </>
-    );
-  };
 
   return (
     <section className="bg-white py-16 sm:py-24">
@@ -131,14 +116,24 @@ export const AboutUsTemplate23: React.FC<AboutUsTemplate23Props> = ({
                 handleTextUpdate("missionButtonText")(text);
                 handleTextUpdate("missionButtonLink")(href);
               }}
-              className="inline-flex items-center justify-center rounded-lg px-8 py-3 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+              className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-3 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
               style={{
                 backgroundColor: primaryColor,
                 color: theme.colors.primaryForeground,
               }}
               isEditable={isEditable}
               siteUser={siteUser}
-            />
+            >
+              <div className="flex items-center gap-2">
+                <span>{data.missionButtonText}</span>
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white transition-transform group-hover:scale-105"
+                  style={{ color: primaryColor }}
+                >
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </div>
+              </div>
+            </EditableLink>
           </motion.div>
           <motion.div
             className="h-[400px] overflow-hidden rounded-3xl shadow-2xl sm:h-[500px]"
@@ -223,14 +218,24 @@ export const AboutUsTemplate23: React.FC<AboutUsTemplate23Props> = ({
                 handleTextUpdate("visionButtonText")(text);
                 handleTextUpdate("visionButtonLink")(href);
               }}
-              className="inline-flex items-center justify-center rounded-lg px-8 py-3 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+              className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-3 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
               style={{
                 backgroundColor: primaryColor,
                 color: theme.colors.primaryForeground,
               }}
               isEditable={isEditable}
               siteUser={siteUser}
-            />
+            >
+              <div className="flex items-center gap-2">
+                <span>{data.visionButtonText}</span>
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white transition-transform group-hover:scale-105"
+                  style={{ color: primaryColor }}
+                >
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </div>
+              </div>
+            </EditableLink>
           </motion.div>
         </div>
       </div>
