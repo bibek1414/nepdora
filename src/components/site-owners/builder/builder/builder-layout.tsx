@@ -869,6 +869,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       | "style-7"
       | "style-8"
       | "style-9"
+      | "style-10"
+      | "style-11"
+      | "style-12"
   ) => {
     const payload = {
       content: "footer content",

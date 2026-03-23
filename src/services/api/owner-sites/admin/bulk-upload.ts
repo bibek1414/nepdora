@@ -38,17 +38,13 @@ export const bulkUploadApi = {
     return response.json();
   },
 
-  downloadTemplate: async () => {
+  downloadTemplate: async (): Promise<Blob> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/download-template/`, {
       headers: createHeaders(),
     });
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "product_bulk_upload_template.xlsx";
-    a.click();
-    URL.revokeObjectURL(url);
+
+    await handleApiError(response);
+    return await response.blob();
   },
 };

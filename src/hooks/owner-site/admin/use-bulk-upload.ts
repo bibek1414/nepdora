@@ -47,7 +47,7 @@ export const useDownloadTemplate = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `products_template_${new Date().getTime()}.csv`;
+      link.download = `products_template_${new Date().getTime()}.xlsx`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
