@@ -18,6 +18,8 @@ export interface Domain {
   tenant: Tenant;
   domain: string;
   is_primary: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 // Generic type for paginated responses

@@ -12,6 +12,8 @@ export interface User {
   role: string;
   stores: Store[];
   schema_name: string;
+  phone_number?: string;
+  created_at: string;
 }
 
 export interface PaginatedResponse<T> {

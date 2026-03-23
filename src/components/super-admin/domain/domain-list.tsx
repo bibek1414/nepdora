@@ -4,8 +4,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Plus } from "lucide-react";
 
-import DomainTable from "@/components/super-admin/domain/domaintable";
-import DomainDialog from "@/components/super-admin/domain/domain-dialog";
+import DomainTable from "@/components/super-admin/domain/domain-table";
+import { DomainDetailsDialog } from "@/components/super-admin/domain/domain-details-dialog";
 import Pagination from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +24,7 @@ import { Domain } from "@/types/super-admin/domain";
 
 export default function DomainsPage() {
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(30);
 
   const { data, isLoading, isError, error, refetch } = useDomains(
     page,
@@ -35,6 +35,10 @@ export default function DomainsPage() {
   // Dialog states
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingDomain, setEditingDomain] = useState<Domain | null>(null);
+
+  // Details Dialog states
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
 
   // Delete confirmation states
   const [deleteDomainId, setDeleteDomainId] = useState<number | null>(null);
@@ -49,6 +53,11 @@ export default function DomainsPage() {
     setDialogOpen(true);
   };
 
+  const handleRowClick = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setDetailsOpen(true);
+  };
+
   const confirmDelete = (id: number) => {
     setDeleteDomainId(id);
   };
@@ -59,7 +68,7 @@ export default function DomainsPage() {
     try {
       await deleteMutation.mutateAsync(deleteDomainId);
       toast.success("Domain deleted successfully");
-      refetch(); // Only explicit refresh if you want, but mutate invalidates list anyway
+      refetch();
     } catch (err: unknown) {
       toast.error(
         err instanceof Error ? err.message : "Failed to delete domain"
@@ -70,8 +79,7 @@ export default function DomainsPage() {
   };
 
   const handleFrontendUrlClick = (tenantSchemaName: string) => {
-    // You can track analytics here if needed
-    // console.log(`Frontend URL clicked for tenant: ${tenantSchemaName}`);
+    // Analytics or logging can go here
   };
 
   if (isLoading) {
@@ -96,17 +104,15 @@ export default function DomainsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Domains</h1>
-        <Button onClick={handleAddNew} className="flex items-center gap-2">
-          <Plus size={16} />
-          Add Domain
-        </Button>
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Domains</h1>
+        </div>
       </div>
-
       {/* Main Table */}
       <DomainTable
         domains={domains}
+        onRowClick={handleRowClick}
         onEdit={handleEdit}
         onDelete={confirmDelete}
         onFrontendUrlClick={handleFrontendUrlClick}
@@ -121,13 +127,18 @@ export default function DomainsPage() {
         />
       )}
 
-      {/* Create / Edit Dialog */}
-      <DomainDialog
-        open={dialogOpen}
-        domain={editingDomain}
+      {/* Details Dialog */}
+      <DomainDetailsDialog
+        domains={domains}
+        currentDomainId={selectedDomain?.id || null}
+        isOpen={detailsOpen}
         onClose={() => {
-          setDialogOpen(false);
-          setEditingDomain(null);
+          setDetailsOpen(false);
+          setSelectedDomain(null);
+        }}
+        onDomainChange={id => {
+          const domain = domains.find(d => d.id === id);
+          if (domain) setSelectedDomain(domain);
         }}
       />
 

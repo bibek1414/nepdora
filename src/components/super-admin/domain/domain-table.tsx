@@ -1,5 +1,5 @@
 import { Domain } from "@/types/super-admin/domain";
-import { Edit2, Trash2, ExternalLink } from "lucide-react";
+import { Trash2, ExternalLink } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -12,13 +12,22 @@ import { Button } from "@/components/ui/button";
 
 interface DomainTableProps {
   domains: Domain[];
+  onRowClick: (domain: Domain) => void;
   onEdit: (domain: Domain) => void;
   onDelete: (id: number) => void;
   onFrontendUrlClick: (tenantSchemaName: string) => void;
 }
-
+const formatDate = (dateString: string | null | undefined) => {
+  if (!dateString) return "N/A";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
 export default function DomainTable({
   domains,
+  onRowClick,
   onEdit,
   onDelete,
   onFrontendUrlClick,
@@ -33,30 +42,44 @@ export default function DomainTable({
   };
 
   return (
-    <div className="rounded-lg bg-white shadow">
+    <div className="overflow-hidden">
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-gray-50/50">
           <TableRow>
-            <TableHead>Domain</TableHead>
-            <TableHead>Frontend URL</TableHead>
-            <TableHead>Tenant</TableHead>
-            <TableHead>Owner</TableHead>
-            <TableHead>Created On</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="font-semibold text-gray-700">
+              Domain
+            </TableHead>
+            <TableHead className="font-semibold text-gray-700">
+              Frontend URL
+            </TableHead>
+            <TableHead className="font-semibold text-gray-700">
+              Tenant
+            </TableHead>
+            <TableHead className="font-semibold text-gray-700">Owner</TableHead>
+            <TableHead className="font-semibold text-gray-700">
+              Created On
+            </TableHead>
+            <TableHead className="text-right font-semibold text-gray-700">
+              Actions
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {domains.length > 0 ? (
             domains.map(domain => {
-              const frontendUrl = `${domain.tenant.schema_name}.nepdora.com`;
-
               return (
-                <TableRow key={domain.id} className="hover:bg-gray-50">
-                  <TableCell className="font-medium">{domain.domain}</TableCell>
+                <TableRow
+                  key={domain.id}
+                  className="group cursor-pointer transition-colors hover:bg-gray-50"
+                  onClick={() => onRowClick(domain)}
+                >
+                  <TableCell className="font-medium text-gray-900">
+                    {domain.domain}
+                  </TableCell>
                   <TableCell>
                     <Button
                       variant="link"
-                      className="h-auto p-0 text-blue-600 hover:text-blue-800"
+                      className="h-auto p-0 font-normal text-blue-600 hover:text-blue-800"
                       onClick={e => {
                         e.stopPropagation();
                         handleFrontendUrlClick(
@@ -66,34 +89,25 @@ export default function DomainTable({
                       }}
                     >
                       <span className="flex items-center gap-1">
-                        {frontendUrl}
-                        <ExternalLink size={14} />
+                        {domain.domain}
+                        <ExternalLink
+                          size={14}
+                          className="opacity-0 transition-opacity group-hover:opacity-100"
+                        />
                       </span>
                     </Button>
                   </TableCell>
                   <TableCell className="text-gray-600">
                     {domain.tenant.name}
                   </TableCell>
-                  <TableCell className="text-gray-600">
+                  <TableCell className="max-w-[150px] truncate text-gray-600">
                     {domain.tenant.owner.email}
                   </TableCell>
                   <TableCell className="text-gray-600">
-                    {new Date(domain.tenant.created_on).toLocaleDateString()}
+                    {formatDate(domain.created_at)}
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onEdit(domain);
-                        }}
-                        className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
-                        title="Edit"
-                      >
-                        <Edit2 size={16} />
-                      </Button>
+                    <div className="flex justify-end space-x-1">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -101,7 +115,7 @@ export default function DomainTable({
                           e.stopPropagation();
                           onDelete(domain.id);
                         }}
-                        className="h-8 w-8 p-0 text-red-600 hover:bg-red-100 hover:text-red-700"
+                        className="h-8 w-8 p-0 text-gray-400 transition-colors hover:text-red-600"
                         title="Delete"
                       >
                         <Trash2 size={16} />
@@ -113,8 +127,11 @@ export default function DomainTable({
             })
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center text-gray-500">
-                No domains available
+              <TableCell
+                colSpan={6}
+                className="h-32 text-center text-gray-400 italic"
+              >
+                No active domains found.
               </TableCell>
             </TableRow>
           )}

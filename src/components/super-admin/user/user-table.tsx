@@ -38,13 +38,19 @@ export default function UserTable({
                 Associated Stores
               </TableHead>
               <TableHead className="text-left font-semibold text-gray-700">
+                Phone
+              </TableHead>
+              <TableHead className="text-left font-semibold text-gray-700">
+                Date
+              </TableHead>
+              <TableHead className="text-left font-semibold text-gray-700">
                 Actions
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell colSpan={4} className="h-32 text-center text-gray-400">
+              <TableCell colSpan={5} className="h-32 text-center text-gray-400">
                 Loading users...
               </TableCell>
             </TableRow>
@@ -55,7 +61,7 @@ export default function UserTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-hidden rounded-xl bg-white">
       <Table>
         <TableHeader>
           <TableRow className="border-b border-gray-200 bg-gray-50">
@@ -70,6 +76,12 @@ export default function UserTable({
             </TableHead>
             <TableHead className="text-left font-semibold text-gray-700">
               Domains
+            </TableHead>
+            <TableHead className="text-left font-semibold text-gray-700">
+              Phone
+            </TableHead>
+            <TableHead className="text-left font-semibold text-gray-700">
+              Date
             </TableHead>
             <TableHead className="text-left font-semibold text-gray-700">
               Actions
@@ -164,6 +176,19 @@ export default function UserTable({
                   )}
                 </TableCell>
                 <TableCell className="py-4 text-left">
+                  {user.phone_number ? (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Phone size={14} className="text-gray-400" />
+                      <span>{user.phone_number}</span>
+                    </div>
+                  ) : (
+                    <span className="text-sm text-gray-400 italic">N/A</span>
+                  )}
+                </TableCell>
+                <TableCell className="py-4 text-left">
+                  {user.created_at || "N/A"}
+                </TableCell>
+                <TableCell className="py-4 text-left">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -181,7 +206,7 @@ export default function UserTable({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="h-32 text-center">
+              <TableCell colSpan={6} className="h-32 text-center">
                 <div className="flex flex-col items-center justify-center gap-2">
                   <Mail size={40} className="text-gray-300" />
                   <p className="font-medium text-gray-400">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ArrowUpRight } from "lucide-react";
 
 import {
   CTATemplate4Data,
@@ -123,13 +123,27 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
               onChange={handleButtonUpdate}
               isEditable={isEditable}
               siteUser={siteUser}
-              className="mb-10 inline-flex rounded-full px-8 py-3 text-base font-semibold shadow-lg"
+              className="group mb-10 inline-flex items-center gap-2 rounded-full px-8 py-3 text-base font-semibold shadow-lg transition-all hover:opacity-90 active:scale-95"
               style={{
-                backgroundColor: theme.colors.secondary,
+                backgroundColor: "#FFFFFF",
+                color: theme.colors.primary,
               }}
               textPlaceholder="Button text..."
               hrefPlaceholder="Enter URL..."
-            />
+            >
+              <div className="flex items-center gap-2">
+                <span>{data.button.text}</span>
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-full transition-transform group-hover:scale-105"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: "#FFFFFF",
+                  }}
+                >
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </div>
+              </div>
+            </EditableLink>
 
             <div className="space-y-3">
               {data.features.map(feature => (
