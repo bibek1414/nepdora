@@ -40,9 +40,8 @@ export const getS3Url = (path: string): string => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
   
-  const bucketName = process.env.NEXT_PUBLIC_AWS_STORAGE_BUCKET_NAME || "himalayancrm";
-  const region = process.env.NEXT_PUBLIC_AWS_REGION || "ap-south-1";
+  const customDomain = process.env.NEXT_PUBLIC_AWS_S3_CUSTOM_DOMAIN || "himalayancrm.sgp1.digitaloceanspaces.com";
   
-  // Format: https://bucket-name.s3.region.amazonaws.com/path
-  return `https://${bucketName}.s3.${region}.amazonaws.com/${path}`;
+  // Format: https://custom-domain/path
+  return `https://${customDomain}/${path}`;
 };
