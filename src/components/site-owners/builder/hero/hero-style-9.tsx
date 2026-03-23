@@ -193,13 +193,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                 folder: "hero-collage",
                 
               }}
-              imageOptimization={{
-                width: 400,
-                height: 500,
-                quality: "auto",
-                format: "auto",
-                crop: "fill",
-              }}
+              
               placeholder={{
                 width: 400,
                 height: 500,
@@ -221,13 +215,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                 folder: "hero-collage",
                 
               }}
-              imageOptimization={{
-                width: 400,
-                height: 500,
-                quality: "auto",
-                format: "auto",
-                crop: "fill",
-              }}
+             
               placeholder={{
                 width: 400,
                 height: 500,
@@ -249,13 +237,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                 folder: "hero-collage",
                 
               }}
-              imageOptimization={{
-                width: 400,
-                height: 500,
-                quality: "auto",
-                format: "auto",
-                crop: "fill",
-              }}
+             
               placeholder={{
                 width: 400,
                 height: 500,
@@ -277,13 +259,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                 folder: "hero-collage",
                 
               }}
-              imageOptimization={{
-                width: 400,
-                height: 500,
-                quality: "auto",
-                format: "auto",
-                crop: "fill",
-              }}
+              
               placeholder={{
                 width: 400,
                 height: 500,

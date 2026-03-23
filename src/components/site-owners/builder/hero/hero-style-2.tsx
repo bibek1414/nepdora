@@ -228,14 +228,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           priority
           s3Options={{
             folder: "hero-backgrounds",
-            
-          }}
-          imageOptimization={{
-            width: 1920,
-            height: 1080,
-            quality: "auto",
-            format: "auto",
-            crop: "fill",
           }}
           placeholder={{
             width: 1920,
@@ -356,7 +348,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                         height={400}
                         s3Options={{
                           folder: "hero-slider-images",
-                          
                         }}
                         showAltEditor={isEditable}
                         placeholder={{

@@ -267,13 +267,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                     folder: "hero-slides",
                     
                   }}
-                  imageOptimization={{
-                    width: 1920,
-                    height: 1080,
-                    quality: "auto",
-                    format: "auto",
-                    crop: "fill",
-                  }}
+                
                   placeholder={{
                     width: 1920,
                     height: 1080,

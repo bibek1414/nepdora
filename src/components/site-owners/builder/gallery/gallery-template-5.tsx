@@ -150,13 +150,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
                     className="h-full w-full"
                     width={800}
                     height={800}
-                    imageOptimization={{
-                      width: 800,
-                      height: 800,
-                      quality: "auto",
-                      format: "auto",
-                      crop: "fill",
-                    }}
+                    
                     s3Options={{
                       folder: "gallery-images",
                       

@@ -195,13 +195,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                   folder: "hero-collections",
                   
                 }}
-                imageOptimization={{
-                  width: 800,
-                  height: 600,
-                  quality: "auto",
-                  format: "auto",
-                  crop: "fill",
-                }}
+                
                 placeholder={{
                   width: 800,
                   height: 600,

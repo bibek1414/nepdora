@@ -90,16 +90,8 @@ export const TestimonialCard10: React.FC<TestimonialCard10Props> = ({
                 height: 540,
                 text: "Upload background image",
               }}
-              imageOptimization={{
-                width: 1100,
-                height: 1080,
-                quality: "auto",
-                format: "auto",
-                crop: "fill",
-              }}
               s3Options={{
                 folder: "testimonial-backgrounds",
-                
               }}
             />
           ) : backgroundImage ? (

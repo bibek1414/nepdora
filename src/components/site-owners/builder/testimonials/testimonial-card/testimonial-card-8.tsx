@@ -222,16 +222,8 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
               height: 1080,
               text: "Upload background image",
             }}
-            imageOptimization={{
-              width: 1920,
-              height: 1080,
-              quality: "auto",
-              format: "auto",
-              crop: "fill",
-            }}
             s3Options={{
               folder: "testimonial-backgrounds",
-              
             }}
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/90 via-white/85 to-white/92" />

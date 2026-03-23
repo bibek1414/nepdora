@@ -234,14 +234,6 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
               className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
               s3Options={{
                 folder: "hero-slides",
-                
-              }}
-              imageOptimization={{
-                width: 1920,
-                height: 1080,
-                quality: "auto",
-                format: "auto",
-                crop: "fill",
               }}
               placeholder={{
                 width: 1920,

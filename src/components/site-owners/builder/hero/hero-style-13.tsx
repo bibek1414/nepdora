@@ -271,7 +271,6 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
           className="h-full w-full opacity-60"
           width={1920}
           height={1080}
-          imageOptimization={{ width: 1920, quality: "auto", format: "auto" }}
           placeholder={{
             width: 1920,
             height: 1080,

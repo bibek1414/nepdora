@@ -198,14 +198,6 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
                   className="absolute inset-0 h-full w-full object-cover opacity-0"
                   s3Options={{
                     folder: "hero-collections",
-                    
-                  }}
-                  imageOptimization={{
-                    width: 800,
-                    height: 800,
-                    quality: "auto",
-                    format: "auto",
-                    crop: "fill",
                   }}
                   placeholder={{
                     width: 800,
