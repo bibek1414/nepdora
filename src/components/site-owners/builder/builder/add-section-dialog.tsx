@@ -223,6 +223,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 23",
         image: "/images/site-owners/hero/hero23.png",
       },
+      {
+        id: "hero-24",
+        name: "Hero Style 24",
+        image: "/images/site-owners/hero/hero24.png",
+      },
     ],
     others: [
       {
@@ -1366,6 +1371,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Footer Style 12",
         image: "/images/site-owners/footers/footer12.png",
         description: "Footer with social media links",
+        showForWebsiteTypes: ["service"],
       },
     ],
     login_form: [
@@ -1531,6 +1537,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: [], // Will be handled dynamically
       type: "section",
+      isSpecialized: true,
     },
     {
       id: "socials-sections",

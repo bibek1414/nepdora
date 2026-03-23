@@ -1142,7 +1142,7 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
             className="h-full focus-within:outline-none"
           />
           {editor && editor.isEmpty && (
-            <div className="pointer-events-none absolute top-3 left-3 text-gray-400">
+            <div className="pointer-events-none absolute top-6 left-6 text-gray-400">
               {placeholder}
             </div>
           )}

@@ -64,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <GoogleAnalyticsStatic measurementId="G-1GZLGXVXWT" />
+        <GoogleAnalyticsStatic />
       </head>
       <body className={inter.className}>
         <Suspense fallback={null}>

@@ -1,12 +1,14 @@
 import Script from "next/script";
 
 interface GoogleAnalyticsStaticProps {
-  measurementId: string;
+  measurementId?: string;
 }
 
 export function GoogleAnalyticsStatic({
-  measurementId,
+  measurementId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
 }: GoogleAnalyticsStaticProps) {
+  if (!measurementId) return null;
+
   return (
     <>
       {/* Google tag (gtag.js) */}

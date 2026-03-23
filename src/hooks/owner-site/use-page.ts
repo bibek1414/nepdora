@@ -71,15 +71,32 @@ export const useCreatePage = () => {
       return new Promise<Page>((resolve, reject) => {
         // Subscribe to page_created event
         const unsubscribe = socket.subscribe("page_created", (message: any) => {
+          if (message.error) {
+            unsubscribe();
+            reject(message.error);
+            return;
+          }
           if (message.data && message.data.title === pageData.title) {
             unsubscribe();
             resolve(message.data as Page);
           }
         });
 
-        // Set a timeout in case of failure
-        setTimeout(() => {
+        // Also subscribe to generic socket_error in case action is missing on error
+        const unsubscribeError = socket.subscribe("socket_error", (message: any) => {
+          // If we can correlate the error (e.g., it contains the title we tried to create)
+          // Based on user log: {"error": {"non_field_errors": [...]}} - it might not have the title.
+          // But if it's the only thing we're waiting for, we might have to assume it's this.
+          // However, if the server sent an action in the error message, the first listener would catch it.
+          unsubscribeError();
           unsubscribe();
+          reject(message.error || message);
+        });
+
+        // Set a timeout in case of failure
+        const timeout = setTimeout(() => {
+          unsubscribe();
+          unsubscribeError();
           reject(new Error("Timeout waiting for page creation"));
         }, 10000);
 

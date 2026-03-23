@@ -105,14 +105,6 @@ export const TeamCard1: React.FC<TeamCard1Props> = ({ member, onClick }) => {
           >
             {member.role}
           </p>
-          {member.department && (
-            <p className="mb-3 text-sm text-gray-500">
-              {member.department.name}
-            </p>
-          )}
-          {member.about && (
-            <p className="line-clamp-3 text-sm text-gray-600">{member.about}</p>
-          )}
         </div>
       </CardContent>
     </Card>

@@ -16,6 +16,7 @@ import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useServices } from "@/hooks/owner-site/admin/use-services";
 
 interface FooterStyle12Props {
   footerData: FooterData;
@@ -47,9 +48,17 @@ export const FooterStyle12 = ({
     },
   };
 
-  // Map the first section to "Our Services" or similar
-  const servicesSection = data.sections?.[0];
-  const services = servicesSection?.links ?? [];
+  // Fetch dynamic services
+  const { data: servicesResponse, isLoading: servicesLoading } = useServices({
+    page_size: 6,
+  });
+
+  const dynamicServices =
+    servicesResponse?.results.map(service => ({
+      id: String(service.id),
+      text: service.title,
+      href: `/services/${service.slug}`,
+    })) || [];
 
   return (
     <footer className="w-full border-t border-black/5 bg-white font-sans text-black">
@@ -87,14 +96,29 @@ export const FooterStyle12 = ({
             </div>
           </motion.div>
 
-          {/* Column 2: Services Section */}
-          <ServicesSection
-            title={servicesSection?.title || "Our Services"}
-            services={services}
-            isEditable={isEditable}
-            siteUser={siteUser}
-            pathname={pathname}
-          />
+          {/* Column 2: Dynamic Services Section */}
+          {(dynamicServices.length > 0 || servicesLoading) && (
+            <ServicesSection
+              title="Our Services"
+              services={dynamicServices}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              pathname={pathname}
+              isLoading={servicesLoading}
+            />
+          )}
+
+          {/* Column 3+: Static Sections from footer data */}
+          {data.sections?.map(section => (
+            <ServicesSection
+              key={section.id}
+              title={section.title}
+              services={section.links}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              pathname={pathname}
+            />
+          ))}
 
           {/* Column 3: Contact Info */}
           <motion.div
@@ -142,27 +166,27 @@ export const FooterStyle12 = ({
 
           {/* Column 4: Newsletter */}
           {data.newsletter?.enabled && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h3 className="mb-6 text-lg font-semibold text-black">
-              {data.newsletter?.title || "Newsletter"}
-            </h3>
-            <p className="mb-6 text-sm leading-relaxed text-gray-600">
-              {data.newsletter?.description ||
-                "Join our subscribers list to get latest news and special offers."}
-            </p>
-            {data.newsletter?.enabled ? (
-              <NewsletterForm isEditable={isEditable} theme={theme} />
-            ) : (
-              <p className="text-sm text-slate-500 italic">
-                Newsletter is currently disabled.
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <h3 className="mb-6 text-lg font-semibold text-black">
+                {data.newsletter?.title || "Newsletter"}
+              </h3>
+              <p className="mb-6 text-sm leading-relaxed text-gray-600">
+                {data.newsletter?.description ||
+                  "Join our subscribers list to get latest news and special offers."}
               </p>
-            )}
-          </motion.div>
+              {data.newsletter?.enabled ? (
+                <NewsletterForm isEditable={isEditable} theme={theme} />
+              ) : (
+                <p className="text-sm text-slate-500 italic">
+                  Newsletter is currently disabled.
+                </p>
+              )}
+            </motion.div>
           )}
         </div>
 
@@ -224,12 +248,14 @@ const ServicesSection = ({
   isEditable,
   siteUser,
   pathname,
+  isLoading,
 }: {
   title: string;
   services: FooterLinkType[];
   isEditable?: boolean;
   siteUser?: string;
   pathname: string;
+  isLoading?: boolean;
 }) => {
   return (
     <motion.div
@@ -239,7 +265,12 @@ const ServicesSection = ({
       transition={{ duration: 0.5, delay: 0.1 }}
     >
       <h3 className="mb-6 text-lg font-semibold text-black">{title}</h3>
-      {services.length > 0 ? (
+      {isLoading ? (
+        <div className="flex items-center space-x-2 text-sm text-gray-500">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>Loading...</span>
+        </div>
+      ) : services.length > 0 ? (
         <ul className="space-y-3 text-sm text-gray-600">
           {services.map(service => (
             <FooterLink

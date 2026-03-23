@@ -49,11 +49,7 @@ const navigationGroups = [
   },
   {
     title: "System",
-    items: [
-      { name: "Users", href: "/superadmin/users", icon: Users },
-      { name: "Database", href: "/superadmin/database", icon: Database },
-      { name: "Settings", href: "/superadmin/settings", icon: Settings },
-    ],
+    items: [{ name: "Users", href: "/superadmin/users", icon: Users }],
   },
 ];
 

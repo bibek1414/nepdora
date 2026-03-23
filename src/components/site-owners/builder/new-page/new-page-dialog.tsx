@@ -85,7 +85,7 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
     }
 
     createPageMutation.mutate(
-      { title: pageTitle.trim() },
+      { title: pageTitle.trim().toLowerCase() },
       {
         onSuccess: (data: Page) => {
           console.log("Page created successfully:", data);
@@ -98,11 +98,21 @@ export const NewPageDialog: React.FC<NewPageDialogProps> = ({
         onError: (error: any) => {
           console.error("Failed to create page:", error);
 
-          // Handle different error types
-          if (error?.response?.data?.title) {
-            setError(error.response.data.title[0] || "Title validation failed");
-          } else if (error?.response?.data?.slug) {
+          // Handle different error formats (REST response or Socket error object)
+          const errorData = error?.response?.data || error;
+
+          if (errorData?.non_field_errors) {
+            setError(errorData.non_field_errors[0]);
+          } else if (errorData?.title) {
+            setError(
+              Array.isArray(errorData.title)
+                ? errorData.title[0]
+                : errorData.title
+            );
+          } else if (errorData?.slug) {
             setError("A page with this name already exists");
+          } else if (typeof errorData === "string") {
+            setError(errorData);
           } else {
             setError("Failed to create page. Please try again.");
           }

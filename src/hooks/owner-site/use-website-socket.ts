@@ -96,7 +96,11 @@ export const useWebsiteSocket = ({
           }
         }
         toast.error(errorMessage);
-        return;
+
+        // If there's no action but an error, notify 'socket_error' listeners
+        if (!action && listenersRef.current["socket_error"]) {
+          listenersRef.current["socket_error"].forEach(cb => cb(message));
+        }
       }
 
       if (action && listenersRef.current[action]) {
