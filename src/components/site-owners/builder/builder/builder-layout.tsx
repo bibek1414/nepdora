@@ -26,6 +26,7 @@ import {
   useCreateFooterMutation,
   useReplaceFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
+import { FooterData } from "@/types/owner-site/components/footer";
 import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
 import { toast } from "sonner";
 import {
@@ -858,65 +859,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     });
   };
 
-  const handleFooterSelectFromDialog = (
-    footerStyle:
-      | "style-1"
-      | "style-2"
-      | "style-3"
-      | "style-4"
-      | "style-5"
-      | "style-6"
-      | "style-7"
-      | "style-8"
-      | "style-9"
-      | "style-10"
-      | "style-11"
-      | "style-12"
-  ) => {
+  const handleFooterSelectFromDialog = (footerData: FooterData) => {
     const payload = {
       content: "footer content",
-      data: {
-        style: footerStyle,
-        logoText: "Your Brand",
-        logoType: "text" as "text" | "image" | "both",
-        logoImage: "",
-        companyName: "Your Brand",
-        description:
-          "Innovative solutions for a modern world. We build amazing experiences.",
-        sections: [
-          {
-            id: "s1",
-            title: "Company",
-            links: [
-              { id: "l1", text: "About Us", href: "#" },
-              { id: "l2", text: "Careers", href: "#" },
-            ],
-          },
-          {
-            id: "s2",
-            title: "Resources",
-            links: [
-              { id: "l3", text: "Blog", href: "#" },
-              { id: "l4", text: "Help Center", href: "#" },
-            ],
-          },
-        ],
-        socialLinks: [
-          { id: "soc1", platform: "Facebook", href: "#" },
-          { id: "soc2", platform: "Twitter", href: "#" },
-        ],
-        contactInfo: {
-          email: "support@yourbrand.com",
-          phone: "+1 234 567 890",
-        },
-        newsletter: {
-          enabled: true,
-          title: "Join our Newsletter",
-          description:
-            "Get the latest news and updates delivered to your inbox.",
-        },
-        copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
-      },
+      data: footerData,
       component_id: `footer-${Date.now()}`,
     };
 

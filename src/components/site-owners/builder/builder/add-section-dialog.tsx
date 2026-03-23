@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
+import { FooterData } from "@/types/owner-site/components/footer";
 import { useCollections } from "@/hooks/owner-site/admin/use-collections";
 
 interface AddSectionDialogProps {
@@ -43,21 +44,7 @@ interface AddSectionDialogProps {
   onOpenChange: (open: boolean) => void;
   onComponentClick: (componentId: string, template?: string) => void;
   onNavbarSelect?: (navbarData: NavbarData) => void;
-  onFooterSelect?: (
-    footerStyle:
-      | "style-1"
-      | "style-2"
-      | "style-3"
-      | "style-4"
-      | "style-5"
-      | "style-6"
-      | "style-7"
-      | "style-8"
-      | "style-9"
-      | "style-10"
-      | "style-11"
-      | "style-12"
-  ) => void;
+  onFooterSelect?: (footerData: FooterData) => void;
   websiteType?: string;
   categoryFilter?: string;
 }
@@ -1875,8 +1862,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       const navbarData = getNavbarData(templateId);
       onNavbarSelect(navbarData);
     } else if (component?.type === "footer" && onFooterSelect) {
-      const footerStyle = getFooterStyle(templateId);
-      onFooterSelect(footerStyle);
+      const footerData = getFooterData(templateId);
+      onFooterSelect(footerData);
     } else if (componentId === "collections-sections") {
       if (templateId.startsWith("collection:")) {
         setSelectedCollectionSlug(templateId.replace("collection:", ""));
@@ -2101,22 +2088,52 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     }
   };
 
-  // Helper function to get footer style based on template ID
-  const getFooterStyle = (
-    templateId: string
-  ):
-    | "style-1"
-    | "style-2"
-    | "style-3"
-    | "style-4"
-    | "style-5"
-    | "style-6"
-    | "style-7"
-    | "style-8"
-    | "style-9" => {
+  // Helper function to get footer data based on template ID
+  const getFooterData = (templateId: string): FooterData => {
     const styleNumber = templateId.split("-")[1];
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return `style-${styleNumber}` as any;
+    const footerStyle = `style-${styleNumber}` as any;
+
+    return {
+      style: footerStyle,
+      logoText: "Your Brand",
+      logoType: "text",
+      logoImage: "",
+      companyName: "Your Brand",
+      description:
+        "Innovative solutions for a modern world. We build amazing experiences.",
+      sections: [
+        {
+          id: "s1",
+          title: "Company",
+          links: [
+            { id: "l1", text: "About Us", href: "#" },
+            { id: "l2", text: "Careers", href: "#" },
+          ],
+        },
+        {
+          id: "s2",
+          title: "Resources",
+          links: [
+            { id: "l3", text: "Blog", href: "#" },
+            { id: "l4", text: "Help Center", href: "#" },
+          ],
+        },
+      ],
+      socialLinks: [
+        { id: "soc1", platform: "Facebook", href: "#" },
+        { id: "soc2", platform: "Twitter", href: "#" },
+      ],
+      contactInfo: {
+        email: "support@yourbrand.com",
+        phone: "+1 234 567 890",
+      },
+      newsletter: {
+        enabled: true,
+        title: "Join our Newsletter",
+        description: "Get the latest news and updates delivered to your inbox.",
+      },
+      copyright: `© ${new Date().getFullYear()} Your Brand. All Rights Reserved.`,
+    };
   };
 
   const currentTemplates = getCurrentTemplates();
