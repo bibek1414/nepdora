@@ -367,7 +367,8 @@ export type AboutUsData =
   | AboutUs19Data
   | AboutUs20Data
   | AboutUs21Data
-  | AboutUs22Data;
+  | AboutUs22Data
+  | AboutUs23Data;
 
 export interface AboutUs4Data {
   template: "about-4";
@@ -429,7 +430,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs19Data>
     | Partial<AboutUs20Data>
     | Partial<AboutUs21Data>
-    | Partial<AboutUs22Data>;
+    | Partial<AboutUs22Data>
+    | Partial<AboutUs23Data>;
   order?: number;
 }
 
@@ -1136,6 +1138,40 @@ export const defaultAboutUs22Data: AboutUs22Data = {
     "We navigate complex regulatory landscapes so you don't have to.",
 };
 
+export const defaultAboutUs23Data: AboutUs23Data = {
+  template: "about-23",
+  missionTag: "[Our Mission]",
+  missionTitle: "Empowering Your Financial Excellence",
+  missionItalicWord: "Excellence",
+  missionDescription:
+    "At XInfin, our mission is to empower businesses worldwide with innovative financial solutions that streamline operations, enhance decision-making, and drive sustainable growth.",
+  missionFeatures: [
+    { id: "m1", text: "Deliver accurate, real-time financial insights for better decisions" },
+    { id: "m2", text: "Automate processes to reduce costs and improve efficiency" },
+    { id: "m3", text: "Build lasting partnerships founded on trust and measurable results" },
+  ],
+  missionButtonText: "Get Started",
+  missionButtonLink: "/contact",
+  missionImage:
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
+  missionImageAlt: "XInfin Mission - Team Collaboration",
+  visionTag: "[Our Vision]",
+  visionTitle: "Leading The Future of Global Financial Services",
+  visionItalicWord: "Future",
+  visionDescription:
+    "We envision becoming the global partner of choice for businesses seeking intelligent financial solutions, where technology and expertise converge to create lasting competitive advantages.",
+  visionFeatures: [
+    { id: "v1", text: "Pioneer innovative technologies that transform financial management" },
+    { id: "v2", text: "Expand our global reach while maintaining personalized service" },
+    { id: "v3", text: "Create a world where every business has access to CFO-level insights" },
+  ],
+  visionButtonText: "Get Started",
+  visionButtonLink: "/contact",
+  visionImage:
+    "https://images.unsplash.com/photo-1531545514256-b1400bc00f31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1674&q=80",
+  visionImageAlt: "XInfin Vision - Global Innovation",
+};
+
 // Default data map for all about us templates
 export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-1": defaultAboutUs1Data,
@@ -1160,6 +1196,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-20": defaultAboutUs20Data,
   "about-21": defaultAboutUs21Data,
   "about-22": defaultAboutUs22Data,
+  "about-23": defaultAboutUs23Data,
 };
 
 export interface AboutUs22Data {
@@ -1179,6 +1216,28 @@ export interface AboutUs22Data {
   imageAlt: string;
   floatingCardTitle: string;
   floatingCardDescription: string;
+}
+
+export interface AboutUs23Data {
+  template: "about-23";
+  missionTag: string;
+  missionTitle: string;
+  missionItalicWord: string;
+  missionDescription: string;
+  missionFeatures: Array<{ id: string; text: string }>;
+  missionButtonText: string;
+  missionButtonLink: string;
+  missionImage: string;
+  missionImageAlt: string;
+  visionTag: string;
+  visionTitle: string;
+  visionItalicWord: string;
+  visionDescription: string;
+  visionFeatures: Array<{ id: string; text: string }>;
+  visionButtonText: string;
+  visionButtonLink: string;
+  visionImage: string;
+  visionImageAlt: string;
 }
 
 // Type guards for each template
@@ -1247,3 +1306,6 @@ export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
 
 export const isAboutUsTemplate22 = (data: AboutUsData): data is AboutUs22Data =>
   data.template === "about-22";
+
+export const isAboutUsTemplate23 = (data: AboutUsData): data is AboutUs23Data =>
+  data.template === "about-23";
