@@ -212,9 +212,9 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                   className="relative z-10 h-auto w-full rounded-lg shadow-2xl"
                   width={800}
                   height={800}
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "hero-images",
-                    resourceType: "image",
+                    
                   }}
                   placeholder={{
                     width: 800,
@@ -232,9 +232,9 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                     className="h-full w-full rounded-lg object-cover"
                     width={800}
                     height={800}
-                    cloudinaryOptions={{
+                    s3Options={{
                       folder: "hero-images",
-                      resourceType: "image",
+                      
                     }}
                     placeholder={{
                       width: 800,

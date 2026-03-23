@@ -14,7 +14,7 @@ import { ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 
 interface GalleryTemplateProps {
@@ -77,10 +77,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
     setIsAddingImage(true);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "gallery-images",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "gallery-images");
 
       handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
@@ -467,9 +464,9 @@ const PhotoCard = ({
             disableImageChange={true}
             showAltEditor={true}
             inputId={inputId}
-            cloudinaryOptions={{
+            s3Options={{
               folder: "gallery-images",
-              resourceType: "image",
+              
             }}
           />
         ) : (

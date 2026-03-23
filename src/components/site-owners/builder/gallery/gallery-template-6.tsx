@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Plus, X } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 
 const buildInitialData = (galleryData: GalleryData): GalleryData => {
   if (galleryData.template !== "gallery-6") {
@@ -99,10 +99,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
     setIsAddingImage(true);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "gallery-images",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "gallery-images");
 
       handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
@@ -293,9 +290,9 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                         format: "auto",
                         crop: "fill",
                       }}
-                      cloudinaryOptions={{
+                      s3Options={{
                         folder: "gallery-images",
-                        resourceType: "image",
+                        
                       }}
                       disableImageChange={true}
                       showAltEditor={isEditable}

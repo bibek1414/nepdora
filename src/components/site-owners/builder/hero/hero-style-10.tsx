@@ -228,9 +228,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                           className="size-full object-cover"
                           width={400}
                           height={600}
-                          cloudinaryOptions={{
+                          s3Options={{
                             folder: "hero-grid-images",
-                            resourceType: "image",
+                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -265,9 +265,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                           className="size-full object-cover"
                           width={400}
                           height={600}
-                          cloudinaryOptions={{
+                          s3Options={{
                             folder: "hero-grid-images",
-                            resourceType: "image",
+                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -305,9 +305,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                           className="size-full object-cover"
                           width={400}
                           height={600}
-                          cloudinaryOptions={{
+                          s3Options={{
                             folder: "hero-grid-images",
-                            resourceType: "image",
+                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -342,9 +342,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                           className="size-full object-cover"
                           width={400}
                           height={600}
-                          cloudinaryOptions={{
+                          s3Options={{
                             folder: "hero-grid-images",
-                            resourceType: "image",
+                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -379,9 +379,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                           className="size-full object-cover"
                           width={400}
                           height={600}
-                          cloudinaryOptions={{
+                          s3Options={{
                             folder: "hero-grid-images",
-                            resourceType: "image",
+                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -419,9 +419,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                           className="size-full object-cover"
                           width={400}
                           height={600}
-                          cloudinaryOptions={{
+                          s3Options={{
                             folder: "hero-grid-images",
-                            resourceType: "image",
+                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -456,9 +456,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                           className="size-full object-cover"
                           width={400}
                           height={600}
-                          cloudinaryOptions={{
+                          s3Options={{
                             folder: "hero-grid-images",
-                            resourceType: "image",
+                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{

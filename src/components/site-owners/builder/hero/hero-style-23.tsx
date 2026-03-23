@@ -8,7 +8,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useRouter, usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { EditableLink } from "@/components/ui/editable-link";
 
@@ -47,10 +47,7 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
 
     setIsUploadingBackground(true);
     try {
-      const url = await uploadToCloudinary(file, {
-        folder: "hero-backgrounds",
-        resourceType: "image",
-      });
+      const url = await uploadToS3(file, "hero-backgrounds");
       const update = {
         backgroundImageUrl: url,
         imageAlt: file.name.split(".")[0] || data.imageAlt,

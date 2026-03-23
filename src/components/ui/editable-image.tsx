@@ -7,12 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { ImagePlus, Upload, Loader2, X, Info } from "lucide-react";
 import {
-  uploadToCloudinary,
-  optimizeCloudinaryUrl,
-  convertUnsplashUrl,
-  DEFAULT_MAX_IMAGE_SIZE,
-  type CloudinaryUploadResponse,
-} from "@/utils/cloudinary";
+  uploadToS3,
+} from "@/utils/s3";
+import { DEFAULT_MAX_IMAGE_SIZE } from "@/utils/s3";
 import { toast } from "sonner";
 
 interface EditableImageProps {
@@ -25,17 +22,8 @@ interface EditableImageProps {
   width?: number;
   height?: number;
   priority?: boolean;
-  cloudinaryOptions?: {
+  s3Options?: {
     folder?: string;
-    resourceType?: "image" | "video" | "raw" | "auto";
-    transformation?: string;
-  };
-  imageOptimization?: {
-    width?: number;
-    height?: number;
-    quality?: number | "auto";
-    format?: "auto" | "webp" | "jpg" | "png";
-    crop?: "fill" | "fit" | "scale" | "crop";
   };
   uploadValidation?: {
     maxSize?: number; // in bytes
@@ -63,11 +51,9 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   width = 700,
   height = 500,
   priority = false,
-  cloudinaryOptions = {
+  s3Options = {
     folder: "editable-images",
-    resourceType: "image",
   },
-  imageOptimization,
   uploadValidation = {
     maxSize: DEFAULT_MAX_IMAGE_SIZE,
     allowedTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
@@ -124,11 +110,8 @@ export const EditableImage: React.FC<EditableImageProps> = ({
     setIsUploading(true);
 
     try {
-      // Upload to Cloudinary using your existing utility
-      const imageUrl = await uploadToCloudinary(file, {
-        ...cloudinaryOptions,
-        maxSize: uploadValidation.maxSize,
-      });
+      // Upload to S3
+      const imageUrl = await uploadToS3(file, s3Options.folder || "editable-images");
 
       // Update with new image
       const newAlt = localAlt || file.name.split(".")[0];
@@ -170,20 +153,11 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   // Show placeholder only in editable mode if no src and placeholder is provided
   const showPlaceholder = !src && placeholder && isEditable;
 
-  // Optimize image URL if optimization options are provided
+  // Optimized image URL handling
   const optimizedSrc = React.useMemo(() => {
     if (!src || showPlaceholder) return src;
-
-    // Convert Unsplash URLs if needed
-    let processedSrc = convertUnsplashUrl(src);
-
-    // Apply Cloudinary optimizations if provided
-    if (imageOptimization) {
-      processedSrc = optimizeCloudinaryUrl(processedSrc, imageOptimization);
-    }
-
-    return processedSrc;
-  }, [src, imageOptimization, showPlaceholder]);
+    return src;
+  }, [src, showPlaceholder]);
 
   return (
     <div className="relative">

@@ -25,7 +25,7 @@ import {
   CollectionData,
 } from "@/types/owner-site/admin/collection";
 import { Badge } from "@/components/ui/badge";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { Loader2, Upload, X, Plus } from "lucide-react";
 import Image from "next/image";
 import Tiptap from "@/components/ui/tip-tap";
@@ -328,7 +328,7 @@ export function CollectionDataDialog({
 
       // Upload all selected files
       const uploadPromises = Array.from(files).map(file =>
-        uploadToCloudinary(file)
+        uploadToS3(file, "collection-images")
       );
       const uploadedUrls = await Promise.all(uploadPromises);
 
@@ -378,7 +378,7 @@ export function CollectionDataDialog({
 
   const handleRichTextImageUpload = async (file: File): Promise<string> => {
     try {
-      const imageUrl = await uploadToCloudinary(file);
+      const imageUrl = await uploadToS3(file, "collection-rich-text");
       return imageUrl;
     } catch (error) {
       console.error("Image upload failed:", error);

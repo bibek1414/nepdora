@@ -233,9 +233,9 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
             width={1742}
             height={600}
-            cloudinaryOptions={{
+            s3Options={{
               folder: "banner-images",
-              resourceType: "image",
+              
             }}
             showAltEditor={isEditable}
             placeholder={{

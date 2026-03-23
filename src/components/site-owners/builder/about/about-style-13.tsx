@@ -3,7 +3,7 @@
 import React, { useMemo, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, ChevronRight, ImagePlus } from "lucide-react";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 
 import { EditableText } from "@/components/ui/editable-text";
@@ -77,10 +77,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
 
     setOverlayUploading(true);
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "about-us-images",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "about-us-images");
 
       const newAlt = file.name.split(".")[0];
 
@@ -202,9 +199,9 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               className="h-full w-full object-cover"
               width={800}
               height={800}
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "about-us-images",
-                resourceType: "image",
+                
               }}
               showAltEditor={isEditable}
               placeholder={{

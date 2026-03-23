@@ -103,9 +103,9 @@ export const AboutUsTemplate8: React.FC<AboutUsTemplate8Props> = ({
                 className="h-full w-full object-cover"
                 width={600}
                 height={600}
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "about-us-images",
-                  resourceType: "image",
+                  
                 }}
                 showAltEditor={isEditable}
                 placeholder={{

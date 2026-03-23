@@ -97,9 +97,9 @@ export const TestimonialCard10: React.FC<TestimonialCard10Props> = ({
                 format: "auto",
                 crop: "fill",
               }}
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "testimonial-backgrounds",
-                resourceType: "image",
+                
               }}
             />
           ) : backgroundImage ? (

@@ -35,9 +35,9 @@ export const AboutUsTemplate4: React.FC<AboutUsTemplate4Props> = ({
               width={700}
               height={500}
               priority
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "about-us-images",
-                resourceType: "image",
+                
               }}
               showAltEditor={isEditable}
               placeholder={{

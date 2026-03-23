@@ -6,7 +6,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate8Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { Loader2, ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -96,10 +96,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
     setIsUploading(imageType);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "hero-rugs",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "hero-rugs");
 
       if (imageType === "leftImage") {
         const updatedData = {

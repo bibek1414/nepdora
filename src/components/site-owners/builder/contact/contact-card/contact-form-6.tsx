@@ -209,9 +209,9 @@ export const ContactForm6: React.FC<ContactForm6Props> = ({
               onImageChange={updateImage}
               isEditable={isEditable}
               className="h-[1100px] w-full rounded-4xl object-cover"
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "contact-images",
-                resourceType: "image",
+                
               }}
               disableImageChange={false}
               showAltEditor={isEditable}

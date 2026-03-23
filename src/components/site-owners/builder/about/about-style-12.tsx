@@ -128,9 +128,9 @@ export function AboutUsTemplate12({
               className="h-full w-full object-cover"
               width={800}
               height={600}
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "about-us-images",
-                resourceType: "image",
+                
               }}
               showAltEditor={isEditable}
             />

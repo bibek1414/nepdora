@@ -189,9 +189,9 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               onImageChange={(url, alt) => handleImageUpdate(url, alt, 0)}
               isEditable={isEditable}
               className="h-full w-full object-cover"
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "hero-collage",
-                resourceType: "image",
+                
               }}
               imageOptimization={{
                 width: 400,
@@ -217,9 +217,9 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               onImageChange={(url, alt) => handleImageUpdate(url, alt, 1)}
               isEditable={isEditable}
               className="h-full w-full object-cover"
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "hero-collage",
-                resourceType: "image",
+                
               }}
               imageOptimization={{
                 width: 400,
@@ -245,9 +245,9 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               onImageChange={(url, alt) => handleImageUpdate(url, alt, 2)}
               isEditable={isEditable}
               className="h-full w-full object-cover"
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "hero-collage",
-                resourceType: "image",
+                
               }}
               imageOptimization={{
                 width: 400,
@@ -273,9 +273,9 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               onImageChange={(url, alt) => handleImageUpdate(url, alt, 3)}
               isEditable={isEditable}
               className="h-full w-full object-cover"
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "hero-collage",
-                resourceType: "image",
+                
               }}
               imageOptimization={{
                 width: 400,

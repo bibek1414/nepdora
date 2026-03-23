@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Testimonial } from "@/types/owner-site/admin/testimonial";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 
 const DEFAULT_BACKGROUND = "/fallback/image-not-found.png";
@@ -97,10 +97,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
       const randomId = Math.random().toString(36).substr(2, 9);
       const uniqueFilename = `testimonial_bg_${timestamp}_${randomId}_${file.name}`;
 
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "testimonial-backgrounds",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "testimonial-backgrounds");
 
       onBackgroundChange?.(imageUrl);
       toast.success("Background image uploaded successfully!");
@@ -232,9 +229,9 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
               format: "auto",
               crop: "fill",
             }}
-            cloudinaryOptions={{
+            s3Options={{
               folder: "testimonial-backgrounds",
-              resourceType: "image",
+              
             }}
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/90 via-white/85 to-white/92" />

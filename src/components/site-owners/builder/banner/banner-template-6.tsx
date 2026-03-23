@@ -141,9 +141,9 @@ export const BannerTemplate6: React.FC<BannerTemplateProps> = ({
                   }
                   isEditable={isEditable}
                   className="w-full max-w-sm object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:-translate-x-4 group-hover:rotate-2 md:max-w-md"
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "banner-images",
-                    resourceType: "image",
+                    
                   }}
                   showAltEditor={isEditable}
                 />

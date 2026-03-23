@@ -7,7 +7,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate5Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -89,11 +89,8 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     setIsUploadingBackground(true);
 
     try {
-      // Upload to Cloudinary with unique public_id
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "hero-backgrounds",
-        resourceType: "image",
-      });
+      // Upload to S3
+      const imageUrl = await uploadToS3(file, "hero-backgrounds");
 
       // Update only this component's background
       handleImageUpdate(imageUrl, `Background image: ${file.name}`);
@@ -176,16 +173,8 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
               alt={data.imageAlt || "Background image"}
               onImageChange={handleImageUpdate}
               isEditable={true}
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "hero-backgrounds",
-                resourceType: "image",
-              }}
-              imageOptimization={{
-                width: 1920,
-                height: 1080,
-                quality: "auto",
-                format: "auto",
-                crop: "fill",
               }}
               placeholder={{
                 width: 1920,

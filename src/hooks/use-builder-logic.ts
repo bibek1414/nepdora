@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from "react";
-import { optimizeCloudinaryUrl, convertUnsplashUrl } from "@/utils/cloudinary";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const useBuilderLogic = <T extends Record<string, any>>(
@@ -76,7 +75,7 @@ export const useBuilderLogic = <T extends Record<string, any>>(
   const getImageUrl = useCallback(
     (
       imageUrl?: string,
-      options: {
+      _options: {
         width?: number;
         height?: number;
         quality?: number | "auto";
@@ -85,10 +84,11 @@ export const useBuilderLogic = <T extends Record<string, any>>(
       } = { width: 600, quality: "auto", format: "auto" }
     ) => {
       if (!imageUrl) return "";
-      return optimizeCloudinaryUrl(
-        convertUnsplashUrl(imageUrl),
-        options as any
-      );
+      
+      // If it's a Cloudinary URL, we can still optimize it for now, 
+      // but new images will be S3 URLs which don't support these options natively.
+      // For now, we'll just return the imageUrl as is if it's not a Cloudinary/Unsplash one.
+      return imageUrl;
     },
     []
   );

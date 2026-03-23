@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, Plus, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 
 interface BannerTemplateProps {
@@ -106,10 +106,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     setIsUploading(true);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "banner-slider-images",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "banner-slider-images");
 
       handleImageUpdateLocal(
         currentSlide,
@@ -232,9 +229,9 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
                     isEditable={isEditable}
                     className="h-auto w-full object-contain"
                     priority={imageIndex === 0}
-                    cloudinaryOptions={{
+                    s3Options={{
                       folder: "banner-slider-images",
-                      resourceType: "image",
+                      
                     }}
                     disableImageChange={true}
                     showAltEditor={isEditable && imageIndex === currentSlide}

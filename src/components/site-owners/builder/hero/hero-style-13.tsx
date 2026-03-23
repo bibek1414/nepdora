@@ -11,7 +11,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -188,10 +188,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
     setIsUploadingBackground(true);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "hero-backgrounds",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "hero-backgrounds");
 
       handleBackgroundUpdate(imageUrl, `Background image: ${file.name}`);
       toast.success("Background image uploaded successfully!");

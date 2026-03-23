@@ -98,9 +98,9 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
                   onAltChange={handleAltUpdate("image1Alt")}
                   isEditable={isEditable}
                   className="object-cover"
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "about-us-images",
-                    resourceType: "image",
+                    
                   }}
                   showAltEditor={isEditable}
                   placeholder={{
@@ -130,9 +130,9 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
                   onAltChange={handleAltUpdate("image2Alt")}
                   isEditable={isEditable}
                   className="object-cover"
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "about-us-images",
-                    resourceType: "image",
+                    
                   }}
                   showAltEditor={isEditable}
                   placeholder={{
@@ -154,9 +154,9 @@ export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
               onAltChange={handleAltUpdate("teamImageAlt")}
               isEditable={isEditable}
               className="object-cover"
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "about-us-images",
-                resourceType: "image",
+                
               }}
               showAltEditor={isEditable}
               placeholder={{

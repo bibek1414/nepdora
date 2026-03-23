@@ -96,9 +96,9 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                   })
                 }
                 className="h-150 w-full rounded-2xl object-cover sm:rounded-3xl md:rounded-[2.5rem]"
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "template-images",
-                  resourceType: "image",
+                  
                 }}
                 disableImageChange={false}
                 showAltEditor={isEditable}
@@ -190,9 +190,9 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
                     })
                   }
                   className="h-85 w-full rounded-2xl object-cover sm:rounded-3xl md:rounded-[2.5rem]"
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "template-images",
-                    resourceType: "image",
+                    
                   }}
                   disableImageChange={false}
                   showAltEditor={isEditable}

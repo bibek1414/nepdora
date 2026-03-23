@@ -56,7 +56,7 @@ import {
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { usePages, useCreatePage } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -254,11 +254,8 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
     setUploadError(null);
 
     try {
-      // Upload to Cloudinary first
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "logos",
-        resourceType: "image",
-      });
+      // Upload to S3 first
+      const imageUrl = await uploadToS3(file, "logos");
 
       // Update local state immediately for better UX
       setNavbarData(prev => ({ ...prev, logoImage: imageUrl }));
@@ -269,7 +266,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
         const formData = new FormData();
         formData.append("logo", file); // Send the file object, not the URL
 
-        // If your API expects the Cloudinary URL as well, you can send both:
+        // If your API expects the S3 URL as well, you can send both:
         formData.append("logoUrl", imageUrl);
 
         await patchSiteConfigMutation.mutateAsync({

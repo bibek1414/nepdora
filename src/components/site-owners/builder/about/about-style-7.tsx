@@ -8,7 +8,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { ChevronRight, Loader2 } from "lucide-react";
 
@@ -93,10 +93,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
     setIsUploading(index);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "about-us-images",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "about-us-images");
 
       handleTrainingImageUpdate(index)(
         imageUrl,

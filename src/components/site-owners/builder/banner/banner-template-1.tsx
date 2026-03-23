@@ -5,7 +5,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 
 interface BannerTemplateProps {
@@ -99,10 +99,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     setIsUploading(true);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "banner-images",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "banner-images");
 
       handleImageUpdateLocal(0, imageUrl, `Banner image: ${file.name}`);
       toast.success("Banner image uploaded successfully!");
@@ -209,9 +206,9 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
                   isEditable={isEditable}
                   className="h-full w-full object-cover"
                   priority
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "banner-images",
-                    resourceType: "image",
+                    
                   }}
                   showAltEditor={isEditable}
                 />
@@ -227,9 +224,9 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
                   isEditable={isEditable}
                   className="h-full w-full object-cover"
                   priority
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "banner-images",
-                    resourceType: "image",
+                    
                   }}
                   showAltEditor={isEditable}
                 />

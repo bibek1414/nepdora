@@ -171,9 +171,9 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
                 className="h-full w-full object-cover"
                 width={600}
                 height={800}
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "about-us-images",
-                  resourceType: "image",
+                  
                 }}
                 showAltEditor={isEditable}
                 placeholder={{
@@ -199,9 +199,9 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
               className="h-full w-full object-cover"
               width={600}
               height={800}
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "about-us-images",
-                resourceType: "image",
+                
               }}
               showAltEditor={isEditable}
               placeholder={{
@@ -259,9 +259,9 @@ export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
                 className="h-full w-full object-cover"
                 width={600}
                 height={800}
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "about-us-images",
-                  resourceType: "image",
+                  
                 }}
                 showAltEditor={isEditable}
                 placeholder={{

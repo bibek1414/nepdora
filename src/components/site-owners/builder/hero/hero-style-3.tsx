@@ -181,9 +181,9 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                     className="h-64 w-full rounded-lg object-contain sm:h-80 md:h-96"
                     width={800}
                     height={800}
-                    cloudinaryOptions={{
+                    s3Options={{
                       folder: "hero-images",
-                      resourceType: "image",
+                      
                     }}
                     showAltEditor={isEditable}
                     placeholder={{
@@ -212,9 +212,9 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                     className="h-full w-full rounded-lg object-contain"
                     width={800}
                     height={800}
-                    cloudinaryOptions={{
+                    s3Options={{
                       folder: "hero-images",
-                      resourceType: "image",
+                      
                     }}
                     showAltEditor={isEditable}
                     placeholder={{

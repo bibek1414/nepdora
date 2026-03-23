@@ -7,7 +7,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate7Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -142,10 +142,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
     setIsUploading(collectionId);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "hero-collections",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "hero-collections");
 
       handleCollectionImageUpdate(
         collectionId,
@@ -194,9 +191,9 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                 }
                 isEditable={false} // Disable hover effects
                 className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "hero-collections",
-                  resourceType: "image",
+                  
                 }}
                 imageOptimization={{
                   width: 800,

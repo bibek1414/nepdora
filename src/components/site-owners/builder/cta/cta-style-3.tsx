@@ -6,7 +6,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -82,11 +82,8 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
     setIsUploadingBackground(true);
 
     try {
-      // Upload to Cloudinary with unique public_id
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "cta-backgrounds",
-        resourceType: "image",
-      });
+      // Upload to S3
+      const imageUrl = await uploadToS3(file, "cta-backgrounds");
 
       // Update background
       handleBackgroundImageUpdate(imageUrl);

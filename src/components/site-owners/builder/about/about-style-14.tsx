@@ -273,9 +273,9 @@ export function AboutUsTemplate14({
                 width={800}
                 height={800}
                 priority
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "about-us-images",
-                  resourceType: "image",
+                  
                 }}
               />
             )}

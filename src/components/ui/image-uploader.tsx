@@ -6,7 +6,7 @@ import { UploadCloud, X, AlertCircle, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_MAX_IMAGE_SIZE } from "@/utils/cloudinary";
+import { DEFAULT_MAX_IMAGE_SIZE } from "@/utils/s3";
 
 interface ImageUploaderProps {
   value: File[] | string[] | File | string | null | undefined;

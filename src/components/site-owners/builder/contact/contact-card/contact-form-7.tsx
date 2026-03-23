@@ -356,9 +356,9 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
                     className="h-full w-full object-cover"
                     width={800}
                     height={600}
-                    cloudinaryOptions={{
+                    s3Options={{
                       folder: "contact-gallery",
-                      resourceType: "image",
+                      
                     }}
                     showAltEditor={isEditable}
                   />
@@ -387,9 +387,9 @@ export const ContactForm7: React.FC<ContactForm7Props> = ({
                   className="h-full w-full object-cover"
                   width={1200}
                   height={600}
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "contact-gallery",
-                    resourceType: "image",
+                    
                   }}
                   showAltEditor={isEditable}
                 />

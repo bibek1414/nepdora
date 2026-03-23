@@ -132,9 +132,9 @@ export function AboutUsTemplate1({
                 width={600}
                 height={450}
                 priority
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "about-us-images",
-                  resourceType: "image",
+                  
                 }}
                 showAltEditor={isEditable}
                 placeholder={{

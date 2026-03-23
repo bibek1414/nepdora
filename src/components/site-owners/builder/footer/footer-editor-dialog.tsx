@@ -69,7 +69,7 @@ import {
   useSiteConfig,
   usePatchSiteConfig,
 } from "@/hooks/owner-site/admin/use-site-config";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useDebouncer } from "@/hooks/use-debouncer";
@@ -388,11 +388,8 @@ export function FooterEditorDialog({
     setUploadLogoError(null);
 
     try {
-      // Upload to Cloudinary first for immediate preview
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "logos",
-        resourceType: "image",
-      });
+      // Upload to S3 first for immediate preview
+      const imageUrl = await uploadToS3(file, "logos");
 
       // Update local state immediately for better UX
       setEditingData(prev => ({ ...prev, logoImage: imageUrl }));
@@ -402,7 +399,7 @@ export function FooterEditorDialog({
         const formData = new FormData();
         formData.append("logo", file); // Send the file object, not the URL
 
-        // If your API expects the Cloudinary URL as well, you can send both:
+        // If your API expects the S3 URL as well, you can send both:
         formData.append("logoUrl", imageUrl);
 
         await patchSiteConfigMutation.mutateAsync({

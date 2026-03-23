@@ -67,9 +67,9 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
             onAltChange={handleAltUpdate("heroImageAlt")}
             isEditable={isEditable}
             className="object-cover opacity-30"
-            cloudinaryOptions={{
+            s3Options={{
               folder: "about-us-images",
-              resourceType: "image",
+              
             }}
             showAltEditor={isEditable}
             placeholder={{
@@ -127,9 +127,9 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
                 className="-rotate-12 transform rounded-xl object-cover shadow-lg transition-transform duration-500 hover:rotate-0"
                 width={400}
                 height={300}
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "about-us-images",
-                  resourceType: "image",
+                  
                 }}
                 placeholder={{
                   width: 400,

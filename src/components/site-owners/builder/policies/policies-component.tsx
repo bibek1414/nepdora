@@ -17,7 +17,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { PolicyStyle1 } from "./policy-style-1";
 
 interface PolicyComponentProps {
@@ -151,10 +151,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
 
   const handleImageUpload = async (file: File): Promise<string> => {
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "policies",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "policies");
       return imageUrl;
     } catch (error) {
       console.error("Image upload failed:", error);

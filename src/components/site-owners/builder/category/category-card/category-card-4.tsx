@@ -7,7 +7,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { Category, SubCategory } from "@/types/owner-site/admin/product";
 import { FeaturedContent } from "@/types/owner-site/components/category";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { usePathname } from "next/navigation";
@@ -158,11 +158,8 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     setIsUploadingBackground(true);
 
     try {
-      // Upload to Cloudinary
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "featured-backgrounds",
-        resourceType: "image",
-      });
+      // Upload to S3
+      const imageUrl = await uploadToS3(file, "featured-backgrounds");
 
       handleBackgroundImageUpdate(imageUrl);
     } catch (error) {

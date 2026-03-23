@@ -10,7 +10,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface HeroTemplate14Props {
@@ -117,10 +117,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
 
     setIsUploadingBackground(true);
     try {
-      const url = await uploadToCloudinary(file, {
-        folder: "hero-banners",
-        resourceType: "image",
-      });
+      const url = await uploadToS3(file, "hero-banners");
       handleBackgroundUpdate(url, file.name);
       toast.success("Image uploaded successfully!");
     } catch (error) {

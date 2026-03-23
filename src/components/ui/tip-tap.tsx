@@ -52,7 +52,7 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 
 const FontSizeExtension = TextStyle.extend({
   addGlobalAttributes() {
@@ -640,11 +640,8 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
           imageUrl = await onImageUpload(file);
         } else {
           try {
-            // Upload to Cloudinary by default if no custom handler provided
-            imageUrl = await uploadToCloudinary(file, {
-              folder: uploadFolder || "text-editor",
-              resourceType: "image",
-            });
+            // Upload to S3 by default if no custom handler provided
+            imageUrl = await uploadToS3(file, uploadFolder || "text-editor");
           } catch (uploadError) {
             console.error(
               "Cloudinary upload failed, falling back to local FileReader:",

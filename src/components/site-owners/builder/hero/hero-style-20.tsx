@@ -10,7 +10,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { HeroTemplate20Data } from "@/types/owner-site/components/hero";
 
@@ -160,10 +160,7 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
     setIsUploadingBackground(true);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "hero-slides",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "hero-slides");
       handleSlideImageUpdate(imageUrl, `Slide image: ${file.name}`, index);
       toast.success("Slide image uploaded successfully!");
     } catch (error) {
@@ -235,9 +232,9 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
               }
               isEditable={isEditable}
               className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-              cloudinaryOptions={{
+              s3Options={{
                 folder: "hero-slides",
-                resourceType: "image",
+                
               }}
               imageOptimization={{
                 width: 1920,

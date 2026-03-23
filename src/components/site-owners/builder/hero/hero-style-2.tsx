@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { HeroTemplate2Data } from "@/types/owner-site/components/hero";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
@@ -109,10 +109,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       const randomId = Math.random().toString(36).substr(2, 9);
       const uniqueFilename = `bg_${timestamp}_${randomId}_${file.name}`;
 
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "hero-backgrounds",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "hero-backgrounds");
 
       handleBackgroundImageUpdate(imageUrl, `Background image: ${file.name}`);
       toast.success("Background image uploaded successfully!");
@@ -229,9 +226,9 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
           isEditable={isEditable}
           className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
           priority
-          cloudinaryOptions={{
+          s3Options={{
             folder: "hero-backgrounds",
-            resourceType: "image",
+            
           }}
           imageOptimization={{
             width: 1920,
@@ -357,9 +354,9 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                         className="h-56 w-full object-cover sm:h-72 md:h-80 lg:h-96"
                         width={600}
                         height={400}
-                        cloudinaryOptions={{
+                        s3Options={{
                           folder: "hero-slider-images",
-                          resourceType: "image",
+                          
                         }}
                         showAltEditor={isEditable}
                         placeholder={{

@@ -155,9 +155,9 @@ export const ContactForm8: React.FC<ContactForm8Props> = ({
                 onImageChange={updateImage}
                 isEditable={isEditable}
                 className="h-auto w-full object-contain"
-                cloudinaryOptions={{
+                s3Options={{
                   folder: "contact-images",
-                  resourceType: "image",
+                  
                 }}
                 disableImageChange={false}
                 showAltEditor={isEditable}

@@ -17,7 +17,7 @@ import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { TextEditorStyle1 } from "./text-editor-style/text-editor-style-1";
 
 interface TextEditorComponentProps {
@@ -132,10 +132,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
 
   const handleImageUpload = async (file: File): Promise<string> => {
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "text-editor",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "text-editor");
       return imageUrl;
     } catch (error) {
       console.error("Image upload failed:", error);

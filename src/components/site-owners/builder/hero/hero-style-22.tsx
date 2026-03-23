@@ -7,7 +7,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 
 interface HeroTemplate22Props {
@@ -55,10 +55,7 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
 
     setIsUploadingBackground(true);
     try {
-      const url = await uploadToCloudinary(file, {
-        folder: "hero-backgrounds",
-        resourceType: "image",
-      });
+      const url = await uploadToS3(file, "hero-backgrounds");
       const update = {
         imageUrl: url,
         imageAlt: file.name.split(".")[0] || data.imageAlt,

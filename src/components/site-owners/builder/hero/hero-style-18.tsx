@@ -7,7 +7,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate18Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -138,10 +138,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
     setIsUploading(collectionId);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "hero-collections",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "hero-collections");
 
       handleCollectionImageUpdate(
         collectionId,
@@ -199,9 +196,9 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
                   }
                   isEditable={isEditable}
                   className="absolute inset-0 h-full w-full object-cover opacity-0"
-                  cloudinaryOptions={{
+                  s3Options={{
                     folder: "hero-collections",
-                    resourceType: "image",
+                    
                   }}
                   imageOptimization={{
                     width: 800,

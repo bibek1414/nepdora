@@ -7,7 +7,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 
@@ -63,10 +63,7 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
     setIsAddingImage(true);
 
     try {
-      const imageUrl = await uploadToCloudinary(file, {
-        folder: "gallery-images",
-        resourceType: "image",
-      });
+      const imageUrl = await uploadToS3(file, "gallery-images");
 
       handleAddImage(imageUrl);
       toast.success("Image uploaded successfully!");
@@ -134,9 +131,9 @@ export const GalleryTemplate7: React.FC<GalleryTemplateProps> = ({
                     }
                     isEditable={isEditable}
                     className="h-120 w-full object-cover"
-                    cloudinaryOptions={{
+                    s3Options={{
                       folder: "gallery-images",
-                      resourceType: "image",
+                      
                     }}
                     disableImageChange={true}
                     showAltEditor={isEditable}
