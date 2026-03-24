@@ -275,7 +275,7 @@ export default function OrdersPage({ isPOS = false }: { isPOS?: boolean }) {
 
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <div className="relative w-full sm:w-64">
-                <Search className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Search className="absolute top-1/2 left-4 z-10 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
                   type="search"
                   placeholder="Search orders..."

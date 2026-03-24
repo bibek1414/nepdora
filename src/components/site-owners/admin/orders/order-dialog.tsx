@@ -14,8 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  ArrowLeft,
-  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   Check,
   MapPin,
   Package2,
@@ -160,7 +160,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
         return;
       }
 
-      if (event.key === "ArrowLeft") {
+      if (event.key === "Chevron") {
         event.preventDefault();
         if (currentIndex <= 0) {
           return;
@@ -172,7 +172,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
         onOrderChange(newOrder.id);
       }
 
-      if (event.key === "ArrowRight") {
+      if (event.key === "ChevronRight") {
         event.preventDefault();
         if (currentIndex >= orders.length - 1) {
           return;
@@ -251,7 +251,8 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
 
   const orderItems = currentOrder.order_items || currentOrder.items || [];
   const stepProgress = getStepProgress(currentOrder.status);
-  const subtotal = Number(currentOrder.total_amount) -
+  const subtotal =
+    Number(currentOrder.total_amount) -
     Number(currentOrder.delivery_charge || 0);
   const canAdvanceDelivery =
     currentOrder.status !== "cancelled" && currentOrder.status !== "delivered";
@@ -260,7 +261,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
       <DialogContent
         showCloseButton={false}
-        className="fixed top-0 right-0 left-auto h-dvh w-full max-w-[480px] translate-x-0 translate-y-0 gap-0 overflow-hidden rounded-none border-0 border-l border-gray-200 bg-white p-0 shadow-2xl data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-[480px]"
+        className="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right fixed top-0 right-0 left-auto h-dvh w-full max-w-[480px] translate-x-0 translate-y-0 gap-0 overflow-hidden rounded-none border-0 border-l border-gray-200 bg-white p-0 shadow-2xl sm:max-w-[480px]"
       >
         <DialogTitle className="sr-only">
           Order details for {currentOrder.order_number}
@@ -291,7 +292,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                     disabled={currentIndex === 0}
                     className="h-10 w-10 cursor-pointer rounded-full border-gray-200 text-gray-600"
                   >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-4 w-4" />
                   </Button>
                   <Button
                     type="button"
@@ -301,7 +302,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                     disabled={currentIndex === orders.length - 1}
                     className="h-10 w-10 cursor-pointer rounded-full border-gray-200 text-gray-600"
                   >
-                    <ArrowRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4" />
                   </Button>
                 </>
               )}
@@ -339,9 +340,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                     >
                       <span
                         className={`relative z-10 h-[10px] w-[10px] rounded-full outline-[6px] outline-white transition-all ${
-                          isActive
-                            ? "scale-110 bg-blue-600"
-                            : "bg-gray-200"
+                          isActive ? "scale-110 bg-blue-600" : "bg-gray-200"
                         }`}
                       />
                       <span
@@ -395,7 +394,8 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                   Shipping address
                 </h3>
                 <p className="text-[14px] text-gray-600">
-                  {currentOrder.shipping_address || currentOrder.customer_address}
+                  {currentOrder.shipping_address ||
+                    currentOrder.customer_address}
                   {currentOrder.city ? ` • ${currentOrder.city}` : ""}
                 </p>
 
@@ -500,8 +500,8 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                               {displayName}
                             </p>
                             <p className="mt-0.5 text-[13px] text-gray-500">
-                              Qty {item.quantity} • Rs. {formatMoney(item.price)}{" "}
-                              each
+                              Qty {item.quantity} • Rs.{" "}
+                              {formatMoney(item.price)} each
                             </p>
                             {item.variant?.option_values?.length ? (
                               <div className="mt-1 flex flex-wrap gap-1.5">
