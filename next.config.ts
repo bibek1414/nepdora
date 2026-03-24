@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "himalayancrm.sgp1.cdn.digitaloceanspaces.com",
+      },
+      {
+        protocol: "https",
         hostname: "himalayancrm.sgp1.digitaloceanspaces.com",
       },
       {

@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { HeroTemplate2Data } from "@/types/owner-site/components/hero";
-import { uploadToS3 } from "@/utils/s3";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface HeroTemplate2Props {
   heroData: HeroTemplate2Data;
@@ -26,7 +26,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   siteUser,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -82,46 +81,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     onUpdate?.(update);
   };
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    setIsUploadingBackground(true);
-
-    try {
-      const timestamp = Date.now();
-      const randomId = Math.random().toString(36).substr(2, 9);
-      const uniqueFilename = `bg_${timestamp}_${randomId}_${file.name}`;
-
-      const imageUrl = await uploadToS3(file, "hero-backgrounds");
-
-      handleBackgroundImageUpdate(imageUrl, `Background image: ${file.name}`);
-      toast.success("Background image uploaded successfully!");
-    } catch (error) {
-      console.error("Background upload failed:", error);
-      toast.error("Failed to upload background image. Please try again.");
-    } finally {
-      setIsUploadingBackground(false);
-      event.target.value = "";
-    }
-  };
-
   const getBackgroundStyles = (): React.CSSProperties => {
     if (data.backgroundType === "image" && data.backgroundImageUrl) {
       return {
@@ -164,7 +123,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
 
   return (
     <section
-      className="relative flex min-h-screen w-full items-center p-4 sm:p-6 md:p-8 lg:p-16"
+      className="group relative flex min-h-screen w-full items-center p-4 sm:p-6 md:p-8 lg:p-16"
       style={{
         ...getBackgroundStyles(),
         color: textColor,
@@ -172,50 +131,16 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
       }}
       data-component-id={componentId}
     >
-      {/* Background Change Button */}
-      {isEditable && (
-        <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4 md:top-6 md:right-6">
-          <label
-            htmlFor={`background-upload-${componentId}`}
-            className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:px-4 sm:py-2 sm:text-sm ${
-              isUploadingBackground ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            {isUploadingBackground ? (
-              <span className="flex items-center gap-1 sm:gap-2">
-                <Loader2 className="h-3 w-3 animate-spin sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Uploading...</span>
-                <span className="sm:hidden">...</span>
-              </span>
-            ) : (
-              <>
-                <span className="hidden sm:inline">Change Background</span>
-                <span className="sm:hidden">Change BG</span>
-              </>
-            )}
-          </label>
-          <input
-            id={`background-upload-${componentId}`}
-            type="file"
-            accept="image/*"
-            onChange={handleBackgroundFileChange}
-            className="hidden"
-            disabled={isUploadingBackground}
-          />
-        </div>
-      )}
-
-      {/* Background Upload Loading Overlay */}
-      {isUploadingBackground && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
-          <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
-            <p className="px-4 text-center text-xs font-medium sm:text-sm">
-              Uploading background...
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Background Image Overlay */}
+      <ImageEditOverlay
+        onImageSelect={url => handleBackgroundImageUpdate(url)}
+        imageWidth={1920}
+        imageHeight={1080}
+        isEditable={isEditable}
+        label="Change Background"
+        folder="hero-backgrounds"
+        className="absolute top-0 right-0 z-20 flex items-center justify-center"
+      />
 
       {/* Background EditableImage */}
       {data.backgroundType === "image" && data.backgroundImageUrl && (
@@ -234,6 +159,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             height: 1080,
             text: "Upload background image",
           }}
+          disableImageChange={true}
         />
       )}
 
@@ -320,7 +246,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                 >
                   {data.sliderImages.map((img, index) => (
                     <div
-                      className="w-full flex-shrink-0"
+                      className="group relative w-full flex-shrink-0"
                       key={`slide-${componentId}-${img.id || index}`}
                     >
                       <EditableImage
@@ -355,6 +281,18 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                           height: 400,
                           text: `Upload slide ${index + 1}`,
                         }}
+                        disableImageChange={true}
+                      />
+                      <ImageEditOverlay
+                        onImageSelect={url =>
+                          handleSliderImageUpdate(index, url)
+                        }
+                        imageWidth={600}
+                        imageHeight={400}
+                        isEditable={isEditable && currentSlide === index}
+                        label="Change Slide Image"
+                        folder="hero-slider-images"
+                        className="absolute top-0 right-0 z-20 flex items-center justify-center"
                       />
                     </div>
                   ))}

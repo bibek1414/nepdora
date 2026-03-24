@@ -147,9 +147,13 @@ export const HeroTemplate17: React.FC<HeroTemplate17Props> = ({
                     width={500}
                     height={600}
                     priority
+                    placeholder={{
+                      width: 1920,
+                      height: 1080,
+                      text: "Upload hero image",
+                    }}
                     showAltEditor={true}
                     disableImageChange={!isEditable}
-                    showDimensionGuide={false}
                   />
                 </div>
               </div>

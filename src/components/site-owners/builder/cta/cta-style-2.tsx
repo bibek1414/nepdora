@@ -91,7 +91,9 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
   return (
     <section
       className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8"
-      style={getBackgroundStyle()}
+      style={{
+        background: theme.colors.background,
+      }}
     >
       <div className="relative z-10 container mx-auto max-w-3xl text-center">
         {/* Badge */}
@@ -123,7 +125,7 @@ export const CTATemplate2: React.FC<CTATemplate2Props> = ({
             value={data.subtitle}
             onChange={handleTextUpdate("subtitle")}
             as="h3"
-            className="mb-2 text-lg font-semibold tracking-wide uppercase"
+            className="mb-2 text-lg font-semibold"
             style={{ color: theme.colors.primaryForeground }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."

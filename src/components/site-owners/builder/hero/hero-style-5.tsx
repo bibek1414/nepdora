@@ -7,8 +7,8 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate5Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { Loader2 } from "lucide-react";
 
 interface HeroTemplate5Props {
@@ -27,7 +27,6 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   // Generate unique component ID to prevent conflicts
   const componentId = React.useId();
 
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -45,13 +44,8 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     },
   };
 
-  const {
-    data,
-    setData,
-    handleTextUpdate,
-    handleButtonUpdate,
-    handleImageUpdate: baseHandleImageUpdate,
-  } = useBuilderLogic(heroData, onUpdate);
+  const { data, setData, handleTextUpdate, handleButtonUpdate } =
+    useBuilderLogic(heroData, onUpdate);
 
   const handleImageUpdate = (imageUrl: string, altText?: string) => {
     const update = {
@@ -64,51 +58,9 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     onUpdate?.(update);
   };
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    setIsUploadingBackground(true);
-
-    try {
-      // Upload to S3
-      const imageUrl = await uploadToS3(file, "hero-backgrounds");
-
-      // Update only this component's background
-      handleImageUpdate(imageUrl, `Background image: ${file.name}`);
-
-      toast.success("Background image uploaded successfully!");
-    } catch (error) {
-      console.error("Background upload failed:", error);
-      toast.error("Failed to upload background image. Please try again.");
-    } finally {
-      setIsUploadingBackground(false);
-      // Reset file input
-      event.target.value = "";
-    }
-  };
-
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center text-center text-white"
+      className="group relative flex min-h-screen items-center justify-center text-center text-white"
       data-component-id={componentId}
       style={{
         ...(data.backgroundType === "image" && data.backgroundImageUrl
@@ -123,67 +75,15 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
             }),
       }}
     >
-      {/* Background Change Button - Only visible when editable */}
-      {isEditable && (
-        <div className="absolute top-6 right-4 z-10">
-          <label
-            htmlFor={`background-upload-${componentId}`}
-            className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-              isUploadingBackground ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            {isUploadingBackground ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
-              </span>
-            ) : (
-              "Change Background"
-            )}
-          </label>
-          <input
-            id={`background-upload-${componentId}`}
-            type="file"
-            accept="image/*"
-            onChange={handleBackgroundFileChange}
-            className="hidden"
-            disabled={isUploadingBackground}
-          />
-        </div>
-      )}
-
-      {/* Background Upload Loading Overlay */}
-      {isUploadingBackground && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
-          <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading background image...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Hidden EditableImage for upload functionality only */}
-      {data.backgroundType === "image" &&
-        data.backgroundImageUrl &&
-        isEditable && (
-          <div className="hidden">
-            <EditableImage
-              key={`bg-edit-${componentId}`}
-              src={data.backgroundImageUrl}
-              alt={data.imageAlt || "Background image"}
-              onImageChange={handleImageUpdate}
-              isEditable={true}
-              s3Options={{
-                folder: "hero-backgrounds",
-              }}
-              placeholder={{
-                width: 1920,
-                height: 1080,
-                text: "Upload background image",
-              }}
-            />
-          </div>
-        )}
+      <ImageEditOverlay
+        onImageSelect={url => handleImageUpdate(url)}
+        imageWidth={1920}
+        imageHeight={1080}
+        isEditable={isEditable}
+        label="Change Background"
+        folder="hero-backgrounds"
+        className="absolute top-0 right-0 z-20 flex items-center justify-center"
+      />
 
       {/* Overlay - Only show if image background with overlay enabled */}
       {data.backgroundType === "image" && data.showOverlay && (

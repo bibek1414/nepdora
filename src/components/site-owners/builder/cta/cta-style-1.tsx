@@ -70,101 +70,61 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
     return { className: baseClasses, style: buttonStyles };
   };
 
-  const getBackgroundStyle = () => {
-    switch (data.backgroundType) {
-      case "gradient":
-        return { background: data.backgroundColor };
-      case "image":
-        return {
-          backgroundImage: `url(${data.backgroundImageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        };
-      default:
-        return {
-          backgroundColor: data.backgroundColor || theme.colors.primary,
-        };
-    }
-  };
-
   return (
     <section
-      className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8"
-      style={getBackgroundStyle()}
+      className="px-4 py-16 sm:px-6 lg:px-8"
+      style={{
+        background: theme.colors.background,
+      }}
     >
-      {data.backgroundType === "image" && data.showOverlay && (
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundColor: `rgba(0, 0, 0, ${data.overlayOpacity || 0.5})`,
-          }}
+      <div className="mx-auto max-w-7xl">
+        {/* Title */}
+        <EditableText
+          value={data.title}
+          onChange={handleTextUpdate("title")}
+          as="h2"
+          className="mx-auto text-center text-3xl font-bold sm:text-4xl md:text-5xl"
+          isEditable={isEditable}
+          placeholder="Enter CTA title..."
         />
-      )}
 
-      <div className="relative z-10 container mx-auto max-w-4xl">
-        <div className={`flex flex-col gap-6`}>
-          {/* Title */}
+        {/* Description */}
+        {data.description && (
           <EditableText
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="h2"
-            className="text-3xl font-bold sm:text-4xl md:text-5xl"
-            style={{
-              color:
-                data.backgroundType === "color" ||
-                data.backgroundType === "gradient"
-                  ? theme.colors.primaryForeground
-                  : theme.colors.text,
-            }}
+            value={data.description}
+            onChange={handleTextUpdate("description")}
+            as="p"
+            className="mx-auto max-w-2xl text-center text-lg"
             isEditable={isEditable}
-            placeholder="Enter CTA title..."
+            placeholder="Enter description..."
+            multiline={true}
           />
+        )}
 
-          {/* Description */}
-          {data.description && (
-            <EditableText
-              value={data.description}
-              onChange={handleTextUpdate("description")}
-              as="p"
-              className="max-w-2xl text-lg"
-              style={{
-                color:
-                  data.backgroundType === "color" ||
-                  data.backgroundType === "gradient"
-                    ? theme.colors.primaryForeground
-                    : theme.colors.text,
-              }}
-              isEditable={isEditable}
-              placeholder="Enter description..."
-              multiline={true}
-            />
-          )}
-
-          {/* Buttons */}
-          {data.buttons.length > 0 && (
-            <div className="mt-4 flex flex-wrap justify-center gap-4">
-              {data.buttons.map(button => {
-                const buttonClass = getButtonClassesLocal(button.variant);
-                return (
-                  <EditableLink
-                    key={button.id}
-                    text={button.text || "Button text"}
-                    href={button.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(button.id, text, href)
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    className={buttonClass.className}
-                    style={buttonClass.style}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
+        {/* Buttons */}
+        {data.buttons.length > 0 && (
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
+            {data.buttons.map(button => {
+              const buttonClass = getButtonClassesLocal(button.variant);
+              return (
+                <EditableLink
+                  key={button.id}
+                  text={button.text || "Button text"}
+                  href={button.href || "#"}
+                  onChange={(text, href) =>
+                    handleButtonUpdate("buttons")(button.id, text, href)
+                  }
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  className={buttonClass.className}
+                  style={buttonClass.style}
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Enter URL..."
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

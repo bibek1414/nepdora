@@ -8,9 +8,9 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { ChevronRight, Loader2 } from "lucide-react";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface AboutUsTemplate7Props {
   aboutUsData: AboutUs7Data;
@@ -25,7 +25,6 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [isUploading, setIsUploading] = useState<number | null>(null);
   const { data: themeResponse } = useThemeQuery();
 
   const componentId = React.useId();
@@ -73,44 +72,6 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
       });
     };
 
-  // Handle file upload for training images
-  const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    setIsUploading(index);
-
-    try {
-      const imageUrl = await uploadToS3(file, "about-us-images");
-
-      handleTrainingImageUpdate(index)(
-        imageUrl,
-        `Training image: ${file.name}`
-      );
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsUploading(null);
-      event.target.value = "";
-    }
-  };
-
   // Handle button link updates
   const handleButtonLinkUpdate = (text: string, href: string) => {
     const update = {
@@ -156,58 +117,21 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
               key={training.id}
               className="group relative h-96 overflow-hidden rounded-lg bg-cover bg-center"
             >
-              {/* Change Image Button - Only visible when editable */}
-              {isEditable && (
-                <div className="absolute top-2 right-2 z-20">
-                  <label
-                    htmlFor={`training-upload-${componentId}-${idx}`}
-                    className={`cursor-pointer rounded border border-gray-300 bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-                      isUploading === idx
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }`}
-                  >
-                    {isUploading === idx ? (
-                      <span className="flex items-center gap-1">
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                        <span className="hidden sm:inline">Uploading...</span>
-                      </span>
-                    ) : (
-                      "Change"
-                    )}
-                  </label>
-                  <input
-                    id={`training-upload-${componentId}-${idx}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageFileChange(e, idx)}
-                    className="hidden"
-                    disabled={isUploading === idx}
-                  />
-                </div>
-              )}
-
-              {/* Upload Loading Overlay */}
-              {isUploading === idx && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-lg bg-black/50">
-                  <div className="flex flex-col items-center gap-2 text-white">
-                    <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
-                    <p className="text-xs font-medium sm:text-sm">
-                      Uploading...
-                    </p>
-                  </div>
-                </div>
-              )}
-
               {/* Training Image */}
               <div className="h-96 w-full overflow-hidden rounded-lg bg-cover bg-center">
-                <Image
+                <EditableImage
                   src={training.imageUrl}
                   alt={training.imageAlt}
                   width={400}
                   height={500}
+                  buttonPosition="top-right"
                   className="h-96 w-full object-cover"
                   priority={idx === 0}
+                  isEditable={isEditable}
+                  onImageChange={url => handleTrainingImageUpdate(idx)(url)}
+                  s3Options={{
+                    folder: "about-us-images",
+                  }}
                 />
               </div>
 
@@ -217,7 +141,7 @@ export const AboutUsTemplate7: React.FC<AboutUsTemplate7Props> = ({
                   value={training.title}
                   onChange={handleTrainingUpdate(idx, "title")}
                   as="h3"
-                  className="text-white"
+                  className="z-10 text-white"
                   isEditable={isEditable}
                   placeholder="Training Title"
                 />

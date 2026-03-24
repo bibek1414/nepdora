@@ -7,6 +7,7 @@ import { Plus, X, Loader2 } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -26,7 +27,6 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
     onUpdate
   );
 
-  const [isUploading, setIsUploading] = useState<number | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const componentId = React.useId();
@@ -105,44 +105,6 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    setIsUploading(index);
-
-    try {
-      const imageUrl = await uploadToS3(file, "banner-images");
-
-      handleImageUpdateLocal(index, imageUrl, `Banner image: ${file.name}`);
-      toast.success("Banner image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error("Failed to upload banner image. Please try again.");
-    } finally {
-      setIsUploading(null);
-      event.target.value = "";
-    }
-  };
 
   // Get all active images
   const activeImages = data.images.filter(img => img.is_active !== false);
@@ -184,53 +146,17 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                     actualIndex >= 0 ? actualIndex : displayIndex;
 
                   return (
-                    <div key={image.id || displayIndex} className="relative">
-                      {/* Change Image Button - Only visible when editable */}
-                      {isEditable && (
-                        <div className="absolute top-2 right-2 z-20">
-                          <label
-                            htmlFor={`banner-upload-${componentId}-${displayIndex}`}
-                            className={`cursor-pointer rounded border border-gray-300 bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-                              isUploading === safeIndex
-                                ? "pointer-events-none opacity-50"
-                                : ""
-                            }`}
-                          >
-                            {isUploading === safeIndex ? (
-                              <span className="flex items-center gap-1">
-                                <Loader2 className="h-3 w-3 animate-spin" />
-                                <span className="hidden sm:inline">
-                                  Uploading...
-                                </span>
-                              </span>
-                            ) : (
-                              "Change"
-                            )}
-                          </label>
-                          <input
-                            id={`banner-upload-${componentId}-${displayIndex}`}
-                            type="file"
-                            accept="image/*"
-                            onChange={e =>
-                              handleBackgroundFileChange(e, safeIndex)
-                            }
-                            className="hidden"
-                            disabled={isUploading === safeIndex}
-                          />
-                        </div>
-                      )}
+                    <div key={image.id || displayIndex} className="group relative">
+                      <ImageEditOverlay
+                        onImageSelect={(url) => handleImageUpdateLocal(safeIndex, url)}
+                        imageWidth={800}
+                        imageHeight={1000}
+                        isEditable={isEditable}
+                        label="Change"
+                        folder="banner-images"
+                        className="absolute top-2 right-2 z-20"
+                      />
 
-                      {/* Upload Loading Overlay */}
-                      {isUploading === safeIndex && (
-                        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-lg bg-black/50">
-                          <div className="flex flex-col items-center gap-2 text-white">
-                            <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
-                            <p className="text-xs font-medium sm:text-sm">
-                              Uploading...
-                            </p>
-                          </div>
-                        </div>
-                      )}
 
                       {image.link && !isEditable ? (
                         <button
@@ -256,9 +182,9 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                               priority={displayIndex === 0}
                               s3Options={{
                                 folder: "banner-images",
-                                
                               }}
                               showAltEditor={isEditable}
+                              disableImageChange={true}
                             />
                           </div>
                         </button>
@@ -279,9 +205,9 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                             priority={displayIndex === 0}
                             s3Options={{
                               folder: "banner-images",
-                              
                             }}
                             showAltEditor={isEditable}
+                            disableImageChange={true}
                           />
                         </div>
                       )}

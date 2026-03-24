@@ -6,6 +6,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { ChevronRight } from "lucide-react";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -131,22 +132,34 @@ export const BannerTemplate7: React.FC<BannerTemplateProps> = ({
             {/* Product Image (Left) */}
             <div className="relative order-1 flex justify-center md:order-1">
               {activeImage ? (
-                <EditableImage
-                  src={getImageUrl(activeImage.image)}
-                  alt={
-                    activeImage.image_alt_description || "Product Banner Image"
-                  }
-                  onImageChange={(imageUrl, altText) =>
-                    handleImageUpdateLocal(imageUrl, altText)
-                  }
-                  isEditable={isEditable}
-                  className="w-full max-w-sm object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:translate-x-4 group-hover:-rotate-2 md:max-w-md"
-                  s3Options={{
-                    folder: "banner-images",
-                    
-                  }}
-                  showAltEditor={isEditable}
-                />
+                <div className="group/image relative">
+                  <EditableImage
+                    src={getImageUrl(activeImage.image)}
+                    alt={
+                      activeImage.image_alt_description ||
+                      "Product Banner Image"
+                    }
+                    onImageChange={(imageUrl, altText) =>
+                      handleImageUpdateLocal(imageUrl, altText)
+                    }
+                    isEditable={isEditable}
+                    className="w-full max-w-sm object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:translate-x-4 group-hover:-rotate-2 md:max-w-md"
+                    s3Options={{
+                      folder: "banner-images",
+                    }}
+                    showAltEditor={isEditable}
+                    disableImageChange={true}
+                  />
+                  <ImageEditOverlay
+                    onImageSelect={handleImageUpdateLocal}
+                    imageWidth={800}
+                    imageHeight={800}
+                    isEditable={isEditable}
+                    label="Change"
+                    folder="banner-images"
+                    className="absolute top-0 right-0 z-20 flex items-center justify-center"
+                  />
+                </div>
               ) : (
                 <div className="flex h-64 w-full max-w-sm items-center justify-center rounded-xl bg-white/10 md:max-w-md">
                   <span className="text-white/50">No Image</span>

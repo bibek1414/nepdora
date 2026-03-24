@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -28,7 +29,6 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
   );
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isUploading, setIsUploading] = useState(false);
 
   const componentId = React.useId();
 
@@ -81,47 +81,6 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    setIsUploading(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "banner-slider-images");
-
-      handleImageUpdateLocal(
-        currentSlide,
-        imageUrl,
-        `Slider image: ${file.name}`
-      );
-      toast.success("Slider image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error("Failed to upload slider image. Please try again.");
-    } finally {
-      setIsUploading(false);
-      event.target.value = "";
-    }
-  };
 
   // Get all active images
   const allActiveImages = data.images.filter(img => img.is_active !== false);
@@ -170,47 +129,17 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     <div className="w-full space-y-4">
       <div className="mx-auto max-w-7xl px-4">
         {allActiveImages.length > 0 ? (
-          <Card className="group relative aspect-[3/1] w-full overflow-hidden py-0 md:aspect-[4/1]">
-            {/* Change Image Button - Only visible when editable */}
-            {isEditable && (
-              <div className="absolute top-2 right-2 z-20">
-                <label
-                  htmlFor={`slider-upload-${componentId}`}
-                  className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white md:px-4 md:py-2 md:text-sm ${
-                    isUploading ? "pointer-events-none opacity-50" : ""
-                  }`}
-                >
-                  {isUploading ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="h-3 w-3 animate-spin md:h-4 md:w-4" />
-                      Uploading...
-                    </span>
-                  ) : (
-                    "Change Current Image"
-                  )}
-                </label>
-                <input
-                  id={`slider-upload-${componentId}`}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleBackgroundFileChange}
-                  className="hidden"
-                  disabled={isUploading}
-                />
-              </div>
-            )}
+          <Card className="group relative aspect-3/1 w-full overflow-hidden py-0 md:aspect-4/1">
+            <ImageEditOverlay
+              onImageSelect={(url) => handleImageUpdateLocal(currentSlide, url)}
+              imageWidth={1920}
+              imageHeight={480}
+              isEditable={isEditable}
+              label="Change Current Image"
+              folder="banner-slider-images"
+              className="absolute top-2 right-2 z-20"
+            />
 
-            {/* Upload Loading Overlay */}
-            {isUploading && (
-              <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                <div className="flex flex-col items-center gap-2 text-white">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                  <p className="text-sm font-medium">
-                    Uploading slider image...
-                  </p>
-                </div>
-              </div>
-            )}
 
             <div className="relative h-full w-full">
               {allActiveImages.map((image, imageIndex) => (
@@ -231,7 +160,6 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
                     priority={imageIndex === 0}
                     s3Options={{
                       folder: "banner-slider-images",
-                      
                     }}
                     disableImageChange={true}
                     showAltEditor={isEditable && imageIndex === currentSlide}

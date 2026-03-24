@@ -69,8 +69,10 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
             className="object-cover opacity-30"
             s3Options={{
               folder: "about-us-images",
-              
             }}
+            width={1200}
+            height={400}
+            buttonPosition="top-right"
             showAltEditor={isEditable}
             placeholder={{
               width: 1200,
@@ -114,29 +116,31 @@ export const AboutUsTemplate2: React.FC<AboutUsTemplate2Props> = ({
         {/* Our Sneaker Journey */}
         <div className="mb-20 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <div className="space-y-6">
-            <div className="flex h-80 items-center justify-center">
-              <EditableImage
-                src={data.journeyImageUrl}
-                alt={data.journeyImageAlt}
-                onImageChange={handleImageUpdate(
-                  "journeyImageUrl",
-                  "journeyImageAlt"
-                )}
-                onAltChange={handleAltUpdate("journeyImageAlt")}
-                isEditable={isEditable}
-                className="-rotate-12 transform rounded-xl object-cover shadow-lg transition-transform duration-500 hover:rotate-0"
-                width={400}
-                height={300}
-                s3Options={{
-                  folder: "about-us-images",
-                  
-                }}
-                placeholder={{
-                  width: 400,
-                  height: 300,
-                  text: "Upload journey image",
-                }}
-              />
+            <div className="transform overflow-hidden rounded-2xl bg-white shadow-xl transition-transform duration-300 hover:scale-105">
+              <div className="flex h-80 items-center justify-center">
+                <EditableImage
+                  src={data.journeyImageUrl}
+                  alt={data.journeyImageAlt}
+                  onImageChange={handleImageUpdate(
+                    "journeyImageUrl",
+                    "journeyImageAlt"
+                  )}
+                  onAltChange={handleAltUpdate("journeyImageAlt")}
+                  isEditable={isEditable}
+                  className="-rotate-12 transform rounded-xl object-cover shadow-lg transition-transform duration-500 hover:rotate-0"
+                  width={400}
+                  height={300}
+                  s3Options={{
+                    folder: "about-us-images",
+                  }}
+                  showAltEditor={isEditable}
+                  placeholder={{
+                    width: 400,
+                    height: 300,
+                    text: "Upload journey image",
+                  }}
+                />
+              </div>
             </div>
           </div>
 

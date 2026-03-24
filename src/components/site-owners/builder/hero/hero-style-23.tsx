@@ -8,8 +8,8 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useRouter, usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { EditableLink } from "@/components/ui/editable-link";
 
 interface HeroTemplate23Props {
@@ -25,7 +25,6 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const componentId = useId();
 
   const router = useRouter();
@@ -39,31 +38,6 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
     handleArrayItemUpdate,
   } = useBuilderLogic(heroData, onUpdate);
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setIsUploadingBackground(true);
-    try {
-      const url = await uploadToS3(file, "hero-backgrounds");
-      const update = {
-        backgroundImageUrl: url,
-        imageAlt: file.name.split(".")[0] || data.imageAlt,
-      };
-      setData({ ...data, ...update });
-      onUpdate?.(update);
-      toast.success("Background updated successfully!");
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsUploadingBackground(false);
-      event.target.value = "";
-    }
-  };
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -84,35 +58,8 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
 
   return (
     <section className="relative flex min-h-[500px] items-center overflow-hidden bg-gray-900 pt-16 sm:min-h-[600px] sm:pt-20 lg:h-screen">
-      {isEditable && (
-        <div className="absolute top-6 left-6 z-30">
-          <label
-            htmlFor={`hero-23-background-upload-${componentId}`}
-            className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-              isUploadingBackground ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            {isUploadingBackground ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
-              </span>
-            ) : (
-              "Change Background"
-            )}
-          </label>
-          <input
-            id={`hero-23-background-upload-${componentId}`}
-            type="file"
-            accept="image/*"
-            onChange={handleBackgroundFileChange}
-            className="hidden"
-            disabled={isUploadingBackground}
-          />
-        </div>
-      )}
       {/* Background Image */}
-      <div className="absolute inset-0 z-0">
+      <div className="group absolute inset-0 z-0">
         <EditableImage
           src={data.backgroundImageUrl}
           alt={data.imageAlt}
@@ -125,6 +72,20 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
             height: 1080,
             text: "Upload Hero Background",
           }}
+          disableImageChange={true}
+        />
+        <ImageEditOverlay
+          onImageSelect={url => {
+            const update = { backgroundImageUrl: url };
+            setData({ ...data, ...update });
+            onUpdate?.(update);
+          }}
+          imageWidth={1920}
+          imageHeight={1080}
+          isEditable={isEditable}
+          label="Change Background"
+          folder="hero-backgrounds"
+          className="absolute top-0 right-0 z-20 flex items-center justify-center"
         />
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-linear-to-r from-gray-900/95 via-gray-900/80 to-transparent"></div>

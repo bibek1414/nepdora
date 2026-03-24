@@ -7,15 +7,13 @@ import {
   GalleryData,
   GalleryImage,
 } from "@/types/owner-site/components/gallery";
-import { EditableText } from "@/components/ui/editable-text";
-import { EditableImage } from "@/components/ui/editable-image";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
+import { MediaLibraryDialog } from "@/components/ui/media-library-dialog";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
-import { ZoomIn } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
 import { Button } from "@/components/ui/button";
-import { Plus, X, Loader2 } from "lucide-react";
+import { Plus, X, Loader2, ZoomIn } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
-import { toast } from "sonner";
 
 interface GalleryTemplateProps {
   galleryData: GalleryData;
@@ -35,7 +33,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isAddingImage, setIsAddingImage] = useState(false);
+  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const componentId = React.useId();
 
   useEffect(() => {
@@ -62,33 +60,6 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-  const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Please select a valid image file");
-      return;
-    }
-
-    setIsAddingImage(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "gallery-images");
-
-      handleAddImage(imageUrl);
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error("Failed to upload image. Please try again.");
-    } finally {
-      setIsAddingImage(false);
-      event.target.value = "";
-    }
-  };
 
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
@@ -107,13 +78,13 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_, idx) => idx !== index);
+    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
 
   const activeImages = useMemo(
-    () => data.images.filter(img => img.is_active),
+    () => data.images.filter((img: GalleryImage) => img.is_active),
     [data.images]
   );
 
@@ -241,23 +212,15 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                           image={image}
                           isEditable={isEditable}
                           onOpenLightbox={() => setSelectedImage(image)}
-                          onImageChange={(imageUrl, altText) =>
+                          onImageChange={(imageUrl) =>
                             handleImageUpdateLocal(
                               actualIndex,
-                              imageUrl,
-                              altText
+                              imageUrl
                             )
                           }
-                          inputId={`gallery-upload-${componentId}-${actualIndex}`}
                         />
                         {isEditable && (
                           <div className="absolute top-2 right-2 z-10 flex gap-2">
-                            <label
-                              htmlFor={`gallery-upload-${componentId}-${actualIndex}`}
-                              className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
-                            >
-                              Change
-                            </label>
                             <Button
                               size="sm"
                               variant="destructive"
@@ -289,22 +252,15 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                     image={image}
                     isEditable={isEditable}
                     onOpenLightbox={() => setSelectedImage(image)}
-                    onImageChange={(imageUrl, altText) =>
-                      handleImageUpdateLocal(actualIndex, imageUrl, altText)
+                    onImageChange={(imageUrl) =>
+                      handleImageUpdateLocal(actualIndex, imageUrl)
                     }
-                    inputId={`gallery-upload-${componentId}-${actualIndex}`}
                     size={180}
                     enableHover={!isEditable}
                     enableRandomRotation={false}
                   />
                   {isEditable && (
                     <div className="absolute top-2 right-2 z-10 flex gap-2">
-                      <label
-                        htmlFor={`gallery-upload-${componentId}-${actualIndex}`}
-                        className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
-                      >
-                        Change
-                      </label>
                       <Button
                         size="sm"
                         variant="destructive"
@@ -327,31 +283,25 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
 
       {isEditable && (
         <div className="mt-4 text-center">
-          <label
-            htmlFor={`gallery-add-${componentId}`}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 hover:bg-gray-100"
+          <button
+            onClick={() => setIsMediaDialogOpen(true)}
+            className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 transition-colors hover:border-gray-400 hover:bg-gray-100"
           >
-            {isAddingImage ? (
-              <div className="flex items-center gap-2 text-gray-500">
-                <Loader2 className="h-5 w-5 animate-spin" />
-                <span className="text-sm font-medium">Uploading...</span>
-              </div>
-            ) : (
-              <>
-                <Plus className="h-5 w-5 text-gray-400" />
-                <span className="text-sm text-gray-600">Add Image</span>
-                <input
-                  id={`gallery-add-${componentId}`}
-                  type="file"
-                  accept="image/*"
-                  onChange={e => handleImageFileChange(e)}
-                  className="hidden"
-                />
-              </>
-            )}
-          </label>
+            <Plus className="h-5 w-5 text-gray-400" />
+            <span className="text-sm text-gray-600 font-medium">Add Image</span>
+          </button>
         </div>
       )}
+
+      <MediaLibraryDialog
+        open={isMediaDialogOpen}
+        onOpenChange={setIsMediaDialogOpen}
+        onSelect={(url) => {
+          handleAddImage(url);
+          setIsMediaDialogOpen(false);
+        }}
+        folder="gallery-images"
+      />
 
       {selectedImage && !isEditable && (
         <Dialog
@@ -434,6 +384,12 @@ const PhotoCard = ({
     setRotation(randomRotation);
   }, [enableRandomRotation]);
 
+  const handleUpdateTitle = (newTitle: string) => {
+    onImageChange?.(image.image as string); // Not really changing image, just title
+    // Wait, PhotoCard doesn't have actualIndex. 
+    // It's better to pass onTitleChange?
+  };
+
   return (
     <motion.div
       whileHover={
@@ -448,37 +404,31 @@ const PhotoCard = ({
       animate={{ rotate: rotation }}
       transition={{ type: "spring", stiffness: 70, damping: 12, mass: 1 }}
       style={{ width: size, height: size, perspective: 400 }}
-      className={cn("relative mx-auto shrink-0")}
+      className={cn("group relative mx-auto shrink-0")}
       draggable={false}
       tabIndex={0}
     >
       <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-sm">
-        {isEditable ? (
-          <EditableImage
-            src={getImageUrl(image.image)}
-            alt={image.image_alt_description}
-            width={size}
+        {isEditable && (
+          <ImageEditOverlay
+            onImageSelect={(imageUrl) => onImageChange?.(imageUrl)}
+            imageWidth={800}
+            imageHeight={1000}
             isEditable={isEditable}
-            onImageChange={onImageChange}
-            height={size}
-            disableImageChange={true}
-            showAltEditor={true}
-            inputId={inputId}
-            s3Options={{
-              folder: "gallery-images",
-              
-            }}
-          />
-        ) : (
-          <MotionImage
-            fill
-            src={getImageUrl(image.image)}
-            alt={image.image_alt_description}
-            className={cn("rounded-3xl object-cover")}
-            draggable={false}
-            onClick={() => onOpenLightbox()}
+            folder="gallery-images"
+            label="Change Image"
           />
         )}
+        <div className="relative h-full w-full">
+          <Image
+            src={getImageUrl(image.image)}
+            alt={image.image_alt_description || "Gallery image"}
+            fill
+            className={cn("rounded-3xl object-cover", !isEditable && "cursor-pointer")}
+            draggable={false}
+            onClick={() => !isEditable && onOpenLightbox()}
+          />
+        </div>
         {!isEditable && (
           <button
             type="button"

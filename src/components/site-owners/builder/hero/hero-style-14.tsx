@@ -10,8 +10,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface HeroTemplate14Props {
   heroData: HeroTemplate14Data;
@@ -34,7 +34,6 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
   onUpdate,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const bannerRef = useRef<HTMLElement>(null);
   const componentId = useId();
 
@@ -100,36 +99,6 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
     );
   };
 
-  const handleBackgroundUpdate = (imageUrl: string, altText?: string) => {
-    const update = {
-      backgroundImageUrl: imageUrl,
-      imageAlt: altText || data.imageAlt || "Hero background image",
-    };
-    setData({ ...data, ...update });
-    onUpdate?.(update);
-  };
-
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setIsUploadingBackground(true);
-    try {
-      const url = await uploadToS3(file, "hero-banners");
-      handleBackgroundUpdate(url, file.name);
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsUploadingBackground(false);
-      event.target.value = "";
-    }
-  };
-
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
 
@@ -138,46 +107,40 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
       ref={bannerRef}
       className="relative h-screen w-full overflow-hidden bg-gray-900"
     >
-      {isEditable && (
-        <div className="absolute top-6 right-4 z-30">
-          <label
-            htmlFor={`hero-15-background-upload-${componentId}`}
-            className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-              isUploadingBackground ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            {isUploadingBackground ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
-              </span>
-            ) : (
-              "Change Background"
-            )}
-          </label>
-          <input
-            id={`hero-15-background-upload-${componentId}`}
-            type="file"
-            accept="image/*"
-            onChange={handleBackgroundFileChange}
-            className="hidden"
-            disabled={isUploadingBackground}
-          />
-        </div>
-      )}
-
       {/* Background Image with Zoom Effect */}
       <div
-        className="absolute inset-0 transition-transform duration-2000 ease-out"
+        className="group absolute inset-0 transition-transform duration-2000 ease-out"
         style={{ transform: isVisible ? "scale(1.05)" : "scale(1)" }}
       >
         <EditableImage
           src={getImageUrl(data.backgroundImageUrl || defaultImageUrl, {})}
           alt={data.imageAlt || "Featured Collection"}
-          onImageChange={handleBackgroundUpdate}
+          onImageChange={(url, alt) => {
+            const update = {
+              backgroundImageUrl: url,
+              imageAlt: alt || data.imageAlt,
+            };
+            setData({ ...data, ...update });
+            onUpdate?.(update);
+          }}
+          
           onAltChange={handleAltUpdate("imageAlt")}
           isEditable={isEditable}
           className="h-screen w-full"
+          disableImageChange={true}
+        />
+        <ImageEditOverlay
+          onImageSelect={url => {
+            const update = { backgroundImageUrl: url };
+            setData({ ...data, ...update });
+            onUpdate?.(update);
+          }}
+          imageWidth={1920}
+          imageHeight={1080}
+          isEditable={isEditable}
+          label="Change Background"
+          folder="hero-banners"
+          className="absolute top-10 right-10 z-20 flex items-center justify-center"
         />
         {/* Dark Overlay for text contrast */}
         <div className="absolute inset-0 bg-black/40" />

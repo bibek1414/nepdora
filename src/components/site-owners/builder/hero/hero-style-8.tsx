@@ -6,9 +6,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate8Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
-import { toast } from "sonner";
-import { Loader2, ImagePlus } from "lucide-react";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -42,8 +40,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
     customerText: "Trusted by 1000+ customers worldwide",
   };
 
-  const [isUploading, setIsUploading] = useState<string | null>(null);
-  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -77,74 +73,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
     onUpdate
   );
 
-  // Handle image uploads
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    imageType: string
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    setIsUploading(imageType);
-
-    try {
-      const imageUrl = await uploadToS3(file, "hero-rugs");
-
-      if (imageType === "leftImage") {
-        const updatedData = {
-          ...data,
-          leftImageUrl: imageUrl,
-          leftImageAlt: `Left rug image: ${file.name}`,
-        };
-        setData(updatedData);
-        onUpdate?.({
-          leftImageUrl: imageUrl,
-          leftImageAlt: updatedData.leftImageAlt,
-        });
-      } else if (imageType === "rightImage") {
-        const updatedData = {
-          ...data,
-          rightImageUrl: imageUrl,
-          rightImageAlt: `Right rug image: ${file.name}`,
-        };
-        setData(updatedData);
-        onUpdate?.({
-          rightImageUrl: imageUrl,
-          rightImageAlt: updatedData.rightImageAlt,
-        });
-      } else if (imageType === "mobileImage") {
-        const updatedData = {
-          ...data,
-          mobileImageUrl: imageUrl,
-          mobileImageAlt: `Mobile background: ${file.name}`,
-        };
-        setData(updatedData);
-        onUpdate?.({
-          mobileImageUrl: imageUrl,
-          mobileImageAlt: updatedData.mobileImageAlt,
-        });
-      }
-
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsUploading(null);
-      setHoveredImage(null);
-      event.target.value = "";
-    }
-  };
 
   // Default images
   const leftImageUrl =
@@ -166,11 +94,25 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
           <div className="hidden md:grid md:h-full md:min-h-[600px] md:grid-cols-3 lg:min-h-[700px]">
             {/* Left Image Column */}
             <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
-              <div
-                className="relative h-full w-full cursor-pointer overflow-hidden"
-                onMouseEnter={() => setHoveredImage("leftImage")}
-                onMouseLeave={() => setHoveredImage(null)}
-              >
+              <div className="group relative h-full w-full cursor-pointer overflow-hidden">
+                <ImageEditOverlay
+                  onImageSelect={(url) => {
+                    const updatedData = {
+                      ...data,
+                      leftImageUrl: url,
+                    };
+                    setData(updatedData);
+                    onUpdate?.({
+                      leftImageUrl: url,
+                    });
+                  }}
+                  imageWidth={800}
+                  imageHeight={1000}
+                  isEditable={isEditable}
+                  folder="hero-rugs"
+                  label="Change Left Image"
+                  className="absolute inset-0 z-30 flex items-center justify-center bg-black/40"
+                />
                 <Image
                   src={leftImageUrl}
                   alt={data.leftImageAlt || "Left image"}
@@ -179,50 +121,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   priority
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
-
-                {isEditable && (
-                  <>
-                    {/* Hover Overlay - Only shows when left image is hovered */}
-                    <div
-                      className={`absolute inset-0 z-15 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
-                        hoveredImage === "leftImage"
-                          ? "opacity-100"
-                          : "opacity-0"
-                      }`}
-                    >
-                      <Button
-                        variant="secondary"
-                        className="gap-2 bg-white/90 text-black hover:bg-white"
-                        onClick={() =>
-                          document
-                            .getElementById(`left-image-upload-${componentId}`)
-                            ?.click()
-                        }
-                      >
-                        <ImagePlus className="h-4 w-4" /> Change Left Image
-                      </Button>
-                    </div>
-
-                    {/* Hidden File Input */}
-                    <input
-                      id={`left-image-upload-${componentId}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleImageUpload(e, "leftImage")}
-                      className="hidden"
-                    />
-                  </>
-                )}
-
-                {/* Upload Loading */}
-                {isUploading === "leftImage" && (
-                  <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                    <div className="flex flex-col items-center gap-2 text-white">
-                      <Loader2 className="h-6 w-6 animate-spin" />
-                      <p className="text-sm font-medium">Uploading...</p>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -308,11 +206,25 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
 
             {/* Right Image Column */}
             <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
-              <div
-                className="relative h-full w-full cursor-pointer overflow-hidden"
-                onMouseEnter={() => setHoveredImage("rightImage")}
-                onMouseLeave={() => setHoveredImage(null)}
-              >
+              <div className="group relative h-full w-full cursor-pointer overflow-hidden">
+                <ImageEditOverlay
+                  onImageSelect={(url) => {
+                    const updatedData = {
+                      ...data,
+                      rightImageUrl: url,
+                    };
+                    setData(updatedData);
+                    onUpdate?.({
+                      rightImageUrl: url,
+                    });
+                  }}
+                  imageWidth={800}
+                  imageHeight={1000}
+                  isEditable={isEditable}
+                  folder="hero-rugs"
+                  label="Change Right Image"
+                  className="absolute inset-0 z-30 flex items-center justify-center bg-black/40"
+                />
                 <Image
                   src={rightImageUrl}
                   alt={data.rightImageAlt || "Right image"}
@@ -321,50 +233,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   priority
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
-
-                {isEditable && (
-                  <>
-                    {/* Hover Overlay - Only shows when right image is hovered */}
-                    <div
-                      className={`absolute inset-0 z-20 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
-                        hoveredImage === "rightImage"
-                          ? "opacity-100"
-                          : "opacity-0"
-                      }`}
-                    >
-                      <Button
-                        variant="secondary"
-                        className="gap-2 bg-white/90 text-black hover:bg-white"
-                        onClick={() =>
-                          document
-                            .getElementById(`right-image-upload-${componentId}`)
-                            ?.click()
-                        }
-                      >
-                        <ImagePlus className="h-4 w-4" /> Change Right Image
-                      </Button>
-                    </div>
-
-                    {/* Hidden File Input */}
-                    <input
-                      id={`right-image-upload-${componentId}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleImageUpload(e, "rightImage")}
-                      className="hidden"
-                    />
-                  </>
-                )}
-
-                {/* Upload Loading */}
-                {isUploading === "rightImage" && (
-                  <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                    <div className="flex flex-col items-center gap-2 text-white">
-                      <Loader2 className="h-6 w-6 animate-spin" />
-                      <p className="text-sm font-medium">Uploading...</p>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -373,11 +241,25 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
           <div className="relative min-h-[500px] md:hidden">
             {/* Mobile Background Image */}
             {data.mobileImageUrl && (
-              <div
-                className="absolute inset-0 cursor-pointer"
-                onMouseEnter={() => setHoveredImage("mobileImage")}
-                onMouseLeave={() => setHoveredImage(null)}
-              >
+              <div className="group absolute inset-0 cursor-pointer">
+                <ImageEditOverlay
+                  onImageSelect={(url) => {
+                    const updatedData = {
+                      ...data,
+                      mobileImageUrl: url,
+                    };
+                    setData(updatedData);
+                    onUpdate?.({
+                      mobileImageUrl: url,
+                    });
+                  }}
+                  imageWidth={600}
+                  imageHeight={800}
+                  isEditable={isEditable}
+                  folder="hero-rugs"
+                  label="Change Background"
+                  className="absolute inset-0 z-30 flex items-center justify-center bg-black/40"
+                />
                 <Image
                   src={data.mobileImageUrl}
                   alt={data.mobileImageAlt || "Mobile background"}
@@ -386,52 +268,6 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   priority
                   sizes="100vw"
                 />
-
-                {isEditable && (
-                  <>
-                    {/* Hover Overlay */}
-                    <div
-                      className={`absolute inset-0 z-20 flex items-center justify-center bg-black/50 transition-opacity duration-200 ${
-                        hoveredImage === "mobileImage"
-                          ? "opacity-100"
-                          : "opacity-0"
-                      }`}
-                    >
-                      <Button
-                        variant="secondary"
-                        className="gap-2 bg-white/90 text-black hover:bg-white"
-                        onClick={() =>
-                          document
-                            .getElementById(
-                              `mobile-image-upload-${componentId}`
-                            )
-                            ?.click()
-                        }
-                      >
-                        <ImagePlus className="h-4 w-4" /> Change Background
-                      </Button>
-                    </div>
-
-                    {/* Hidden File Input */}
-                    <input
-                      id={`mobile-image-upload-${componentId}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleImageUpload(e, "mobileImage")}
-                      className="hidden"
-                    />
-                  </>
-                )}
-
-                {/* Upload Loading */}
-                {isUploading === "mobileImage" && (
-                  <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                    <div className="flex flex-col items-center gap-2 text-white">
-                      <Loader2 className="h-6 w-6 animate-spin" />
-                      <p className="text-sm font-medium">Uploading...</p>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 

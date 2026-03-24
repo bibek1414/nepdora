@@ -11,8 +11,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate13Props {
@@ -42,7 +42,6 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
   onUpdate,
 }) => {
   const componentId = useId();
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -165,42 +164,6 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
     primaryButton.text ?? DEFAULT_BUTTON.text ?? "Button";
   const primaryButtonHref = primaryButton.href ?? DEFAULT_BUTTON.href ?? "#";
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    setIsUploadingBackground(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "hero-backgrounds");
-
-      handleBackgroundUpdate(imageUrl, `Background image: ${file.name}`);
-      toast.success("Background image uploaded successfully!");
-    } catch (error) {
-      console.error("Background upload failed:", error);
-      toast.error("Failed to upload background image. Please try again.");
-    } finally {
-      setIsUploadingBackground(false);
-      event.target.value = "";
-    }
-  };
-
   const fadeInUp = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0 },
@@ -213,49 +176,12 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
 
   return (
     <motion.section
-      className="relative h-[880px] w-full overflow-hidden bg-gray-900"
+      className="group relative h-[880px] w-full overflow-hidden bg-gray-900"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.15 }}
     >
-      {isEditable && (
-        <div className="absolute top-6 right-4 z-30">
-          <label
-            htmlFor={`hero-13-background-upload-${componentId}`}
-            className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-              isUploadingBackground ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            {isUploadingBackground ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
-              </span>
-            ) : (
-              "Change Background"
-            )}
-          </label>
-          <input
-            id={`hero-13-background-upload-${componentId}`}
-            type="file"
-            accept="image/*"
-            onChange={handleBackgroundFileChange}
-            className="hidden"
-            disabled={isUploadingBackground}
-          />
-        </div>
-      )}
-
-      {isUploadingBackground && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
-          <div className="flex items-center gap-2 text-white">
-            <Loader2 className="h-6 w-6 animate-spin" />
-            <p className="text-sm font-medium">Uploading background image...</p>
-          </div>
-        </div>
-      )}
-
       {/* Background Image with Overlay */}
       <motion.div
         className="absolute inset-0"
@@ -276,6 +202,16 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             height: 1080,
             text: "Upload hero background",
           }}
+          disableImageChange={true}
+        />
+        <ImageEditOverlay
+          onImageSelect={url => handleBackgroundUpdate(url)}
+          imageWidth={1920}
+          imageHeight={1080}
+          isEditable={isEditable}
+          label="Change Background"
+          folder="hero-backgrounds"
+          className="absolute top-0 right-0 z-20 flex items-center justify-center"
         />
       </motion.div>
 

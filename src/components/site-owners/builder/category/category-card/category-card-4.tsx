@@ -7,11 +7,11 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { Category, SubCategory } from "@/types/owner-site/admin/product";
 import { FeaturedContent } from "@/types/owner-site/components/category";
-import { uploadToS3 } from "@/utils/s3";
 
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface CategoryCard4Props {
   isEditable?: boolean;
@@ -81,7 +81,6 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
   // State management
   const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
   const [activeMobileCategoryId, setActiveMobileCategoryId] = useState<
     number | null
@@ -137,39 +136,6 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     onFeaturedContentUpdate?.(updatedContent);
   };
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      return;
-    }
-
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      return;
-    }
-
-    setIsUploadingBackground(true);
-
-    try {
-      // Upload to S3
-      const imageUrl = await uploadToS3(file, "featured-backgrounds");
-
-      handleBackgroundImageUpdate(imageUrl);
-    } catch (error) {
-      console.error("Background upload failed:", error);
-    } finally {
-      setIsUploadingBackground(false);
-      // Reset file input
-      event.target.value = "";
-    }
-  };
 
   const addBackgroundImage = () => {
     const newImageUrl = "/fallback/image-not-found.png";
@@ -534,7 +500,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
       <div className="flex flex-1 flex-col">
         <div
           key={`featured-${componentId}-${featuredContent.currentImageIndex}`}
-          className="relative flex min-h-[420px] flex-1 items-center sm:min-h-[460px] md:min-h-[500px]"
+          className="group relative flex min-h-[420px] flex-1 items-center sm:min-h-[460px] md:min-h-[500px]"
           style={{
             background: currentBackgroundImage
               ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${getImageUrl(currentBackgroundImage, { width: 1200 })})`
@@ -544,71 +510,41 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
             backgroundRepeat: "no-repeat",
           }}
         >
-          {/* Background Change Button - Only visible when editable */}
+          {/* Background Edit Controls - Only visible when editable on hover */}
           {isEditable && (
-            <div className="absolute top-4 right-4 z-10 flex w-46 flex-col gap-2 sm:top-6 sm:right-6">
-              <label
-                htmlFor={`background-upload-${componentId}`}
-                className={`cursor-pointer rounded bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-                  isUploadingBackground ? "pointer-events-none opacity-50" : ""
-                }`}
-                style={{ fontFamily: theme.fonts.body }}
-              >
-                {isUploadingBackground ? (
-                  <span className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Uploading...
-                  </span>
-                ) : (
-                  "Change Background"
-                )}
-              </label>
-              <input
-                id={`background-upload-${componentId}`}
-                type="file"
-                accept="image/*"
-                onChange={handleBackgroundFileChange}
-                className="hidden"
-                disabled={isUploadingBackground}
+            <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-2 opacity-0 transition-opacity group-hover:opacity-100 sm:top-6 sm:right-6">
+              <ImageEditOverlay
+                onImageSelect={handleBackgroundImageUpdate}
+                imageWidth={1200}
+                imageHeight={600}
+                isEditable={isEditable}
+                label="Change Background"
+                folder="featured-backgrounds"
+                className="relative"
               />
-
-              <button
-                onClick={addBackgroundImage}
-                className="rounded bg-gray-600 px-4 py-2 text-sm text-white transition hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70"
-                disabled={isUploadingBackground}
-                style={{ fontFamily: theme.fonts.body }}
-              >
-                Add Image
-              </button>
-              {featuredContent.backgroundImages.length > 1 && (
+              <div className="flex gap-2">
                 <button
-                  onClick={() =>
-                    removeBackgroundImage(featuredContent.currentImageIndex)
-                  }
-                  className="rounded bg-red-600 px-4 py-2 text-sm text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
-                  disabled={isUploadingBackground}
+                  onClick={addBackgroundImage}
+                  className="rounded-full bg-gray-800/80 px-4 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur-sm transition hover:bg-gray-700"
                   style={{ fontFamily: theme.fonts.body }}
                 >
-                  Remove
+                  Add Slide
                 </button>
-              )}
-            </div>
-          )}
-
-          {/* Background Upload Loading Overlay */}
-          {isUploadingBackground && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 px-4">
-              <div className="flex flex-col items-center gap-2 text-white">
-                <Loader2 className="h-8 w-8 animate-spin" />
-                <p
-                  className="text-center text-sm font-medium"
-                  style={{ fontFamily: theme.fonts.body }}
-                >
-                  Uploading background image...
-                </p>
+                {featuredContent.backgroundImages.length > 1 && (
+                  <button
+                    onClick={() =>
+                      removeBackgroundImage(featuredContent.currentImageIndex)
+                    }
+                    className="rounded-full bg-red-600/80 px-4 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur-sm transition hover:bg-red-700"
+                    style={{ fontFamily: theme.fonts.body }}
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             </div>
           )}
+
 
           <div className="container mx-auto px-4 py-12 sm:px-6 md:px-8 md:py-0">
             <div className="max-w-2xl text-white">
@@ -680,7 +616,6 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
                         : "bg-white/50 hover:bg-white/70"
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
-                    disabled={isUploadingBackground}
                   />
                 ))}
               </div>

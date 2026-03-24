@@ -126,62 +126,11 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
   };
 
   return (
-    <section
-      className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8"
-      style={{
-        ...(data.backgroundType === "image" && data.backgroundImageUrl
-          ? {
-              backgroundImage: `url(${data.backgroundImageUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }
-          : {
-              backgroundColor: data.backgroundColor || theme.colors.background,
-            }),
-      }}
-      data-component-id={componentId}
-    >
+    <section className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8">
       {/* Background Change Button - Only visible when editable */}
-      {isEditable && (
-        <div className="absolute top-6 right-4 z-10">
-          <label
-            htmlFor={`background-upload-${componentId}`}
-            className={`mr-12 cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-              isUploadingBackground ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            {isUploadingBackground ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
-              </span>
-            ) : (
-              "Change Background"
-            )}
-          </label>
-          <input
-            id={`background-upload-${componentId}`}
-            type="file"
-            accept="image/*"
-            onChange={handleBackgroundFileChange}
-            className="hidden"
-            disabled={isUploadingBackground}
-          />
-        </div>
-      )}
-
-      {/* Background Upload Loading Overlay */}
-      {isUploadingBackground && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
-          <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading background image...</p>
-          </div>
-        </div>
-      )}
 
       <div className="relative z-10 container mx-auto max-w-5xl">
-        <div className="rounded-2xl bg-white p-8 shadow-xl sm:p-12 md:p-16">
+        <div className="rounded-2xl sm:p-12 md:p-16">
           <div className="text-center">
             {/* Title */}
             <EditableText
@@ -189,7 +138,6 @@ export const CTATemplate3: React.FC<CTATemplate3Props> = ({
               onChange={handleTextUpdate("title")}
               as="h2"
               className="mb-4 text-2xl font-bold sm:text-3xl md:text-4xl"
-              style={{ color: theme.colors.text }}
               isEditable={isEditable}
               placeholder="Enter CTA title..."
             />

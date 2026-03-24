@@ -8,6 +8,7 @@ import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -235,14 +236,23 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
             height={600}
             s3Options={{
               folder: "banner-images",
-              
             }}
             showAltEditor={isEditable}
+            disableImageChange={true}
             placeholder={{
               width: 1742,
               height: 600,
               text: "Upload team image",
             }}
+          />
+          <ImageEditOverlay
+            onImageSelect={handleImageUpdate}
+            imageWidth={1742}
+            imageHeight={600}
+            isEditable={isEditable}
+            label="Change Image"
+            folder="banner-images"
+            className="absolute top-0 right-0 z-20 flex items-center justify-center"
           />
 
           {/* Floating Card */}

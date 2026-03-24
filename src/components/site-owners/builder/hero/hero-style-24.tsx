@@ -7,8 +7,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface HeroTemplate24Props {
   heroData: HeroTemplate24Data;
@@ -23,7 +23,6 @@ export const HeroTemplate24: React.FC<HeroTemplate24Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const componentId = useId();
 
   const { data: themeResponse } = useThemeQuery();
@@ -41,65 +40,11 @@ export const HeroTemplate24: React.FC<HeroTemplate24Props> = ({
     handleAltUpdate,
   } = useBuilderLogic(heroData, onUpdate);
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setIsUploadingBackground(true);
-    try {
-      const url = await uploadToS3(file, "hero-backgrounds");
-      const update = {
-        imageUrl: url,
-        imageAlt: file.name.split(".")[0] || data.imageAlt,
-      };
-      setData({ ...data, ...update });
-      onUpdate?.(update);
-      toast.success("Background updated successfully!");
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsUploadingBackground(false);
-      event.target.value = "";
-    }
-  };
-
   return (
     <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden bg-gray-900 pt-20 sm:min-h-[600px] lg:h-screen">
-      {isEditable && (
-        <div className="absolute top-24 right-6 z-30">
-          <label
-            htmlFor={`hero-24-background-upload-${componentId}`}
-            className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-              isUploadingBackground ? "pointer-events-none opacity-50" : ""
-            }`}
-          >
-            {isUploadingBackground ? (
-              <span className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Uploading...
-              </span>
-            ) : (
-              "Change Background"
-            )}
-          </label>
-          <input
-            id={`hero-24-background-upload-${componentId}`}
-            type="file"
-            accept="image/*"
-            onChange={handleBackgroundFileChange}
-            className="hidden"
-            disabled={isUploadingBackground}
-          />
-        </div>
-      )}
-
       {/* Background Image */}
       <motion.div
-        className="absolute inset-0 z-0"
+        className="group absolute inset-0 z-0"
         initial={{ opacity: 0, scale: 1.05 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.1, ease: "easeOut" }}
@@ -116,6 +61,20 @@ export const HeroTemplate24: React.FC<HeroTemplate24Props> = ({
             height: 1080,
             text: "Upload hero image",
           }}
+          disableImageChange={true}
+        />
+        <ImageEditOverlay
+          onImageSelect={url => {
+            const update = { imageUrl: url };
+            setData({ ...data, ...update });
+            onUpdate?.(update);
+          }}
+          imageWidth={1920}
+          imageHeight={1080}
+          isEditable={isEditable}
+          label="Change Background"
+          folder="hero-backgrounds"
+          className="absolute top-0 right-0 z-20 flex items-center justify-center"
         />
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-linear-to-r from-gray-900/90 via-gray-900/60 to-transparent"></div>

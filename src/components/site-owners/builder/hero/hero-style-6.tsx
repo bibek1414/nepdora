@@ -7,8 +7,8 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate6Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { Loader2 } from "lucide-react";
 import {
   Carousel,
@@ -36,7 +36,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
 
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const [isUploadingBackground, setIsUploadingBackground] = useState(false);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -173,43 +172,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
     }
   };
 
-  const handleSlideUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    setIsUploadingBackground(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "hero-slides");
-
-      handleSliderImageUpdate(imageUrl, `Slide image: ${file.name}`, index);
-      toast.success("Slide image uploaded successfully!");
-    } catch (error) {
-      console.error("Slide upload failed:", error);
-      toast.error("Failed to upload slide image. Please try again.");
-    } finally {
-      setIsUploadingBackground(false);
-      event.target.value = "";
-    }
-  };
-
   return (
     <div className="relative h-screen w-full" data-component-id={componentId}>
       {isEditable && (
@@ -229,16 +191,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
         </div>
       )}
 
-      {/* Upload Loading Overlay */}
-      {isUploadingBackground && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50">
-          <div className="flex flex-col items-center gap-2 text-white">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading image...</p>
-          </div>
-        </div>
-      )}
-
       <Carousel opts={{ loop: true }} setApi={setApi} className="h-full w-full">
         <CarouselContent>
           {slides.map((slide, index) => (
@@ -247,11 +199,23 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
               <div className="absolute inset-0 h-full w-full">
                 {/* Direct image background */}
                 <div
-                  className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
+                  className="group absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
                   style={{
                     backgroundImage: `url(${slide.url})`,
                   }}
-                />
+                >
+                  <ImageEditOverlay
+                    onImageSelect={url =>
+                      handleSliderImageUpdate(url, undefined, index)
+                    }
+                    imageWidth={1920}
+                    imageHeight={1080}
+                    isEditable={isEditable && current === index}
+                    label="Change Background"
+                    folder="hero-slides"
+                    className="absolute top-0 left-0 z-20 flex items-center justify-center"
+                  />
+                </div>
 
                 {/* Hidden EditableImage for functionality */}
                 <EditableImage
@@ -265,46 +229,14 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
                   className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
                   s3Options={{
                     folder: "hero-slides",
-                    
                   }}
-                
                   placeholder={{
                     width: 1920,
                     height: 1080,
                     text: `Slide ${index + 1}`,
                   }}
+                  disableImageChange={true}
                 />
-
-                {/* Change Background Button for current slide */}
-                {isEditable && current === index && (
-                  <div className="absolute top-4 left-4 z-10">
-                    <label
-                      htmlFor={`slide-upload-${componentId}-${index}`}
-                      className={`cursor-pointer rounded-lg border border-gray-300 bg-white/90 px-3 py-1 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white ${
-                        isUploadingBackground
-                          ? "pointer-events-none opacity-50"
-                          : ""
-                      }`}
-                    >
-                      {isUploadingBackground ? (
-                        <span className="flex items-center gap-1">
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                          Uploading...
-                        </span>
-                      ) : (
-                        "Change Background"
-                      )}
-                    </label>
-                    <input
-                      id={`slide-upload-${componentId}-${index}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleSlideUpload(e, index)}
-                      className="hidden"
-                      disabled={isUploadingBackground}
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="absolute inset-0 bg-black/50"></div>

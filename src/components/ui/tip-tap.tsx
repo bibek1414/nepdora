@@ -53,6 +53,9 @@ import {
   Plus,
 } from "lucide-react";
 import { uploadToS3 } from "@/utils/s3";
+import { useUploadS3 } from "@/hooks/use-s3";
+import { MediaLibraryDialog } from "@/components/ui/media-library-dialog";
+import { cn } from "@/lib/utils";
 
 const FontSizeExtension = TextStyle.extend({
   addGlobalAttributes() {
@@ -127,7 +130,12 @@ const ResizableImageExtension = Image.extend({
 
 // Resizable Image Component with drag handles
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ResizableImageComponent = ({ node, updateAttributes }: any) => {
+const ResizableImageComponent = ({
+  node,
+  updateAttributes,
+  editor,
+  getPos,
+}: any) => {
   const [isSelected, setIsSelected] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -252,24 +260,50 @@ const ResizableImageComponent = ({ node, updateAttributes }: any) => {
       as="div"
       className="group relative my-2 inline-block"
       ref={containerRef}
-      onClick={() => setIsSelected(true)}
+      onClick={() => {
+        setIsSelected(true);
+        // If already selected and clicked again, or just clicked, we want to allow replacement
+        // But TipTap selection might handle the first click.
+      }}
       onBlur={() => setIsSelected(false)}
     >
-      <img
-        ref={imageRef}
-        src={node.attrs.src}
-        alt={node.attrs.alt || ""}
-        width={node.attrs.width || undefined}
-        height={node.attrs.height || undefined}
-        style={{
-          width: node.attrs.width ? `${node.attrs.width}px` : undefined,
-          height: node.attrs.height ? `${node.attrs.height}px` : undefined,
-          maxWidth: "100%",
-          cursor: isResizing ? "nwse-resize" : "pointer",
-        }}
-        className={`rounded-lg ${isSelected || isResizing ? "ring-2 ring-blue-500" : "ring-1 ring-gray-200"}`}
-        draggable={false}
-      />
+      <div className="relative">
+        <img
+          ref={imageRef}
+          src={node.attrs.src}
+          alt={node.attrs.alt || ""}
+          width={node.attrs.width || undefined}
+          height={node.attrs.height || undefined}
+          style={{
+            width: node.attrs.width ? `${node.attrs.width}px` : undefined,
+            height: node.attrs.height ? `${node.attrs.height}px` : undefined,
+            maxWidth: "100%",
+            cursor: isResizing ? "nwse-resize" : "pointer",
+          }}
+          className={`rounded-lg ${isSelected || isResizing ? "ring-2 ring-blue-500" : "ring-1 ring-gray-200"}`}
+          draggable={false}
+        />
+
+        {isSelected && !isResizing && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 rounded-lg">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="h-8 gap-2 bg-white/90 text-xs shadow-lg hover:bg-white"
+              onClick={e => {
+                e.stopPropagation();
+                if (editor.storage.mediaLibrary) {
+                  editor.storage.mediaLibrary.setReplaceImagePos(getPos());
+                  editor.storage.mediaLibrary.setIsMediaLibraryOpen(true);
+                }
+              }}
+            >
+              <Upload className="h-3 w-3" />
+              Replace Image
+            </Button>
+          </div>
+        )}
+      </div>
 
       {(isSelected || isResizing) && (
         <>
@@ -423,6 +457,10 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
       null
     );
     const [customFontSize, setCustomFontSize] = useState("");
+    const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
+    const [replaceImagePos, setReplaceImagePos] = useState<number | null>(null);
+
+    const uploadMutation = useUploadS3();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const initialValueSet = useRef(false);
 
@@ -475,18 +513,35 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
       extensions,
       content: value || "",
       editable: !readOnly && !disabled,
+      editorProps: {
+        attributes: {
+          class: "tiptap focus:outline-none",
+        },
+      },
       onUpdate: ({ editor }) => {
         onChange(editor.getHTML());
       },
       onBlur: () => {
         onBlur?.();
       },
-      editorProps: {
-        attributes: {
-          class: "tiptap focus:outline-none",
-        },
+      onCreate: ({ editor }) => {
+        // Initialize storage for media library callbacks
+        editor.storage.mediaLibrary = {
+          setIsMediaLibraryOpen,
+          setReplaceImagePos,
+        };
       },
     });
+
+    // Update storage when state change (callbacks are stable but good practice)
+    useEffect(() => {
+      if (editor) {
+        editor.storage.mediaLibrary = {
+          setIsMediaLibraryOpen,
+          setReplaceImagePos,
+        };
+      }
+    }, [editor, setIsMediaLibraryOpen, setReplaceImagePos]);
 
     React.useImperativeHandle(
       ref,
@@ -640,14 +695,17 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
           imageUrl = await onImageUpload(file);
         } else {
           try {
-            // Upload to S3 by default if no custom handler provided
-            imageUrl = await uploadToS3(file, uploadFolder || "text-editor");
+            // Upload to S3 using mutation
+            imageUrl = await uploadMutation.mutateAsync({
+              file,
+              folder: uploadFolder || "text-editor",
+            });
           } catch (uploadError) {
             console.error(
-              "Cloudinary upload failed, falling back to local FileReader:",
+              "S3 upload failed, falling back to local FileReader:",
               uploadError
             );
-            // Fallback to local FileReader if Cloudinary fails
+            // Fallback to local FileReader if S3 fails
             imageUrl = await new Promise<string>(resolve => {
               const reader = new FileReader();
               reader.onload = e => resolve(e.target?.result as string);
@@ -656,8 +714,18 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
           }
         }
 
-        // Insert image at current cursor position
-        editor?.chain().focus().setImage({ src: imageUrl }).run();
+        if (replaceImagePos !== null) {
+          editor
+            ?.chain()
+            .focus()
+            .setNodeSelection(replaceImagePos)
+            .setImage({ src: imageUrl })
+            .run();
+          setReplaceImagePos(null);
+        } else {
+          // Insert image at current cursor position
+          editor?.chain().focus().setImage({ src: imageUrl }).run();
+        }
 
         // Reset file input so the same file can be uploaded again
         if (fileInputRef.current) {
@@ -670,6 +738,21 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
       } finally {
         setIsImageUploading(false);
       }
+    };
+
+    const handleMediaLibrarySelect = (url: string) => {
+      if (replaceImagePos !== null) {
+        editor
+          ?.chain()
+          .focus()
+          .setNodeSelection(replaceImagePos)
+          .setImage({ src: url })
+          .run();
+        setReplaceImagePos(null);
+      } else {
+        editor?.chain().focus().setImage({ src: url }).run();
+      }
+      setIsMediaLibraryOpen(false);
     };
 
     const renderToolbar = () => {
@@ -1012,19 +1095,45 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
                   <ImageIcon className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-96">
+              <PopoverContent className="w-96 shadow-xl border-[#E8E4DF] rounded-2xl bg-[#FAFAF8] p-4">
                 <Tabs defaultValue="upload" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="upload">Upload</TabsTrigger>
-                    <TabsTrigger value="url">URL</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3 bg-[#F0EBE4] p-1 rounded-xl">
+                    <TabsTrigger value="upload" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1714] text-[#6B5C4E]">Upload</TabsTrigger>
+                    <TabsTrigger value="library" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1714] text-[#6B5C4E]">Library</TabsTrigger>
+                    <TabsTrigger value="url" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1714] text-[#6B5C4E]">URL</TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="upload" className="space-y-3">
-                    <div className="text-sm text-gray-600">
-                      Upload an image file (max {maxImageSize}MB)
+                  <TabsContent value="library" className="pt-4">
+                    <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-[#DDD8D0] rounded-2xl bg-white hover:border-[#C0A888] hover:bg-[#FBF9F6] transition-all duration-200">
+                      <Button
+                        variant="ghost"
+                        className="flex flex-col h-auto gap-3 hover:bg-transparent"
+                        onClick={() => {
+                          setIsMediaLibraryOpen(true);
+                          setIsImageOpen(false); // Close popover
+                        }}
+                      >
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0EBE4] text-[#8C6A3C]">
+                          <ImageIcon className="h-5 w-5" strokeWidth={1.75} />
+                        </span>
+                        <div className="space-y-1">
+                          <p className="text-sm font-semibold text-[#1A1714]">Open Media Library</p>
+                          <p className="text-xs text-[#A09080]">Choose from your existing images</p>
+                        </div>
+                      </Button>
                     </div>
+                  </TabsContent>
 
-                    <div className="rounded-lg border-2 border-dashed border-gray-300 p-4 text-center transition-colors hover:border-gray-400">
+                  <TabsContent value="upload" className="space-y-4 pt-2">
+                    <div
+                      className={cn(
+                        "group relative flex cursor-pointer flex-col items-center justify-center gap-4",
+                        "rounded-2xl border-2 border-dashed border-[#DDD8D0] bg-white",
+                        "px-4 py-10 text-center transition-all duration-200",
+                        "hover:border-[#C0A888] hover:bg-[#FBF9F6]",
+                        uploadMutation.isPending && "pointer-events-none opacity-60"
+                      )}
+                    >
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -1037,32 +1146,43 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
                         }}
                         className="hidden"
                         id="image-upload"
-                        disabled={isImageUploading}
+                        disabled={uploadMutation.isPending}
                       />
                       <label
                         htmlFor="image-upload"
-                        className={`flex cursor-pointer flex-col items-center gap-2 ${isImageUploading ? "opacity-50" : ""}`}
+                        className="flex w-full cursor-pointer flex-col items-center gap-4"
                       >
-                        {isImageUploading ? (
-                          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                        ) : (
-                          <Upload className="h-8 w-8 text-gray-400" />
-                        )}
-                        <span className="text-sm text-gray-600">
-                          {isImageUploading
-                            ? "Uploading..."
-                            : "Click to upload or drag and drop"}
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0EBE4] transition-colors group-hover:bg-[#E8E0D5]">
+                          {uploadMutation.isPending ? (
+                            <Loader2
+                              className="h-5 w-5 animate-spin text-[#8C6A3C]"
+                              strokeWidth={2}
+                            />
+                          ) : (
+                            <Upload
+                              className="h-5 w-5 text-[#8C6A3C]"
+                              strokeWidth={2}
+                            />
+                          )}
                         </span>
-                        <span className="text-xs text-gray-500">
-                          {acceptedImageTypes
-                            .map(type => type.split("/")[1])
-                            .join(", ")}
-                        </span>
+                        <div>
+                          <p className="text-sm font-semibold text-[#1A1714]">
+                            {uploadMutation.isPending
+                              ? "Uploading..."
+                              : "Click to upload"}
+                          </p>
+                          <p className="mt-1 text-xs text-[#A09080]">
+                            Max {maxImageSize}MB —{" "}
+                            {acceptedImageTypes
+                              .map(type => type.split("/")[1].toUpperCase())
+                              .join(", ")}
+                          </p>
+                        </div>
                       </label>
                     </div>
 
                     {imageUploadError && (
-                      <div className="rounded bg-red-50 p-2 text-sm text-red-600">
+                      <div className="rounded-lg bg-red-50 p-3 text-xs font-medium text-red-600 border border-red-100 italic">
                         {imageUploadError}
                       </div>
                     )}
@@ -1144,6 +1264,13 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
             </div>
           )}
         </div>
+
+        <MediaLibraryDialog
+          open={isMediaLibraryOpen}
+          onOpenChange={setIsMediaLibraryOpen}
+          onSelect={handleMediaLibrarySelect}
+          folder={uploadFolder || "text-editor"}
+        />
       </div>
     );
   }

@@ -6,13 +6,13 @@ import {
   defaultGalleryData,
   TEMPLATE6_DEFAULT_IMAGES,
 } from "@/types/owner-site/components/gallery";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
+import { MediaLibraryDialog } from "@/components/ui/media-library-dialog";
 import { EditableText } from "@/components/ui/editable-text";
-import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Plus, X } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { toast } from "sonner";
-import { uploadToS3 } from "@/utils/s3";
+import Image from "next/image";
 
 const buildInitialData = (galleryData: GalleryData): GalleryData => {
   if (galleryData.template !== "gallery-6") {
@@ -54,7 +54,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(buildInitialData(galleryData), onUpdate);
 
-  const [isAddingImage, setIsAddingImage] = useState(false);
+  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const componentId = React.useId();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showRightFade, setShowRightFade] = useState(false);
@@ -84,35 +84,6 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-  const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Please select a valid image file");
-      return;
-    }
-
-    setIsAddingImage(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "gallery-images");
-
-      handleAddImage(imageUrl);
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsAddingImage(false);
-      event.target.value = "";
-    }
-  };
 
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
@@ -131,7 +102,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_, idx) => idx !== index);
+    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
@@ -139,7 +110,7 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
   const getImageUrl = (image: string | File) =>
     typeof image === "string" ? image : URL.createObjectURL(image);
 
-  const filteredImages = data.images.filter(image => image.is_active);
+  const filteredImages = data.images.filter((image: GalleryImage) => image.is_active);
 
   const updateFadeVisibility = useCallback(() => {
     const container = scrollContainerRef.current;
@@ -258,9 +229,9 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
             onScroll={updateFadeVisibility}
             className="scrollbar-hide -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden"
           >
-            {filteredImages.map(image => {
+            {filteredImages.map((image: GalleryImage) => {
               const actualIndex = data.images.findIndex(
-                img => img.id === image.id
+                (img: GalleryImage) => img.id === image.id
               );
               return (
                 <motion.div
@@ -272,38 +243,31 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
                   viewport={{ once: true, amount: 0.4 }}
                   transition={{ duration: 0.45, ease: "easeOut" }}
                 >
-                  <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-700 group-hover/card:[&_img]:scale-110 hover:[&_img]:scale-110">
-                    <EditableImage
-                      src={getImageUrl(image.image)}
-                      alt={image.image_alt_description}
-                      onImageChange={(imageUrl, altText) =>
-                        handleImageUpdateLocal(actualIndex, imageUrl, altText)
+                  <div className="group relative h-full w-full overflow-hidden">
+                    <ImageEditOverlay
+                      onImageSelect={(imageUrl) =>
+                        handleImageUpdateLocal(actualIndex, imageUrl)
                       }
+                      imageWidth={800}
+                      imageHeight={1000}
                       isEditable={isEditable}
-                      className="h-full w-full"
-                      width={800}
-                      height={1000}
-                     
-                      s3Options={{
-                        folder: "gallery-images",
-                        
-                      }}
-                      disableImageChange={true}
-                      showAltEditor={isEditable}
-                      inputId={`gallery6-upload-${componentId}-${actualIndex}`}
+                      folder="gallery-images"
+                      label="Change Image"
                     />
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={getImageUrl(image.image)}
+                        alt={image.image_alt_description || "Gallery image"}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover/card:scale-110"
+                      />
+                    </div>
                   </div>
 
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-60" />
 
                   {isEditable && (
                     <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
-                      <label
-                        htmlFor={`gallery6-upload-${componentId}-${actualIndex}`}
-                        className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
-                      >
-                        Change
-                      </label>
                       <Button
                         size="sm"
                         variant="destructive"
@@ -354,37 +318,29 @@ export const GalleryTemplate6: React.FC<GalleryTemplateProps> = ({
             })}
 
             {isEditable && (
-              <div className="flex h-[450px] min-w-[300px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 md:min-w-[350px]">
-                <label
-                  htmlFor={`gallery6-add-${componentId}`}
-                  className="flex cursor-pointer flex-col items-center gap-2 text-gray-500"
+              <div className="flex h-[450px] min-w-[300px] items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:border-gray-400 hover:bg-gray-100 md:min-w-[350px]">
+                <button
+                  onClick={() => setIsMediaDialogOpen(true)}
+                  className="flex flex-col items-center gap-2 text-gray-500"
                 >
-                  {isAddingImage ? (
-                    <div className="flex flex-col items-center gap-2 text-gray-500">
-                      <Loader2 className="h-8 w-8 animate-spin" />
-                      <span className="text-sm font-medium">Uploading...</span>
-                    </div>
-                  ) : (
-                    <>
-                      <Plus className="h-8 w-8" />
-                      <span className="text-sm font-medium">
-                        Add Case Study
-                      </span>
-                      <input
-                        id={`gallery6-add-${componentId}`}
-                        type="file"
-                        accept="image/*"
-                        onChange={event => handleImageFileChange(event)}
-                        className="hidden"
-                      />
-                    </>
-                  )}
-                </label>
+                  <Plus className="h-8 w-8" />
+                  <span className="text-sm font-medium">Add Case Study</span>
+                </button>
               </div>
             )}
           </div>
         </motion.div>
       </div>
+
+      <MediaLibraryDialog
+        open={isMediaDialogOpen}
+        onOpenChange={setIsMediaDialogOpen}
+        onSelect={(url) => {
+          handleAddImage(url);
+          setIsMediaDialogOpen(false);
+        }}
+        folder="gallery-images"
+      />
     </motion.section>
   );
 };

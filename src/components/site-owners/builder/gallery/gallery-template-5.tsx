@@ -3,13 +3,13 @@ import {
   GalleryData,
   GalleryImage,
 } from "@/types/owner-site/components/gallery";
-import { EditableImage } from "@/components/ui/editable-image";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
+import { MediaLibraryDialog } from "@/components/ui/media-library-dialog";
 import { EditableText } from "@/components/ui/editable-text";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2 } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
-import { toast } from "sonner";
+import Image from "next/image";
 
 interface GalleryTemplateProps {
   galleryData: GalleryData;
@@ -26,7 +26,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(galleryData, onUpdate);
 
-  const [isAddingImage, setIsAddingImage] = useState(false);
+  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
 
   const componentId = React.useId();
 
@@ -45,35 +45,6 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-  const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Please select a valid image file");
-      return;
-    }
-
-    setIsAddingImage(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "gallery-images");
-
-      handleAddImage(imageUrl);
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsAddingImage(false);
-      event.target.value = "";
-    }
-  };
 
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
@@ -92,7 +63,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_, idx) => idx !== index);
+    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
@@ -102,7 +73,7 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
     return URL.createObjectURL(image);
   };
 
-  const filteredImages = data.images.filter(img => img.is_active);
+  const filteredImages = data.images.filter((img: GalleryImage) => img.is_active);
 
   return (
     <>
@@ -125,50 +96,44 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
       </p>
 
       <div className="mx-auto mt-10 flex h-[400px] w-full max-w-4xl items-center gap-2">
-        {filteredImages.map((image, index) => {
-          const actualIndex = data.images.findIndex(img => img.id === image.id);
+        {filteredImages.map((image: GalleryImage, index: number) => {
+          const actualIndex = data.images.findIndex((img: GalleryImage) => img.id === image.id);
           return (
             <div
               key={image.id}
               className="group relative h-[400px] w-56 grow overflow-hidden rounded-lg transition-all duration-500 hover:w-full"
             >
               {!isEditable ? (
-                <img
+                <Image
                   className="h-full w-full object-cover object-center"
                   src={getImageUrl(image.image)}
-                  alt={image.image_alt_description}
+                  alt={image.image_alt_description || "Gallery image"}
+                  fill
                 />
               ) : (
-                <div className="h-full w-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-center [&>div]:relative! [&>div]:h-full [&>div]:w-full">
-                  <EditableImage
-                    src={getImageUrl(image.image)}
-                    alt={image.image_alt_description}
-                    onImageChange={(imageUrl, altText) =>
-                      handleImageUpdateLocal(actualIndex, imageUrl, altText)
+                <div className="h-full w-full">
+                  <ImageEditOverlay
+                    onImageSelect={(imageUrl) =>
+                      handleImageUpdateLocal(actualIndex, imageUrl)
                     }
+                    imageWidth={800}
+                    imageHeight={800}
                     isEditable={isEditable}
-                    className="h-full w-full"
-                    width={800}
-                    height={800}
-                    
-                    s3Options={{
-                      folder: "gallery-images",
-                      
-                    }}
-                    disableImageChange={true}
-                    showAltEditor={false}
-                    inputId={`gallery5-upload-${componentId}-${actualIndex}`}
+                    folder="gallery-images"
+                    label="Change Image"
                   />
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={getImageUrl(image.image)}
+                      alt={image.image_alt_description || "Gallery image"}
+                      fill
+                      className="object-cover object-center"
+                    />
+                  </div>
                 </div>
               )}
               {isEditable && (
                 <div className="absolute top-2 right-2 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                  <label
-                    htmlFor={`gallery5-upload-${componentId}-${actualIndex}`}
-                    className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
-                  >
-                    Change
-                  </label>
                   <Button
                     size="sm"
                     variant="destructive"
@@ -187,33 +152,27 @@ export const GalleryTemplate5: React.FC<GalleryTemplateProps> = ({
         })}
 
         {isEditable && (
-          <div className="relative flex h-[400px] w-56 grow items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
-            <label
-              htmlFor={`gallery5-add-${componentId}`}
-              className="flex cursor-pointer flex-col items-center gap-2"
+          <div className="relative flex h-[400px] w-56 grow items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:border-gray-400 hover:bg-gray-100">
+            <button
+              onClick={() => setIsMediaDialogOpen(true)}
+              className="flex flex-col items-center gap-2"
             >
-              {isAddingImage ? (
-                <div className="flex flex-col items-center gap-2 text-gray-500">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                  <span className="text-sm font-medium">Uploading...</span>
-                </div>
-              ) : (
-                <>
-                  <Plus className="h-8 w-8 text-gray-400" />
-                  <span className="text-sm text-gray-500">Add Image</span>
-                  <input
-                    id={`gallery5-add-${componentId}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageFileChange(e)}
-                    className="hidden"
-                  />
-                </>
-              )}
-            </label>
+              <Plus className="h-8 w-8 text-gray-400" />
+              <span className="text-sm text-gray-500 font-medium">Add Image</span>
+            </button>
           </div>
         )}
       </div>
+
+      <MediaLibraryDialog
+        open={isMediaDialogOpen}
+        onOpenChange={setIsMediaDialogOpen}
+        onSelect={(url) => {
+          handleAddImage(url);
+          setIsMediaDialogOpen(false);
+        }}
+        folder="gallery-images"
+      />
     </>
   );
 };

@@ -7,6 +7,7 @@ import { Plus, X, Loader2 } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface BannerTemplateProps {
   bannerData: BannerData;
@@ -26,7 +27,6 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     onUpdate
   );
 
-  const [isUploading, setIsUploading] = useState(false);
 
   const componentId = React.useId();
 
@@ -74,43 +74,6 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-  const handleBackgroundFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    setIsUploading(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "banner-images");
-
-      handleImageUpdateLocal(0, imageUrl, `Banner image: ${file.name}`);
-      toast.success("Banner image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error("Failed to upload banner image. Please try again.");
-    } finally {
-      setIsUploading(false);
-      event.target.value = "";
-    }
-  };
 
   // Get first active image
   const activeImage =
@@ -145,51 +108,16 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
         {activeImage ? (
           <div className="group relative h-32 overflow-hidden rounded-lg sm:h-40 md:h-48 lg:h-80">
             {/* Change Background Button - Only visible when editable */}
-            {isEditable && (
-              <div className="absolute top-1 right-1 z-20 sm:top-2 sm:right-2">
-                <label
-                  htmlFor={`banner-upload-${componentId}`}
-                  className={`cursor-pointer rounded border border-gray-300 bg-white/90 px-1.5 py-0.5 text-[10px] font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:rounded-lg sm:px-2 sm:py-1 sm:text-xs md:px-3 md:py-1.5 md:text-sm ${
-                    isUploading ? "pointer-events-none opacity-50" : ""
-                  }`}
-                >
-                  {isUploading ? (
-                    <span className="flex items-center gap-1 sm:gap-2">
-                      <Loader2 className="h-2.5 w-2.5 animate-spin sm:h-3 sm:w-3 md:h-4 md:w-4" />
-                      <span className="hidden sm:inline">Uploading...</span>
-                    </span>
-                  ) : (
-                    <span className="whitespace-nowrap">
-                      <span className="hidden sm:inline">Change Image</span>
-                      <span className="sm:hidden">Change</span>
-                    </span>
-                  )}
-                </label>
-                <input
-                  id={`banner-upload-${componentId}`}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleBackgroundFileChange}
-                  className="hidden"
-                  disabled={isUploading}
-                />
-              </div>
-            )}
+              <ImageEditOverlay
+                onImageSelect={(url) => handleImageUpdateLocal(0, url)}
+                imageWidth={1920}
+                imageHeight={400}
+                isEditable={isEditable}
+                label="Change Image"
+                folder="banner-images"
+                className="absolute top-2 right-2 z-20"
+              />
 
-            {/* Upload Loading Overlay */}
-            {isUploading && (
-              <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50">
-                <div className="flex flex-col items-center gap-1.5 px-2 text-white sm:gap-2">
-                  <Loader2 className="h-6 w-6 animate-spin sm:h-8 sm:w-8" />
-                  <p className="text-xs font-medium sm:text-sm">
-                    <span className="hidden sm:inline">
-                      Uploading banner image...
-                    </span>
-                    <span className="sm:hidden">Uploading...</span>
-                  </p>
-                </div>
-              </div>
-            )}
 
             {activeImage.link && !isEditable ? (
               <button
@@ -208,7 +136,6 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
                   priority
                   s3Options={{
                     folder: "banner-images",
-                    
                   }}
                   showAltEditor={isEditable}
                 />
@@ -226,7 +153,6 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
                   priority
                   s3Options={{
                     folder: "banner-images",
-                    
                   }}
                   showAltEditor={isEditable}
                 />

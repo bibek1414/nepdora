@@ -6,11 +6,10 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { ImagePlus, Upload, Loader2, X, Info } from "lucide-react";
-import {
-  uploadToS3,
-} from "@/utils/s3";
+import { uploadToS3 } from "@/utils/s3";
 import { DEFAULT_MAX_IMAGE_SIZE } from "@/utils/s3";
 import { toast } from "sonner";
+import { MediaLibraryDialog } from "@/components/ui/media-library-dialog";
 
 interface EditableImageProps {
   src: string;
@@ -38,6 +37,12 @@ interface EditableImageProps {
   };
   showDimensionGuide?: boolean; // New prop to enable/disable dimension display
   dimensionGuideText?: string; // Custom text for dimension guide
+  buttonPosition?:
+    | "center"
+    | "top-right"
+    | "top-left"
+    | "bottom-right"
+    | "bottom-left";
   inputId?: string;
 }
 
@@ -63,77 +68,29 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   placeholder,
   showDimensionGuide = true,
   dimensionGuideText,
+  buttonPosition = "center",
   inputId,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isAltEditing, setIsAltEditing] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [localAlt, setLocalAlt] = useState(alt);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate aspect ratio
   const aspectRatio = (width / height).toFixed(2);
-  const dimensionText =
-    dimensionGuideText ||
-    `Recommended: ${width}×${height}px (${aspectRatio}:1 ratio)`;
+  const dimensionText = dimensionGuideText || `Size: ${width} × ${height}px`;
 
-  // Handle file selection and upload
-  const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (
-      uploadValidation.allowedTypes &&
-      !uploadValidation.allowedTypes.includes(file.type)
-    ) {
-      toast.error(
-        `Please select a valid image file (${uploadValidation.allowedTypes.join(
-          ", "
-        )})`
-      );
-      return;
-    }
-
-    // Validate file size
-    if (uploadValidation.maxSize && file.size > uploadValidation.maxSize) {
-      const maxSizeFormatted =
-        uploadValidation.maxSize >= 1024 * 1024
-          ? `${(uploadValidation.maxSize / (1024 * 1024)).toFixed(1)}MB`
-          : `${Math.round(uploadValidation.maxSize / 1024)}KB`;
-      toast.error(`Image size must be less than ${maxSizeFormatted}`);
-      return;
-    }
-
-    setIsUploading(true);
-
-    try {
-      // Upload to S3
-      const imageUrl = await uploadToS3(file, s3Options.folder || "editable-images");
-
-      // Update with new image
-      const newAlt = localAlt || file.name.split(".")[0];
-      onImageChange?.(imageUrl, newAlt);
-
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error("Failed to upload image. Please try again.");
-    } finally {
-      setIsUploading(false);
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
+  // Handle image selection from library
+  const handleImageSelect = (imageUrl: string) => {
+    onImageChange?.(imageUrl, localAlt);
+    setIsLibraryOpen(false);
   };
 
   // Handle image change click
   const handleImageClick = () => {
     if (!isEditable || isUploading || disableImageChange) return;
-    fileInputRef.current?.click();
+    setIsLibraryOpen(true);
   };
 
   // Handle alt text changes
@@ -161,14 +118,11 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
   return (
     <div className="relative">
-      {/* Hidden file input */}
-      <input
-        ref={fileInputRef}
-        id={inputId}
-        type="file"
-        accept="image/*"
-        onChange={handleFileSelect}
-        className="hidden"
+      <MediaLibraryDialog
+        open={isLibraryOpen}
+        onOpenChange={setIsLibraryOpen}
+        onSelect={handleImageSelect}
+        folder={s3Options.folder}
       />
 
       {/* Image Container */}
@@ -193,12 +147,10 @@ export const EditableImage: React.FC<EditableImageProps> = ({
           >
             <div className="text-center text-gray-500">
               <ImagePlus className="mx-auto mb-2 h-12 w-12" />
-              <p className="text-sm">
+              <p className="text-xs text-red-200">
                 {placeholder.text || "Click to add image"}
               </p>
-              {showDimensionGuide && (
-                <p className="mt-2 text-xs text-gray-400">{dimensionText}</p>
-              )}
+              {showDimensionGuide && <p className="mt">{dimensionText}</p>}
             </div>
           </div>
         ) : (
@@ -233,21 +185,48 @@ export const EditableImage: React.FC<EditableImageProps> = ({
           !disableImageChange && (
             <div
               className={cn(
-                "absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60 transition-opacity",
-                isHovered ? "opacity-100" : "opacity-0"
+                "absolute inset-0 z-10 flex transition-opacity",
+                isHovered ? "opacity-100" : "opacity-0",
+                buttonPosition === "center" &&
+                  "flex-col items-center justify-center bg-black/60",
+                buttonPosition === "top-right" &&
+                  "items-start justify-end bg-black/40 p-4",
+                buttonPosition === "top-left" &&
+                  "items-start justify-start bg-black/40 p-4",
+                buttonPosition === "bottom-right" &&
+                  "items-end justify-end bg-black/40 p-4",
+                buttonPosition === "bottom-left" &&
+                  "items-end justify-start bg-black/40 p-4"
               )}
             >
-              <SOButton variant="default" className="gap-2">
-                <ImagePlus className="h-4 w-4" /> Change Image
-              </SOButton>
+              <div
+                className={cn(
+                  "flex flex-col gap-2",
+                  (buttonPosition === "top-right" ||
+                    buttonPosition === "bottom-right") &&
+                    "items-end",
+                  (buttonPosition === "top-left" ||
+                    buttonPosition === "bottom-left") &&
+                    "items-start",
+                  buttonPosition === "center" && "items-center"
+                )}
+              >
+                <SOButton
+                  variant="default"
+                  size="sm"
+                  className="gap-2 shadow-xl"
+                >
+                  <ImagePlus className="h-4 w-4" /> Change Image
+                </SOButton>
 
-              {/* Dimension Guide on Hover */}
-              {showDimensionGuide && (
-                <div className="mt-3 flex items-center gap-1.5 rounded-md bg-white/95 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-lg">
-                  <Info className="h-3.5 w-3.5 text-blue-500" />
-                  <span>{dimensionText}</span>
-                </div>
-              )}
+                {/* Dimension Guide on Hover */}
+                {showDimensionGuide && (
+                  <div className="flex items-center gap-1.5 rounded-md border border-gray-100 bg-white/95 px-3 py-1.5 text-xs text-gray-800 shadow-xl">
+                    <Info className="h-3.5 w-3.5 text-blue-600" />
+                    <span className="text-xs">{dimensionText}</span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
       </div>

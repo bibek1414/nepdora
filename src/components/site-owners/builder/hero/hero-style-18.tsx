@@ -7,9 +7,8 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate18Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
-import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface HeroTemplate18Props {
   heroData: HeroTemplate18Data;
@@ -50,7 +49,6 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
     },
   ];
 
-  const [isUploading, setIsUploading] = useState<string | null>(null);
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -120,42 +118,9 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
     });
   };
 
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-    collectionId: string
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
 
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error(
-        `Please select a valid image file (${allowedTypes.join(", ")})`
-      );
-      return;
-    }
-
-    setIsUploading(collectionId);
-
-    try {
-      const imageUrl = await uploadToS3(file, "hero-collections");
-
-      handleCollectionImageUpdate(
-        collectionId,
-        imageUrl,
-        `Collection image: ${file.name}`
-      );
-      toast.success("Collection image uploaded successfully!");
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsUploading(null);
-      event.target.value = "";
-    }
-  };
+  const imageWidth = 800;
+  const imageHeight = 800;
 
   return (
     <div
@@ -186,8 +151,8 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
                 />
               </div>
 
-              {/* EditableImage for hover/upload overlay (positioned over the whole area) */}
-              <div className="absolute inset-0 h-full w-full">
+              {/* EditableImage for hover/upload overlay */}
+              <div className="absolute inset-0 z-20 h-full w-full">
                 <EditableImage
                   src={collection.imageUrl}
                   alt={collection.imageAlt}
@@ -196,57 +161,35 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
                   }
                   isEditable={isEditable}
                   className="absolute inset-0 h-full w-full object-cover opacity-0"
+                  width={imageWidth}
+                  height={imageHeight}
+                  buttonPosition="top-right"
                   s3Options={{
                     folder: "hero-collections",
                   }}
                   placeholder={{
-                    width: 800,
-                    height: 800,
+                    width: imageWidth,
+                    height: imageHeight,
                     text: `Collection ${index + 1}`,
                   }}
+                  disableImageChange={true}
                 />
               </div>
-
-              {/* Manual upload button for collection image */}
-              {isEditable && (
-                <div className="absolute top-6 right-6 z-20">
-                  <label
-                    htmlFor={`collection-upload-${componentId}-${collection.id}`}
-                    className={`cursor-pointer rounded-full border border-gray-300 bg-white/90 px-4 py-2 text-xs font-medium text-black shadow-sm backdrop-blur-sm transition hover:bg-white ${
-                      isUploading === collection.id
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }`}
-                  >
-                    {isUploading === collection.id ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                        Uploading...
-                      </span>
-                    ) : (
-                      "Change Image"
-                    )}
-                  </label>
-                  <input
-                    id={`collection-upload-${componentId}-${collection.id}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageUpload(e, collection.id)}
-                    className="hidden"
-                    disabled={isUploading === collection.id}
-                  />
-                </div>
-              )}
-
-              {/* Upload Loading Overlay */}
-              {isUploading === collection.id && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-                  <div className="flex flex-col items-center gap-3 rounded-xl bg-white p-6 text-black shadow-xl">
-                    <Loader2 className="h-8 w-8 animate-spin text-black" />
-                    <p className="text-sm font-medium">Uploading image...</p>
-                  </div>
-                </div>
-              )}
+              <ImageEditOverlay
+                onImageSelect={url =>
+                  handleCollectionImageUpdate(
+                    collection.id,
+                    url,
+                    `Collection image`
+                  )
+                }
+                imageWidth={imageWidth}
+                imageHeight={imageHeight}
+                isEditable={isEditable}
+                label="Change Image"
+                folder="hero-collections"
+                className="absolute top-6 right-6 z-20"
+              />
 
               {/* Content on the Left */}
               <div

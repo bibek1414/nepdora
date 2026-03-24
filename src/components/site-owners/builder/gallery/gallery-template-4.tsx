@@ -3,14 +3,14 @@ import {
   GalleryData,
   GalleryImage,
 } from "@/types/owner-site/components/gallery";
-import { EditableImage } from "@/components/ui/editable-image";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
+import { MediaLibraryDialog } from "@/components/ui/media-library-dialog";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { EditableText } from "@/components/ui/editable-text";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2, ZoomIn } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { uploadToS3 } from "@/utils/s3";
-import { toast } from "sonner";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import Image from "next/image";
 
 interface GalleryTemplateProps {
   galleryData: GalleryData;
@@ -27,7 +27,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(galleryData, onUpdate);
 
-  const [isAddingImage, setIsAddingImage] = useState(false);
+  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
 
   const componentId = React.useId();
@@ -47,35 +47,6 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-  const handleImageFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Please select a valid image file");
-      return;
-    }
-
-    setIsAddingImage(true);
-
-    try {
-      const imageUrl = await uploadToS3(file, "gallery-images");
-
-      handleAddImage(imageUrl);
-      toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to upload image."
-      );
-    } finally {
-      setIsAddingImage(false);
-      event.target.value = "";
-    }
-  };
 
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
@@ -94,7 +65,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_, idx) => idx !== index);
+    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
@@ -109,7 +80,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
     return URL.createObjectURL(image);
   };
 
-  const filteredImages = data.images.filter(img => img.is_active);
+  const filteredImages = data.images.filter((img: GalleryImage) => img.is_active);
 
   return (
     <>
@@ -133,41 +104,37 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
         </div>
 
         <div className="mx-auto mt-12 flex max-w-5xl flex-wrap items-center justify-center gap-4">
-          {filteredImages.map((image, index) => {
+          {filteredImages.map((image: GalleryImage, index: number) => {
             const actualIndex = data.images.findIndex(
-              img => img.id === image.id
+              (img: GalleryImage) => img.id === image.id
             );
             return (
               <div
                 key={image.id}
                 className="relative overflow-hidden rounded-lg"
               >
-                <div className="relative">
-                  <EditableImage
-                    src={getImageUrl(image.image)}
-                    alt={image.image_alt_description}
-                    onImageChange={(imageUrl, altText) =>
-                      handleImageUpdateLocal(actualIndex, imageUrl, altText)
+                <div className="group relative">
+                  <ImageEditOverlay
+                    onImageSelect={(imageUrl) =>
+                      handleImageUpdateLocal(actualIndex, imageUrl)
                     }
+                    imageWidth={800}
+                    imageHeight={1000}
                     isEditable={isEditable}
-                    className="size-56 object-cover object-top"
-                    s3Options={{
-                      folder: "gallery-images",
-                      
-                    }}
-                    disableImageChange={true}
-                    showAltEditor={isEditable}
-                    inputId={`gallery4-upload-${componentId}-${actualIndex}`}
+                    folder="gallery-images"
+                    label="Change Image"
                   />
+                  <div className="relative size-56 overflow-hidden rounded-lg">
+                    <Image
+                      src={getImageUrl(image.image)}
+                      alt={image.image_alt_description || "Gallery image"}
+                      fill
+                      className="object-cover object-top"
+                    />
+                  </div>
 
                   {isEditable && (
                     <div className="absolute top-2 right-2 z-10 flex gap-2">
-                      <label
-                        htmlFor={`gallery4-upload-${componentId}-${actualIndex}`}
-                        className="cursor-pointer rounded-lg bg-white/90 px-2 py-1 text-xs font-medium text-black shadow-lg hover:bg-white"
-                      >
-                        Change
-                      </label>
                       <Button
                         size="sm"
                         variant="destructive"
@@ -187,7 +154,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                   {image.title && (
                     <EditableText
                       value={image.title}
-                      onChange={newTitle =>
+                      onChange={(newTitle: string) =>
                         handleImageTitleUpdate(actualIndex, newTitle)
                       }
                       isEditable={isEditable}
@@ -200,34 +167,28 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
           })}
 
           {isEditable && (
-            <div className="flex h-56 w-56 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
-              <label
-                htmlFor={`gallery4-add-${componentId}`}
-                className="flex cursor-pointer flex-col items-center gap-2"
+            <div className="flex h-56 w-56 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:border-gray-400 hover:bg-gray-100">
+              <button
+                onClick={() => setIsMediaDialogOpen(true)}
+                className="flex flex-col items-center gap-2"
               >
-                {isAddingImage ? (
-                  <div className="flex flex-col items-center gap-2 text-gray-500">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                    <span className="text-sm font-medium">Uploading...</span>
-                  </div>
-                ) : (
-                  <>
-                    <Plus className="h-8 w-8 text-gray-400" />
-                    <span className="text-sm text-gray-500">Add Image</span>
-                    <input
-                      id={`gallery4-add-${componentId}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={e => handleImageFileChange(e)}
-                      className="hidden"
-                    />
-                  </>
-                )}
-              </label>
+                <Plus className="h-8 w-8 text-gray-400" />
+                <span className="text-sm text-gray-500 font-medium">Add Image</span>
+              </button>
             </div>
           )}
         </div>
       </div>
+
+      <MediaLibraryDialog
+        open={isMediaDialogOpen}
+        onOpenChange={setIsMediaDialogOpen}
+        onSelect={(url) => {
+          handleAddImage(url);
+          setIsMediaDialogOpen(false);
+        }}
+        folder="gallery-images"
+      />
 
       {selectedImage && (
         <Dialog
