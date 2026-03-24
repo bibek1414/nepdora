@@ -172,8 +172,6 @@ export default function OrdersPage({ isPOS = false }: { isPOS?: boolean }) {
       page_size: ITEMS_PER_PAGE,
       search: debouncedSearch || undefined,
       status: statusFilter !== "all" ? statusFilter : undefined,
-      sortBy: "created_at",
-      sortOrder: "desc",
       is_manual: showManualOnly ? true : undefined,
       pos_order: isPOS ? true : undefined,
     }),
