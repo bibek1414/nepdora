@@ -4,13 +4,14 @@ import { toast } from "sonner";
 
 export const s3Keys = {
   all: ["s3"] as const,
-  files: (folder: string) => [...s3Keys.all, "files", folder] as const,
+  files: () => [...s3Keys.all, "files"] as const,
 };
 
-export function useS3Files(folder: string = "nepdora") {
+export function useS3Files() {
   return useQuery({
-    queryKey: s3Keys.files(folder),
-    queryFn: () => listS3Files(folder),
+    queryKey: s3Keys.files(),
+    queryFn: () => listS3Files(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -20,10 +21,10 @@ export function useUploadS3() {
   return useMutation({
     mutationFn: ({ file, folder }: { file: File; folder?: string }) =>
       uploadToS3(file, folder),
-    onSuccess: (_, { folder = "nepdora" }) => {
-      queryClient.invalidateQueries({ queryKey: s3Keys.files(folder) });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: s3Keys.files() });
     },
-    onError: (error) => {
+    onError: error => {
       console.error("S3 upload error:", error);
       toast.error("Failed to upload image");
     },
@@ -35,13 +36,11 @@ export function useDeleteS3() {
 
   return useMutation({
     mutationFn: (urls: string[]) => deleteS3Files(urls),
-    onSuccess: (_, urls) => {
-      // Invalidate all S3 file queries since we don't know which folder they belong to easily from just URLs
-      // or we can just invalidate the default one if that's what's mostly used.
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: s3Keys.all });
       toast.success("Image(s) deleted successfully");
     },
-    onError: (error) => {
+    onError: error => {
       console.error("S3 delete error:", error);
       toast.error("Failed to delete image(s)");
     },
