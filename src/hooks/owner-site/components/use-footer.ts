@@ -9,7 +9,7 @@ import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 
 const FOOTER_QUERY_KEY = ["footer"];
 
-export const useFooterQuery = () => {
+export const useFooterQuery = (enabled: boolean = true) => {
   const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: FOOTER_QUERY_KEY,
@@ -39,10 +39,11 @@ export const useFooterQuery = () => {
     },
     staleTime: 5 * 60 * 1000,
     retry: 2,
+    enabled,
   });
 };
 
-export const useFooterQueryPublished = () => {
+export const useFooterQueryPublished = (enabled: boolean = true) => {
   const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: [...FOOTER_QUERY_KEY, "published"],
@@ -72,6 +73,7 @@ export const useFooterQueryPublished = () => {
     },
     staleTime: 5 * 60 * 1000,
     retry: 2,
+    enabled,
   });
 };
 

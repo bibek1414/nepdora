@@ -1,9 +1,6 @@
-import { apiFetch } from "@/lib/api-client";
-import { getApiBaseUrl } from "@/config/site";
 const publishSiteApi = async () => {
   try {
-    const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/publish-all/`, {
+    const response = await fetch("/api/publish-site", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -12,11 +9,13 @@ const publishSiteApi = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to publish site");
+      const payload = await response.json().catch(() => null);
+      throw new Error(payload?.message || "Failed to publish site");
     }
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error(error);
+    throw error;
   }
 };
 

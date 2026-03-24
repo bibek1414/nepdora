@@ -5,6 +5,7 @@ import { DynamicFontProvider } from "@/providers/dynamic-font-provider";
 import { DynamicFavicon } from "@/components/site-owners/admin/favicon/dynamic-favicon";
 import { GoogleAnalytics } from "@/components/site-owners/admin/google-analytics/google-analytics";
 import { generatePublishPageMetadata } from "@/lib/metadata-utils";
+import { getPublishedLayoutPayload } from "@/lib/publish-page-cache";
 import type { Metadata } from "next";
 import { WebsiteSocketProvider } from "@/providers/website-socket-provider";
 
@@ -30,6 +31,8 @@ export default async function PublishLayout({
   params,
 }: PublishLayoutProps) {
   const { siteUser } = await params;
+  const { navbarResponse, footerResponse, themeResponse } =
+    await getPublishedLayoutPayload(siteUser);
 
   return (
     <>
@@ -37,7 +40,14 @@ export default async function PublishLayout({
       <GoogleAnalytics />
       <WebsiteSocketProvider schema_name={siteUser} enabled={false}>
         <DynamicFontProvider>
-          <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
+          <SiteLayoutWrapper
+            siteUser={siteUser}
+            initialNavbarResponse={navbarResponse}
+            initialFooterResponse={footerResponse}
+            initialThemeResponse={themeResponse}
+          >
+            {children}
+          </SiteLayoutWrapper>
           <WhatsApp />
           <PopupManager />
         </DynamicFontProvider>

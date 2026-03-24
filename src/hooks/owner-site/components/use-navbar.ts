@@ -9,7 +9,7 @@ import { useWebsiteSocketContext } from "@/providers/website-socket-provider";
 
 const NAVBAR_QUERY_KEY = ["navbar"];
 
-export const useNavbarQuery = () => {
+export const useNavbarQuery = (enabled: boolean = true) => {
   const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: NAVBAR_QUERY_KEY,
@@ -39,10 +39,11 @@ export const useNavbarQuery = () => {
     },
     staleTime: 5 * 60 * 1000,
     retry: 2,
+    enabled,
   });
 };
 
-export const useNavbarQueryPublished = () => {
+export const useNavbarQueryPublished = (enabled: boolean = true) => {
   const socket = useWebsiteSocketContext();
   return useQuery({
     queryKey: [...NAVBAR_QUERY_KEY, "published"],
@@ -72,6 +73,7 @@ export const useNavbarQueryPublished = () => {
     },
     staleTime: 5 * 60 * 1000,
     retry: 2,
+    enabled,
   });
 };
 

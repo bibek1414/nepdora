@@ -17,30 +17,49 @@ import {
 import { usePathname } from "next/navigation";
 import { InnerPageHeader } from "@/components/site-owners/builder/navbar/inner-page-header";
 import { useEffect, useState } from "react";
+import { GetNavbarResponse } from "@/types/owner-site/components/navbar";
+import { GetFooterResponse } from "@/types/owner-site/components/footer";
+import { GetThemeResponse } from "@/types/owner-site/components/theme";
 
 interface SiteLayoutWrapperProps {
   children: React.ReactNode;
   siteUser: string;
+  initialNavbarResponse?: GetNavbarResponse | null;
+  initialFooterResponse?: GetFooterResponse | null;
+  initialThemeResponse?: GetThemeResponse | null;
 }
 
 export function SiteLayoutWrapper({
   children,
   siteUser,
+  initialNavbarResponse,
+  initialFooterResponse,
+  initialThemeResponse,
 }: SiteLayoutWrapperProps) {
   const pathname = usePathname();
   const isPreview = pathname?.startsWith("/preview") || false;
 
-  const { data: navbarResponse, isLoading: isNavbarLoading } = isPreview
-    ? useNavbarQuery()
-    : useNavbarQueryPublished();
+  const { data: previewNavbarResponse, isLoading: isNavbarLoading } =
+    useNavbarQuery(isPreview);
 
-  const { data: footerResponse, isLoading: isFooterLoading } = isPreview
-    ? useFooterQuery()
-    : useFooterQueryPublished();
+  const { data: previewFooterResponse, isLoading: isFooterLoading } =
+    useFooterQuery(isPreview);
 
-  const { data: themeResponse } = isPreview
-    ? useThemeQuery()
-    : useThemeQueryPublished();
+  const { data: previewThemeResponse } = useThemeQuery(isPreview);
+
+  useNavbarQueryPublished(false);
+  useFooterQueryPublished(false);
+  useThemeQueryPublished(false);
+
+  const navbarResponse = isPreview
+    ? previewNavbarResponse
+    : initialNavbarResponse ?? null;
+  const footerResponse = isPreview
+    ? previewFooterResponse
+    : initialFooterResponse ?? null;
+  const themeResponse = isPreview
+    ? previewThemeResponse
+    : initialThemeResponse ?? null;
 
   const [pageInfo, setPageInfo] = useState<{ isHome: boolean; title: string }>({
     isHome: true,
@@ -48,7 +67,7 @@ export function SiteLayoutWrapper({
   });
 
   const isStyle11 = navbarResponse?.data?.data?.style === "style-11";
-  const isLoading = isNavbarLoading || isFooterLoading;
+  const isLoading = isPreview ? isNavbarLoading || isFooterLoading : false;
 
   useEffect(() => {
     if (!pathname || !isStyle11) return;
@@ -92,7 +111,7 @@ export function SiteLayoutWrapper({
   return (
     <div className="bg-background min-h-screen">
       {/* Sticky Navbar */}
-      {navbarResponse?.data && (
+      {!isLoading && navbarResponse?.data && (
         <div className="sticky top-0 z-40">
           <NavbarComponent
             navbar={navbarResponse.data}
@@ -116,7 +135,7 @@ export function SiteLayoutWrapper({
             {children}
 
             {/* Render Footer */}
-            {footerResponse?.data && (
+            {!isLoading && footerResponse?.data && (
               <FooterComponent
                 footer={footerResponse.data}
                 isEditable={false}

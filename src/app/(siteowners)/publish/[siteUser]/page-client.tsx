@@ -1,86 +1,77 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/site-owners/button";
-import { usePages } from "@/hooks/owner-site/use-page";
-import { usePageData } from "@/hooks/owner-site/use-page-data";
 import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
-import { PageSkeleton } from "@/components/site-owners/shared/page-skeleton";
-import { useDomains } from "@/hooks/super-admin/use-domain";
+import { ComponentResponse } from "@/types/owner-site/components/components";
 
 interface PublishPageClientProps {
   siteUser: string;
+  initialPageSlug: string;
+  initialPageComponents: ComponentResponse[];
 }
 
 export default function PublishPageClient({
   siteUser,
+  initialPageSlug,
+  initialPageComponents,
 }: PublishPageClientProps) {
-  const { data: pagesData = [], isLoading: isPagesLoading } =
-    usePages("published");
-
-  const homePage = React.useMemo(() => {
-    if (isPagesLoading) return null;
-    return (
-      pagesData.find(page => page.title?.trim().toLowerCase() === "home") ??
-      pagesData[0]
-    );
-  }, [pagesData, isPagesLoading]);
-
-  const homePageSlug = homePage?.slug || (isPagesLoading ? "" : "home");
-  const { data: domainsData, isLoading: isDomainsLoading } = useDomains(1, 100);
-
-  const {
-    pageComponents,
-    isLoading: isComponentsLoading,
-    handleBacktoHome,
-    handleProductClick,
-    handleBlogClick,
-    handleServiceClick,
-    handleCategoryClick,
-    handleSubCategoryClick,
-    handlePortfolioClick,
-  } = usePageData(siteUser, homePageSlug);
-
+  const router = useRouter();
+  const pageComponents = React.useMemo(
+    () => initialPageComponents ?? [],
+    [initialPageComponents]
+  );
+  const handleBacktoHome = React.useCallback(() => {
+    router.push(`/publish/${siteUser}`);
+  }, [router, siteUser]);
+  const handleProductClick = React.useCallback(
+    (productSlug: string) => {
+      router.push(`/publish/${siteUser}/product-details/${productSlug}`);
+    },
+    [router, siteUser]
+  );
+  const handleBlogClick = React.useCallback(
+    (blogSlug: string) => {
+      router.push(`/publish/${siteUser}/blog-details/${blogSlug}`);
+    },
+    [router, siteUser]
+  );
+  const handleServiceClick = React.useCallback(
+    (serviceSlug: string) => {
+      router.push(`/publish/${siteUser}/service-details/${serviceSlug}`);
+    },
+    [router, siteUser]
+  );
+  const handleCategoryClick = React.useCallback(
+    (categoryId: number) => {
+      router.push(`/publish/${siteUser}/categories/${categoryId}`);
+    },
+    [router, siteUser]
+  );
+  const handleSubCategoryClick = React.useCallback(
+    (subcategoryId: number) => {
+      router.push(`/publish/${siteUser}/subcategories/${subcategoryId}`);
+    },
+    [router, siteUser]
+  );
+  const handlePortfolioClick = React.useCallback(
+    (portfolioSlug: string) => {
+      router.push(`/publish/${siteUser}/portfolio-details/${portfolioSlug}`);
+    },
+    [router, siteUser]
+  );
   const handleComponentUpdate = () => {};
 
-  if (isPagesLoading || isComponentsLoading) {
-    return <PageSkeleton />;
-  }
-
   const hasContent = pageComponents.length > 0;
-  const domainExists = domainsData?.results?.some(
-    domain => domain.tenant.schema_name === siteUser
-  );
 
-  if (isDomainsLoading || isPagesLoading || isComponentsLoading) {
-    return <PageSkeleton />;
-  }
-
-  // Show error if domain doesn't exist
-  if (!domainExists) {
-    return (
-      <div className="flex min-h-screen items-center justify-center p-8">
-        <div className="text-center">
-          <h1 className="text-6xl font-bold text-gray-800">404</h1>
-          <h2 className="mt-4 text-2xl font-semibold text-gray-700">
-            Domain Not Found
-          </h2>
-          <p className="mt-2 text-lg text-gray-600">
-            The domain{" "}
-            <span className="font-mono font-semibold">{siteUser}</span>{" "}
-            doesn&apos;t exist.
-          </p>
-        </div>
-      </div>
-    );
-  }
   return (
     <>
-      {hasContent && (
+      {hasContent ? (
         <PageComponentRenderer
           components={pageComponents}
           siteUser={siteUser}
-          pageSlug={homePageSlug}
+          pageSlug={initialPageSlug}
           onProductClick={handleProductClick}
           onBlogClick={handleBlogClick}
           onComponentUpdate={handleComponentUpdate}
@@ -89,7 +80,7 @@ export default function PublishPageClient({
           onSubCategoryClick={handleSubCategoryClick}
           onPortfolioClick={handlePortfolioClick}
         />
-      )}
+      ) : null}
 
       <div className="p-8">
         {!hasContent ? (
