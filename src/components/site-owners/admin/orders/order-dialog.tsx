@@ -1,13 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Order } from "@/types/owner-site/admin/orders";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { ChevronLeft, ChevronRight, Package2, X, MapPin } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  MapPin,
+  Package2,
+  Printer,
+  Truck,
+  X,
+} from "lucide-react";
 import { useUpdateOrderStatus } from "@/hooks/owner-site/admin/use-orders";
 import { toast } from "sonner";
 import { WhatsAppOrderButton } from "@/components/ui/whatsapp-order-button";
@@ -43,104 +47,86 @@ const STATUS_OPTIONS = [
   { value: "cancelled", label: "Cancelled" },
 ];
 
-const getStatusBadge = (status: string) => {
-  const statusConfig = {
-    pending: {
-      variant: "secondary" as const,
-      className: "bg-yellow-100 text-yellow-800",
-    },
-    confirmed: {
-      variant: "secondary" as const,
-      className: "bg-green-100 text-green-800",
-    },
-    processing: {
-      variant: "secondary" as const,
-      className: "bg-blue-100 text-blue-800",
-    },
-    shipped: {
-      variant: "secondary" as const,
-      className: "bg-green-100 text-green-800",
-    },
-    delivered: {
-      variant: "secondary" as const,
-      className: "bg-green-100 text-green-800",
-    },
-    cancelled: {
-      variant: "destructive" as const,
-      className: "",
-    },
-    open: {
-      variant: "secondary" as const,
-      className: "bg-blue-100 text-blue-800",
-    },
-  };
+const PIPELINE_STEPS = [
+  { value: "pending", label: "Ordered" },
+  { value: "confirmed", label: "Confirmed" },
+  { value: "processing", label: "Processing" },
+  { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
+];
 
-  const config =
-    statusConfig[status as keyof typeof statusConfig] || statusConfig.pending;
-
-  return (
-    <Badge variant={config.variant} className={config.className}>
-      {status.charAt(0).toUpperCase() + status.slice(1)}
-    </Badge>
-  );
+const STATUS_BADGE_STYLES: Record<string, string> = {
+  pending: "bg-slate-100 text-slate-700",
+  confirmed: "bg-blue-50 text-blue-700",
+  processing: "bg-amber-50 text-amber-700",
+  shipped: "bg-violet-50 text-violet-700",
+  delivered: "bg-emerald-50 text-emerald-700",
+  cancelled: "bg-rose-50 text-rose-700",
+  open: "bg-blue-50 text-blue-700",
 };
 
-const getPaymentBadge = (isPaid: boolean | undefined) => {
-  return isPaid ? (
-    <Badge variant="secondary" className="bg-green-100 text-green-800">
-      Paid
-    </Badge>
-  ) : (
-    <Badge variant="secondary" className="bg-red-100 text-red-800">
-      Unpaid
-    </Badge>
-  );
+const PAYMENT_TYPE_LABELS: Record<string, string> = {
+  cod: "COD",
+  esewa: "eSewa",
+  khalti: "Khalti",
+  card: "Card",
 };
 
-const getPaymentTypeBadge = (paymentType: string | undefined) => {
-  const paymentTypeConfig = {
-    cod: { label: "COD", color: "bg-blue-100 text-blue-800" },
-    esewa: { label: "eSewa", color: "bg-purple-100 text-purple-800" },
-    khalti: { label: "Khalti", color: "bg-purple-100 text-purple-800" },
-    card: { label: "Card", color: "bg-gray-100 text-gray-800" },
-  };
+const formatDate = (dateString: string) =>
+  new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
-  const config = paymentTypeConfig[
-    paymentType as keyof typeof paymentTypeConfig
-  ] || { label: paymentType || "Unknown", color: "bg-gray-100 text-gray-800" };
+const formatMoney = (value: string | number | undefined | null) =>
+  Number(value || 0).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
-  return (
-    <Badge variant="secondary" className={config.color}>
-      {config.label}
-    </Badge>
+const getStatusClassName = (status: string) =>
+  STATUS_BADGE_STYLES[status?.toLowerCase()] || "bg-slate-100 text-slate-700";
+
+const getStatusBadge = (status: string) => (
+  <Badge
+    variant="secondary"
+    className={`rounded-full border-0 px-3 py-1 text-[12px] font-medium shadow-none ${getStatusClassName(
+      status
+    )}`}
+  >
+    {status.charAt(0).toUpperCase() + status.slice(1)}
+  </Badge>
+);
+
+const getPaymentBadge = (isPaid: boolean | undefined) => (
+  <Badge
+    variant="secondary"
+    className={`rounded-full border-0 px-3 py-1 text-[12px] font-medium shadow-none ${
+      isPaid ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
+    }`}
+  >
+    {isPaid ? "Paid" : "Unpaid"}
+  </Badge>
+);
+
+const getPaymentTypeLabel = (paymentType: string | undefined) =>
+  PAYMENT_TYPE_LABELS[paymentType || ""] || paymentType || "Unknown";
+
+const getStepProgress = (status: string) => {
+  const currentIndex = PIPELINE_STEPS.findIndex(
+    step => step.value === status.toLowerCase()
   );
-};
 
-const getStatusPipeline = (currentStatus: string) => {
-  const statuses = [
-    "pending",
-    "confirmed",
-    "processing",
-    "shipped",
-    "delivered",
-  ];
-  const currentIndex = statuses.indexOf(currentStatus.toLowerCase());
+  if (currentIndex <= 0) {
+    return 0;
+  }
 
-  return statuses.map((status, index) => ({
-    label:
-      status === "pending"
-        ? "Ordered"
-        : status === "confirmed"
-          ? "Confirmed"
-          : status === "shipped"
-            ? "Shipped"
-            : status === "delivered"
-              ? "Delivered"
-              : "Processing",
-    number: index + 1,
-    active: index <= currentIndex,
-    isLast: index === statuses.length - 1,
-  }));
+  if (currentIndex >= PIPELINE_STEPS.length - 1) {
+    return 100;
+  }
+
+  return (currentIndex / (PIPELINE_STEPS.length - 1)) * 100;
 };
 
 export const OrderDialog: React.FC<OrderDialogProps> = ({
@@ -156,33 +142,46 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
   const apiBaseUrl = getApiBaseUrl();
 
   useEffect(() => {
-    if (currentOrderId && orders.length > 0) {
-      const orderIndex = orders.findIndex(order => order.id === currentOrderId);
-      if (orderIndex !== -1) {
-        setCurrentOrder(orders[orderIndex]);
-        setCurrentIndex(orderIndex);
-      }
+    if (!currentOrderId || orders.length === 0) {
+      setCurrentOrder(null);
+      return;
+    }
+
+    const orderIndex = orders.findIndex(order => order.id === currentOrderId);
+    if (orderIndex !== -1) {
+      setCurrentOrder(orders[orderIndex]);
+      setCurrentIndex(orderIndex);
     }
   }, [currentOrderId, orders]);
 
-  // Keyboard navigation handler
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!isOpen || orders.length <= 1) return;
+      if (!isOpen || orders.length <= 1) {
+        return;
+      }
 
-      switch (event.key) {
-        case "ArrowLeft":
-          event.preventDefault();
-          handlePrevious();
-          break;
-        case "ArrowRight":
-          event.preventDefault();
-          handleNext();
-          break;
-        case "Escape":
-          event.preventDefault();
-          onClose();
-          break;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        if (currentIndex <= 0) {
+          return;
+        }
+
+        const newOrder = orders[currentIndex - 1];
+        setCurrentOrder(newOrder);
+        setCurrentIndex(currentIndex - 1);
+        onOrderChange(newOrder.id);
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        if (currentIndex >= orders.length - 1) {
+          return;
+        }
+
+        const newOrder = orders[currentIndex + 1];
+        setCurrentOrder(newOrder);
+        setCurrentIndex(currentIndex + 1);
+        onOrderChange(newOrder.id);
       }
     };
 
@@ -193,30 +192,34 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, currentIndex, orders.length]);
+  }, [isOpen, currentIndex, onOrderChange, orders]);
 
   const handlePrevious = () => {
-    if (currentIndex > 0) {
-      const newIndex = currentIndex - 1;
-      const newOrder = orders[newIndex];
-      setCurrentIndex(newIndex);
-      setCurrentOrder(newOrder);
-      onOrderChange(newOrder.id);
+    if (currentIndex <= 0) {
+      return;
     }
+
+    const newOrder = orders[currentIndex - 1];
+    setCurrentOrder(newOrder);
+    setCurrentIndex(currentIndex - 1);
+    onOrderChange(newOrder.id);
   };
 
   const handleNext = () => {
-    if (currentIndex < orders.length - 1) {
-      const newIndex = currentIndex + 1;
-      const newOrder = orders[newIndex];
-      setCurrentIndex(newIndex);
-      setCurrentOrder(newOrder);
-      onOrderChange(newOrder.id);
+    if (currentIndex >= orders.length - 1) {
+      return;
     }
+
+    const newOrder = orders[currentIndex + 1];
+    setCurrentOrder(newOrder);
+    setCurrentIndex(currentIndex + 1);
+    onOrderChange(newOrder.id);
   };
 
   const handleStatusChange = async (newStatus: string) => {
-    if (!currentOrder) return;
+    if (!currentOrder) {
+      return;
+    }
 
     try {
       await updateOrderStatus.mutateAsync({
@@ -226,77 +229,338 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
 
       setCurrentOrder(prev => (prev ? { ...prev, status: newStatus } : null));
       toast.success("Order status updated successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update order status");
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  const handlePrimaryAction = async () => {
+    if (!currentOrder) {
+      return;
+    }
+
+    const nextStatus =
+      currentOrder.status === "shipped" ? "delivered" : "shipped";
+
+    await handleStatusChange(nextStatus);
   };
 
-  if (!currentOrder) return null;
+  if (!currentOrder) {
+    return null;
+  }
 
   const orderItems = currentOrder.order_items || currentOrder.items || [];
-  const pipeline = getStatusPipeline(currentOrder.status);
+  const stepProgress = getStepProgress(currentOrder.status);
+  const subtotal = Number(currentOrder.total_amount) -
+    Number(currentOrder.delivery_charge || 0);
+  const canAdvanceDelivery =
+    currentOrder.status !== "cancelled" && currentOrder.status !== "delivered";
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl overflow-visible bg-black/80 p-0 backdrop-blur-sm">
-        {/* Navigation Arrows - Positioned outside the dialog */}
-        {orders.length > 1 && (
-          <>
-            {/* Left Arrow */}
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={handlePrevious}
-              disabled={currentIndex === 0}
-              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
-            >
-              <ChevronLeft className="h-6 w-6 text-black" />
-            </Button>
+    <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
+      <DialogContent
+        showCloseButton={false}
+        className="fixed top-0 right-0 left-auto h-dvh w-full max-w-[480px] translate-x-0 translate-y-0 gap-0 overflow-hidden rounded-none border-0 border-l border-gray-200 bg-white p-0 shadow-2xl data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-[480px]"
+      >
+        <DialogTitle className="sr-only">
+          Order details for {currentOrder.order_number}
+        </DialogTitle>
 
-            {/* Right Arrow */}
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={handleNext}
-              disabled={currentIndex === orders.length - 1}
-              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
-            >
-              <ChevronRight className="h-6 w-6 text-black" />
-            </Button>
-          </>
-        )}
+        <div className="flex h-full flex-col">
+          <div className="flex items-start justify-between border-b border-gray-100 px-8 pt-8 pb-5">
+            <div>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-bold tracking-tight text-gray-900">
+                  #{currentOrder.order_number}
+                </h2>
+                {getStatusBadge(currentOrder.status)}
+              </div>
+              <p className="mt-1 text-[14px] text-gray-500">
+                Processed {formatDate(currentOrder.created_at)}
+              </p>
+            </div>
 
-        <div className="relative max-h-[95vh] w-full overflow-y-auto rounded-lg bg-white shadow">
-          {/* Header with navigation indicator */}
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white p-4">
-            <div className="flex items-center gap-4">
-              <h2 className="text-sm font-semibold">
-                Order #{currentOrder.order_number}
-              </h2>
+            <div className="flex items-center gap-2">
               {orders.length > 1 && (
-                <div className="text-xs text-gray-500">
-                  {currentIndex + 1} of {orders.length}
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handlePrevious}
+                    disabled={currentIndex === 0}
+                    className="h-10 w-10 cursor-pointer rounded-full border-gray-200 text-gray-600"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleNext}
+                    disabled={currentIndex === orders.length - 1}
+                    className="h-10 w-10 cursor-pointer rounded-full border-gray-200 text-gray-600"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className="h-10 w-10 cursor-pointer rounded-full bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-8 pb-36">
+            <div className="relative mt-8 mb-10 px-2">
+              <div className="absolute top-[5px] right-[10%] left-[10%] h-[2px] bg-gray-100">
+                <div
+                  className="h-full bg-blue-600 transition-all duration-500"
+                  style={{ width: `${stepProgress}%` }}
+                />
+              </div>
+              <div className="relative flex justify-between">
+                {PIPELINE_STEPS.map((step, index) => {
+                  const isActive = index * 25 <= stepProgress;
+
+                  return (
+                    <button
+                      key={step.value}
+                      type="button"
+                      onClick={() => handleStatusChange(step.value)}
+                      disabled={updateOrderStatus.isPending}
+                      className="flex flex-1 cursor-pointer flex-col items-center text-center disabled:cursor-not-allowed"
+                    >
+                      <span
+                        className={`relative z-10 h-[10px] w-[10px] rounded-full outline-[6px] outline-white transition-all ${
+                          isActive
+                            ? "scale-110 bg-blue-600"
+                            : "bg-gray-200"
+                        }`}
+                      />
+                      <span
+                        className={`mt-3 block text-[12px] ${
+                          isActive
+                            ? "font-semibold text-gray-900"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        {step.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-y-8 border-t border-gray-100 py-8">
+              <div>
+                <h3 className="mb-1.5 text-[13px] font-semibold text-gray-900">
+                  Customer
+                </h3>
+                <p className="text-[14px] font-medium text-gray-900 capitalize">
+                  {currentOrder.customer_name || "Walk-in Customer"}
+                </p>
+                <p className="mt-1 text-[13px] text-gray-500">
+                  {currentOrder.customer_email || "No email provided"}
+                </p>
+                <p className="mt-0.5 text-[13px] text-gray-500">
+                  {currentOrder.customer_phone || "No phone provided"}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="mb-1.5 text-[13px] font-semibold text-gray-900">
+                  Payment
+                </h3>
+                <div>{getPaymentBadge(currentOrder.is_paid)}</div>
+                <p className="mt-2 text-[13px] text-gray-500">
+                  {getPaymentTypeLabel(currentOrder.payment_type)}
+                </p>
+                {currentOrder.transaction_id && (
+                  <p className="mt-0.5 text-[13px] text-gray-500">
+                    Txn: {currentOrder.transaction_id}
+                  </p>
+                )}
+              </div>
+
+              <div className="col-span-2">
+                <h3 className="mb-1.5 text-[13px] font-semibold text-gray-900">
+                  Shipping address
+                </h3>
+                <p className="text-[14px] text-gray-600">
+                  {currentOrder.shipping_address || currentOrder.customer_address}
+                  {currentOrder.city ? ` • ${currentOrder.city}` : ""}
+                </p>
+
+                <div className="mt-3 flex items-center justify-between rounded-2xl bg-gray-50 p-3">
+                  <div className="flex items-center gap-2.5">
+                    <MapPin className="h-4 w-4 text-gray-500" />
+                    {currentOrder.latitude && currentOrder.longitude ? (
+                      <div className="text-[13px] text-gray-600">
+                        <p>
+                          Lat {currentOrder.latitude.toFixed(6)}, Lng{" "}
+                          {currentOrder.longitude.toFixed(6)}
+                        </p>
+                        {currentOrder.location_accuracy && (
+                          <p className="mt-0.5 text-[12px] text-gray-500">
+                            Accuracy ±
+                            {Math.round(currentOrder.location_accuracy)}m
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-[13px] text-gray-600">
+                        Location not confirmed.
+                      </p>
+                    )}
+                  </div>
+
+                  {currentOrder.latitude && currentOrder.longitude ? (
+                    <a
+                      href={`https://www.google.com/maps?q=${currentOrder.latitude},${currentOrder.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer rounded-full border border-gray-200 bg-white px-3 py-1 text-[12px] font-medium text-gray-900 shadow-sm transition hover:bg-gray-50"
+                    >
+                      View map
+                    </a>
+                  ) : (
+                    <LocationLinkButton
+                      orderId={currentOrder.id.toString()}
+                      confirmPageUrl={`${window.location.origin}/location/confirm`}
+                      callbackUrl={`${apiBaseUrl}/api/order/${currentOrder.id}/`}
+                      redirectUrl={`${window.location.origin}/admin/orders`}
+                      className="cursor-pointer rounded-full border border-gray-200 bg-white px-3 py-1 text-[12px] font-medium text-gray-900 shadow-sm transition hover:bg-gray-50"
+                      label="Get link"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100 py-8">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h3 className="text-[13px] font-semibold text-gray-900">
+                  Items ordered
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  <WhatsAppOrderButton
+                    order={currentOrder}
+                    size="sm"
+                    className="cursor-pointer rounded-full border-0 bg-green-600 px-4 text-[12px] text-white hover:bg-green-700"
+                  />
+                  <SMSOrderButton
+                    order={currentOrder}
+                    size="sm"
+                    className="cursor-pointer rounded-full border-0 bg-gray-900 px-4 text-[12px] text-white hover:bg-black"
+                  />
+                </div>
+              </div>
+
+              {orderItems.length > 0 ? (
+                <div className="space-y-4">
+                  {orderItems.map((item, index) => {
+                    const displayImage =
+                      item.variant?.image || item.product?.thumbnail_image;
+                    const displayName =
+                      item.variant?.product?.name ||
+                      item.product?.name ||
+                      `Product #${item.product_id}`;
+                    const itemTotal = Number(item.price) * item.quantity;
+
+                    return (
+                      <div
+                        key={item.id || index}
+                        className="flex items-center justify-between gap-4"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+                            {displayImage ? (
+                              <Image
+                                src={displayImage}
+                                alt={displayName}
+                                width={48}
+                                height={48}
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <Package2 className="h-5 w-5 text-gray-300" />
+                            )}
+                          </div>
+
+                          <div>
+                            <p className="text-[14px] font-medium text-gray-900">
+                              {displayName}
+                            </p>
+                            <p className="mt-0.5 text-[13px] text-gray-500">
+                              Qty {item.quantity} • Rs. {formatMoney(item.price)}{" "}
+                              each
+                            </p>
+                            {item.variant?.option_values?.length ? (
+                              <div className="mt-1 flex flex-wrap gap-1.5">
+                                {item.variant.option_values.map(option => (
+                                  <Badge
+                                    key={option.id}
+                                    variant="secondary"
+                                    className="rounded-full border-0 bg-gray-100 text-[11px] font-medium text-gray-600"
+                                  >
+                                    {option.value}
+                                  </Badge>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+
+                        <p className="text-[14px] font-medium text-gray-900">
+                          Rs. {formatMoney(itemTotal)}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-gray-200 py-10 text-center text-gray-500">
+                  <Package2 className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+                  <p className="text-sm">No items found for this order</p>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <WhatsAppOrderButton order={currentOrder} size="sm" />
-              <SMSOrderButton order={currentOrder} size="sm" />
+            <div className="space-y-3 border-t border-gray-100 py-8">
+              <div className="flex justify-between text-[14px] text-gray-500">
+                <span>Subtotal</span>
+                <span>Rs. {formatMoney(subtotal)}</span>
+              </div>
+              {Number(currentOrder.delivery_charge || 0) > 0 && (
+                <div className="flex justify-between text-[14px] text-gray-500">
+                  <span>Delivery charge</span>
+                  <span>Rs. {formatMoney(currentOrder.delivery_charge)}</span>
+                </div>
+              )}
+              <div className="flex justify-between pt-1 text-[16px] font-semibold text-gray-900">
+                <span>Total</span>
+                <span>Rs. {formatMoney(currentOrder.total_amount)}</span>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100 py-8">
+              <h3 className="mb-3 text-[13px] font-semibold text-gray-900">
+                Status control
+              </h3>
               <Select
                 value={currentOrder.status}
                 onValueChange={handleStatusChange}
                 disabled={updateOrderStatus.isPending}
               >
-                <SelectTrigger className="w-[120px]">
+                <SelectTrigger className="h-11 w-full rounded-2xl border-gray-200 bg-white text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -307,274 +571,37 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                   ))}
                 </SelectContent>
               </Select>
-              <button
-                onClick={onClose}
-                className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-              >
-                <X className="h-5 w-5" />
-              </button>
             </div>
           </div>
 
-          <div className="p-6">
-            {/* Status Pipeline */}
-            <div className="mb-6 flex items-center justify-between">
-              {pipeline.map((step, index) => (
-                <React.Fragment key={step.number}>
-                  <div className="flex flex-1 items-center">
-                    <div className="flex items-center">
-                      <div
-                        className={`flex h-8 w-8 items-center justify-center rounded-full text-xs ${
-                          step.active
-                            ? "bg-black text-white"
-                            : "bg-gray-200 text-gray-600"
-                        }`}
-                      >
-                        {step.number}
-                      </div>
-                      <span
-                        className={`ml-2 ${step.active ? "font-medium text-gray-900" : "text-gray-600"}`}
-                      >
-                        {step.label}
-                      </span>
-                    </div>
-                    {!step.isLast && (
-                      <div
-                        className={`mx-2 h-0.5 flex-1 ${step.active ? "bg-black" : "bg-gray-200"}`}
-                      ></div>
-                    )}
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
-
-            {/* Order Info Grid */}
-            <div className="mb-3 grid grid-cols-1 gap-4 text-xs md:grid-cols-2">
-              <div>
-                <p className="text-gray-500">Order date</p>
-                <p className="font-medium">
-                  {formatDate(currentOrder.created_at)}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-500">Customer</p>
-                <p className="font-medium capitalize">
-                  {currentOrder.customer_name}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-500">Email</p>
-                <p className="font-medium">{currentOrder.customer_email}</p>
-              </div>
-              <div>
-                <p className="text-gray-500">Phone</p>
-                <div className="flex items-center gap-2">
-                  <p className="font-medium">{currentOrder.customer_phone}</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-gray-500">Payment status</p>
-                {getPaymentBadge(currentOrder.is_paid)}
-              </div>
-              <div>
-                <p className="text-gray-500">Payment type</p>
-                {getPaymentTypeBadge(currentOrder.payment_type)}
-              </div>
-              <div className="md:col-span-1">
-                <p className="text-gray-500">Shipping Address</p>
-                <p className="font-medium capitalize">
-                  {currentOrder.shipping_address}
-                </p>
-              </div>
-              <div className="md:col-span-1">
-                <p className="text-gray-500">City</p>
-                <p className="font-medium capitalize">{currentOrder.city}</p>
-              </div>
-              {currentOrder.transaction_id && (
-                <div className="md:col-span-2">
-                  <p className="text-gray-500">Transaction ID</p>
-                  <p className="font-medium">{currentOrder.transaction_id}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Location Section */}
-            <div className="mt-4 mb-4 border-t pt-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-700">
-                  <MapPin className="mr-1 inline h-4 w-4" />
-                  Delivery Location
-                </h3>
-                {!currentOrder.latitude && !currentOrder.longitude && (
-                  <LocationLinkButton
-                    orderId={currentOrder.id.toString()}
-                    confirmPageUrl={`${window.location.origin}/location/confirm`}
-                    callbackUrl={`${apiBaseUrl}/api/order/${currentOrder.id}/`}
-                    redirectUrl={`${window.location.origin}/admin/orders`}
-                    className="bg-primary hover:bg-primary flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium text-white"
-                    label="Get Location"
-                  />
-                )}
-              </div>
-              {currentOrder.latitude && currentOrder.longitude ? (
-                <div className="mt-3 rounded-md bg-green-50 p-3 text-xs">
-                  <div className="mb-2 flex items-center gap-1 text-green-800">
-                    <MapPin className="h-3 w-3" />
-                    <span className="font-medium">Location Confirmed</span>
-                  </div>
-                  <div className="space-y-1 text-gray-700">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Latitude:</span>
-                      <span className="font-mono">
-                        {currentOrder.latitude.toFixed(6)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Longitude:</span>
-                      <span className="font-mono">
-                        {currentOrder.longitude.toFixed(6)}
-                      </span>
-                    </div>
-                    {currentOrder.location_accuracy && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Accuracy:</span>
-                        <span>
-                          ±{Math.round(currentOrder.location_accuracy)}m
-                        </span>
-                      </div>
-                    )}
-                    <div className="mt-2 border-t border-green-200 pt-2">
-                      <a
-                        href={`https://www.google.com/maps?q=${currentOrder.latitude},${currentOrder.longitude}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 hover:underline"
-                      >
-                        View on Google Maps →
-                      </a>
-                    </div>
-                  </div>
-                </div>
+          <div className="absolute right-0 bottom-0 left-0 flex gap-3 bg-gradient-to-t from-white via-white to-white/90 p-6 backdrop-blur-sm">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => window.print()}
+              className="h-12 flex-1 cursor-pointer rounded-full border-gray-200 bg-white text-[14px] font-medium text-gray-900 hover:bg-gray-50"
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Print label
+            </Button>
+            <Button
+              type="button"
+              onClick={handlePrimaryAction}
+              disabled={!canAdvanceDelivery || updateOrderStatus.isPending}
+              className="h-12 flex-[1.5] cursor-pointer rounded-full bg-blue-600 text-[14px] font-medium text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700"
+            >
+              {currentOrder.status === "shipped" ? (
+                <>
+                  <Check className="mr-2 h-4 w-4" />
+                  Mark delivered
+                </>
               ) : (
-                <div className="mt-3 rounded-md bg-yellow-50 p-3 text-xs text-yellow-800">
-                  <p>
-                    📍 Location not yet confirmed. Send the location link to the
-                    customer to get their exact delivery location.
-                  </p>
-                </div>
+                <>
+                  <Truck className="mr-2 h-4 w-4" />
+                  Send for delivery
+                </>
               )}
-            </div>
-
-            {/* Items Ordered */}
-            <div className="border-t pt-4">
-              <h3 className="mb-3 text-base font-semibold">Items Ordered</h3>
-              {orderItems.length > 0 ? (
-                <ul className="divide-y text-sm">
-                  {orderItems.map((item, index) => {
-                    // Use variant data if available, otherwise use product data
-                    const displayImage =
-                      item.variant?.image || item.product?.thumbnail_image;
-                    const displayName =
-                      item.variant?.product?.name ||
-                      item.product?.name ||
-                      `Product #${item.product_id}`;
-                    const itemPrice = item.price;
-
-                    return (
-                      <li
-                        key={item.id || index}
-                        className="flex justify-between py-3"
-                      >
-                        <div className="flex flex-1 items-center gap-3">
-                          {displayImage && (
-                            <Image
-                              src={displayImage}
-                              alt={displayName}
-                              width={50}
-                              height={50}
-                              className="rounded border object-cover"
-                            />
-                          )}
-                          <div className="flex-1">
-                            <div className="text-xs font-medium">
-                              {displayName}
-                            </div>
-
-                            {/* Display variant options as badges if variant exists */}
-                            {item.variant && item.variant.option_values && (
-                              <div className="mt-1 flex flex-wrap gap-1">
-                                {item.variant.option_values.map(option => (
-                                  <Badge
-                                    key={option.id}
-                                    variant="secondary"
-                                    className="text-xs capitalize"
-                                  >
-                                    {option.value}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-
-                            <div className="mt-1 text-xs text-gray-500">
-                              Quantity: {item.quantity}
-                            </div>
-                            <div className="mt-0.5 text-xs text-gray-500">
-                              Rs.{Number(itemPrice).toFixed(2)} each
-                            </div>
-                          </div>
-                        </div>
-                        <span className="text-xs font-medium text-gray-600">
-                          Rs.{(Number(itemPrice) * item.quantity).toFixed(2)}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <div className="py-8 text-center text-gray-500">
-                  <Package2 className="mx-auto h-12 w-12 text-gray-300" />
-                  <p>No items found for this order</p>
-                </div>
-              )}
-            </div>
-
-            {/* Order Summary */}
-            <div className="mt-4 border-t pt-4">
-              <h3 className="mb-3 text-base font-semibold">Summary</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span>
-                    Rs.
-                    {(
-                      Number(currentOrder.total_amount) -
-                      Number(currentOrder.delivery_charge || 0)
-                    ).toLocaleString("en-IN")}
-                  </span>
-                </div>
-
-                {currentOrder.delivery_charge &&
-                  Number(currentOrder.delivery_charge) > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Delivery Charge</span>
-                      <span>
-                        Rs.
-                        {Number(currentOrder.delivery_charge).toLocaleString(
-                          "en-IN"
-                        )}
-                      </span>
-                    </div>
-                  )}
-
-                <div className="flex justify-between text-base font-semibold">
-                  <span>Total</span>
-                  <span>
-                    Rs.
-                    {Number(currentOrder.total_amount).toLocaleString("en-IN")}
-                  </span>
-                </div>
-              </div>
-            </div>
+            </Button>
           </div>
         </div>
       </DialogContent>
