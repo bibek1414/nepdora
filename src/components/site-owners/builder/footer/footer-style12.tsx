@@ -53,11 +53,16 @@ export const FooterStyle12 = ({
     page_size: 6,
   });
 
+  const isPreviewMode = pathname?.includes("/preview/");
+  const basePath = isPreviewMode
+    ? "/service-details-draft"
+    : "/service-details";
+
   const dynamicServices =
     servicesResponse?.results.map(service => ({
       id: String(service.id),
       text: service.title,
-      href: `/services/${service.slug}`,
+      href: `${basePath}/${service.slug}`,
     })) || [];
 
   return (

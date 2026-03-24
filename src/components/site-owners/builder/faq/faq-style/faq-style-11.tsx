@@ -32,7 +32,7 @@ export const FAQStyle11: React.FC<FAQStyle11Props> = ({
     (Array.isArray(faqsResponse)
       ? faqsResponse
       : (faqsResponse as any)?.results || []
-    )?.slice(0, 5) || [];
+    )?.slice(0, 8) || [];
 
   const handleUpdate = (field: keyof FAQData) => (value: string | any) => {
     onUpdate?.({ [field]: value });

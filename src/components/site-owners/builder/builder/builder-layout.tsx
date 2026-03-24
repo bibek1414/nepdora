@@ -14,7 +14,6 @@ import {
   useReplaceNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
 import { NavbarData } from "@/types/owner-site/components/navbar";
-import { NavbarTemplateDialog } from "@/components/site-owners/builder/navbar/navbar-template-dialog";
 import {
   usePages,
   useCreatePage,
@@ -44,7 +43,6 @@ import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import BuilderSkeleton from "./builder-skeleton";
 import { useAuth } from "@/hooks/use-auth";
-import { Facebook, Twitter } from "lucide-react";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 import { DEFAULT_PRODUCT_DETAILS_MAP } from "@/types/owner-site/components/product-details-map";
 import { DEFAULT_BLOG_DETAILS_MAP } from "@/types/owner-site/components/blog-details-map";
@@ -836,29 +834,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     deleteAuthPages,
   ]);
 
-  const handleNavbarTemplateSelect = (templateData: NavbarData) => {
-    const payload = {
-      content: "navbar content",
-      data: templateData,
-      component_id: `nav-${Date.now()}`,
-    };
-
-    const toastId = "navbar-create";
-
-    createNavbarMutation.mutate(payload, {
-      onSuccess: () => {
-        setIsNavbarDialogOpen(false);
-        // Auto-create service details page if Navbar Style 14 is selected
-        if (templateData.style === "style-14") {
-          ensureServiceDetailsPageExists();
-        }
-      },
-      onError: () => {
-        toast.error("Failed to add navbar", { id: toastId });
-      },
-    });
-  };
-
   const handleFooterSelectFromDialog = (footerData: FooterData) => {
     const payload = {
       content: "footer content",
@@ -873,6 +848,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onSuccess: () => {
           setPendingCategoryFilter(undefined);
           setPendingReplaceId(null);
+          if (footerData.style === "style-12") {
+            ensureServiceDetailsPageExists();
+          }
         },
         onError: error => {
           toast.error("Failed to replace footer", { id: toastId });
@@ -881,6 +859,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     } else {
       createFooterMutation.mutate(payload, {
         onSuccess: () => {
+          // Auto-create service details page if Navbar Style 14 is selected
+          if (footerData.style === "style-12") {
+            ensureServiceDetailsPageExists();
+          }
           toast.success("Footer added successfully!", { id: toastId });
         },
         onError: error => {
@@ -888,12 +870,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         },
       });
     }
-  };
-
-  // Add handler for opening CTA dialog
-  const handleAddCTA = (insertIndex?: number) => {
-    setPendingInsertIndex(insertIndex);
-    handleTemplateSelect("cta", "cta-1");
   };
 
   // Generic template selection handler
@@ -1021,12 +997,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onFooterSelect={handleFooterSelectFromDialog}
           websiteType={user?.website_type || "ecommerce"}
           categoryFilter={pendingCategoryFilter}
-        />
-
-        <NavbarTemplateDialog
-          isOpen={isNavbarDialogOpen}
-          onClose={() => setIsNavbarDialogOpen(false)}
-          onSelectTemplate={handleNavbarTemplateSelect}
         />
 
         <PageTemplateDialog

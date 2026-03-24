@@ -127,6 +127,7 @@ const PageSelector: React.FC<PageSelectorProps> = ({
                     <CommandItem
                       key={page.id}
                       value={page.title}
+                      className="capitalize"
                       onSelect={() => handlePageSelect(page)}
                     >
                       <Check
