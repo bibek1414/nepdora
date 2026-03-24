@@ -68,8 +68,12 @@ export function MediaLibraryDialog({
       toast.error("Invalid file type");
       return;
     }
-    if (file.size > maxSize) {
-      toast.error("File is too large");
+
+    // Only block if it's NOT an image and still too large,
+    // or if it's an image but ridiculously large (e.g. > 50MB) even for compression.
+    const MAX_RAW_SIZE = 5 * 1024 * 1024; // 5MB
+    if (file.size > MAX_RAW_SIZE) {
+      toast.error("File is too large (max 5MB)");
       return;
     }
 
@@ -107,7 +111,7 @@ export function MediaLibraryDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="flex max-h-[90vh] max-w-4xl flex-col overflow-hidden rounded-2xl border border-[#E8E4DF] bg-[#FAFAF8] p-0 shadow-2xl shadow-black/10"
+        className="flex max-h-150 max-w-4xl! flex-col overflow-hidden rounded-2xl border border-[#E8E4DF] bg-[#FAFAF8] p-0 shadow-2xl shadow-black/10"
         style={{ fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif" }}
       >
         {/* ── Header ── */}
@@ -120,11 +124,10 @@ export function MediaLibraryDialog({
           </DialogTitle>
         </DialogHeader>
 
-        {/* ── Tabs ── */}
-        <div className="flex min-h-0 flex-1 flex-col">
-          {/* ── Search Bar ── */}
-
-          <ScrollArea className="flex-1 px-8 py-4">
+        {/* ── Search Bar ── */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          {/* ── Scrollable Content Area ── */}
+          <ScrollArea className="flex-1 overflow-y-auto px-8">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center gap-3 py-24">
                 <Loader2
@@ -171,7 +174,7 @@ export function MediaLibraryDialog({
                             Click to upload
                           </p>
                           <p className="text-[9px] leading-tight text-gray-500">
-                            PNG, JPG, WebP <br /> up to 500 KB
+                            PNG, JPG, WebP <br /> Auto-optimized
                           </p>
                         </div>
                       </>
@@ -260,7 +263,7 @@ export function MediaLibraryDialog({
           </ScrollArea>
         </div>
 
-        {/* ── Footer ── */}
+        {/* ── Footer (Always Visible) ── */}
         <DialogFooter className="border-t border-[#E8E4DF] bg-[#F7F5F2] px-8 py-5">
           <div className="flex w-full items-center justify-between gap-4">
             <p className="max-w-[50%] truncate text-xs text-[#A09080]">

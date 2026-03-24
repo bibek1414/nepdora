@@ -79,15 +79,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     const errors: string[] = [];
 
     files.forEach((file, index) => {
-      // Check file size
-      if (file.size > maxFileSize) {
-        const sizeFormatted =
-          maxFileSize >= 1024 * 1024
-            ? `${(maxFileSize / 1024 / 1024).toFixed(1)}MB`
-            : `${Math.round(maxFileSize / 1024)}KB`;
-        errors.push(
-          `File ${file.name} is too large. Max size: ${sizeFormatted}`
-        );
+      // Check file size - Relaxed for images because they will be compressed
+      const MAX_RAW_SIZE = 5 * 1024 * 1024; // 5MB
+      if (file.size > MAX_RAW_SIZE) {
+        errors.push(`File ${file.name} is too large. Max size: 5MB`);
         return;
       }
 
@@ -198,7 +193,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     },
     multiple,
     disabled,
-    maxSize: maxFileSize,
+    maxSize: 50 * 1024 * 1024, // 50MB
   });
 
   const handleRemove = (index: number) => (e: React.MouseEvent) => {

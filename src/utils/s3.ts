@@ -9,13 +9,32 @@ export interface S3File {
   last_modified: string;
 }
 
+import { compressImage } from "./image-compression";
+
 export const uploadToS3 = async (
   file: File,
   folder: string = "nepdora"
 ): Promise<string> => {
   try {
+    let fileToUpload = file;
+
+    // Compress image if it's larger than 500KB and it's an image
+    if (file.size > DEFAULT_MAX_IMAGE_SIZE && file.type.startsWith("image/")) {
+      const originalSizeKB = (file.size / 1024).toFixed(2);
+      console.log(`[Compression] Starting: ${file.name} (${originalSizeKB} KB)`);
+      
+      fileToUpload = await compressImage(file, {
+        maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024), // Convert to MB
+        useWebWorker: true,
+      });
+
+      const compressedSizeKB = (fileToUpload.size / 1024).toFixed(2);
+      const reduction = (((file.size - fileToUpload.size) / file.size) * 100).toFixed(1);
+      console.log(`[Compression] Finished: ${fileToUpload.name} (${compressedSizeKB} KB) - Reduced by ${reduction}%`);
+    }
+
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", fileToUpload);
     formData.append("folder", folder);
 
     const response = await apiFetch(`${API_BASE_URL}/api/s3/upload/`, {
@@ -60,20 +79,6 @@ export const deleteS3Files = async (urls: string[]): Promise<void> => {
     if (!response.ok) throw new Error("Failed to delete file(s)");
   } catch (error) {
     console.error("S3 delete error:", error);
-    throw error;
-  }
-};
-
-export const deleteS3Folder = async (folder: string): Promise<void> => {
-  try {
-    const response = await apiFetch(`${API_BASE_URL}/api/s3/delete-folder/`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ folder }),
-    });
-    if (!response.ok) throw new Error("Failed to delete folder");
-  } catch (error) {
-    console.error("S3 delete folder error:", error);
     throw error;
   }
 };
