@@ -23,12 +23,6 @@ import { FAQStyle2 } from "./faq-style/faq-style-2";
 import { FAQStyle3 } from "./faq-style/faq-style-3";
 import { FAQStyle4 } from "./faq-style/faq-style-4";
 import { FAQStyle5 } from "./faq-style/faq-style-5";
-import { FAQStyle6 } from "./faq-style/faq-style-6";
-import { FAQStyle7 } from "./faq-style/faq-style-7";
-import { FAQStyle8 } from "./faq-style/faq-style-8";
-import { FAQStyle9 } from "./faq-style/faq-style-9";
-import { FAQStyle10 } from "./faq-style/faq-style-10";
-import { FAQStyle11 } from "./faq-style/faq-style-11";
 
 interface FAQComponentProps {
   component: FAQComponentData;
@@ -97,18 +91,6 @@ export const FAQComponent: React.FC<FAQComponentProps> = ({
         return <FAQStyle4 {...commonProps} />;
       case "faq-5":
         return <FAQStyle5 {...commonProps} />;
-      case "faq-6":
-        return <FAQStyle6 {...commonProps} />;
-      case "faq-7":
-        return <FAQStyle7 {...commonProps} />;
-      case "faq-8":
-        return <FAQStyle8 {...commonProps} />;
-      case "faq-9":
-        return <FAQStyle9 {...commonProps} />;
-      case "faq-10":
-        return <FAQStyle10 {...commonProps} />;
-      case "faq-11":
-        return <FAQStyle11 {...commonProps} />;
       case "faq-1":
       default:
         return <FAQStyle1 {...commonProps} />;

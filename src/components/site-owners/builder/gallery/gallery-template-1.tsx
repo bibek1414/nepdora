@@ -70,20 +70,12 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-  const handleImageTitleUpdate = (index: number, title: string) => {
-    const imgId = data.images[index].id;
-    handleArrayItemUpdate("images", imgId)({ title });
-  };
-
   const getImageUrl = (image: string | File): string => {
     if (typeof image === "string") return image;
     return URL.createObjectURL(image);
   };
 
-  const filteredImages = data.images.filter((img: GalleryImage) => img.is_active);
-
-  const gridClass =
-    "grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
+  const activeImages = data.images.filter((img: GalleryImage) => img.is_active);
 
   return (
     <div className="w-full space-y-8 py-16">
@@ -106,90 +98,78 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
           )}
         </div>
 
-        {/* Gallery Grid */}
-        <div className={gridClass}>
-          {filteredImages.map((image: GalleryImage, index: number) => {
-            const actualIndex = data.images.findIndex(
-              (img: GalleryImage) => img.id === image.id
-            );
-            return (
-              <div
-                key={image.id}
-                className="relative overflow-hidden rounded-lg bg-gray-100 transition-all hover:shadow-xl"
-              >
-                {/* Image Container */}
-                <div className="group relative aspect-square overflow-hidden">
-                  <ImageEditOverlay
-                    onImageSelect={(imageUrl) =>
-                      handleImageUpdateLocal(actualIndex, imageUrl)
-                    }
-                    imageWidth={800}
-                    imageHeight={1000}
-                    isEditable={isEditable}
-                    folder="gallery-images"
-                    label="Change Image"
+        {/* Masonry Grid */}
+        <div className="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4">
+          {activeImages.map((image: GalleryImage, index: number) => (
+            <div
+              key={image.id}
+              className="relative mb-4 break-inside-avoid overflow-hidden rounded-lg bg-gray-100 transition-all"
+            >
+              <div className="group relative">
+                <ImageEditOverlay
+                  onImageSelect={(imageUrl) =>
+                    handleImageUpdateLocal(index, imageUrl)
+                  }
+                  imageWidth={800}
+                  imageHeight={1000}
+                  isEditable={isEditable}
+                  folder="gallery-images"
+                  label="Change Image"
+                />
+                <div className="relative w-full">
+                  <Image
+                    src={getImageUrl(image.image)}
+                    alt={image.image_alt_description || "Gallery image"}
+                    width={800}
+                    height={1000}
+                    className="h-auto w-full object-cover"
                   />
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={getImageUrl(image.image)}
-                      alt={image.image_alt_description || "Gallery image"}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  {isEditable && (
-                    <div className="absolute top-2 right-2 z-10 flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={e => {
-                          e.stopPropagation();
-                          handleRemoveImage(actualIndex);
-                        }}
-                        className="h-6 px-2"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  )}
                 </div>
 
-                {/* Image Info */}
-                <div className="p-4">
-                  {image.title && (
-                    <EditableText
-                      value={image.title}
-                      onChange={(newTitle: string) =>
-                        handleImageTitleUpdate(actualIndex, newTitle)
-                      }
-                      isEditable={isEditable}
-                      className="font-semibold text-gray-900"
-                    />
-                  )}
+                {isEditable && (
+                  <div className="absolute top-2 right-2 z-10 flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleRemoveImage(index);
+                      }}
+                      className="h-6 px-2"
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Image Info */}
+              {image.title && (
+                <div className="p-3">
+                  <h3 className="font-semibold text-gray-900">{image.title}</h3>
                   {image.description && (
                     <p className="mt-1 text-sm text-gray-600">
                       {image.description}
                     </p>
                   )}
                 </div>
-              </div>
-            );
-          })}
-
-          {/* Add New Image Card */}
-          {isEditable && (
-            <div className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:border-gray-400 hover:bg-gray-100">
-              <button
-                onClick={() => setIsMediaDialogOpen(true)}
-                className="flex flex-col items-center gap-2"
-              >
-                <Plus className="h-8 w-8 text-gray-400" />
-                <span className="text-sm text-gray-500 font-medium">Add Image</span>
-              </button>
+              )}
             </div>
-          )}
+          ))}
         </div>
+
+        {/* Add Button */}
+        {isEditable && (
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => setIsMediaDialogOpen(true)}
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 transition-colors hover:border-gray-400 hover:bg-gray-100"
+            >
+              <Plus className="h-5 w-5 text-gray-400" />
+              <span className="text-sm text-gray-600 font-medium">Add Image</span>
+            </button>
+          </div>
+        )}
       </div>
 
       <MediaLibraryDialog
@@ -202,7 +182,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
         folder="gallery-images"
       />
 
-      {/* Lightbox Dialog */}
+      {/* Lightbox */}
       {selectedImage && (
         <Dialog
           open={!!selectedImage}
@@ -214,13 +194,9 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
               alt={selectedImage.image_alt_description}
               className="h-auto w-full rounded-lg"
             />
-            {(selectedImage.title || selectedImage.description) && (
+            {selectedImage.title && (
               <div className="mt-4">
-                {selectedImage.title && (
-                  <h3 className="text-xl font-semibold">
-                    {selectedImage.title}
-                  </h3>
-                )}
+                <h3 className="text-xl font-semibold">{selectedImage.title}</h3>
                 {selectedImage.description && (
                   <p className="mt-2 text-gray-600">
                     {selectedImage.description}

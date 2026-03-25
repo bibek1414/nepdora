@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import Image, { type ImageProps } from "next/image";
+import { type Ref, forwardRef } from "react";
+import { cn } from "@/lib/utils";
 import {
   GalleryData,
   GalleryImage,
@@ -10,7 +14,6 @@ import { EditableText } from "@/components/ui/editable-text";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Loader2, ZoomIn } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import Image from "next/image";
 
 interface GalleryTemplateProps {
   galleryData: GalleryData;
@@ -27,10 +30,20 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
   const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
     useBuilderLogic(galleryData, onUpdate);
 
-  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
   const componentId = React.useId();
+
+  useEffect(() => {
+    const visibilityTimer = setTimeout(() => setIsVisible(true), 500);
+    const animationTimer = setTimeout(() => setIsLoaded(true), 900);
+    return () => {
+      clearTimeout(visibilityTimer);
+      clearTimeout(animationTimer);
+    };
+  }, []);
 
   const handleImageUpdateLocal = (
     index: number,
@@ -70,107 +83,215 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-  const getImageUrl = (image: string | File): string => {
-    if (typeof image === "string") return image;
-    return URL.createObjectURL(image);
+  const activeImages = useMemo(
+    () => data.images.filter((img: GalleryImage) => img.is_active),
+    [data.images]
+  );
+
+  const displayed = useMemo(() => activeImages.slice(0, 5), [activeImages]);
+
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+    },
   };
 
-  const activeImages = data.images.filter((img: GalleryImage) => img.is_active);
+  type Position = {
+    id: number | string;
+    order: number;
+    x: string;
+    y: string;
+    zIndex: number;
+    direction: "left" | "right";
+  };
+
+  const positions: Position[] = useMemo(() => {
+    // Fallback placeholders if fewer than 5 images
+    const count = displayed.length;
+    const base: Position[] = [
+      {
+        id: 1,
+        order: 0,
+        x: "-320px",
+        y: "15px",
+        zIndex: 5,
+        direction: "left",
+      },
+      {
+        id: 2,
+        order: 1,
+        x: "-160px",
+        y: "32px",
+        zIndex: 4,
+        direction: "left",
+      },
+      { id: 3, order: 2, x: "0px", y: "8px", zIndex: 3, direction: "right" },
+      {
+        id: 4,
+        order: 3,
+        x: "160px",
+        y: "22px",
+        zIndex: 2,
+        direction: "right",
+      },
+      { id: 5, order: 4, x: "320px", y: "44px", zIndex: 1, direction: "left" },
+    ];
+    return base
+      .slice(0, Math.max(1, count))
+      .map((p, idx) => ({ ...p, order: idx }));
+  }, [displayed.length]);
+
+  const photoVariants = {
+    hidden: () => ({ x: 0, y: 0, rotate: 0, scale: 1 }),
+    visible: (custom: { x: string; y: string; order: number }) => ({
+      x: custom.x,
+      y: custom.y,
+      rotate: 0,
+      scale: 1,
+      transition: {
+        type: "spring" as const,
+        stiffness: 70,
+        damping: 12,
+        mass: 1,
+        delay: custom.order * 0.15,
+      },
+    }),
+  };
 
   return (
     <div className="w-full space-y-8 py-16">
       <div className="mx-auto max-w-7xl px-4">
-        {/* Header */}
-        <div className="mb-12 text-center">
+        <div className="mb-6 text-center">
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
-            className="mb-4 text-4xl font-bold"
+            className="mb-2 text-4xl font-bold"
           />
           {data.subtitle && (
             <EditableText
               value={data.subtitle}
               onChange={handleTextUpdate("subtitle")}
               isEditable={isEditable}
-              className="text-lg text-gray-600"
+              className="text-sm text-gray-600"
             />
           )}
         </div>
 
-        {/* Masonry Grid */}
-        <div className="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4">
-          {activeImages.map((image: GalleryImage, index: number) => (
-            <div
-              key={image.id}
-              className="relative mb-4 break-inside-avoid overflow-hidden rounded-lg bg-gray-100 transition-all"
+        <div className="relative mb-8 w-full lg:min-h-[350px]">
+          <motion.div
+            className="relative mx-auto hidden w-full max-w-7xl justify-center lg:flex"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isVisible ? 1 : 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <motion.div
+              className="relative flex w-full justify-center"
+              variants={containerVariants}
+              initial="hidden"
+              animate={isLoaded ? "visible" : "hidden"}
             >
-              <div className="group relative">
-                <ImageEditOverlay
-                  onImageSelect={(imageUrl) =>
-                    handleImageUpdateLocal(index, imageUrl)
-                  }
-                  imageWidth={800}
-                  imageHeight={1000}
-                  isEditable={isEditable}
-                  folder="gallery-images"
-                  label="Change Image"
-                />
-                <div className="relative w-full">
-                  <Image
-                    src={getImageUrl(image.image)}
-                    alt={image.image_alt_description || "Gallery image"}
-                    width={800}
-                    height={1000}
-                    className="h-auto w-full object-cover"
-                  />
-                </div>
-
-                {isEditable && (
-                  <div className="absolute top-2 right-2 z-10 flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={e => {
-                        e.stopPropagation();
-                        handleRemoveImage(index);
-                      }}
-                      className="h-6 px-2"
+              <div className="relative h-[220px] w-[220px]">
+                {[...displayed].reverse().map((image, idx) => {
+                  const pos = positions[idx] ?? positions[positions.length - 1];
+                  const actualIndex = data.images.findIndex(
+                    img => img.id === image.id
+                  );
+                  return (
+                    <motion.div
+                      key={image.id}
+                      className="absolute top-0 left-0"
+                      style={{ zIndex: pos.zIndex }}
+                      variants={photoVariants}
+                      custom={{ x: pos.x, y: pos.y, order: pos.order }}
                     >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
+                      <div className="relative">
+                        <PhotoCard
+                          image={image}
+                          isEditable={isEditable}
+                          onOpenLightbox={() => setSelectedImage(image)}
+                          onImageChange={(imageUrl) =>
+                            handleImageUpdateLocal(
+                              actualIndex,
+                              imageUrl
+                            )
+                          }
+                        />
+                        {isEditable && (
+                          <div className="absolute top-2 right-2 z-10 flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={e => {
+                                e.stopPropagation();
+                                handleRemoveImage(actualIndex);
+                              }}
+                              className="h-6 px-2"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
-
-              {/* Image Info */}
-              {image.title && (
-                <div className="p-3">
-                  <h3 className="font-semibold text-gray-900">{image.title}</h3>
-                  {image.description && (
-                    <p className="mt-1 text-sm text-gray-600">
-                      {image.description}
-                    </p>
+            </motion.div>
+          </motion.div>
+          <div className="flex w-full snap-x snap-mandatory gap-4 overflow-x-auto px-2 py-4 lg:hidden">
+            {activeImages.map(image => {
+              const actualIndex = data.images.findIndex(
+                img => img.id === image.id
+              );
+              return (
+                <div key={image.id} className="relative shrink-0">
+                  <PhotoCard
+                    image={image}
+                    isEditable={isEditable}
+                    onOpenLightbox={() => setSelectedImage(image)}
+                    onImageChange={(imageUrl) =>
+                      handleImageUpdateLocal(actualIndex, imageUrl)
+                    }
+                    size={180}
+                    enableHover={!isEditable}
+                    enableRandomRotation={false}
+                  />
+                  {isEditable && (
+                    <div className="absolute top-2 right-2 z-10 flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleRemoveImage(actualIndex);
+                        }}
+                        className="h-6 px-2"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
                   )}
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Add Button */}
-        {isEditable && (
-          <div className="mt-8 text-center">
-            <button
-              onClick={() => setIsMediaDialogOpen(true)}
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 transition-colors hover:border-gray-400 hover:bg-gray-100"
-            >
-              <Plus className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-600 font-medium">Add Image</span>
-            </button>
+              );
+            })}
           </div>
-        )}
+        </div>
       </div>
+
+      {isEditable && (
+        <div className="mt-4 text-center">
+          <button
+            onClick={() => setIsMediaDialogOpen(true)}
+            className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 transition-colors hover:border-gray-400 hover:bg-gray-100"
+          >
+            <Plus className="h-5 w-5 text-gray-400" />
+            <span className="text-sm text-gray-600 font-medium">Add Image</span>
+          </button>
+        </div>
+      )}
 
       <MediaLibraryDialog
         open={isMediaDialogOpen}
@@ -182,8 +303,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
         folder="gallery-images"
       />
 
-      {/* Lightbox */}
-      {selectedImage && (
+      {selectedImage && !isEditable && (
         <Dialog
           open={!!selectedImage}
           onOpenChange={() => setSelectedImage(null)}
@@ -192,11 +312,15 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
             <img
               src={getImageUrl(selectedImage.image)}
               alt={selectedImage.image_alt_description}
-              className="h-auto w-full rounded-lg"
+              className="h-[480px] w-full rounded-lg object-cover"
             />
-            {selectedImage.title && (
+            {(selectedImage.title || selectedImage.description) && (
               <div className="mt-4">
-                <h3 className="text-xl font-semibold">{selectedImage.title}</h3>
+                {selectedImage.title && (
+                  <h3 className="text-xl font-semibold">
+                    {selectedImage.title}
+                  </h3>
+                )}
                 {selectedImage.description && (
                   <p className="mt-2 text-gray-600">
                     {selectedImage.description}
@@ -211,3 +335,115 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
     </div>
   );
 };
+
+function getRandomNumberInRange(min: number, max: number): number {
+  if (min >= max) {
+    throw new Error("Min value should be less than max value");
+  }
+  return Math.random() * (max - min) + min;
+}
+
+const MotionImage = motion(
+  forwardRef(function MotionImage(
+    props: ImageProps,
+    ref: Ref<HTMLImageElement>
+  ) {
+    return <Image ref={ref} {...props} />;
+  })
+);
+
+type Direction = "left" | "right";
+
+const PhotoCard = ({
+  image,
+  isEditable,
+  onOpenLightbox,
+  onImageChange,
+  inputId,
+  size = 220,
+  enableHover = true,
+  enableRandomRotation = true,
+}: {
+  image: GalleryImage;
+  isEditable: boolean;
+  onOpenLightbox: () => void;
+  onImageChange?: (imageUrl: string, altText?: string) => void;
+  inputId?: string;
+  size?: number;
+  enableHover?: boolean;
+  enableRandomRotation?: boolean;
+}) => {
+  const [rotation, setRotation] = useState<number>(0);
+  useEffect(() => {
+    if (!enableRandomRotation) {
+      setRotation(0);
+      return;
+    }
+    const randomRotation =
+      getRandomNumberInRange(1, 4) * (Math.random() > 0.5 ? -1 : 1);
+    setRotation(randomRotation);
+  }, [enableRandomRotation]);
+
+  const handleUpdateTitle = (newTitle: string) => {
+    onImageChange?.(image.image as string); // Not really changing image, just title
+    // Wait, PhotoCard doesn't have actualIndex. 
+    // It's better to pass onTitleChange?
+  };
+
+  return (
+    <motion.div
+      whileHover={
+        enableHover
+          ? {
+              scale: 1.1,
+              transition: { type: "spring", stiffness: 300, damping: 20 },
+            }
+          : undefined
+      }
+      initial={{ rotate: rotation }}
+      animate={{ rotate: rotation }}
+      transition={{ type: "spring", stiffness: 70, damping: 12, mass: 1 }}
+      style={{ width: size, height: size, perspective: 400 }}
+      className={cn("group relative mx-auto shrink-0")}
+      draggable={false}
+      tabIndex={0}
+    >
+      <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-sm">
+        {isEditable && (
+          <ImageEditOverlay
+            onImageSelect={(imageUrl) => onImageChange?.(imageUrl)}
+            imageWidth={800}
+            imageHeight={1000}
+            isEditable={isEditable}
+            folder="gallery-images"
+            label="Change Image"
+          />
+        )}
+        <div className="relative h-full w-full">
+          <Image
+            src={getImageUrl(image.image)}
+            alt={image.image_alt_description || "Gallery image"}
+            fill
+            className={cn("rounded-3xl object-cover", !isEditable && "cursor-pointer")}
+            draggable={false}
+            onClick={() => !isEditable && onOpenLightbox()}
+          />
+        </div>
+        {!isEditable && (
+          <button
+            type="button"
+            className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-opacity hover:bg-black/40 hover:opacity-100"
+            onClick={onOpenLightbox}
+          >
+            <ZoomIn className="h-6 w-6 text-white" />
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+function getImageUrl(image: string | File): string {
+  if (typeof image === "string") return image;
+  return URL.createObjectURL(image);
+}

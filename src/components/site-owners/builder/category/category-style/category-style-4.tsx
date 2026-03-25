@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
-import { CategoryCard3 } from "../category-card/category-card-3";
+import { CategoryCard5 } from "../category-card/category-card-5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, FolderOpen } from "lucide-react";
@@ -84,18 +84,14 @@ export const CategoryStyle4: React.FC<CategoryStyleProps> = ({
 
         {!isLoading && !error && categories.length > 0 && (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {categories.map((category, index) => (
+            {categories.map(category => (
               <div
                 key={category.id}
                 className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
                 onClick={() => !isEditable && onCategoryClick?.(category.id)}
               >
                 {isEditable && <div className="absolute inset-0 z-10" />}
-                <CategoryCard3
-                  category={category}
-                  siteUser={siteUser}
-                  index={index}
-                />
+                <CategoryCard5 category={category} siteUser={siteUser} />
               </div>
             ))}
           </div>

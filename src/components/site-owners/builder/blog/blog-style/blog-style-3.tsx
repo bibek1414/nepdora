@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
-import { BlogCard3 } from "../blog-card/blog-card3";
+import { BlogCard5 } from "../blog-card/blog-card5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Rss } from "lucide-react";
@@ -67,8 +67,8 @@ export const BlogStyle3: React.FC<BlogStyleProps> = ({
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-1 gap-6">
-            {Array.from({ length: 3 }).map((_, i) => (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex flex-col space-y-3">
                 <Skeleton className="h-[200px] w-full rounded-xl" />
                 <div className="space-y-2">
@@ -91,14 +91,14 @@ export const BlogStyle3: React.FC<BlogStyleProps> = ({
         )}
 
         {!isLoading && !error && blogs.length > 0 && (
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-4">
             {blogs.slice(0, pageSize).map(blog => (
               <div
                 key={blog.id}
                 className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
               >
                 {isEditable && <div className="absolute inset-0 z-10" />}
-                <BlogCard3
+                <BlogCard5
                   blog={blog}
                   siteUser={siteUser}
                   onClick={() => onBlogClick?.(blog.slug)}

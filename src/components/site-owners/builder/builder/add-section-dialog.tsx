@@ -650,11 +650,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Category Style 7",
         image: "/images/site-owners/categories/category7.png",
       },
-      {
-        id: "category-8",
-        name: "Category Style 8",
-        image: "/images/site-owners/categories/category8.png",
-      },
     ],
     subcategory: [
       {
@@ -859,38 +854,23 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     gallery: [
       {
         id: "gallery-1",
-        name: "Gallery Grid",
+        name: "Gallery Masonry",
         image: "/images/site-owners/gallery/gallery1.png",
       },
       {
         id: "gallery-2",
-        name: "Gallery Masonry",
+        name: "Gallery Carousel",
         image: "/images/site-owners/gallery/gallery2.png",
       },
       {
         id: "gallery-3",
-        name: "Gallery Carousel",
+        name: "Gallery Style 3",
         image: "/images/site-owners/gallery/gallery3.png",
       },
       {
         id: "gallery-4",
         name: "Gallery Style 4",
         image: "/images/site-owners/gallery/gallery4.png",
-      },
-      {
-        id: "gallery-5",
-        name: "Gallery Style 5",
-        image: "/images/site-owners/gallery/gallery5.png",
-      },
-      {
-        id: "gallery-6",
-        name: "Gallery Style 6",
-        image: "/images/site-owners/gallery/gallery6.png",
-      },
-      {
-        id: "gallery-7",
-        name: "Gallery Style 7",
-        image: "/images/site-owners/gallery/gallery7.png",
       },
     ],
     banner: [
@@ -929,12 +909,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Banner Style 7",
         image: "/images/site-owners/banner/banner7.png",
       },
-      {
-        id: "banner-8",
-        name: "Banner Style 8",
-        image: "/images/site-owners/banner/banner8.png",
-      },
-    ],
+      ],
     blog: [
       {
         id: "blog-1",
@@ -955,26 +930,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "blog-4",
         name: "Blog Style 4",
         image: "/images/site-owners/blogs/blog4.png",
-      },
-      {
-        id: "blog-5",
-        name: "Blog Style 5",
-        image: "/images/site-owners/blogs/blog5.png",
-      },
-      {
-        id: "blog-6",
-        name: "Blog Style 6",
-        image: "/images/site-owners/blogs/blog6.png",
-      },
-      {
-        id: "blog-7",
-        name: "Blog Style 7",
-        image: "/images/site-owners/blogs/blog7.png",
-      },
-      {
-        id: "blog-8",
-        name: "Blog Style 8",
-        image: "/images/site-owners/blogs/blog8.png",
       },
     ],
     faq: [
@@ -1002,36 +957,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "faq-5",
         name: "FAQ Style 5",
         image: "/images/site-owners/faq/faq-5.png",
-      },
-      {
-        id: "faq-6",
-        name: "FAQ Style 6",
-        image: "/images/site-owners/faq/faq-6.png",
-      },
-      {
-        id: "faq-7",
-        name: "FAQ Style 7",
-        image: "/images/site-owners/faq/faq-7.png",
-      },
-      {
-        id: "faq-8",
-        name: "FAQ Style 8",
-        image: "/images/site-owners/faq/faq-8.png",
-      },
-      {
-        id: "faq-9",
-        name: "FAQ Style 9",
-        image: "/images/site-owners/faq/faq-9.png",
-      },
-      {
-        id: "faq-10",
-        name: "FAQ Style 10",
-        image: "/images/site-owners/faq/faq-10.png",
-      },
-      {
-        id: "faq-11",
-        name: "FAQ Style 11",
-        image: "/images/site-owners/faq/faq-11.png",
       },
     ],
     portfolio: [

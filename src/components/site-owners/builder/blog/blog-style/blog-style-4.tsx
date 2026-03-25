@@ -1,12 +1,19 @@
 "use client";
 import React from "react";
 import { useBlogs } from "@/hooks/owner-site/admin/use-blogs";
-import { BlogCard4 } from "../blog-card/blog-card4";
+import { BlogCard8 } from "../blog-card/blog-card8";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Rss } from "lucide-react";
+import { AlertCircle, Rss, ArrowUpRight } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
+import { EditableLink } from "@/components/ui/editable-link";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { generateLinkHref } from "@/lib/link-utils";
+import { usePathname } from "next/navigation";
 
 interface BlogStyleProps {
   data: BlogComponentData["data"];
@@ -23,8 +30,14 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
   onUpdate,
   onBlogClick,
 }) => {
-  const { title = "Latest Blog Posts", subtitle } = data || {};
-  const pageSize = 6;
+  const { title = "Strategic Insights That Drive Business Success" } =
+    data || {};
+
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme;
+  const primaryColor = theme?.colors?.primary || "#4f46e5";
+
+  const pageSize = 4;
   const {
     data: blogsData,
     isLoading,
@@ -33,54 +46,79 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
     page: 1,
     page_size: pageSize,
   });
-  const blogs = blogsData?.results || [];
+  const featuredBlogs = blogsData?.results || [];
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
   };
 
-  const handleSubtitleChange = (newSubtitle: string) => {
-    onUpdate?.({ subtitle: newSubtitle });
+  const pathname = usePathname();
+
+  const getBlogsUrl = (): string => {
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode ? "/blogs-draft" : "/blogs";
+    return generateLinkHref(basePath, siteUser, pathname);
   };
 
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-8 text-center">
-          <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="text-foreground mb-2 text-3xl font-bold tracking-tight"
-            isEditable={isEditable}
-            placeholder="Enter title..."
-          />
-          <EditableText
-            value={subtitle || ""}
-            onChange={handleSubtitleChange}
-            as="p"
-            className="text-muted-foreground mx-auto text-lg"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-            multiline={true}
-          />
-        </div>
+    <section id="blog" className="py-16 sm:py-32">
+      <div className="mx-auto max-w-360 px-4 sm:px-6 md:px-8">
+        <motion.div
+          className="mb-10 flex flex-col items-start justify-between gap-4 md:mb-16 md:flex-row md:items-end md:gap-0"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <div className="flex w-full items-center justify-between gap-5">
+            <EditableText
+              value={title}
+              onChange={handleTitleChange}
+              as="h2"
+              className="text-foreground mb-0 max-w-xl text-3xl font-bold tracking-tight md:text-4xl"
+              isEditable={isEditable}
+              placeholder="Enter title..."
+            />
 
-        {isLoading && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex flex-col space-y-3">
-                <Skeleton className="h-[200px] w-full rounded-xl" />
-                <div className="space-y-2">
-                  <Skeleton className="h-5 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
+            <EditableLink
+              text="View More Blogs"
+              href={getBlogsUrl()}
+              isEditable={isEditable}
+              onChange={() => {}}
+              style={{
+                backgroundColor: primaryColor,
+                color: "#FFFFFF",
+              }}
+              className="mr-2 w-48 px-2 font-bold text-gray-900"
+            >
+              View More Blogs
+              <div
+                className="flex h-9 w-9 items-center justify-center rounded-full transition-transform group-hover:scale-105"
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                }}
+              >
+                <ArrowUpRight size={16} strokeWidth={2.5} />
               </div>
-            ))}
+            </EditableLink>
           </div>
-        )}
+        </motion.div>
 
-        {error && (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-10">
+            <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+              {[1, 2, 3, 4].map(i => (
+                <div key={i} className="flex flex-col gap-4">
+                  <Skeleton className="h-48 w-full rounded-2xl" />
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : error ? (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading Blog Posts</AlertTitle>
@@ -88,27 +126,7 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
               {error instanceof Error ? error.message : "Failed to load blogs."}
             </AlertDescription>
           </Alert>
-        )}
-
-        {!isLoading && !error && blogs.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {blogs.slice(0, pageSize).map(blog => (
-              <div
-                key={blog.id}
-                className="relative transform cursor-default transition-transform duration-200 hover:scale-105"
-              >
-                {isEditable && <div className="absolute inset-0 z-10" />}
-                <BlogCard4
-                  blog={blog}
-                  siteUser={siteUser}
-                  onClick={() => onBlogClick?.(blog.slug)}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {!isLoading && !error && blogs.length === 0 && (
+        ) : featuredBlogs.length === 0 ? (
           <div className="bg-muted/50 rounded-lg py-12 text-center">
             <Rss className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
             <h3 className="text-foreground mb-2 text-lg font-semibold">
@@ -118,6 +136,30 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
               Add some blog posts to your site to display them here.
             </p>
           </div>
+        ) : (
+          <motion.div
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            {featuredBlogs.map(blog => (
+              <div
+                key={blog.slug}
+                className="relative z-10 transition-transform duration-200"
+              >
+                {isEditable && (
+                  <div className="absolute inset-0 z-20 bg-transparent" />
+                )}
+                <BlogCard8
+                  blog={blog}
+                  siteUser={siteUser}
+                  onClick={() => onBlogClick?.(blog.slug)}
+                />
+              </div>
+            ))}
+          </motion.div>
         )}
       </div>
     </section>

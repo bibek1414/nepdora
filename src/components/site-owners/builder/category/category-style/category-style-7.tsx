@@ -1,13 +1,12 @@
+"use client";
+
 import React from "react";
+import Link from "next/link";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, ChevronRight, FolderOpen } from "lucide-react";
+import Image from "next/image";
 import { EditableText } from "@/components/ui/editable-text";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { Category } from "@/types/owner-site/admin/product";
@@ -27,8 +26,8 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
   onUpdate,
   onCategoryClick,
 }) => {
-  const { title = "Shop by Category" } = data || {};
-  const { data: categoriesData, isLoading, error } = useCategories();
+  const { title = "Browse Categories" } = data || {};
+  const { data: categoriesData, isLoading } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
   const pathname = usePathname();
 
@@ -54,13 +53,34 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
     onUpdate?.({ title: newTitle });
   };
 
+  if (isLoading) {
+    return (
+      <section
+        className="mb-16 bg-white py-16 lg:py-24"
+        style={{ backgroundColor: theme.colors.background }}
+      >
+        <div className="container mx-auto max-w-7xl px-4">
+          <div className="grid animate-pulse grid-cols-3 gap-6 sm:grid-cols-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-4">
+                <div className="h-20 w-20 rounded-full bg-gray-200 md:h-24 md:w-24" />
+                <div className="h-4 w-16 rounded bg-gray-200" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!categories || categories.length === 0) {
+    return null;
+  }
+
   return (
-    <section className="bg-white py-16 lg:py-24">
+    <section className="mb-16 bg-white py-16 lg:py-24">
       <div className="container mx-auto max-w-7xl px-4">
-        <h2
-          className="mb-16 text-center text-3xl font-bold md:text-4xl"
-          style={{ color: theme.colors.primary }}
-        >
+        <h2 className="mb-8 text-2xl font-black">
           <EditableText
             value={title}
             onChange={handleTitleChange}
@@ -69,36 +89,13 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
           />
         </h2>
 
-        {isLoading && (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton
-                key={i}
-                className="h-[400px] w-full rounded-2xl md:h-[450px]"
-              />
-            ))}
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive" className="mx-auto max-w-2xl">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error Loading Categories</AlertTitle>
-            <AlertDescription>
-              {error instanceof Error
-                ? error.message
-                : "Failed to load categories."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!isLoading && !error && categories.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {categories.slice(0, 3).map(cat => (
+        <div className="grid grid-cols-3 gap-6 sm:grid-cols-6">
+          {categories.map(cat => {
+            return (
               <Link
-                key={cat.slug}
                 href={getCategoryUrl(cat)}
-                className="group relative h-[400px] overflow-hidden rounded-2xl md:h-[450px]"
+                key={cat.id}
+                className="group flex flex-col items-center gap-4"
                 onClick={e => {
                   if (isEditable) {
                     e.preventDefault();
@@ -107,42 +104,29 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
                   }
                 }}
               >
-                <Image
-                  width={800}
-                  height={600}
-                  src={cat.image || "/fallback/image-not-found.png"}
-                  alt={cat.name}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
                 <div
-                  className="absolute inset-0 flex flex-col justify-end p-8 md:p-10"
-                  style={{
-                    background: `linear-gradient(to top, ${theme.colors.primary || "#000"}E6 0%, ${theme.colors.primary || "#000"}33 40%, transparent 100%)`,
+                  className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-transparent transition-all duration-300 md:h-24 md:w-24"
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = theme.colors.primary;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = "transparent";
                   }}
                 >
-                  <h3 className="mb-2 text-2xl font-bold text-white">
-                    {cat.name}
-                  </h3>
-                  <p className="flex translate-y-4 transform items-center gap-1 text-sm font-medium text-white/80 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    Explore Collection <ChevronRight className="h-4 w-4" />
-                  </p>
+                  <Image
+                    src={cat.image || "/fallback/image-not-found.png"}
+                    alt={cat.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
+                <span className="text-center text-sm font-bold tracking-wider uppercase transition-colors">
+                  {cat.name}
+                </span>
               </Link>
-            ))}
-          </div>
-        )}
-
-        {!isLoading && !error && categories.length === 0 && (
-          <div className="rounded-2xl border border-gray-100 bg-gray-50 py-16 text-center shadow-inner">
-            <FolderOpen className="mx-auto mb-4 h-16 w-16 text-gray-300" />
-            <h3 className="mb-2 text-xl font-bold text-gray-900">
-              No Categories Found
-            </h3>
-            <p className="text-gray-500">
-              Add some categories to display them here.
-            </p>
-          </div>
-        )}
+            );
+          })}
+        </div>
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
-import { CategoryCard2 } from "../category-card/category-card-2";
+import { CategoryCard3 } from "../category-card/category-card-3";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, FolderOpen } from "lucide-react";
@@ -59,12 +59,9 @@ export const CategoryStyle3: React.FC<CategoryStyleProps> = ({
         </div>
 
         {isLoading && (
-          <div className="flex gap-6 overflow-x-auto pb-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="w-[280px] shrink-0 space-y-3 sm:w-[350px]"
-              >
+              <div key={i} className="flex flex-col space-y-3">
                 <Skeleton className="h-[250px] w-full rounded-xl" />
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
@@ -86,15 +83,19 @@ export const CategoryStyle3: React.FC<CategoryStyleProps> = ({
         )}
 
         {!isLoading && !error && categories.length > 0 && (
-          <div className="flex snap-x gap-6 overflow-x-auto pb-4">
-            {categories.map(category => (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {categories.map((category, index) => (
               <div
                 key={category.id}
-                className="relative w-[280px] shrink-0 transform cursor-pointer snap-start transition-transform duration-200 hover:scale-105 sm:w-[350px]"
+                className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
                 onClick={() => !isEditable && onCategoryClick?.(category.id)}
               >
                 {isEditable && <div className="absolute inset-0 z-10" />}
-                <CategoryCard2 category={category} siteUser={siteUser} />
+                <CategoryCard3
+                  category={category}
+                  siteUser={siteUser}
+                  index={index}
+                />
               </div>
             ))}
           </div>

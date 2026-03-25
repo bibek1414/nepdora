@@ -1,90 +1,76 @@
-"use client";
 import React from "react";
-import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
-import { FAQCard5 } from "../faq-card/faq-card-5";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, HelpCircle } from "lucide-react";
+import { FAQData } from "@/types/owner-site/components/faq";
 import { EditableText } from "@/components/ui/editable-text";
-import { FAQComponentData } from "@/types/owner-site/components/faq";
+import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { FAQCard11 } from "../faq-card/faq-card-11";
 
-interface FAQStyleProps {
-  data: FAQComponentData["data"];
+interface FAQStyle5Props {
+  data: FAQData;
   isEditable?: boolean;
-  onUpdate?: (updatedData: Partial<FAQComponentData["data"]>) => void;
+  onUpdate?: (updatedData: Partial<FAQData>) => void;
 }
 
-export const FAQStyle5: React.FC<FAQStyleProps> = ({
+export const FAQStyle5: React.FC<FAQStyle5Props> = ({
   data,
   isEditable = false,
   onUpdate,
 }) => {
-  const { title = "Frequently Asked Questions", subtitle } = data || {};
-  const { data: faqs = [], isLoading, error } = useFAQs();
-
-  const handleTitleChange = (newTitle: string) => {
-    onUpdate?.({ title: newTitle });
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      secondary: "#F59E0B",
+      background: "#FFFFFF",
+    },
   };
 
-  const handleSubtitleChange = (newSubtitle: string) => {
-    onUpdate?.({ subtitle: newSubtitle });
+  const { data: faqsResponse, isLoading } = useFAQs();
+
+  const faqs =
+    (Array.isArray(faqsResponse)
+      ? faqsResponse
+      : (faqsResponse as any)?.results || []
+    )?.slice(0, 8) || [];
+
+  const handleUpdate = (field: keyof FAQData) => (value: string | any) => {
+    onUpdate?.({ [field]: value });
   };
 
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
+    <section className="bg-white py-16 md:py-24">
+      <div className="container mx-auto max-w-3xl px-4">
+        <div className="mb-16 text-center">
           <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+            value={data.title}
+            as="h1"
+            onChange={handleUpdate("title")}
             isEditable={isEditable}
-            placeholder="Enter title..."
           />
           <EditableText
-            value={subtitle || ""}
-            onChange={handleSubtitleChange}
+            value={
+              data.subtitle || "Everything you need to know about Nepglass."
+            }
+            onChange={handleUpdate("subtitle")}
+            isEditable={isEditable}
             as="p"
-            className="text-muted-foreground mx-auto max-w-3xl text-xl"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-            multiline={true}
+            multiline
           />
         </div>
 
-        <div className="mx-auto max-w-4xl">
-          {isLoading && (
-            <div className="space-y-6">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-14 w-full rounded-lg" />
-              ))}
-            </div>
-          )}
-
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error Loading FAQs</AlertTitle>
-              <AlertDescription>
-                {error instanceof Error
-                  ? error.message
-                  : "Failed to load FAQs."}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {!isLoading && !error && faqs.length > 0 && <FAQCard5 faqs={faqs} />}
-
-          {!isLoading && !error && faqs.length === 0 && (
-            <div className="py-16 text-center">
-              <HelpCircle className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-              <h3 className="text-foreground mb-4 text-2xl font-semibold">
-                No FAQs Available
-              </h3>
-            </div>
-          )}
-        </div>
+        {isLoading ? (
+          <div className="space-y-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-20 w-full animate-pulse rounded-2xl bg-gray-100"
+              />
+            ))}
+          </div>
+        ) : (
+          <FAQCard11 faqs={faqs} theme={theme} />
+        )}
       </div>
     </section>
   );
