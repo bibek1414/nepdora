@@ -101,6 +101,21 @@ export async function addDomainToCloudflare(domainName: string) {
 
     if (!createZoneResponse.ok || !createZoneData.success) {
       console.error("Cloudflare Add Zone Error:", createZoneData.errors);
+      
+      // Error 1061: Zone already exists
+      if (createZoneData.errors?.[0]?.code === 1061) {
+        console.log(`Zone ${domainName} already exists in Cloudflare. Fetching existing zone...`);
+        const existingZoneRes = await checkDomainVerificationStatus(domainName);
+        if (existingZoneRes.success && existingZoneRes.zoneId) {
+          return {
+            success: true,
+            nameservers: existingZoneRes.nameservers,
+            zoneId: existingZoneRes.zoneId,
+            message: "Existing zone found and reused."
+          };
+        }
+      }
+
       return {
         success: false,
         error:
@@ -196,11 +211,13 @@ export async function checkDomainVerificationStatus(domainName: string) {
     const zone = data.result[0];
     const status = zone.status; // 'active', 'pending', etc.
     const nameservers = zone.name_servers || zone.nameservers;
+    const zoneId = zone.id;
 
     return {
       success: true,
       status,
       nameservers,
+      zoneId,
     };
   } catch (error: any) {
     return {
@@ -272,3 +289,119 @@ export async function checkDnsAndAddToCloudflare(domainName: string) {
     };
   }
 }
+
+export async function addVercelDnsRecords(zoneId: string, domainName: string) {
+  try {
+    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+    if (!apiToken) {
+      return { success: false, error: "Cloudflare API Token not configured." };
+    }
+
+    console.log(`Adding DNS records for ${domainName} in zone ${zoneId}`);
+
+    // root domain A record
+    const aRecordRes = await fetch(
+      `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "A",
+          name: "@",
+          content: "76.76.21.21", // Vercel IP
+          ttl: 1,
+          proxied: false,
+        }),
+      }
+    );
+
+    const aRecordData = await aRecordRes.json();
+    console.log("A Record Response:", aRecordData);
+
+    // www CNAME record
+    const cnameRes = await fetch(
+      `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "CNAME",
+          name: "www",
+          content: "cname.vercel-dns.com",
+          ttl: 1,
+          proxied: false,
+        }),
+      }
+    );
+
+    const cnameData = await cnameRes.json();
+    console.log("CNAME Record Response:", cnameData);
+
+    return {
+      success: true,
+      aRecord: aRecordData,
+      cnameRecord: cnameData,
+    };
+  } catch (error: any) {
+    console.error("Failed to add DNS records:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to add DNS records",
+    };
+  }
+}
+
+export async function deleteDomainFromCloudflare(domainName: string) {
+  try {
+    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+    if (!apiToken) {
+      return { success: false, error: "Cloudflare API Token not configured." };
+    }
+
+    // 1. Get the zone ID
+    const zoneRes = await checkDomainVerificationStatus(domainName);
+    if (!zoneRes.success || !zoneRes.zoneId) {
+      // If zone not found, it's already deleted or not there
+      return { success: true, message: "Zone not found in Cloudflare, skipping deletion." };
+    }
+
+    const zoneId = zoneRes.zoneId;
+    console.log(`Deleting zone ${domainName} (ID: ${zoneId}) from Cloudflare`);
+
+    // 2. Delete the zone
+    const response = await fetch(
+      `https://api.cloudflare.com/client/v4/zones/${zoneId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      console.error("Cloudflare Delete Zone Error:", data.errors);
+      return {
+        success: false,
+        error: data.errors?.[0]?.message || "Failed to delete zone from Cloudflare.",
+      };
+    }
+
+    console.log(`Successfully deleted zone ${domainName} from Cloudflare.`);
+    return { success: true };
+  } catch (error: any) {
+    console.error("Cloudflare Delete Exception:", error);
+    return { success: false, error: error.message || "Failed to delete zone from Cloudflare." };
+  }
+}
+
+

@@ -12,7 +12,33 @@ import {
   deleteCustomDomain,
   CustomDomain,
 } from "@/lib/actions/custom-domain-actions";
-import { Edit2 } from "lucide-react";
+import { addDomainToVercel } from "@/lib/actions/vercel-actions";
+import {
+  provisionDomain,
+  deprovisionDomain,
+} from "@/lib/actions/domain-provisioning-actions";
+import { Edit2, Trash2, AlertTriangle, Loader2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 function DomainStatusItem({
   domainItem,
@@ -27,6 +53,7 @@ function DomainStatusItem({
   const [nameservers, setNameservers] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isProvisioning, setIsProvisioning] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Edit State
@@ -73,6 +100,15 @@ function DomainStatusItem({
 
     if (result.success) {
       setStatus("active");
+      // PROACTIVE: Trigger provisioning automatically once DNS is verified
+      setIsProvisioning(true);
+      const provisionResult = await provisionDomain(domainItem.domain);
+      if (!provisionResult.success) {
+        setError(
+          `DNS Verified, but automatic setup failed: ${provisionResult.error}. You may need to manually add it to Vercel.`
+        );
+      }
+      setIsProvisioning(false);
     } else {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setError((result as any).error || "Failed to verify DNS.");
@@ -81,13 +117,19 @@ function DomainStatusItem({
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this custom domain?")) return;
     setIsDeleting(true);
-    const result = await deleteCustomDomain(domainItem.id);
-    if (result.success) {
-      onDelete(domainItem.id);
-    } else {
-      setError(result.error || "Failed to delete domain.");
+    setError(null);
+
+    try {
+      const result = await deprovisionDomain(domainItem.id, domainItem.domain);
+      if (result.success) {
+        onDelete(domainItem.id);
+      } else {
+        setError(result.error || "Failed to fully delete domain.");
+        setIsDeleting(false);
+      }
+    } catch (err: any) {
+      setError("An unexpected error occurred during deletion.");
       setIsDeleting(false);
     }
   };
@@ -113,81 +155,155 @@ function DomainStatusItem({
   };
 
   return (
-    <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="mb-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md">
       <div className="flex flex-col gap-4 sm:justify-between xl:flex-row xl:items-center">
         <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
-          {isEditing ? (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={editDomainVal}
-                onChange={e => setEditDomainVal(e.target.value)}
-                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                disabled={isSaving}
-              />
-              <button
-                onClick={handleSaveEdit}
-                disabled={isSaving}
-                className="cursor-pointer text-sm font-medium text-green-600 hover:text-green-700 disabled:opacity-50"
-              >
-                {isSaving ? "Saving..." : "Save"}
-              </button>
-              <button
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditDomainVal(domainItem.domain);
-                }}
-                disabled={isSaving}
-                className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <>
-              <span className="font-semibold text-gray-800">
-                {domainItem.domain}
-              </span>
-              <div
-                onClick={() => setIsEditing(true)}
-                className="flex cursor-pointer items-center gap-1 border-l pl-3"
-              >
-                <Edit2 className="text-primary h-3 w-3" />
-                <span className="text-primary hover:text-primary/80 text-xs font-medium">
+          <div className="flex items-center gap-3">
+            <span className="text-base font-bold text-gray-900">
+              {domainItem.domain}
+            </span>
+
+            <Dialog open={isEditing} onOpenChange={setIsEditing}>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-100 bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100"
+                >
+                  <Edit2 className="h-3 w-3" />
                   Edit
-                </span>
-              </div>
-            </>
-          )}
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Edit Domain Name</DialogTitle>
+                </DialogHeader>
+                <div className="py-4">
+                  <Input
+                    label="Domain Name"
+                    value={editDomainVal}
+                    onChange={e => setEditDomainVal(e.target.value)}
+                    disabled={isSaving}
+                    placeholder="example.com"
+                  />
+                </div>
+                <DialogFooter className="gap-2 sm:gap-0">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsEditing(false);
+                      setEditDomainVal(domainItem.domain);
+                    }}
+                    disabled={isSaving}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSaveEdit}
+                    disabled={
+                      isSaving ||
+                      !editDomainVal ||
+                      editDomainVal === domainItem.domain
+                    }
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      "Save Changes"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
-        <div>
-          {status === "loading" && (
-            <span className="text-sm text-gray-500">
-              Checking Cloudflare...
-            </span>
-          )}
-          {status === "active" && (
-            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-              ✅ Verified Active
-            </span>
-          )}
-          {(status === "pending" || status === "initializing") && (
-            <span className="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
-              ⏳ Pending Cloudflare Verification
-            </span>
-          )}
-          {status === "dns_pending" && (
-            <span className="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-medium text-orange-800">
-              ⚠️ Waiting for DNS Configuration
-            </span>
-          )}
-          {status === "error" && (
-            <span className="text-sm text-red-500">Error: {error}</span>
-          )}
-          {status === "unknown" && (
-            <span className="text-sm text-gray-500">Status unknown</span>
-          )}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center">
+            {status === "loading" && (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Checking status...
+              </div>
+            )}
+            {status === "active" && (
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700 ring-1 ring-green-600/20 ring-inset">
+                  {isProvisioning ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+                      Provisioning...
+                    </>
+                  ) : (
+                    "✅ Verified Active"
+                  )}
+                </span>
+              </div>
+            )}
+            {(status === "pending" || status === "initializing") && (
+              <span className="inline-flex items-center rounded-full bg-yellow-50 px-2.5 py-1 text-xs font-semibold text-yellow-700 ring-1 ring-yellow-600/20 ring-inset">
+                ⏳ Pending Verification
+              </span>
+            )}
+            {status === "dns_pending" && (
+              <span className="inline-flex items-center rounded-full bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700 ring-1 ring-orange-600/20 ring-inset">
+                ⚠️ DNS Setup Required
+              </span>
+            )}
+            {status === "error" && (
+              <span className="inline-flex items-center rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 ring-1 ring-red-600/20 ring-inset">
+                ❌ Error: {error}
+              </span>
+            )}
+          </div>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="h-8 gap-1.5"
+                disabled={isDeleting || isSaving || isProvisioning}
+              >
+                {isDeleting ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="h-3.5 w-3.5" />
+                )}
+                {isDeleting ? "Deleting..." : "Delete"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                  <AlertTriangle className="h-5 w-5" />
+                  Danger Zone: Delete Domain?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-gray-600">
+                  Are you sure you want to remove{" "}
+                  <strong>{domainItem.domain}</strong>?
+                  <br />
+                  <br />
+                  This will disconnect the domain from your website and it will
+                  stop working.
+                  <br />
+                  <br />
+                  You can add it again anytime if needed.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Keep Domain</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  className="bg-red-600 text-white hover:bg-red-700"
+                >
+                  Yes, Delete Everything
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
 
@@ -273,6 +389,12 @@ export default function CloudflareDomainForm({
       // PROACTIVE: Add to Cloudflare immediately so we get real nameservers
       await addDomainToCloudflare(domain);
 
+      // PROACTIVE: Add to Vercel immediately so it's visible in Vercel console right away
+      const vercelRes = await addDomainToVercel(domain);
+      if (!vercelRes.success) {
+        console.error("Proactive Vercel addition failed:", vercelRes.error);
+      }
+
       setNewDomainAdded(true);
       setLocalDomains([...localDomains, saveResult.domain]);
       setDomain("");
@@ -347,9 +469,16 @@ export default function CloudflareDomainForm({
             <button
               type="submit"
               disabled={isLoading || !domain}
-              className="inline-flex justify-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
             >
-              {isLoading ? "Saving Domain..." : "Save Domain"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving Domain...
+                </>
+              ) : (
+                "Save Domain"
+              )}
             </button>
           </form>
 
