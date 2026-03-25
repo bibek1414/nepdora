@@ -18,25 +18,37 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
-  const { data, isLoading, isError, error, refetch } = useDashboardStats();
-
-  // Fetch counts for stats cards
-  const { data: contactsData, isLoading: isContactsLoading } = useGetContacts({
-    page: 1,
-    page_size: 1,
-  });
-  const { data: appointmentsData, isLoading: isAppointmentsLoading } =
-    useGetAppointments({ page: 1, page_size: 1 });
-  const {
-    data: pendingAppointmentsData,
-    isLoading: isPendingAppointmentsLoading,
-  } = useGetAppointments({ page: 1, page_size: 1, status: "pending" });
-
   const isServiceSite =
     user?.website_type === "service" ||
     user?.website_type === "SERVICE_WEBSITE" ||
     user?.website_type === "AGENCY_WEBSITE" ||
     user?.website_type === "CONSULTANCY_WEBSITE";
+
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useDashboardStats({ enabled: !isServiceSite });
+
+  // Fetch counts for stats cards
+  const { data: contactsData, isLoading: isContactsLoading } = useGetContacts(
+    {
+      page: 1,
+      page_size: 1,
+    },
+    { enabled: isServiceSite }
+  );
+  const { data: appointmentsData, isLoading: isAppointmentsLoading } =
+    useGetAppointments({ page: 1, page_size: 1 }, { enabled: isServiceSite });
+  const {
+    data: pendingAppointmentsData,
+    isLoading: isPendingAppointmentsLoading,
+  } = useGetAppointments(
+    { page: 1, page_size: 1, status: "pending" },
+    { enabled: isServiceSite }
+  );
 
   return (
     <div>
@@ -44,7 +56,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         <GoogleAuthRedirectHandler />
       </SessionProvider>
 
-      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+      <div className="mx-auto mt-12 mb-40 max-w-7xl px-6 md:px-8">
         {isServiceSite ? (
           <div className="space-y-12">
             <StatsCards

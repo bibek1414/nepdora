@@ -17,12 +17,12 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
 );
 
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
-  const { data, isLoading, isError, refetch } = useSubscriptionStatus();
+  const { data, isPending, isError, refetch } = useSubscriptionStatus();
 
   const value: SubscriptionContextType = {
     subscription: data,
     isActive: data?.active ?? false,
-    isLoading,
+    isLoading: isPending && !data,
     isError,
     refetch,
   };

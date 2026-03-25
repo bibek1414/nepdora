@@ -9,10 +9,14 @@ import {
 import { ContactFormSubmission } from "@/types/owner-site/components/contact";
 import { toast } from "sonner";
 
-export const useGetContacts = (filters: ContactFilters = {}) => {
+export const useGetContacts = (
+  filters: ContactFilters = {},
+  options: any = {}
+) => {
   return useQuery<PaginatedContacts>({
     queryKey: ["contacts", filters],
     queryFn: () => contactAPI.getContacts(filters),
+    ...options,
   });
 };
 

@@ -71,7 +71,7 @@ const StatCard: React.FC<StatCardProps> = ({
         </div>
 
         {/* Value */}
-        <div className="mb-4 text-3xl font-bold text-black">{value}</div>
+        <div className="mb-4 text-2xl font-bold text-black">{value}</div>
 
         {/* Simple trend line */}
         <div className="flex h-8 items-end gap-1">

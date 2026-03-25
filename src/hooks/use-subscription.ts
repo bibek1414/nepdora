@@ -12,10 +12,66 @@ import type {
   UpgradeRequest,
 } from "@/types/subscription";
 
+const SUBSCRIPTION_STATUS_STORAGE_KEY = "nepdora-subscription-status";
+
+function readPersistedSubscriptionStatus():
+  | { data: SubscriptionStatus; updatedAt: number }
+  | undefined {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  const rawValue = window.localStorage.getItem(SUBSCRIPTION_STATUS_STORAGE_KEY);
+
+  if (!rawValue) {
+    return undefined;
+  }
+
+  try {
+    const parsedValue = JSON.parse(rawValue) as {
+      data?: SubscriptionStatus;
+      updatedAt?: number;
+    };
+
+    if (!parsedValue.data || typeof parsedValue.updatedAt !== "number") {
+      return undefined;
+    }
+
+    return {
+      data: parsedValue.data,
+      updatedAt: parsedValue.updatedAt,
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+function persistSubscriptionStatus(status: SubscriptionStatus) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(
+    SUBSCRIPTION_STATUS_STORAGE_KEY,
+    JSON.stringify({
+      data: status,
+      updatedAt: Date.now(),
+    })
+  );
+}
+
 export const useSubscriptionStatus = () => {
+  const persistedStatus = readPersistedSubscriptionStatus();
+
   return useQuery<SubscriptionStatus, Error>({
     queryKey: ["subscription", "status"],
-    queryFn: subscriptionApi.getStatus,
+    queryFn: async () => {
+      const status = await subscriptionApi.getStatus();
+      persistSubscriptionStatus(status);
+      return status;
+    },
+    initialData: persistedStatus?.data,
+    initialDataUpdatedAt: persistedStatus?.updatedAt,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
   });

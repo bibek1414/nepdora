@@ -28,7 +28,12 @@ const TemplateList = () => {
     }));
   }, [debouncedSearchTerm]);
 
-  const { data: templatesData, isLoading, error } = useGetTemplates(filters);
+  const {
+    data: templatesData,
+    isLoading,
+    isFetching,
+    error,
+  } = useGetTemplates(filters);
 
   const handlePageChange = useCallback((newPage: number) => {
     setFilters(prev => ({ ...prev, page: newPage }));
@@ -46,109 +51,23 @@ const TemplateList = () => {
   const LoadingSkeleton = () => (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {[...Array(8)].map((_, i) => (
-        <Card key={i} className="overflow-hidden">
-          <Skeleton className="aspect-[4/3] w-full" />
-          <div className="space-y-3 p-4">
-            <Skeleton className="h-5 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
-            <Skeleton className="h-10 w-full" />
+        <div key={i} className="group">
+          <div className="mb-4 overflow-hidden rounded-xl border border-slate-200/60 bg-white">
+            <Skeleton className="aspect-4/3 w-full" />
           </div>
-        </Card>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <Skeleton className="h-5 w-3/4" />
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Skeleton className="h-9 w-20 rounded-full" />
+              <Skeleton className="h-9 w-16 rounded-full" />
+            </div>
+          </div>
+        </div>
       ))}
     </div>
   );
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center">
-            <Skeleton className="mx-auto mb-4 h-12 w-96" />
-            <Skeleton className="mx-auto h-6 w-64" />
-          </div>
-          <div className="mb-8">
-            <Skeleton className="mx-auto h-12 w-full max-w-md" />
-          </div>
-          <LoadingSkeleton />
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <Alert variant="destructive">
-            <AlertDescription>
-              Error loading templates. Please try again later.
-            </AlertDescription>
-          </Alert>
-        </div>
-      </div>
-    );
-  }
-
-  if (
-    !templatesData ||
-    !templatesData.results ||
-    templatesData.results.length === 0
-  ) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center">
-            <h1 className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
-              Choose From Our Templates
-            </h1>
-            <p className="text-lg text-gray-600">
-              Select a template to get started quickly
-            </p>
-          </div>
-
-          <div className="mx-auto mb-8 max-w-md">
-            <div className="relative">
-              <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Search templates..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                className="pr-10 pl-10 placeholder:text-gray-400"
-              />
-              {searchTerm && (
-                <button
-                  onClick={clearSearch}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="py-16 text-center">
-            <div className="mb-4 text-6xl">📋</div>
-            <h2 className="mb-2 text-2xl font-semibold text-gray-900">
-              {searchTerm
-                ? "No matching templates found"
-                : "No templates available"}
-            </h2>
-            <p className="mb-6 text-gray-600">
-              {searchTerm
-                ? "Try adjusting your search criteria."
-                : "Templates will appear here when available."}
-            </p>
-            {searchTerm && (
-              <Button onClick={clearSearch} variant="outline">
-                Clear Search
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">
@@ -180,22 +99,54 @@ const TemplateList = () => {
           </div>
         </div>
 
-        {/* Templates Grid */}
-        <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {templatesData.results.map(template => (
-            <TemplateCard key={template.id} template={template} />
-          ))}
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-center">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+        {/* Content Area */}
+        {error ? (
+          <Alert variant="destructive">
+            <AlertDescription>
+              Error loading templates. Please try again later.
+            </AlertDescription>
+          </Alert>
+        ) : isLoading || isFetching ? (
+          <LoadingSkeleton />
+        ) : !templatesData ||
+          !templatesData.results ||
+          templatesData.results.length === 0 ? (
+          <div className="py-16 text-center">
+            <div className="mb-4 text-6xl">📋</div>
+            <h2 className="mb-2 text-2xl font-semibold text-gray-900">
+              {searchTerm
+                ? "No matching templates found"
+                : "No templates available"}
+            </h2>
+            <p className="mb-6 text-gray-600">
+              {searchTerm
+                ? "Try adjusting your search criteria."
+                : "Templates will appear here when available."}
+            </p>
+            {searchTerm && (
+              <Button onClick={clearSearch} variant="outline">
+                Clear Search
+              </Button>
+            )}
           </div>
+        ) : (
+          <>
+            <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {templatesData.results.map(template => (
+                <TemplateCard key={template.id} template={template} />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

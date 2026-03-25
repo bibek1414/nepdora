@@ -3,15 +3,20 @@ import { appointmentAPI } from "@/services/api/owner-sites/admin/appointment";
 import {
   AppointmentFilters,
   AppointmentFormData,
+  PaginatedAppointments,
 } from "@/types/owner-site/admin/appointment";
 import { toast } from "sonner";
 
 // Get appointments with filters
-export const useGetAppointments = (filters: AppointmentFilters = {}) => {
-  return useQuery({
+export const useGetAppointments = (
+  filters: AppointmentFilters = {},
+  options: any = {}
+) => {
+  return useQuery<PaginatedAppointments>({
     queryKey: ["appointments", filters],
     queryFn: () => appointmentAPI.getAppointments(filters),
     staleTime: 30000, // 30 seconds
+    ...options,
   });
 };
 
