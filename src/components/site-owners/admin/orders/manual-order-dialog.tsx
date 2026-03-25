@@ -587,7 +587,7 @@ export function ManualOrderDialog({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {trigger || (
-            <Button>
+            <Button className="h-10 rounded-full">
               <Plus className="mr-2 h-4 w-4" />
               Create Manual Order
             </Button>

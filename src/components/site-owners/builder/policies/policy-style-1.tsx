@@ -28,7 +28,7 @@ export const PolicyStyle1: React.FC<PolicyStyleProps> = ({
   }, [data.content, isEditable]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
       <div className="rounded-lg bg-white">
         {/* Header */}
         <div className="border-b border-gray-200 px-8 py-6">

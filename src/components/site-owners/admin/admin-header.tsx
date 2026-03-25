@@ -112,18 +112,22 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+                    className="rounded-full border-none bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
                   >
                     <LayoutGrid className="mr-2 h-4 w-4" />
                     POS Mode
                   </Button>
                 </Link>
               )}
-              <Link href={liveSiteUrl} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={liveSiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+                  className="rounded-full border-none bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
                 >
                   Live Site
                   <ExternalLink className="ml-2 h-4 w-4" />
@@ -137,7 +141,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+                  className="rounded-full border-none bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
                 >
                   Preview
                   <ExternalLink className="ml-2 h-4 w-4" />
@@ -151,7 +155,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
+                  className="rounded-full border-none bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
                 >
                   <Pencil className="mr-2 h-4 w-4" />
                   Website Builder
