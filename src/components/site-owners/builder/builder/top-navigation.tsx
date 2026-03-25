@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 import { useResetUi } from "@/hooks/owner-site/components/use-reset-ui";
+import { useCustomDomain } from "@/hooks/use-custom-domain";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 interface TopNavigationProps {
   pages: Page[];
   currentPage: string;
@@ -42,6 +44,9 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const { mutate: publish, isPending } = usePublishSite();
   const { mutate: resetUi, isPending: isResetUiPending } = useResetUi();
+  const { customDomain } = useCustomDomain();
+
+  const liveSiteUrl = customDomain ? `https://${customDomain}` : "/";
 
   return (
     <header className="fixed top-0 right-0 left-0 z-45 h-16 border-b bg-white">
@@ -72,7 +77,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             Theme Settings
           </Button>
 
-          <Link href={`/`} target="_blank" rel="noopener noreferrer">
+          <Link href={liveSiteUrl} target="_blank" rel="noopener noreferrer">
             <Button
               variant="outline"
               className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"

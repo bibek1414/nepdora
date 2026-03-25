@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
+import { useCustomDomain } from "@/hooks/use-custom-domain";
 import Link from "next/link";
 import { User } from "@/types/auth/auth";
 import { getUserInitials } from "@/lib/user-utils";
@@ -42,7 +43,10 @@ interface AdminHeaderProps {
 export default function AdminHeader({ user }: AdminHeaderProps) {
   const router = useRouter();
   const { logout, user: authUser, updateUser, isLoading } = useAuth();
+  const { customDomain } = useCustomDomain();
   const currentUser = authUser || user;
+
+  const liveSiteUrl = customDomain ? `https://${customDomain}` : "/";
   const [showOnboarding, setShowOnboarding] = useState(
     !user?.is_onboarding_complete
   );
@@ -115,7 +119,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   </Button>
                 </Link>
               )}
-              <Link href={`/`} target="_blank" rel="noopener noreferrer">
+              <Link href={liveSiteUrl} target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   size="sm"
