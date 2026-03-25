@@ -1,9 +1,15 @@
 "use client";
 
-import React from "react";
-import { CTATemplate1Data } from "@/types/owner-site/components/cta";
+import React, { useMemo } from "react";
+import { CheckCircle2, ArrowUpRight } from "lucide-react";
+
+import {
+  CTATemplate1Data,
+  defaultCTATemplate1Data,
+} from "@/types/owner-site/components/cta";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
+import { EditableImage } from "@/components/ui/editable-image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
@@ -14,6 +20,32 @@ interface CTATemplate1Props {
   onUpdate?: (updatedData: Partial<CTATemplate1Data>) => void;
 }
 
+const normalizeCTAData = (ctaData: CTATemplate1Data): CTATemplate1Data => {
+  const mergedButton = {
+    ...defaultCTATemplate1Data.button,
+    ...ctaData.button,
+  };
+
+  const mergedFeatures =
+    ctaData.features && ctaData.features.length > 0
+      ? ctaData.features.map((feature, index) => ({
+          id: feature.id || `cta-4-feature-${index + 1}`,
+          text:
+            feature.text ||
+            defaultCTATemplate1Data.features[
+              index % defaultCTATemplate1Data.features.length
+            ].text,
+        }))
+      : defaultCTATemplate1Data.features;
+
+  return {
+    ...defaultCTATemplate1Data,
+    ...ctaData,
+    button: mergedButton,
+    features: mergedFeatures,
+  };
+};
+
 export const CTATemplate1: React.FC<CTATemplate1Props> = ({
   ctaData,
   siteUser,
@@ -21,7 +53,7 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
   onUpdate,
 }) => {
   const { data: themeResponse } = useThemeQuery();
-
+  // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
@@ -37,94 +69,126 @@ export const CTATemplate1: React.FC<CTATemplate1Props> = ({
     },
   };
 
-  const { data, handleTextUpdate, handleButtonUpdate } = useBuilderLogic(
-    ctaData,
-    onUpdate
-  );
+  const {
+    data,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+    handleArrayItemUpdate,
+  } = useBuilderLogic(normalizeCTAData(ctaData), onUpdate);
 
-  const getButtonClassesLocal = (variant: string) => {
-    const baseClasses =
-      " px-6 py-3 font-bold transition-colors min-w-[120px] text-center rounded-lg";
+  const primaryBackground = theme.colors?.primary;
+  const buttonTextColor = theme.colors.primary;
 
-    const buttonStyles = {
-      backgroundColor:
-        variant === "primary"
-          ? theme.colors.primaryForeground
-          : variant === "secondary"
-            ? theme.colors.secondary
-            : "transparent",
-      color:
-        variant === "primary"
-          ? theme.colors.primary
-          : variant === "secondary"
-            ? theme.colors.secondaryForeground
-            : theme.colors.primaryForeground,
-      border:
-        variant === "outline"
-          ? `2px solid ${theme.colors.primaryForeground}`
-          : "none",
-      borderRadius: "8px",
-      fontFamily: theme.fonts.body,
-    };
-
-    return { className: baseClasses, style: buttonStyles };
+  const handleButtonUpdate = (text: string, href: string) => {
+    const updatedButton = { ...data.button, text, href };
+    onUpdate?.({ button: updatedButton });
   };
 
+  const handleFeatureUpdate = (featureId: string) => (value: string) => {
+    handleArrayItemUpdate("features", featureId)({ text: value });
+  };
+
+  const overlayBackground = data.overlayColor || "#0F172A";
+  const overlayOpacity = data.overlayOpacity ?? 0.2;
+
   return (
-    <section
-      className="px-4 py-16 sm:px-6 lg:px-8"
-      style={{
-        background: theme.colors.background,
-      }}
-    >
-      <div className="mx-auto max-w-7xl">
-        {/* Title */}
-        <EditableText
-          value={data.title}
-          onChange={handleTextUpdate("title")}
-          as="h2"
-          className="mx-auto text-center text-3xl font-bold sm:text-4xl md:text-5xl"
-          isEditable={isEditable}
-          placeholder="Enter CTA title..."
-        />
+    <section className="bg-white py-12">
+      <div className="container mx-auto max-w-7xl px-[23px]">
+        <div
+          className="relative flex flex-col overflow-hidden rounded-3xl lg:flex-row"
+          style={{ backgroundColor: primaryBackground }}
+        >
+          <div className="relative z-10 p-12 text-white lg:w-1/2 lg:p-20">
+            <EditableText
+              value={data.eyebrow}
+              onChange={handleTextUpdate("eyebrow")}
+              as="div"
+              className="text-xs font-bold tracking-[0.3em] uppercase opacity-80"
+              isEditable={isEditable}
+            />
 
-        {/* Description */}
-        {data.description && (
-          <EditableText
-            value={data.description}
-            onChange={handleTextUpdate("description")}
-            as="p"
-            className="mx-auto max-w-2xl text-center text-lg"
-            isEditable={isEditable}
-            placeholder="Enter description..."
-            multiline={true}
-          />
-        )}
+            <EditableText
+              value={data.title}
+              onChange={handleTextUpdate("title")}
+              as="h3"
+              className="mb-6 block"
+              isEditable={isEditable}
+              multiline
+            />
 
-        {/* Buttons */}
-        {data.buttons.length > 0 && (
-          <div className="mt-4 flex flex-wrap justify-center gap-4">
-            {data.buttons.map(button => {
-              const buttonClass = getButtonClassesLocal(button.variant);
-              return (
-                <EditableLink
-                  key={button.id}
-                  text={button.text || "Button text"}
-                  href={button.href || "#"}
-                  onChange={(text, href) =>
-                    handleButtonUpdate("buttons")(button.id, text, href)
-                  }
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className={buttonClass.className}
-                  style={buttonClass.style}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL..."
-                />
-              );
-            })}
+            <EditableLink
+              text={data.button.text}
+              href={data.button.href || "#"}
+              onChange={handleButtonUpdate}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              className="group mb-10 inline-flex items-center gap-2 rounded-full px-8 py-3 text-base font-semibold shadow-lg transition-all hover:opacity-90 active:scale-95"
+              style={{
+                backgroundColor: "#FFFFFF",
+                color: theme.colors.primary,
+              }}
+              textPlaceholder="Button text..."
+              hrefPlaceholder="Enter URL..."
+            >
+              <div className="flex items-center gap-2">
+                <span>{data.button.text}</span>
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-full transition-transform group-hover:scale-105"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: "#FFFFFF",
+                  }}
+                >
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </div>
+              </div>
+            </EditableLink>
+
+            <div className="space-y-3">
+              {data.features.map(feature => (
+                <div
+                  key={feature.id}
+                  className="flex items-center gap-3 text-sm font-medium text-white"
+                >
+                  <CheckCircle2 size={18} />
+                  <EditableText
+                    value={feature.text}
+                    onChange={handleFeatureUpdate(feature.id)}
+                    as="span"
+                    isEditable={isEditable}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        )}
+
+          <div className="relative h-64 lg:h-auto lg:w-1/2">
+            <div className="absolute inset-0">
+              <EditableImage
+                src={data.imageUrl}
+                alt={data.imageAlt || "CTA image"}
+                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                onAltChange={handleAltUpdate("imageAlt")}
+                isEditable={isEditable}
+                className="h-full w-full"
+                width={800}
+                height={800}
+              />
+            </div>
+
+            {data.showOverlay && (
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundColor: overlayBackground,
+                  opacity: overlayOpacity,
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );
