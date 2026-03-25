@@ -6,24 +6,38 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { Edit, Trash2, ShoppingCart, User } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  ChevronDown,
+  User,
+  Heart,
+  Package,
+  LogOut,
+  ShoppingCart,
+} from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { generateLinkHref } from "@/lib/link-utils";
+import { useCategories } from "@/hooks/owner-site/admin/use-category";
+import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
+import { useAuth } from "@/hooks/customer/use-auth";
+import { useWishlist } from "@/hooks/customer/use-wishlist";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/hooks/customer/use-auth";
-import { useWishlist } from "@/hooks/customer/use-wishlist";
-import { Heart, Package, LogOut, ChevronDown } from "lucide-react";
+import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -31,11 +45,13 @@ const EditableItem: React.FC<{
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
-  siteUser: string;
   isEditable?: boolean;
   onEditLogo?: () => void;
+  onAddLink?: () => void;
+  siteUser: string;
   onEditLink?: (link: NavbarLink) => void;
   onDeleteLink?: (linkId: string) => void;
+  onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
   onEditCart?: () => void;
@@ -45,25 +61,30 @@ interface NavbarStyleProps {
 export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
-  siteUser,
   onEditLogo,
+  onAddLink,
   onEditLink,
   onDeleteLink,
+  siteUser,
+  onAddButton,
   onEditButton,
   onDeleteButton,
   onEditCart,
   disableClicks = false,
 }) => {
   const { links, buttons, showCart, enableLogin } = navbarData;
-  const midIndex = Math.ceil(links.length / 2);
-  const leftLinks = links.slice(0, midIndex);
-  const rightLinks = links.slice(midIndex);
-
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
+  const router = useRouter();
+
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
-  const router = useRouter();
+
+  const { data: categoriesData } = useCategories();
+  const { data: subCategoriesData } = useSubCategories();
+
+  const categories = categoriesData?.results || [];
+  const subCategories = subCategoriesData?.results || [];
 
   const toggleCart = () => {
     if (disableClicks) return;
@@ -73,7 +94,61 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   const closeCart = () => {
     setIsCartOpen(false);
   };
+
   const pathname = usePathname();
+
+  const handleCategoryFilter = (categorySlug: string, categoryName: string) => {
+    if (isEditable || disableClicks) return;
+
+    const filterUrl = generateLinkHref(
+      `/collections/?category=${categorySlug}`,
+      siteUser,
+      pathname
+    );
+    router.push(filterUrl);
+  };
+
+  const handleSubCategoryFilter = (
+    subCategorySlug: string,
+    subCategoryName: string
+  ) => {
+    if (isEditable || disableClicks) return;
+
+    const filterUrl = generateLinkHref(
+      `/collections/?sub_category=${subCategorySlug}`,
+      siteUser,
+      pathname
+    );
+    router.push(filterUrl);
+  };
+
+  const handleCombinedFilter = (
+    categorySlug: string,
+    subCategorySlug: string
+  ) => {
+    if (isEditable || disableClicks) return;
+
+    const filterUrl = generateLinkHref(
+      `/collections/?category=${categorySlug}&sub_category=${subCategorySlug}`,
+      siteUser,
+      pathname
+    );
+    router.push(filterUrl);
+  };
+
+  const generateCategoryHref = (categorySlug: string) => {
+    if (isEditable || disableClicks) return "#";
+    return generateLinkHref(`/category/${categorySlug}`, siteUser, pathname);
+  };
+
+  const generateSubCategoryHref = (subCategorySlug: string) => {
+    if (isEditable || disableClicks) return "#";
+    return generateLinkHref(
+      `/subcategory/${subCategorySlug}`,
+      siteUser,
+      pathname
+    );
+  };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
@@ -82,8 +157,13 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
     }
   };
 
+  const handleLoginClick = () => {
+    if (isEditable || disableClicks) return;
+    router.push(generateLinkHref("/login", siteUser, pathname));
+  };
+
   const handleProfileAction = (action: string) => {
-    if (disableClicks || isEditable) return;
+    if (isEditable || disableClicks) return;
 
     switch (action) {
       case "profile":
@@ -97,133 +177,186 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
         break;
       case "logout":
         logout();
+        router.push(generateLinkHref("/", siteUser, pathname));
         break;
     }
   };
 
-  const handleLoginClick = () => {
-    if (disableClicks || isEditable) return;
-    router.push(generateLinkHref("/login", siteUser, pathname));
+  const getSubCategoriesForCategory = (categoryId: number) => {
+    return subCategories.filter(subCat => {
+      if (typeof subCat.category === "object" && subCat.category) {
+        return subCat.category.id === categoryId;
+      }
+      return parseInt(subCat.category as string) === categoryId;
+    });
   };
 
   return (
     <>
       <nav
-        className={`bg-background flex items-center justify-between p-4 ${
-          !isEditable ? "sticky top-16 z-40 border-b" : ""
+        className={`bg-background flex items-center justify-between border-b p-4 ${
+          !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
       >
-        <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
-          {leftLinks.map(link =>
-            isEditable && onEditLink && onDeleteLink ? (
-              <EditableItem key={link.id}>
-                <Link
-                  href={link.href}
-                  onClick={e => e.preventDefault()}
-                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
-                >
-                  {link.text}
-                </Link>
+        <div className="flex items-center gap-8">
+          <div className={disableClicks ? "pointer-events-auto" : ""}>
+            {isEditable && onEditLogo ? (
+              <EditableItem>
+                <NavbarLogo
+                  data={navbarData}
+                  isEditable={isEditable}
+                  onEdit={onEditLogo}
+                />
               </EditableItem>
             ) : (
-              <Link
-                key={link.id}
-                href={generateLinkHref(
-                  link.href,
-                  siteUser,
-                  pathname,
-                  isEditable,
-                  disableClicks
-                )}
-                target={
-                  link.href?.startsWith("http") ||
-                  link.href?.startsWith("mailto:")
-                    ? "_blank"
-                    : undefined
-                }
-                rel={
-                  link.href?.startsWith("http") ||
-                  link.href?.startsWith("mailto:")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
-                onClick={e => handleLinkClick(e, link.href)}
-                className={`text-sm font-medium transition-colors ${
-                  disableClicks
-                    ? "cursor-default opacity-60"
-                    : "cursor-pointer hover:opacity-80"
-                }`}
+              <div
+                onClick={disableClicks ? e => e.preventDefault() : undefined}
               >
-                {link.text}
-              </Link>
-            )
-          )}
-        </div>
+                <NavbarLogo data={navbarData} siteUser={siteUser} />
+              </div>
+            )}
+          </div>
 
-        <div className={`px-8 ${disableClicks ? "pointer-events-auto" : ""}`}>
-          {isEditable && onEditLogo ? (
-            <EditableItem>
-              <NavbarLogo
-                data={navbarData}
+          <div className="hidden items-center gap-6 md:flex">
+            <div
+              className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
+            >
+              <SearchBar
+                siteUser={siteUser}
                 isEditable={isEditable}
-                onEdit={onEditLogo}
+                className="w-full"
               />
-            </EditableItem>
-          ) : (
-            <div onClick={disableClicks ? e => e.preventDefault() : undefined}>
-              <NavbarLogo data={navbarData} siteUser={siteUser} />
             </div>
-          )}
-        </div>
 
-        <div className="hidden flex-1 items-center justify-start gap-4 md:flex">
-          {rightLinks.map(link =>
-            isEditable && onEditLink && onDeleteLink ? (
-              <EditableItem key={link.id}>
+            {links.map(link =>
+              isEditable && onEditLink && onDeleteLink ? (
+                <EditableItem key={link.id}>
+                  <Link
+                    href={link.href}
+                    onClick={e => e.preventDefault()}
+                    className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                  >
+                    {link.text}
+                  </Link>
+                </EditableItem>
+              ) : (
                 <Link
-                  href={link.href}
-                  onClick={e => e.preventDefault()}
-                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                  key={link.id}
+                  href={generateLinkHref(
+                    link.href,
+                    siteUser,
+                    pathname,
+                    isEditable,
+                    disableClicks
+                  )}
+                  target={
+                    link.href?.startsWith("http") ||
+                    link.href?.startsWith("mailto:")
+                      ? "_blank"
+                      : undefined
+                  }
+                  rel={
+                    link.href?.startsWith("http") ||
+                    link.href?.startsWith("mailto:")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
+                  onClick={e => handleLinkClick(e, link.href)}
+                  className={`text-sm font-medium transition-colors ${
+                    disableClicks
+                      ? "cursor-default opacity-60"
+                      : "cursor-pointer hover:opacity-80"
+                  }`}
                 >
                   {link.text}
                 </Link>
-              </EditableItem>
-            ) : (
-              <Link
-                key={link.id}
-                href={generateLinkHref(
-                  link.href,
-                  siteUser,
-                  pathname,
-                  isEditable,
-                  disableClicks
-                )}
-                target={
-                  link.href?.startsWith("http") ||
-                  link.href?.startsWith("mailto:")
-                    ? "_blank"
-                    : undefined
-                }
-                rel={
-                  link.href?.startsWith("http") ||
-                  link.href?.startsWith("mailto:")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
-                onClick={e => handleLinkClick(e, link.href)}
-                className={`text-sm font-medium transition-colors ${
-                  disableClicks
-                    ? "cursor-default opacity-60"
-                    : "cursor-pointer hover:opacity-80"
-                }`}
-                style={{
-                  pointerEvents: disableClicks ? "auto" : undefined,
-                }}
-              >
-                {link.text}
-              </Link>
-            )
-          )}
+              )
+            )}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                    disableClicks
+                      ? "pointer-events-auto cursor-default opacity-60"
+                      : "cursor-pointer hover:opacity-80"
+                  }`}
+                  onClick={disableClicks ? e => e.preventDefault() : undefined}
+                >
+                  Categories
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              {!disableClicks && (
+                <DropdownMenuContent className="w-56" align="start">
+                  {categories.map(category => {
+                    const categorySubCategories = getSubCategoriesForCategory(
+                      category.id
+                    );
+
+                    if (categorySubCategories.length > 0) {
+                      return (
+                        <DropdownMenuSub key={category.id}>
+                          <DropdownMenuSubTrigger className="cursor-pointer">
+                            <span>{category.name}</span>
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent className="w-48">
+                            <DropdownMenuItem
+                              className="cursor-pointer font-medium"
+                              onClick={() =>
+                                handleCategoryFilter(
+                                  category.slug,
+                                  category.name
+                                )
+                              }
+                            >
+                              View All {category.name}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            {categorySubCategories.map(subCategory => (
+                              <DropdownMenuItem
+                                key={subCategory.id}
+                                className="cursor-pointer"
+                                onClick={() =>
+                                  handleSubCategoryFilter(
+                                    subCategory.slug,
+                                    subCategory.name
+                                  )
+                                }
+                              >
+                                {subCategory.name}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                      );
+                    } else {
+                      return (
+                        <DropdownMenuItem
+                          key={category.id}
+                          className="cursor-pointer"
+                          onClick={() =>
+                            handleCategoryFilter(category.slug, category.name)
+                          }
+                        >
+                          {category.name}
+                        </DropdownMenuItem>
+                      );
+                    }
+                  })}
+                  {categories.length === 0 && (
+                    <DropdownMenuItem disabled>
+                      No categories available
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
           {buttons.map(button =>
             isEditable && onEditButton && onDeleteButton ? (
               <EditableItem key={button.id}>
@@ -231,7 +364,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   onClick={e => e.preventDefault()}
                   variant={getButtonVariant(button.variant)}
                   size="sm"
-                  className="cursor-pointer"
+                  className="cursor-pointer bg-black text-white hover:bg-black/90"
                 >
                   {button.text}
                 </Button>
@@ -242,7 +375,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
-                className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                className={`bg-black text-white hover:bg-black/90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
@@ -277,91 +410,90 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
           )}
 
           {enableLogin && (
-            <div className={disableClicks ? "pointer-events-auto" : ""}>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`flex items-center gap-1 p-2 text-black ${
-                      disableClicks || isEditable
-                        ? "cursor-default opacity-60"
-                        : "cursor-pointer hover:opacity-80"
-                    }`}
-                    onClick={
-                      disableClicks ? e => e.preventDefault() : undefined
-                    }
-                  >
-                    <User className="h-5 w-5" />
-                    {isAuthenticated ? (
-                      <>
-                        <span className="hidden text-sm font-medium sm:inline-block">
-                          {user?.first_name || "Account"}
-                        </span>
-                        <ChevronDown className="h-4 w-4" />
-                      </>
-                    ) : null}
-                  </Button>
-                </DropdownMenuTrigger>
-                {!disableClicks && !isEditable && (
-                  <DropdownMenuContent className="w-48" align="end">
-                    {isAuthenticated ? (
-                      <>
-                        <DropdownMenuItem
-                          className="cursor-pointer"
-                          onClick={() => handleProfileAction("profile")}
-                        >
-                          <User className="mr-2 h-4 w-4" />
-                          My Profile
-                        </DropdownMenuItem>
-                        {(!user?.website_type ||
-                          user.website_type === "ecommerce") && (
-                          <>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => handleProfileAction("wishlist")}
-                            >
-                              <Heart className="mr-2 h-4 w-4" />
-                              <div className="flex w-full items-center justify-between">
-                                <span>Wishlist</span>
-                                {wishlistCount > 0 && (
-                                  <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
-                                    {wishlistCount}
-                                  </span>
-                                )}
-                              </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => handleProfileAction("orders")}
-                            >
-                              <Package className="mr-2 h-4 w-4" />
-                              My Orders
-                            </DropdownMenuItem>
-                          </>
-                        )}
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="cursor-pointer text-red-600 focus:text-red-600"
-                          onClick={() => handleProfileAction("logout")}
-                        >
-                          <LogOut className="mr-2 h-4 w-4" />
-                          Logout
-                        </DropdownMenuItem>
-                      </>
-                    ) : (
+            <>
+              {!isAuthenticated ? (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={isEditable ? undefined : handleLoginClick}
+                  className={`bg-black text-white hover:bg-black/90 ${
+                    isEditable
+                      ? "pointer-events-none opacity-60"
+                      : disableClicks
+                        ? "pointer-events-auto cursor-default opacity-60"
+                        : "pointer-events-auto"
+                  }`}
+                >
+                  {isEditable ? "Login (Preview Only)" : "Login"}
+                </Button>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className={`flex items-center gap-1 bg-black text-white hover:bg-black/90 ${
+                        isEditable || disableClicks
+                          ? "pointer-events-auto cursor-default opacity-60"
+                          : ""
+                      }`}
+                      onClick={
+                        disableClicks ? e => e.preventDefault() : undefined
+                      }
+                    >
+                      <User className="h-4 w-4" />
+                      {user?.first_name || "Profile"}
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  {!disableClicks && !isEditable && (
+                    <DropdownMenuContent className="w-48" align="end">
                       <DropdownMenuItem
                         className="cursor-pointer"
-                        onClick={handleLoginClick}
+                        onClick={() => handleProfileAction("profile")}
                       >
                         <User className="mr-2 h-4 w-4" />
-                        Login / Register
+                        My Profile
                       </DropdownMenuItem>
-                    )}
-                  </DropdownMenuContent>
-                )}
-              </DropdownMenu>
-            </div>
+                      {(!user?.website_type ||
+                        user.website_type === "ecommerce") && (
+                        <>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => handleProfileAction("wishlist")}
+                          >
+                            <Heart className="mr-2 h-4 w-4" />
+                            <div className="flex w-full items-center justify-between">
+                              <span>Wishlist</span>
+                              {wishlistCount > 0 && (
+                                <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                  {wishlistCount}
+                                </span>
+                              )}
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => handleProfileAction("orders")}
+                          >
+                            <Package className="mr-2 h-4 w-4" />
+                            My Orders
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="cursor-pointer text-red-600 focus:text-red-600"
+                        onClick={() => handleProfileAction("logout")}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  )}
+                </DropdownMenu>
+              )}
+            </>
           )}
 
           {showCart && (

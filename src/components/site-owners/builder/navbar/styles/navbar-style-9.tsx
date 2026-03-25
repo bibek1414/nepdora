@@ -1,57 +1,54 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/site-owners/button";
+import Link from "next/link";
+import NextImage from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetClose,
-} from "@/components/ui/sheet";
+  ShoppingCart,
+  Menu,
+  X,
+  ChevronDown,
+  HelpCircle,
+  Phone,
+  User,
+  LogOut,
+  Package,
+  Heart,
+} from "lucide-react";
+
+import { useCart } from "@/hooks/owner-site/admin/use-cart";
+import { useAuth } from "@/hooks/customer/use-auth";
+import { useProfile } from "@/hooks/customer/use-customer-profile";
+import { useCategories } from "@/hooks/owner-site/admin/use-category";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
+import { SearchBar } from "@/components/site-owners/builder/search-bar/search-bar";
+
 import {
   NavbarData,
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import {
-  Edit,
-  Trash2,
-  Menu,
-  X,
-  Search,
-  ShoppingCart,
-  User,
-} from "lucide-react";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { NavbarLogo } from "../navbar-logo";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import SideCart from "../../cart/side-cart";
 import { generateLinkHref } from "@/lib/link-utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/hooks/customer/use-auth";
-import { useWishlist } from "@/hooks/customer/use-wishlist";
-import { Heart, Package, LogOut, ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 const EditableItem: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => <div className="group relative">{children}</div>;
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
-  siteUser: string;
   isEditable?: boolean;
   onEditLogo?: () => void;
   onAddLink?: () => void;
+  siteUser: string;
   onEditLink?: (link: NavbarLink) => void;
   onDeleteLink?: (linkId: string) => void;
   onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
   onEditCart?: () => void;
+  onToggleCart?: () => void;
   disableClicks?: boolean;
 }
 
@@ -64,33 +61,53 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
   onDeleteLink,
   onEditButton,
   onDeleteButton,
+  onEditCart,
+  onToggleCart,
   disableClicks = false,
 }) => {
-  const { links, buttons, showCart, enableLogin } = navbarData;
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth();
-  const { data: wishlistData } = useWishlist();
-  const wishlistCount = wishlistData?.length || 0;
-  const router = useRouter();
+  const { data } = useBuilderLogic(navbarData, undefined);
+  const { links, buttons, showCart, enableLogin } = data;
 
-  const toggleMobileMenu = () => {
-    if (disableClicks) return;
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const { itemCount, totalPrice } = useCart();
+  const { user, logout, isAuthenticated } = useAuth();
+  const { data: profile } = useProfile();
+  const { data: categoriesData } = useCategories();
+  const { data: siteConfig } = useSiteConfig();
+  const categories: any[] = categoriesData?.results || [];
+
+  const compareItems: any[] = []; // Mock compare items
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const router = useRouter();
   const pathname = usePathname();
+
+  const toggleCart = () => {
+    if (disableClicks) return;
+    setIsCartOpen(!isCartOpen);
+    if (onToggleCart) onToggleCart();
+  };
+
+  const closeCart = () => {
+    setIsCartOpen(false);
+  };
+
+  const formatCategoryUrl = (category: string) => {
+    return category.toLowerCase().replace(/\s+/g, "-");
+  };
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
     if (disableClicks || isEditable) {
       e.preventDefault();
       return;
     }
-    setIsMobileMenuOpen(false);
   };
 
   const handleProfileAction = (action: string) => {
     if (disableClicks || isEditable) return;
+    setIsAccountOpen(false);
 
     switch (action) {
       case "profile":
@@ -106,61 +123,313 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
         logout();
         break;
     }
-    setIsMobileMenuOpen(false);
   };
 
   const handleLoginClick = () => {
     if (disableClicks || isEditable) return;
     router.push(generateLinkHref("/login", siteUser, pathname));
-    setIsMobileMenuOpen(false);
+  };
+
+  const handleAccountClick = () => {
+    if (disableClicks || isEditable) return;
+    isAuthenticated ? setIsAccountOpen(!isAccountOpen) : handleLoginClick();
   };
 
   return (
     <>
-      <nav
-        className={`bg-background mx-auto flex max-w-7xl items-center justify-between p-4 lg:p-6 ${
-          !isEditable ? "sticky top-0 z-40 border-b" : ""
-        } ${disableClicks ? "pointer-events-none" : ""}`}
+      <header
+        className={`border-b border-gray-100 bg-white ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
       >
-        {/* Logo - Left side */}
-        <div className="flex min-w-0 flex-1 items-center lg:gap-6">
-          <div
-            className={`shrink-0 ${disableClicks ? "pointer-events-auto" : ""}`}
-          >
-            {isEditable && onEditLogo ? (
-              <EditableItem>
-                <NavbarLogo
-                  data={navbarData}
-                  isEditable={isEditable}
-                  onEdit={onEditLogo}
-                />
-              </EditableItem>
-            ) : (
-              <div
-                onClick={disableClicks ? e => e.preventDefault() : undefined}
+        {/* Main Header */}
+        <div className="bg-white py-4 md:py-6">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between gap-4 md:gap-8">
+              {/* Mobile Menu Button */}
+              <button
+                className="pointer-events-auto -ml-2 p-2 text-gray-600 md:hidden"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                disabled={disableClicks}
               >
-                <NavbarLogo data={navbarData} siteUser={siteUser} />
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+
+              {/* Logo */}
+              <div
+                className={`flex shrink-0 items-center gap-2 ${disableClicks ? "pointer-events-auto" : ""}`}
+              >
+                {isEditable && onEditLogo ? (
+                  <EditableItem>
+                    <NavbarLogo
+                      data={navbarData}
+                      isEditable={isEditable}
+                      onEdit={onEditLogo}
+                    />
+                  </EditableItem>
+                ) : (
+                  <div
+                    onClick={
+                      disableClicks ? e => e.preventDefault() : undefined
+                    }
+                  >
+                    <NavbarLogo data={navbarData} siteUser={siteUser} />
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Search Bar */}
+              <div className="pointer-events-auto hidden max-w-2xl flex-1 md:flex">
+                <SearchBar
+                  siteUser={siteUser}
+                  isEditable={isEditable}
+                  className="w-full"
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="pointer-events-auto flex items-center gap-2 sm:gap-6">
+                {/* Account Link */}
+                {enableLogin && (
+                  <div className="group relative">
+                    <div
+                      className={`hidden flex-col items-end leading-tight md:flex ${disableClicks || isEditable ? "cursor-default opacity-60" : "cursor-pointer hover:opacity-80"}`}
+                      onClick={handleAccountClick}
+                    >
+                      <span className="text-[10px] font-medium text-gray-500">
+                        {isAuthenticated
+                          ? `Hello, ${(profile as any)?.first_name || user?.first_name || "User"}`
+                          : "Hello, Sign In"}
+                      </span>
+                      <span className="text-navy-900 flex items-center gap-1 text-sm font-medium">
+                        My Account{" "}
+                        <ChevronDown
+                          size={12}
+                          className={`transition-transform duration-200 ${isAccountOpen ? "rotate-180" : ""}`}
+                        />
+                      </span>
+                    </div>
+
+                    {/* Account Dropdown */}
+                    {isAuthenticated && !disableClicks && !isEditable && (
+                      <div
+                        className={`absolute top-full right-0 z-50 mt-2 w-56 rounded-2xl border border-gray-100 bg-white py-2 transition-all duration-200 ${isAccountOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"}`}
+                      >
+                        <div
+                          onClick={() => handleProfileAction("profile")}
+                          className="hover:text-brand-600 flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                        >
+                          <User size={18} /> My Profile
+                        </div>
+                        <div
+                          onClick={() => handleProfileAction("orders")}
+                          className="hover:text-brand-600 flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                        >
+                          <Package size={18} /> My Orders
+                        </div>
+                        <div
+                          onClick={() => handleProfileAction("wishlist")}
+                          className="hover:text-brand-600 flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                        >
+                          <Heart size={18} /> Wishlist
+                        </div>
+                        <div className="my-2 h-px bg-gray-100"></div>
+                        <button
+                          onClick={() => handleProfileAction("logout")}
+                          className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
+                        >
+                          <LogOut size={18} /> Sign Out
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {enableLogin && (
+                  <div className="hidden h-8 w-px bg-gray-200 md:block"></div>
+                )}
+
+                {/* Cart Icon */}
+                {showCart && (
+                  <div className={disableClicks ? "pointer-events-auto" : ""}>
+                    {isEditable && onEditCart ? (
+                      <EditableItem>
+                        <button
+                          onClick={onEditCart}
+                          className="group relative flex cursor-pointer items-center gap-2 rounded-full p-2 transition-colors hover:bg-gray-50"
+                        >
+                          <div className="relative">
+                            <ShoppingCart className="group-hover:text-brand-600 h-6 w-6 text-gray-700 transition-colors" />
+                            {itemCount > 0 && (
+                              <span className="absolute -top-1.5 -right-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] leading-none font-bold text-white ring-2 ring-white">
+                                {itemCount}
+                              </span>
+                            )}
+                          </div>
+                          <div className="hidden flex-col items-start leading-none lg:flex">
+                            <span className="text-[10px] font-medium text-gray-500">
+                              My Cart
+                            </span>
+                            <span className="text-navy-900 text-xs font-bold">
+                              Rs.
+                              {Number(totalPrice.toFixed(2)).toLocaleString(
+                                "en-IN"
+                              )}
+                            </span>
+                          </div>
+                        </button>
+                      </EditableItem>
+                    ) : (
+                      <button
+                        onClick={
+                          disableClicks ? e => e.preventDefault() : toggleCart
+                        }
+                        className={`group relative flex items-center gap-2 rounded-full p-2 transition-colors hover:bg-gray-50 ${disableClicks ? "pointer-events-none cursor-default opacity-60" : "cursor-pointer"}`}
+                        aria-label={`Shopping cart with ${itemCount} items`}
+                      >
+                        <div className="relative">
+                          <ShoppingCart className="group-hover:text-brand-600 h-6 w-6 text-gray-700 transition-colors" />
+                          {itemCount > 0 && (
+                            <span className="absolute -top-1.5 -right-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] leading-none font-bold text-white ring-2 ring-white">
+                              {itemCount}
+                            </span>
+                          )}
+                        </div>
+                        <div className="hidden flex-col items-start leading-none lg:flex">
+                          <span className="text-[10px] font-medium text-gray-500">
+                            My Cart
+                          </span>
+                          <span className="text-navy-900 text-xs font-bold">
+                            Rs.
+                            {Number(totalPrice.toFixed(2)).toLocaleString(
+                              "en-IN"
+                            )}
+                          </span>
+                        </div>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Search */}
+            <div
+              className={`mt-4 md:hidden ${disableClicks ? "pointer-events-auto" : ""}`}
+            >
+              <SearchBar
+                siteUser={siteUser}
+                isEditable={isEditable}
+                className="w-full"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Desktop Navigation - Right side */}
-        <div className="hidden shrink-0 items-center gap-4 lg:flex">
-          {/* Desktop Links */}
-          <div className="hidden items-center gap-6 lg:flex">
-            {links.map(link =>
-              isEditable && onEditLink && onDeleteLink ? (
-                <EditableItem key={link.id}>
-                  <Link
-                    href={link.href}
-                    onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-base font-medium text-black transition-colors hover:text-black/80"
-                  >
-                    {link.text}
-                  </Link>
-                </EditableItem>
-              ) : (
+        {/* Category & Builder Links Navigation Bar */}
+        <div className="hidden border-t border-gray-100 bg-white md:block">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="pointer-events-auto flex items-center gap-8">
+              {/* All Categories Dropdown Trigger */}
+              <div className="group relative cursor-pointer py-3">
+                <div className="text-navy-900 flex items-center gap-2 text-sm font-medium">
+                  <Menu size={18} />
+                  All Categories
+                  <ChevronDown
+                    size={14}
+                    className="text-gray-400 transition-transform group-hover:rotate-180"
+                  />
+                </div>
+                {/* Dropdown Menu */}
+                <div className="invisible absolute top-full left-0 z-40 w-64 translate-y-2 transform rounded-b-lg border border-gray-100 bg-white opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  <div className="px-5 py-2">
+                    {categories.map(category => (
+                      <Link
+                        key={category.id}
+                        href={generateLinkHref(
+                          `/collections?category=${category.slug}`,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        className="hover:text-brand-600 block border-b border-gray-50 py-2 text-sm font-medium text-gray-900"
+                        onClick={e => {
+                          handleLinkClick(e);
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        {category.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Horizontal Builder Links */}
+              <nav className="no-scrollbar flex items-center gap-6 overflow-x-auto py-3">
+                {links.map(link =>
+                  isEditable && onEditLink && onDeleteLink ? (
+                    <EditableItem key={link.id}>
+                      <span className="hover:text-brand-600 cursor-pointer text-sm font-medium whitespace-nowrap text-gray-600 transition-colors">
+                        {link.text}
+                      </span>
+                    </EditableItem>
+                  ) : (
+                    <Link
+                      key={link.id}
+                      href={generateLinkHref(
+                        link.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className={`text-sm font-medium whitespace-nowrap transition-colors ${
+                        pathname.includes(link.href)
+                          ? "text-brand-600 font-semibold"
+                          : "hover:text-brand-600 text-gray-600"
+                      } ${disableClicks ? "pointer-events-none cursor-default opacity-60" : "cursor-pointer"}`}
+                    >
+                      {link.text}
+                    </Link>
+                  )
+                )}
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMenuOpen && !disableClicks && !isEditable && (
+          <div className="pointer-events-auto fixed inset-0 z-40 overflow-y-auto bg-white md:hidden">
+            <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 p-4">
+              <span className="text-navy-900 text-lg font-bold">Menu</span>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="space-y-4 p-4">
+              <div className="mb-2 text-xs font-bold tracking-wider text-gray-400 uppercase">
+                Builder Links
+              </div>
+              {links.map(link => (
                 <Link
                   key={link.id}
                   href={generateLinkHref(
@@ -182,309 +451,100 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       ? "noopener noreferrer"
                       : undefined
                   }
-                  onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-base font-medium transition-colors ${
-                    disableClicks
-                      ? "cursor-default opacity-60"
-                      : "cursor-pointer text-black hover:text-black/80"
-                  }`}
+                  onClick={e => {
+                    handleLinkClick(e, link.href);
+                    setIsMenuOpen(false);
+                  }}
+                  className="block border-b border-gray-50 py-2 text-sm font-medium text-gray-900"
                 >
                   {link.text}
                 </Link>
-              )
-            )}
-          </div>
+              ))}
 
-          {/* Desktop Buttons */}
-          <div className="hidden items-center gap-3 lg:flex">
-            {buttons.map(button =>
-              isEditable && onEditButton && onDeleteButton ? (
-                <EditableItem key={button.id}>
-                  <Button
-                    onClick={e => e.preventDefault()}
-                    variant="default"
-                    size="default"
-                    className="cursor-pointer bg-black px-6 py-2 text-base text-white hover:bg-black/90"
-                  >
-                    {button.text}
-                  </Button>
-                </EditableItem>
-              ) : (
-                <Button
-                  key={button.id}
-                  variant="default"
-                  size="default"
-                  onClick={disableClicks ? e => e.preventDefault() : undefined}
-                  className={`bg-black px-6 py-2 text-base text-white hover:bg-black/90 ${
+              <div className="mt-4 mb-2 text-xs font-bold tracking-wider text-gray-400 uppercase">
+                Categories
+              </div>
+              {categories.map(category => (
+                <Link
+                  key={category.id}
+                  href={generateLinkHref(
+                    `/category/${formatCategoryUrl(category.slug)}`,
+                    siteUser,
+                    pathname,
+                    isEditable,
                     disableClicks
-                      ? "pointer-events-auto cursor-default opacity-60"
-                      : ""
-                  }`}
-                  asChild={!disableClicks}
-                >
-                  {disableClicks ? (
-                    button.text
-                  ) : (
-                    <Link
-                      href={generateLinkHref(
-                        button.href,
-                        siteUser,
-                        pathname,
-                        isEditable,
-                        disableClicks
-                      )}
-                      target={
-                        button.href?.startsWith("http") ||
-                        button.href?.startsWith("mailto:")
-                          ? "_blank"
-                          : undefined
-                      }
-                      rel={
-                        button.href?.startsWith("http") ||
-                        button.href?.startsWith("mailto:")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                    >
-                      {button.text}
-                    </Link>
                   )}
-                </Button>
-              )
-            )}
-          </div>
-        </div>
+                  className="block border-b border-gray-50 py-2 text-sm font-medium text-gray-900"
+                  onClick={e => {
+                    handleLinkClick(e);
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  {category.name}
+                </Link>
+              ))}
 
-        {enableLogin && (
-          <div
-            className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}
-          >
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`flex items-center gap-1 p-2 text-black transition-colors hover:text-black/80 ${
-                    disableClicks || isEditable
-                      ? "cursor-default opacity-60"
-                      : "cursor-pointer"
-                  }`}
-                  onClick={disableClicks ? e => e.preventDefault() : undefined}
+              <div className="space-y-3 pt-4">
+                <div
+                  onClick={() => {
+                    handleProfileAction("profile");
+                    setIsMenuOpen(false);
+                  }}
+                  className="block cursor-pointer text-sm text-gray-600"
                 >
-                  <User className="h-5 w-5" />
-                  {isAuthenticated ? (
-                    <>
-                      <span className="hidden text-sm font-medium lg:inline-block">
-                        {user?.first_name || "Account"}
-                      </span>
-                      <ChevronDown className="h-4 w-4" />
-                    </>
-                  ) : null}
-                </Button>
-              </DropdownMenuTrigger>
-              {!disableClicks && !isEditable && (
-                <DropdownMenuContent className="w-48" align="end">
-                  {isAuthenticated ? (
-                    <>
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => handleProfileAction("profile")}
-                      >
-                        <User className="mr-2 h-4 w-4" />
-                        My Profile
-                      </DropdownMenuItem>
-                      {(!user?.website_type ||
-                        user.website_type === "ecommerce") && (
-                        <>
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => handleProfileAction("wishlist")}
-                          >
-                            <Heart className="mr-2 h-4 w-4" />
-                            <div className="flex w-full items-center justify-between">
-                              <span>Wishlist</span>
-                              {wishlistCount > 0 && (
-                                <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
-                                  {wishlistCount}
-                                </span>
-                              )}
-                            </div>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => handleProfileAction("orders")}
-                          >
-                            <Package className="mr-2 h-4 w-4" />
-                            My Orders
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="cursor-pointer text-red-600 focus:text-red-600"
-                        onClick={() => handleProfileAction("logout")}
-                      >
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
-                      </DropdownMenuItem>
-                    </>
-                  ) : (
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={handleLoginClick}
-                    >
-                      <User className="mr-2 h-4 w-4" />
-                      Login / Register
-                    </DropdownMenuItem>
+                  My Account
+                </div>
+                <div
+                  onClick={() => {
+                    handleProfileAction("orders");
+                    setIsMenuOpen(false);
+                  }}
+                  className="block cursor-pointer text-sm text-gray-600"
+                >
+                  Orders
+                </div>
+                <Link
+                  href={generateLinkHref(
+                    "/compare",
+                    siteUser,
+                    pathname,
+                    isEditable,
+                    disableClicks
                   )}
-                </DropdownMenuContent>
-              )}
-            </DropdownMenu>
+                  onClick={e => {
+                    handleLinkClick(e);
+                    setIsMenuOpen(false);
+                  }}
+                  className="block text-sm text-gray-600"
+                >
+                  Compare Products
+                </Link>
+                <Link
+                  href={generateLinkHref(
+                    "/faq",
+                    siteUser,
+                    pathname,
+                    isEditable,
+                    disableClicks
+                  )}
+                  onClick={e => {
+                    handleLinkClick(e);
+                    setIsMenuOpen(false);
+                  }}
+                  className="block text-sm text-gray-600"
+                >
+                  Help Center
+                </Link>
+              </div>
+            </div>
           </div>
         )}
+      </header>
 
-        {/* Mobile Header Right Side - Menu Button & Cart */}
-        <div className="flex items-center gap-2 lg:hidden">
-          {/* Cart Icon - Mobile */}
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleMobileMenu}
-            className="h-10 w-10"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Sheet */}
-      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="right" className="w-1/2 sm:max-w-md">
-          <SheetHeader className="flex flex-row items-center justify-between border-b pb-4">
-            <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
-          </SheetHeader>
-
-          <div className="mt-6 flex h-[calc(100vh-100px)] flex-col">
-            {/* Mobile Links */}
-            <div className="mb-6 space-y-2">
-              {links.map(link =>
-                isEditable && onEditLink && onDeleteLink ? (
-                  <EditableItem key={link.id}>
-                    <Button
-                      variant="ghost"
-                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
-                      onClick={e => e.preventDefault()}
-                    >
-                      {link.text}
-                    </Button>
-                  </EditableItem>
-                ) : (
-                  <SheetClose asChild key={link.id}>
-                    <Button
-                      variant="ghost"
-                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
-                      asChild={!disableClicks}
-                    >
-                      <Link
-                        href={generateLinkHref(
-                          link.href,
-                          siteUser,
-                          pathname,
-                          isEditable,
-                          disableClicks
-                        )}
-                        target={
-                          link.href?.startsWith("http") ||
-                          link.href?.startsWith("mailto:")
-                            ? "_blank"
-                            : undefined
-                        }
-                        rel={
-                          link.href?.startsWith("http") ||
-                          link.href?.startsWith("mailto:")
-                            ? "noopener noreferrer"
-                            : undefined
-                        }
-                        onClick={e => handleLinkClick(e, link.href)}
-                        className={`w-full text-left ${
-                          disableClicks ? "pointer-events-none opacity-60" : ""
-                        }`}
-                      >
-                        {link.text}
-                      </Link>
-                    </Button>
-                  </SheetClose>
-                )
-              )}
-            </div>
-
-            {/* Mobile Buttons */}
-            <div className="mb-6 space-y-3">
-              {buttons.map(button =>
-                isEditable && onEditButton && onDeleteButton ? (
-                  <EditableItem key={button.id}>
-                    <Button
-                      onClick={e => e.preventDefault()}
-                      variant="default"
-                      size="default"
-                      className="w-full cursor-pointer justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90"
-                    >
-                      {button.text}
-                    </Button>
-                  </EditableItem>
-                ) : (
-                  <SheetClose asChild key={button.id}>
-                    <Button
-                      variant="default"
-                      size="default"
-                      onClick={
-                        disableClicks ? e => e.preventDefault() : undefined
-                      }
-                      className={`w-full justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90 ${
-                        disableClicks
-                          ? "pointer-events-auto cursor-default opacity-60"
-                          : ""
-                      }`}
-                      asChild={!disableClicks}
-                    >
-                      {disableClicks ? (
-                        <span>{button.text}</span>
-                      ) : (
-                        <Link
-                          href={generateLinkHref(
-                            button.href,
-                            siteUser,
-                            pathname,
-                            isEditable,
-                            disableClicks
-                          )}
-                          className="w-full text-center"
-                          target={
-                            button.href?.startsWith("http") ||
-                            button.href?.startsWith("mailto:")
-                              ? "_blank"
-                              : undefined
-                          }
-                          rel={
-                            button.href?.startsWith("http") ||
-                            button.href?.startsWith("mailto:")
-                              ? "noopener noreferrer"
-                              : undefined
-                          }
-                        >
-                          {button.text}
-                        </Link>
-                      )}
-                    </Button>
-                  </SheetClose>
-                )
-              )}
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Only show SideCart in preview mode, not in editable mode */}
+      {!isEditable && (
+        <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
+      )}
     </>
   );
 };

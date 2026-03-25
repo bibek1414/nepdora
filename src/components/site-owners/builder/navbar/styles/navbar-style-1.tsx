@@ -6,11 +6,10 @@ import {
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
 import { getButtonVariant } from "@/lib/utils";
-import { User } from "lucide-react";
+import { Edit, Trash2, ShoppingCart, User } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -32,17 +31,14 @@ const EditableItem: React.FC<{
 
 interface NavbarStyleProps {
   navbarData: NavbarData;
+  siteUser: string;
   isEditable?: boolean;
   onEditLogo?: () => void;
-  onAddLink?: () => void;
-  siteUser: string;
   onEditLink?: (link: NavbarLink) => void;
   onDeleteLink?: (linkId: string) => void;
-  onAddButton?: () => void;
   onEditButton?: (button: NavbarButton) => void;
   onDeleteButton?: (buttonId: string) => void;
   onEditCart?: () => void;
-  onToggleCart?: () => void;
   disableClicks?: boolean;
 }
 
@@ -58,8 +54,11 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   onEditCart,
   disableClicks = false,
 }) => {
-  const { data } = useBuilderLogic(navbarData, undefined);
-  const { links, buttons, showCart, enableLogin } = data;
+  const { links, buttons, showCart, enableLogin } = navbarData;
+  const midIndex = Math.ceil(links.length / 2);
+  const leftLinks = links.slice(0, midIndex);
+  const rightLinks = links.slice(midIndex);
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const { data: wishlistData } = useWishlist();
@@ -74,7 +73,6 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   const closeCart = () => {
     setIsCartOpen(false);
   };
-
   const pathname = usePathname();
 
   const handleLinkClick = (e: React.MouseEvent, originalHref?: string) => {
@@ -112,77 +110,120 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
     <>
       <nav
         className={`bg-background flex items-center justify-between p-4 ${
-          !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
+          !isEditable ? "sticky top-16 z-40 border-b" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
       >
-        <div className="flex items-center gap-8">
-          <div className={disableClicks ? "pointer-events-auto" : ""}>
-            {isEditable && onEditLogo ? (
-              <EditableItem>
-                <NavbarLogo
-                  data={navbarData}
-                  isEditable={isEditable}
-                  onEdit={onEditLogo}
-                />
-              </EditableItem>
-            ) : (
-              <div
-                onClick={disableClicks ? e => e.preventDefault() : undefined}
-              >
-                <NavbarLogo data={navbarData} siteUser={siteUser} />
-              </div>
-            )}
-          </div>
-
-          <div className="hidden items-center gap-4 md:flex">
-            {links.map(link =>
-              isEditable && onEditLink && onDeleteLink ? (
-                <EditableItem key={link.id}>
-                  <Link
-                    href={link.href}
-                    onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
-                  >
-                    {link.text}
-                  </Link>
-                </EditableItem>
-              ) : (
+        <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
+          {leftLinks.map(link =>
+            isEditable && onEditLink && onDeleteLink ? (
+              <EditableItem key={link.id}>
                 <Link
-                  key={link.id}
-                  href={generateLinkHref(
-                    link.href,
-                    siteUser,
-                    pathname,
-                    isEditable,
-                    disableClicks
-                  )}
-                  target={
-                    link.href?.startsWith("http") ||
-                    link.href?.startsWith("mailto:")
-                      ? "_blank"
-                      : undefined
-                  }
-                  rel={
-                    link.href?.startsWith("http") ||
-                    link.href?.startsWith("mailto:")
-                      ? "noopener noreferrer"
-                      : undefined
-                  }
-                  onClick={e => handleLinkClick(e, link.href)}
-                  className={`text-sm font-medium transition-colors ${
-                    disableClicks
-                      ? "cursor-default opacity-60"
-                      : "cursor-pointer hover:opacity-80"
-                  }`}
+                  href={link.href}
+                  onClick={e => e.preventDefault()}
+                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
                 >
                   {link.text}
                 </Link>
-              )
-            )}
-          </div>
+              </EditableItem>
+            ) : (
+              <Link
+                key={link.id}
+                href={generateLinkHref(
+                  link.href,
+                  siteUser,
+                  pathname,
+                  isEditable,
+                  disableClicks
+                )}
+                target={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "_blank"
+                    : undefined
+                }
+                rel={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
+                onClick={e => handleLinkClick(e, link.href)}
+                className={`text-sm font-medium transition-colors ${
+                  disableClicks
+                    ? "cursor-default opacity-60"
+                    : "cursor-pointer hover:opacity-80"
+                }`}
+              >
+                {link.text}
+              </Link>
+            )
+          )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className={`px-8 ${disableClicks ? "pointer-events-auto" : ""}`}>
+          {isEditable && onEditLogo ? (
+            <EditableItem>
+              <NavbarLogo
+                data={navbarData}
+                isEditable={isEditable}
+                onEdit={onEditLogo}
+              />
+            </EditableItem>
+          ) : (
+            <div onClick={disableClicks ? e => e.preventDefault() : undefined}>
+              <NavbarLogo data={navbarData} siteUser={siteUser} />
+            </div>
+          )}
+        </div>
+
+        <div className="hidden flex-1 items-center justify-start gap-4 md:flex">
+          {rightLinks.map(link =>
+            isEditable && onEditLink && onDeleteLink ? (
+              <EditableItem key={link.id}>
+                <Link
+                  href={link.href}
+                  onClick={e => e.preventDefault()}
+                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                >
+                  {link.text}
+                </Link>
+              </EditableItem>
+            ) : (
+              <Link
+                key={link.id}
+                href={generateLinkHref(
+                  link.href,
+                  siteUser,
+                  pathname,
+                  isEditable,
+                  disableClicks
+                )}
+                target={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "_blank"
+                    : undefined
+                }
+                rel={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
+                onClick={e => handleLinkClick(e, link.href)}
+                className={`text-sm font-medium transition-colors ${
+                  disableClicks
+                    ? "cursor-default opacity-60"
+                    : "cursor-pointer hover:opacity-80"
+                }`}
+                style={{
+                  pointerEvents: disableClicks ? "auto" : undefined,
+                }}
+              >
+                {link.text}
+              </Link>
+            )
+          )}
           {buttons.map(button =>
             isEditable && onEditButton && onDeleteButton ? (
               <EditableItem key={button.id}>
@@ -190,6 +231,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   onClick={e => e.preventDefault()}
                   variant={getButtonVariant(button.variant)}
                   size="sm"
+                  className="cursor-pointer"
                 >
                   {button.text}
                 </Button>
@@ -200,6 +242,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
+                className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
@@ -240,7 +283,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={`flex items-center gap-1 p-2 text-gray-700 ${
+                    className={`flex items-center gap-1 p-2 text-black ${
                       disableClicks || isEditable
                         ? "cursor-default opacity-60"
                         : "cursor-pointer hover:opacity-80"
@@ -321,12 +364,21 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
             </div>
           )}
 
-          {/* Cart Icon with Editable Wrapper */}
           {showCart && (
             <div className={disableClicks ? "pointer-events-auto" : ""}>
               {isEditable && onEditCart ? (
                 <EditableItem>
-                  <CartIcon onToggleCart={() => {}} />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative"
+                    onClick={e => e.preventDefault()}
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                      0
+                    </span>
+                  </Button>
                 </EditableItem>
               ) : (
                 <CartIcon onToggleCart={toggleCart} />
@@ -336,7 +388,6 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
         </div>
       </nav>
 
-      {/* Only show SideCart in preview mode, not in editable mode */}
       {!isEditable && (
         <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
       )}
