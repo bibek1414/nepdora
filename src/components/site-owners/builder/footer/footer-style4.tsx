@@ -11,6 +11,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle4Props {
   footerData: FooterData;
@@ -168,7 +169,7 @@ export function FooterStyle4({
           <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 md:flex-row">
             {/* Copyright */}
             <div className="mb-4 flex flex-col items-center gap-2 md:mb-0 md:items-start">
-              <p className="text-white/80">{data.copyright}</p>
+              <p className="text-white/80">{getProcessedCopyright(data.copyright, data.companyName)}</p>
               {data.policyLinks && data.policyLinks.length > 0 && (
                 <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
                   {data.policyLinks.map(link => (

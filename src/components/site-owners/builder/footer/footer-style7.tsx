@@ -19,6 +19,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle7Props {
   footerData: FooterData;
@@ -336,7 +337,7 @@ export function FooterStyle7({
           className="flex flex-col items-center justify-between gap-3 px-3 py-6 text-[10px] leading-relaxed sm:gap-4 sm:px-4 sm:py-7 sm:text-xs md:flex-row md:gap-0 md:px-6 md:py-8 lg:px-12"
           style={{ color: `${primaryForeground}80` }}
         >
-          <p>{data.copyright}</p>
+          <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:justify-start md:gap-8">
             {(data.policyLinks && data.policyLinks.length > 0
               ? data.policyLinks

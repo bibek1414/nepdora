@@ -18,6 +18,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle1Props {
   footerData: FooterData;
@@ -183,7 +184,7 @@ export function FooterStyle1({
           {/* Copyright */}
           <div className="border-border mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
             <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm">
-              {data.copyright}
+              {getProcessedCopyright(data.copyright, data.companyName)}
               <Heart className="inline h-3 w-3 text-red-500" />
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (

@@ -16,6 +16,7 @@ import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { getProcessedCopyright } from "./shared/footer-utils";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
 
 interface FooterStyle12Props {
@@ -198,9 +199,7 @@ export const FooterStyle12 = ({
         {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between space-y-4 border-t border-black/10 pt-8 text-sm text-gray-700 md:flex-row md:space-y-0">
           <p className="text-center md:text-left">
-            {data.copyright ||
-              `Copyright ${new Date().getFullYear()}. All rights reserved by `}
-            <span className="font-medium text-black">{data.companyName}</span>
+            {getProcessedCopyright(data.copyright, data.companyName)}
           </p>
           <div className="flex space-x-6">
             {(data.policyLinks || []).map(link => (

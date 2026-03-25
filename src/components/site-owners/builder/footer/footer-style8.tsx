@@ -9,6 +9,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle8Props {
   footerData: FooterData;
@@ -233,7 +234,7 @@ export function FooterStyle8({
           {/* Copyright & Policies */}
           <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed text-gray-300 md:items-end md:text-right md:text-base">
             <div>
-              <p>{data.copyright}</p>
+              <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
               <p>
                 Powered By{" "}
                 <span className="font-medium text-white">Nepdora</span>

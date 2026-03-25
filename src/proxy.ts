@@ -145,9 +145,7 @@ async function fetchTenantDomainsBySubdomain(
     const tenantDomain = siteConfig.isDev ? `${subdomain}.localhost` : hostname;
 
     const apiUrl = `${siteConfig.apiBaseUrl}/api/custom-domain/`;
-    console.log(
-      `[API] Fetching domains for subdomain "${subdomain}" via ${apiUrl}`
-    );
+
     const res = await apiFetch(apiUrl, {
       headers: {
         "Content-Type": "application/json",
@@ -200,9 +198,6 @@ async function fetchTenantDomainsByCustomDomain(
 
   try {
     const apiUrl = `${siteConfig.apiBaseUrl}/api/custom-domain/`;
-    console.log(
-      `[API] Reverse-lookup for custom domain "${customDomain}" via ${apiUrl}`
-    );
 
     const res = await apiFetch(apiUrl, {
       headers: {
@@ -382,27 +377,19 @@ export async function proxy(request: NextRequest) {
   const subdomain = extractSubdomain(request);
 
   if (subdomain) {
-    console.log(`\n[Subdomain] "${subdomain}" detected`);
-
-    // We no longer redirect subdomains to custom domains.
-    // Both bibek.nepdora.com and yachuindia.com will serve the same content independently.
-
     // Bypass admin / builder routes
     if (allowedPaths.some(p => pathname.startsWith(p))) {
-      console.log(`[Bypass] Allowed path "${pathname}" — skipping rewrite`);
       return NextResponse.next();
     }
 
     // Clean up accidental internal paths
     if (pathname.startsWith(`/publish/${subdomain}`)) {
       const cleanPath = pathname.replace(`/publish/${subdomain}`, "") || "/";
-      console.log(`[Cleanup] Redirecting internal path to: ${cleanPath}`);
       return NextResponse.redirect(new URL(cleanPath, request.url));
     }
 
     // Rewrite to internal publish route
     const newPath = `/publish/${subdomain}${pathname}`;
-    console.log(`[Rewrite] ${pathname} → ${newPath}`);
     return NextResponse.rewrite(new URL(newPath, request.url));
   }
 
@@ -411,11 +398,9 @@ export async function proxy(request: NextRequest) {
     if (siteConfig.isDev) return NextResponse.next();
     const host = request.headers.get("host") || "";
     const hostname = host.split(":")[0];
-    console.log(`\n[Custom Domain] "${hostname}" detected`);
 
     // Bypass admin / builder routes
     if (allowedPaths.some(p => pathname.startsWith(p))) {
-      console.log(`[Bypass] Allowed path "${pathname}" on custom domain`);
       return NextResponse.next();
     }
 
@@ -423,7 +408,6 @@ export async function proxy(request: NextRequest) {
     let cacheEntry = getCached(hostname);
 
     if (!cacheEntry) {
-      console.log(`[Cache Miss] Reverse-looking up tenant for "${hostname}"`);
       const result = await fetchTenantDomainsByCustomDomain(hostname);
       cacheEntry = {
         customDomain: hostname,
@@ -431,18 +415,12 @@ export async function proxy(request: NextRequest) {
         timestamp: Date.now(),
       };
       setCached(hostname, cacheEntry);
-    } else {
-      console.log(
-        `[Cache Hit] "${hostname}" → subdomain: ${cacheEntry.subdomain ?? "none"}`
-      );
     }
 
     if (cacheEntry.subdomain) {
       // Rewrite to /publish/[subdomain]/[...path] — content served from Next.js
       const newPath = `/publish/${cacheEntry.subdomain}${pathname}`;
-      console.log(
-        `[Rewrite] Custom domain ${hostname}${pathname} → ${newPath}`
-      );
+
       return NextResponse.rewrite(new URL(newPath, request.url));
     }
 
@@ -472,9 +450,6 @@ export async function proxy(request: NextRequest) {
         if (request.nextUrl.search) {
           subdomainUrl += request.nextUrl.search;
         }
-        console.log(
-          `[Root→Subdomain] Redirecting authenticated user to ${subdomainUrl}`
-        );
         return NextResponse.redirect(new URL(subdomainUrl));
       }
     }
@@ -488,6 +463,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|media|uploads|images|assets|.*\\.svg$|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.avif$|.*\\.webp$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.well-known|media|uploads|images|assets|.*\\.svg$|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.avif$|.*\\.webp$).*)",
   ],
 };

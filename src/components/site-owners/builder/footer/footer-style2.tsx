@@ -20,6 +20,7 @@ import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle2Props {
   footerData: FooterData;
@@ -225,7 +226,7 @@ export function FooterStyle2({
                 )}
                 <div className="flex flex-col items-center gap-2 text-center md:items-end md:text-right">
                   <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm md:justify-end">
-                    {data.copyright}
+                    {getProcessedCopyright(data.copyright, data.companyName)}
                     <Heart
                       style={{
                         color: theme.colors.primary,

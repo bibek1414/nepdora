@@ -11,6 +11,7 @@ import { SocialIcon } from "./shared/social-icon";
 import Image from "next/image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { NewsletterForm } from "./shared/newsletter-form";
+import { getProcessedCopyright } from "./shared/footer-utils";
 interface FooterStyle10Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -159,7 +160,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
         <div className="flex flex-col items-center justify-between space-y-4 border-t border-gray-200 pt-6 transition-colors duration-300 md:flex-row md:space-y-0 dark:border-gray-900">
           <div className="flex flex-col items-center gap-2 md:items-start">
             <p className="text-xs text-gray-500">
-              {data.copyright || "© Copyright 2025 All rights reserved."}
+              {getProcessedCopyright(data.copyright, data.companyName)}
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">

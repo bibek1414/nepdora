@@ -22,6 +22,7 @@ import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle11Props {
   footerData: FooterData;
@@ -219,8 +220,7 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
         {/* Bottom Bar */}
         <div className="mt-16 flex flex-col items-center justify-between border-t border-gray-100 pt-8 pb-4 md:flex-row dark:border-gray-800">
           <p className="mb-4 text-xs text-gray-500 md:mb-0 dark:text-gray-400">
-            {data.copyright ||
-              `© ${new Date().getFullYear()} ${data.companyName}. All Rights Reserved.`}
+            {getProcessedCopyright(data.copyright, data.companyName)}
           </p>
 
           {data.policyLinks && data.policyLinks.length > 0 && (

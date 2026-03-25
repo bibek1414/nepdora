@@ -13,6 +13,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle5Props {
   footerData: FooterData;
@@ -199,8 +200,7 @@ export function FooterStyle5({
           {/* Copyright */}
           <div className="mx-auto mt-12 flex flex-col items-center gap-4 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
             <p className="text-text-light dark:text-text-dark flex items-center justify-center gap-1 text-sm">
-              {data.copyright ||
-                `© ${new Date().getFullYear()} ${data.companyName}. All rights reserved.`}
+              {getProcessedCopyright(data.copyright, data.companyName)}
               <Heart className="inline h-3 w-3 text-red-500" />
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (

@@ -8,6 +8,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
+import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle6Props {
   footerData: FooterData;
@@ -64,9 +65,7 @@ export function FooterStyle6({
   const pathname = usePathname();
 
   // Get copyright text or generate default
-  const copyrightText =
-    data.copyright ||
-    `Copyright © ${new Date().getFullYear()} ${data.companyName}. All rights reserved.`;
+  const copyrightText = getProcessedCopyright(data.copyright, data.companyName);
 
   return (
     <>

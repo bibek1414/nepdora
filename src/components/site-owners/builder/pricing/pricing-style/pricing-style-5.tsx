@@ -69,7 +69,7 @@ export const PricingStyle5: React.FC<PricingStyle5Props> = ({
   };
 
   return (
-    <section id="pricing-5" className="py-20">
+    <section id="pricing-5" className="py-40">
       <div className="container mx-auto px-4 md:px-8">
         <motion.div
           className="mx-auto mb-16 max-w-3xl text-center"
