@@ -358,11 +358,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Appointment Style 2",
         image: "/images/site-owners/appointment/appointment2.png",
       },
-      {
-        id: "appointment-3",
-        name: "Appointment Style 3",
-        image: "/images/site-owners/appointment/appointment3.png",
-      },
     ],
     about: [
       {
@@ -758,41 +753,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "contact-4",
         name: "Contact Form 4",
         image: "/images/site-owners/contact/contact4.png",
-      },
-      {
-        id: "contact-5",
-        name: "Contact Form 5",
-        image: "/images/site-owners/contact/contact5.png",
-      },
-      {
-        id: "contact-6",
-        name: "Contact Form 6",
-        image: "/images/site-owners/contact/contact6.png",
-      },
-      {
-        id: "contact-7",
-        name: "Contact Form 7",
-        image: "/images/site-owners/contact/contact7.png",
-      },
-      {
-        id: "contact-8",
-        name: "Contact Form 8",
-        image: "/images/site-owners/contact/contact8.png",
-      },
-      {
-        id: "contact-9",
-        name: "Contact Form 9",
-        image: "/images/site-owners/contact/contact9.png",
-      },
-      {
-        id: "contact-10",
-        name: "Contact Style 10",
-        image: "/images/site-owners/contact/contact10.png",
-      },
-      {
-        id: "contact-11",
-        name: "Contact Style 11",
-        image: "/images/site-owners/contact/contact11.png",
       },
     ],
     testimonials: [

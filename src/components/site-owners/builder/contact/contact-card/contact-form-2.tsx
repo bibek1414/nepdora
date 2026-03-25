@@ -1,17 +1,12 @@
 import React, { useState } from "react";
+import { Check, Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
 import { Button } from "@/components/ui/site-owners/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Send, Loader2 } from "lucide-react";
-
-// Import types
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import {
   ContactData,
   ContactFormSubmission,
 } from "@/types/owner-site/components/contact";
-
-// Import the hook
 import { useSubmitContactForm } from "@/hooks/owner-site/admin/use-contact";
 
 interface ContactForm2Props {
@@ -19,7 +14,7 @@ interface ContactForm2Props {
   siteUser?: string;
   isPreview?: boolean;
   isEditable?: boolean;
-  onDataChange?: (newData: ContactData) => void;
+  onDataChange?: (data: ContactData) => void;
 }
 
 export const ContactForm2: React.FC<ContactForm2Props> = ({
@@ -36,12 +31,39 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
     message: "",
   });
 
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#034833",
+      primaryForeground: "#FFFFFF",
+      secondary: "#83CD20",
+      secondaryForeground: "#FFFFFF",
+      background: "#FFFFFF",
+      muted: "#F1F5EB",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
   const submitContactForm = useSubmitContactForm(siteUser || "preview");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isPreview && siteUser) {
+    if (isPreview) {
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
+      });
+      return;
+    }
+
+    if (siteUser) {
       submitContactForm.mutate(formData, {
         onSuccess: () => {
           setFormData({
@@ -51,6 +73,16 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
             message: "",
           });
         },
+        onError: (error: any) => {
+          console.error("Form submission failed:", error);
+        },
+      });
+    } else {
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
       });
     }
   };
@@ -62,118 +94,228 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const updateTitle = (value: string) => {
+    if (onDataChange) {
+      onDataChange({
+        ...data,
+        title: value,
+      });
+    }
+  };
+
+  const updateSubtitle = (value: string) => {
+    if (onDataChange) {
+      onDataChange({
+        ...data,
+        subtitle: value,
+      });
+    }
+  };
+
+  const updateDescription = (value: string) => {
+    if (onDataChange) {
+      onDataChange({
+        ...data,
+        description: value,
+      });
+    }
+  };
+
+  const updateChecklist = (index: number, value: string) => {
+    if (onDataChange) {
+      const newChecklist = [...checklist];
+      newChecklist[index] = value;
+      onDataChange({
+        ...data,
+        checklist: newChecklist,
+      });
+    }
+  };
+
+  // Use theme colors with fallbacks
+  const primaryColor = theme.colors.primary || "#034833";
+  const secondaryColor = theme.colors.secondary || "#83CD20";
+
+  // Default values
+  const title = data.title || "Remote Destinations Seeking Solitude";
+  const subtitle = data.subtitle || "SUCCESS STORY";
+  const description =
+    data.description ||
+    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy text ever";
+  const checklist = data.checklist || [
+    "Mistakes To Avoid",
+    "Your Startup",
+    "Knew About Fonts",
+    "Knew About Fonts",
+  ];
+
   return (
-    <div className="from-primary/5 to-primary/10 mx-auto max-w-4xl rounded-2xl bg-gradient-to-br p-8">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div>
-            <Label
-              htmlFor="name"
-              className="text-foreground text-sm font-medium"
-            >
-              Name{" "}
-              {data.required_fields.name && (
-                <span className="text-red-500">*</span>
-              )}
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleInputChange}
-              required={data.required_fields.name}
-              className="mt-1 bg-white"
-              placeholder="Your full name"
-            />
+    <section className="px-4 py-12 sm:px-6 lg:px-12">
+      <div className="mx-auto max-w-5xl">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+          {/* Left Content: Text & Checklist */}
+          <div className="flex flex-col space-y-6">
+            <div className="space-y-4">
+              {/* Subtitle */}
+              <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gray-500 uppercase">
+                <EditableText
+                  value={subtitle}
+                  onChange={updateSubtitle}
+                  as="span"
+                  isEditable={isEditable}
+                  className="flex items-center gap-2"
+                />
+              </div>
+
+              {/* Main Title */}
+              <EditableText
+                value={title}
+                onChange={updateTitle}
+                as="h2"
+                className="text-4xl leading-tight font-bold md:text-5xl"
+                isEditable={isEditable}
+                multiline={true}
+              />
+
+              {/* Description */}
+              <EditableText
+                value={description}
+                onChange={updateDescription}
+                as="p"
+                className="text-lg leading-relaxed text-gray-500"
+                isEditable={isEditable}
+                multiline={true}
+              />
+            </div>
+
+            {/* Checklist */}
+            <ul className="mt-4 space-y-3">
+              {checklist.map((item, index) => (
+                <li key={index} className="flex items-center gap-3">
+                  <Check size={20} style={{ color: secondaryColor }} />
+                  <EditableText
+                    value={item}
+                    onChange={value => updateChecklist(index, value)}
+                    as="span"
+                    className="text-lg font-medium"
+                    isEditable={isEditable}
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div>
-            <Label
-              htmlFor="email"
-              className="text-foreground text-sm font-medium"
-            >
-              Email{" "}
-              {data.required_fields.email && (
-                <span className="text-red-500">*</span>
-              )}
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required={data.required_fields.email}
-              className="mt-1 bg-white"
-              placeholder="your.email@example.com"
-            />
+          {/* Right Content: Form */}
+          <div className="flex flex-col justify-center">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Full Name */}
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium">
+                  Full Name {data.required_fields.name && "*"}
+                </span>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Full Name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required={data.required_fields.name}
+                    className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200 focus:outline-none"
+                    style={{ borderColor: "#E5E7EB" }}
+                  />
+                </div>
+              </label>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Email */}
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-medium">
+                    Your Email {data.required_fields.email && "*"}
+                  </span>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Your Email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required={data.required_fields.email}
+                      className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200 focus:outline-none"
+                      style={{ borderColor: "#E5E7EB" }}
+                    />
+                    <Send
+                      className="absolute top-1/2 right-4 -translate-y-1/2 rotate-45 text-gray-400"
+                      size={16}
+                    />
+                  </div>
+                </label>
+
+                {/* Phone */}
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-medium">
+                    Your Phone {data.required_fields.phone && "*"}
+                  </span>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      name="phone_number"
+                      placeholder="Your Phone"
+                      value={formData.phone_number}
+                      onChange={handleInputChange}
+                      required={data.required_fields.phone}
+                      className="w-full rounded-full border border-gray-200 bg-white py-3 pr-10 pl-5 text-sm transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200 focus:outline-none"
+                      style={{ borderColor: "#E5E7EB" }}
+                    />
+                    <Phone
+                      className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400"
+                      size={16}
+                    />
+                  </div>
+                </label>
+              </div>
+
+              {/* Message */}
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium">
+                  Message {data.required_fields.message && "*"}
+                </span>
+                <div className="relative">
+                  <textarea
+                    name="message"
+                    placeholder="Write Message.."
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required={data.required_fields.message}
+                    className="h-32 w-full resize-none rounded-3xl border border-gray-200 bg-white p-5 text-sm placeholder:text-gray-400 focus:ring-1 focus:outline-none"
+                    style={{ borderColor: "#E5E7EB" }}
+                  />
+                  <Mail
+                    className="absolute top-6 right-4 text-gray-400"
+                    size={16}
+                  />
+                </div>
+              </label>
+
+              <Button
+                type="submit"
+                disabled={submitContactForm.isPending}
+                className="w-full rounded-full py-6 text-base font-semibold"
+                variant="default"
+              >
+                {submitContactForm.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  "Send Message"
+                )}
+              </Button>
+            </form>
           </div>
         </div>
-
-        <div>
-          <Label
-            htmlFor="phone_number"
-            className="text-foreground text-sm font-medium"
-          >
-            Phone{" "}
-            {data.required_fields.phone && (
-              <span className="text-red-500">*</span>
-            )}
-          </Label>
-          <Input
-            id="phone_number"
-            name="phone_number"
-            type="tel"
-            value={formData.phone_number}
-            onChange={handleInputChange}
-            required={data.required_fields.phone}
-            className="mt-1 bg-white"
-            placeholder="+1 (555) 123-4567"
-          />
-        </div>
-
-        <div>
-          <Label
-            htmlFor="message"
-            className="text-foreground text-sm font-medium"
-          >
-            Message{" "}
-            {data.required_fields.message && (
-              <span className="text-red-500">*</span>
-            )}
-          </Label>
-          <Textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleInputChange}
-            required={data.required_fields.message}
-            className="mt-1 min-h-[120px] bg-white"
-            placeholder="Tell us how we can help you..."
-          />
-        </div>
-
-        <Button
-          type="submit"
-          disabled={submitContactForm.isPending || isPreview}
-          variant="default"
-          className="w-full"
-          size="lg"
-        >
-          {submitContactForm.isPending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Sending...
-            </>
-          ) : (
-            <>
-              <Send className="mr-2 h-4 w-4" />
-              Send Message
-            </>
-          )}
-        </Button>
-      </form>
-    </div>
+      </div>
+    </section>
   );
 };

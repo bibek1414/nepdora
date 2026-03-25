@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AppointmentStyle1 } from "./appointment-style/appointment-style-1";
 import { AppointmentStyle2 } from "./appointment-style/appointment-style-2";
-import { AppointmentStyle3 } from "./appointment-style/appointment-style-3";
 
 interface AppointmentComponentProps {
   component: AppointmentComponentData;
@@ -92,8 +91,6 @@ export const AppointmentComponent: React.FC<AppointmentComponentProps> = ({
     switch (style) {
       case "appointment-2":
         return <AppointmentStyle2 {...commonProps} />;
-      case "appointment-3":
-        return <AppointmentStyle3 {...commonProps} />;
       case "appointment-1":
       default:
         return <AppointmentStyle1 {...commonProps} />;

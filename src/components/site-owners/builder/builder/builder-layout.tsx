@@ -32,8 +32,6 @@ import {
   ComponentResponse,
   ComponentTypeMap,
 } from "@/types/owner-site/components/components";
-import { PageTemplateDialog } from "@/components/site-owners/builder/templates/page-template-dialog";
-import { PageTemplate } from "@/types/owner-site/components/page-template";
 import {
   usePageComponentsQuery,
   useCreateComponentMutation,
@@ -884,43 +882,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     await createComponentWithIndex(type, data, pendingInsertIndex);
   };
 
-  // Page template handler
-  const handlePageTemplateSelect = async (template: PageTemplate) => {
-    const toastId = "page-template-create";
-
-    try {
-      toast.loading(`Creating ${template.name} page...`, { id: toastId });
-
-      const newPage = await createPageMutation.mutateAsync({
-        title: template.name,
-      });
-
-      for (const component of template.components) {
-        await createComponentMutation.mutateAsync({
-          componentType: component.type as keyof ComponentTypeMap,
-          data: {
-            ...component.defaultData,
-            order: component.order,
-          },
-          insertIndex: component.order,
-          silent: true,
-        });
-      }
-
-      router.push(`/builder/${siteUser}/${newPage.slug}`);
-      setIsPageTemplateDialogOpen(false);
-      toast.success(
-        `Page "${template.name}" created successfully with ${template.components.length} components!`,
-        { id: toastId }
-      );
-    } catch (error) {
-      console.error("Failed to create page from template:", error);
-      toast.error("Failed to create page from template. Please try again.", {
-        id: toastId,
-      });
-    }
-  };
-
   // Component click handler for Add Section Dialog
   const handleComponentClick = (sectionId: string, template?: string) => {
     if (sectionId === "page-templates") {
@@ -997,12 +958,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onFooterSelect={handleFooterSelectFromDialog}
           websiteType={user?.website_type || "ecommerce"}
           categoryFilter={pendingCategoryFilter}
-        />
-
-        <PageTemplateDialog
-          isOpen={isPageTemplateDialogOpen}
-          onClose={() => setIsPageTemplateDialogOpen(false)}
-          onSelectTemplate={handlePageTemplateSelect}
         />
 
         {/* Top Navigation */}

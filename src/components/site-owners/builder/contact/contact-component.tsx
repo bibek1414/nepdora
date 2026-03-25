@@ -21,13 +21,6 @@ import { ContactStyle1 } from "./contact-style/contact-style-1";
 import { ContactStyle2 } from "./contact-style/contact-style-2";
 import { ContactStyle3 } from "./contact-style/contact-style-3";
 import { ContactStyle4 } from "./contact-style/contact-style-4";
-import { ContactStyle5 } from "./contact-style/contact-style-5";
-import { ContactStyle6 } from "./contact-style/contact-style-6";
-import { ContactStyle7 } from "./contact-style/contact-style-7";
-import { ContactStyle8 } from "./contact-style/contact-style-8";
-import { ContactStyle9 } from "./contact-style/contact-style-9";
-import { ContactStyle10 } from "./contact-style/contact-style-10";
-import { ContactStyle11 } from "./contact-style/contact-style-11";
 
 interface ContactComponentProps {
   component: ContactComponentData;
@@ -89,7 +82,7 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
   };
 
   const renderContactStyle = () => {
-    const style = component.data?.style || "form-1";
+    const style = component.data?.style || "contact-1";
     const commonProps = {
       data: component.data,
       isEditable,
@@ -104,25 +97,12 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
         return <ContactStyle3 {...commonProps} />;
       case "contact-4":
         return <ContactStyle4 {...commonProps} />;
-      case "contact-5":
-        return <ContactStyle5 {...commonProps} />;
-      case "contact-6":
-        return <ContactStyle6 {...commonProps} />;
-      case "contact-7":
-        return <ContactStyle7 {...commonProps} />;
-      case "contact-8":
-        return <ContactStyle8 {...commonProps} />;
-      case "contact-9":
-        return <ContactStyle9 {...commonProps} />;
-      case "contact-10":
-        return <ContactStyle10 {...commonProps} />;
-      case "contact-11":
-        return <ContactStyle11 {...commonProps} />;
       case "contact-1":
       default:
         return <ContactStyle1 {...commonProps} />;
     }
   };
+
 
   return (
     <div className="group relative">

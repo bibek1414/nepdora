@@ -1,19 +1,27 @@
 "use client";
-import React from "react";
-import { ContactForm4 } from "../contact-card/contact-form-4";
-import {
-  ContactComponentData,
-  ContactData,
-} from "@/types/owner-site/components/contact";
 
-interface ContactStyleProps {
-  data: ContactComponentData["data"];
+import React from "react";
+import { ContactData } from "@/types/owner-site/components/contact";
+import { ContactForm4 } from "../contact-card/contact-form-4";
+import { motion, Variants } from "framer-motion";
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+interface ContactStyle4Props {
+  data: ContactData;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<ContactComponentData["data"]>) => void;
+  onUpdate?: (updatedData: Partial<ContactData>) => void;
 }
 
-export const ContactStyle4: React.FC<ContactStyleProps> = ({
+export const ContactStyle4: React.FC<ContactStyle4Props> = ({
   data,
   isEditable = false,
   siteUser,
@@ -24,8 +32,14 @@ export const ContactStyle4: React.FC<ContactStyleProps> = ({
   };
 
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
+    <motion.section
+      className="relative overflow-hidden bg-white py-16 md:py-24"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={fadeInUp}
+    >
+      <div className="relative z-10 container mx-auto max-w-7xl px-4">
         <ContactForm4
           data={data}
           siteUser={isEditable ? undefined : siteUser}
@@ -34,6 +48,6 @@ export const ContactStyle4: React.FC<ContactStyleProps> = ({
           onDataChange={isEditable ? handleDataChange : undefined}
         />
       </div>
-    </section>
+    </motion.section>
   );
 };

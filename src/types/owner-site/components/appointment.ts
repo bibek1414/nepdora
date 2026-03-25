@@ -1,7 +1,7 @@
 export interface AppointmentData {
   component_id?: string;
   component_type: "appointment";
-  style: "appointment-1" | "appointment-2" | "appointment-3" | "appointment-4";
+  style: "appointment-1" | "appointment-2";
   title: string;
   subtitle?: string;
   description?: string;
@@ -77,8 +77,6 @@ export const DEFAULT_APPOINTMENT_MAP: Record<
 > = {
   "appointment-1": { ...defaultAppointmentData, style: "appointment-1" },
   "appointment-2": { ...defaultAppointmentData, style: "appointment-2" },
-  "appointment-3": { ...defaultAppointmentData, style: "appointment-3" },
-  "appointment-4": { ...defaultAppointmentData, style: "appointment-4" },
 };
 // Type guards
 export const isAppointmentTemplate1 = (data: AppointmentData): boolean =>
@@ -86,9 +84,3 @@ export const isAppointmentTemplate1 = (data: AppointmentData): boolean =>
 
 export const isAppointmentTemplate2 = (data: AppointmentData): boolean =>
   data.style === "appointment-2";
-
-export const isAppointmentTemplate3 = (data: AppointmentData): boolean =>
-  data.style === "appointment-3";
-
-export const isAppointmentTemplate4 = (data: AppointmentData): boolean =>
-  data.style === "appointment-4";
