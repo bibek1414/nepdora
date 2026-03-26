@@ -1,13 +1,14 @@
 "use client";
-
-import React from "react";
-import { Coffee, Heart, Zap, Box, Lightbulb } from "lucide-react";
+import React, { useMemo } from "react";
+import { motion, Variants } from "framer-motion";
+import { FaTree } from "react-icons/fa";
 import { AboutUs6Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { ChevronRight } from "lucide-react";
 
 interface AboutUsTemplate6Props {
   aboutUsData: AboutUs6Data;
@@ -16,264 +17,255 @@ interface AboutUsTemplate6Props {
   siteUser?: string;
 }
 
-export const AboutUsTemplate6: React.FC<AboutUsTemplate6Props> = ({
+export function AboutUsTemplate6({
   aboutUsData,
   isEditable = false,
   onUpdate,
   siteUser,
-}) => {
+}: AboutUsTemplate6Props) {
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#FFFFFF",
-      primary: "#EF4444",
-      primaryForeground: "#FFFFFF",
-      secondary: "#9CA3AF",
-      secondaryForeground: "#1F2937",
-      background: "#111827",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
+  const theme = useMemo(
+    () =>
+      themeResponse?.data?.[0]?.data?.theme || {
+        colors: {
+          text: "#0F172A",
+          primary: "#00D26A",
+          primaryForeground: "#FFFFFF",
+          secondary: "#F59E0B",
+          secondaryForeground: "#1F2937",
+          background: "#FFFFFF",
+        },
+        fonts: {
+          body: "Inter",
+          heading: "Poppins",
+        },
+      },
+    [themeResponse]
+  );
 
-  const {
-    data,
-    handleTextUpdate,
-    handleImageUpdate,
-    handleAltUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(aboutUsData, onUpdate);
+  const { data, handleTextUpdate, handleImageUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
 
-  // Handle stat updates
-  const handleStatUpdate =
-    (index: number, field: "value" | "label") => (value: string) => {
-      const statId = data.stats[index].id;
-      handleArrayItemUpdate("stats", statId)({ [field]: value });
-    };
-
-  // Handle button link updates
   const handleButtonLinkUpdate = (text: string, href: string) => {
-    const update = {
+    onUpdate?.({
       buttonText: text,
       buttonLink: href,
-    };
-    onUpdate?.(update);
+    });
   };
 
-  // Get icon component based on name
-  const getIconComponent = (iconName: string) => {
-    switch (iconName) {
-      case "Heart":
-        return <Heart size={24} />;
-      case "Zap":
-        return <Zap size={24} className="-rotate-45" />;
-      case "Box":
-        return <Box size={24} />;
-      case "Lightbulb":
-        return <Lightbulb size={24} />;
-      default:
-        return <Coffee size={24} />;
-    }
+  // Animation Variants
+  const fadeInUp: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const imageVariant: Variants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const containerVariant: Variants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.1 },
+    },
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
-      <div className="container mx-auto max-w-7xl px-4 py-16">
-        {/* Header */}
-        <header className="mb-12 text-center">
-          <div
-            className="mb-4 inline-block rounded-xl p-3"
-            style={{ backgroundColor: theme.colors.primary }}
-          >
-            <Coffee className="text-white" size={24} />
-          </div>
-          <EditableText
-            value={data.headline}
-            onChange={handleTextUpdate("headline")}
-            as="h1"
-            className="mx-auto max-w-4xl text-xl leading-tight font-bold text-black md:text-3xl"
-            isEditable={isEditable}
-            placeholder="Brewhaus is where flavor meets craft. From bean to cup, we focus on quality, speed, and simplicity — perfect for busy mornings or laid-back afternoons."
-            multiline={true}
-          />
-        </header>
-
-        {/* Buttons */}
-        <div className="mb-16 flex items-center justify-center space-x-4">
-          <EditableLink
-            text={data.buttonText}
-            href={data.buttonLink}
-            onChange={handleButtonLinkUpdate}
-            style={{
-              backgroundColor: theme.colors.primary,
-              color: theme.colors.primaryForeground,
-            }}
-            className="rounded-full px-6 py-3 font-medium transition-colors"
-            isEditable={isEditable}
-            textPlaceholder="Our News"
-            hrefPlaceholder="#news"
-            siteUser={siteUser}
-          >
-            {data.buttonText || "Our News"}
-          </EditableLink>
-        </div>
-
-        {/* Stats & Images Grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* Left Column */}
-          <div className="flex flex-col gap-8 lg:col-span-1">
-            {/* Stat Card 1 */}
-            <div
-              className="flex h-full flex-col justify-between rounded-xl p-8"
-              style={{
-                backgroundColor: theme.colors.primary,
-                color: theme.colors.primaryForeground,
-              }}
+    <section className="mx-auto max-w-7xl overflow-hidden bg-white py-20">
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          {/* LEFT SIDE: Image Composition */}
+          <div className="relative">
+            {/* Main Central Image */}
+            <motion.div
+              variants={imageVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="relative z-10 overflow-hidden rounded-lg"
             >
-              <div className="flex justify-end">
-                {getIconComponent(data.stats[0].topIcon)}
-              </div>
-              <div className="my-auto text-center">
-                <EditableText
-                  value={data.stats[0].value}
-                  onChange={handleStatUpdate(0, "value")}
-                  as="p"
-                  className="text-5xl font-bold"
-                  isEditable={isEditable}
-                  placeholder="10K+"
-                />
-                <EditableText
-                  value={data.stats[0].label}
-                  onChange={handleStatUpdate(0, "label")}
-                  as="p"
-                  className="mt-2 text-lg"
-                  isEditable={isEditable}
-                  placeholder="Happy Customers"
-                />
-              </div>
-              <div className="flex justify-start">
-                {getIconComponent(data.stats[0].bottomIcon)}
-              </div>
-            </div>
-
-            {/* Image 1 */}
-            <div className="h-full overflow-hidden rounded-xl">
               <EditableImage
-                src={data.image1Url}
-                alt={data.image1Alt}
-                onImageChange={handleImageUpdate("image1Url", "image1Alt")}
-                onAltChange={handleAltUpdate("image1Alt")}
+                src={data.mainImage}
+                alt="Main About Image"
+                onImageChange={handleImageUpdate("mainImage")}
+                isEditable={isEditable}
+                className="h-150 w-full rounded-lg object-cover shadow-lg"
+                width={800}
+                height={600}
+                priority
+              />
+            </motion.div>
+
+            {/* Floating Badge (Top Left) */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="absolute -top-10 -left-4 z-20 max-w-[220px] rounded-lg p-6 text-white shadow-xl md:-left-10 md:p-8"
+              style={{ backgroundColor: theme.colors.primary }}
+            >
+              <div className="mb-2 flex items-start gap-2">
+                <span className="text-5xl leading-none font-bold md:text-6xl">
+                  <EditableText
+                    value={data.badgeCount}
+                    onChange={handleTextUpdate("badgeCount")}
+                    as="span"
+                    isEditable={isEditable}
+                    placeholder="35"
+                  />
+                </span>
+                <span className="mt-1 text-sm leading-tight font-medium">
+                  <EditableText
+                    value={data.badgeText}
+                    onChange={handleTextUpdate("badgeText")}
+                    as="span"
+                    isEditable={isEditable}
+                    multiline
+                    placeholder="Years' Experience"
+                  />
+                </span>
+              </div>
+              <div className="my-3 border-t border-white/30"></div>
+              <p className="mb-2 font-medium">
+                <EditableText
+                  value={data.badgeDescription}
+                  onChange={handleTextUpdate("badgeDescription")}
+                  as="span"
+                  isEditable={isEditable}
+                  multiline
+                  placeholder="Success Stories"
+                />
+              </p>
+              <FaTree className="text-2xl opacity-80" />
+            </motion.div>
+
+            {/* Small Top Floating Image */}
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="absolute -top-12 right-0 z-0 hidden h-32 w-40 overflow-hidden rounded-lg border-4 border-white shadow-lg md:-right-8 md:block"
+            >
+              <EditableImage
+                src={data.smallImage1}
+                alt="Small Image 1"
+                onImageChange={handleImageUpdate("smallImage1")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
-                width={600}
-                height={800}
-                s3Options={{
-                  folder: "about-us-images",
-                  
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 600,
-                  height: 800,
-                  text: "Upload image 1",
-                }}
+                width={300}
+                height={200}
               />
-            </div>
-          </div>
+            </motion.div>
 
-          {/* Center Image */}
-          <div className="col-span-1 overflow-hidden rounded-xl md:col-span-2 lg:col-span-1">
-            <EditableImage
-              src={data.centerImageUrl}
-              alt={data.centerImageAlt}
-              onImageChange={handleImageUpdate(
-                "centerImageUrl",
-                "centerImageAlt"
-              )}
-              onAltChange={handleAltUpdate("centerImageAlt")}
-              isEditable={isEditable}
-              className="h-full w-full object-cover"
-              width={600}
-              height={800}
-              s3Options={{
-                folder: "about-us-images",
-                
-              }}
-              showAltEditor={isEditable}
-              placeholder={{
-                width: 600,
-                height: 800,
-                text: "Upload center image",
-              }}
-            />
-          </div>
-
-          {/* Right Column */}
-          <div className="flex flex-col gap-8 lg:col-span-1">
-            {/* Stat Card 2 */}
-            <div
-              className="flex h-full flex-col justify-between rounded-xl p-8"
-              style={{
-                backgroundColor: theme.colors.primary,
-                color: theme.colors.primaryForeground,
-              }}
+            {/* Small Bottom Floating Image */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+              className="absolute -bottom-10 left-0 z-20 hidden h-32 w-48 overflow-hidden rounded-lg border-4 border-white shadow-lg md:-left-12 md:block"
             >
-              <div className="flex justify-end">
-                {getIconComponent(data.stats[1].topIcon)}
-              </div>
-              <div className="my-auto text-center">
-                <EditableText
-                  value={data.stats[1].value}
-                  onChange={handleStatUpdate(1, "value")}
-                  as="p"
-                  className="text-5xl font-bold"
-                  isEditable={isEditable}
-                  placeholder="20"
-                />
-                <EditableText
-                  value={data.stats[1].label}
-                  onChange={handleStatUpdate(1, "label")}
-                  as="p"
-                  className="mt-2 text-lg"
-                  isEditable={isEditable}
-                  placeholder="Products"
-                />
-              </div>
-              <div className="flex justify-start">
-                {getIconComponent(data.stats[1].bottomIcon)}
-              </div>
-            </div>
-
-            {/* Image 2 */}
-            <div className="h-full overflow-hidden rounded-xl">
               <EditableImage
-                src={data.image2Url}
-                alt={data.image2Alt}
-                onImageChange={handleImageUpdate("image2Url", "image2Alt")}
-                onAltChange={handleAltUpdate("image2Alt")}
+                src={data.smallImage2}
+                alt="Small Image 2"
+                onImageChange={handleImageUpdate("smallImage2")}
                 isEditable={isEditable}
                 className="h-full w-full object-cover"
-                width={600}
-                height={800}
-                s3Options={{
-                  folder: "about-us-images",
-                  
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 600,
-                  height: 800,
-                  text: "Upload image 2",
-                }}
+                width={300}
+                height={200}
               />
-            </div>
+            </motion.div>
           </div>
+
+          {/* RIGHT SIDE: Text Content */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariant}
+            className="mt-10 lg:mt-0"
+          >
+            <motion.p
+              variants={fadeInUp}
+              className="mb-4 text-sm font-semibold tracking-widest text-gray-500 uppercase"
+            >
+              <EditableText
+                value={data.smallTitle}
+                onChange={handleTextUpdate("smallTitle")}
+                as="span"
+                isEditable={isEditable}
+                placeholder="SMALL TITLE"
+              />
+            </motion.p>
+
+            <motion.h2
+              variants={fadeInUp}
+              className="mb-6 text-4xl leading-tight font-bold text-gray-900 md:text-5xl"
+            >
+              <EditableText
+                value={data.title}
+                onChange={handleTextUpdate("title")}
+                as="span"
+                isEditable={isEditable}
+                placeholder="Main Title"
+              />{" "}
+              <span style={{ color: theme.colors.primary }}>
+                <EditableText
+                  value={data.highlightedText}
+                  onChange={handleTextUpdate("highlightedText")}
+                  as="span"
+                  isEditable={isEditable}
+                  placeholder="Highlighted"
+                />
+              </span>
+            </motion.h2>
+
+            <motion.div
+              variants={fadeInUp}
+              className="mb-8 text-lg leading-relaxed text-gray-600"
+            >
+              <EditableText
+                value={data.description}
+                onChange={handleTextUpdate("description")}
+                as="p"
+                isEditable={isEditable}
+                multiline
+                placeholder="Description text..."
+              />
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <EditableLink
+                text={data.buttonText}
+                href={data.buttonLink}
+                onChange={handleButtonLinkUpdate}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                className="text-white"
+                style={{ backgroundColor: theme.colors.primary }}
+              >
+                <span>{data.buttonText}</span>
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </EditableLink>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
+}

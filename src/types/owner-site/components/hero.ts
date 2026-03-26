@@ -54,90 +54,47 @@ export interface HeroTemplate1Data {
   subtitle?: string;
   description?: string;
   buttons: HeroButton[];
-  layout: "text-left" | "text-center" | "text-right";
-  showImage?: boolean;
-  imageUrl?: string;
-  imageAlt?: string;
+  sliderImages?: HeroSliderImage[];
+  backgroundType: "color" | "gradient" | "image";
+  backgroundColor?: string;
+  backgroundImageUrl?: string;
   showOverlay?: boolean;
+  overlayOpacity?: number;
 }
+
+export const defaultHeroTemplate1Data: HeroTemplate1Data = {
+  template: "hero-1",
+  title: "FIND YOUR PERFECT WORKOUT ATTIRE",
+  subtitle: "AN EXCLUSIVE SELECTION OF THIS SEASON'S TRENDS.",
+  description: "EXCLUSIVELY ONLINE!",
+  buttons: [
+    { id: "1", text: "SHOP COLLECTION", variant: "primary", href: "#" },
+  ],
+  sliderImages: [
+    {
+      id: "1",
+      url: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop",
+      alt: "Workout attire collection",
+    },
+    {
+      id: "2",
+      url: "https://images.unsplash.com/photo-1545151414-8a948e1ea54f?q=80&w=987&auto=format&fit=crop",
+      alt: "Fitness clothing",
+    },
+    {
+      id: "3",
+      url: "https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?q=80&w=1920&auto=format&fit=crop",
+      alt: "Activewear selection",
+    },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#000000",
+  showOverlay: true,
+  overlayOpacity: 0.5,
+};
 
 export interface HeroTemplate2Data {
   template: "hero-2";
-  title: string;
-  subtitle: string;
-  description?: string;
-  buttons: HeroButton[];
-  layout: "text-left" | "text-center" | "text-right";
-  showSlider?: boolean;
-  sliderImages?: HeroSliderImage[];
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-  showOverlay?: boolean;
-  overlayOpacity?: number;
-  imageAlt?: string;
-}
-
-export interface HeroTemplate3Data {
-  template: "hero-3";
-  title: string;
-  subtitle?: string;
-  description?: string;
-  buttons: HeroButton[];
-  showImage?: boolean;
-  imageUrl?: string;
-  imageAlt?: string;
-  backgroundImageUrl?: string;
-  statsNumber?: string;
-  statsLabel?: string;
-}
-
-export interface HeroTemplate4Data {
-  template: "hero-4";
-  title: string;
-  subtitle: string;
-  description: string;
-  buttons: HeroButton[];
-  showImage?: boolean;
-  imageUrl?: string;
-  imageAlt?: string;
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-  statsNumber?: string;
-  statsLabel?: string;
-}
-
-export interface HeroTemplate5Data {
-  template: "hero-5";
-  title: string;
-  subtitle?: string;
-  description: string;
-  buttons: HeroButton[];
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-  showOverlay?: boolean;
-  overlayOpacity?: number;
-  imageAlt?: string;
-}
-
-export interface HeroTemplate6Data {
-  template: "hero-6";
-  title: string;
-  subtitle?: string;
-  description?: string;
-  buttons: HeroButton[];
-  sliderImages?: HeroSliderImage[];
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-  showOverlay?: boolean;
-  overlayOpacity?: number;
-}
-
-export interface HeroTemplate7Data {
-  template: "hero-7";
   title?: string;
   subtitle?: string;
   description?: string;
@@ -147,27 +104,40 @@ export interface HeroTemplate7Data {
   backgroundColor?: string;
   backgroundImageUrl?: string;
 }
-export interface HeroTemplate8Data {
-  template: "hero-8";
-  title: string;
-  subtitle?: string;
-  description?: string;
-  buttons: HeroButton[];
-  features?: HeroFeature[];
-  trustIndicators?: HeroTrustIndicators;
-  leftImageUrl?: string;
-  leftImageAlt?: string;
-  rightImageUrl?: string;
-  rightImageAlt?: string;
-  mobileImageUrl?: string;
-  mobileImageAlt?: string;
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-}
 
-export interface HeroTemplate9Data {
-  template: "hero-9";
+export const defaultHeroTemplate2Data: HeroTemplate2Data = {
+  template: "hero-2",
+  buttons: [],
+  collections: [
+    {
+      id: "women",
+      title: "WOMEN'S COLLECTION",
+      subtitle: "NEW COLLECTION",
+      badge: "WOMEN",
+      imageUrl:
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1600&auto=format&fit=crop",
+      imageAlt: "Woman in yellow sportswear stretching on stairs",
+      buttonText: "DISCOVER MORE",
+      buttonHref: "#",
+    },
+    {
+      id: "men",
+      title: "MEN'S COLLECTION",
+      subtitle: "SAVE 50% OFF",
+      badge: "MEN",
+      imageUrl:
+        "https://images.unsplash.com/photo-1683509231125-5c487afaa453?q=80&w=1364&auto=format&fit=crop",
+      imageAlt: "Man in red t-shirt resting after a workout",
+      buttonText: "DISCOVER MORE",
+      buttonHref: "#",
+    },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#F3F4F6",
+};
+
+export interface HeroTemplate3Data {
+  template: "hero-3";
   title: string;
   subtitle?: string;
   description?: string;
@@ -178,20 +148,62 @@ export interface HeroTemplate9Data {
   backgroundImageUrl?: string;
 }
 
-export interface HeroTemplate10Data {
-  template: "hero-10";
-  title: string;
-  subtitle?: string;
-  description?: string;
-  buttons: HeroButton[];
-  sliderImages?: HeroSliderImage[];
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-}
+export const defaultHeroTemplate3Data: HeroTemplate3Data = {
+  template: "hero-3",
+  title: "Summer styles are finally here",
+  description:
+    "This year, our new summer collection will shelter you from the harsh elements of a world that doesn't care if you live or die.",
+  buttons: [
+    { id: "1", text: "Shop Collection", variant: "primary", href: "#" },
+  ],
+  sliderImages: [
+    {
+      id: "1",
+      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 1",
+    },
+    {
+      id: "2",
+      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 2",
+    },
+    {
+      id: "3",
+      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 2",
+    },
+    {
+      id: "4",
+      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 3",
+    },
+    {
+      id: "5",
+      url: "https://images.unsplash.com/photo-1756134904044-1cf7868cb9de?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 4",
+    },
+    {
+      id: "6",
+      url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 3",
+    },
+    {
+      id: "7",
+      url: "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 4",
+    },
+    {
+      id: "8",
+      url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      alt: "Images 3",
+    },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#FFFFFF",
+};
 
-export interface HeroTemplate11Data {
-  template: "hero-11";
+export interface HeroTemplate4Data {
+  template: "hero-4";
   title: string;
   subtitle?: string;
   description?: string;
@@ -203,8 +215,22 @@ export interface HeroTemplate11Data {
   backgroundImageUrl?: string;
 }
 
-export interface HeroTemplate12Data {
-  template: "hero-12";
+export const defaultHeroTemplate4Data: HeroTemplate4Data = {
+  template: "hero-4",
+  title: "Visa Made Easy\nDreams Made\nPossible",
+  buttons: [
+    { id: "1", text: "Read More", variant: "primary", href: "#" },
+    { id: "2", text: "Watch Our Videos", variant: "secondary", href: "#" },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2940&auto=format&fit=crop",
+  imageAlt: "Happy traveler in Paris",
+  backgroundType: "color",
+  backgroundColor: "#013D2F",
+};
+
+export interface HeroTemplate5Data {
+  template: "hero-5";
   title: string;
   subtitle?: string;
   description?: string;
@@ -216,30 +242,41 @@ export interface HeroTemplate12Data {
   backgroundImageUrl?: string;
 }
 
-export interface HeroTemplate13Data {
-  template: "hero-13";
-  title: string;
+export const defaultHeroTemplate5Data: HeroTemplate5Data = {
+  template: "hero-5",
+  title:
+    "Navigate Business <br /> with <span class='font-serif font-normal italic'>Confidence</span>",
+  description:
+    "Expert strategic consulting to drive sustainable growth, operational innovation, and lasting business transformation across industries and markets, maximizing impact.",
+  buttons: [
+    { id: "1", text: "Book a Free Call", variant: "secondary", href: "#" },
+  ],
+  backgroundType: "image",
+  backgroundImageUrl: "https://picsum.photos/seed/office1/1920/1080",
+  imageAlt: "Office meeting background",
+};
+
+export interface HeroTemplate6Data {
+  template: "hero-6";
   subtitle?: string;
-  description?: string;
+  title: string;
   buttons: HeroButton[];
-  imageUrl?: string;
-  imageAlt?: string;
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
   backgroundImageUrl?: string;
+  imageAlt?: string;
 }
 
-export interface HeroTemplate14Data {
-  template: "hero-14";
-  subtitle?: string;
-  title: string;
-  buttons: HeroButton[];
-  backgroundImageUrl?: string;
-  imageAlt?: string;
-}
+export const defaultHeroTemplate6Data: HeroTemplate6Data = {
+  template: "hero-6",
+  subtitle: "Exclusive Drop",
+  title: "MIDNIGHT SERIES",
+  buttons: [{ id: "1", text: "Shop The Look", variant: "primary", href: "#" }],
+  backgroundImageUrl:
+    "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop",
+  imageAlt: "Featured Collection",
+};
 
-export interface HeroTemplate15Data {
-  template: "hero-15";
+export interface HeroTemplate7Data {
+  template: "hero-7";
   title: string;
   subtitle?: string;
   description?: string;
@@ -254,8 +291,25 @@ export interface HeroTemplate15Data {
   stat2Label?: string;
 }
 
-export interface HeroTemplate16Data {
-  template: "hero-16";
+export const defaultHeroTemplate7Data: HeroTemplate7Data = {
+  template: "hero-7",
+  title: "Delicious Deals\nIn One\nClick",
+  subtitle: "Savor Every Bite",
+  description:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed sodales auctor orci, sit amet vulputate velit molestie.",
+  buttons: [{ id: "1", text: "Order Now", variant: "primary", href: "#" }],
+  imageUrl: "/hero.webp",
+  imageAlt: "Delicious food plate",
+  priceLabel: "Price",
+  priceValue: "$ 10.03",
+  stat1Value: "23",
+  stat1Label: "Daily Orders",
+  stat2Value: "56+",
+  stat2Label: "Items Available",
+};
+
+export interface HeroTemplate8Data {
+  template: "hero-8";
   title: string;
   description?: string;
   badge1Image?: string;
@@ -268,8 +322,31 @@ export interface HeroTemplate16Data {
   imageAlt?: string;
 }
 
-export interface HeroTemplate17Data {
-  template: "hero-17";
+export const defaultHeroTemplate8Data: HeroTemplate8Data = {
+  template: "hero-8",
+  title: "Best Abroad Study Consultancy <br /> In Nepal",
+  description:
+    "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered.",
+  badge1Text: "Approved by Ministry of Education",
+  badge1Image: "/ministry-of-education.png",
+  badge2Text: "TITI Certified Counselors",
+  badge2Image: "/titi.png",
+  buttons: [
+    { id: "1", text: "Book Free Consultation", variant: "primary", href: "#" },
+    { id: "2", text: "Learn More About Us", variant: "outline", href: "#" },
+  ],
+  features: [
+    { id: "1", text: "10+ Years Experience" },
+    { id: "2", text: "5000+ Students Placed" },
+    { id: "3", text: "100+ Partner Universities" },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1523240715639-9942f1476d06?q=80&w=2070&auto=format&fit=crop",
+  imageAlt: "Students graduating",
+};
+
+export interface HeroTemplate9Data {
+  template: "hero-9";
   title: string;
   badgeText?: string;
   buttons: HeroButton[];
@@ -280,8 +357,25 @@ export interface HeroTemplate17Data {
   features?: HeroFeature[];
 }
 
-export interface HeroTemplate18Data {
-  template: "hero-18";
+export const defaultHeroTemplate9Data: HeroTemplate9Data = {
+  template: "hero-9",
+  badgeText: "New Trend 2025",
+  title: "Waves Puffer\nCoat Black",
+  buttons: [{ id: "1", text: "Shop Now", variant: "outline", href: "#" }],
+  rightImageUrl: "/images/site-owners/hero/hero-style-17/hero-right-image.webp",
+  rightImageAlt: "Waves Puffer Coat Black",
+  rightStampImageUrl: "/images/site-owners/hero/hero-style-17/bag.webp",
+  rightStampAlt: "Product Quality Best",
+  features: [
+    { id: "1", text: "Free Shipping|Free Shipping for orders over $90" },
+    { id: "2", text: "Money Back guarantee|100% money back guarantee" },
+    { id: "3", text: "24/7 online support|24 hours a day, 7 days a week" },
+    { id: "4", text: "Flexible Payment|Pay with Multiple Credit Cards" },
+  ],
+};
+
+export interface HeroTemplate10Data {
+  template: "hero-10";
   buttons: HeroButton[];
   collections: HeroCollection[];
   backgroundType: "color" | "gradient" | "image";
@@ -289,8 +383,39 @@ export interface HeroTemplate18Data {
   backgroundImageUrl?: string;
 }
 
-export interface HeroTemplate19Data {
-  template: "hero-19";
+export const defaultHeroTemplate10Data: HeroTemplate10Data = {
+  template: "hero-10",
+  buttons: [],
+  collections: [
+    {
+      id: "men",
+      title: "Men's\nCollection",
+      subtitle: "",
+      badge: "",
+      imageUrl:
+        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
+      imageAlt: "Men's collection",
+      buttonText: "Shop Now",
+      buttonHref: "#",
+    },
+    {
+      id: "women",
+      title: "Women's\nCollection",
+      subtitle: "",
+      badge: "",
+      imageUrl:
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
+      imageAlt: "Women's collection",
+      buttonText: "Shop Now",
+      buttonHref: "#",
+    },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#FFFFFF",
+};
+
+export interface HeroTemplate11Data {
+  template: "hero-11";
   titlePart1: string;
   description: string;
   buttons: HeroButton[];
@@ -301,7 +426,27 @@ export interface HeroTemplate19Data {
   backgroundImageUrl?: string;
 }
 
-export interface HeroTemplate20Slide {
+export const defaultHeroTemplate11Data: HeroTemplate11Data = {
+  template: "hero-11",
+  titlePart1: "Premium Eyewear <br /> Made for Nepal",
+  description:
+    "Thoughtfully designed eyewear that blends comfort, clarity, and modern style for everyday life.",
+  buttons: [
+    {
+      id: "1",
+      text: "Explore Collection",
+      variant: "primary",
+      href: "#",
+    },
+    { id: "2", text: "Our Story", variant: "outline", href: "#" },
+  ],
+  imageUrl:
+    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800",
+  imageAlt: "NepGlass Premium Sunglasses",
+  backgroundType: "color",
+  backgroundColor: "#FFFFFF",
+};
+export interface HeroTemplate12Slide {
   id: string;
   url: string;
   alt: string;
@@ -312,18 +457,59 @@ export interface HeroTemplate20Slide {
   buttonText: string;
   buttonHref: string;
 }
-
-export interface HeroTemplate20Data {
-  template: "hero-20";
+export interface HeroTemplate12Data {
+  template: "hero-12";
   buttons: HeroButton[];
-  slides?: HeroTemplate20Slide[];
+  slides?: HeroTemplate12Slide[];
   backgroundType: "color" | "gradient" | "image";
   backgroundColor?: string;
   backgroundImageUrl?: string;
 }
 
-export interface HeroTemplate21Data {
-  template: "hero-21";
+export const defaultHeroTemplate12Data: HeroTemplate12Data = {
+  template: "hero-12",
+  buttons: [],
+  slides: [
+    {
+      id: "1",
+      url: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      alt: "Next Gen Gaming",
+      subtitle: "New Arrival",
+      title: "Next Gen Gaming",
+      description: "Experience console quality gaming on the go.",
+      color: "from-navy-950/90",
+      buttonText: "Shop Now",
+      buttonHref: "/collections",
+    },
+    {
+      id: "2",
+      url: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      alt: "Workstation Pro",
+      subtitle: "Best Seller",
+      title: "Workstation Pro",
+      description: "Power through your workflow with M3 chips.",
+      color: "from-blue-900/90",
+      buttonText: "Shop Now",
+      buttonHref: "/collections",
+    },
+    {
+      id: "3",
+      url: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+      alt: "Wearable Tech",
+      subtitle: "Spring Sale",
+      title: "Wearable Tech",
+      description: "Track your fitness goals with precision.",
+      color: "from-emerald-900/90",
+      buttonText: "Shop Now",
+      buttonHref: "/collections",
+    },
+  ],
+  backgroundType: "color",
+  backgroundColor: "#000000",
+};
+
+export interface HeroTemplate13Data {
+  template: "hero-13";
   title: string;
   description: string;
   imageUrl?: string;
@@ -331,8 +517,19 @@ export interface HeroTemplate21Data {
   buttons: HeroButton[];
 }
 
-export interface HeroTemplate22Data {
-  template: "hero-22";
+export const defaultHeroTemplate13Data: HeroTemplate13Data = {
+  template: "hero-13",
+  title: "I'm Sam, and I am a senior industrial designer",
+  description:
+    "Lorem ipsum dolor sit amet consectetur adipiscing elit lectus etiam malesuada nunc lacus velit vitae egestas integer urna phasellu.",
+  imageUrl:
+    "https://cdn.prod.website-files.com/60e640d00fdb1e0bd76fae59/60ecd8896b60ff2782eeee29_sam-moore-avatar-home-v3-portfolio-x-webflow-template%20(1).jpeg",
+  imageAlt: "Sam Profile",
+  buttons: [],
+};
+
+export interface HeroTemplate14Data {
+  template: "hero-14";
   eyebrow: string;
   title: string;
   spanText: string;
@@ -341,8 +538,20 @@ export interface HeroTemplate22Data {
   imageAlt: string;
 }
 
-export interface HeroTemplate23Data {
-  template: "hero-23";
+export const defaultHeroTemplate14Data: HeroTemplate14Data = {
+  template: "hero-14",
+  eyebrow: "About Me",
+  title: "I craft digital experiences",
+  spanText: "digital",
+  description:
+    "Full-stack developer passionate about building elegant, performant, and user-centric applications that make a difference.",
+  imageUrl:
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop",
+  imageAlt: "Developer workspace",
+};
+
+export interface HeroTemplate15Data {
+  template: "hero-15";
   eyebrow: string;
   title: string;
   spanText: string;
@@ -352,13 +561,38 @@ export interface HeroTemplate23Data {
   buttons: HeroButton[];
 }
 
-export interface HeroTemplate24Data {
-  template: "hero-24";
+export const defaultHeroTemplate15Data: HeroTemplate15Data = {
+  template: "hero-15",
+  eyebrow: "6+ Years Experience • 250+ Clients Worldwide",
+  title: "Professional Accounting, Compliance & Business Setup",
+  spanText: "Business Setup",
+  description:
+    "We help businesses stay compliant, manage finances, and grow — so you can focus on running your business.",
+  backgroundImageUrl:
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+  imageAlt: "Corporate Finance",
+  buttons: [
+    { id: "1", text: "Explore Services", variant: "primary", href: "#" },
+    { id: "2", text: "Get a Quote", variant: "secondary", href: "#" },
+  ],
+};
+
+export interface HeroTemplate16Data {
+  template: "hero-16";
   title: string;
   spanText: string;
   imageUrl: string;
   imageAlt: string;
 }
+
+export const defaultHeroTemplate16Data: HeroTemplate16Data = {
+  template: "hero-16",
+  title: "Your Partner <br /> In",
+  spanText: "Financial Growth",
+  imageUrl:
+    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+  imageAlt: "Office Meeting",
+};
 
 // Union type for all hero templates
 export type HeroData =
@@ -377,15 +611,7 @@ export type HeroData =
   | HeroTemplate13Data
   | HeroTemplate14Data
   | HeroTemplate15Data
-  | HeroTemplate16Data
-  | HeroTemplate17Data
-  | HeroTemplate18Data
-  | HeroTemplate19Data
-  | HeroTemplate20Data
-  | HeroTemplate21Data
-  | HeroTemplate22Data
-  | HeroTemplate23Data
-  | HeroTemplate24Data;
+  | HeroTemplate16Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -445,546 +671,6 @@ export interface GetPageComponentsResponse {
   components?: ApiHeroComponentResponse[] | HeroComponentData[];
 }
 
-// Default data for each template
-export const defaultHeroTemplate1Data: HeroTemplate1Data = {
-  template: "hero-1",
-  title: "Transform Your Digital Presence",
-  subtitle: "Modern Solutions for Growing Businesses",
-  description:
-    "Empower your brand with cutting-edge technology and innovative design that drives real results.",
-  buttons: [
-    { id: "1", text: "Start Free Trial", variant: "primary", href: "#" },
-    { id: "2", text: "View Demo", variant: "secondary", href: "#" },
-  ],
-  layout: "text-center",
-  showImage: true,
-  imageUrl: "/hero-students.webp",
-  imageAlt: "Hero image",
-};
-
-export const defaultHeroTemplate2Data: HeroTemplate2Data = {
-  template: "hero-2",
-  title: "Discover Amazing Products",
-  subtitle: "Featured Collection",
-  description:
-    "Explore our handpicked selection of premium products designed to enhance your lifestyle.",
-  buttons: [
-    { id: "1", text: "Shop Now", variant: "primary", href: "#" },
-    { id: "2", text: "Learn More", variant: "secondary", href: "#" },
-  ],
-  layout: "text-center",
-  showSlider: true,
-  sliderImages: [
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 1",
-    },
-    {
-      id: "2",
-      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 2",
-    },
-    {
-      id: "3",
-      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 2",
-    },
-    {
-      id: "4",
-      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 3",
-    },
-  ],
-  backgroundType: "image",
-  backgroundColor: "#FFFFFF",
-  backgroundImageUrl:
-    "https://images.pexels.com/photos/695644/pexels-photo-695644.jpeg",
-};
-
-export const defaultHeroTemplate3Data: HeroTemplate3Data = {
-  template: "hero-3",
-  title: "Build Better Products Faster",
-  subtitle: "Innovation Platform",
-  description:
-    "Join thousands of teams building the next generation of digital products with our powerful platform.",
-  buttons: [
-    { id: "1", text: "Get Started", variant: "primary", href: "#" },
-    { id: "2", text: "Watch Demo", variant: "outline", href: "#" },
-  ],
-  showImage: true,
-  imageUrl:
-    "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1170&auto=format&fit=crop",
-  imageAlt: "Platform interface",
-  statsNumber: "12k+",
-  statsLabel: "Used by teams and professionals.",
-};
-
-export const defaultHeroTemplate4Data: HeroTemplate4Data = {
-  template: "hero-4",
-  title: "Elevate Your",
-  subtitle: "Style Game",
-  description:
-    "Discover our exclusive collection of premium fashion that combines comfort, style, and sustainability.",
-  buttons: [
-    { id: "1", text: "Shop Collection", variant: "primary", href: "#" },
-  ],
-  showImage: true,
-  imageUrl: "https://images.pexels.com/photos/813787/pexels-photo-813787.jpeg",
-  imageAlt: "Fashion collection",
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-  statsNumber: "788+|8k+",
-  statsLabel: "Happy clients|Projects completed",
-};
-
-export const defaultHeroTemplate5Data: HeroTemplate5Data = {
-  template: "hero-5",
-  title: "Minimal Elegance",
-  subtitle: "Introducing the UA-01",
-  description:
-    "Experience the perfect blend of form and function with our latest collection of minimalist design.",
-  buttons: [
-    { id: "1", text: "Discover More", variant: "primary", href: "#" },
-    { id: "2", text: "Explore Collection", variant: "outline", href: "#" },
-  ],
-  backgroundType: "image",
-  backgroundImageUrl:
-    "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1327&auto=format&fit=crop",
-  showOverlay: true,
-  overlayOpacity: 0.7,
-  imageAlt: "Minimalist design",
-};
-
-export const defaultHeroTemplate6Data: HeroTemplate6Data = {
-  template: "hero-6",
-  title: "FIND YOUR PERFECT WORKOUT ATTIRE",
-  subtitle: "AN EXCLUSIVE SELECTION OF THIS SEASON'S TRENDS.",
-  description: "EXCLUSIVELY ONLINE!",
-  buttons: [
-    { id: "1", text: "SHOP COLLECTION", variant: "primary", href: "#" },
-  ],
-  sliderImages: [
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1035&auto=format&fit=crop",
-      alt: "Workout attire collection",
-    },
-    {
-      id: "2",
-      url: "https://images.unsplash.com/photo-1545151414-8a948e1ea54f?q=80&w=987&auto=format&fit=crop",
-      alt: "Fitness clothing",
-    },
-    {
-      id: "3",
-      url: "https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?q=80&w=1920&auto=format&fit=crop",
-      alt: "Activewear selection",
-    },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#000000",
-  showOverlay: true,
-  overlayOpacity: 0.5,
-};
-
-export const defaultHeroTemplate7Data: HeroTemplate7Data = {
-  template: "hero-7",
-  buttons: [],
-  collections: [
-    {
-      id: "women",
-      title: "WOMEN'S COLLECTION",
-      subtitle: "NEW COLLECTION",
-      badge: "WOMEN",
-      imageUrl:
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1600&auto=format&fit=crop",
-      imageAlt: "Woman in yellow sportswear stretching on stairs",
-      buttonText: "DISCOVER MORE",
-      buttonHref: "#",
-    },
-    {
-      id: "men",
-      title: "MEN'S COLLECTION",
-      subtitle: "SAVE 50% OFF",
-      badge: "MEN",
-      imageUrl:
-        "https://images.unsplash.com/photo-1683509231125-5c487afaa453?q=80&w=1364&auto=format&fit=crop",
-      imageAlt: "Man in red t-shirt resting after a workout",
-      buttonText: "DISCOVER MORE",
-      buttonHref: "#",
-    },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#F3F4F6",
-};
-export const defaultHeroTemplate8Data: HeroTemplate8Data = {
-  template: "hero-8",
-  title: "Premium Nepali Hand Knotted Rugs",
-  description:
-    "Experience the timeless beauty of authentic Nepali craftsmanship. Each rug tells a story of tradition, patience, and unparalleled artistry passed down through generations.",
-  buttons: [
-    { id: "1", text: "Order Now", variant: "primary", href: "#" },
-    { id: "2", text: "View Menu", variant: "outline", href: "#" },
-  ],
-  features: [
-    { id: "1", text: "Hand Knotted" },
-    { id: "2", text: "Premium Quality" },
-    { id: "3", text: "Authentic" },
-  ],
-  trustIndicators: {
-    rating: "4.9/5",
-    stars: "★★★★★",
-    features: ["Free Shipping", "30-Day Returns"],
-    customerText: "Trusted by 1000+ customers worldwide",
-  },
-  leftImageUrl:
-    "https://images.unsplash.com/photo-1725653811863-8ca1776e126a?q=80&w=764&auto=format&fit=crop",
-  leftImageAlt: "Left rug image",
-  rightImageUrl:
-    "https://images.unsplash.com/photo-1758640920659-0bb864175983?q=80&w=1171&auto=format&fit=crop",
-  rightImageAlt: "Right rug image",
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
-
-export const defaultHeroTemplate9Data: HeroTemplate9Data = {
-  template: "hero-9",
-  title: "Innovation Meets Elegance",
-  description:
-    "Join our community of innovators and creators shaping the future of design and technology.",
-  buttons: [{ id: "1", text: "Get Started", variant: "primary", href: "#" }],
-  sliderImages: [
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 1",
-    },
-    {
-      id: "2",
-      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 2",
-    },
-    {
-      id: "3",
-      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 2",
-    },
-    {
-      id: "4",
-      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 3",
-    },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#F9FAFB",
-};
-
-export const defaultHeroTemplate10Data: HeroTemplate10Data = {
-  template: "hero-10",
-  title: "Summer styles are finally here",
-  description:
-    "This year, our new summer collection will shelter you from the harsh elements of a world that doesn't care if you live or die.",
-  buttons: [
-    { id: "1", text: "Shop Collection", variant: "primary", href: "#" },
-  ],
-  sliderImages: [
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1760694533407-6a10714f3b65?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 1",
-    },
-    {
-      id: "2",
-      url: "https://plus.unsplash.com/premium_photo-1710849581742-f2151607c745?q=80&w=715&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 2",
-    },
-    {
-      id: "3",
-      url: "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 2",
-    },
-    {
-      id: "4",
-      url: "https://images.unsplash.com/photo-1762776345918-dbc968a5fcb0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 3",
-    },
-    {
-      id: "5",
-      url: "https://images.unsplash.com/photo-1756134904044-1cf7868cb9de?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 4",
-    },
-    {
-      id: "6",
-      url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 3",
-    },
-    {
-      id: "7",
-      url: "https://images.unsplash.com/photo-1762112800040-b0d01696cb92?q=80&w=681&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 4",
-    },
-    {
-      id: "8",
-      url: "https://images.unsplash.com/photo-1757137910091-1cf071030691?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Images 3",
-    },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
-
-export const defaultHeroTemplate11Data: HeroTemplate11Data = {
-  template: "hero-11",
-  title: "Best Solution For Your Business Strategy.",
-  subtitle: "Started From - 1998",
-  description: "Whole-Life Business Coaching for committed entrepreneurs",
-  buttons: [
-    { id: "1", text: "Get started today", variant: "primary", href: "#" },
-  ],
-  imageUrl:
-    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2080&auto=format&fit=crop",
-  imageAlt: "Business strategy meeting",
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
-
-export const defaultHeroTemplate12Data: HeroTemplate12Data = {
-  template: "hero-12",
-  title: "Visa Made Easy\nDreams Made\nPossible",
-  buttons: [
-    { id: "1", text: "Read More", variant: "primary", href: "#" },
-    { id: "2", text: "Watch Our Videos", variant: "secondary", href: "#" },
-  ],
-  imageUrl:
-    "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=2940&auto=format&fit=crop",
-  imageAlt: "Happy traveler in Paris",
-  backgroundType: "color",
-  backgroundColor: "#013D2F",
-};
-
-export const defaultHeroTemplate13Data: HeroTemplate13Data = {
-  template: "hero-13",
-  title:
-    "Navigate Business <br /> with <span class='font-serif font-normal italic'>Confidence</span>",
-  description:
-    "Expert strategic consulting to drive sustainable growth, operational innovation, and lasting business transformation across industries and markets, maximizing impact.",
-  buttons: [
-    { id: "1", text: "Book a Free Call", variant: "secondary", href: "#" },
-  ],
-  backgroundType: "image",
-  backgroundImageUrl: "https://picsum.photos/seed/office1/1920/1080",
-  imageAlt: "Office meeting background",
-};
-
-export const defaultHeroTemplate14Data: HeroTemplate14Data = {
-  template: "hero-14",
-  subtitle: "Exclusive Drop",
-  title: "MIDNIGHT SERIES",
-  buttons: [{ id: "1", text: "Shop The Look", variant: "primary", href: "#" }],
-  backgroundImageUrl:
-    "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2576&auto=format&fit=crop",
-  imageAlt: "Featured Collection",
-};
-
-export const defaultHeroTemplate15Data: HeroTemplate15Data = {
-  template: "hero-15",
-  title: "Delicious Deals\nIn One\nClick",
-  subtitle: "Savor Every Bite",
-  description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed sodales auctor orci, sit amet vulputate velit molestie.",
-  buttons: [{ id: "1", text: "Order Now", variant: "primary", href: "#" }],
-  imageUrl: "/hero.webp",
-  imageAlt: "Delicious food plate",
-  priceLabel: "Price",
-  priceValue: "$ 10.03",
-  stat1Value: "23",
-  stat1Label: "Daily Orders",
-  stat2Value: "56+",
-  stat2Label: "Items Available",
-};
-
-export const defaultHeroTemplate16Data: HeroTemplate16Data = {
-  template: "hero-16",
-  title: "Best Abroad Study Consultancy <br /> In Nepal",
-  description:
-    "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered.",
-  badge1Text: "Approved by Ministry of Education",
-  badge1Image: "/ministry-of-education.png",
-  badge2Text: "TITI Certified Counselors",
-  badge2Image: "/titi.png",
-  buttons: [
-    { id: "1", text: "Book Free Consultation", variant: "primary", href: "#" },
-    { id: "2", text: "Learn More About Us", variant: "outline", href: "#" },
-  ],
-  features: [
-    { id: "1", text: "10+ Years Experience" },
-    { id: "2", text: "5000+ Students Placed" },
-    { id: "3", text: "100+ Partner Universities" },
-  ],
-  imageUrl:
-    "https://images.unsplash.com/photo-1523240715639-9942f1476d06?q=80&w=2070&auto=format&fit=crop",
-  imageAlt: "Students graduating",
-};
-
-export const defaultHeroTemplate17Data: HeroTemplate17Data = {
-  template: "hero-17",
-  badgeText: "New Trend 2025",
-  title: "Waves Puffer\nCoat Black",
-  buttons: [{ id: "1", text: "Shop Now", variant: "outline", href: "#" }],
-  rightImageUrl: "/images/site-owners/hero/hero-style-17/hero-right-image.webp",
-  rightImageAlt: "Waves Puffer Coat Black",
-  rightStampImageUrl: "/images/site-owners/hero/hero-style-17/bag.webp",
-  rightStampAlt: "Product Quality Best",
-  features: [
-    { id: "1", text: "Free Shipping|Free Shipping for orders over $90" },
-    { id: "2", text: "Money Back guarantee|100% money back guarantee" },
-    { id: "3", text: "24/7 online support|24 hours a day, 7 days a week" },
-    { id: "4", text: "Flexible Payment|Pay with Multiple Credit Cards" },
-  ],
-};
-
-export const defaultHeroTemplate18Data: HeroTemplate18Data = {
-  template: "hero-18",
-  buttons: [],
-  collections: [
-    {
-      id: "men",
-      title: "Men's\nCollection",
-      subtitle: "",
-      badge: "",
-      imageUrl:
-        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
-      imageAlt: "Men's collection",
-      buttonText: "Shop Now",
-      buttonHref: "#",
-    },
-    {
-      id: "women",
-      title: "Women's\nCollection",
-      subtitle: "",
-      badge: "",
-      imageUrl:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
-      imageAlt: "Women's collection",
-      buttonText: "Shop Now",
-      buttonHref: "#",
-    },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
-
-export const defaultHeroTemplate19Data: HeroTemplate19Data = {
-  template: "hero-19",
-  titlePart1: "Premium Eyewear <br /> Made for Nepal",
-  description:
-    "Thoughtfully designed eyewear that blends comfort, clarity, and modern style for everyday life.",
-  buttons: [
-    {
-      id: "1",
-      text: "Explore Collection",
-      variant: "primary",
-      href: "#",
-    },
-    { id: "2", text: "Our Story", variant: "outline", href: "#" },
-  ],
-  imageUrl:
-    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=800",
-  imageAlt: "NepGlass Premium Sunglasses",
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
-
-export const defaultHeroTemplate20Data: HeroTemplate20Data = {
-  template: "hero-20",
-  buttons: [],
-  slides: [
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      alt: "Next Gen Gaming",
-      subtitle: "New Arrival",
-      title: "Next Gen Gaming",
-      description: "Experience console quality gaming on the go.",
-      color: "from-navy-950/90",
-      buttonText: "Shop Now",
-      buttonHref: "/collections",
-    },
-    {
-      id: "2",
-      url: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      alt: "Workstation Pro",
-      subtitle: "Best Seller",
-      title: "Workstation Pro",
-      description: "Power through your workflow with M3 chips.",
-      color: "from-blue-900/90",
-      buttonText: "Shop Now",
-      buttonHref: "/collections",
-    },
-    {
-      id: "3",
-      url: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-      alt: "Wearable Tech",
-      subtitle: "Spring Sale",
-      title: "Wearable Tech",
-      description: "Track your fitness goals with precision.",
-      color: "from-emerald-900/90",
-      buttonText: "Shop Now",
-      buttonHref: "/collections",
-    },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#000000",
-};
-
-export const defaultHeroTemplate21Data: HeroTemplate21Data = {
-  template: "hero-21",
-  title: "I'm Sam, and I am a senior industrial designer",
-  description:
-    "Lorem ipsum dolor sit amet consectetur adipiscing elit lectus etiam malesuada nunc lacus velit vitae egestas integer urna phasellu.",
-  imageUrl:
-    "https://cdn.prod.website-files.com/60e640d00fdb1e0bd76fae59/60ecd8896b60ff2782eeee29_sam-moore-avatar-home-v3-portfolio-x-webflow-template%20(1).jpeg",
-  imageAlt: "Sam Profile",
-  buttons: [],
-};
-
-export const defaultHeroTemplate22Data: HeroTemplate22Data = {
-  template: "hero-22",
-  eyebrow: "About Me",
-  title: "I craft digital experiences",
-  spanText: "digital",
-  description:
-    "Full-stack developer passionate about building elegant, performant, and user-centric applications that make a difference.",
-  imageUrl:
-    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop",
-  imageAlt: "Developer workspace",
-};
-
-export const defaultHeroTemplate23Data: HeroTemplate23Data = {
-  template: "hero-23",
-  eyebrow: "6+ Years Experience • 250+ Clients Worldwide",
-  title: "Professional Accounting, Compliance & Business Setup",
-  spanText: "Business Setup",
-  description:
-    "We help businesses stay compliant, manage finances, and grow — so you can focus on running your business.",
-  backgroundImageUrl:
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-  imageAlt: "Corporate Finance",
-  buttons: [
-    { id: "1", text: "Explore Services", variant: "primary", href: "#" },
-    { id: "2", text: "Get a Quote", variant: "secondary", href: "#" },
-  ],
-};
-
-export const defaultHeroTemplate24Data: HeroTemplate24Data = {
-  template: "hero-24",
-  title: "Your Partner <br /> In",
-  spanText: "Financial Growth",
-  imageUrl:
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-  imageAlt: "Office Meeting",
-};
-
 // Default data map for all hero templates
 export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-1": defaultHeroTemplate1Data,
@@ -1003,14 +689,6 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-14": defaultHeroTemplate14Data,
   "hero-15": defaultHeroTemplate15Data,
   "hero-16": defaultHeroTemplate16Data,
-  "hero-17": defaultHeroTemplate17Data,
-  "hero-18": defaultHeroTemplate18Data,
-  "hero-19": defaultHeroTemplate19Data,
-  "hero-20": defaultHeroTemplate20Data,
-  "hero-21": defaultHeroTemplate21Data,
-  "hero-22": defaultHeroTemplate22Data,
-  "hero-23": defaultHeroTemplate23Data,
-  "hero-24": defaultHeroTemplate24Data,
 };
 
 // Type guards for each template
@@ -1034,6 +712,7 @@ export const isHeroTemplate6 = (data: HeroData): data is HeroTemplate6Data =>
 
 export const isHeroTemplate7 = (data: HeroData): data is HeroTemplate7Data =>
   data.template === "hero-7";
+
 export const isHeroTemplate8 = (data: HeroData): data is HeroTemplate8Data =>
   data.template === "hero-8";
 
@@ -1060,27 +739,3 @@ export const isHeroTemplate15 = (data: HeroData): data is HeroTemplate15Data =>
 
 export const isHeroTemplate16 = (data: HeroData): data is HeroTemplate16Data =>
   data.template === "hero-16";
-
-export const isHeroTemplate17 = (data: HeroData): data is HeroTemplate17Data =>
-  data.template === "hero-17";
-
-export const isHeroTemplate18 = (data: HeroData): data is HeroTemplate18Data =>
-  data.template === "hero-18";
-
-export const isHeroTemplate19 = (data: HeroData): data is HeroTemplate19Data =>
-  data.template === "hero-19";
-
-export const isHeroTemplate20 = (data: HeroData): data is HeroTemplate20Data =>
-  data.template === "hero-20";
-
-export const isHeroTemplate21 = (data: HeroData): data is HeroTemplate21Data =>
-  data.template === "hero-21";
-
-export const isHeroTemplate22 = (data: HeroData): data is HeroTemplate22Data =>
-  data.template === "hero-22";
-
-export const isHeroTemplate23 = (data: HeroData): data is HeroTemplate23Data =>
-  data.template === "hero-23";
-
-export const isHeroTemplate24 = (data: HeroData): data is HeroTemplate24Data =>
-  data.template === "hero-24";

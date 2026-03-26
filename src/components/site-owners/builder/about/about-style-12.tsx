@@ -1,154 +1,243 @@
 "use client";
-import React, { useState } from "react";
+
+import React from "react";
+import { motion } from "framer-motion";
+import { Check, ArrowUpRight } from "lucide-react";
 import { AboutUs12Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-import { ChevronRight, Map } from "lucide-react";
+import { EditableLink } from "@/components/ui/editable-link";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate12Props {
   aboutUsData: AboutUs12Data;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<AboutUs12Data>) => void;
+  siteUser?: string;
 }
 
-export function AboutUsTemplate12({
+export const AboutUsTemplate12: React.FC<AboutUsTemplate12Props> = ({
   aboutUsData,
   isEditable = false,
   onUpdate,
-}: AboutUsTemplate12Props) {
-  const {
-    data,
-    handleTextUpdate,
-    handleImageUpdate,
-    handleAltUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(aboutUsData, onUpdate);
+  siteUser,
+}) => {
+  const { data, handleTextUpdate, handleImageUpdate, handleArrayItemUpdate } =
+    useBuilderLogic(aboutUsData, onUpdate);
 
-  const [activeMemberId, setActiveMemberId] = useState<string | null>(
-    data.teamMembers[0]?.id || null
-  );
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: { primary: "#3B82F6", primaryForeground: "#FFFFFF" },
+  };
 
-  // Handle team member updates
-  const handleMemberUpdate =
-    (memberId: string, field: "name" | "role") => (value: string) => {
-      handleArrayItemUpdate("teamMembers", memberId)({ [field]: value });
-    };
+  const primaryColor = theme.colors.primary;
 
-  return (
-    <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-12">
-      {/* Background decoration lines */}
-      <div className="pointer-events-none absolute top-0 left-0 h-full w-full overflow-hidden opacity-[0.03]">
-        <svg width="100%" height="100%">
-          <circle
-            cx="0"
-            cy="50%"
-            r="40%"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-          />
-          <circle
-            cx="0"
-            cy="50%"
-            r="50%"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-          />
-        </svg>
-      </div>
-
-      <div className="container mx-auto grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-        <div>
-          <div className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
-            <Map size={14} />
-            <EditableText
-              value={data.sectionTag}
-              onChange={handleTextUpdate("sectionTag")}
-              as="p"
-              isEditable={isEditable}
-              placeholder="OUR COACHING"
-            />
+  const FeatureList = ({
+    items,
+    section,
+  }: {
+    items: Array<{ id: string; text: string }>;
+    section: "mission" | "vision";
+  }) => (
+    <ul className="mb-8 space-y-4">
+      {items.map(item => (
+        <li key={item.id} className="flex items-start gap-3">
+          <div
+            className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+            style={{
+              backgroundColor: `${primaryColor}1A`,
+              color: primaryColor,
+            }}
+          >
+            <Check size={12} />
           </div>
           <EditableText
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="h2"
-            className="mb-12 text-4xl leading-tight font-bold md:text-5xl"
+            value={item.text}
+            onChange={(val: string) => {
+              handleArrayItemUpdate(
+                `${section}Features` as keyof AboutUs12Data,
+                item.id
+              )({ text: val });
+            }}
+            as="span"
+            className="font-medium text-gray-700"
             isEditable={isEditable}
-            placeholder="Exploring the Unknown Voyages of Wonder"
           />
+        </li>
+      ))}
+    </ul>
+  );
 
-          <div className="space-y-6">
-            {data.teamMembers.map((member, idx) => {
-              const isActive = activeMemberId === member.id;
-              return (
+  return (
+    <section className="bg-white py-16 sm:py-24">
+      <div className="container mx-auto px-4 sm:px-6 md:px-8">
+        {/* Mission Row */}
+        <div className="mb-20 grid grid-cols-1 items-center gap-12 lg:mb-32 lg:grid-cols-2 lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            <div className="mb-4">
+              <EditableText
+                value={data.missionTag}
+                onChange={handleTextUpdate("missionTag")}
+                as="span"
+                className="text-sm font-bold tracking-wider uppercase"
+                style={{ color: primaryColor }}
+                isEditable={isEditable}
+              />
+            </div>
+            <div className="mb-6">
+              <EditableText
+                value={data.missionTitle}
+                onChange={handleTextUpdate("missionTitle")}
+                as="h2"
+                className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl"
+                isEditable={isEditable}
+              />
+            </div>
+            <EditableText
+              value={data.missionDescription}
+              onChange={handleTextUpdate("missionDescription")}
+              as="p"
+              className="mb-8 leading-relaxed text-gray-500"
+              isEditable={isEditable}
+              multiline
+            />
+            <FeatureList items={data.missionFeatures} section="mission" />
+            <EditableLink
+              text={data.missionButtonText}
+              href={data.missionButtonLink}
+              onChange={(text: string, href: string) => {
+                handleTextUpdate("missionButtonText")(text);
+                handleTextUpdate("missionButtonLink")(href);
+              }}
+              className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-3 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+              style={{
+                backgroundColor: primaryColor,
+                color: theme.colors.primaryForeground,
+              }}
+              isEditable={isEditable}
+              siteUser={siteUser}
+            >
+              <div className="flex items-center gap-2">
+                <span>{data.missionButtonText}</span>
                 <div
-                  key={member.id}
-                  className="group flex cursor-pointer items-center justify-between rounded-2xl border bg-white p-6 shadow-sm transition-colors"
-                  onClick={() => setActiveMemberId(member.id)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white transition-transform group-hover:scale-105"
+                  style={{ color: primaryColor }}
                 >
-                  <div>
-                    <EditableText
-                      value={member.name}
-                      onChange={handleMemberUpdate(member.id, "name")}
-                      as="h4"
-                      className="font-bold"
-                      isEditable={isEditable}
-                      placeholder="Name"
-                    />
-                    <div className="mt-1 text-xs">
-                      <EditableText
-                        value={member.role}
-                        onChange={handleMemberUpdate(member.id, "role")}
-                        as="span"
-                        isEditable={isEditable}
-                        placeholder="Role"
-                      />
-                    </div>
-                  </div>
-                  <button className="flex h-10 w-10 items-center justify-center rounded-full transition-colors">
-                    <ChevronRight size={16} />
-                  </button>
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="relative">
-          <div className="relative h-[500px] w-full overflow-hidden rounded-[40px] bg-gray-200">
+              </div>
+            </EditableLink>
+          </motion.div>
+          <motion.div
+            className="h-[400px] overflow-hidden rounded-3xl shadow-2xl sm:h-[500px]"
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <EditableImage
-              src={data.imageUrl}
-              alt={data.imageAlt}
-              onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
-              onAltChange={handleAltUpdate("imageAlt")}
+              src={data.missionImage}
+              alt={data.missionImageAlt}
+              onImageChange={handleImageUpdate(
+                "missionImage",
+                "missionImageAlt"
+              )}
               isEditable={isEditable}
               className="h-full w-full object-cover"
-              width={800}
-              height={600}
-              s3Options={{
-                folder: "about-us-images",
-                
-              }}
-              showAltEditor={isEditable}
+              width={1740}
+              height={1000}
             />
+          </motion.div>
+        </div>
 
-            {/* Social Links overlay */}
-            <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-white/90 px-6 py-2 backdrop-blur-sm">
-              {["X", "f", "O", "in"].map((social, i) => (
-                <span
-                  key={i}
-                  className="cursor-pointer text-xs font-bold transition-colors"
-                >
-                  {social}
-                </span>
-              ))}
+        {/* Vision Row */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <motion.div
+            className="order-2 h-[400px] overflow-hidden rounded-3xl shadow-2xl sm:h-[500px] lg:order-1"
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            <EditableImage
+              src={data.visionImage}
+              alt={data.visionImageAlt}
+              onImageChange={handleImageUpdate("visionImage", "visionImageAlt")}
+              isEditable={isEditable}
+              className="h-full w-full object-cover"
+              width={1674}
+              height={1000}
+            />
+          </motion.div>
+          <motion.div
+            className="order-1 lg:order-2"
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            <div className="mb-4">
+              <EditableText
+                value={data.visionTag}
+                onChange={handleTextUpdate("visionTag")}
+                as="span"
+                className="text-sm font-bold tracking-wider uppercase"
+                style={{ color: primaryColor }}
+                isEditable={isEditable}
+              />
             </div>
-          </div>
+            <div className="mb-6">
+              <EditableText
+                value={data.visionTitle}
+                onChange={handleTextUpdate("visionTitle")}
+                as="h2"
+                className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl"
+                isEditable={isEditable}
+              />
+            </div>
+            <EditableText
+              value={data.visionDescription}
+              onChange={handleTextUpdate("visionDescription")}
+              as="p"
+              className="mb-8 leading-relaxed text-gray-500"
+              isEditable={isEditable}
+              multiline
+            />
+            <FeatureList items={data.visionFeatures} section="vision" />
+            <EditableLink
+              text={data.visionButtonText}
+              href={data.visionButtonLink}
+              onChange={(text: string, href: string) => {
+                handleTextUpdate("visionButtonText")(text);
+                handleTextUpdate("visionButtonLink")(href);
+              }}
+              className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-3 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+              style={{
+                backgroundColor: primaryColor,
+                color: theme.colors.primaryForeground,
+              }}
+              isEditable={isEditable}
+              siteUser={siteUser}
+            >
+              <div className="flex items-center gap-2">
+                <span>{data.visionButtonText}</span>
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white transition-transform group-hover:scale-105"
+                  style={{ color: primaryColor }}
+                >
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </div>
+              </div>
+            </EditableLink>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};

@@ -1,123 +1,239 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { Search, Puzzle, Rocket } from "lucide-react";
 import { AboutUs8Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
-import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate8Props {
   aboutUsData: AboutUs8Data;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<AboutUs8Data>) => void;
+  siteUser?: string;
 }
 
-export const AboutUsTemplate8: React.FC<AboutUsTemplate8Props> = ({
+const iconMap: Record<
+  string,
+  React.ComponentType<{ size?: number; className?: string }>
+> = {
+  Search,
+  Puzzle,
+  Rocket,
+};
+
+export function AboutUsTemplate8({
   aboutUsData,
   isEditable = false,
   onUpdate,
-}) => {
-  const {
-    data,
-    handleTextUpdate,
-    handleImageUpdate,
-    handleAltUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(aboutUsData, onUpdate);
+}: AboutUsTemplate8Props) {
+  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
 
-  // Handle feature updates
-  const handleFeatureUpdate =
-    (featureId: string, field: "name" | "description") => (value: string) => {
-      handleArrayItemUpdate("features", featureId)({ [field]: value });
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#2563EB",
+    },
+  };
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+
+      const rect = sectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      const startPoint = windowHeight * 0.8;
+      const totalHeight = rect.height;
+      const scrolled = startPoint - rect.top;
+      const percentage = Math.min(
+        1,
+        Math.max(0, scrolled / (totalHeight * 0.8))
+      );
+
+      setProgress(percentage);
     };
 
-  // Handle image updates
-  const handleImageUpdateLocal =
-    (imageId: string) => (imageUrl: string, altText?: string) => {
-      handleArrayItemUpdate("images", imageId)({ url: imageUrl, alt: altText });
-    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  // Handle alt text updates
-  const handleAltUpdateLocal = (imageId: string) => (altText: string) => {
-    handleArrayItemUpdate("images", imageId)({ alt: altText });
+  const handleStepUpdate = (stepId: string, field: string, value: string) => {
+    handleArrayItemUpdate("steps", stepId)({ [field]: value });
+  };
+
+  // Helper to render italic word in title
+  const renderTitle = () => {
+    const { title, italicWord } = data;
+    if (!italicWord || !title.includes(italicWord)) {
+      return title;
+    }
+    const parts = title.split(italicWord);
+    return (
+      <>
+        {parts[0]}
+        <em className="italic">{italicWord}</em>
+        {parts[1]}
+      </>
+    );
   };
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-24 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
-        <div>
-          <EditableText
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="h2"
-            className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
-            isEditable={isEditable}
-            placeholder="Enter title..."
-          />
-          <EditableText
-            value={data.description}
-            onChange={handleTextUpdate("description")}
-            as="p"
-            className="mt-4 text-gray-500"
-            isEditable={isEditable}
-            placeholder="Enter description..."
-            multiline={true}
-          />
+    <section ref={sectionRef} className="bg-white py-20">
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+          {/* Left Column - Sticky Header */}
+          <div className="mb-12 h-fit lg:sticky lg:top-32 lg:mb-0">
+            <EditableText
+              value={data.sectionTag}
+              onChange={handleTextUpdate("sectionTag")}
+              isEditable={isEditable}
+              className="mb-4 block text-sm font-medium"
+              style={{ color: theme.colors.primary }}
+            />
+            <h2 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl">
+              {isEditable ? (
+                <EditableText
+                  value={data.title}
+                  onChange={handleTextUpdate("title")}
+                  isEditable={isEditable}
+                />
+              ) : (
+                renderTitle()
+              )}
+            </h2>
+            <EditableText
+              value={data.description}
+              onChange={handleTextUpdate("description")}
+              isEditable={isEditable}
+              className="mb-8 max-w-md text-gray-500"
+            />
+          </div>
 
-          <dl className="mt-16 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-y-16 lg:gap-x-8">
-            {data.features.map(feature => (
-              <div key={feature.id} className="border-t border-gray-200 pt-4">
-                <EditableText
-                  value={feature.name}
-                  onChange={handleFeatureUpdate(feature.id, "name")}
-                  as="div"
-                  className="font-medium text-gray-900"
-                  isEditable={isEditable}
-                  placeholder="Enter feature name..."
-                />
-                <EditableText
-                  value={feature.description}
-                  onChange={handleFeatureUpdate(feature.id, "description")}
-                  as="div"
-                  className="mt-2 text-sm text-gray-500"
-                  isEditable={isEditable}
-                  placeholder="Enter feature description..."
-                  multiline={true}
-                />
-              </div>
-            ))}
-          </dl>
-        </div>
-        <div className="grid grid-cols-2 grid-rows-2 gap-4 sm:gap-6 lg:gap-8">
-          {data.images.map((image, index) => (
+          {/* Right Column - Steps with Timeline */}
+          <div className="relative pl-8 md:pl-12">
+            {/* Background Line */}
+            <div className="absolute top-8 bottom-20 left-[15px] w-0.5 bg-gray-100 md:left-[19px]"></div>
+
+            {/* Active Blue Line */}
             <div
-              key={image.id}
-              className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100"
-            >
-              <EditableImage
-                src={image.url}
-                alt={image.alt}
-                onImageChange={handleImageUpdateLocal(image.id)}
-                onAltChange={handleAltUpdateLocal(image.id)}
-                isEditable={isEditable}
-                className="h-full w-full object-cover"
-                width={600}
-                height={600}
-                s3Options={{
-                  folder: "about-us-images",
-                  
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 600,
-                  height: 600,
-                  text: `Upload image ${index + 1}`,
-                }}
-              />
+              className="absolute top-8 left-[15px] w-0.5 transition-all duration-100 ease-out md:left-[19px]"
+              style={{
+                height: `calc(${progress * 100}% - 60px)`,
+                backgroundColor: theme.colors.primary,
+              }}
+            ></div>
+
+            <div className="space-y-12">
+              {data.steps.map((step, idx) => {
+                const threshold = idx / (data.steps.length - 0.5);
+                const isActive = progress > threshold;
+                const IconComponent = iconMap[step.icon] || Search;
+
+                return (
+                  <div
+                    key={step.id}
+                    className={`relative transition-all duration-500 ${
+                      isActive
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-4 opacity-50"
+                    }`}
+                  >
+                    {/* Timeline Dot */}
+                    <div
+                      className={`absolute top-6 -left-[41px] h-4 w-4 rounded-full border-4 transition-colors duration-500 md:-left-[45px] ${
+                        isActive
+                          ? "scale-125 bg-white"
+                          : "border-gray-100 bg-gray-100"
+                      }`}
+                      style={{
+                        borderColor: isActive
+                          ? theme.colors.primary
+                          : undefined,
+                      }}
+                    ></div>
+
+                    <div
+                      className={`group relative overflow-hidden rounded-2xl border p-8 transition-all duration-500 ${
+                        isActive
+                          ? "bg-white shadow-lg"
+                          : "border-gray-50 bg-gray-50"
+                      }`}
+                      style={{
+                        borderColor: isActive
+                          ? theme.colors.primary + "4D"
+                          : undefined,
+                      }}
+                    >
+                      <div
+                        className="absolute top-4 right-4 rounded-md px-2 py-1 text-xs font-bold"
+                        style={{
+                          backgroundColor: theme.colors.primary + "1A",
+                          color: theme.colors.primary,
+                        }}
+                      >
+                        <EditableText
+                          value={step.stepNumber}
+                          onChange={value =>
+                            handleStepUpdate(step.id, "stepNumber", value)
+                          }
+                          isEditable={isEditable}
+                        />
+                      </div>
+
+                      <div
+                        className={`mb-6 flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-500 ${
+                          isActive
+                            ? "text-white shadow-lg"
+                            : "bg-gray-200 text-gray-500"
+                        }`}
+                        style={
+                          isActive
+                            ? {
+                                backgroundColor: theme.colors.primary,
+                                boxShadow: `0 10px 15px -3px ${theme.colors.primary}33`,
+                              }
+                            : undefined
+                        }
+                      >
+                        <IconComponent size={20} />
+                      </div>
+
+                      <h3 className="mb-3 text-xl font-bold text-gray-900">
+                        <EditableText
+                          value={step.title}
+                          onChange={value =>
+                            handleStepUpdate(step.id, "title", value)
+                          }
+                          isEditable={isEditable}
+                        />
+                      </h3>
+
+                      <p className="text-sm leading-relaxed text-gray-500">
+                        <EditableText
+                          value={step.description}
+                          onChange={value =>
+                            handleStepUpdate(step.id, "description", value)
+                          }
+                          isEditable={isEditable}
+                        />
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
+}

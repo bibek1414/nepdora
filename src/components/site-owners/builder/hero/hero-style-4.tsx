@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Play } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate4Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import EiffelTowerBg from "../../../ui/eiffle-tower-bg";
 
 interface HeroTemplate4Props {
   heroData: HeroTemplate4Data;
@@ -24,15 +25,15 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
 }) => {
   const { data: themeResponse } = useThemeQuery();
 
-  // Get theme colors with updated structure, fallback to defaults if not available
+  // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
+      text: "#ffffff",
+      primary: "#84cc16",
+      primaryForeground: "#013D2F",
+      secondary: "#0A4F3F",
+      secondaryForeground: "#ffffff",
+      background: "#013D2F",
     },
     fonts: {
       body: "Inter",
@@ -44,206 +45,150 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
     data,
     handleTextUpdate,
     handleImageUpdate,
+    handleAltUpdate,
     handleButtonUpdate,
     getImageUrl,
   } = useBuilderLogic(heroData, onUpdate);
 
-  // Parse stats - if statsLabel contains "|", split it for two stats
-  const statsParts = data.statsLabel?.split("|") || [];
-  const firstStatLabel =
-    statsParts[0]?.trim() || data.statsLabel || "Happy clients";
-  const secondStatLabel = statsParts[1]?.trim() || "Projects completed";
-  const statsNumbers = data.statsNumber?.split("|") || [];
-  const firstStatNumber = statsNumbers[0]?.trim() || data.statsNumber || "788+";
-  const secondStatNumber = statsNumbers[1]?.trim() || "8k+";
+  // Ensure we have buttons
+  const primaryButton = data.buttons?.find(
+    btn => btn.variant === "primary"
+  ) || {
+    id: "1",
+    text: "Read More",
+    variant: "primary" as const,
+    href: "#",
+  };
+
+  const secondaryButton = data.buttons?.find(
+    btn => btn.variant === "secondary"
+  ) || {
+    id: "2",
+    text: "Watch Our Videos",
+    variant: "secondary" as const,
+    href: "#",
+  };
+
+  // Default image if none provided
+  const defaultImageUrl =
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
+  const imageUrl = data.imageUrl || defaultImageUrl;
 
   return (
     <section
-      className="relative flex min-h-screen w-full items-center overflow-hidden"
-      style={{
-        background: `linear-gradient(135deg, ${theme.colors.background} 0%, #f8fafc 100%)`,
-        fontFamily: theme.fonts.body,
-      }}
+      className="min-h-screen"
+      style={{ backgroundColor: theme.colors.background }}
     >
-      {/* Hero Section */}
-      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-12 lg:py-16">
-        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+      <div className="relative mx-auto flex min-h-[380px] w-full max-w-7xl items-center overflow-hidden rounded-[16px] px-2 py-4 sm:min-h-[450px] sm:rounded-[24px] sm:px-3 sm:py-6 md:min-h-[500px] md:rounded-[32px] md:px-4 md:py-8 lg:min-h-[600px] lg:rounded-[40px] lg:px-5 lg:py-16 xl:min-h-[720px] xl:rounded-[48px]">
+        {/* Background decoration: Eiffel Tower outline */}
+        <div className="pointer-events-none absolute bottom-0 left-1 z-0 w-[100px] text-white opacity-[0.08] sm:left-2 sm:w-[150px] md:left-4 md:w-[200px] lg:left-4 lg:w-[250px] xl:left-10 xl:w-[350px] 2xl:w-[450px]">
+          <EiffelTowerBg />
+        </div>
+
+        {/* Accent decorative circle */}
+        <div
+          className="absolute -right-[20%] bottom-[-20%] z-0 h-[150px] w-[150px] rounded-full sm:-right-[15%] sm:bottom-[-15%] sm:h-[250px] sm:w-[250px] md:h-[300px] md:w-[300px] lg:h-[400px] lg:w-[400px] xl:h-[500px] xl:w-[500px]"
+          style={{ backgroundColor: theme.colors.primary }}
+        ></div>
+
+        <div className="relative z-10 grid h-full w-full grid-cols-1 items-center gap-3 px-2 py-4 sm:gap-4 sm:px-3 sm:py-6 md:gap-6 md:px-4 md:py-8 lg:gap-8 lg:px-5 lg:py-16 xl:grid-cols-2 xl:gap-20">
           {/* Left Content */}
-          <div className="flex flex-col space-y-6 sm:space-y-8">
-            <div className="space-y-4 sm:space-y-6">
-              {/* Main Title */}
-              <div className="space-y-2 sm:space-y-3">
-                <EditableText
-                  value={data.title}
-                  onChange={handleTextUpdate("title")}
-                  as="h1"
-                  className="leading-tight font-bold text-balance text-white"
-                  isEditable={isEditable}
-                  placeholder="Enter main title..."
-                  multiline={true}
-                />
-                {/* Highlighted word - part of subtitle */}
-                <EditableText
-                  value={data.subtitle}
-                  onChange={handleTextUpdate("subtitle")}
-                  as="h2"
-                  className="text-3xl leading-tight font-bold text-white"
-                  isEditable={isEditable}
-                  placeholder="Highlighted text..."
-                  multiline={true}
-                />
-              </div>
+          <div className="relative z-10 max-w-2xl space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6 xl:space-y-10">
+            {/* Title */}
+            <EditableText
+              value={data.title || "Visa Made Easy\nDreams Made\nPossible"}
+              onChange={handleTextUpdate("title")}
+              as="h1"
+              className="!text-2xl !leading-tight font-bold text-white sm:!text-3xl md:!text-4xl lg:!text-5xl xl:!text-6xl 2xl:!text-7xl"
+              isEditable={isEditable}
+              placeholder="Visa Made Easy\nDreams Made\nPossible"
+              useHeadingFont={true}
+              multiline={true}
+            />
 
-              {/* Description */}
-              <EditableText
-                value={data.description}
-                onChange={handleTextUpdate("description")}
-                as="p"
-                className="max-w-lg text-base leading-relaxed text-white sm:text-lg"
+            {/* Buttons Container */}
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 md:gap-4 lg:gap-8">
+              {/* Primary Button */}
+              <EditableLink
+                text={primaryButton.text}
+                href={primaryButton.href || "#"}
+                onChange={(text, href) => {
+                  handleButtonUpdate("buttons")(primaryButton.id, text, href);
+                }}
                 isEditable={isEditable}
-                placeholder="Enter description..."
-                multiline={true}
-              />
+                siteUser={siteUser}
+                className="group flex items-center gap-1.5 rounded-full border border-white/40 px-3 py-1.5 text-xs font-semibold text-white transition-all duration-300 hover:shadow-lg sm:gap-2 sm:px-4 sm:py-2 sm:text-sm md:gap-3 md:px-5 md:py-2.5 md:text-base lg:px-6 lg:py-3 xl:px-9 xl:py-4"
+                textPlaceholder="Button text..."
+                hrefPlaceholder="Enter URL..."
+              >
+                <span>{primaryButton.text}</span>
+                <ChevronRight
+                  size={14}
+                  className="transition-transform group-hover:translate-x-1 sm:size-[16px] md:size-[18px]"
+                />
+              </EditableLink>
 
-              {/* CTA Button */}
-              {data.buttons.length > 0 && (
-                <div className="pt-2 sm:pt-4">
-                  <div className="group inline-flex items-center gap-2">
-                    <EditableLink
-                      text={data.buttons[0]?.text || "Shop Now"}
-                      href={data.buttons[0]?.href || "#"}
-                      onChange={(text, href) =>
-                        handleButtonUpdate("buttons")(
-                          data.buttons[0]?.id || "1",
-                          text,
-                          href
-                        )
-                      }
-                      isEditable={isEditable}
-                      siteUser={siteUser}
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.primaryForeground,
-                        fontFamily: theme.fonts.body,
-                      }}
-                      textPlaceholder="Button text..."
-                      hrefPlaceholder="Enter URL..."
-                    >
-                      {data.buttons[0]?.text || "Shop Now"}
-                      <ChevronRight
-                        className="h-4 w-4 transition-transform group-hover:translate-x-1 sm:h-5 sm:w-5"
-                        style={{ color: theme.colors.primaryForeground }}
-                      />
-                    </EditableLink>
-                  </div>
+              {/* Secondary Button */}
+              <EditableLink
+                text={secondaryButton.text}
+                href={secondaryButton.href || "#"}
+                onChange={(text, href) => {
+                  handleButtonUpdate("buttons")(secondaryButton.id, text, href);
+                }}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                className="group flex cursor-pointer items-center gap-1.5 text-white sm:gap-2 md:gap-3 lg:gap-4"
+                textPlaceholder="Button text..."
+                hrefPlaceholder="Enter URL..."
+              >
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 shadow-lg transition-all duration-300 group-hover:shadow-lg sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11 xl:h-12 xl:w-12 2xl:h-14 2xl:w-14"
+                  style={{ backgroundColor: theme.colors.secondary }}
+                >
+                  <Play
+                    size={12}
+                    className="ml-0.5 fill-white text-white sm:size-[14px] md:size-[16px] lg:ml-0.5 lg:size-[18px] xl:ml-1"
+                    style={{ color: theme.colors.secondaryForeground }}
+                  />
                 </div>
-              )}
-            </div>
-
-            {/* Stats */}
-            <div className="flex flex-wrap gap-6 pt-4 sm:gap-8 sm:pt-6 lg:gap-12">
-              <div className="min-w-[120px] flex-1">
-                <EditableText
-                  value={firstStatNumber}
-                  onChange={value => {
-                    const newValue =
-                      value + (statsNumbers[1] ? `|${statsNumbers[1]}` : "");
-                    handleTextUpdate("statsNumber")(newValue);
-                  }}
-                  as="h3"
-                  className="text-2xl font-bold text-white sm:text-3xl"
-                  isEditable={isEditable}
-                  placeholder="788+"
-                />
-                <EditableText
-                  value={firstStatLabel}
-                  onChange={value => {
-                    const newValue =
-                      value + (statsParts[1] ? `|${statsParts[1]}` : "");
-                    handleTextUpdate("statsLabel")(newValue);
-                  }}
-                  as="div"
-                  className="mt-1 text-xs leading-relaxed text-white sm:text-sm"
-                  isEditable={isEditable}
-                  placeholder="Stats description..."
-                  multiline={true}
-                />
-              </div>
-              <div className="min-w-[120px] flex-1">
-                <EditableText
-                  value={secondStatNumber}
-                  onChange={value => {
-                    const newValue =
-                      (statsNumbers[0] || firstStatNumber) + `|${value}`;
-                    handleTextUpdate("statsNumber")(newValue);
-                  }}
-                  as="h3"
-                  className="text-2xl font-bold text-white sm:text-3xl"
-                  isEditable={isEditable}
-                  placeholder="8k+"
-                />
-                <EditableText
-                  value={secondStatLabel}
-                  onChange={value => {
-                    const newValue =
-                      (statsParts[0] || firstStatLabel) + `|${value}`;
-                    handleTextUpdate("statsLabel")(newValue);
-                  }}
-                  as="div"
-                  className="mt-1 text-xs leading-relaxed text-white sm:text-sm"
-                  isEditable={isEditable}
-                  placeholder="Second stats description..."
-                  multiline={true}
-                />
-              </div>
+                <span className="text-xs font-medium sm:text-sm md:text-base lg:text-lg">
+                  {secondaryButton.text}
+                </span>
+              </EditableLink>
             </div>
           </div>
 
-          {/* Right Content - Product Image */}
-          <div className="relative flex items-center justify-center lg:order-2">
-            <div className="relative w-full max-w-lg lg:max-w-xl xl:max-w-2xl">
-              {/* Main Product Image */}
-              {data.showImage ? (
-                <EditableImage
-                  src={getImageUrl(data.imageUrl, { width: 800 })}
-                  alt={data.imageAlt || "Hero image"}
-                  onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
-                  isEditable={isEditable}
-                  className="relative z-10 h-auto w-full rounded-lg shadow-2xl"
-                  width={800}
-                  height={800}
-                  s3Options={{
-                    folder: "hero-images",
-                    
-                  }}
-                  placeholder={{
-                    width: 800,
-                    height: 800,
-                    text: "Upload main product image",
-                  }}
-                />
-              ) : (
-                <div className="relative z-10 flex aspect-square w-full items-center justify-center rounded-lg bg-gray-100 shadow-2xl">
-                  <EditableImage
-                    src=""
-                    alt="Hero image placeholder"
-                    onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
-                    isEditable={isEditable}
-                    className="h-full w-full rounded-lg object-cover"
-                    width={800}
-                    height={800}
-                    s3Options={{
-                      folder: "hero-images",
-                      
-                    }}
-                    placeholder={{
-                      width: 800,
-                      height: 800,
-                      text: "Upload main product image",
-                    }}
-                  />
-                </div>
-              )}
+          {/* Right Content - Image */}
+          <div className="relative flex h-full w-full items-center justify-center lg:justify-end">
+            <div className="relative z-10 h-full w-full max-w-xs overflow-hidden rounded-lg border-[2px] border-white/10 shadow-2xl sm:max-w-sm sm:rounded-xl sm:border-[3px] md:max-w-md md:rounded-xl md:border-[4px] lg:rounded-2xl lg:border-[5px] xl:max-w-lg xl:border-[6px] 2xl:border-[8px]">
+              <EditableImage
+                src={getImageUrl(data.imageUrl, { width: 800 }) || imageUrl}
+                alt={data.imageAlt || "Happy traveler in Paris"}
+                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+                onAltChange={handleAltUpdate("imageAlt")}
+                isEditable={isEditable}
+                className="h-150 w-full object-cover"
+                width={600}
+                height={750}
+                s3Options={{
+                  folder: "hero-images",
+                  
+                }}
+                showAltEditor={isEditable}
+                placeholder={{
+                  width: 600,
+                  height: 750,
+                  text: "Upload hero image",
+                }}
+              />
+
+              {/* Overlay gradient */}
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-[#013D2F]/40 to-transparent"
+                style={{
+                  background: `linear-gradient(to top, ${theme.colors.background}66, transparent)`,
+                }}
+              ></div>
             </div>
           </div>
         </div>

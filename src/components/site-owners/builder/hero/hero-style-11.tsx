@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import { HeroTemplate11Data } from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { HeroTemplate11Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
@@ -22,180 +22,94 @@ export const HeroTemplate11: React.FC<HeroTemplate11Props> = ({
   onUpdate,
 }) => {
   const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
-      text: "#1a1a2e",
-      primary: "#4338ca",
-      primaryForeground: "#FFFFFF",
+      text: "#0F172A",
+      primary: "#3B82F6",
       secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
       background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
     },
   };
 
-  const {
-    data,
-    setData,
-    handleTextUpdate,
-    handleImageUpdate,
-    handleAltUpdate,
-    handleButtonUpdate,
-    getImageUrl,
-  } = useBuilderLogic(heroData, onUpdate);
-
-  // Ensure we have at least one button
-  const button =
-    data.buttons && data.buttons.length > 0
-      ? data.buttons[0]
-      : {
-          id: "1",
-          text: "Get started today",
-          variant: "primary" as const,
-          href: "#",
-        };
-
-  // Default image if none provided
-  const defaultImageUrl =
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
-  const imageUrl = data.imageUrl || defaultImageUrl;
+  const { data, handleTextUpdate, handleButtonUpdate, getImageUrl } =
+    useBuilderLogic(heroData, onUpdate);
 
   return (
-    <section className="relative overflow-hidden bg-white">
-      {/* Background Stripes */}
-      <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
-        <div className="grid h-full w-full grid-cols-6 gap-0 md:grid-cols-12">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div
-              key={i}
-              className={`h-full w-full ${
-                i % 2 === 0 ? "bg-[#f8f9fc]" : "bg-white"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-24 lg:py-32">
-        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
-          {/* Left Content */}
-          <div className="flex max-w-2xl flex-col space-y-8">
-            {/* Subtitle with line indicator */}
-            {data.subtitle && (
-              <div className="flex items-center space-x-4">
-                <div
-                  className="h-0.5 w-12"
-                  style={{ backgroundColor: theme.colors.primary }}
-                ></div>
-                <EditableText
-                  value={data.subtitle}
-                  onChange={handleTextUpdate("subtitle")}
-                  as="span"
-                  className="text-lg font-bold tracking-wide"
-                  style={{
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.body,
-                  }}
-                  isEditable={isEditable}
-                  placeholder="Started From - 1998"
-                />
-              </div>
-            )}
-
-            {/* Title */}
+    <section className="relative mx-auto flex max-w-7xl items-center bg-white py-8 md:py-16">
+      <div className="container mx-auto grid grid-cols-1 items-center gap-8 px-4 md:grid-cols-2 md:gap-10">
+        {/* Text Area */}
+        <div className="order-2 py-6 md:order-1 md:py-10">
+          <h1 className="mb-4 text-3xl leading-tight font-bold md:mb-5 md:text-5xl lg:text-6xl">
             <EditableText
-              value={data.title || "Best Solution For Your Business Strategy."}
-              onChange={handleTextUpdate("title")}
-              as="h1"
-              className="text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl"
-              style={{
-                color: "#1a1a2e",
-                fontFamily: theme.fonts.heading,
-              }}
+              value={data.titlePart1}
+              onChange={handleTextUpdate("titlePart1")}
               isEditable={isEditable}
-              placeholder="Enter your hero title..."
-              useHeadingFont={true}
+              as="h1"
+              style={{ color: theme.colors.primary }}
             />
+          </h1>
 
-            {/* Description */}
-            {data.description && (
-              <EditableText
-                value={data.description}
-                onChange={handleTextUpdate("description")}
-                as="p"
-                className="max-w-lg text-xl text-gray-600"
-                style={{
-                  fontFamily: theme.fonts.body,
-                }}
-                isEditable={isEditable}
-                placeholder="Whole-Life Business Coaching for committed entrepreneurs"
-                multiline={true}
-              />
-            )}
-
-            {/* Button */}
-            <div className="pt-4">
-              <EditableLink
-                text={button.text || "Get started today"}
-                href={button.href || "#"}
-                onChange={(text, href) => {
-                  // If button doesn't exist in data.buttons, create it
-                  if (!data.buttons || data.buttons.length === 0) {
-                    const newButton = {
-                      id: "1",
-                      text,
-                      href: href || "#",
-                      variant: "primary" as const,
-                    };
-                    const updatedData = { ...data, buttons: [newButton] };
-                    setData(updatedData);
-                    onUpdate?.({ buttons: [newButton] });
-                  } else {
-                    handleButtonUpdate("buttons")(button.id, text, href);
-                  }
-                }}
-                isEditable={isEditable}
-                siteUser={siteUser}
-                className="h-auto rounded-md px-8 py-6 text-lg shadow-lg transition-all duration-200 hover:shadow-xl"
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                  fontFamily: theme.fonts.body,
-                }}
-                textPlaceholder="Button text..."
-                hrefPlaceholder="Enter URL..."
-              />
-            </div>
+          <div className="mb-6 max-w-md text-sm leading-relaxed text-gray-600 md:mb-8 md:text-lg">
+            <EditableText
+              value={data.description}
+              onChange={handleTextUpdate("description")}
+              isEditable={isEditable}
+              as="p"
+              multiline
+            />
           </div>
 
-          {/* Right Image */}
-          <div className="relative hidden w-full md:-mt-8 md:block lg:-mt-12">
+          <div className="flex gap-3 md:gap-4">
+            {data.buttons.length > 0 && (
+              <EditableLink
+                text={data.buttons[0].text}
+                href={data.buttons[0].href || "#"}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                onChange={(text, href) =>
+                  handleButtonUpdate("buttons")(data.buttons[0].id, text, href)
+                }
+                className="inline-flex w-full items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-opacity hover:opacity-90 md:w-auto md:px-8 md:text-base"
+                style={{ backgroundColor: theme.colors.primary, color: "#fff" }}
+              />
+            )}
+            {data.buttons.length > 1 && (
+              <EditableLink
+                text={data.buttons[1].text}
+                href={data.buttons[1].href || "#"}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                onChange={(text, href) =>
+                  handleButtonUpdate("buttons")(data.buttons[1].id, text, href)
+                }
+                className="inline-flex w-full items-center justify-center rounded-full border-2 px-6 py-3 text-sm font-semibold transition-colors md:w-auto md:px-8 md:text-base"
+                style={{
+                  borderColor: theme.colors.primary,
+                  color: theme.colors.primary,
+                }}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Image Area */}
+        <div className="relative order-1 md:order-2">
+          {/* Decorative Blur Circle */}
+          <div
+            className="absolute -top-16 -right-16 hidden h-80 w-80 rounded-full opacity-10 blur-3xl md:block"
+            style={{ backgroundColor: theme.colors.secondary }}
+          />
+
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm md:aspect-[4/5] md:rounded-3xl md:shadow-none">
             <EditableImage
-              src={
-                getImageUrl(data.imageUrl, { width: 800 }) || defaultImageUrl
-              }
-              alt={data.imageAlt || "Business strategy meeting"}
-              onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
-              onAltChange={handleAltUpdate("imageAlt")}
+              src={getImageUrl(data.imageUrl)}
+              alt={data.imageAlt}
               isEditable={isEditable}
-              className="h-auto w-full rounded-lg object-cover shadow-xl"
-              width={800}
-              height={600}
-              s3Options={{
-                folder: "hero-images",
-                
-              }}
-              showAltEditor={isEditable}
-              placeholder={{
-                width: 800,
-                height: 600,
-                text: "Upload hero image",
-              }}
+              onImageChange={(url, alt) =>
+                onUpdate?.({ imageUrl: url, imageAlt: alt || data.imageAlt })
+              }
+              className="h-full w-full rounded-lg object-cover"
+              priority
             />
           </div>
         </div>

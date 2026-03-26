@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { motion, Variants } from "framer-motion";
 import { EditableText } from "@/components/ui/editable-text";
+import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate8Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { CheckCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface HeroTemplate8Props {
   heroData: HeroTemplate8Data;
@@ -17,352 +18,229 @@ interface HeroTemplate8Props {
   onUpdate?: (updatedData: Partial<HeroTemplate8Data>) => void;
 }
 
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const fadeInRight: Variants = {
+  hidden: { opacity: 0, x: 30 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.8, ease: "easeOut", delay: 0.2 },
+  },
+};
+
 export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
   heroData,
   siteUser,
   isEditable = false,
   onUpdate,
 }) => {
-  // Generate unique component ID to prevent conflicts
   const componentId = React.useId();
 
-  // Default data - moved before useState to fix initialization order
-  const defaultFeatures = [
-    { id: "1", text: "Hand Knotted" },
-    { id: "2", text: "Premium Quality" },
-    { id: "3", text: "Authentic" },
-  ];
-
-  const defaultTrustIndicators = {
-    rating: "4.9/5",
-    stars: "★★★★★",
-    features: ["Free Shipping", "30-Day Returns"],
-    customerText: "Trusted by 1000+ customers worldwide",
-  };
-
   const { data: themeResponse } = useThemeQuery();
-
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
-      text: "#000000",
-      primary: "#8B4513",
+      text: "#1F2937",
+      primary: "#10B981",
       primaryForeground: "#FFFFFF",
-      secondary: "#D2691E",
+      secondary: "#3B82F6",
       secondaryForeground: "#FFFFFF",
-      background: "#FDFAF6",
-      backgroundDark: "#1F2937",
+      background: "#FFFFFF",
     },
     fonts: {
-      body: "Poppins, sans-serif",
-      heading: "Unna, serif",
+      body: "Inter",
+      heading: "Poppins",
     },
   };
 
-  const {
-    data,
-    setData,
-    handleTextUpdate,
-    handleButtonUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(
-    {
-      ...heroData,
-      features: heroData.features || defaultFeatures,
-      trustIndicators: heroData.trustIndicators || defaultTrustIndicators,
-    },
-    onUpdate
-  );
+  const { data, handleTextUpdate, getImageUrl, handleButtonUpdate } =
+    useBuilderLogic(heroData, onUpdate);
 
+  const primaryColor = theme.colors.primary ?? "#10B981";
 
-  // Default images
-  const leftImageUrl =
-    data.leftImageUrl ||
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
-  const rightImageUrl =
-    data.rightImageUrl ||
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
+  const buttons = data.buttons || [];
+  const features = data.features || [];
 
   return (
     <section
-      className="relative mx-auto max-w-7xl overflow-hidden bg-white"
+      className="relative overflow-hidden"
       data-component-id={componentId}
     >
-      {/* Desktop Layout */}
-      <div className="">
-        <div className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px]">
-          {/* Desktop: Three Column Layout */}
-          <div className="hidden md:grid md:h-full md:min-h-[600px] md:grid-cols-3 lg:min-h-[700px]">
-            {/* Left Image Column */}
-            <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
-              <div className="group relative h-full w-full cursor-pointer overflow-hidden">
-                <ImageEditOverlay
-                  onImageSelect={(url) => {
-                    const updatedData = {
-                      ...data,
-                      leftImageUrl: url,
-                    };
-                    setData(updatedData);
-                    onUpdate?.({
-                      leftImageUrl: url,
-                    });
-                  }}
-                  imageWidth={800}
-                  imageHeight={1000}
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 50px, currentColor 50px, currentColor 51px),
+                           repeating-linear-gradient(90deg, transparent, transparent 50px, currentColor 50px, currentColor 51px)`,
+          }}
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          {/* Content */}
+          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+            <div className="mb-6 flex w-fit items-center gap-3 rounded-lg border border-gray-200 bg-white/80 px-4 py-2 backdrop-blur-sm">
+              <div className="flex items-center gap-2">
+                <div className="h-[28px] w-[28px] overflow-hidden">
+                  <EditableImage
+                    src="/certifications/education-ministry.jpg"
+                    alt={data.badge1Text || "Ministry of Education Approved"}
+                    onImageChange={url => onUpdate?.({ badge1Image: url })}
+                    isEditable={isEditable}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <EditableText
+                  value={data.badge1Text || "Approved by Ministry of Education"}
+                  onChange={handleTextUpdate("badge1Text")}
+                  className="text-xs font-medium whitespace-nowrap text-gray-700"
                   isEditable={isEditable}
-                  folder="hero-rugs"
-                  label="Change Left Image"
-                  className="absolute inset-0 z-30 flex items-center justify-center bg-black/40"
+                  as="span"
                 />
-                <Image
-                  src={leftImageUrl}
-                  alt={data.leftImageAlt || "Left image"}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 33vw"
+              </div>
+              <div className="h-6 w-px bg-gray-300"></div>
+              <div className="flex items-center gap-2">
+                <div className="h-[28px] w-[28px] overflow-hidden">
+                  <EditableImage
+                    src="/certifications/titi.jpg"
+                    alt={data.badge2Text || "TITI Certified"}
+                    onImageChange={url => onUpdate?.({ badge2Image: url })}
+                    isEditable={isEditable}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <EditableText
+                  value={data.badge2Text || "TITI Certified Counselors"}
+                  onChange={handleTextUpdate("badge2Text")}
+                  className="text-xs font-medium whitespace-nowrap text-gray-700"
+                  isEditable={isEditable}
+                  as="span"
                 />
               </div>
             </div>
 
-            {/* Center Content Column */}
-            <div className="relative flex h-full min-h-[600px] flex-col items-center justify-center px-6 py-12 lg:min-h-[700px] lg:px-8">
-              {/* Main Heading */}
-              <EditableText
-                value={data.title || "Premium Nepali Hand Knotted Rugs"}
-                onChange={handleTextUpdate("title")}
-                as="h1"
-                className="mb-4 w-full text-center text-3xl leading-tight font-bold md:text-4xl lg:mb-6 lg:text-5xl"
-                isEditable={isEditable}
-                placeholder="Enter main title..."
-                multiline={true}
-              />
+            <EditableText
+              value={data.title}
+              onChange={handleTextUpdate("title")}
+              isEditable={isEditable}
+              multiline
+              as="h1"
+              className="mb-6 text-4xl leading-tight font-bold text-gray-900 md:text-4xl lg:text-5xl"
+            />
 
-              {/* Description */}
-              <EditableText
-                value={
-                  data.description ||
-                  "Experience the timeless beauty of authentic Nepali craftsmanship. Each rug tells a story of tradition, patience, and unparalleled artistry passed down through generations."
+            <EditableText
+              value={
+                data.description ||
+                "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered."
+              }
+              onChange={handleTextUpdate("description")}
+              as="p"
+              className="max-w-xl text-xl text-gray-500 md:text-3xl"
+              isEditable={isEditable}
+              multiline
+            />
+
+            <div className="mt-10 mb-10 flex flex-col gap-4 sm:flex-row">
+              {buttons.map((button, index) => {
+                if (index === 0) {
+                  return (
+                    <EditableLink
+                      key={button.id}
+                      text={button.text}
+                      href={button.href || "#"}
+                      onChange={(text, href) =>
+                        handleButtonUpdate("buttons")(button.id, text, href)
+                      }
+                      isEditable={isEditable}
+                      siteUser={siteUser}
+                      className="text-primary-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md px-8 text-base font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                      style={{ backgroundColor: primaryColor, color: "#fff" }}
+                    >
+                      <span>{button.text}</span>
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </EditableLink>
+                  );
                 }
-                onChange={handleTextUpdate("description")}
-                as="p"
-                className="mb-8 w-full text-center text-sm leading-relaxed md:mb-10 md:text-base lg:mb-12 lg:text-lg"
-                isEditable={isEditable}
-                placeholder="Enter description..."
-                multiline={true}
-              />
 
-              {/* Action Buttons */}
-              <div className="flex w-full flex-col gap-4 sm:flex-row sm:justify-center sm:gap-6">
-                {data.buttons.length > 1 && (
+                return (
                   <EditableLink
-                    text={data.buttons[1]?.text || "View Menu"}
-                    href={data.buttons[1]?.href || "#"}
+                    key={button.id}
+                    text={button.text}
+                    href={button.href || "#"}
                     onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(
-                        data.buttons[1]?.id || "2",
-                        text,
-                        href
-                      )
+                      handleButtonUpdate("buttons")(button.id, text, href)
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="h-10 w-full rounded-lg border-2 bg-transparent px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-gray-50 sm:w-auto sm:min-w-[140px] lg:h-12 lg:px-6 lg:text-base"
-                    style={{
-                      borderColor: theme.colors.primary,
-                      color: theme.colors.primary,
-                      fontFamily: theme.fonts.body,
-                    }}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
-                  />
-                )}
+                    className="border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md border px-8 text-base font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                  >
+                    <span>{button.text}</span>
+                  </EditableLink>
+                );
+              })}
+            </div>
 
-                {data.buttons.length > 0 && (
-                  <EditableLink
-                    text={data.buttons[0]?.text || "Order Now"}
-                    href={data.buttons[0]?.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(
-                        data.buttons[0]?.id || "1",
-                        text,
-                        href
-                      )
-                    }
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-900">
+              {features.map(feature => (
+                <div key={feature.id} className="flex items-center gap-2">
+                  <CheckCircle
+                    className="text-primary h-4 w-4"
+                    style={{ color: primaryColor }}
+                  />
+                  <EditableText
+                    value={feature.text}
+                    onChange={val => {
+                      const updatedFeatures = features.map(f =>
+                        f.id === feature.id ? { ...f, text: val } : f
+                      );
+                      onUpdate?.({ features: updatedFeatures });
+                    }}
+                    className="flex items-center gap-2"
+                    as="span"
                     isEditable={isEditable}
-                    siteUser={siteUser}
-                    className="h-10 w-full rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl sm:w-auto sm:min-w-[140px] lg:h-12 lg:px-6 lg:text-base"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
-                    }}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
                   />
-                )}
-              </div>
+                </div>
+              ))}
             </div>
+          </motion.div>
 
-            {/* Right Image Column */}
-            <div className="relative h-full min-h-[600px] lg:min-h-[700px]">
-              <div className="group relative h-full w-full cursor-pointer overflow-hidden">
-                <ImageEditOverlay
-                  onImageSelect={(url) => {
-                    const updatedData = {
-                      ...data,
-                      rightImageUrl: url,
-                    };
-                    setData(updatedData);
-                    onUpdate?.({
-                      rightImageUrl: url,
-                    });
-                  }}
-                  imageWidth={800}
-                  imageHeight={1000}
-                  isEditable={isEditable}
-                  folder="hero-rugs"
-                  label="Change Right Image"
-                  className="absolute inset-0 z-30 flex items-center justify-center bg-black/40"
-                />
-                <Image
-                  src={rightImageUrl}
-                  alt={data.rightImageAlt || "Right image"}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Layout */}
-          <div className="relative min-h-[500px] md:hidden">
-            {/* Mobile Background Image */}
-            {data.mobileImageUrl && (
-              <div className="group absolute inset-0 cursor-pointer">
-                <ImageEditOverlay
-                  onImageSelect={(url) => {
-                    const updatedData = {
-                      ...data,
-                      mobileImageUrl: url,
-                    };
-                    setData(updatedData);
-                    onUpdate?.({
-                      mobileImageUrl: url,
-                    });
-                  }}
-                  imageWidth={600}
-                  imageHeight={800}
-                  isEditable={isEditable}
-                  folder="hero-rugs"
-                  label="Change Background"
-                  className="absolute inset-0 z-30 flex items-center justify-center bg-black/40"
-                />
-                <Image
-                  src={data.mobileImageUrl}
-                  alt={data.mobileImageAlt || "Mobile background"}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="100vw"
-                />
-              </div>
-            )}
-
-            {/* Mobile Content Overlay */}
-            <div className="relative z-10 flex min-h-[500px] flex-col items-center justify-center px-6 py-12">
-              {/* Main Heading */}
-              <EditableText
-                value={data.title || "Premium Nepali Hand Knotted Rugs"}
-                onChange={handleTextUpdate("title")}
-                as="h1"
-                className="mb-4 w-full text-center text-3xl leading-tight font-bold"
-                isEditable={isEditable}
-                placeholder="Enter main title..."
-                multiline={true}
-                style={{
-                  fontFamily: theme.fonts.heading,
-                  color: data.mobileImageUrl ? "#FFFFFF" : theme.colors.primary,
-                }}
-              />
-
-              {/* Description */}
-              <EditableText
-                value={
-                  data.description ||
-                  "Experience the timeless beauty of authentic Nepali craftsmanship. Each rug tells a story of tradition, patience, and unparalleled artistry passed down through generations."
+          {/* Image */}
+          <motion.div
+            className="relative hidden lg:block"
+            initial="hidden"
+            animate="visible"
+            variants={fadeInRight}
+          >
+            <div className="mt-12 h-auto w-full overflow-hidden rounded-2xl shadow-lg">
+              <EditableImage
+                src="/hero-students.webp"
+                alt={
+                  data.imageAlt ||
+                  "International students celebrating graduation with global landmarks"
                 }
-                onChange={handleTextUpdate("description")}
-                as="p"
-                className="mb-8 w-full text-center text-sm leading-relaxed md:text-base"
-                isEditable={isEditable}
-                placeholder="Enter description..."
-                multiline={true}
-                style={{
-                  fontFamily: theme.fonts.body,
-                  color: data.mobileImageUrl ? "#FFFFFF" : theme.colors.text,
+                onImageChange={(url, alt) => {
+                  const updated: Partial<HeroTemplate8Data> = {
+                    imageUrl: url,
+                  };
+                  if (alt) updated.imageAlt = alt;
+                  onUpdate?.(updated);
                 }}
+                isEditable={isEditable}
+                className="h-full w-full object-cover"
+                width={1000}
+                height={600}
               />
-
-              {/* Action Buttons */}
-              <div className="flex w-full flex-col gap-4">
-                {data.buttons.length > 1 && (
-                  <EditableLink
-                    text={data.buttons[1]?.text || "View Menu"}
-                    href={data.buttons[1]?.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(
-                        data.buttons[1]?.id || "2",
-                        text,
-                        href
-                      )
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    className="h-10 w-full rounded-lg border-2 bg-transparent px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-white/10"
-                    style={{
-                      borderColor: data.mobileImageUrl
-                        ? "#FFFFFF"
-                        : theme.colors.primary,
-                      color: data.mobileImageUrl
-                        ? "#FFFFFF"
-                        : theme.colors.primary,
-                      fontFamily: theme.fonts.body,
-                    }}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
-                  />
-                )}
-
-                {data.buttons.length > 0 && (
-                  <EditableLink
-                    text={data.buttons[0]?.text || "Order Now"}
-                    href={data.buttons[0]?.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(
-                        data.buttons[0]?.id || "1",
-                        text,
-                        href
-                      )
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    className="h-10 w-full rounded-lg px-5 py-2.5 text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                      fontFamily: theme.fonts.body,
-                      boxShadow: `0 10px 25px ${theme.colors.primary}20`,
-                    }}
-                    textPlaceholder="Button text..."
-                    hrefPlaceholder="Enter URL..."
-                  />
-                )}
-              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

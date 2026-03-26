@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { AboutUs3Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate3Props {
@@ -18,183 +17,67 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { data: themeResponse } = useThemeQuery();
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
-  const { data, setData, handleTextUpdate, handleArrayItemUpdate } =
+  const { data, handleTextUpdate, handleImageUpdate, handleAltUpdate } =
     useBuilderLogic(aboutUsData, onUpdate);
 
-  // Handle stats updates
-  const handleStatsUpdate =
-    (
-      field:
-        | "startYear"
-        | "completeYear"
-        | "unitsAvailable"
-        | "startLabel"
-        | "completeLabel"
-    ) =>
-    (value: string) => {
-      const updatedStats = { ...data.stats, [field]: value };
-      const updatedData = { ...data, stats: updatedStats };
-      setData(updatedData);
-      onUpdate?.({ stats: updatedStats });
-    };
-
-  // Handle features updates
-  const handleFeatureUpdate = (featureId: string) => (value: string) => {
-    handleArrayItemUpdate("features", featureId)({ text: value });
-  };
-
   return (
-    <section id="about" className="bg-white py-16 sm:py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Main Content */}
-        <div className="grid items-center gap-12 sm:gap-16 lg:grid-cols-2 lg:gap-20">
-          {/* Left - Visual */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-6 sm:space-y-8"
-          >
-            <div className="space-y-3 sm:space-y-4">
-              <div
-                className="h-px w-20 sm:w-32"
-                style={{
-                  background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                }}
-              ></div>
+    <section className="relative overflow-hidden bg-white py-16 sm:py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
+          <div className="relative mt-16 sm:mt-24 lg:col-span-6 lg:mt-0">
+            <EditableImage
+              src={data.imageUrl}
+              alt={data.imageAlt}
+              onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+              onAltChange={handleAltUpdate("imageAlt")}
+              isEditable={isEditable}
+              className="relative mx-auto w-full max-w-xl overflow-hidden rounded-xl lg:max-w-none"
+              width={700}
+              height={500}
+              priority
+              s3Options={{
+                folder: "about-us-images",
+                
+              }}
+              showAltEditor={isEditable}
+              placeholder={{
+                width: 700,
+                height: 500,
+                text: "Upload your about us image",
+              }}
+            />
+          </div>
 
-              <EditableText
-                value={data.title}
-                onChange={handleTextUpdate("title")}
-                as="h1"
-                isEditable={isEditable}
-                placeholder="Enter title..."
-              />
-              <EditableText
-                value={data.subtitle}
-                onChange={handleTextUpdate("subtitle")}
-                as="div"
-                className="block bg-clip-text font-normal text-transparent"
-                style={{
-                  color: theme.colors.secondary,
-                  fontFamily: theme.fonts.heading,
-                }}
-                isEditable={isEditable}
-                placeholder="Enter subtitle..."
-              />
-            </div>
+          {/* Text on the right */}
+          <div className="text-center lg:col-span-6 lg:text-left">
+            <EditableText
+              value={data.title}
+              onChange={handleTextUpdate("title")}
+              as="p"
+              className="text-base leading-7 font-semibold"
+              isEditable={isEditable}
+              placeholder="Enter section title..."
+            />
 
-            <div className="grid grid-cols-2 gap-6 sm:gap-8">
-              <div className="space-y-2">
-                <EditableText
-                  value={data.stats.startYear}
-                  onChange={handleStatsUpdate("startYear")}
-                  as="div"
-                  className="text-2xl font-bold text-black sm:text-3xl"
-                  isEditable={isEditable}
-                  placeholder="Year"
-                />
-                <EditableText
-                  value={data.stats.startLabel || "START"}
-                  onChange={handleStatsUpdate("startLabel")}
-                  as="div"
-                  className="text-xs tracking-wider text-gray-500 sm:text-sm"
-                  isEditable={isEditable}
-                  placeholder="START"
-                />
-              </div>
-              <div className="space-y-2">
-                <EditableText
-                  value={data.stats.completeYear}
-                  onChange={handleStatsUpdate("completeYear")}
-                  as="div"
-                  className="text-2xl font-bold text-black sm:text-3xl"
-                  isEditable={isEditable}
-                  placeholder="Year"
-                />
-                <EditableText
-                  value={data.stats.completeLabel || "COMPLETE"}
-                  onChange={handleStatsUpdate("completeLabel")}
-                  as="div"
-                  className="text-xs tracking-wider text-gray-500 sm:text-sm"
-                  isEditable={isEditable}
-                  placeholder="COMPLETE"
-                />
-              </div>
-            </div>
-          </motion.div>
+            <EditableText
+              value={data.subtitle}
+              onChange={handleTextUpdate("subtitle")}
+              as="h2"
+              className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+              isEditable={isEditable}
+              placeholder="Enter main heading..."
+            />
 
-          {/* Right - Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-6 sm:space-y-8"
-          >
-            <div className="space-y-4 sm:space-y-6">
-              <EditableText
-                value={data.description}
-                onChange={handleTextUpdate("description")}
-                as="p"
-                className="text-base leading-relaxed text-gray-600 sm:text-lg"
-                isEditable={isEditable}
-                placeholder="Enter description..."
-                multiline={true}
-              />
-
-              <div className="space-y-3 sm:space-y-4">
-                {data.features.map(feature => (
-                  <div
-                    key={feature.id}
-                    className="flex items-center space-x-3 sm:space-x-4"
-                  >
-                    <div className="h-2 w-2 bg-black"></div>
-                    <EditableText
-                      value={feature.text}
-                      onChange={handleFeatureUpdate(feature.id)}
-                      as="p"
-                      className="text-sm text-gray-700 sm:text-base"
-                      isEditable={isEditable}
-                      placeholder="Enter feature..."
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-6 sm:pt-8">
-              <div className="inline-flex items-center space-x-2 text-xs tracking-wider text-gray-500 sm:text-sm">
-                <EditableText
-                  value={data.stats.unitsAvailable}
-                  onChange={handleStatsUpdate("unitsAvailable")}
-                  as="p"
-                  isEditable={isEditable}
-                  placeholder="Number"
-                />
-                <div className="h-1 w-1 rounded-full bg-gray-400"></div>
-                <span>AVAILABLE</span>
-              </div>
-            </div>
-          </motion.div>
+            <EditableText
+              value={data.subSubtitle}
+              onChange={handleTextUpdate("subSubtitle")}
+              as="p"
+              className="mt-6 text-lg leading-8 text-gray-600"
+              isEditable={isEditable}
+              placeholder="Enter description..."
+              multiline={true}
+            />
+          </div>
         </div>
       </div>
     </section>

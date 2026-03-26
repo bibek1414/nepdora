@@ -30,14 +30,6 @@ import {
   isHeroTemplate14,
   isHeroTemplate15,
   isHeroTemplate16,
-  isHeroTemplate17,
-  isHeroTemplate18,
-  isHeroTemplate19,
-  isHeroTemplate20,
-  isHeroTemplate21,
-  isHeroTemplate22,
-  isHeroTemplate23,
-  isHeroTemplate24,
 } from "@/types/owner-site/components/hero";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
@@ -46,10 +38,6 @@ import { HeroTemplate4 } from "./hero-style-4";
 import { HeroTemplate5 } from "./hero-style-5";
 import { HeroTemplate6 } from "./hero-style-6";
 import { HeroTemplate7 } from "./hero-style-7";
-import {
-  useDeleteComponentMutation,
-  useUpdateComponentMutation,
-} from "@/hooks/owner-site/components/use-unified";
 import { HeroTemplate8 } from "./hero-style-8";
 import { HeroTemplate9 } from "./hero-style-9";
 import { HeroTemplate10 } from "./hero-style-10";
@@ -59,14 +47,10 @@ import { HeroTemplate13 } from "./hero-style-13";
 import { HeroTemplate14 } from "./hero-style-14";
 import { HeroTemplate15 } from "./hero-style-15";
 import { HeroTemplate16 } from "./hero-style-16";
-import { HeroTemplate17 } from "./hero-style-17";
-import { HeroTemplate18 } from "./hero-style-18";
-import { HeroTemplate19 } from "./hero-style-19";
-import { HeroTemplate20 } from "./hero-style-20";
-import { HeroTemplate21 } from "./hero-style-21";
-import { HeroTemplate22 } from "./hero-style-22";
-import { HeroTemplate23 } from "./hero-style-23";
-import { HeroTemplate24 } from "./hero-style-24";
+import {
+  useDeleteComponentMutation,
+  useUpdateComponentMutation,
+} from "@/hooks/owner-site/components/use-unified";
 
 interface HeroComponentData {
   id: string | number;
@@ -132,19 +116,16 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
 
     const commonProps = {
       isEditable,
-      siteUser,
       onUpdate: handleUpdate,
+      siteUser,
     };
 
-    // Type-safe template rendering using type guards
     if (isHeroTemplate1(component.data)) {
       return <HeroTemplate1 heroData={component.data} {...commonProps} />;
     }
-
     if (isHeroTemplate2(component.data)) {
       return <HeroTemplate2 heroData={component.data} {...commonProps} />;
     }
-
     if (isHeroTemplate3(component.data)) {
       return <HeroTemplate3 heroData={component.data} {...commonProps} />;
     }
@@ -187,36 +168,8 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
     if (isHeroTemplate16(component.data)) {
       return <HeroTemplate16 heroData={component.data} {...commonProps} />;
     }
-    if (isHeroTemplate17(component.data)) {
-      return <HeroTemplate17 heroData={component.data} {...commonProps} />;
-    }
-    if (isHeroTemplate18(component.data)) {
-      return <HeroTemplate18 heroData={component.data} {...commonProps} />;
-    }
-    if (isHeroTemplate19(component.data)) {
-      return <HeroTemplate19 heroData={component.data} {...commonProps} />;
-    }
-    if (isHeroTemplate20(component.data)) {
-      return <HeroTemplate20 heroData={component.data} {...commonProps} />;
-    }
 
-    if (isHeroTemplate21(component.data)) {
-      return <HeroTemplate21 heroData={component.data} {...commonProps} />;
-    }
-
-    if (isHeroTemplate22(component.data)) {
-      return <HeroTemplate22 heroData={component.data} {...commonProps} />;
-    }
-
-    if (isHeroTemplate23(component.data)) {
-      return <HeroTemplate23 heroData={component.data} {...commonProps} />;
-    }
-
-    if (isHeroTemplate24(component.data)) {
-      return <HeroTemplate24 heroData={component.data} {...commonProps} />;
-    }
-
-    // Fallback for unknown templates (e.g. hero-14)
+    // Fallback for unknown templates
     const fallbackData = component.data as HeroData;
     return (
       <div className="flex min-h-[60vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-20">

@@ -1,27 +1,14 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowUpRight,
-  Folder,
-  Sun,
-  Users,
-  Lightbulb,
-  Briefcase,
-  Target,
-  Star,
-  BarChart3,
-  LucideIcon,
-  Pin,
-} from "lucide-react";
-
+import { ShieldCheck, ArrowUpRight } from "lucide-react";
+import { AboutUs11Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { AboutUs11Data } from "@/types/owner-site/components/about";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface AboutUsTemplate11Props {
   aboutUsData: AboutUs11Data;
@@ -30,339 +17,219 @@ interface AboutUsTemplate11Props {
   siteUser?: string;
 }
 
-const iconRegistry: Record<string, LucideIcon> = {
-  folder: Folder,
-  sun: Sun,
-  users: Users,
-  lightbulb: Lightbulb,
-  briefcase: Briefcase,
-  target: Target,
-  star: Star,
-  chart: BarChart3,
-};
-
-const hexToRgba = (hex: string, alpha = 1) => {
-  const sanitized = hex?.replace("#", "");
-  if (sanitized?.length === 6) {
-    const r = parseInt(sanitized.slice(0, 2), 16);
-    const g = parseInt(sanitized.slice(2, 4), 16);
-    const b = parseInt(sanitized.slice(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-  return hex;
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
-
-type TextFieldKey =
-  | "headline"
-  | "description"
-  | "featuredStatValue"
-  | "featuredStatLabel"
-  | "supportingTitle"
-  | "supportingDescription";
-
 export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
   aboutUsData,
   isEditable = false,
   onUpdate,
   siteUser,
 }) => {
+  const { data, handleTextUpdate } = useBuilderLogic(aboutUsData, onUpdate);
+
   const { data: themeResponse } = useThemeQuery();
-
-  const theme = useMemo(
-    () =>
-      themeResponse?.data?.[0]?.data?.theme || {
-        colors: {
-          text: "#0F172A",
-          primary: "#111827",
-          primaryForeground: "#FFFFFF",
-          secondary: "#F5F5F0",
-          secondaryForeground: "#1F2937",
-          background: "#F8F8F6",
-        },
-        fonts: {
-          body: "Inter",
-          heading: "Playfair Display",
-        },
+  const theme =
+    themeResponse?.data?.[0]?.data?.theme ||
+    ({
+      colors: {
+        primary: "#3B82F6",
       },
-    [themeResponse]
-  );
+    } as any);
 
-  const {
-    data,
-    handleTextUpdate,
-    handleImageUpdate,
-    handleAltUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(aboutUsData, onUpdate);
+  const primaryColor = theme.colors.primary;
 
-  const handleBulletUpdate = (id: string) => (value: string) => {
-    handleArrayItemUpdate("bulletPoints", id)({ text: value });
-  };
-
-  const handleStatUpdate =
-    (id: string, field: "value" | "label") => (value: string) => {
-      handleArrayItemUpdate("stats", id)({ [field]: value });
-    };
-
-  const handleButtonUpdate = (text: string, href: string) => {
-    onUpdate?.({
-      ctaText: text,
-      ctaLink: href,
-    });
-  };
-
-  const getIcon = (iconKey: string): LucideIcon => {
-    const normalizedKey = iconKey?.toLowerCase() || "";
-    return iconRegistry[normalizedKey] || Folder;
+  const renderTitle = () => {
+    if (!data.italicWord || !data.title.includes(data.italicWord)) {
+      return data.title;
+    }
+    const parts = data.title.split(data.italicWord);
+    return (
+      <>
+        {parts[0]}
+        <span className="italic" style={{ color: primaryColor }}>
+          {data.italicWord}
+        </span>
+        {parts[1]}
+      </>
+    );
   };
 
   return (
-    <motion.section
-      className="bg-[#f8f8f6] py-16 md:py-24"
-      style={{
-        backgroundColor: theme.colors.background || "#f8f8f6",
-        color: theme.colors.text,
-      }}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ staggerChildren: 0.12 }}
-    >
-      <div className="mx-auto min-h-screen max-w-[1400px] px-6 py-14 md:px-16 lg:px-[82px]">
-        <motion.div
-          className="mb-20 max-w-5xl"
-          variants={fadeInUp}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <EditableText
-            value={data.headline}
-            onChange={handleTextUpdate("headline")}
-            as="h1"
-            className="text-5xl leading-[1.1] font-semibold tracking-tight text-[#111] md:text-6xl lg:text-[68px]"
-            isEditable={isEditable}
-            placeholder="Add your headline"
-            multiline
-          />
-        </motion.div>
-
-        <motion.div
-          className="mb-32 flex flex-col items-start gap-8 lg:flex-row"
-          variants={fadeInUp}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <div className="flex h-full flex-col justify-between pt-2 lg:w-[22%]">
-            <EditableText
-              value={data.description}
-              onChange={handleTextUpdate("description")}
-              as="p"
-              className="mb-12 text-[13px] leading-4 text-gray-600 lg:mb-[180px]"
-              isEditable={isEditable}
-              placeholder="Add supporting description"
-              multiline
-            />
-
-            <div
-              className="border-l-[3px] py-1 pl-5"
-              style={{ borderColor: theme.colors.primary }}
-            >
-              <EditableText
-                value={data.featuredStatValue}
-                onChange={handleTextUpdate("featuredStatValue")}
-                as="p"
-                className="text-5xl font-bold tracking-tight text-[#111]"
-                isEditable={isEditable}
-                placeholder="150+"
-              />
-              <EditableText
-                value={data.featuredStatLabel}
-                onChange={handleTextUpdate("featuredStatLabel")}
-                as="p"
-                className="text-[11px] font-semibold tracking-wide text-gray-500 uppercase"
-                isEditable={isEditable}
-                placeholder="Successful Projects Delivered"
-              />
-            </div>
-          </div>
-
+    <section id="about" className="bg-gray-50/50 pt-20">
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12">
+          {/* Left Text */}
           <motion.div
-            className="px-2 lg:w-[46%] lg:max-w-[520px]"
-            variants={fadeInUp}
-            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-          >
-            <div
-              className="relative w-full overflow-hidden rounded-3xl shadow-sm"
-              style={{ aspectRatio: "4 / 3.8" }}
-            >
-              <EditableImage
-                src={data.imageUrl}
-                alt={data.imageAlt}
-                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
-                onAltChange={handleAltUpdate("imageAlt")}
-                isEditable={isEditable}
-                className="h-full w-full object-cover"
-                width={1000}
-                height={700}
-                s3Options={{
-                  folder: "about-us-images",
-                  
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 1000,
-                  height: 700,
-                  text: "Upload about section image",
-                }}
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="flex flex-col gap-6 pt-2 lg:w-[28%] lg:pl-6"
-            variants={fadeInUp}
-            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+            className="md:col-span-6"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
           >
             <motion.div
-              className="min-h-[200px] rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
-              variants={fadeIn}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
             >
-              <div className="mb-6">
-                <Pin
-                  className="h-5 w-5 rotate-45"
-                  style={{ color: theme.colors.primary }}
+              <EditableText
+                value={data.tag}
+                onChange={handleTextUpdate("tag")}
+                as="p"
+                className="mb-2 text-sm font-medium tracking-wider uppercase"
+                style={{ color: primaryColor }}
+                isEditable={isEditable}
+              />
+              <div className="space-y-4">
+                <EditableText
+                  value={data.title}
+                  onChange={handleTextUpdate("title")}
+                  as="h2"
+                  className="text-4xl font-bold text-gray-900 md:text-5xl"
+                  isEditable={isEditable}
                 />
-              </div>
-              <div className="space-y-3.5 text-[15px] font-medium text-[#1A1A1A]">
-                {data.bulletPoints.map(point => (
-                  <EditableText
-                    key={point.id}
-                    value={point.text}
-                    onChange={handleBulletUpdate(point.id)}
-                    as="p"
-                    className="leading-relaxed"
-                    isEditable={isEditable}
-                    placeholder="Add highlight"
-                  />
-                ))}
               </div>
             </motion.div>
 
+            <EditableText
+              value={data.description1}
+              onChange={handleTextUpdate("description1")}
+              as="p"
+              className="mb-6 text-xl leading-relaxed font-medium text-gray-900"
+              isEditable={isEditable}
+              multiline
+            />
+
+            <EditableText
+              value={data.description2}
+              onChange={handleTextUpdate("description2")}
+              as="p"
+              className="mb-8 leading-relaxed text-gray-500"
+              isEditable={isEditable}
+              multiline
+            />
+
+            <div className="mb-8 flex gap-8 border-t border-gray-100 pt-8">
+              <div>
+                <EditableText
+                  value={data.experienceYears}
+                  onChange={handleTextUpdate("experienceYears")}
+                  as="div"
+                  className="mb-1 text-4xl font-bold"
+                  style={{ color: primaryColor }}
+                  isEditable={isEditable}
+                />
+                <EditableText
+                  value={data.experienceLabel}
+                  onChange={handleTextUpdate("experienceLabel")}
+                  as="div"
+                  className="text-sm font-medium text-gray-600"
+                  isEditable={isEditable}
+                />
+              </div>
+              <div>
+                <EditableText
+                  value={data.clientsCount}
+                  onChange={handleTextUpdate("clientsCount")}
+                  as="div"
+                  className="mb-1 text-4xl font-bold"
+                  style={{ color: primaryColor }}
+                  isEditable={isEditable}
+                />
+                <EditableText
+                  value={data.clientsLabel}
+                  onChange={handleTextUpdate("clientsLabel")}
+                  as="div"
+                  className="text-sm font-medium text-gray-600"
+                  isEditable={isEditable}
+                />
+              </div>
+            </div>
+
             <EditableLink
-              text={data.ctaText}
-              href={data.ctaLink}
-              onChange={handleButtonUpdate}
-              className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:opacity-90"
+              text={data.buttonText}
+              href={data.buttonLink}
+              onChange={(text, href) => {
+                handleTextUpdate("buttonText")(text);
+                handleTextUpdate("buttonLink")(href);
+              }}
+              className="inline-flex h-16! cursor-pointer items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-sm font-bold transition-all sm:text-base"
               style={{
-                backgroundColor: theme.colors.primary,
+                background: theme.colors.primary,
+                color: theme.colors.primaryForeground,
               }}
               isEditable={isEditable}
-              textPlaceholder="Book a Free Call"
-              hrefPlaceholder="#"
               siteUser={siteUser}
             >
-              <>
-                <span>{data.ctaText || "Book a Free Call"}</span>
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
-                  <ArrowUpRight
-                    className="h-5 w-5"
-                    style={{ color: theme.colors.primary }}
-                  />
-                </span>
-              </>
+              {data.buttonText}
+              <div className="ml-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition-transform group-hover:scale-105">
+                <ArrowUpRight />
+              </div>
             </EditableLink>
           </motion.div>
-        </motion.div>
 
-        <motion.div
-          className="mx-auto mb-20 max-w-4xl text-center"
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <EditableText
-            value={data.supportingTitle}
-            onChange={handleTextUpdate("supportingTitle")}
-            as="h2"
-            className="text-4xl leading-[1.15] font-medium text-[#1A1A1A] md:text-5xl lg:text-[56px]"
-            isEditable={isEditable}
-            placeholder="Add supporting title"
-            multiline
-          />
-          <EditableText
-            value={data.supportingDescription}
-            onChange={handleTextUpdate("supportingDescription")}
-            as="p"
-            className="mt-8 text-sm text-gray-500 md:text-[15px]"
-            isEditable={isEditable}
-            placeholder="Add a brief description"
-            multiline
-          />
-        </motion.div>
+          {/* Right Image/Card */}
+          <motion.div
+            className="relative pl-0 md:col-span-6 md:pl-10"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            <div className="relative h-[500px] w-full overflow-hidden rounded-2xl shadow-2xl">
+              <EditableImage
+                src={data.image}
+                alt={data.imageAlt}
+                onImageChange={(url, alt) => {
+                  handleTextUpdate("image")(url);
+                  if (alt) handleTextUpdate("imageAlt")(alt);
+                }}
+                isEditable={isEditable}
+                className="h-150 w-full object-cover"
+                width={1000}
+                height={1000}
+              />
+            </div>
 
-        <motion.div
-          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
-          variants={fadeIn}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          {data.stats.map(stat => {
-            const Icon = getIcon(stat.icon);
-            return (
-              <motion.div
-                key={stat.id}
-                className="flex h-full flex-col items-start gap-6 rounded-2xl border border-gray-100 bg-white p-7"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
-                variants={fadeInUp}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
+            {/* Floating Card */}
+            <motion.div
+              className="absolute bottom-10 left-0 max-w-xs rounded-xl border border-gray-100 bg-white p-6 shadow-xl md:left-2"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
+            >
+              <div className="flex items-start gap-4">
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-full"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600"
                   style={{
-                    backgroundColor: hexToRgba(theme.colors.primary, 0.1),
+                    color: primaryColor,
+                    backgroundColor: `${primaryColor}1A`,
                   }}
                 >
-                  <Icon
-                    className="h-5 w-5"
-                    style={{ color: theme.colors.primary }}
-                  />
+                  <ShieldCheck size={20} />
                 </div>
-                <div className="mt-auto">
+                <div>
                   <EditableText
-                    value={stat.value}
-                    onChange={handleStatUpdate(stat.id, "value")}
+                    value={data.floatingCardTitle}
+                    onChange={handleTextUpdate("floatingCardTitle")}
                     as="h4"
-                    className="mb-3 text-[32px] font-bold text-[#111]"
+                    className="z-50 mb-1 font-bold text-gray-900"
                     isEditable={isEditable}
-                    placeholder="Value"
                   />
                   <EditableText
-                    value={stat.label}
-                    onChange={handleStatUpdate(stat.id, "label")}
+                    value={data.floatingCardDescription}
+                    onChange={handleTextUpdate("floatingCardDescription")}
                     as="p"
-                    className="text-[13px] text-gray-600"
+                    className="z-50 text-xs text-gray-500"
                     isEditable={isEditable}
-                    placeholder="Add label"
                     multiline
                   />
                 </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 };

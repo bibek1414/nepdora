@@ -188,46 +188,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 16",
         image: "/images/site-owners/hero/hero16.png",
       },
-      {
-        id: "hero-17",
-        name: "Hero Style 17",
-        image: "/images/site-owners/hero/hero17.png",
-      },
-      {
-        id: "hero-18",
-        name: "Hero Style 18",
-        image: "/images/site-owners/hero/hero18.png",
-      },
-      {
-        id: "hero-19",
-        name: "Hero Style 19",
-        image: "/images/site-owners/hero/hero19.png",
-      },
-      {
-        id: "hero-20",
-        name: "Hero Style 20",
-        image: "/images/site-owners/hero/hero20.png",
-      },
-      {
-        id: "hero-21",
-        name: "Hero Style 21",
-        image: "/images/site-owners/hero/hero21.png",
-      },
-      {
-        id: "hero-22",
-        name: "Hero Style 22",
-        image: "/images/site-owners/hero/hero22.png",
-      },
-      {
-        id: "hero-23",
-        name: "Hero Style 23",
-        image: "/images/site-owners/hero/hero23.png",
-      },
-      {
-        id: "hero-24",
-        name: "Hero Style 24",
-        image: "/images/site-owners/hero/hero24.png",
-      },
     ],
     others: [
       {
@@ -401,61 +361,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "about-12",
         name: "About Style 12",
         image: "/images/site-owners/about/about12.png",
-      },
-      {
-        id: "about-13",
-        name: "About Style 13",
-        image: "/images/site-owners/about/about13.png",
-      },
-      {
-        id: "about-14",
-        name: "About Style 14",
-        image: "/images/site-owners/about/about14.png",
-      },
-      {
-        id: "about-15",
-        name: "About Style 15",
-        image: "/images/site-owners/about/about15.png",
-      },
-      {
-        id: "about-16",
-        name: "About Style 16",
-        image: "/images/site-owners/about/about16.png",
-      },
-      {
-        id: "about-17",
-        name: "About Style 17",
-        image: "/images/site-owners/about/about17.png",
-      },
-      {
-        id: "about-18",
-        name: "About Style 18",
-        image: "/images/site-owners/about/about18.png",
-      },
-      {
-        id: "about-19",
-        name: "About Style 19",
-        image: "/images/site-owners/about/about19.png",
-      },
-      {
-        id: "about-20",
-        name: "About Style 20",
-        image: "/images/site-owners/about/about20.png",
-      },
-      {
-        id: "about-21",
-        name: "About Style 21",
-        image: "/images/site-owners/about/about20.png",
-      },
-      {
-        id: "about-22",
-        name: "About Style 22",
-        image: "/images/site-owners/about/about20.png",
-      },
-      {
-        id: "about-23",
-        name: "About Style 23",
-        image: "/images/site-owners/about/about20.png",
       },
     ],
     products: [

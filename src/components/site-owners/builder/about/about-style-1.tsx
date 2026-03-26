@@ -1,154 +1,194 @@
 "use client";
+
 import React from "react";
+import { ChevronRight } from "lucide-react";
 import { AboutUs1Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
+import { EditableLink } from "@/components/ui/editable-link";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface AboutUsTemplate1Props {
   aboutUsData: AboutUs1Data;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<AboutUs1Data>) => void;
+  siteUser?: string;
 }
 
-export function AboutUsTemplate1({
+export const AboutUsTemplate1: React.FC<AboutUsTemplate1Props> = ({
   aboutUsData,
   isEditable = false,
   onUpdate,
-}: AboutUsTemplate1Props) {
-  const {
-    data,
-    handleTextUpdate,
-    handleImageUpdate,
-    handleAltUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(aboutUsData, onUpdate);
+  siteUser,
+}) => {
+  const { data: themeResponse } = useThemeQuery();
 
-  // Handle stats updates
-  const handleStatsUpdate =
-    (statId: string, field: "value" | "label") => (value: string) => {
-      handleArrayItemUpdate("stats", statId)({ [field]: value });
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  const { data, handleTextUpdate, handleImageUpdate, handleAltUpdate } =
+    useBuilderLogic(aboutUsData, onUpdate);
+
+  // Handle link updates
+  const handleLinkUpdate = (text: string, href: string) => {
+    const update = {
+      ctaText: text,
+      ctaLink: href,
     };
+    onUpdate?.(update);
+  };
 
   return (
-    <section className="bg-background py-20 md:py-28">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div
-          className={`grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-20 lg:gap-24 ${
-            data.layout === "image-left" ? "md:grid-flow-col-dense" : ""
-          }`}
-        >
-          {/* Content Section */}
-          <div
-            className={`space-y-6 ${
-              data.layout === "image-left" ? "md:col-start-2" : ""
-            }`}
-          >
-            {/* Subtitle with accent */}
-            {data.subtitle && (
-              <div className="flex items-center gap-3">
-                <EditableText
-                  value={data.subtitle}
-                  onChange={handleTextUpdate("subtitle")}
-                  as="p"
-                  className="text-sm font-semibold tracking-wider uppercase"
+    <div className="relative min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="relative flex h-96 items-center justify-center overflow-hidden bg-gradient-to-r from-gray-800 to-gray-600">
+        <div className="absolute inset-0 bg-black/40"></div>
+
+        {/* Background sneaker image */}
+        <div className="absolute inset-0">
+          <EditableImage
+            src={data.heroImageUrl}
+            alt={data.heroImageAlt}
+            onImageChange={handleImageUpdate("heroImageUrl", "heroImageAlt")}
+            onAltChange={handleAltUpdate("heroImageAlt")}
+            isEditable={isEditable}
+            className="object-cover opacity-30"
+            s3Options={{
+              folder: "about-us-images",
+            }}
+            width={1200}
+            height={400}
+            buttonPosition="top-right"
+            showAltEditor={isEditable}
+            placeholder={{
+              width: 1200,
+              height: 400,
+              text: "Upload hero background image",
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 text-center text-white">
+          <EditableText
+            value={data.heroTitle}
+            onChange={handleTextUpdate("heroTitle")}
+            as="h1"
+            style={{
+              color: "#FFFFFF",
+              fontFamily: theme.fonts.heading,
+            }}
+            className="mb-4 text-6xl font-bold tracking-wide"
+            isEditable={isEditable}
+            placeholder="Enter hero title..."
+          />
+        </div>
+      </div>
+
+      {/* Our Story Section */}
+      <div className="mx-auto max-w-7xl px-4 py-16">
+        <EditableText
+          value={data.storyTitle}
+          onChange={handleTextUpdate("storyTitle")}
+          as="h2"
+          style={{
+            color: theme.colors.primary,
+            fontFamily: theme.fonts.heading,
+          }}
+          className="mb-12 text-3xl font-bold text-gray-900"
+          isEditable={isEditable}
+          placeholder="Enter story title..."
+        />
+
+        {/* Our Sneaker Journey */}
+        <div className="mb-20 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+          <div className="space-y-6">
+            <div className="transform overflow-hidden rounded-2xl bg-white shadow-xl transition-transform duration-300 hover:scale-105">
+              <div className="flex h-80 items-center justify-center">
+                <EditableImage
+                  src={data.journeyImageUrl}
+                  alt={data.journeyImageAlt}
+                  onImageChange={handleImageUpdate(
+                    "journeyImageUrl",
+                    "journeyImageAlt"
+                  )}
+                  onAltChange={handleAltUpdate("journeyImageAlt")}
                   isEditable={isEditable}
-                  placeholder="Enter subtitle..."
+                  className="-rotate-12 transform rounded-xl object-cover shadow-lg transition-transform duration-500 hover:rotate-0"
+                  width={400}
+                  height={300}
+                  s3Options={{
+                    folder: "about-us-images",
+                  }}
+                  showAltEditor={isEditable}
+                  placeholder={{
+                    width: 400,
+                    height: 300,
+                    text: "Upload journey image",
+                  }}
                 />
               </div>
-            )}
+            </div>
+          </div>
 
-            {/* Main Title */}
+          <div className="space-y-6">
             <EditableText
-              value={data.title}
-              onChange={handleTextUpdate("title")}
-              as="h2"
-              className="text-foreground mb-2 text-3xl leading-tight font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
+              value={data.journeyTitle}
+              onChange={handleTextUpdate("journeyTitle")}
+              as="h3"
+              style={{
+                color: theme.colors.secondary,
+                fontFamily: theme.fonts.heading,
+              }}
+              className="text-4xl leading-tight font-bold text-gray-900"
               isEditable={isEditable}
-              placeholder="Enter main title..."
+              placeholder="Enter journey title..."
             />
 
-            {/* Description */}
             <EditableText
-              value={data.description}
-              onChange={handleTextUpdate("description")}
+              value={data.journeyDescription}
+              onChange={handleTextUpdate("journeyDescription")}
               as="p"
-              className="text-muted-foreground text-base leading-relaxed sm:text-lg md:text-xl"
+              className="text-lg leading-relaxed text-gray-600"
               isEditable={isEditable}
-              placeholder="Enter description..."
+              placeholder="Enter journey description..."
               multiline={true}
             />
 
-            {/* Stats Grid */}
-            {data.stats && data.stats.length > 0 && (
-              <div className="border-border mt-10 grid grid-cols-2 gap-6 border-t pt-8 sm:grid-cols-3">
-                {data.stats.map((stat, index) => (
-                  <div
-                    key={stat.id}
-                    className="group relative space-y-1 text-left transition-opacity hover:opacity-90"
-                  >
-                    <EditableText
-                      value={stat.value}
-                      onChange={handleStatsUpdate(stat.id, "value")}
-                      as="p"
-                      className="text-foreground text-3xl leading-none font-bold sm:text-4xl md:text-5xl"
-                      isEditable={isEditable}
-                      placeholder="Value"
-                    />
-                    <EditableText
-                      value={stat.label}
-                      onChange={handleStatsUpdate(stat.id, "label")}
-                      as="p"
-                      className="text-muted-foreground text-xs font-medium tracking-wider uppercase sm:text-sm"
-                      isEditable={isEditable}
-                      placeholder="Label"
-                    />
-                    {index < data.stats.length - 1 && (
-                      <div className="bg-border absolute top-0 -right-3 hidden h-full w-px sm:block" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            <EditableLink
+              text={data.ctaText}
+              href={data.ctaLink}
+              onChange={handleLinkUpdate}
+              className="flex transform items-center space-x-2 rounded-full px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: theme.colors.primary,
 
-          {/* Image Section */}
-          <div
-            className={`relative ${
-              data.layout === "image-left" ? "md:col-start-1" : ""
-            }`}
-          >
-            <div className="group hover:shadow-3xl relative aspect-4/3 w-full overflow-hidden rounded-2xl shadow-2xl transition-shadow duration-300">
-              {/* Decorative gradient overlay */}
-              <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-br from-transparent via-transparent to-black/5" />
-
-              <EditableImage
-                src={data.imageUrl}
-                alt={data.imageAlt || data.title}
-                onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
-                onAltChange={handleAltUpdate("imageAlt")}
-                isEditable={isEditable}
-                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                width={600}
-                height={450}
-                priority
-                s3Options={{
-                  folder: "about-us-images",
-                }}
-                showAltEditor={isEditable}
-                placeholder={{
-                  width: 600,
-                  height: 450,
-                  text: "Upload your about us image",
-                }}
-              />
-            </div>
-
-            {/* Decorative element */}
-            <div className="bg-primary/5 absolute -right-4 -bottom-4 -z-10 h-full w-full rounded-2xl" />
+                fontFamily: theme.fonts.heading,
+              }}
+              isEditable={isEditable}
+              textPlaceholder="Button text..."
+              hrefPlaceholder="Enter link URL..."
+              siteUser={siteUser}
+            >
+              <span>{data.ctaText || "Let's Go"}</span>
+              <ChevronRight className="h-5 w-5" />
+            </EditableLink>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
-}
+};

@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate10Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { ChevronRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface HeroTemplate10Props {
   heroData: HeroTemplate10Data;
@@ -23,493 +24,209 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
   onUpdate,
 }) => {
   const componentId = React.useId();
-
-  const { data: themeResponse } = useThemeQuery();
-
-  // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#1F2937",
-      primary: "#4F46E5",
-      primaryForeground: "#FFFFFF",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
-  };
-
-  const {
-    data,
-    setData,
-    handleTextUpdate,
-    handleButtonUpdate,
-    handleArrayItemUpdate,
-    getImageUrl,
-  } = useBuilderLogic(heroData, onUpdate);
-
-  // Default grid images (7 images total)
-  const defaultGridImages = [
+  const defaultCollections = [
     {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Product image 1",
+      id: "men",
+      title: "Men's\nCollection",
+      subtitle: "",
+      badge: "",
+      imageUrl:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      imageAlt: "Men's collection",
+      buttonText: "Shop Now",
+      buttonHref: "#",
     },
     {
-      id: "2",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Product image 2",
-    },
-    {
-      id: "3",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Product image 3",
-    },
-    {
-      id: "4",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Product image 4",
-    },
-    {
-      id: "5",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Product image 5",
-    },
-    {
-      id: "6",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Product image 6",
-    },
-    {
-      id: "7",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Product image 7",
+      id: "women",
+      title: "Women's\nCollection",
+      subtitle: "",
+      badge: "",
+      imageUrl:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      imageAlt: "Women's collection",
+      buttonText: "Shop Now",
+      buttonHref: "#",
     },
   ];
 
-  // Get grid images from data or use defaults
-  const gridImages =
-    data.sliderImages && data.sliderImages.length > 0
-      ? data.sliderImages.slice(0, 7)
-      : defaultGridImages;
+  const { data: themeResponse } = useThemeQuery();
 
-  // Ensure we have exactly 7 images
-  const finalGridImages = [...gridImages];
-  while (finalGridImages.length < 7) {
-    finalGridImages.push({
-      id: `default-${finalGridImages.length}`,
-      url: defaultGridImages[finalGridImages.length % defaultGridImages.length]
-        .url,
-      alt: `Product image ${finalGridImages.length + 1}`,
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#FFFFFF",
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#F3F4F6",
+      backgroundDark: "#1F2937",
+    },
+    fonts: {
+      body: "sans-serif",
+      heading: "sans-serif",
+    },
+  };
+
+  const { data, handleArrayItemUpdate } = useBuilderLogic(
+    {
+      ...heroData,
+      collections: heroData.collections || defaultCollections,
+    },
+    onUpdate
+  );
+
+  const collections = data.collections || defaultCollections;
+
+  const handleCollectionUpdate = (
+    collectionId: string,
+    field: string,
+    value: string
+  ) => {
+    handleArrayItemUpdate(
+      "collections" as any,
+      collectionId
+    )({
+      [field]: value,
     });
-  }
+  };
 
-  // Handle grid image updates
-  const handleGridImageUpdate = (
-    index: number,
+  const handleCollectionImageUpdate = (
+    collectionId: string,
     imageUrl: string,
     altText?: string
   ) => {
-    const currentImages =
-      data.sliderImages && data.sliderImages.length > 0
-        ? [...data.sliderImages]
-        : [...defaultGridImages];
-
-    // Ensure we have at least index + 1 images
-    while (currentImages.length <= index) {
-      currentImages.push({
-        id: `default-${currentImages.length}`,
-        url: defaultGridImages[currentImages.length % defaultGridImages.length]
-          .url,
-        alt: `Product image ${currentImages.length + 1}`,
-      });
-    }
-
-    if (index < currentImages.length) {
-      currentImages[index] = {
-        ...currentImages[index],
-        url: imageUrl,
-        alt: altText || currentImages[index].alt,
-      };
-    }
-
-    // Ensure we have exactly 7 images
-    while (currentImages.length < 7) {
-      currentImages.push({
-        id: `default-${currentImages.length}`,
-        url: defaultGridImages[currentImages.length % defaultGridImages.length]
-          .url,
-        alt: `Product image ${currentImages.length + 1}`,
-      });
-    }
-
     handleArrayItemUpdate(
-      "sliderImages" as any,
-      currentImages[index].id
-    )(currentImages[index]);
+      "collections" as any,
+      collectionId
+    )({
+      imageUrl,
+      imageAlt: altText,
+    });
   };
 
-  // Ensure we have at least one button for the button to always render
-  const button =
-    data.buttons && data.buttons.length > 0
-      ? data.buttons[0]
-      : {
-          id: "1",
-          text: "Shop Collection",
-          variant: "primary" as const,
-          href: "#",
-        };
+  const handleCollectionButtonUpdate = (
+    collectionId: string,
+    text: string,
+    href: string
+  ) => {
+    handleArrayItemUpdate(
+      "collections" as any,
+      collectionId
+    )({
+      buttonText: text,
+      buttonHref: href,
+    });
+  };
+
+
+  const imageWidth = 800;
+  const imageHeight = 800;
 
   return (
     <div
-      className="relative overflow-hidden bg-white"
+      className="bg-background-light dark:bg-background-dark flex items-center justify-center py-6 sm:py-8 lg:py-12"
       data-component-id={componentId}
     >
-      <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
-        <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
-          <div className="relative z-10 sm:max-w-lg">
-            <EditableText
-              value={data.title || "Summer styles are finally here"}
-              onChange={handleTextUpdate("title")}
-              as="h1"
-              className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
-              isEditable={isEditable}
-              placeholder="Enter hero title..."
-            />
-            <EditableText
-              value={
-                data.description ||
-                "This year, our new summer collection will shelter you from the harsh elements of a world that doesn't care if you live or die."
-              }
-              onChange={handleTextUpdate("description")}
-              as="p"
-              className="mt-4 text-xl text-gray-500"
-              isEditable={isEditable}
-              placeholder="Enter description..."
-              multiline={true}
-            />
-          </div>
-          <div>
-            <div className="mt-10">
-              {/* Decorative image grid */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none lg:absolute lg:inset-y-0 lg:mx-auto lg:w-full lg:max-w-7xl"
-              >
-                <div className="absolute transform sm:top-0 sm:left-1/2 sm:translate-x-8 lg:top-1/2 lg:left-1/2 lg:translate-x-8 lg:-translate-y-1/2">
-                  <div className="flex items-center space-x-6 lg:space-x-8">
-                    {/* Column 1 - 2 images */}
-                    <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100 ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-0-${finalGridImages[0].url}`}
-                          src={getImageUrl(finalGridImages[0].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[0].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(0, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              0,
-                              finalGridImages[0].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                            
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 1",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-1-${finalGridImages[1].url}`}
-                          src={getImageUrl(finalGridImages[1].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[1].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(1, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              1,
-                              finalGridImages[1].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                            
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 2",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {/* Column 2 - 3 images */}
-                    <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-2-${finalGridImages[2].url}`}
-                          src={getImageUrl(finalGridImages[2].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[2].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(2, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              2,
-                              finalGridImages[2].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                            
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 3",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-3-${finalGridImages[3].url}`}
-                          src={getImageUrl(finalGridImages[3].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[3].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(3, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              3,
-                              finalGridImages[3].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                            
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 4",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-4-${finalGridImages[4].url}`}
-                          src={getImageUrl(finalGridImages[4].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[4].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(4, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              4,
-                              finalGridImages[4].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                            
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 5",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {/* Column 3 - 2 images */}
-                    <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-5-${finalGridImages[5].url}`}
-                          src={getImageUrl(finalGridImages[5].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[5].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(5, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              5,
-                              finalGridImages[5].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                            
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 6",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-6-${finalGridImages[6].url}`}
-                          src={getImageUrl(finalGridImages[6].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[6].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(6, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              6,
-                              finalGridImages[6].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                            
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 7",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 sm:px-6 md:grid-cols-2 lg:gap-8 lg:px-8">
+        {collections.map((collection, index) => {
+          // Different backgrounds based on index to match the design (darker left, lighter right)
+          const cardBgClass = index % 2 === 0 ? "bg-[#8A95A5]" : "bg-[#E6E6E6]";
+          const textColorClass = index % 2 === 0 ? "text-white" : "text-black";
+          const btnBorderClass =
+            index % 2 === 0 ? "border-white" : "border-black";
+
+          return (
+            <div
+              key={collection.id}
+              className={`group relative h-[400px] w-full overflow-hidden rounded-[40px] ${cardBgClass} sm:h-[450px] lg:h-[500px]`}
+            >
+              {/* Product Image on the Background */}
+              <div className="pointer-events-none absolute inset-0 h-full w-full">
+                {/* The actual image */}
+                <div
+                  className="pointer-events-auto absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url(${collection.imageUrl})`,
+                  }}
+                />
               </div>
 
-              {/* Button */}
-              <EditableLink
-                text={button.text || "Shop Collection"}
-                href={button.href || "#"}
-                onChange={(text, href) => {
-                  // If button doesn't exist in data.buttons, create it
-                  if (!data.buttons || data.buttons.length === 0) {
-                    const newButton = {
-                      id: "1",
-                      text,
-                      href: href || "#",
-                      variant: "primary" as const,
-                    };
-                    const updatedData = { ...data, buttons: [newButton] };
-                    setData(updatedData);
-                    onUpdate?.({ buttons: [newButton] });
-                  } else {
-                    handleButtonUpdate("buttons")(button.id, text, href);
+              {/* EditableImage for hover/upload overlay */}
+              <div className="absolute inset-0 z-20 h-full w-full">
+                <EditableImage
+                  src={collection.imageUrl}
+                  alt={collection.imageAlt}
+                  onImageChange={(url, alt) =>
+                    handleCollectionImageUpdate(collection.id, url, alt)
                   }
-                }}
+                  isEditable={isEditable}
+                  className="absolute inset-0 h-full w-full object-cover opacity-0"
+                  width={imageWidth}
+                  height={imageHeight}
+                  buttonPosition="top-right"
+                  s3Options={{
+                    folder: "hero-collections",
+                  }}
+                  placeholder={{
+                    width: imageWidth,
+                    height: imageHeight,
+                    text: `Collection ${index + 1}`,
+                  }}
+                  disableImageChange={true}
+                />
+              </div>
+              <ImageEditOverlay
+                onImageSelect={url =>
+                  handleCollectionImageUpdate(
+                    collection.id,
+                    url,
+                    `Collection image`
+                  )
+                }
+                imageWidth={imageWidth}
+                imageHeight={imageHeight}
                 isEditable={isEditable}
-                siteUser={siteUser}
-                style={{
-                  background: theme.colors.primary ? theme.colors.primary : "",
-                  color: theme.colors.primaryForeground,
-                }}
-                textPlaceholder="Button text..."
-                hrefPlaceholder="Enter URL..."
+                label="Change Image"
+                folder="hero-collections"
+                className="absolute top-6 right-6 z-20"
+              />
+
+              {/* Content on the Left */}
+              <div
+                className={`relative z-10 flex h-full w-full max-w-[60%] flex-col justify-center p-8 sm:p-12 lg:p-16 ${textColorClass}`}
               >
-                <span>{button.text}</span>
-                <span className="ml-2">
-                  <ChevronRight />
-                </span>
-              </EditableLink>
+                {/* Main Title */}
+                <EditableText
+                  value={collection.title}
+                  onChange={value =>
+                    handleCollectionUpdate(collection.id, "title", value)
+                  }
+                  as="h2"
+                  className="mb-8 text-3xl leading-tight font-medium tracking-tight whitespace-pre-line sm:text-4xl lg:text-5xl"
+                  isEditable={isEditable}
+                  placeholder="Enter collection title..."
+                  multiline={true}
+                />
+
+                {/* CTA Button */}
+                <div className="mt-4">
+                  <EditableLink
+                    text={collection.buttonText}
+                    href={collection.buttonHref}
+                    onChange={(text, href) =>
+                      handleCollectionButtonUpdate(collection.id, text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className={`rounded-full border border-solid px-8 py-3 text-sm font-medium transition-all hover:bg-black/5 ${btnBorderClass} ${textColorClass}`}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );

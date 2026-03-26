@@ -1,10 +1,14 @@
 "use client";
-
-import React from "react";
-import { AboutUs5Data } from "@/types/owner-site/components/about";
+import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  AboutUs5Data,
+  AboutUs5Service,
+} from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
+import { Check, ChevronRight } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
@@ -15,159 +19,271 @@ interface AboutUsTemplate5Props {
   siteUser?: string;
 }
 
-export const AboutUsTemplate5: React.FC<AboutUsTemplate5Props> = ({
+export function AboutUsTemplate5({
   aboutUsData,
   isEditable = false,
   onUpdate,
   siteUser,
-}) => {
+}: AboutUsTemplate5Props) {
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#FFFFFF",
-      primary: "#EF4444",
-      primaryForeground: "#FFFFFF",
-      secondary: "#9CA3AF",
-      secondaryForeground: "#1F2937",
-      background: "#111827",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
-    },
+  const theme = useMemo(
+    () =>
+      themeResponse?.data?.[0]?.data?.theme || {
+        colors: {
+          text: "#0F172A",
+          primary: "#3C32E7",
+          primaryForeground: "#FFFFFF",
+          secondary: "#F59E0B",
+          secondaryForeground: "#1F2937",
+          background: "#FFFFFF",
+        },
+        fonts: {
+          body: "Inter",
+          heading: "Poppins",
+        },
+      },
+    [themeResponse]
+  );
+
+  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
+
+  const [activeService, setActiveService] = useState(0);
+
+  // Handle service updates
+  const handleServiceUpdate =
+    (serviceId: string, field: keyof AboutUs5Service, pointIndex?: number) =>
+    (value: string) => {
+      const service = data.services.find(s => s.id === serviceId);
+      if (!service) return;
+
+      if (field === "points" && typeof pointIndex === "number") {
+        const newPoints = [...service.points];
+        newPoints[pointIndex] = value;
+        handleArrayItemUpdate("services", serviceId)({ points: newPoints });
+      } else {
+        handleArrayItemUpdate("services", serviceId)({ [field]: value });
+      }
+    };
+
+  // Handle image updates
+  const handleImageUpdateLocal = (serviceId: string) => (imageUrl: string) => {
+    handleArrayItemUpdate("services", serviceId)({ image: imageUrl });
   };
 
-  const {
-    data,
-    handleTextUpdate,
-    handleImageUpdate,
-    handleAltUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(aboutUsData, onUpdate);
+  // Handle button link updates
+  const handleButtonLinkUpdate = (text: string, href: string) => {
+    const update = {
+      buttonText: text,
+      buttonLink: href,
+    };
+    onUpdate?.(update);
+  };
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
 
   return (
-    <div className="relative bg-gray-900 text-white">
-      {/* Main Content Section */}
-      <div className="bg-gray-900 py-20">
-        <div className="mx-auto max-w-6xl px-4">
-          {/* Section Tag */}
-          <EditableText
-            value={data.sectionTag}
-            onChange={handleTextUpdate("sectionTag")}
-            as="div"
-            className="mb-6 text-xl tracking-widest uppercase"
-            isEditable={isEditable}
-            placeholder="Our Story"
-          />
-
-          {/* Main Content Grid */}
-          <div className="mb-20 grid items-center gap-16 lg:grid-cols-2">
-            {/* Left Content */}
-            <div>
+    <motion.section
+      id="services"
+      className="bg-white py-20"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.15 }}
+    >
+      <div className="container mx-auto max-w-7xl px-[23px]">
+        <motion.div
+          className="mb-16 flex flex-col items-end justify-between md:flex-row"
+          variants={fadeInUp}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <div className="mb-0 max-w-xl">
+            <div className="flex flex-wrap gap-2 text-3xl font-bold text-gray-900 md:text-4xl">
               <EditableText
-                value={data.mainTitle}
-                onChange={handleTextUpdate("mainTitle")}
-                as="h2"
-                className="mb-8 text-4xl leading-tight font-bold md:text-5xl"
+                value={data.title}
+                onChange={handleTextUpdate("title")}
+                as="h3"
                 isEditable={isEditable}
-                placeholder="Your Vision Our Expertise Your Success Get Noticed Generate Leads Dominate."
-                multiline={true}
+                placeholder="Enter title..."
               />
             </div>
-
-            {/* Right Content - Images */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Image 1 */}
-              <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-gray-800">
-                <div className="absolute top-4 right-4 z-50">
-                  <EditableText
-                    value={data.image1Tag}
-                    onChange={handleTextUpdate("image1Tag")}
-                    as="p"
-                    className="text-xs"
-                    isEditable={isEditable}
-                    placeholder="Tech Blog"
-                  />
-                </div>
-                <EditableImage
-                  src={data.image1Url}
-                  alt={data.image1Alt}
-                  onImageChange={handleImageUpdate("image1Url", "image1Alt")}
-                  onAltChange={handleAltUpdate("image1Alt")}
-                  isEditable={isEditable}
-                  className="object-cover"
-                  s3Options={{
-                    folder: "about-us-images",
-                    
-                  }}
-                  showAltEditor={isEditable}
-                  placeholder={{
-                    width: 600,
-                    height: 450,
-                    text: "Upload image 1",
-                  }}
-                />
-              </div>
-
-              {/* Image 2 */}
-              <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-gray-800">
-                <div className="absolute top-4 right-4 z-50">
-                  <EditableText
-                    value={data.image2Tag}
-                    onChange={handleTextUpdate("image2Tag")}
-                    as="p"
-                    className="text-xs"
-                    isEditable={isEditable}
-                    placeholder="Trends"
-                  />
-                </div>
-                <EditableImage
-                  src={data.image2Url}
-                  alt={data.image2Alt}
-                  onImageChange={handleImageUpdate("image2Url", "image2Alt")}
-                  onAltChange={handleAltUpdate("image2Alt")}
-                  isEditable={isEditable}
-                  className="object-cover"
-                  s3Options={{
-                    folder: "about-us-images",
-                    
-                  }}
-                  showAltEditor={isEditable}
-                  placeholder={{
-                    width: 600,
-                    height: 450,
-                    text: "Upload image 2",
-                  }}
-                />
-              </div>
-            </div>
           </div>
+          <EditableLink
+            text={data.buttonText}
+            href={data.buttonLink || "#"}
+            onChange={handleButtonLinkUpdate}
+            style={{
+              backgroundColor: theme.colors.primary,
+              fontFamily: theme.fonts.body,
+            }}
+            className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-8 text-[15px] font-medium text-white shadow-lg shadow-blue-900/10 transition-colors hover:opacity-90 md:w-auto md:min-w-[180px]"
+            textPlaceholder="Button Text"
+            hrefPlaceholder="#"
+            isEditable={isEditable}
+            siteUser={siteUser}
+          >
+            <>
+              <span>{data.buttonText || "Button Text"}</span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:rotate-45">
+                <ChevronRight
+                  className="h-5 w-5"
+                  style={{ color: theme.colors.primary }}
+                />
+              </span>
+            </>
+          </EditableLink>
+        </motion.div>
 
-          {/* Team Image */}
-          <div className="relative mb-20 aspect-[16/10] overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-700">
-            <EditableImage
-              src={data.teamImageUrl}
-              alt={data.teamImageAlt}
-              onImageChange={handleImageUpdate("teamImageUrl", "teamImageAlt")}
-              onAltChange={handleAltUpdate("teamImageAlt")}
-              isEditable={isEditable}
-              className="object-cover"
-              s3Options={{
-                folder: "about-us-images",
-                
-              }}
-              showAltEditor={isEditable}
-              placeholder={{
-                width: 800,
-                height: 500,
-                text: "Upload team image",
-              }}
-            />
-          </div>
-        </div>
+        <motion.div
+          className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16"
+          variants={fadeIn}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          {/* Accordion List */}
+          <motion.div
+            className="space-y-6"
+            variants={fadeInUp}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            {data.services.map((service, idx) => {
+              const isActive = activeService === idx;
+              return (
+                <motion.div
+                  key={service.id}
+                  className="group cursor-pointer border-b border-gray-100 pb-6"
+                  onClick={() => setActiveService(idx)}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
+                  variants={fadeInUp}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  <div className="mb-4 flex items-center gap-6">
+                    <span
+                      className={`text-lg font-medium transition-colors duration-300 ${
+                        isActive
+                          ? "text-gray-900"
+                          : "text-gray-400 group-hover:text-gray-600"
+                      }`}
+                      style={
+                        isActive ? { color: theme.colors.primary } : undefined
+                      }
+                    >
+                      [{service.id}]
+                    </span>
+                    <div
+                      className={`text-lg transition-colors duration-300 ${
+                        isActive
+                          ? "text-gray-900"
+                          : "text-gray-400 group-hover:text-gray-600"
+                      }`}
+                    >
+                      <EditableText
+                        value={service.title}
+                        onChange={handleServiceUpdate(service.id, "title")}
+                        as="h4"
+                        isEditable={isEditable}
+                        placeholder="Service Title"
+                      />
+                    </div>
+                  </div>
+
+                  <motion.div
+                    className="overflow-hidden"
+                    initial={false}
+                    animate={{
+                      height: isActive ? "auto" : 0,
+                      opacity: isActive ? 1 : 0,
+                    }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                  >
+                    <div className="pt-1 pb-4 pl-14">
+                      <div className="mb-6 max-w-md text-sm leading-relaxed text-gray-500">
+                        <EditableText
+                          value={service.description}
+                          onChange={handleServiceUpdate(
+                            service.id,
+                            "description"
+                          )}
+                          as="p"
+                          isEditable={isEditable}
+                          multiline
+                          placeholder="Service Description"
+                        />
+                      </div>
+                      <ul className="space-y-3">
+                        {service.points.map((point, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-3 text-sm font-medium text-gray-800"
+                          >
+                            <Check
+                              size={16}
+                              className="text-blue-600"
+                              style={{ color: theme.colors.primary }}
+                            />
+                            <EditableText
+                              value={point}
+                              onChange={handleServiceUpdate(
+                                service.id,
+                                "points",
+                                i
+                              )}
+                              as="span"
+                              isEditable={isEditable}
+                              placeholder="Point"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Right Image */}
+          <motion.div
+            className="relative h-[550px] overflow-hidden rounded-2xl shadow-2xl"
+            variants={fadeInUp}
+            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+          >
+            {data.services[activeService] && (
+              <EditableImage
+                src={data.services[activeService].image}
+                alt={data.services[activeService].title}
+                onImageChange={handleImageUpdateLocal(
+                  data.services[activeService].id
+                )}
+                isEditable={isEditable}
+                className="h-full w-full object-cover transition-opacity duration-500"
+                width={800}
+                height={800}
+                priority
+                s3Options={{
+                  folder: "about-us-images",
+                  
+                }}
+              />
+            )}
+            {/* Gradient Overlay for subtle text contrast if needed */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent"></div>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </motion.section>
   );
-};
+}

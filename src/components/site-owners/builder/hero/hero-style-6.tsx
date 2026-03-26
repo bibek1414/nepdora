@@ -1,23 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState, useId } from "react";
+import { ArrowRight, ChevronRight, Loader2 } from "lucide-react";
+import {
+  HeroTemplate6Data,
+  HeroButton,
+} from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
-import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { HeroTemplate6Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
-import { Loader2 } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
-
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 interface HeroTemplate6Props {
   heroData: HeroTemplate6Data;
   isEditable?: boolean;
@@ -25,310 +20,189 @@ interface HeroTemplate6Props {
   onUpdate?: (updatedData: Partial<HeroTemplate6Data>) => void;
 }
 
+const DEFAULT_BUTTON: HeroButton = {
+  id: "btn-1",
+  text: "Shop The Look",
+  variant: "primary",
+  href: "#",
+};
+
 export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   heroData,
-  siteUser,
   isEditable = false,
+  siteUser,
   onUpdate,
 }) => {
-  // Generate unique component ID to prevent conflicts
-  const componentId = React.useId();
-
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const { data: themeResponse } = useThemeQuery();
-
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#FFFFFF",
-      primary: "#FFFFFF",
-      primaryForeground: "#000000",
-      secondary: "#F59E0B",
-      secondaryForeground: "#1F2937",
-      background: "#000000",
-    },
-    fonts: {
-      body: "sans-serif",
-      heading: "sans-serif",
-    },
-  };
+  const [isVisible, setIsVisible] = useState(false);
+  const bannerRef = useRef<HTMLElement>(null);
+  const componentId = useId();
 
   const {
     data,
     setData,
     handleTextUpdate,
     handleButtonUpdate,
-    handleArrayItemUpdate,
-  } = useBuilderLogic(heroData, onUpdate);
-
+    handleAltUpdate,
+    getImageUrl,
+  } = useBuilderLogic(
+    {
+      ...heroData,
+      buttons:
+        heroData.buttons?.length && heroData.buttons[0]
+          ? [{ ...heroData.buttons[0] }]
+          : [{ ...DEFAULT_BUTTON }],
+    },
+    onUpdate
+  );
+  const { data: themeResponse } = useThemeQuery();
+  // Get theme colors with fallback to defaults
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
   useEffect(() => {
-    if (!api) return;
+    const element = bannerRef.current;
+    if (!element) return;
 
-    setCurrent(api.selectedScrollSnap());
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap());
-    });
-  }, [api]);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.25 }
+    );
 
-  // Auto-slider effect when not editable
-  useEffect(() => {
-    if (!api || isEditable) return;
+    observer.observe(element);
+    return () => observer.unobserve(element);
+  }, []);
 
-    const interval = setInterval(() => {
-      api.scrollNext();
-    }, 5000); // 5 seconds
+  const primaryButton = data.buttons[0] || DEFAULT_BUTTON;
+  const buttonText =
+    primaryButton.text ?? DEFAULT_BUTTON.text ?? "Shop The Look";
+  const buttonHref = primaryButton.href ?? DEFAULT_BUTTON.href ?? "#";
 
-    return () => clearInterval(interval);
-  }, [api, isEditable]);
-
-  // Default slides if no slider images are provided
-  const defaultSlides = [
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Workout attire collection",
-    },
-    {
-      id: "2",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Fitness clothing",
-    },
-    {
-      id: "3",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Activewear selection",
-    },
-    {
-      id: "4",
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "Workout gear",
-    },
-  ];
-
-  const slides =
-    data.sliderImages && data.sliderImages.length > 0
-      ? data.sliderImages
-      : defaultSlides;
-
-  // Handle slider image updates
-  const handleSliderImageUpdate = (
-    imageUrl: string,
-    altText?: string,
-    index?: number
-  ) => {
-    const updatedSliderImages = [...slides];
-
-    if (index !== undefined && index < updatedSliderImages.length) {
-      handleArrayItemUpdate(
-        "sliderImages",
-        updatedSliderImages[index].id
-      )({
-        url: imageUrl,
-        alt: altText || updatedSliderImages[index].alt,
-      });
-    } else {
-      // Add new image
-      const newSlide = {
-        id: `slide-${Date.now()}`,
-        url: imageUrl,
-        alt: altText || "Slider image",
-      };
-      const updatedData = {
-        ...data,
-        sliderImages: [...(data.sliderImages || []), newSlide],
-      };
-      setData(updatedData);
-      onUpdate?.({ sliderImages: updatedData.sliderImages });
-    }
+  const handlePrimaryButtonUpdate = (text: string, href: string) => {
+    const existingButton = data.buttons[0] || DEFAULT_BUTTON;
+    handleButtonUpdate("buttons")(
+      existingButton.id || DEFAULT_BUTTON.id,
+      text,
+      href
+    );
   };
 
-  // Handle slide addition/removal
-  const addSlide = () => {
-    const newSlide = {
-      id: `slide-${Date.now()}`,
-      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      alt: "New slide",
-    };
-    const updatedSliderImages = [...slides, newSlide];
-    const updatedData = { ...data, sliderImages: updatedSliderImages };
-    setData(updatedData);
-    onUpdate?.({ sliderImages: updatedSliderImages });
-  };
-
-  const removeSlide = (index: number) => {
-    if (slides.length <= 1) {
-      toast.error("At least one slide is required");
-      return;
-    }
-
-    const updatedSliderImages = slides.filter((_, i) => i !== index);
-    const updatedData = { ...data, sliderImages: updatedSliderImages };
-    setData(updatedData);
-    onUpdate?.({ sliderImages: updatedSliderImages });
-
-    // Scroll to previous slide if current slide is removed
-    if (current >= index && current > 0) {
-      setTimeout(() => api?.scrollTo(current - 1), 100);
-    }
-  };
+  const defaultImageUrl =
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
 
   return (
-    <div className="relative h-screen w-full" data-component-id={componentId}>
-      {isEditable && (
-        <div className="absolute top-6 right-4 z-30 flex gap-2">
-          <button
-            onClick={addSlide}
-            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
-          >
-            Add Slide
-          </button>
-          <button
-            onClick={() => removeSlide(current)}
-            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
-          >
-            Remove Current Slide
-          </button>
-        </div>
-      )}
+    <section
+      ref={bannerRef}
+      className="relative h-screen w-full overflow-hidden bg-gray-900"
+    >
+      {/* Background Image with Zoom Effect */}
+      <div
+        className="group absolute inset-0 transition-transform duration-2000 ease-out"
+        style={{ transform: isVisible ? "scale(1.05)" : "scale(1)" }}
+      >
+        <EditableImage
+          src={getImageUrl(data.backgroundImageUrl || defaultImageUrl, {})}
+          alt={data.imageAlt || "Featured Collection"}
+          onImageChange={(url, alt) => {
+            const update = {
+              backgroundImageUrl: url,
+              imageAlt: alt || data.imageAlt,
+            };
+            setData({ ...data, ...update });
+            onUpdate?.(update);
+          }}
+          
+          onAltChange={handleAltUpdate("imageAlt")}
+          isEditable={isEditable}
+          className="h-screen w-full"
+          disableImageChange={true}
+        />
+        <ImageEditOverlay
+          onImageSelect={url => {
+            const update = { backgroundImageUrl: url };
+            setData({ ...data, ...update });
+            onUpdate?.(update);
+          }}
+          imageWidth={1920}
+          imageHeight={1080}
+          isEditable={isEditable}
+          label="Change Background"
+          folder="hero-banners"
+          className="absolute top-10 right-10 z-20 flex items-center justify-center"
+        />
+        {/* Dark Overlay for text contrast */}
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      </div>
 
-      <Carousel opts={{ loop: true }} setApi={setApi} className="h-full w-full">
-        <CarouselContent>
-          {slides.map((slide, index) => (
-            <CarouselItem key={slide.id} className="relative h-screen w-full">
-              {/* Background image */}
-              <div className="absolute inset-0 h-full w-full">
-                {/* Direct image background */}
-                <div
-                  className="group absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
-                  style={{
-                    backgroundImage: `url(${slide.url})`,
-                  }}
-                >
-                  <ImageEditOverlay
-                    onImageSelect={url =>
-                      handleSliderImageUpdate(url, undefined, index)
-                    }
-                    imageWidth={1920}
-                    imageHeight={1080}
-                    isEditable={isEditable && current === index}
-                    label="Change Background"
-                    folder="hero-slides"
-                    className="absolute top-0 left-0 z-20 flex items-center justify-center"
-                  />
-                </div>
-
-                {/* Hidden EditableImage for functionality */}
-                <EditableImage
-                  key={`slide-${componentId}-${index}-${slide.url}`}
-                  src={slide.url}
-                  alt={slide.alt}
-                  onImageChange={(url, alt) =>
-                    handleSliderImageUpdate(url, alt, index)
-                  }
-                  isEditable={isEditable}
-                  className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-                  s3Options={{
-                    folder: "hero-slides",
-                  }}
-                  placeholder={{
-                    width: 1920,
-                    height: 1080,
-                    text: `Slide ${index + 1}`,
-                  }}
-                  disableImageChange={true}
-                />
-              </div>
-
-              <div className="absolute inset-0 bg-black/50"></div>
-
-              {/* Text content with proper container */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <div className="flex items-center justify-center md:justify-start">
-                    <div className="max-w-xl space-y-4 text-center text-white md:space-y-6 md:text-left">
-                      {/* Main Title */}
-                      <EditableText
-                        key={`title-${componentId}`}
-                        value={data.title || "Find your perfect workout attire"}
-                        onChange={handleTextUpdate("title")}
-                        as="h1"
-                        className="font-black tracking-wider"
-                        isEditable={isEditable}
-                        placeholder="Enter main title..."
-                        multiline={true}
-                      />
-
-                      {/* Subtitle */}
-                      <EditableText
-                        key={`subtitle-${componentId}`}
-                        value={
-                          data.subtitle ||
-                          "An exclusive selection of this season's trends."
-                        }
-                        onChange={handleTextUpdate("subtitle")}
-                        as="p"
-                        isEditable={isEditable}
-                        placeholder="Enter subtitle..."
-                        multiline={true}
-                      />
-
-                      {/* Additional Text */}
-                      <EditableText
-                        key={`description-${componentId}`}
-                        value={data.description || "Exclusively online!"}
-                        onChange={handleTextUpdate("description")}
-                        as="p"
-                        isEditable={isEditable}
-                        placeholder="Enter additional text..."
-                        multiline={true}
-                      />
-
-                      {/* CTA Button */}
-                      {data.buttons.length > 0 && (
-                        <EditableLink
-                          key={`button-${componentId}`}
-                          text={data.buttons[0]?.text || "SHOP COLLECTION"}
-                          href={data.buttons[0]?.href || "#"}
-                          onChange={(text, href) =>
-                            handleButtonUpdate("buttons")(
-                              data.buttons[0]?.id || "1",
-                              text,
-                              href
-                            )
-                          }
-                          isEditable={isEditable}
-                          siteUser={siteUser}
-                          className="rounded-full bg-white px-6 py-2 text-sm font-bold text-black shadow-lg transition duration-300 hover:bg-gray-200 sm:px-8 sm:py-3 sm:text-base"
-                          style={{
-                            backgroundColor: theme.colors.primary,
-                            color: theme.colors.primaryForeground,
-                          }}
-                          textPlaceholder="Button text..."
-                          hrefPlaceholder="Enter URL..."
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-
-        {/* Dots navigation */}
-        <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 space-x-2 sm:bottom-10 sm:space-x-3">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => api?.scrollTo(index)}
-              className={cn(
-                "h-2 w-2 rounded-full transition-all sm:h-1 sm:w-20",
-                current === index ? "bg-white" : "bg-white/50"
-              )}
+      {/* Content Container - Reset to Centered */}
+      <div className="relative flex h-full w-full flex-col items-center justify-center px-4 text-center text-white sm:px-6">
+        {/* Title & Subtitle with Fade Up Animation */}
+        <div
+          className={`transition-all delay-100 duration-1000 ease-out ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+          }`}
+        >
+          <p className="mb-3 text-xs font-bold tracking-[0.2em] text-gray-300 uppercase sm:mb-4 sm:text-sm sm:tracking-[0.3em]">
+            <EditableText
+              value={data.subtitle || "Exclusive Drop"}
+              onChange={handleTextUpdate("subtitle")}
+              as="span"
+              isEditable={isEditable}
+              placeholder="Exclusive Drop"
             />
-          ))}
+          </p>
+          <h2 className="mb-6 text-4xl font-light tracking-tight sm:mb-8 sm:text-6xl md:text-7xl lg:text-8xl">
+            <EditableText
+              value={data.title || "MIDNIGHT SERIES"}
+              onChange={handleTextUpdate("title")}
+              as="span"
+              isEditable={isEditable}
+              placeholder="MIDNIGHT SERIES"
+            />
+          </h2>
         </div>
-      </Carousel>
-    </div>
+
+        {/* Sliding Button Animation: Slides from Left (-translate-x) to Center (0) */}
+        <div
+          className={`transform transition-all delay-300 duration-1000 ease-out ${
+            isVisible
+              ? "translate-x-0 opacity-100"
+              : "-translate-x-20 opacity-0 sm:-translate-x-32"
+          }`}
+        >
+          <EditableLink
+            text={buttonText}
+            href={buttonHref}
+            onChange={handlePrimaryButtonUpdate}
+            isEditable={isEditable}
+            siteUser={siteUser}
+            textPlaceholder="Shop The Look"
+            hrefPlaceholder="Enter URL..."
+            style={{
+              color: theme.colors.primaryForeground,
+              backgroundColor: theme.colors.primary,
+            }}
+          >
+            <>
+              <span className="mr-2">{buttonText}</span>
+              <ChevronRight className="h-4 w-4" />
+            </>
+          </EditableLink>
+        </div>
+      </div>
+    </section>
   );
 };

@@ -11,18 +11,17 @@ export interface TeamMember {
   imageUrl: string;
   bio?: string;
 }
+
+export interface AboutUs5Service {
+  id: string;
+  title: string;
+  description: string;
+  points: string[];
+  image: string;
+}
+
 export interface AboutUs1Data {
   template: "about-1";
-  title: string;
-  subtitle: string;
-  description: string;
-  imageUrl: string;
-  imageAlt: string;
-  layout: "image-left" | "image-right";
-  stats: AboutUsStat[];
-}
-export interface AboutUs2Data {
-  template: "about-2";
   heroTitle: string;
   heroImageUrl: string;
   heroImageAlt: string;
@@ -34,8 +33,26 @@ export interface AboutUs2Data {
   ctaText: string;
   ctaLink: string;
 }
-export interface AboutUs3Data {
-  template: "about-3";
+
+export const defaultAboutUs1Data: AboutUs1Data = {
+  template: "about-1",
+  heroTitle: "ABOUT",
+  heroImageUrl:
+    "https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  heroImageAlt: "Sneaker background",
+  storyTitle: "Our Story",
+  journeyTitle: "Our Sneaker Journey",
+  journeyDescription:
+    "Sneaker Story Began With A Love For Sneakers. We've Evolved Into A Hub For Innovation, Style, And Community. Uniting Enthusiasts Globally With Our Curated Selection And Passion-Driven Approach.",
+  journeyImageUrl:
+    "https://images.unsplash.com/photo-1626379616459-b2ce1d9decbc?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  journeyImageAlt: "Sneaker Journey",
+  ctaText: "Let's Go",
+  ctaLink: "#",
+};
+
+export interface AboutUs2Data {
+  template: "about-2";
   title: string;
   subtitle: string;
   description: string;
@@ -52,427 +69,8 @@ export interface AboutUs3Data {
   };
 }
 
-// Add this to your types file (about.ts)
-export interface AboutUs5Data {
-  template: "about-5";
-  heroTitle: string;
-  sectionTag: string;
-  mainTitle: string;
-  image1Url: string;
-  image1Alt: string;
-  image1Tag: string;
-  image2Url: string;
-  image2Alt: string;
-  image2Tag: string;
-  teamImageUrl: string;
-  teamImageAlt: string;
-  description: string;
-  stats: Array<{
-    id: string;
-    value: string;
-    label: string;
-  }>;
-  avatars: Array<{
-    id: string;
-    imageUrl: string;
-    alt: string;
-  }>;
-  videoLinkText: string;
-  videoLink: string;
-}
-
-// Add this to your types file (about.ts)
-export interface AboutUs6Data {
-  template: "about-6";
-  headline: string;
-  buttonText: string;
-  buttonLink: string;
-  stats: Array<{
-    id: string;
-    value: string;
-    label: string;
-    topIcon: string;
-    bottomIcon: string;
-  }>;
-  image1Url: string;
-  image1Alt: string;
-  centerImageUrl: string;
-  centerImageAlt: string;
-  image2Url: string;
-  image2Alt: string;
-}
-
-// Add this to your types file (about.ts)
-export interface AboutUs7Data {
-  template: "about-7";
-  subtitle: string;
-  title: string;
-  trainings: Array<{
-    id: string;
-    title: string;
-    description?: string;
-    imageUrl: string;
-    imageAlt: string;
-  }>;
-  buttonText: string;
-  buttonLink: string;
-}
-
-export interface AboutUs8Data {
-  template: "about-8";
-  title: string;
-  description: string;
-  features: Array<{
-    id: string;
-    name: string;
-    description: string;
-  }>;
-  images: Array<{
-    id: string;
-    url: string;
-    alt: string;
-  }>;
-}
-
-export interface AboutUs9Data {
-  template: "about-9";
-  eyebrow: string;
-  title: string;
-  descriptionPrimary: string;
-  descriptionSecondary: string;
-  buttonText: string;
-  buttonLink: string;
-  media: {
-    type: "image" | "video";
-    url: string;
-    alt: string;
-  };
-}
-
-export interface AboutUs10Data {
-  template: "about-10";
-  badgeCount: string;
-  badgeText: string;
-  sectionTag: string;
-  title: string;
-  description: string;
-  features: Array<{
-    id: string;
-    title: string;
-    items: string[];
-  }>;
-  buttonText: string;
-  buttonLink: string;
-  supportText: string;
-  supportNumber: string;
-  imageUrl: string;
-  imageAlt: string;
-  circularStampText: string;
-}
-
-export interface AboutUs11Stat {
-  id: string;
-  icon: string;
-  value: string;
-  label: string;
-}
-
-export interface AboutUs11Data {
-  template: "about-11";
-  headline: string;
-  description: string;
-  featuredStatValue: string;
-  featuredStatLabel: string;
-  imageUrl: string;
-  imageAlt: string;
-  bulletPoints: Array<{ id: string; text: string }>;
-  supportingTitle: string;
-  supportingDescription: string;
-  stats: AboutUs11Stat[];
-  ctaText: string;
-  ctaLink: string;
-}
-
-export interface AboutUs12Data {
-  template: "about-12";
-  sectionTag: string;
-  title: string;
-  teamMembers: Array<{
-    id: string;
-    name: string;
-    role: string;
-  }>;
-  imageUrl: string;
-  imageAlt: string;
-}
-
-export interface AboutUs13Tab {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl?: string;
-  imageAlt?: string;
-}
-
-export interface AboutUs13Data {
-  template: "about-13";
-  heading: string;
-  description: string;
-  highlightValue: string;
-  highlightLabel: string;
-  imageUrl: string;
-  imageAlt: string;
-  ctaText: string;
-  ctaLink: string;
-  tabs: AboutUs13Tab[];
-  tabDescription: string;
-  cardTitle: string;
-  cardDescription: string;
-  buttonText: string;
-  buttonLink: string;
-}
-
-export interface AboutUs14Service {
-  id: string;
-  title: string;
-  description: string;
-  points: string[];
-  image: string;
-}
-
-export interface AboutUs14Data {
-  template: "about-14";
-  title: string;
-  italicWord: string;
-  buttonText: string;
-  buttonLink: string;
-  services: AboutUs14Service[];
-}
-
-export interface AboutUs15Card {
-  id: string;
-  icon: "Puzzle" | "TrendingUp" | "Lightbulb";
-  title: string;
-  description: string;
-}
-
-export interface AboutUs15Data {
-  template: "about-15";
-  sectionTag: string;
-  title: string;
-  italicWord: string;
-  buttonText: string;
-  buttonLink: string;
-  primaryDescription: string;
-  secondaryDescription: string;
-  cards: AboutUs15Card[];
-  imageUrl: string;
-  imageAlt: string;
-}
-
-export interface AboutUs16Data {
-  template: "about-16";
-  badgeCount: string;
-  badgeText: string;
-  badgeDescription: string;
-  smallTitle: string;
-  title: string;
-  highlightedText: string;
-  description: string;
-  buttonText: string;
-  buttonLink: string;
-  mainImage: string;
-  smallImage1: string;
-  smallImage2: string;
-}
-
-export interface AboutUs17Data {
-  template: "about-17";
-  title: string;
-  description: string;
-  visaAppliedLabel: string;
-  visaApplied: string;
-  visaTypeLabel: string;
-  visaType: string;
-  approvalLabel: string;
-  approval: string;
-  button1Text: string;
-  button1Link: string;
-  button2Text: string;
-  button2Link: string;
-  imageUrl: string;
-  imageAlt: string;
-}
-
-export interface AboutUs18Feature {
-  id: string;
-  title: string;
-  description: string;
-}
-
-export interface AboutUs18Data {
-  template: "about-18";
-  sectionTag: string;
-  headline: string;
-  subheadline: string;
-  description: string;
-  experienceYears: string;
-  features: AboutUs18Feature[];
-  buttonText: string;
-  buttonLink: string;
-  mainImageUrl: string;
-  mainImageAlt: string;
-  secondaryImageUrl: string;
-  secondaryImageAlt: string;
-}
-
-export interface AboutUs20Stat {
-  id: string;
-  label: string;
-  value: string;
-}
-
-export interface AboutUs20Data {
-  template: "about-20";
-  eyebrow: string;
-  title: string;
-  description1: string;
-  description2: string;
-  description3: string;
-  stats: AboutUs20Stat[];
-}
-
-// Don't forget to update your AboutUsData type union to include AboutUs7Data and AboutUs8Data
-export type AboutUsData =
-  | AboutUs1Data
-  | AboutUs2Data
-  | AboutUs3Data
-  | AboutUs4Data
-  | AboutUs5Data
-  | AboutUs6Data
-  | AboutUs7Data
-  | AboutUs8Data
-  | AboutUs9Data
-  | AboutUs10Data
-  | AboutUs11Data
-  | AboutUs12Data
-  | AboutUs13Data
-  | AboutUs14Data
-  | AboutUs13Data
-  | AboutUs14Data
-  | AboutUs15Data
-  | AboutUs16Data
-  | AboutUs17Data
-  | AboutUs18Data
-  | AboutUs19Data
-  | AboutUs20Data
-  | AboutUs21Data
-  | AboutUs22Data
-  | AboutUs23Data;
-
-export interface AboutUs4Data {
-  template: "about-4";
-  title: string;
-  subtitle: string;
-  subSubtitle: string; // New field
-  imageUrl: string;
-  imageAlt: string;
-}
-
-export interface AboutUsComponentData {
-  id: string | number;
-  component_id?: string;
-  component_type?: "about";
-  data: AboutUsData;
-  order: number;
-  page?: number;
-}
-
-// API response interface for a single component
-export interface ApiAboutUsComponentResponse {
-  id: number;
-  component_id: string;
-  component_type: "about";
-  data: AboutUsData;
-  order: number;
-  page: number;
-}
-
-// Request interfaces
-export interface CreateAboutUsRequest {
-  component_id?: string;
-  component_type: "about";
-  data: AboutUsData;
-  order?: number;
-}
-
-export interface UpdateAboutUsRequest {
-  component_id?: string;
-  component_type?: "about";
-  data:
-    | Partial<AboutUs1Data>
-    | Partial<AboutUs2Data>
-    | Partial<AboutUs3Data>
-    | Partial<AboutUs4Data>
-    | Partial<AboutUs5Data>
-    | Partial<AboutUs6Data>
-    | Partial<AboutUs7Data>
-    | Partial<AboutUs8Data>
-    | Partial<AboutUs9Data>
-    | Partial<AboutUs10Data>
-    | Partial<AboutUs11Data>
-    | Partial<AboutUs12Data>
-    | Partial<AboutUs13Data>
-    | Partial<AboutUs14Data>
-    | Partial<AboutUs13Data>
-    | Partial<AboutUs17Data>
-    | Partial<AboutUs18Data>
-    | Partial<AboutUs19Data>
-    | Partial<AboutUs20Data>
-    | Partial<AboutUs21Data>
-    | Partial<AboutUs22Data>
-    | Partial<AboutUs23Data>;
-  order?: number;
-}
-
-// Response interfaces for mutations
-export interface CreateAboutUsResponse {
-  success: boolean;
-  message: string;
-  data: AboutUsComponentData;
-}
-
-export interface UpdateAboutUsResponse {
-  success: boolean;
-  message: string;
-  data: AboutUsComponentData;
-}
-
-export interface DeleteAboutUsResponse {
-  success: boolean;
-  message: string;
-}
-
-// Default data for creating a new component
-export const defaultAboutUs1Data: AboutUs1Data = {
-  template: "about-1",
-  title: "About Our Company",
-  subtitle: "Driving Innovation and Excellence Since 2010",
-  description:
-    "We are a passionate team dedicated to creating cutting-edge solutions that empower businesses and individuals. Our journey began with a simple idea: to make technology accessible and impactful.",
-  imageUrl:
-    "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop",
-  imageAlt: "A team of professionals collaborating in a modern office.",
-  layout: "image-right",
-  stats: [
-    { id: "1", value: "10+", label: "Years Experience" },
-    { id: "2", value: "500+", label: "Projects Completed" },
-    { id: "3", value: "99%", label: "Client Satisfaction" },
-  ],
-};
-
-export const defaultAboutUs3Data: AboutUs3Data = {
-  template: "about-3",
+export const defaultAboutUs2Data: AboutUs2Data = {
+  template: "about-2",
   title: "Luxury Living",
   subtitle: "Redefined",
   description:
@@ -490,8 +88,18 @@ export const defaultAboutUs3Data: AboutUs3Data = {
     completeLabel: "Completion Date",
   },
 };
-export const defaultAboutUs4Data: AboutUs4Data = {
-  template: "about-4",
+
+export interface AboutUs3Data {
+  template: "about-3";
+  title: string;
+  subtitle: string;
+  subSubtitle: string; // New field
+  imageUrl: string;
+  imageAlt: string;
+}
+
+export const defaultAboutUs3Data: AboutUs3Data = {
+  template: "about-3",
   title: "Our Vision",
   subtitle: "Simple, Elegant, Effective.",
   subSubtitle:
@@ -501,108 +109,23 @@ export const defaultAboutUs4Data: AboutUs4Data = {
   imageAlt: "A minimalist office setting with a computer and plants.",
 };
 
-export const defaultAboutUs2Data: AboutUs2Data = {
-  template: "about-2",
-  heroTitle: "ABOUT",
-  heroImageUrl:
-    "https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  heroImageAlt: "Sneaker background",
-  storyTitle: "Our Story",
-  journeyTitle: "Our Sneaker Journey",
-  journeyDescription:
-    "Sneaker Story Began With A Love For Sneakers. We've Evolved Into A Hub For Innovation, Style, And Community. Uniting Enthusiasts Globally With Our Curated Selection And Passion-Driven Approach.",
-  journeyImageUrl:
-    "https://images.unsplash.com/photo-1626379616459-b2ce1d9decbc?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  journeyImageAlt: "Sneaker Journey",
-  ctaText: "Let's Go",
-  ctaLink: "#",
-};
+export interface AboutUs4Data {
+  template: "about-4";
+  subtitle: string;
+  title: string;
+  trainings: Array<{
+    id: string;
+    title: string;
+    description?: string;
+    imageUrl: string;
+    imageAlt: string;
+  }>;
+  buttonText: string;
+  buttonLink: string;
+}
 
-export const defaultAboutUs5Data: AboutUs5Data = {
-  template: "about-5",
-  heroTitle: "ABOUT US",
-  sectionTag: "Our Story",
-  mainTitle:
-    "Your Vision Our Expertise Your Success Get Noticed Generate Leads Dominate.",
-  image1Url:
-    "https://plus.unsplash.com/premium_photo-1661627374844-11ca6ddb3633?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  image1Alt: "Woman with laptop",
-  image1Tag: "Tech Blog",
-  image2Url:
-    "https://images.unsplash.com/photo-1709715357520-5e1047a2b691?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  image2Alt: "Team meeting",
-  image2Tag: "Trends",
-  teamImageUrl:
-    "https://plus.unsplash.com/premium_photo-1677529496297-fd0174d65941?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  teamImageAlt: "Team collaboration",
-  description:
-    "Tempor commodo ullamcorper a lacus. Amet commodo nulla facilisi nullam. Molestie nunc non blandit massa enim nec. Felis bibendum ut tristique et egestas quis ipsum suspendisse ultrices. Eros in cursus turpis massa tincidunt dui.",
-  stats: [
-    { id: "1", value: "10k+", label: "Completed Projects" },
-    { id: "2", value: "15k", label: "Satisfied Customers" },
-    { id: "3", value: "10k+", label: "Years Of Mastery" },
-    { id: "4", value: "45+", label: "Worldwide Honors" },
-  ],
-  avatars: [
-    {
-      id: "1",
-      imageUrl:
-        "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Avatar A",
-    },
-    {
-      id: "2",
-      imageUrl:
-        "https://plus.unsplash.com/premium_photo-1678197937465-bdbc4ed95815?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Avatar B",
-    },
-    {
-      id: "3",
-      imageUrl:
-        "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1061&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      alt: "Avatar C",
-    },
-  ],
-  videoLinkText: "WATCH INTRO",
-  videoLink: "#",
-};
-
-export const defaultAboutUs6Data: AboutUs6Data = {
-  template: "about-6",
-  headline:
-    "Brewhaus is where flavor meets craft. From bean to cup, we focus on quality, speed, and simplicity — perfect for busy mornings or laid-back afternoons.",
-  buttonText: "Our News",
-  buttonLink: "#",
-  stats: [
-    {
-      id: "1",
-      value: "10K+",
-      label: "Happy Customers",
-      topIcon: "Heart",
-      bottomIcon: "Zap",
-    },
-    {
-      id: "2",
-      value: "20",
-      label: "Products",
-      topIcon: "Box",
-      bottomIcon: "Lightbulb",
-    },
-  ],
-  image1Url:
-    "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  image1Alt: "A female barista smiling while holding a coffee cup",
-  centerImageUrl:
-    "https://images.unsplash.com/photo-1464979681340-bdd28a61699e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  centerImageAlt: "A close-up of coffee beans being roasted",
-  image2Url:
-    "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  image2Alt: "A female barista smiling while holding a coffee cup",
-};
-
-// Add this to your default data exports
-export const defaultAboutUs7Data: AboutUs7Data = {
-  template: "about-7",
+export const defaultAboutUs4Data: AboutUs4Data = {
+  template: "about-4",
   subtitle: "What we do",
   title: "Where athletes push their limits and train with purpose.",
   trainings: [
@@ -639,221 +162,17 @@ export const defaultAboutUs7Data: AboutUs7Data = {
   buttonLink: "#",
 };
 
-export const defaultAboutUs8Data: AboutUs8Data = {
-  template: "about-8",
-  title: "Technical Specifications",
-  description:
-    "The walnut wood card tray is precision milled to perfectly fit a stack of Focus cards. The powder coated steel divider separates active cards from new ones, or can be used to archive important task lists.",
-  features: [
-    { id: "1", name: "Origin", description: "Designed by Good Goods, Inc." },
-    {
-      id: "2",
-      name: "Material",
-      description:
-        "Solid walnut base with rare earth magnets and powder coated steel card cover",
-    },
-    { id: "3", name: "Dimensions", description: '6.25" x 3.55" x 1.15"' },
-    {
-      id: "4",
-      name: "Finish",
-      description: "Hand sanded and finished with natural oil",
-    },
-    {
-      id: "5",
-      name: "Includes",
-      description: "Wood card tray and 3 refill packs",
-    },
-    {
-      id: "6",
-      name: "Considerations",
-      description:
-        "Made from natural materials. Grain and color vary with each item.",
-    },
-  ],
-  images: [
-    {
-      id: "1",
-      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-01.jpg",
-      alt: "Walnut card tray with white powder coated steel divider and 3 punchout holes.",
-    },
-    {
-      id: "2",
-      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-02.jpg",
-      alt: "Top down view of walnut card tray with embedded magnets and card groove.",
-    },
-    {
-      id: "3",
-      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-03.jpg",
-      alt: "Side of walnut card tray with card groove and recessed card area.",
-    },
-    {
-      id: "4",
-      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-04.jpg",
-      alt: "Walnut card tray filled with cards and card angled in dedicated groove.",
-    },
-  ],
-};
+export interface AboutUs5Data {
+  template: "about-5";
+  title: string;
+  italicWord: string;
+  buttonText: string;
+  buttonLink: string;
+  services: AboutUs5Service[];
+}
 
-export const defaultAboutUs9Data: AboutUs9Data = {
-  template: "about-9",
-  eyebrow: "About Funder",
-  title: "Funder is best business solution provider.",
-  descriptionPrimary:
-    "We are Funder Business Consultancy Agency, pioneers in business consultancy. Funder is a leading consulting company that has helped over 100 companies grow their businesses to the next level.",
-  descriptionSecondary:
-    "Funder provides all of its services with integrity and honesty. We take pride in our work because we know how much your success means to us!",
-  buttonText: "Read More",
-  buttonLink: "#",
-  media: {
-    type: "image",
-    url: "https://images.unsplash.com/photo-1542372147193-a7aca54189cd?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    alt: "Businessman in office",
-  },
-};
-
-export const defaultAboutUs10Data: AboutUs10Data = {
-  template: "about-10",
-  badgeCount: "25",
-  badgeText: "Years Of experience",
-  sectionTag: "WHY CHOOSE US",
-  title: "Where Wanderlust Meets Dream Destinations",
-  description:
-    "Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa Et purus duis sollicitudin dignissim habitant. Egestas nulla",
-  features: [
-    {
-      id: "1",
-      title: "Passport Plus",
-      items: ["Beyond Border Immigration", "Worldwide Visa Assistance"],
-    },
-    {
-      id: "2",
-      title: "Global Entry",
-      items: ["GlobeTrot Visa Services", "Infinity Visa Solutions"],
-    },
-  ],
-  buttonText: "Read More",
-  buttonLink: "#",
-  supportText: "Need help?",
-  supportNumber: "(808) 555-0111",
-  imageUrl:
-    "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=2874&auto=format&fit=crop",
-  imageAlt: "Traveler with backpack",
-  circularStampText: "World Wide Access • Immigration Agency •",
-};
-
-export const defaultAboutUs11Data: AboutUs11Data = {
-  template: "about-11",
-  headline:
-    'Since 2016, we\'re a team of all in all <span class="font-serif italic font-normal">experienced</span> consultations, combine for strategic instant.',
-  description:
-    "At Optimo, We help businesses navigate complexity unlock to growth achieve lasting transformation with a team of experienced consultations, We can combine for strategic instant.",
-  featuredStatValue: "150+",
-  featuredStatLabel: "Successful Projects Delivered",
-  imageUrl: "https://picsum.photos/seed/team1/1200/900",
-  imageAlt: "Team collaborating",
-  bulletPoints: [
-    { id: "bp-1", text: "Strategic Planning" },
-    { id: "bp-2", text: "Operational Excellence" },
-    { id: "bp-3", text: "Market Expansion" },
-    { id: "bp-4", text: "Risk Management" },
-  ],
-  supportingTitle:
-    'With a 98% client <span class="font-serif italic text-gray-600">satisfaction</span>, our strategies have led to <span class="font-bold">$50M+ in revenue</span>',
-  supportingDescription:
-    "Our strategic approach is designed to align with your business goals, helping you scale faster.",
-  stats: [
-    {
-      id: "stat-1",
-      icon: "folder",
-      value: "250+",
-      label: "Over 300+ clients complete high-impact projects.",
-    },
-    {
-      id: "stat-2",
-      icon: "sun",
-      value: "98%",
-      label: "Trusted by hundreds of clients who rate our work highly.",
-    },
-    {
-      id: "stat-3",
-      icon: "users",
-      value: "50+",
-      label: "Our ability to adapt and deliver impactful solutions across.",
-    },
-    {
-      id: "stat-4",
-      icon: "lightbulb",
-      value: "20+",
-      label: "Building on years of experience, we provide trusted guidance.",
-    },
-  ],
-  ctaText: "Book a Free Call",
-  ctaLink: "#",
-};
-
-export const defaultAboutUs12Data: AboutUs12Data = {
-  template: "about-12",
-  sectionTag: "OUR COACHING",
-  title: "Exploring the Unknown Voyages of Wonder",
-  teamMembers: [
-    { id: "1", name: "Courtney Henry", role: "Medical Assistant" },
-    { id: "2", name: "Courtney Henry", role: "Marketing Coordinator" },
-    { id: "3", name: "Albert Flores", role: "Web Designer" },
-  ],
-  imageUrl:
-    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2776&auto=format&fit=crop",
-  imageAlt: "Professional Team Member",
-};
-
-export const defaultAboutUs13Data: AboutUs13Data = {
-  template: "about-13",
-  heading:
-    'The Value Behind Our <span class="font-serif italic font-normal">Partnership</span>',
-  description:
-    "At Optimo, Our partnership goes beyond delivering solutions—it's about building trust, aligning with your goals. We go beyond consulting to become your strategic partner—delivering tailored solutions, expert insight, and measurable results.",
-  highlightValue: "150+",
-  highlightLabel: "Successful Projects Delivered",
-  imageUrl: "https://picsum.photos/seed/creative/800/800",
-  imageAlt: "Creative Partnership",
-  ctaText: "Get In Touch",
-  ctaLink: "#",
-  tabs: [
-    {
-      id: "tab-1",
-      title: "Deep Collaboration",
-      description:
-        "We work as an extension of your team—immersing ourselves in your goals, challenges, and vision to ensure aligned outcomes.",
-      imageUrl: "https://picsum.photos/seed/creative/800/800",
-      imageAlt: "Deep Collaboration",
-    },
-    {
-      id: "tab-2",
-      title: "Expertise",
-      description:
-        "Our multidisciplinary team brings decades of experience across strategy, design, and technology.",
-      imageUrl: "https://picsum.photos/seed/expertise/800/800",
-      imageAlt: "Expertise discussion",
-    },
-    {
-      id: "tab-3",
-      title: "Tailored Solutions",
-      description:
-        "Every engagement is customized to deliver the right mix of insights, execution, and long-term support.",
-      imageUrl: "https://picsum.photos/seed/solutions/800/800",
-      imageAlt: "Tailored solutions workshop",
-    },
-  ],
-  tabDescription:
-    "We believe great results come from working closely together. From discovery to delivery, we stay synced with your objectives.",
-  cardTitle: "What to Know What's Possible",
-  cardDescription:
-    "We help teams uncover opportunities and execute bold ideas with confidence.",
-  buttonText: "Get In Touch",
-  buttonLink: "#",
-};
-
-export const defaultAboutUs14Data: AboutUs14Data = {
-  template: "about-14",
+export const defaultAboutUs5Data: AboutUs5Data = {
+  template: "about-5",
   title: "Driving Growth Through Strategic Excellence",
   italicWord: "Excellence",
   buttonText: "Contact Us",
@@ -906,44 +225,24 @@ export const defaultAboutUs14Data: AboutUs14Data = {
   ],
 };
 
-export const defaultAboutUs15Data: AboutUs15Data = {
-  template: "about-15",
-  sectionTag: "[More About Us]",
-  title: "We Believe In Results With",
-  italicWord: "Consulting.",
-  buttonText: "Get Started",
-  buttonLink: "#",
-  primaryDescription:
-    "At Optimo, we believe that real business growth is rooted in strategy, insight, and execution. As a results-driven consulting firm for you.",
-  secondaryDescription:
-    "Our approach blends deep industry insight, extensive experience, and strategic thinking to solve complex challenges, innovation, and deliver measurable, lasting business value",
-  cards: [
-    {
-      id: "card-1",
-      icon: "Puzzle",
-      title: "Strategic Planning",
-      description: "Defining goals and strategies for sustainable",
-    },
-    {
-      id: "card-2",
-      icon: "TrendingUp",
-      title: "Operational Growth",
-      description: "Driving efficiency and scalable performance.",
-    },
-    {
-      id: "card-3",
-      icon: "Lightbulb",
-      title: "Strategic Planning",
-      description: "Transforming businesses through technology.",
-    },
-  ],
-  imageUrl:
-    "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  imageAlt: "Senior Consultant",
-};
+export interface AboutUs6Data {
+  template: "about-6";
+  badgeCount: string;
+  badgeText: string;
+  badgeDescription: string;
+  smallTitle: string;
+  title: string;
+  highlightedText: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  mainImage: string;
+  smallImage1: string;
+  smallImage2: string;
+}
 
-export const defaultAboutUs16Data: AboutUs16Data = {
-  template: "about-16",
+export const defaultAboutUs6Data: AboutUs6Data = {
+  template: "about-6",
   badgeCount: "35",
   badgeText: "Years' Experience in HR",
   badgeDescription: "We have Lots of Success Stories",
@@ -955,15 +254,33 @@ export const defaultAboutUs16Data: AboutUs16Data = {
   buttonText: "Explore More",
   buttonLink: "#",
   mainImage:
-    "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=800&auto=format&fit=crop",
   smallImage1:
-    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=300&auto=format&fit=crop",
   smallImage2:
-    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=300&auto=format&fit=crop",
 };
 
-export const defaultAboutUs17Data: AboutUs17Data = {
-  template: "about-17",
+export interface AboutUs7Data {
+  template: "about-7";
+  title: string;
+  description: string;
+  visaAppliedLabel: string;
+  visaApplied: string;
+  visaTypeLabel: string;
+  visaType: string;
+  approvalLabel: string;
+  approval: string;
+  button1Text: string;
+  button1Link: string;
+  button2Text: string;
+  button2Link: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
+export const defaultAboutUs7Data: AboutUs7Data = {
+  template: "about-7",
   title: "Visa Got Approved for Eygpt",
   description:
     "Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere viverra .Aliquam eros justo, posuere lobortis viverra laoreet augue mattis fmentum ullamco rper viverra laoreet Aliquam eros justo, posuere lobortis viverra laoreet matti ullamc orper posuere viverra .Aliquam eros justo, posu Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere viverra .Aliquam eros justo, posuere lobo rtis viverra laoreet augue mattis fmentum ullamcorper viverra laoreet Aliquam eros justo, posuere lobortis viverra laoreet matti ullamcorper posuere",
@@ -982,38 +299,8 @@ export const defaultAboutUs17Data: AboutUs17Data = {
   imageAlt: "Visa approval document",
 };
 
-export const defaultAboutUs18Data: AboutUs18Data = {
-  template: "about-18",
-  sectionTag: "ABOUT US",
-  headline: "Unknown Wanderlust",
-  subheadline: "Your Journey into",
-  description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet rcus nunc. Duis egestas ac ante sed tincidunt.",
-  experienceYears: "10+ years of experiences",
-  features: [
-    {
-      id: "1",
-      title: "Safety Guides",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-    },
-    {
-      id: "2",
-      title: "Passport Assistance",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-    },
-  ],
-  buttonText: "Read More",
-  buttonLink: "#",
-  mainImageUrl:
-    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
-  mainImageAlt: "Wooden boat on turquoise mountain lake",
-  secondaryImageUrl:
-    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=2070&auto=format&fit=crop",
-  secondaryImageAlt: "Travel essentials flat lay with map and camera",
-};
-
-export interface AboutUs19Data {
-  template: "about-19";
+export interface AboutUs8Data {
+  template: "about-8";
   sectionTag: string;
   title: string;
   italicWord: string;
@@ -1027,8 +314,8 @@ export interface AboutUs19Data {
   }>;
 }
 
-export const defaultAboutUs19Data: AboutUs19Data = {
-  template: "about-19",
+export const defaultAboutUs8Data: AboutUs8Data = {
+  template: "about-8",
   sectionTag: "[Our Process]",
   title: "Step-by-Step to Business Growth",
   italicWord: "Business Growth",
@@ -1062,8 +349,18 @@ export const defaultAboutUs19Data: AboutUs19Data = {
   ],
 };
 
-export const defaultAboutUs20Data: AboutUs20Data = {
-  template: "about-20",
+export interface AboutUs9Data {
+  template: "about-9";
+  eyebrow: string;
+  title: string;
+  description1: string;
+  description2: string;
+  description3: string;
+  stats: AboutUsStat[];
+}
+
+export const defaultAboutUs9Data: AboutUs9Data = {
+  template: "about-9",
   eyebrow: "My Story",
   title: "From curiosity to code",
   description1:
@@ -1080,8 +377,8 @@ export const defaultAboutUs20Data: AboutUs20Data = {
   ],
 };
 
-export interface AboutUs21Data {
-  template: "about-21";
+export interface AboutUs10Data {
+  template: "about-10";
   title: string;
   italicWord: string;
   description: string;
@@ -1094,8 +391,8 @@ export interface AboutUs21Data {
   buttonLink: string;
 }
 
-export const defaultAboutUs21Data: AboutUs21Data = {
-  template: "about-21",
+export const defaultAboutUs10Data: AboutUs10Data = {
+  template: "about-10",
   title:
     "Since 2019, we’ve delivered finance and automation solutions that streamline operations and boost financial performance.",
   italicWord: "finance and automation",
@@ -1115,8 +412,27 @@ export const defaultAboutUs21Data: AboutUs21Data = {
   buttonLink: "#",
 };
 
-export const defaultAboutUs22Data: AboutUs22Data = {
-  template: "about-22",
+export interface AboutUs11Data {
+  template: "about-11";
+  tag: string;
+  title: string;
+  italicWord: string;
+  description1: string;
+  description2: string;
+  experienceYears: string;
+  experienceLabel: string;
+  clientsCount: string;
+  clientsLabel: string;
+  buttonText: string;
+  buttonLink: string;
+  image: string;
+  imageAlt: string;
+  floatingCardTitle: string;
+  floatingCardDescription: string;
+}
+
+export const defaultAboutUs11Data: AboutUs11Data = {
+  template: "about-11",
   tag: "[Who We Are]",
   title: "Your Trusted Financial & Compliance Partner",
   italicWord: "Partner",
@@ -1138,8 +454,30 @@ export const defaultAboutUs22Data: AboutUs22Data = {
     "We navigate complex regulatory landscapes so you don't have to.",
 };
 
-export const defaultAboutUs23Data: AboutUs23Data = {
-  template: "about-23",
+export interface AboutUs12Data {
+  template: "about-12";
+  missionTag: string;
+  missionTitle: string;
+  missionItalicWord: string;
+  missionDescription: string;
+  missionFeatures: Array<{ id: string; text: string }>;
+  missionButtonText: string;
+  missionButtonLink: string;
+  missionImage: string;
+  missionImageAlt: string;
+  visionTag: string;
+  visionTitle: string;
+  visionItalicWord: string;
+  visionDescription: string;
+  visionFeatures: Array<{ id: string; text: string }>;
+  visionButtonText: string;
+  visionButtonLink: string;
+  visionImage: string;
+  visionImageAlt: string;
+}
+
+export const defaultAboutUs12Data: AboutUs12Data = {
+  template: "about-12",
   missionTag: "[Our Mission]",
   missionTitle: "Empowering Your Financial Excellence",
   missionItalicWord: "Excellence",
@@ -1190,6 +528,85 @@ export const defaultAboutUs23Data: AboutUs23Data = {
   visionImageAlt: "XInfin Vision - Global Innovation",
 };
 
+// Union type for all about us templates
+export type AboutUsData =
+  | AboutUs1Data
+  | AboutUs2Data
+  | AboutUs3Data
+  | AboutUs4Data
+  | AboutUs5Data
+  | AboutUs6Data
+  | AboutUs7Data
+  | AboutUs8Data
+  | AboutUs9Data
+  | AboutUs10Data
+  | AboutUs11Data
+  | AboutUs12Data;
+
+export interface AboutUsComponentData {
+  id: string | number;
+  component_id?: string;
+  component_type?: "about";
+  data: AboutUsData;
+  order: number;
+  page?: number;
+}
+
+// API response interface for a single component
+export interface ApiAboutUsComponentResponse {
+  id: number;
+  component_id: string;
+  component_type: "about";
+  data: AboutUsData;
+  order: number;
+  page: number;
+}
+
+// Request interfaces
+export interface CreateAboutUsRequest {
+  component_id?: string;
+  component_type: "about";
+  data: AboutUsData;
+  order?: number;
+}
+
+export interface UpdateAboutUsRequest {
+  component_id?: string;
+  component_type?: "about";
+  data:
+    | Partial<AboutUs1Data>
+    | Partial<AboutUs2Data>
+    | Partial<AboutUs3Data>
+    | Partial<AboutUs4Data>
+    | Partial<AboutUs5Data>
+    | Partial<AboutUs6Data>
+    | Partial<AboutUs7Data>
+    | Partial<AboutUs8Data>
+    | Partial<AboutUs9Data>
+    | Partial<AboutUs10Data>
+    | Partial<AboutUs11Data>
+    | Partial<AboutUs12Data>;
+  order?: number;
+}
+
+// Response interfaces for mutations
+export interface CreateAboutUsResponse {
+  success: boolean;
+  message: string;
+  data: AboutUsComponentData;
+}
+
+export interface UpdateAboutUsResponse {
+  success: boolean;
+  message: string;
+  data: AboutUsComponentData;
+}
+
+export interface DeleteAboutUsResponse {
+  success: boolean;
+  message: string;
+}
+
 // Default data map for all about us templates
 export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-1": defaultAboutUs1Data,
@@ -1204,59 +621,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-10": defaultAboutUs10Data,
   "about-11": defaultAboutUs11Data,
   "about-12": defaultAboutUs12Data,
-  "about-13": defaultAboutUs13Data,
-  "about-14": defaultAboutUs14Data,
-  "about-15": defaultAboutUs15Data,
-  "about-16": defaultAboutUs16Data,
-  "about-17": defaultAboutUs17Data,
-  "about-18": defaultAboutUs18Data,
-  "about-19": defaultAboutUs19Data,
-  "about-20": defaultAboutUs20Data,
-  "about-21": defaultAboutUs21Data,
-  "about-22": defaultAboutUs22Data,
-  "about-23": defaultAboutUs23Data,
 };
-
-export interface AboutUs22Data {
-  template: "about-22";
-  tag: string;
-  title: string;
-  italicWord: string;
-  description1: string;
-  description2: string;
-  experienceYears: string;
-  experienceLabel: string;
-  clientsCount: string;
-  clientsLabel: string;
-  buttonText: string;
-  buttonLink: string;
-  image: string;
-  imageAlt: string;
-  floatingCardTitle: string;
-  floatingCardDescription: string;
-}
-
-export interface AboutUs23Data {
-  template: "about-23";
-  missionTag: string;
-  missionTitle: string;
-  missionItalicWord: string;
-  missionDescription: string;
-  missionFeatures: Array<{ id: string; text: string }>;
-  missionButtonText: string;
-  missionButtonLink: string;
-  missionImage: string;
-  missionImageAlt: string;
-  visionTag: string;
-  visionTitle: string;
-  visionItalicWord: string;
-  visionDescription: string;
-  visionFeatures: Array<{ id: string; text: string }>;
-  visionButtonText: string;
-  visionButtonLink: string;
-  visionImage: string;
-  visionImageAlt: string;
-}
 
 // Type guards for each template
 export const isAboutUsTemplate1 = (data: AboutUsData): data is AboutUs1Data =>
@@ -1294,36 +659,3 @@ export const isAboutUsTemplate11 = (data: AboutUsData): data is AboutUs11Data =>
 
 export const isAboutUsTemplate12 = (data: AboutUsData): data is AboutUs12Data =>
   data.template === "about-12";
-
-export const isAboutUsTemplate13 = (data: AboutUsData): data is AboutUs13Data =>
-  data.template === "about-13";
-
-export const isAboutUsTemplate14 = (data: AboutUsData): data is AboutUs14Data =>
-  data.template === "about-14";
-
-export const isAboutUsTemplate15 = (data: AboutUsData): data is AboutUs15Data =>
-  data.template === "about-15";
-
-export const isAboutUsTemplate16 = (data: AboutUsData): data is AboutUs16Data =>
-  data.template === "about-16";
-
-export const isAboutUsTemplate17 = (data: AboutUsData): data is AboutUs17Data =>
-  data.template === "about-17";
-
-export const isAboutUsTemplate18 = (data: AboutUsData): data is AboutUs18Data =>
-  data.template === "about-18";
-
-export const isAboutUsTemplate19 = (data: AboutUsData): data is AboutUs19Data =>
-  data.template === "about-19";
-
-export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
-  data.template === "about-20";
-
-export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
-  data.template === "about-21";
-
-export const isAboutUsTemplate22 = (data: AboutUsData): data is AboutUs22Data =>
-  data.template === "about-22";
-
-export const isAboutUsTemplate23 = (data: AboutUsData): data is AboutUs23Data =>
-  data.template === "about-23";

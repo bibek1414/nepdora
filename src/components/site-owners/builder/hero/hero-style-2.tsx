@@ -1,377 +1,232 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { HeroTemplate2Data } from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
+import { HeroTemplate2Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface HeroTemplate2Props {
   heroData: HeroTemplate2Data;
   isEditable?: boolean;
-  onUpdate?: (updatedData: Partial<HeroTemplate2Data>) => void;
   siteUser?: string;
+  onUpdate?: (updatedData: Partial<HeroTemplate2Data>) => void;
 }
 
 export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
   heroData,
+  siteUser,
   isEditable = false,
   onUpdate,
-  siteUser,
 }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // Generate unique component ID to prevent conflicts
+  const componentId = React.useId();
+  const defaultCollections = [
+    {
+      id: "women",
+      title: "WOMEN'S COLLECTION",
+      subtitle: "NEW COLLECTION",
+      badge: "WOMEN",
+      imageUrl:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      imageAlt: "Woman in yellow sportswear stretching on stairs",
+      buttonText: "DISCOVER MORE",
+      buttonHref: "#",
+    },
+    {
+      id: "men",
+      title: "MEN'S COLLECTION",
+      subtitle: "SAVE 50% OFF",
+      badge: "MEN",
+      imageUrl:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      imageAlt: "Man in red t-shirt resting after a workout",
+      buttonText: "DISCOVER MORE",
+      buttonHref: "#",
+    },
+  ];
+
   const { data: themeResponse } = useThemeQuery();
 
-  // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
-      text: "#0F172A",
-      primary: "#3B82F6",
-      primaryForeground: "#FFFFFF",
+      text: "#FFFFFF",
+      primary: "#FFFFFF",
+      primaryForeground: "#000000",
       secondary: "#F59E0B",
       secondaryForeground: "#1F2937",
-      background: "#FFFFFF",
+      background: "#F3F4F6",
+      backgroundDark: "#1F2937",
     },
     fonts: {
-      body: "Inter",
-      heading: "Poppins",
+      body: "sans-serif",
+      heading: "sans-serif",
     },
   };
 
-  const {
-    data,
-    setData,
-    handleTextUpdate,
-    handleButtonUpdate,
-    handleArrayItemUpdate,
-    getImageUrl,
-  } = useBuilderLogic(heroData, onUpdate);
+  const { data, handleArrayItemUpdate } = useBuilderLogic(
+    {
+      ...heroData,
+      collections: heroData.collections || defaultCollections,
+    },
+    onUpdate
+  );
 
-  const componentId = React.useId();
+  const collections = data.collections || defaultCollections;
 
-  const handleSliderImageUpdate = (
-    index: number,
-    imageUrl: string,
-    altText?: string
+  // Handle collection updates
+  const handleCollectionUpdate = (
+    collectionId: string,
+    field: string,
+    value: string
   ) => {
-    const imgId = data.sliderImages?.[index]?.id || `slide-${index}`;
     handleArrayItemUpdate(
-      "sliderImages",
-      imgId
+      "collections" as any,
+      collectionId
     )({
-      url: imageUrl,
-      alt: altText || data.sliderImages?.[index]?.alt,
+      [field]: value,
     });
   };
 
-  const handleBackgroundImageUpdate = (imageUrl: string, altText?: string) => {
-    const update = {
-      backgroundType: "image" as const,
-      backgroundImageUrl: imageUrl,
-      imageAlt: altText || data.imageAlt,
-    };
-    const updatedData = { ...data, ...update };
-    setData(updatedData);
-    onUpdate?.(update);
+  // Handle collection image update
+  const handleCollectionImageUpdate = (
+    collectionId: string,
+    imageUrl: string,
+    altText?: string
+  ) => {
+    handleArrayItemUpdate(
+      "collections" as any,
+      collectionId
+    )({
+      imageUrl,
+      imageAlt: altText,
+    });
   };
 
-  const getBackgroundStyles = (): React.CSSProperties => {
-    if (data.backgroundType === "image" && data.backgroundImageUrl) {
-      return {
-        backgroundImage: `url(${data.backgroundImageUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      };
-    }
-    return {
-      backgroundColor: data.backgroundColor || theme.colors.background,
-    };
+  // Handle collection button update
+  const handleCollectionButtonUpdate = (
+    collectionId: string,
+    text: string,
+    href: string
+  ) => {
+    handleArrayItemUpdate(
+      "collections" as any,
+      collectionId
+    )({
+      buttonText: text,
+      buttonHref: href,
+    });
   };
 
-  const nextSlide = () => {
-    if (data.sliderImages && data.sliderImages.length > 0) {
-      setCurrentSlide(prev => (prev + 1) % data.sliderImages!.length);
-    }
-  };
-
-  const prevSlide = () => {
-    if (data.sliderImages && data.sliderImages.length > 0) {
-      setCurrentSlide(prev =>
-        prev === 0 ? data.sliderImages!.length - 1 : prev - 1
-      );
-    }
-  };
-
-  // Auto-slide effect
-  React.useEffect(() => {
-    if (data.showSlider && data.sliderImages && data.sliderImages.length > 1) {
-      const interval = setInterval(nextSlide, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [data.showSlider, data.sliderImages?.length]);
-
-  const textColor =
-    data.backgroundType === "image" || data.backgroundColor === "#000000"
-      ? "#FFFFFF"
-      : theme.colors.text;
 
   return (
-    <section
-      className="group relative flex min-h-screen w-full items-center p-4 sm:p-6 md:p-8 lg:p-16"
-      style={{
-        ...getBackgroundStyles(),
-        color: textColor,
-        fontFamily: theme.fonts.body,
-      }}
+    <div
+      className="bg-background-light dark:bg-background-dark flex min-h-screen items-center justify-center p-4"
       data-component-id={componentId}
     >
-      {/* Background Image Overlay */}
-      <ImageEditOverlay
-        onImageSelect={url => handleBackgroundImageUpdate(url)}
-        imageWidth={1920}
-        imageHeight={1080}
-        isEditable={isEditable}
-        label="Change Background"
-        folder="hero-backgrounds"
-        className="absolute top-0 right-0 z-20 flex items-center justify-center"
-      />
-
-      {/* Background EditableImage */}
-      {data.backgroundType === "image" && data.backgroundImageUrl && (
-        <EditableImage
-          src={data.backgroundImageUrl}
-          alt={data.imageAlt || "Background image"}
-          onImageChange={handleBackgroundImageUpdate}
-          isEditable={isEditable}
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-          priority
-          s3Options={{
-            folder: "hero-backgrounds",
-          }}
-          placeholder={{
-            width: 1920,
-            height: 1080,
-            text: "Upload background image",
-          }}
-          disableImageChange={true}
-        />
-      )}
-
-      {/* Overlay */}
-      {data.backgroundType === "image" && data.showOverlay && (
-        <div
-          className="absolute inset-0 z-0 bg-black"
-          style={{
-            opacity: data.overlayOpacity || 0.5,
-          }}
-        />
-      )}
-
-      {/* Main Content Container */}
-      <div className="relative z-10 container mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center">
-        {/* Text Content */}
-        <div className={`flex w-full flex-col gap-3 sm:gap-4 lg:flex-1`}>
-          <EditableText
-            value={data.title}
-            onChange={handleTextUpdate("title")}
-            as="h1"
-            isEditable={isEditable}
-            placeholder="Enter your hero title..."
-          />
-
-          <EditableText
-            value={data.subtitle}
-            onChange={handleTextUpdate("subtitle")}
-            as="p"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-          />
-
-          {data.description && (
-            <EditableText
-              value={data.description}
-              onChange={handleTextUpdate("description")}
-              as="p"
-              isEditable={isEditable}
-              placeholder="Enter description..."
-              multiline={true}
-            />
-          )}
-
-          {/* Buttons */}
-          <div className="mt-2 flex flex-wrap justify-start gap-2 sm:mt-4 sm:gap-3">
-            {data.buttons.map(btn => (
-              <EditableLink
-                key={`btn-${componentId}-${btn.id}`}
+      <div className="grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
+        {collections.map((collection, index) => (
+          <div
+            key={collection.id}
+            className="group relative h-auto w-full overflow-hidden"
+          >
+            {/* Collection Image */}
+            <div className="relative h-full min-h-[600px] w-full">
+              {/* Background Image */}
+              <div
+                className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
                 style={{
-                  backgroundColor:
-                    btn.variant === "primary"
-                      ? theme.colors.primary
-                      : theme.colors.secondary,
-                  color:
-                    btn.variant === "primary"
-                      ? theme.colors.primaryForeground
-                      : theme.colors.secondaryForeground,
-                  fontFamily: theme.fonts.body,
+                  backgroundImage: `url(${collection.imageUrl})`,
                 }}
-                text={btn.text}
-                href={btn.href || "#"}
-                onChange={(text, href) =>
-                  handleButtonUpdate("buttons")(btn.id, text, href)
-                }
-                isEditable={isEditable}
-                siteUser={siteUser}
-                textPlaceholder="Button text..."
-                hrefPlaceholder="Enter button URL..."
               />
-            ))}
-          </div>
-        </div>
 
-        {/* Image Slider */}
-        {data.showSlider &&
-          data.sliderImages &&
-          data.sliderImages.length > 0 && (
-            <div className="group relative mt-6 w-full lg:mt-0 lg:w-1/2 lg:flex-shrink-0">
-              <div className="relative overflow-hidden rounded-lg shadow-lg">
-                <div
-                  className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                >
-                  {data.sliderImages.map((img, index) => (
-                    <div
-                      className="group relative w-full flex-shrink-0"
-                      key={`slide-${componentId}-${img.id || index}`}
-                    >
-                      <EditableImage
-                        key={`slide-img-${componentId}-${index}-${img.url}`}
-                        src={getImageUrl(img.url, {
-                          width: 600,
-                          height: 400,
-                          crop: "fill",
-                        })}
-                        alt={img.alt || `Slide ${index + 1}`}
-                        onImageChange={(imageUrl, altText) =>
-                          handleSliderImageUpdate(index, imageUrl, altText)
-                        }
-                        onAltChange={altText => {
-                          const imgId =
-                            data.sliderImages?.[index]?.id || `slide-${index}`;
-                          handleArrayItemUpdate(
-                            "sliderImages",
-                            imgId
-                          )({ alt: altText });
-                        }}
-                        isEditable={isEditable}
-                        className="h-56 w-full object-cover sm:h-72 md:h-80 lg:h-96"
-                        width={600}
-                        height={400}
-                        s3Options={{
-                          folder: "hero-slider-images",
-                        }}
-                        showAltEditor={isEditable}
-                        placeholder={{
-                          width: 600,
-                          height: 400,
-                          text: `Upload slide ${index + 1}`,
-                        }}
-                        disableImageChange={true}
-                      />
-                      <ImageEditOverlay
-                        onImageSelect={url =>
-                          handleSliderImageUpdate(index, url)
-                        }
-                        imageWidth={600}
-                        imageHeight={400}
-                        isEditable={isEditable && currentSlide === index}
-                        label="Change Slide Image"
-                        folder="hero-slider-images"
-                        className="absolute top-0 right-0 z-20 flex items-center justify-center"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Hidden EditableImage for functionality only - no hover effects */}
+                <EditableImage
+                  src={collection.imageUrl}
+                  alt={collection.imageAlt}
+                  onImageChange={(url, alt) =>
+                    handleCollectionImageUpdate(collection.id, url, alt)
+                  }
+                  isEditable={false} // Disable hover effects
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+                  s3Options={{
+                    folder: "hero-collections",
+                  }}
+                  placeholder={{
+                    width: 800,
+                    height: 600,
+                    text: `Collection ${index + 1}`,
+                  }}
+                  disableImageChange={true}
+                />
 
-              {/* Slider Navigation */}
-              {data.sliderImages.length > 1 && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="bg-background/80 pointer-events-none invisible absolute top-1/2 left-1 z-10 h-8 w-8 -translate-y-1/2 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 sm:left-2 sm:h-10 sm:w-10"
-                    onClick={prevSlide}
-                  >
-                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="bg-background/80 pointer-events-none invisible absolute top-1/2 right-1 z-10 h-8 w-8 -translate-y-1/2 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 sm:right-2 sm:h-10 sm:w-10"
-                    onClick={nextSlide}
-                  >
-                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </Button>
-
-                  {/* Slide indicators */}
-                  <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 transform space-x-1.5 sm:bottom-4 sm:space-x-2">
-                    {data.sliderImages.map((_, index) => (
-                      <button
-                        key={index}
-                        className={`h-1.5 w-1.5 rounded-full transition-colors sm:h-2 sm:w-2 ${
-                          index === currentSlide ? "bg-white" : "bg-white/50"
-                        }`}
-                        onClick={() => setCurrentSlide(index)}
-                        aria-label={`Go to slide ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {/* Add New Slide Button */}
-              {isEditable && (
-                <div className="mt-4 text-center sm:mt-6">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs sm:text-sm"
-                    onClick={() => {
-                      const newSlide = {
-                        id: `slide-${Date.now()}`,
-                        url: "https://via.placeholder.com/600x400?text=New+Slide",
-                        alt: `Slide ${(data.sliderImages?.length || 0) + 1}`,
-                      };
-                      const updatedSliderImages = [
-                        ...(data.sliderImages || []),
-                        newSlide,
-                      ];
-                      const updatedData = {
-                        ...data,
-                        sliderImages: updatedSliderImages,
-                      };
-                      setData(updatedData);
-                      onUpdate?.({ sliderImages: updatedSliderImages });
-                    }}
-                    style={{
-                      borderColor: theme.colors.primary,
-                      color: theme.colors.primary,
-                    }}
-                  >
-                    Add New Slide
-                  </Button>
-                </div>
-              )}
+              <ImageEditOverlay
+                onImageSelect={(url) => handleCollectionImageUpdate(collection.id, url)}
+                imageWidth={800}
+                imageHeight={600}
+                isEditable={isEditable}
+                label="Change Image"
+                folder="hero-collections"
+                className="absolute top-4 left-4 z-20"
+              />
             </div>
-          )}
+
+
+            {/* Content Overlay */}
+            <div className="bg-opacity-10 absolute inset-0 flex flex-col justify-center bg-black/40 p-8 text-white">
+              {/* Content */}
+              <div className="relative z-10">
+                {/* Subtitle */}
+                <EditableText
+                  value={collection.subtitle}
+                  onChange={value =>
+                    handleCollectionUpdate(collection.id, "subtitle", value)
+                  }
+                  as="p"
+                  className="mb-2 tracking-wider"
+                  isEditable={isEditable}
+                  placeholder="Enter subtitle..."
+                />
+
+                {/* Main Title */}
+                <EditableText
+                  value={collection.title}
+                  onChange={value =>
+                    handleCollectionUpdate(collection.id, "title", value)
+                  }
+                  as="h2"
+                  className="mb-4 font-bold"
+                  isEditable={isEditable}
+                  placeholder="Enter collection title..."
+                  multiline={true}
+                />
+
+                {/* CTA Button */}
+                <EditableLink
+                  text={collection.buttonText}
+                  href={collection.buttonHref}
+                  onChange={(text, href) =>
+                    handleCollectionButtonUpdate(collection.id, text, href)
+                  }
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  className="rounded-sm bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-gray-200"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  textPlaceholder="Button text..."
+                  hrefPlaceholder="Enter URL..."
+                />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 };

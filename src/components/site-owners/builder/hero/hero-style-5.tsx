@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Loader2 } from "lucide-react";
+import {
+  HeroTemplate5Data,
+  HeroButton,
+} from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
-import { EditableImage } from "@/components/ui/editable-image";
 import { EditableLink } from "@/components/ui/editable-link";
-import { HeroTemplate5Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { EditableImage } from "@/components/ui/editable-image";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
-import { Loader2 } from "lucide-react";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface HeroTemplate5Props {
   heroData: HeroTemplate5Data;
@@ -18,168 +22,262 @@ interface HeroTemplate5Props {
   onUpdate?: (updatedData: Partial<HeroTemplate5Data>) => void;
 }
 
+const CTA_BUTTON_BASE =
+  "group/cta relative inline-flex items-center justify-between rounded-full px-6 py-3 text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2";
+
+const CTA_ARROW_BASE =
+  "flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover/cta:rotate-45";
+
+const DEFAULT_BUTTON: HeroButton = {
+  id: "btn-1",
+  text: "Book a Free Call",
+  variant: "secondary",
+  href: "#",
+};
+
 export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
   heroData,
-  siteUser,
   isEditable = false,
+  siteUser,
   onUpdate,
 }) => {
-  // Generate unique component ID to prevent conflicts
-  const componentId = React.useId();
-
+  const componentId = useId();
   const { data: themeResponse } = useThemeQuery();
 
+  // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
-      text: "#FFFFFF",
-      primary: "#FFFFFF",
-      primaryForeground: "#000000",
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
       secondary: "#F59E0B",
       secondaryForeground: "#1F2937",
-      background: "#000000",
+      background: "#FFFFFF",
     },
     fonts: {
-      body: "serif",
-      heading: "serif",
+      body: "Inter",
+      heading: "Poppins",
     },
   };
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleButtonUpdate,
+    handleAltUpdate,
+    getImageUrl,
+  } = useBuilderLogic(
+    {
+      ...heroData,
+      buttons:
+        heroData.buttons?.length && heroData.buttons[0]
+          ? [{ ...heroData.buttons[0] }]
+          : [{ ...DEFAULT_BUTTON }],
+    },
+    onUpdate
+  );
 
-  const { data, setData, handleTextUpdate, handleButtonUpdate } =
-    useBuilderLogic(heroData, onUpdate);
+  const handlePrimaryButtonUpdate = (text: string, href: string) => {
+    const existingButton = data.buttons[0] || DEFAULT_BUTTON;
+    handleButtonUpdate("buttons")(
+      existingButton.id || DEFAULT_BUTTON.id,
+      text,
+      href
+    );
+  };
 
-  const handleImageUpdate = (imageUrl: string, altText?: string) => {
+  const handleBackgroundUpdate = (imageUrl: string, altText?: string) => {
     const update = {
       backgroundType: "image" as const,
       backgroundImageUrl: imageUrl,
-      imageAlt: altText || data.imageAlt,
+      imageAlt: altText || data.imageAlt || "Hero background image",
     };
     const updatedData = { ...data, ...update };
     setData(updatedData);
     onUpdate?.(update);
   };
 
+  const getButtonVariant = (
+    variant?: string
+  ): "primary" | "white" | "outline" => {
+    switch (variant) {
+      case "outline":
+        return "outline";
+      case "secondary":
+        return "white";
+      default:
+        return "primary";
+    }
+  };
+
+  const getButtonStyle = (variant: "primary" | "white" | "outline") => {
+    switch (variant) {
+      case "primary":
+        return {
+          backgroundColor: theme.colors.primary,
+          color: theme.colors.primaryForeground,
+        };
+      case "white":
+        return {
+          backgroundColor: theme.colors.primary,
+          color: theme.colors.secondaryForeground,
+        };
+      case "outline":
+        return {
+          border: `1px solid ${theme.colors.text}4D`,
+          color: theme.colors.text,
+        };
+    }
+  };
+
+  const getArrowStyle = (variant: "primary" | "white" | "outline") => {
+    switch (variant) {
+      case "primary":
+        return {
+          backgroundColor: theme.colors.primaryForeground,
+          color: theme.colors.primary,
+        };
+      case "white":
+        return {
+          backgroundColor: theme.colors.secondaryForeground,
+          color: theme.colors.secondary,
+        };
+      case "outline":
+        return {
+          backgroundColor: theme.colors.text,
+          color: theme.colors.background,
+        };
+    }
+  };
+
+  const titleContent =
+    data.title ||
+    "Navigate Business <br /> with <span class='font-serif font-normal italic'>Confidence</span>";
+
+  const descriptionContent =
+    data.description ||
+    "Expert strategic consulting to drive sustainable growth, operational innovation, and lasting business transformation across industries and markets, maximizing impact.";
+
+  const primaryButton = data.buttons[0] || DEFAULT_BUTTON;
+  const buttonVariant = getButtonVariant(primaryButton.variant);
+  const primaryButtonText =
+    primaryButton.text ?? DEFAULT_BUTTON.text ?? "Button";
+  const primaryButtonHref = primaryButton.href ?? DEFAULT_BUTTON.href ?? "#";
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
-    <div
-      className="group relative flex min-h-screen items-center justify-center text-center text-white"
-      data-component-id={componentId}
-      style={{
-        ...(data.backgroundType === "image" && data.backgroundImageUrl
-          ? {
-              backgroundImage: `url(${data.backgroundImageUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }
-          : {
-              backgroundColor: data.backgroundColor || theme.colors.background,
-            }),
-      }}
+    <motion.section
+      className="group relative h-[880px] w-full overflow-hidden bg-gray-900"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.15 }}
     >
-      <ImageEditOverlay
-        onImageSelect={url => handleImageUpdate(url)}
-        imageWidth={1920}
-        imageHeight={1080}
-        isEditable={isEditable}
-        label="Change Background"
-        folder="hero-backgrounds"
-        className="absolute top-0 right-0 z-20 flex items-center justify-center"
-      />
-
-      {/* Overlay - Only show if image background with overlay enabled */}
-      {data.backgroundType === "image" && data.showOverlay && (
-        <div
-          className="absolute inset-0 z-[1]"
-          style={{
-            backgroundColor: `rgba(0, 0, 0, ${data.overlayOpacity || 0.7})`,
+      {/* Background Image with Overlay */}
+      <motion.div
+        className="absolute inset-0"
+        variants={fadeIn}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <EditableImage
+          src={getImageUrl(data.backgroundImageUrl, { width: 1920 })}
+          alt={data.imageAlt || "Office meeting background"}
+          onImageChange={handleBackgroundUpdate}
+          onAltChange={handleAltUpdate("imageAlt")}
+          isEditable={isEditable}
+          className="h-full w-full opacity-60"
+          width={1920}
+          height={1080}
+          placeholder={{
+            width: 1920,
+            height: 1080,
+            text: "Upload hero background",
           }}
+          disableImageChange={true}
         />
-      )}
-
-      {/* Content - Make sure it's above the overlay */}
-      <div className="relative z-10 max-w-3xl px-6">
-        {/* Badge/Subtitle */}
-        <EditableText
-          key={`subtitle-${componentId}`}
-          value={data.subtitle || "Introducing the UA-01"}
-          onChange={handleTextUpdate("subtitle")}
-          as="h1"
-          style={{
-            color: "#D1D5DB", // text-gray-300 equivalent
-          }}
+        <ImageEditOverlay
+          onImageSelect={url => handleBackgroundUpdate(url)}
+          imageWidth={1920}
+          imageHeight={1080}
           isEditable={isEditable}
-          placeholder="Enter subtitle/badge text..."
+          label="Change Background"
+          folder="hero-backgrounds"
+          className="absolute top-0 right-0 z-20 flex items-center justify-center"
         />
+      </motion.div>
 
-        {/* Main Title */}
-        <EditableText
-          key={`title-${componentId}`}
-          value={data.title}
-          onChange={handleTextUpdate("title")}
-          as="h2"
-          isEditable={isEditable}
-          placeholder="Enter main title..."
-          multiline={true}
-        />
+      {/* Content */}
+      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 md:px-6">
+        <motion.div
+          className="max-w-3xl"
+          style={{ color: theme.colors.text }}
+          variants={fadeInUp}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <EditableText
+            value={titleContent}
+            onChange={handleTextUpdate("title")}
+            as="h1"
+            className="mb-6 text-5xl leading-tight font-semibold md:text-7xl"
+            style={{ fontFamily: theme.fonts.heading }}
+            isEditable={isEditable}
+            placeholder="Enter hero title..."
+            multiline
+          />
 
-        {/* Description */}
-        <EditableText
-          key={`description-${componentId}`}
-          value={data.description}
-          onChange={handleTextUpdate("description")}
-          as="p"
-          className="mt-6"
-          isEditable={isEditable}
-          placeholder="Enter description..."
-          multiline={true}
-        />
+          <EditableText
+            value={descriptionContent}
+            onChange={handleTextUpdate("description")}
+            as="p"
+            className="mb-10 max-w-xl text-lg leading-relaxed opacity-90"
+            style={{ fontFamily: theme.fonts.body }}
+            isEditable={isEditable}
+            placeholder="Enter hero description..."
+            multiline
+          />
 
-        {/* Buttons */}
-        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-          {data.buttons.length > 0 && (
+          <motion.div
+            className="flex flex-wrap gap-4"
+            variants={fadeInUp}
+            transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+          >
             <EditableLink
-              key={`button-1-${componentId}`}
-              text={data.buttons[0]?.text || "Discover More"}
-              href={data.buttons[0]?.href || "#"}
-              onChange={(text, href) =>
-                handleButtonUpdate("buttons")(
-                  data.buttons[0]?.id || "1",
-                  text,
-                  href
-                )
-              }
+              key={primaryButton.id}
+              text={primaryButtonText}
+              href={primaryButtonHref}
+              onChange={handlePrimaryButtonUpdate}
               isEditable={isEditable}
               siteUser={siteUser}
+              className={CTA_BUTTON_BASE}
               style={{
-                backgroundColor: theme.colors.primary,
-                color: theme.colors.primaryForeground,
+                ...getButtonStyle(buttonVariant),
                 fontFamily: theme.fonts.body,
               }}
-              textPlaceholder="Primary button text..."
+              textPlaceholder="Button text..."
               hrefPlaceholder="Enter URL..."
-            />
-          )}
-
-          {data.buttons.length > 1 && (
-            <EditableLink
-              key={`button-2-${componentId}`}
-              text={data.buttons[1]?.text || "Explore Collection"}
-              href={data.buttons[1]?.href || "#"}
-              onChange={(text, href) =>
-                handleButtonUpdate("buttons")(
-                  data.buttons[1]?.id || "2",
-                  text,
-                  href
-                )
-              }
-              isEditable={isEditable}
-              siteUser={siteUser}
-              className="border"
-              textPlaceholder="Secondary button text..."
-              hrefPlaceholder="Enter URL..."
-            />
-          )}
-        </div>
+            >
+              <>
+                <span className="mr-4">{primaryButtonText}</span>
+                <span
+                  className={CTA_ARROW_BASE}
+                  style={getArrowStyle(buttonVariant)}
+                >
+                  <ArrowUpRight size={16} />
+                </span>
+              </>
+            </EditableLink>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </motion.section>
   );
 };

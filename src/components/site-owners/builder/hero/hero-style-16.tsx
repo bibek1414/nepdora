@@ -1,247 +1,114 @@
 "use client";
-
-import React from "react";
-import { motion, Variants } from "framer-motion";
+import React, { useState, useId } from "react";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { HeroTemplate16Data } from "@/types/owner-site/components/hero";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
-import { EditableLink } from "@/components/ui/editable-link";
-import { HeroTemplate16Data } from "@/types/owner-site/components/hero";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { CheckCircle } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { toast } from "sonner";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface HeroTemplate16Props {
   heroData: HeroTemplate16Data;
   isEditable?: boolean;
-  siteUser?: string;
   onUpdate?: (updatedData: Partial<HeroTemplate16Data>) => void;
+  siteUser?: string;
 }
-
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
-
-const fadeInRight: Variants = {
-  hidden: { opacity: 0, x: 30 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.8, ease: "easeOut", delay: 0.2 },
-  },
-};
 
 export const HeroTemplate16: React.FC<HeroTemplate16Props> = ({
   heroData,
-  siteUser,
   isEditable = false,
   onUpdate,
+  siteUser,
 }) => {
-  const componentId = React.useId();
+  const componentId = useId();
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
-      text: "#1F2937",
-      primary: "#10B981",
-      primaryForeground: "#FFFFFF",
-      secondary: "#3B82F6",
-      secondaryForeground: "#FFFFFF",
-      background: "#FFFFFF",
-    },
-    fonts: {
-      body: "Inter",
-      heading: "Poppins",
+      primary: "#3B82F6",
     },
   };
 
-  const { data, handleTextUpdate, getImageUrl, handleButtonUpdate } =
-    useBuilderLogic(heroData, onUpdate);
-
-  const primaryColor = theme.colors.primary ?? "#10B981";
-
-  const buttons = data.buttons || [];
-  const features = data.features || [];
+  const {
+    data,
+    setData,
+    handleTextUpdate,
+    handleImageUpdate,
+    handleAltUpdate,
+  } = useBuilderLogic(heroData, onUpdate);
 
   return (
-    <section
-      className="relative overflow-hidden"
-      data-component-id={componentId}
-    >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 50px, currentColor 50px, currentColor 51px),
-                           repeating-linear-gradient(90deg, transparent, transparent 50px, currentColor 50px, currentColor 51px)`,
+    <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden bg-gray-900 pt-20 sm:min-h-[600px] lg:h-screen">
+      {/* Background Image */}
+      <motion.div
+        className="group absolute inset-0 z-0"
+        initial={{ opacity: 0, scale: 1.05 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.1, ease: "easeOut" }}
+      >
+        <EditableImage
+          src={data.imageUrl}
+          alt={data.imageAlt}
+          onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
+          onAltChange={handleAltUpdate("imageAlt")}
+          isEditable={isEditable}
+          className="h-full w-full object-cover opacity-60"
+          placeholder={{
+            width: 1920,
+            height: 1080,
+            text: "Upload hero image",
           }}
+          disableImageChange={true}
         />
-      </div>
+        <ImageEditOverlay
+          onImageSelect={url => {
+            const update = { imageUrl: url };
+            setData({ ...data, ...update });
+            onUpdate?.(update);
+          }}
+          imageWidth={1920}
+          imageHeight={1080}
+          isEditable={isEditable}
+          label="Change Background"
+          folder="hero-backgrounds"
+          className="absolute top-0 right-0 z-20 flex items-center justify-center"
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-linear-to-r from-gray-900/90 via-gray-900/60 to-transparent"></div>
+      </motion.div>
 
-      <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          {/* Content */}
-          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-            <div className="mb-6 flex w-fit items-center gap-3 rounded-lg border border-gray-200 bg-white/80 px-4 py-2 backdrop-blur-sm">
-              <div className="flex items-center gap-2">
-                <div className="h-[28px] w-[28px] overflow-hidden">
-                  <EditableImage
-                    src="/certifications/education-ministry.jpg"
-                    alt={data.badge1Text || "Ministry of Education Approved"}
-                    onImageChange={url => onUpdate?.({ badge1Image: url })}
-                    isEditable={isEditable}
-                    className="h-full w-full object-contain"
-                  />
-                </div>
-                <EditableText
-                  value={data.badge1Text || "Approved by Ministry of Education"}
-                  onChange={handleTextUpdate("badge1Text")}
-                  className="text-xs font-medium whitespace-nowrap text-gray-700"
-                  isEditable={isEditable}
-                  as="span"
-                />
-              </div>
-              <div className="h-6 w-px bg-gray-300"></div>
-              <div className="flex items-center gap-2">
-                <div className="h-[28px] w-[28px] overflow-hidden">
-                  <EditableImage
-                    src="/certifications/titi.jpg"
-                    alt={data.badge2Text || "TITI Certified"}
-                    onImageChange={url => onUpdate?.({ badge2Image: url })}
-                    isEditable={isEditable}
-                    className="h-full w-full object-contain"
-                  />
-                </div>
-                <EditableText
-                  value={data.badge2Text || "TITI Certified Counselors"}
-                  onChange={handleTextUpdate("badge2Text")}
-                  className="text-xs font-medium whitespace-nowrap text-gray-700"
-                  isEditable={isEditable}
-                  as="span"
-                />
-              </div>
-            </div>
-
+      <div className="z-10 flex h-full flex-col justify-center px-4 text-center text-white sm:px-6 md:px-8">
+        <motion.div
+          className="mt-6 max-w-4xl sm:mt-10"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <h1 className="mb-4 text-4xl leading-tight font-semibold tracking-tight wrap-break-word sm:mb-6 sm:text-5xl md:text-7xl lg:text-8xl">
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
+              as="span"
               isEditable={isEditable}
               multiline
-              as="h1"
-              className="mb-6 text-4xl leading-tight font-bold text-gray-900 md:text-4xl lg:text-5xl"
-            />
-
-            <EditableText
-              value={
-                data.description ||
-                "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered."
-              }
-              onChange={handleTextUpdate("description")}
-              as="p"
-              className="max-w-xl text-xl text-gray-500 md:text-3xl"
-              isEditable={isEditable}
-              multiline
-            />
-
-            <div className="mt-10 mb-10 flex flex-col gap-4 sm:flex-row">
-              {buttons.map((button, index) => {
-                if (index === 0) {
-                  return (
-                    <EditableLink
-                      key={button.id}
-                      text={button.text}
-                      href={button.href || "#"}
-                      onChange={(text, href) =>
-                        handleButtonUpdate("buttons")(button.id, text, href)
-                      }
-                      isEditable={isEditable}
-                      siteUser={siteUser}
-                      className="text-primary-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md px-8 text-base font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                      style={{ backgroundColor: primaryColor, color: "#fff" }}
-                    >
-                      <span>{button.text}</span>
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </EditableLink>
-                  );
-                }
-
-                return (
-                  <EditableLink
-                    key={button.id}
-                    text={button.text}
-                    href={button.href || "#"}
-                    onChange={(text, href) =>
-                      handleButtonUpdate("buttons")(button.id, text, href)
-                    }
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    className="border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md border px-8 text-base font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                  >
-                    <span>{button.text}</span>
-                  </EditableLink>
-                );
-              })}
-            </div>
-
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-900">
-              {features.map(feature => (
-                <div key={feature.id} className="flex items-center gap-2">
-                  <CheckCircle
-                    className="text-primary h-4 w-4"
-                    style={{ color: primaryColor }}
-                  />
-                  <EditableText
-                    value={feature.text}
-                    onChange={val => {
-                      const updatedFeatures = features.map(f =>
-                        f.id === feature.id ? { ...f, text: val } : f
-                      );
-                      onUpdate?.({ features: updatedFeatures });
-                    }}
-                    className="flex items-center gap-2"
-                    as="span"
-                    isEditable={isEditable}
-                  />
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Image */}
-          <motion.div
-            className="relative hidden lg:block"
-            initial="hidden"
-            animate="visible"
-            variants={fadeInRight}
-          >
-            <div className="mt-12 h-auto w-full overflow-hidden rounded-2xl shadow-lg">
-              <EditableImage
-                src="/hero-students.webp"
-                alt={
-                  data.imageAlt ||
-                  "International students celebrating graduation with global landmarks"
-                }
-                onImageChange={(url, alt) => {
-                  const updated: Partial<HeroTemplate16Data> = {
-                    imageUrl: url,
-                  };
-                  if (alt) updated.imageAlt = alt;
-                  onUpdate?.(updated);
-                }}
+            />{" "}
+            <span
+              className="font-serif font-normal italic"
+              style={{ color: theme.colors.primary }}
+            >
+              <EditableText
+                value={data.spanText}
+                onChange={handleTextUpdate("spanText")}
+                as="span"
                 isEditable={isEditable}
-                className="h-full w-full object-cover"
-                width={1000}
-                height={600}
               />
-            </div>
-          </motion.div>
-        </div>
+            </span>
+          </h1>
+        </motion.div>
       </div>
     </section>
   );
