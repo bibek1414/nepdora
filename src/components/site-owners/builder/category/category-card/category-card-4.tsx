@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { ChevronRight, ChevronDown, Loader2, Plus } from "lucide-react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
@@ -58,9 +59,9 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     buttonText: "Shop now",
     buttonHref: "/products",
     backgroundImages: [
-      "/fallback/image-not-found.png",
-      "/fallback/image-not-found.png",
-      "/fallback/image-not-found.png",
+      "https://images.pexels.com/photos/36710456/pexels-photo-36710456.png",
+      "https://images.pexels.com/photos/36251125/pexels-photo-36251125.jpeg",
+      "https://images.pexels.com/photos/7135033/pexels-photo-7135033.jpeg",
     ],
     currentImageIndex: 0,
   };
@@ -136,9 +137,9 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     onFeaturedContentUpdate?.(updatedContent);
   };
 
-
   const addBackgroundImage = () => {
-    const newImageUrl = "/fallback/image-not-found.png";
+    const newImageUrl =
+      "https://images.pexels.com/photos/36710456/pexels-photo-36710456.png";
     const updatedContent = {
       ...featuredContent,
       backgroundImages: [...featuredContent.backgroundImages, newImageUrl],
@@ -167,30 +168,47 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     onFeaturedContentUpdate?.(updatedContent);
   };
 
-  // Fixed carousel navigation functions - don't trigger content updates
+  // FIXED: Carousel navigation functions with proper state updates
   const nextImage = () => {
-    setFeaturedContent(prev => ({
-      ...prev,
-      currentImageIndex:
-        (prev.currentImageIndex + 1) % prev.backgroundImages.length,
-    }));
+    setFeaturedContent(prev => {
+      const nextIndex =
+        (prev.currentImageIndex + 1) % prev.backgroundImages.length;
+      const updatedContent = {
+        ...prev,
+        currentImageIndex: nextIndex,
+      };
+      // Notify parent of the update
+      onFeaturedContentUpdate?.(updatedContent);
+      return updatedContent;
+    });
   };
 
   const prevImage = () => {
-    setFeaturedContent(prev => ({
-      ...prev,
-      currentImageIndex:
+    setFeaturedContent(prev => {
+      const nextIndex =
         prev.currentImageIndex === 0
           ? prev.backgroundImages.length - 1
-          : prev.currentImageIndex - 1,
-    }));
+          : prev.currentImageIndex - 1;
+      const updatedContent = {
+        ...prev,
+        currentImageIndex: nextIndex,
+      };
+      // Notify parent of the update
+      onFeaturedContentUpdate?.(updatedContent);
+      return updatedContent;
+    });
   };
 
   const setImageIndex = (index: number) => {
-    setFeaturedContent(prev => ({
-      ...prev,
-      currentImageIndex: index,
-    }));
+    setFeaturedContent(prev => {
+      const updatedContent = {
+        ...prev,
+        currentImageIndex: index,
+      };
+      // Notify parent of the update
+      onFeaturedContentUpdate?.(updatedContent);
+      return updatedContent;
+    });
   };
 
   const getCategoryUrl = (category: Category): string => {
@@ -498,8 +516,8 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
 
       {/* Right Content Area - Featured Section Only */}
       <div className="flex flex-1 flex-col">
+        {/* FIXED: Removed dynamic key that was causing re-renders */}
         <div
-          key={`featured-${componentId}-${featuredContent.currentImageIndex}`}
           className="group relative flex min-h-[420px] flex-1 items-center sm:min-h-[460px] md:min-h-[500px]"
           style={{
             background: currentBackgroundImage
@@ -544,7 +562,6 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
               </div>
             </div>
           )}
-
 
           <div className="container mx-auto px-4 py-12 sm:px-6 md:px-8 md:py-0">
             <div className="max-w-2xl text-white">
@@ -604,6 +621,24 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
           {/* Carousel Navigation - Only show when multiple images */}
           {featuredContent.backgroundImages.length > 1 && (
             <>
+              {/* Previous Button */}
+              <button
+                onClick={prevImage}
+                className="absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white transition hover:bg-black/50 sm:left-6 sm:p-3"
+                aria-label="Previous slide"
+              >
+                <ChevronRight className="h-5 w-5 rotate-180 sm:h-6 sm:w-6" />
+              </button>
+
+              {/* Next Button */}
+              <button
+                onClick={nextImage}
+                className="absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white transition hover:bg-black/50 sm:right-6 sm:p-3"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+              </button>
+
               {/* Dots Indicator */}
               <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-8">
                 {featuredContent.backgroundImages.map((_, index) => (

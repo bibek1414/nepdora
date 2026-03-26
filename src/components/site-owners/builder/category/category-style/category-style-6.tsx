@@ -2,15 +2,12 @@ import React from "react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, ChevronRight, FolderOpen } from "lucide-react";
+import { AlertCircle, FolderOpen } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { generateLinkHref } from "@/lib/link-utils";
 import { Category } from "@/types/owner-site/admin/product";
+import { CategoryCard6 } from "../category-card/category-card-6";
 
 interface CategoryStyleProps {
   data: CategoryComponentData["data"];
@@ -30,15 +27,6 @@ export const CategoryStyle6: React.FC<CategoryStyleProps> = ({
   const { title = "Shop by Category" } = data || {};
   const { data: categoriesData, isLoading, error } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
-  const pathname = usePathname();
-
-  const getCategoryUrl = (category: Category): string => {
-    return generateLinkHref(
-      `/collections?category=${category.slug}`,
-      siteUser,
-      pathname
-    );
-  };
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -95,39 +83,14 @@ export const CategoryStyle6: React.FC<CategoryStyleProps> = ({
         {!isLoading && !error && categories.length > 0 && (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {categories.slice(0, 3).map(cat => (
-              <Link
+              <CategoryCard6
                 key={cat.slug}
-                href={getCategoryUrl(cat)}
-                className="group relative h-[400px] overflow-hidden rounded-2xl md:h-[450px]"
-                onClick={e => {
-                  if (isEditable) {
-                    e.preventDefault();
-                  } else {
-                    onCategoryClick?.(cat.id);
-                  }
-                }}
-              >
-                <Image
-                  width={800}
-                  height={600}
-                  src={cat.image || "/fallback/image-not-found.png"}
-                  alt={cat.name}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div
-                  className="absolute inset-0 flex flex-col justify-end p-8 md:p-10"
-                  style={{
-                    background: `linear-gradient(to top, ${theme.colors.primary || "#000"}E6 0%, ${theme.colors.primary || "#000"}33 40%, transparent 100%)`,
-                  }}
-                >
-                  <h3 className="mb-2 text-2xl font-bold text-white">
-                    {cat.name}
-                  </h3>
-                  <p className="flex translate-y-4 transform items-center gap-1 text-sm font-medium text-white/80 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    Explore Collection <ChevronRight className="h-4 w-4" />
-                  </p>
-                </div>
-              </Link>
+                category={cat}
+                theme={theme}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                onCategoryClick={onCategoryClick}
+              />
             ))}
           </div>
         )}

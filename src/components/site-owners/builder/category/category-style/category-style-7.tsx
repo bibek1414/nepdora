@@ -1,15 +1,12 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
-import Image from "next/image";
 import { EditableText } from "@/components/ui/editable-text";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { usePathname } from "next/navigation";
-import { generateLinkHref } from "@/lib/link-utils";
 import { Category } from "@/types/owner-site/admin/product";
+import { CategoryCard7 } from "../category-card/category-card-7";
 
 interface CategoryStyleProps {
   data: CategoryComponentData["data"];
@@ -29,15 +26,6 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
   const { title = "Browse Categories" } = data || {};
   const { data: categoriesData, isLoading } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
-  const pathname = usePathname();
-
-  const getCategoryUrl = (category: Category): string => {
-    return generateLinkHref(
-      `/collections?category=${category.slug}`,
-      siteUser,
-      pathname
-    );
-  };
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -92,38 +80,14 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
         <div className="grid grid-cols-3 gap-6 sm:grid-cols-6">
           {categories.map(cat => {
             return (
-              <Link
-                href={getCategoryUrl(cat)}
+              <CategoryCard7
                 key={cat.id}
-                className="group flex flex-col items-center gap-4"
-                onClick={e => {
-                  if (isEditable) {
-                    e.preventDefault();
-                  } else {
-                    onCategoryClick?.(cat.id);
-                  }
-                }}
-              >
-                <div
-                  className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-transparent transition-all duration-300 md:h-24 md:w-24"
-                  onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = theme.colors.primary;
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = "transparent";
-                  }}
-                >
-                  <Image
-                    src={cat.image || "/fallback/image-not-found.png"}
-                    alt={cat.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <span className="text-center text-sm font-bold tracking-wider uppercase transition-colors">
-                  {cat.name}
-                </span>
-              </Link>
+                category={cat}
+                theme={theme}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                onCategoryClick={onCategoryClick}
+              />
             );
           })}
         </div>
@@ -131,3 +95,4 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
     </section>
   );
 };
+
