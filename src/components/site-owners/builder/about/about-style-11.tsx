@@ -53,7 +53,7 @@ export const AboutUsTemplate11: React.FC<AboutUsTemplate11Props> = ({
   };
 
   return (
-    <section id="about" className="bg-gray-50/50 pt-20">
+    <section id="about" className="mx-auto max-w-7xl pt-20">
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12">
           {/* Left Text */}

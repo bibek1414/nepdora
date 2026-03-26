@@ -44,7 +44,7 @@ export const BlogStyle2: React.FC<BlogStyleProps> = ({
   };
 
   return (
-    <section className="bg-background py-12 md:py-16">
+    <section className="bg-background mx-auto max-w-7xl py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-8 text-center">
           <EditableText

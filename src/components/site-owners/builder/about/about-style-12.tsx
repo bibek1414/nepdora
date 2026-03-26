@@ -70,7 +70,7 @@ export const AboutUsTemplate12: React.FC<AboutUsTemplate12Props> = ({
   );
 
   return (
-    <section className="bg-white py-16 sm:py-24">
+    <section className="mx-auto max-w-7xl bg-white py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 md:px-8">
         {/* Mission Row */}
         <div className="mb-20 grid grid-cols-1 items-center gap-12 lg:mb-32 lg:grid-cols-2 lg:gap-16">

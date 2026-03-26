@@ -40,7 +40,7 @@ export const AboutUsTemplate10: React.FC<AboutUsTemplate10Props> = ({
   const primaryColor = theme.colors.primary;
 
   return (
-    <section id="about" className="bg-gray-50/50 py-16 md:py-24 lg:py-28">
+    <section id="about" className="mx-auto max-w-7xl py-16 md:py-24 lg:py-28">
       <div className="container mx-auto px-4 sm:px-6 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

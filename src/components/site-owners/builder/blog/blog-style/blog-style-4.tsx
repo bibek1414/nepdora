@@ -62,7 +62,7 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
 
   return (
     <section id="blog" className="py-16 sm:py-32">
-      <div className="mx-auto max-w-360 px-4 sm:px-6 md:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
         <motion.div
           className="mb-10 flex flex-col items-start justify-between gap-4 md:mb-16 md:flex-row md:items-end md:gap-0"
           initial={{ opacity: 0, y: 25 }}
