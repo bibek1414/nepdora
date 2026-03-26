@@ -136,7 +136,6 @@ export const defaultContactData4: ContactData = {
   title: "Get in touch",
   description:
     "Have a question about our collections or need help finding the perfect fit? We're here to help.",
-  subtitle: "Our working hours are Monday to Friday, 10 AM to 6 PM NPT.",
   contact_info: {
     email: "hello@nepglass.com",
     phone: "+977 1-4000000",
@@ -157,4 +156,3 @@ export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
   "contact-3": defaultContactData3,
   "contact-4": defaultContactData4,
 };
-

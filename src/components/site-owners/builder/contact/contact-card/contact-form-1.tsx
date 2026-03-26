@@ -157,7 +157,6 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
                 className="h-auto w-full object-contain"
                 s3Options={{
                   folder: "contact-images",
-                  
                 }}
                 disableImageChange={false}
                 showAltEditor={isEditable}
@@ -169,16 +168,6 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
           <div className="order-1 flex flex-col justify-center lg:order-none">
             <div className="mb-8 space-y-2">
               {/* Subtitle */}
-              <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gray-500 uppercase">
-                <EditableText
-                  value={subtitle}
-                  onChange={updateSubtitle}
-                  as="span"
-                  isEditable={isEditable}
-                  placeholder="CONTACT INFORMATION"
-                />
-                <Send size={12} fill="#83CD20" />
-              </div>
 
               {/* Main Title */}
               <EditableText

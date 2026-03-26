@@ -16,8 +16,10 @@ export function useCustomDomain() {
 
   // Find the first domain that is NOT a system domain (.nepdora.com or .localhost)
   const customDomain = data?.find(
-    (d) =>
-      !d.domain.endsWith(".nepdora.com") && !d.domain.endsWith(".localhost")
+    d =>
+      !d.domain.endsWith(".nepdora.com") &&
+      !d.domain.endsWith(".localhost") &&
+      !d.domain.endsWith(".nepdora.baliyoventures.com")
   );
 
   return {
