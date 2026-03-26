@@ -192,7 +192,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
 
               {/* Content on the Left */}
               <div
-                className={`relative z-50 flex h-full w-full max-w-[60%] flex-col justify-center p-8 sm:p-12 lg:p-16 ${textColorClass}`}
+                className={`relative z-20 flex h-full w-full max-w-[60%] flex-col justify-center p-8 sm:p-12 lg:p-16 ${textColorClass}`}
               >
                 {/* Main Title */}
                 <EditableText
