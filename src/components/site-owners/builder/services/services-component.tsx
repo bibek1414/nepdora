@@ -20,12 +20,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ServicesStyle1 } from "./services-style/services-style-1";
 import { ServicesStyle2 } from "./services-style/services-style-2";
-import { ServicesStyle3 } from "./services-style/services-style-3";
-import { ServicesStyle4 } from "./services-style/services-style-4";
-import { ServicesStyle5 } from "./services-style/services-style-5";
-import { ServicesStyle6 } from "./services-style/services-style-6";
-import { ServicesStyle7 } from "./services-style/services-style-7";
-import { ServicesStyle8 } from "./services-style/services-style-8";
 
 interface ServicesComponentProps {
   component: ServicesComponentData;
