@@ -1,15 +1,23 @@
-import React from "react";
-import { MapPin, Mail, ChevronRight } from "lucide-react";
-import { FooterData } from "@/types/owner-site/components/footer";
+"use client";
+
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { generateLinkHref } from "@/lib/link-utils";
+
+import {
+  FooterData,
+  FooterLink as FooterLinkType,
+} from "@/types/owner-site/components/footer";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { generateLinkHref } from "@/lib/link-utils";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { useServices } from "@/hooks/owner-site/admin/use-services";
 
 interface FooterStyle8Props {
   footerData: FooterData;
@@ -18,11 +26,13 @@ interface FooterStyle8Props {
   siteUser?: string;
 }
 
-export function FooterStyle8({
+export const FooterStyle8 = ({
   footerData,
   isEditable,
   siteUser,
-}: FooterStyle8Props) {
+}: FooterStyle8Props) => {
+  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
+  const pathname = usePathname();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -39,241 +49,250 @@ export function FooterStyle8({
     },
   };
 
-  const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
-  const pathname = usePathname();
+  // Fetch dynamic services
+  const { data: servicesResponse, isLoading: servicesLoading } = useServices({
+    page_size: 6,
+  });
 
-  // Split sections into two columns if possible
-  const section1 = data.sections[0];
-  const section2 = data.sections[1];
+  const isPreviewMode = pathname?.includes("/preview/");
+  const basePath = isPreviewMode
+    ? "/service-details-draft"
+    : "/service-details";
+
+  const dynamicServices =
+    servicesResponse?.results.map(service => ({
+      id: String(service.id),
+      text: service.title,
+      href: `${basePath}/${service.slug}`,
+    })) || [];
 
   return (
-    <footer className="border-t border-gray-800 bg-[#1A1A1A] font-sans text-white">
-      <div className="mx-auto w-full max-w-[1440px]">
-        {/* Top Section */}
-        <div className="flex flex-col lg:flex-row">
-          {/* Column 1: Brand Info */}
-          <div className="w-full border-b border-gray-800 p-8 lg:w-[40%] lg:border-r lg:border-b-0 lg:p-16">
-            <div className="mb-6 flex items-center gap-3">
+    <footer className="w-full border-t border-black/5 bg-white font-sans text-black">
+      <div className="mx-auto max-w-360 px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+          {/* Column 1: Logo & About */}
+          <motion.div
+            className="space-y-6"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center space-x-3">
               <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
-            <p className="max-w-md text-lg leading-relaxed text-gray-400">
-              {data.description}
+
+            <p className="text-sm leading-relaxed text-gray-600">
+              {data.description ||
+                "With many years of experience and expertise, we customize solutions to meet the specific needs of businesses."}
             </p>
 
-            {data.newsletter?.enabled && (
-              <div className="mt-12">
-                <h3 className="mb-6 text-lg font-medium text-white">
-                  {data.newsletter.title}
-                </h3>
-                <p className="mb-6 text-sm leading-relaxed text-gray-400">
-                  {data.newsletter.description}
+            <div className="flex gap-4">
+              {data.socialLinks.map(social => (
+                <a
+                  key={social.id}
+                  href={social.href || "#"}
+                  className="text-gray-700 transition-colors duration-200 hover:text-black"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SocialIcon platform={social.platform} className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Column 2: Dynamic Services Section */}
+          {(dynamicServices.length > 0 || servicesLoading) && (
+            <ServicesSection
+              title="Our Services"
+              services={dynamicServices}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              pathname={pathname}
+              isLoading={servicesLoading}
+            />
+          )}
+
+          {/* Column 3+: Static Sections from footer data */}
+          {data.sections?.map(section => (
+            <ServicesSection
+              key={section.id}
+              title={section.title}
+              services={section.links}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              pathname={pathname}
+            />
+          ))}
+
+          {/* Column 3: Contact Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h3 className="mb-6 text-lg font-semibold text-black">
+              Contact Info
+            </h3>
+            <div className="space-y-6 text-sm">
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-black opacity-60">
+                  Address:
                 </p>
+                <p className="max-w-[220px] leading-relaxed text-gray-600">
+                  {data.contactInfo?.address || "Location not specified"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-black opacity-60">
+                  Email:
+                </p>
+                <a
+                  href={`mailto:${data.contactInfo?.email}`}
+                  className="text-gray-600 transition-colors hover:text-black"
+                >
+                  {data.contactInfo?.email || "email@example.com"}
+                </a>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-black opacity-60">
+                  Phone:
+                </p>
+                <a
+                  href={`tel:${data.contactInfo?.phone}`}
+                  className="text-gray-600 transition-colors hover:text-black"
+                >
+                  {data.contactInfo?.phone || "Phone not specified"}
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Column 4: Newsletter */}
+          {data.newsletter?.enabled && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <h3 className="mb-6 text-lg font-semibold text-black">
+                {data.newsletter?.title || "Newsletter"}
+              </h3>
+              <p className="mb-6 text-sm leading-relaxed text-gray-600">
+                {data.newsletter?.description ||
+                  "Join our subscribers list to get latest news and special offers."}
+              </p>
+              {data.newsletter?.enabled ? (
                 <NewsletterForm isEditable={isEditable} theme={theme} />
-              </div>
-            )}
-          </div>
-
-          {/* Column 2 & 3 & 4 Container */}
-          <div className="flex w-full flex-col md:flex-row lg:w-[60%]">
-            {/* Links Columns */}
-            <div className="flex flex-1 gap-12 border-b border-gray-800 p-8 sm:gap-20 md:border-r md:border-b-0 lg:p-16">
-              {/* Quick Links (Section 1) */}
-              {section1 && (
-                <div className="flex flex-col gap-6">
-                  <h3 className="text-lg font-medium text-white">
-                    {section1.title}
-                  </h3>
-                  <ul className="space-y-4">
-                    {section1.links.map(link => (
-                      <li key={link.id}>
-                        {isEditable ? (
-                          <span className="cursor-default font-medium text-gray-400 transition-colors hover:text-white">
-                            {link.text}
-                          </span>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="font-medium text-gray-400 transition-colors hover:text-white"
-                            target={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
-                          >
-                            {link.text}
-                          </Link>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              ) : (
+                <p className="text-sm text-slate-500 italic">
+                  Newsletter is currently disabled.
+                </p>
               )}
-
-              {/* Pages (Section 2) */}
-              {section2 && (
-                <div className="flex flex-col gap-6">
-                  <h3 className="text-lg font-medium text-white">
-                    {section2.title}
-                  </h3>
-                  <ul className="space-y-4">
-                    {section2.links.map(link => (
-                      <li key={link.id}>
-                        {isEditable ? (
-                          <span className="cursor-default font-medium text-gray-400 transition-colors hover:text-white">
-                            {link.text}
-                          </span>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="font-medium text-gray-400 transition-colors hover:text-white"
-                            target={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
-                          >
-                            {link.text}
-                          </Link>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Contact Column */}
-            <div className="flex flex-1 flex-col justify-start gap-8 p-8 lg:p-16">
-              {data.contactInfo.address && (
-                <div className="flex items-start gap-4">
-                  <div className="mt-1">
-                    <MapPin className="h-6 w-6 stroke-[1.5] text-white" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-lg leading-snug font-medium text-white">
-                      {data.contactInfo.address}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-start gap-4">
-                <div className="mt-1">
-                  <Mail className="h-6 w-6 stroke-[1.5] text-white" />
-                </div>
-                <div className="flex flex-col">
-                  {data.contactInfo.email && (
-                    <a
-                      href={`mailto:${data.contactInfo.email}`}
-                      className="text-lg font-medium text-white transition-colors hover:text-gray-300"
-                    >
-                      {data.contactInfo.email}
-                    </a>
-                  )}
-                  {data.contactInfo.phone && (
-                    <a
-                      href={`tel:${data.contactInfo.phone}`}
-                      className="mt-1 text-lg font-medium text-white transition-colors hover:text-gray-300"
-                    >
-                      {data.contactInfo.phone}
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-start justify-between gap-6 border-t border-gray-800 px-8 py-8 md:flex-row md:items-center lg:px-16">
-          {/* Social Links */}
-          <div className="flex items-center gap-6 font-medium text-white">
-            {data.socialLinks.map(social => (
-              <a
-                key={social.id}
-                href={social.href || "#"}
-                className="group flex items-center gap-1 transition-colors hover:text-gray-300"
-                target={social.href?.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  social.href?.startsWith("http")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
+        <div className="flex flex-col items-center justify-between space-y-4 border-t border-black/10 pt-8 text-sm text-gray-700 md:flex-row md:space-y-0">
+          <p className="text-center md:text-left">
+            {getProcessedCopyright(data.copyright, data.companyName)}
+          </p>
+          <div className="flex space-x-6">
+            {(data.policyLinks || []).map(link => (
+              <Link
+                key={link.id}
+                href={generateLinkHref(
+                  link.href || "#",
+                  siteUser,
+                  pathname,
+                  isEditable
+                )}
+                className="transition-colors hover:text-black"
               >
-                <SocialIcon platform={social.platform} className="h-4 w-4" />
-                <span>{social.platform}</span>
-                <ChevronRight className="h-4 w-4 text-white group-hover:text-gray-300" />
-              </a>
+                {link.text}
+              </Link>
             ))}
-          </div>
-
-          {/* Copyright & Policies */}
-          <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed text-gray-300 md:items-end md:text-right md:text-base">
-            <div>
-              <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
-              <p>
-                Powered By{" "}
-                <span className="font-medium text-white">Nepdora</span>
-              </p>
-            </div>
-            {data.policyLinks && data.policyLinks.length > 0 && (
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-4 md:justify-end">
-                {data.policyLinks.map(link => (
-                  <Link
-                    key={link.id}
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    className="text-sm text-gray-400 transition-colors hover:text-white"
-                    target={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
-                  >
-                    {link.text}
-                  </Link>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+const FooterLink: React.FC<{
+  href: string;
+  children: React.ReactNode;
+  isEditable?: boolean;
+  siteUser?: string;
+  pathname: string;
+}> = ({ href, children, isEditable, siteUser, pathname }) => (
+  <li>
+    {isEditable ? (
+      <span className="block cursor-default transition-colors duration-200 hover:text-black">
+        {children}
+      </span>
+    ) : (
+      <Link
+        href={generateLinkHref(href, siteUser, pathname, isEditable)}
+        className="block transition-colors duration-200 hover:text-black"
+      >
+        {children}
+      </Link>
+    )}
+  </li>
+);
+
+const ServicesSection = ({
+  title,
+  services,
+  isEditable,
+  siteUser,
+  pathname,
+  isLoading,
+}: {
+  title: string;
+  services: FooterLinkType[];
+  isEditable?: boolean;
+  siteUser?: string;
+  pathname: string;
+  isLoading?: boolean;
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+    >
+      <h3 className="mb-6 text-lg font-semibold text-black">{title}</h3>
+      {isLoading ? (
+        <div className="flex items-center space-x-2 text-sm text-gray-500">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>Loading...</span>
+        </div>
+      ) : services.length > 0 ? (
+        <ul className="space-y-3 text-sm text-gray-600">
+          {services.map(service => (
+            <FooterLink
+              key={service.id}
+              href={service.href || "#"}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              pathname={pathname}
+            >
+              {service.text}
+            </FooterLink>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-gray-600">No services available</p>
+      )}
+    </motion.div>
+  );
+};
+
+export default FooterStyle8;

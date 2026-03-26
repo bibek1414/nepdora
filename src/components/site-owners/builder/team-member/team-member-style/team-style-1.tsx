@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
-import { TeamCard1 } from "../team-member-card/team-card-1";
+import { TeamCard5 } from "../team-member-card/team-card-5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Users } from "lucide-react";
@@ -23,7 +23,7 @@ export const TeamStyle1: React.FC<TeamStyleProps> = ({
   onUpdate,
   onMemberClick,
 }) => {
-  const { title = "Meet Our Team", subtitle } = data || {};
+  const { title = "Meet Our Team", subtitle = "Team Members" } = data || {};
   const { data: members = [], isLoading, error } = useTeamMembers();
 
   const handleTitleChange = (newTitle: string) => {
@@ -37,23 +37,22 @@ export const TeamStyle1: React.FC<TeamStyleProps> = ({
   return (
     <section className="bg-background py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
+        <div className="mb-16 text-center">
+          <EditableText
+            value={subtitle}
+            onChange={handleSubtitleChange}
+            as="p"
+            className="mb-2 text-lg font-semibold text-blue-600"
+            isEditable={isEditable}
+            placeholder="Enter subtitle..."
+          />
           <EditableText
             value={title}
             onChange={handleTitleChange}
-            as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+            as="h1"
+            className="text-5xl font-bold text-[#001a4d]"
             isEditable={isEditable}
             placeholder="Enter title..."
-          />
-          <EditableText
-            value={subtitle || ""}
-            onChange={handleSubtitleChange}
-            as="p"
-            className="text-muted-foreground mx-auto max-w-3xl text-xl"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-            multiline={true}
           />
         </div>
 
@@ -94,7 +93,7 @@ export const TeamStyle1: React.FC<TeamStyleProps> = ({
                 {isEditable && (
                   <div className="absolute inset-0 z-10 bg-transparent" />
                 )}
-                <TeamCard1 member={member} />
+                <TeamCard5 member={member} />
               </div>
             ))}
           </div>

@@ -1,9 +1,10 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Check, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Pricing } from "@/types/owner-site/admin/pricing";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { Separator } from "@/components/ui/separator";
 
 interface PricingCard1Props {
   pricing: Pricing;
@@ -21,6 +22,8 @@ export const PricingCard1: React.FC<PricingCard1Props> = ({
       primary: "#3B82F6",
       primaryForeground: "#FFFFFF",
       background: "#FFFFFF",
+      card: "#F8FAFC",
+      border: "#E2E8F0",
     },
     fonts: {
       body: "Inter",
@@ -29,50 +32,55 @@ export const PricingCard1: React.FC<PricingCard1Props> = ({
   };
 
   return (
-    <Card
-      className="relative overflow-hidden transition-all hover:shadow-lg"
-      style={{ fontFamily: theme.fonts.body }}
-    >
-      {pricing.is_popular && (
-        <Badge
-          className="absolute top-4 right-4"
-          style={{
-            backgroundColor: theme.colors.primary,
-            color: theme.colors.primaryForeground,
-          }}
-        >
-          Popular
-        </Badge>
-      )}
-      <CardContent className="p-6">
-        <h3
-          className="mb-2 text-2xl font-bold"
-          style={{ fontFamily: theme.fonts.heading }}
-        >
-          {pricing.name}
-        </h3>
-        <div className="mb-4">
-          <span className="text-4xl font-bold">
+    <div className="flex h-full flex-col overflow-hidden rounded-[2rem] border duration-300">
+      {/* Header Section */}
+      <div
+        className="py-10 text-center"
+        style={{
+          backgroundColor: `${theme.colors.primary}15`,
+        }}
+      >
+        <h3 className="text-3xl font-medium">{pricing.name}</h3>
+      </div>
+      {/* Body Section */}
+      <div className="flex h-full flex-col p-8">
+        {/* Price */}
+        <div className="mb-8 text-center">
+          <span
+            className="text-4xl font-bold"
+            style={{ color: theme.colors.primary }}
+          >
             {Number(pricing.price) === 0
               ? "Free"
               : `Rs.${Number(pricing.price).toLocaleString("en-IN")}`}
           </span>
-          <span className="text-muted-foreground">/month</span>
-        </div>
-        <p className="text-muted-foreground mb-6">{pricing.description}</p>
 
-        <ul className="mb-6 space-y-3">
-          {pricing.features.map(feature => (
-            <li key={feature.id} className="flex items-start gap-2">
+          <span
+            className="ml-1 text-xl font-medium"
+            style={{ color: theme.colors.primary }}
+          >
+            /mo
+          </span>
+        </div>
+        <Separator />
+
+        {/* Divider */}
+        <div className="mb-8 h-px w-full text-black" />
+
+        {/* Features List */}
+        <ul className="mb-10 flex-grow space-y-4 pl-2">
+          {pricing.features.map((feature, i) => (
+            <li key={i} className="flex items-center gap-3">
               <Check
-                className="mt-0.5 h-5 w-5 flex-shrink-0"
+                className="h-5 w-5"
+                strokeWidth={3}
                 style={{ color: theme.colors.primary }}
               />
-              <span>{feature.feature}</span>
+              <span className="text-base font-light">{feature.feature}</span>
             </li>
           ))}
         </ul>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

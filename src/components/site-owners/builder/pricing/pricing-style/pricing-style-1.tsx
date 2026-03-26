@@ -5,7 +5,6 @@ import { PricingCard1 } from "../pricing-card/pricing-card-1";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, DollarSign } from "lucide-react";
-import { EditableText } from "@/components/ui/editable-text";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
 
 interface PricingStyleProps {
@@ -16,12 +15,9 @@ interface PricingStyleProps {
 }
 
 export const PricingStyle1: React.FC<PricingStyleProps> = ({
-  data,
   isEditable = false,
-  onUpdate,
   onPricingClick,
 }) => {
-  const { title = "Our Pricing Plans", subtitle } = data || {};
   const { data: pricingsData, isLoading, error } = usePricings();
   const pricings = React.useMemo(() => {
     return [...(pricingsData?.results || [])].sort(
@@ -29,37 +25,9 @@ export const PricingStyle1: React.FC<PricingStyleProps> = ({
     );
   }, [pricingsData?.results]);
 
-  const handleTitleChange = (newTitle: string) => {
-    onUpdate?.({ title: newTitle });
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    onUpdate?.({ subtitle: newSubtitle });
-  };
-
   return (
     <section className="bg-background mx-auto max-w-6xl py-12 md:py-16">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            isEditable={isEditable}
-            placeholder="Enter title..."
-          />
-          <EditableText
-            value={subtitle || ""}
-            onChange={handleSubtitleChange}
-            as="p"
-            className="text-muted-foreground mx-auto max-w-3xl text-xl"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-            multiline={true}
-          />
-        </div>
-
         {isLoading && (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (

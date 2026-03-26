@@ -1,16 +1,7 @@
 export interface TeamData {
   component_id?: string;
   component_type: "team";
-  style:
-    | "team-1"
-    | "team-2"
-    | "team-3"
-    | "team-4"
-    | "team-5"
-    | "team-6"
-    | "team-7"
-    | "team-8"
-    | "team-9";
+  style: "team-1" | "team-2" | "team-3" | "team-4";
 
   title: string;
   subtitle?: string;
@@ -41,9 +32,4 @@ export const DEFAULT_TEAM_MAP: Record<TeamData["style"], TeamData> = {
   "team-2": { ...defaultTeamData, style: "team-2" },
   "team-3": { ...defaultTeamData, style: "team-3" },
   "team-4": { ...defaultTeamData, style: "team-4" },
-  "team-5": { ...defaultTeamData, style: "team-5" },
-  "team-6": { ...defaultTeamData, style: "team-6" },
-  "team-7": { ...defaultTeamData, style: "team-7" },
-  "team-8": { ...defaultTeamData, style: "team-8" },
-  "team-9": { ...defaultTeamData, style: "team-9" },
 };

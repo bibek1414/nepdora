@@ -9,13 +9,7 @@ export interface TestimonialsData {
     | "testimonial-5"
     | "testimonial-6"
     | "testimonial-7"
-    | "testimonial-8"
-    | "testimonial-9"
-    | "testimonial-10"
-    | "testimonial-11"
-    | "testimonial-12"
-    | "testimonial-13"
-    | "testimonial-14";
+    | "testimonial-8";
   title: string;
   subtitle?: string;
   page_size: number;
@@ -56,15 +50,9 @@ export const DEFAULT_TESTIMONIALS_MAP: Record<
   "testimonial-5": { ...defaultTestimonialsData, style: "testimonial-5" },
   "testimonial-6": { ...defaultTestimonialsData, style: "testimonial-6" },
   "testimonial-7": { ...defaultTestimonialsData, style: "testimonial-7" },
-  "testimonial-8": { ...defaultTestimonialsData, style: "testimonial-8" },
-  "testimonial-9": { ...defaultTestimonialsData, style: "testimonial-9" },
-  "testimonial-10": { ...defaultTestimonialsData, style: "testimonial-10" },
-  "testimonial-11": { ...defaultTestimonialsData, style: "testimonial-11" },
-  "testimonial-12": { ...defaultTestimonialsData, style: "testimonial-12" },
-  "testimonial-13": { ...defaultTestimonialsData, style: "testimonial-13" },
-  "testimonial-14": {
+  "testimonial-8": {
     ...defaultTestimonialsData,
-    style: "testimonial-14",
+    style: "testimonial-8",
     buttonText: "Get a free consultation",
     buttonLink: "#",
   },

@@ -1,29 +1,29 @@
 "use client";
 import React from "react";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
-import { ServicesCard2 } from "../services-card/services-card2";
+import { ServicesCard6 } from "../services-card/services-card6";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Briefcase } from "lucide-react";
-import { EditableText } from "@/components/ui/editable-text";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 
 interface ServicesStyleProps {
-  data: ServicesComponentData["data"];
+  component: ServicesComponentData;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<ServicesComponentData["data"]>) => void;
+  pageSlug?: string;
+  onUpdate?: (componentId: string, newData: ServicesComponentData) => void;
   onServiceClick?: (serviceSlug: string) => void;
 }
 
 export const ServicesStyle2: React.FC<ServicesStyleProps> = ({
-  data,
+  component,
   isEditable = false,
   siteUser,
+  pageSlug,
   onUpdate,
   onServiceClick,
 }) => {
-  const { title = "Latest Services", subtitle } = data || {};
   const pageSize = 6;
   const {
     data: servicesData,
@@ -35,52 +35,29 @@ export const ServicesStyle2: React.FC<ServicesStyleProps> = ({
   });
   const services = servicesData?.results || [];
 
-  const handleTitleChange = (newTitle: string) => {
-    onUpdate?.({ title: newTitle });
-  };
-
-  const handleSubtitleChange = (newSubtitle: string) => {
-    onUpdate?.({ subtitle: newSubtitle });
-  };
-
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            isEditable={isEditable}
-            placeholder="Enter title..."
-          />
-          <EditableText
-            value={subtitle || ""}
-            onChange={handleSubtitleChange}
-            as="p"
-            className="text-muted-foreground mx-auto max-w-3xl text-xl"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-            multiline={true}
-          />
-        </div>
-
-        {isLoading && (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex flex-col space-y-4">
-                <Skeleton className="h-[280px] w-full rounded-lg" />
-                <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
+    <div className="relative">
+      {isLoading && (
+        <div className="py-20">
+          <div className="container mx-auto px-4 md:px-8">
+            <div className="mb-12 flex flex-col items-end justify-between md:flex-row">
+              <div className="mb-4 md:mb-0">
+                <Skeleton className="mb-2 h-4 w-32" />
+                <Skeleton className="h-12 w-64" />
               </div>
-            ))}
+              <Skeleton className="h-10 w-32" />
+            </div>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="h-64 rounded-3xl" />
+              ))}
+            </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {error && (
+      {error && (
+        <div className="container mx-auto px-4 py-8">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading Services</AlertTitle>
@@ -90,41 +67,37 @@ export const ServicesStyle2: React.FC<ServicesStyleProps> = ({
                 : "Failed to load services."}
             </AlertDescription>
           </Alert>
-        )}
+        </div>
+      )}
 
-        {!isLoading && !error && services.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {services.slice(0, pageSize).map(service => (
-              <div
-                key={service.id}
-                className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
-                onClick={() => !isEditable && onServiceClick?.(service.slug)}
-              >
-                {isEditable && (
-                  <div className="absolute inset-0 z-10 bg-transparent" />
-                )}
-                <ServicesCard2
-                  services={service}
-                  siteUser={isEditable ? undefined : siteUser}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+      {!isLoading && !error && services.length > 0 && (
+        <div className="relative">
+          {isEditable && (
+            <div className="absolute inset-0 z-10 bg-transparent" />
+          )}
+          <ServicesCard6
+            component={component}
+            services={services.slice(0, pageSize)}
+            isEditable={isEditable}
+            siteUser={siteUser}
+            pageSlug={pageSlug}
+            onUpdate={onUpdate}
+            onServiceClick={onServiceClick}
+          />
+        </div>
+      )}
 
-        {!isLoading && !error && services.length === 0 && (
-          <div className="py-16 text-center">
-            <Briefcase className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Services Available
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-lg">
-              We&apos;re currently working on new services. Please check back
-              soon.
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
+      {!isLoading && !error && services.length === 0 && (
+        <div className="bg-muted/50 rounded-lg py-12 text-center">
+          <Briefcase className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+          <h3 className="text-foreground mb-2 text-lg font-semibold">
+            No Services Found
+          </h3>
+          <p className="text-muted-foreground">
+            Add some services to your site to display them here.
+          </p>
+        </div>
+      )}
+    </div>
   );
 };

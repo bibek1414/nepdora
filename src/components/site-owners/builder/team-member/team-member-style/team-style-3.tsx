@@ -1,10 +1,20 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
-import { TeamCard3 } from "../team-member-card/team-card-3";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { TeamCard7 } from "../team-member-card/team-card-7";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Users } from "lucide-react";
+import {
+  AlertCircle,
+  Map,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Twitter,
+  Mail,
+} from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { TeamComponentData } from "@/types/owner-site/components/team";
 
@@ -13,7 +23,6 @@ interface TeamStyleProps {
   isEditable?: boolean;
   siteUser?: string;
   onUpdate?: (updatedData: Partial<TeamComponentData["data"]>) => void;
-  onMemberClick?: (memberId: number) => void;
 }
 
 export const TeamStyle3: React.FC<TeamStyleProps> = ({
@@ -21,10 +30,28 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
   isEditable = false,
   siteUser,
   onUpdate,
-  onMemberClick,
 }) => {
-  const { title = "Meet Our Team", subtitle } = data || {};
+  const { title = "Meet Our Team", subtitle = "OUR TEAM" } = data || {};
+  const [activeMemberId, setActiveMemberId] = useState<number | null>(null);
+
   const { data: members = [], isLoading, error } = useTeamMembers();
+  const activeMember = members.find(m => m.id === activeMemberId) || members[0];
+
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -35,82 +62,150 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
   };
 
   return (
-    <section className="bg-background py-12 md:py-16">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
+    <section className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-12">
+      {/* Background decoration lines */}
+      <div className="pointer-events-none absolute top-0 left-0 h-full w-full overflow-hidden opacity-[0.03]">
+        <svg width="100%" height="100%">
+          <circle
+            cx="0%"
+            cy="50%"
+            r="40%"
+            stroke={theme.colors.primary}
+            strokeWidth="2"
+            fill="none"
+          />
+          <circle
+            cx="0%"
+            cy="50%"
+            r="50%"
+            stroke={theme.colors.primary}
+            strokeWidth="2"
+            fill="none"
+          />
+        </svg>
+      </div>
+
+      <div className="container mx-auto grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+        <div>
+          <div
+            className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase"
+            style={{ color: theme.colors.primary }}
+          >
+            <Map size={14} />
+            <EditableText
+              value={subtitle}
+              onChange={handleSubtitleChange}
+              as="span"
+              isEditable={isEditable}
+              placeholder="OUR TEAM"
+              style={{ fontFamily: theme.fonts.body }}
+            />
+          </div>
           <EditableText
             value={title}
             onChange={handleTitleChange}
             as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
+            className="mb-12 text-4xl leading-tight font-bold md:text-5xl"
             isEditable={isEditable}
-            placeholder="Enter title..."
+            placeholder="Meet Our Team"
           />
-          <EditableText
-            value={subtitle || ""}
-            onChange={handleSubtitleChange}
-            as="p"
-            className="text-muted-foreground mx-auto max-w-3xl text-xl"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-            multiline={true}
-          />
+
+          <div className="space-y-6">
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-24 w-full rounded-2xl" />
+              ))
+            ) : error ? (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>Failed to load members.</AlertDescription>
+              </Alert>
+            ) : (
+              members
+                .slice(0, 3)
+                .map(member => (
+                  <TeamCard7
+                    key={member.id}
+                    member={member}
+                    isActive={activeMember?.id === member.id}
+                    onClick={() => setActiveMemberId(member.id)}
+                  />
+                ))
+            )}
+          </div>
         </div>
 
-        {isLoading && (
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex flex-col space-y-4">
-                <Skeleton className="h-[280px] w-full rounded-lg" />
-                <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
+        <div className="relative">
+          <div className="relative h-[500px] w-full overflow-hidden rounded-[40px] bg-gray-200">
+            {activeMember ? (
+              <Image
+                src={activeMember.photo}
+                alt={activeMember.name}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-gray-400">
+                No active member
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        {error && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error Loading Team</AlertTitle>
-            <AlertDescription>
-              {error instanceof Error
-                ? error.message
-                : "Failed to load team members."}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!isLoading && !error && members.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {members.map(member => (
-              <div
-                key={member.id}
-                className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
-                onClick={() => !isEditable && onMemberClick?.(member.id)}
-              >
-                {isEditable && (
-                  <div className="absolute inset-0 z-10 bg-transparent" />
+            {/* Social Links overlay */}
+            {activeMember && (
+              <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-white/90 px-6 py-2 backdrop-blur-sm">
+                {activeMember.facebook && (
+                  <a
+                    href={activeMember.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 transition-colors hover:text-blue-600"
+                  >
+                    <Facebook size={18} />
+                  </a>
                 )}
-                <TeamCard3 member={member} />
+                {activeMember.instagram && (
+                  <a
+                    href={activeMember.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 transition-colors hover:text-pink-600"
+                  >
+                    <Instagram size={18} />
+                  </a>
+                )}
+                {activeMember.linkedin && (
+                  <a
+                    href={activeMember.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 transition-colors hover:text-blue-700"
+                  >
+                    <Linkedin size={18} />
+                  </a>
+                )}
+                {activeMember.twitter && (
+                  <a
+                    href={activeMember.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 transition-colors hover:text-black"
+                  >
+                    <Twitter size={18} />
+                  </a>
+                )}
+                {activeMember.email && (
+                  <a
+                    href={`mailto:${activeMember.email}`}
+                    className="text-gray-700 transition-colors hover:text-red-500"
+                  >
+                    <Mail size={18} />
+                  </a>
+                )}
               </div>
-            ))}
+            )}
           </div>
-        )}
-
-        {!isLoading && !error && members.length === 0 && (
-          <div className="py-16 text-center">
-            <Users className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Team Members
-            </h3>
-            <p className="text-muted-foreground">
-              Our team page is currently being updated. Please check back soon.
-            </p>
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );

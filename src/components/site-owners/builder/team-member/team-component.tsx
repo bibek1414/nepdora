@@ -22,11 +22,6 @@ import { TeamStyle1 } from "./team-member-style/team-style-1";
 import { TeamStyle2 } from "./team-member-style/team-style-2";
 import { TeamStyle3 } from "./team-member-style/team-style-3";
 import { TeamStyle4 } from "./team-member-style/team-style-4";
-import { TeamStyle5 } from "./team-member-style/team-style-5";
-import { TeamStyle6 } from "./team-member-style/team-style-6";
-import { TeamStyle7 } from "./team-member-style/team-style-7";
-import { TeamStyle8 } from "./team-member-style/team-style-8";
-import { TeamStyle9 } from "./team-member-style/team-style-9";
 
 interface TeamComponentProps {
   component: TeamComponentData;
@@ -104,19 +99,23 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       case "team-2":
         return <TeamStyle2 {...commonProps} />;
       case "team-3":
-        return <TeamStyle3 {...commonProps} />;
+        return (
+          <TeamStyle3
+            data={component.data}
+            isEditable={isEditable}
+            siteUser={siteUser}
+            onUpdate={handleUpdate}
+          />
+        );
       case "team-4":
-        return <TeamStyle4 {...commonProps} />;
-      case "team-5":
-        return <TeamStyle5 {...commonProps} />;
-      case "team-6":
-        return <TeamStyle6 {...commonProps} />;
-      case "team-7":
-        return <TeamStyle7 {...commonProps} />;
-      case "team-8":
-        return <TeamStyle8 {...commonProps} />;
-      case "team-9":
-        return <TeamStyle9 {...commonProps} />;
+        return (
+          <TeamStyle4
+            data={component.data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+            onMemberClick={commonProps.onMemberClick}
+          />
+        );
       case "team-1":
       default:
         return <TeamStyle1 {...commonProps} />;

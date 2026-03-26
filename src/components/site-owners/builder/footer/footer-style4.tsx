@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Mail, Phone, MapPin, CheckCircle, AlertCircle } from "lucide-react";
+import React from "react";
+import { MapPin, Mail, ChevronRight } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { NewsletterForm } from "./shared/newsletter-form";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
+import { NewsletterForm } from "./shared/newsletter-form";
 import { getProcessedCopyright } from "./shared/footer-utils";
 
 interface FooterStyle4Props {
@@ -23,7 +21,6 @@ interface FooterStyle4Props {
 export function FooterStyle4({
   footerData,
   isEditable,
-  onEditClick,
   siteUser,
 }: FooterStyle4Props) {
   const { data: themeResponse } = useThemeQuery();
@@ -43,189 +40,239 @@ export function FooterStyle4({
   };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
-
   const pathname = usePathname();
 
+  // Split sections into two columns if possible
+  const section1 = data.sections[0];
+  const section2 = data.sections[1];
+
   return (
-    <div className="group relative">
-      <footer
-        style={{
-          background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
-        }}
-        className="text-white"
-      >
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          {/* Main content */}
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
-            {/* Company Info */}
-            <div className="lg:col-span-2">
-              {/* Logo */}
-              <div className="mb-6">
-                <FooterLogo footerData={data} getImageUrl={getImageUrl} />
-              </div>
-
-              <p className="mb-6 text-lg leading-relaxed text-white/90">
-                {data.description}
-              </p>
-
-              {/* Contact Info */}
-              <div className="space-y-3">
-                {data.contactInfo.email && (
-                  <div className="flex items-center">
-                    <Mail className="mr-3 h-5 w-5 text-white/80" />
-                    <span className="text-white/90">
-                      {data.contactInfo.email}
-                    </span>
-                  </div>
-                )}
-                {data.contactInfo.phone && (
-                  <div className="flex items-center">
-                    <Phone className="mr-3 h-5 w-5 text-white/80" />
-                    <span className="text-white/90">
-                      {data.contactInfo.phone}
-                    </span>
-                  </div>
-                )}
-                {data.contactInfo.address && (
-                  <div className="flex items-center">
-                    <MapPin className="mr-3 h-5 w-5 text-white/80" />
-                    <span className="text-white/90">
-                      {data.contactInfo.address}
-                    </span>
-                  </div>
-                )}
-              </div>
+    <footer className="border-t border-gray-800 bg-[#1A1A1A] font-sans text-white">
+      <div className="mx-auto w-full max-w-[1440px]">
+        {/* Top Section */}
+        <div className="flex flex-col lg:flex-row">
+          {/* Column 1: Brand Info */}
+          <div className="w-full border-b border-gray-800 p-8 lg:w-[40%] lg:border-r lg:border-b-0 lg:p-16">
+            <div className="mb-6 flex items-center gap-3">
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
+            <p className="max-w-md text-lg leading-relaxed text-gray-400">
+              {data.description}
+            </p>
 
-            {/* Link Sections */}
-            {data.sections.map(section => (
-              <div key={section.id}>
-                <h4 className="mb-6 text-xl font-semibold">{section.title}</h4>
-                <ul className="space-y-3">
-                  {section.links.map(link => (
-                    <li key={link.id}>
-                      {isEditable ? (
-                        <button
-                          className="text-left text-white/80 transition-all hover:translate-x-1 hover:text-white"
-                          onClick={
-                            isEditable ? e => e.preventDefault() : undefined
-                          }
-                        >
-                          {link.text}
-                        </button>
-                      ) : (
-                        <Link
-                          href={generateLinkHref(
-                            link.href || "",
-                            siteUser,
-                            pathname,
-                            isEditable
-                          )}
-                          className="block text-white/80 transition-all hover:translate-x-1 hover:text-white"
-                          target={
-                            link.href?.startsWith("http") ||
-                            link.href?.startsWith("mailto:")
-                              ? "_blank"
-                              : undefined
-                          }
-                          rel={
-                            link.href?.startsWith("http") ||
-                            link.href?.startsWith("mailto:")
-                              ? "noopener noreferrer"
-                              : undefined
-                          }
-                        >
-                          {link.text}
-                        </Link>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+            {data.newsletter?.enabled && (
+              <div className="mt-12">
+                <h3 className="mb-6 text-lg font-medium text-white">
+                  {data.newsletter.title}
+                </h3>
+                <p className="mb-6 text-sm leading-relaxed text-gray-400">
+                  {data.newsletter.description}
+                </p>
+                <NewsletterForm isEditable={isEditable} theme={theme} />
               </div>
-            ))}
+            )}
           </div>
 
-          {/* Newsletter Section */}
-          {data.newsletter.enabled && (
-            <div className="mt-16 rounded-2xl bg-white/10 p-8 backdrop-blur-sm">
-              <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
-                <div>
-                  <h4 className="mb-3 text-2xl font-bold">
-                    {data.newsletter.title}
-                  </h4>
-                  <p className="text-lg text-white/80">
-                    {data.newsletter.description}
-                  </p>
+          {/* Column 2 & 3 & 4 Container */}
+          <div className="flex w-full flex-col md:flex-row lg:w-[60%]">
+            {/* Links Columns */}
+            <div className="flex flex-1 gap-12 border-b border-gray-800 p-8 sm:gap-20 md:border-r md:border-b-0 lg:p-16">
+              {/* Quick Links (Section 1) */}
+              {section1 && (
+                <div className="flex flex-col gap-6">
+                  <h3 className="text-lg font-medium text-white">
+                    {section1.title}
+                  </h3>
+                  <ul className="space-y-4">
+                    {section1.links.map(link => (
+                      <li key={link.id}>
+                        {isEditable ? (
+                          <span className="cursor-default font-medium text-gray-400 transition-colors hover:text-white">
+                            {link.text}
+                          </span>
+                        ) : (
+                          <Link
+                            href={generateLinkHref(
+                              link.href || "",
+                              siteUser,
+                              pathname,
+                              isEditable
+                            )}
+                            className="font-medium text-gray-400 transition-colors hover:text-white"
+                            target={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
+                          >
+                            {link.text}
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+              )}
 
-                {data.newsletter.enabled && (
-                  <NewsletterForm isEditable={isEditable} theme={theme} />
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Bottom Section */}
-          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 md:flex-row">
-            {/* Copyright */}
-            <div className="mb-4 flex flex-col items-center gap-2 md:mb-0 md:items-start">
-              <p className="text-white/80">{getProcessedCopyright(data.copyright, data.companyName)}</p>
-              {data.policyLinks && data.policyLinks.length > 0 && (
-                <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
-                  {data.policyLinks.map(link => (
-                    <Link
-                      key={link.id}
-                      href={generateLinkHref(
-                        link.href || "",
-                        siteUser,
-                        pathname,
-                        isEditable
-                      )}
-                      className="text-sm text-white/80 transition-colors hover:text-white"
-                      target={
-                        link.href?.startsWith("http") ||
-                        link.href?.startsWith("mailto:")
-                          ? "_blank"
-                          : undefined
-                      }
-                      rel={
-                        link.href?.startsWith("http") ||
-                        link.href?.startsWith("mailto:")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                      onClick={isEditable ? e => e.preventDefault() : undefined}
-                    >
-                      {link.text}
-                    </Link>
-                  ))}
+              {/* Pages (Section 2) */}
+              {section2 && (
+                <div className="flex flex-col gap-6">
+                  <h3 className="text-lg font-medium text-white">
+                    {section2.title}
+                  </h3>
+                  <ul className="space-y-4">
+                    {section2.links.map(link => (
+                      <li key={link.id}>
+                        {isEditable ? (
+                          <span className="cursor-default font-medium text-gray-400 transition-colors hover:text-white">
+                            {link.text}
+                          </span>
+                        ) : (
+                          <Link
+                            href={generateLinkHref(
+                              link.href || "",
+                              siteUser,
+                              pathname,
+                              isEditable
+                            )}
+                            className="font-medium text-gray-400 transition-colors hover:text-white"
+                            target={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
+                          >
+                            {link.text}
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
 
-            {/* Social Links */}
-            <div className="flex items-center space-x-4">
-              {data.socialLinks.map(social => (
-                <Link
-                  key={social.id}
-                  href={social.href || "#"}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
-                  target={
-                    social.href?.startsWith("http") ? "_blank" : undefined
-                  }
-                  rel={
-                    social.href?.startsWith("http")
-                      ? "noopener noreferrer"
-                      : undefined
-                  }
-                >
-                  <SocialIcon platform={social.platform} className="h-4 w-4" />
-                </Link>
-              ))}
+            {/* Contact Column */}
+            <div className="flex flex-1 flex-col justify-start gap-8 p-8 lg:p-16">
+              {data.contactInfo.address && (
+                <div className="flex items-start gap-4">
+                  <div className="mt-1">
+                    <MapPin className="h-6 w-6 stroke-[1.5] text-white" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-lg leading-snug font-medium text-white">
+                      {data.contactInfo.address}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-start gap-4">
+                <div className="mt-1">
+                  <Mail className="h-6 w-6 stroke-[1.5] text-white" />
+                </div>
+                <div className="flex flex-col">
+                  {data.contactInfo.email && (
+                    <a
+                      href={`mailto:${data.contactInfo.email}`}
+                      className="text-lg font-medium text-white transition-colors hover:text-gray-300"
+                    >
+                      {data.contactInfo.email}
+                    </a>
+                  )}
+                  {data.contactInfo.phone && (
+                    <a
+                      href={`tel:${data.contactInfo.phone}`}
+                      className="mt-1 text-lg font-medium text-white transition-colors hover:text-gray-300"
+                    >
+                      {data.contactInfo.phone}
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </footer>
-    </div>
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col items-start justify-between gap-6 border-t border-gray-800 px-8 py-8 md:flex-row md:items-center lg:px-16">
+          {/* Social Links */}
+          <div className="flex items-center gap-6 font-medium text-white">
+            {data.socialLinks.map(social => (
+              <a
+                key={social.id}
+                href={social.href || "#"}
+                className="group flex items-center gap-1 transition-colors hover:text-gray-300"
+                target={social.href?.startsWith("http") ? "_blank" : undefined}
+                rel={
+                  social.href?.startsWith("http")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
+              >
+                <SocialIcon platform={social.platform} className="h-4 w-4" />
+                <span>{social.platform}</span>
+                <ChevronRight className="h-4 w-4 text-white group-hover:text-gray-300" />
+              </a>
+            ))}
+          </div>
+
+          {/* Copyright & Policies */}
+          <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed text-gray-300 md:items-end md:text-right md:text-base">
+            <div>
+              <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
+              <p>
+                Powered By <span className="font-medium text-white">Nepdora</span>
+              </p>
+            </div>
+            {data.policyLinks && data.policyLinks.length > 0 && (
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-4 md:justify-end">
+                {data.policyLinks.map(link => (
+                  <Link
+                    key={link.id}
+                    href={generateLinkHref(
+                      link.href || "",
+                      siteUser,
+                      pathname,
+                      isEditable
+                    )}
+                    className="text-sm text-gray-400 transition-colors hover:text-white"
+                    target={
+                      link.href?.startsWith("http") ||
+                      link.href?.startsWith("mailto:")
+                        ? "_blank"
+                        : undefined
+                    }
+                    rel={
+                      link.href?.startsWith("http") ||
+                      link.href?.startsWith("mailto:")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                    onClick={isEditable ? e => e.preventDefault() : undefined}
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 }

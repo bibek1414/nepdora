@@ -107,58 +107,10 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
       case "services-2":
         return (
           <ServicesStyle2
-            data={component.data}
-            {...commonProps}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "services-3":
-        return (
-          <ServicesStyle3
-            data={component.data}
-            {...commonProps}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "services-4":
-        return (
-          <ServicesStyle4
-            data={component.data}
-            {...commonProps}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "services-5":
-        return (
-          <ServicesStyle5
-            data={component.data}
-            {...commonProps}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "services-6":
-        return (
-          <ServicesStyle6
             component={component}
             pageSlug={pageSlug}
             onUpdate={onUpdate}
             {...commonProps}
-          />
-        );
-      case "services-7":
-        return (
-          <ServicesStyle7
-            component={component}
-            {...commonProps}
-            onUpdate={handleUpdate}
-          />
-        );
-      case "services-8":
-        return (
-          <ServicesStyle8
-            data={component.data}
-            {...commonProps}
-            onUpdate={handleUpdate}
           />
         );
       case "services-1":

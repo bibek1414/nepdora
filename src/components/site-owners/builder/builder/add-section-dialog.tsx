@@ -361,17 +361,17 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     products: [
       {
         id: "product-1",
-        name: "Product Grid 1",
+        name: "Product Style 1",
         image: "/images/site-owners/products/product1.png",
       },
       {
         id: "product-2",
-        name: "Product Grid 2",
+        name: "Product Style 2",
         image: "/images/site-owners/products/product2.png",
       },
       {
         id: "product-3",
-        name: "Product List",
+        name: "Product Style 3",
         image: "/images/site-owners/products/product3.png",
       },
       {
@@ -383,46 +383,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "product-5",
         name: "Product Style 5",
         image: "/images/site-owners/products/product5.png",
-      },
-      {
-        id: "product-6",
-        name: "Product Style 6",
-        image: "/images/site-owners/products/product6.png",
-      },
-      {
-        id: "product-7",
-        name: "Product Grid 7",
-        image: "/images/site-owners/products/product7.png",
-      },
-      {
-        id: "product-8",
-        name: "Product Grid 8",
-        image: "/images/site-owners/products/product8.png",
-      },
-      {
-        id: "product-9",
-        name: "Featured Collection",
-        image: "/images/site-owners/products/product9.png",
-      },
-      {
-        id: "product-10",
-        name: "Best Sellers",
-        image: "/images/site-owners/products/product10.png",
-      },
-      {
-        id: "product-11",
-        name: "Featured Collections",
-        image: "/images/site-owners/products/product11.png",
-      },
-      {
-        id: "product-12",
-        name: "Featured Collections",
-        image: "/images/site-owners/products/product12.png",
-      },
-      {
-        id: "product-13",
-        name: "Product Style 13",
-        image: "/images/site-owners/products/product13.png",
       },
     ],
     product_details: [
@@ -576,38 +536,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       },
       {
         id: "services-2",
-        name: "Services Grid 2",
+        name: "Services Style 2",
         image: "/images/site-owners/services/services-2.png",
-      },
-      {
-        id: "services-3",
-        name: "Services List",
-        image: "/images/site-owners/services/services-3.png",
-      },
-      {
-        id: "services-4",
-        name: "Services Style 4",
-        image: "/images/site-owners/services/services-4.png",
-      },
-      {
-        id: "services-5",
-        name: "Services Style 5",
-        image: "/images/site-owners/services/services-5.png",
-      },
-      {
-        id: "services-6",
-        name: "Services Style 6",
-        image: "/images/site-owners/services/services-6.png",
-      },
-      {
-        id: "services-7",
-        name: "Services Style 7",
-        image: "/images/site-owners/services/services-7.png",
-      },
-      {
-        id: "services-8",
-        name: "Services Style 8",
-        image: "/images/site-owners/services/services-1.png",
       },
     ],
     contact: [
@@ -635,17 +565,17 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     testimonials: [
       {
         id: "testimonial-1",
-        name: "Testimonials Grid",
+        name: "Testimonials Style 1",
         image: "/images/site-owners/testimonials/testimonial1.png",
       },
       {
         id: "testimonial-2",
-        name: "Testimonials Carousel",
+        name: "Testimonials Style 2",
         image: "/images/site-owners/testimonials/testimonial2.png",
       },
       {
         id: "testimonial-3",
-        name: "Testimonials Cards",
+        name: "Testimonials Style 3",
         image: "/images/site-owners/testimonials/testimonial3.png",
       },
       {
@@ -658,97 +588,27 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Testimonials Style 5",
         image: "/images/site-owners/testimonials/testimonial5.png",
       },
-      {
-        id: "testimonial-6",
-        name: "Testimonials Style 6",
-        image: "/images/site-owners/testimonials/testimonial6.png",
-      },
-      {
-        id: "testimonial-7",
-        name: "Testimonials Style 7",
-        image: "/images/site-owners/testimonials/testimonial7.png",
-      },
-      {
-        id: "testimonial-8",
-        name: "Testimonials Style 8",
-        image: "/images/site-owners/testimonials/testimonial8.png",
-      },
-      {
-        id: "testimonial-9",
-        name: "Testimonials Style 9",
-        image: "/images/site-owners/testimonials/testimonial9.png",
-      },
-      {
-        id: "testimonial-10",
-        name: "Testimonials Style 10",
-        image: "/images/site-owners/testimonials/testimonial10.png",
-      },
-      {
-        id: "testimonial-11",
-        name: "Testimonials Style 11",
-        image: "/images/site-owners/testimonials/testimonial11.png",
-      },
-      {
-        id: "testimonial-12",
-        name: "Testimonials Style 12",
-        image: "/images/site-owners/testimonials/testimonial12.png",
-      },
-      {
-        id: "testimonial-13",
-        name: "Testimonials Style 13",
-        image: "/images/site-owners/testimonials/testimonial13.png",
-      },
-      {
-        id: "testimonial-14",
-        name: "Testimonials Style 14",
-        image: "/images/site-owners/testimonials/testimonial14.png",
-      },
     ],
     team: [
       {
         id: "team-1",
-        name: "Team Grid",
+        name: "Team Style 1",
         image: "/images/site-owners/team/team1.png",
       },
       {
         id: "team-2",
-        name: "Team Cards",
+        name: "Team Style 2",
         image: "/images/site-owners/team/team2.png",
       },
       {
         id: "team-3",
-        name: "Team List",
+        name: "Team Style 3",
         image: "/images/site-owners/team/team3.png",
       },
       {
         id: "team-4",
         name: "Team Style 4",
         image: "/images/site-owners/team/team4.png",
-      },
-      {
-        id: "team-5",
-        name: "Team Style 5",
-        image: "/images/site-owners/team/team5.png",
-      },
-      {
-        id: "team-6",
-        name: "Team Style 6",
-        image: "/images/site-owners/team/team6.png",
-      },
-      {
-        id: "team-7",
-        name: "Team Style 7",
-        image: "/images/site-owners/team/team7.png",
-      },
-      {
-        id: "team-8",
-        name: "Team Style 8",
-        image: "/images/site-owners/team/team8.png",
-      },
-      {
-        id: "team-9",
-        name: "Team Style 9",
-        image: "/images/site-owners/team/team8.png",
       },
     ],
     gallery: [
@@ -913,21 +773,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Pricing Style 2",
         image: "/images/site-owners/pricing/pricing2.png",
       },
-      {
-        id: "pricing-3",
-        name: "Pricing Style 3",
-        image: "/images/site-owners/pricing/pricing3.png",
-      },
-      {
-        id: "pricing-4",
-        name: "Pricing Style 4",
-        image: "/images/site-owners/pricing/pricing4.png",
-      },
-      {
-        id: "pricing-5",
-        name: "Pricing Style 5",
-        image: "/images/site-owners/pricing/pricing1.png",
-      },
     ],
     text_editor: [
       {
@@ -1056,32 +901,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Footer Style 8",
         image: "/images/site-owners/footers/footer8.png",
         description: "Footer with social media links",
-      },
-      {
-        id: "footer-9",
-        name: "Footer Style 9",
-        image: "/images/site-owners/footers/footer9.png",
-        description: "Dark footer with student services and policy links",
-      },
-      {
-        id: "footer-10",
-        name: "Footer Style 10",
-        image: "/images/site-owners/footers/footer10.png",
-        description: "Footer with social media links",
-      },
-      {
-        id: "footer-11",
-        name: "Footer Style 11",
-        image: "/images/site-owners/footers/footer11.png",
-        description: "Footer with social media links",
-        showForWebsiteTypes: ["ecommerce"],
-      },
-      {
-        id: "footer-12",
-        name: "Footer Style 12",
-        image: "/images/site-owners/footers/footer12.png",
-        description: "Footer with social media links",
-        showForWebsiteTypes: ["service"],
       },
     ],
     login_form: [

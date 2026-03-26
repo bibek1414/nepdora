@@ -1,15 +1,11 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Mail, Phone, MapPin, Heart } from "lucide-react";
+import React from "react";
+import { ChevronRight } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { useDeleteFooterMutation } from "@/hooks/owner-site/components/use-footer";
-import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import Link from "next/link";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
-import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
@@ -22,10 +18,53 @@ interface FooterStyle5Props {
   siteUser?: string;
 }
 
+// Helper component for column headers
+const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => (
+  <h3 className="mb-6 text-2xl font-bold tracking-wide text-white uppercase">
+    {children}
+  </h3>
+);
+
+// Helper component for list items
+const LinkItem: React.FC<{
+  label: string;
+  href: string;
+  isEditable?: boolean;
+  siteUser?: string;
+}> = ({ label, href, isEditable, siteUser }) => {
+  const pathname = usePathname();
+
+  return (
+    <li className="mb-3">
+      {isEditable ? (
+        <span className="group flex cursor-default items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white">
+          <ChevronRight
+            size={16}
+            className="mr-2 text-gray-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-white"
+          />
+          {label}
+        </span>
+      ) : (
+        <Link
+          href={generateLinkHref(href, siteUser, pathname, isEditable)}
+          className="group flex items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white"
+        >
+          <ChevronRight
+            size={16}
+            className="mr-2 text-gray-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-white"
+          />
+          {label}
+        </Link>
+      )}
+    </li>
+  );
+};
+
 export function FooterStyle5({
   footerData,
   isEditable,
-  onEditClick,
   siteUser,
 }: FooterStyle5Props) {
   const { data: themeResponse } = useThemeQuery();
@@ -45,198 +84,186 @@ export function FooterStyle5({
   };
 
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
-
   const pathname = usePathname();
 
-  // Get available sections, fallback to creating sections if none exist
-  const availableSections =
-    data.sections.length > 0
-      ? data.sections
-      : [{ id: "default", title: "Quick Links", links: [] }];
+  // Map sections to specific columns
+  const studentServices = data.sections[0];
+  const aboutLinks = data.sections[1];
+  const quickLinks = data.sections[2];
 
-  const sectionsToShow = availableSections.slice(0, 3);
+  // Default policy links if not provided
+  const policyLinks = data.policyLinks || [
+    { id: "p1", text: "Privacy Policy", href: "#" },
+    { id: "p2", text: "Terms & Conditions", href: "#" },
+    { id: "p3", text: "Code of Conduct", href: "#" },
+  ];
 
   return (
-    <div className="group relative">
-      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {/* Company Info - Takes 2 columns on large screens */}
-            <div className="lg:col-span-2">
-              {/* Logo */}
-              <div className="mb-4">
-                <FooterLogo footerData={data} getImageUrl={getImageUrl} />
-              </div>
+    <footer className="relative overflow-hidden bg-[#0b1221] pt-16 pb-8 font-sans text-white">
+      {/* Subtle Background Elements to mimic the bridge/cityscape watermark */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="50" />
+            </filter>
+          </defs>
+          <path d="M0 600 L100 500 L200 550 L300 450 L500 600 Z" fill="white" />
+          <circle cx="80%" cy="40%" r="300" fill="white" filter="url(#blur)" />
+        </svg>
+      </div>
 
-              <p className="text-text-light dark:text-text-dark mb-6 max-w-md">
-                {data.description}
-              </p>
+      <div className="relative z-10 container mx-auto px-6 lg:px-12">
+        {/* Main Grid Content */}
+        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+          {/* Column 1: Student Services (Span 4) */}
+          <div className="lg:col-span-4">
+            {studentServices && (
+              <>
+                <ColumnHeader>{studentServices.title}</ColumnHeader>
+                <ul className="space-y-1">
+                  {studentServices.links.map(link => (
+                    <LinkItem
+                      key={link.id}
+                      label={link.text}
+                      href={link.href || "#"}
+                      isEditable={isEditable}
+                      siteUser={siteUser}
+                    />
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
 
-              {/* Contact Info */}
-              <div className="mb-6 space-y-2">
-                {data.contactInfo.email && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
-                    <Mail className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.email}</span>
-                  </div>
-                )}
-                {data.contactInfo.phone && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
-                    <Phone className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.phone}</span>
-                  </div>
-                )}
-                {data.contactInfo.address && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.address}</span>
-                  </div>
-                )}
-              </div>
+          {/* Column 2: About (Span 2) */}
+          <div className="lg:col-span-2">
+            {aboutLinks && (
+              <>
+                <ColumnHeader>{aboutLinks.title}</ColumnHeader>
+                <ul className="space-y-1">
+                  {aboutLinks.links.map(link => (
+                    <LinkItem
+                      key={link.id}
+                      label={link.text}
+                      href={link.href || "#"}
+                      isEditable={isEditable}
+                      siteUser={siteUser}
+                    />
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
 
-              {/* Social Links - Horizontal Layout */}
-              <div>
-                <h4 className="text-heading-light dark:text-heading-dark mb-3 font-semibold">
-                  Follow Us
-                </h4>
-                {data.socialLinks.length > 0 ? (
-                  <div className="flex flex-wrap gap-3">
-                    {data.socialLinks.map(social => (
-                      <Link
-                        key={social.id}
-                        href={social.href || "#"}
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
-                        target={
-                          social.href?.startsWith("http") ? "_blank" : undefined
-                        }
-                        rel={
-                          social.href?.startsWith("http")
-                            ? "noopener noreferrer"
-                            : undefined
-                        }
-                      >
-                        <SocialIcon
-                          platform={social.platform}
-                          className="h-5 w-5"
-                        />
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-text-light dark:text-text-dark text-sm opacity-60">
-                    No social links available
-                  </p>
-                )}
-              </div>
+          {/* Column 3: Quick Links (Span 3) */}
+          <div className="lg:col-span-3">
+            {quickLinks && (
+              <>
+                <ColumnHeader>{quickLinks.title}</ColumnHeader>
+                <ul className="space-y-1">
+                  {quickLinks.links.map(link => (
+                    <LinkItem
+                      key={link.id}
+                      label={link.text}
+                      href={link.href || "#"}
+                      isEditable={isEditable}
+                      siteUser={siteUser}
+                    />
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+
+          {/* Column 4: Socials & Logo (Span 3) */}
+          <div className="flex flex-col items-start space-y-8 lg:col-span-3 lg:items-end">
+            {/* Social Icons */}
+            <div className="flex gap-3">
+              {data.socialLinks.map(social => (
+                <a
+                  key={social.id}
+                  href={social.href || "#"}
+                  className="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition-all duration-300 hover:border-white hover:bg-white hover:text-[#0b1221]"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SocialIcon
+                    platform={social.platform}
+                    className="h-[18px] w-[18px]"
+                  />
+                </a>
+              ))}
             </div>
 
-            {/* Render the first 3 sections */}
-            {sectionsToShow
-              .filter(section => section.links.length > 0)
-              .map(section => (
-                <div key={section.id} className="col-span-1">
-                  <h3 className="text-heading-light dark:text-heading-dark mb-4 font-bold">
-                    {section.title}
-                  </h3>
+            {/* Logo */}
+            <div className="mt-4 cursor-pointer opacity-90 transition-opacity hover:opacity-100">
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+            </div>
 
-                  <ul className="space-y-3">
-                    {section.links.map(link => (
-                      <li key={link.id}>
-                        {isEditable ? (
-                          <button
-                            className="text-text-light dark:text-text-dark hover:text-primary text-left transition-colors dark:hover:text-white"
-                            onClick={
-                              isEditable ? e => e.preventDefault() : undefined
-                            }
-                          >
-                            {link.text}
-                          </button>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white"
-                            target={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
-                          >
-                            {link.text}
-                          </Link>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            {/* Newsletter Section */}
-            {data.newsletter?.enabled && (
-              <div className="mt-12 border-t border-gray-300 pt-8 dark:border-gray-700">
-                <div className="mx-auto max-w-md text-center">
-                  <h4 className="text-heading-light dark:text-heading-dark mb-2 font-semibold">
-                    {data.newsletter.title}
-                  </h4>
-                  <p className="text-text-light dark:text-text-dark mb-4 text-sm">
-                    {data.newsletter.description}
-                  </p>
-                  <NewsletterForm isEditable={isEditable} theme={theme} />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Copyright */}
-          <div className="mx-auto mt-12 flex flex-col items-center gap-4 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
-            <p className="text-text-light dark:text-text-dark flex items-center justify-center gap-1 text-sm">
-              {getProcessedCopyright(data.copyright, data.companyName)}
-              <Heart className="inline h-3 w-3 text-red-500" />
-            </p>
-            {data.policyLinks && data.policyLinks.length > 0 && (
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                {data.policyLinks.map(link => (
-                  <Link
-                    key={link.id}
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    className="text-text-light dark:text-text-dark hover:text-primary text-sm transition-colors"
-                    target={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
-                  >
-                    {link.text}
-                  </Link>
-                ))}
-              </div>
-            )}
+            {/* Decorative bottom graphic hint */}
+            <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-linear-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
           </div>
         </div>
-      </footer>
-    </div>
+
+        {/* Newsletter Section */}
+        {data.newsletter?.enabled && (
+          <div className="mb-12 border-t border-gray-800 pt-12">
+            <div className="mx-auto max-w-md text-center">
+              <h3 className="mb-4 text-xl font-bold tracking-wide text-white uppercase">
+                {data.newsletter.title}
+              </h3>
+              <p className="mb-6 text-sm text-gray-400">
+                {data.newsletter.description}
+              </p>
+              <NewsletterForm isEditable={isEditable} theme={theme} />
+            </div>
+          </div>
+        )}
+
+        {/* Separator */}
+        <div className="mb-8 h-px w-full bg-gray-800" />
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-400 md:flex-row">
+          {/* Left: Copyright */}
+          <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
+            <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
+            <p>Powered By Nepdora</p>
+          </div>
+
+          {/* Right: Policy Links */}
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 md:justify-end">
+            {policyLinks.map(link => (
+              <Link
+                key={link.id}
+                href={generateLinkHref(
+                  link.href || "",
+                  siteUser,
+                  pathname,
+                  isEditable
+                )}
+                className="transition-colors hover:text-white"
+                target={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "_blank"
+                    : undefined
+                }
+                rel={
+                  link.href?.startsWith("http") ||
+                  link.href?.startsWith("mailto:")
+                    ? "noopener noreferrer"
+                    : undefined
+                }
+                onClick={isEditable ? e => e.preventDefault() : undefined}
+              >
+                {link.text}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 }

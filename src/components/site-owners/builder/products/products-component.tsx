@@ -27,26 +27,22 @@ import { ProductsStyle6 } from "./products-style/products-style-6";
 import { ProductsStyle7 } from "./products-style/products-style-7";
 import { ProductsStyle8 } from "./products-style/products-style-8";
 import { ProductsStyle9 } from "./products-style/products-style-9";
-import { ProductsStyle10 } from "./products-style/products-style-10";
-import { ProductsStyle11 } from "./products-style/products-style-11";
-import { ProductsStyle12 } from "./products-style/products-style-12";
-import { ProductsStyle13 } from "./products-style/products-style-13";
 
 interface ProductsComponentProps {
   component: ProductsComponentData;
   isEditable?: boolean;
-  siteUser?: string;
   pageSlug?: string;
+  siteUser?: string;
   onUpdate?: (componentId: string, newData: ProductsComponentData) => void;
-  onProductClick?: (productSlug: string, order: number) => void;
+  onProductClick?: (productslug: string, order: number) => void;
   onReplace?: (componentId: string) => void;
 }
 
 export const ProductsComponent: React.FC<ProductsComponentProps> = ({
   component,
   isEditable = false,
-  siteUser,
   pageSlug,
+  siteUser,
   onUpdate,
   onProductClick,
   onReplace,
@@ -99,9 +95,9 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
       isEditable,
       siteUser,
       onUpdate: handleUpdate,
-      onProductClick: (productSlug: string) => {
+      onProductClick: (productslug: string) => {
         if (onProductClick && component.order !== undefined) {
-          onProductClick(productSlug, component.order);
+          onProductClick(productslug, component.order);
         }
       },
     };
@@ -115,22 +111,6 @@ export const ProductsComponent: React.FC<ProductsComponentProps> = ({
         return <ProductsStyle4 {...commonProps} />;
       case "product-5":
         return <ProductsStyle5 {...commonProps} />;
-      case "product-6":
-        return <ProductsStyle6 {...commonProps} />;
-      case "product-7":
-        return <ProductsStyle7 {...commonProps} />;
-      case "product-8":
-        return <ProductsStyle8 {...commonProps} />;
-      case "product-9":
-        return <ProductsStyle9 {...commonProps} />;
-      case "product-10":
-        return <ProductsStyle10 {...commonProps} />;
-      case "product-11":
-        return <ProductsStyle11 {...commonProps} />;
-      case "product-12":
-        return <ProductsStyle12 {...commonProps} />;
-      case "product-13":
-        return <ProductsStyle13 {...commonProps} />;
       case "product-1":
       default:
         return <ProductsStyle1 {...commonProps} />;

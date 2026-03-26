@@ -1,13 +1,14 @@
 "use client";
+
 import React from "react";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
-import ProductCard8 from "../products-card/product-card8";
-import { EditableText } from "@/components/ui/editable-text";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ProductCard11 } from "../products-card/product-card11";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, ShoppingBag } from "lucide-react";
+import { AlertCircle, ChevronRight, ShoppingBag } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { EditableLink } from "@/components/ui/editable-link";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
@@ -25,118 +26,125 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
   onProductClick,
 }) => {
   const {
-    title = "Our Products",
-    subtitle,
+    title = "New Arrivals",
+    subtitle = "Discover the latest additions to our collection",
     categoryId,
-    subCategoryId,
+    buttonText = "View All Products",
+    buttonLink = "/products",
   } = data || {};
+
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
-    fonts: {
-      heading: "Inter",
-      body: "Inter",
+    colors: {
+      primary: "#111827",
+      secondary: "#6B7280",
+      background: "#FFFFFF",
     },
   };
+
   const {
     data: productsData,
     isLoading,
     error,
   } = useProducts({
     category_id: categoryId,
-    sub_category_id: subCategoryId,
+    page_size: 4,
   });
+
   const products = productsData?.results || [];
 
-  const handleTitleChange = (newTitle: string) => {
-    onUpdate?.({ title: newTitle });
-  };
+  const handleUpdate =
+    (field: keyof ProductsComponentData["data"]) => (value: string | any) => {
+      onUpdate?.({ [field]: value });
+    };
 
-  const handleSubtitleChange = (newSubtitle: string) => {
-    onUpdate?.({ subtitle: newSubtitle });
+  const handleLinkChange = (newText: string, newLink: string) => {
+    onUpdate?.({ buttonText: newText, buttonLink: newLink });
   };
 
   return (
-    <div className="relative">
-      {isLoading && (
-        <div className="py-12 text-center">
-          <Skeleton className="mx-auto h-[400px] w-full max-w-7xl rounded-xl" />
-        </div>
-      )}
+    <section className="border-b border-gray-50 bg-white py-12 last:border-0 md:py-20">
+      <div className="container mx-auto max-w-7xl px-4">
+        {/* Header Section */}
+        <div className="mb-8 flex flex-col items-start justify-between gap-4 md:mb-12 md:flex-row md:items-end md:gap-6">
+          <div>
+            <EditableText
+              value={subtitle}
+              onChange={handleUpdate("subtitle")}
+              as="span"
+              isEditable={isEditable}
+            />
 
-      {error && (
-        <div className="container mx-auto px-4 py-8">
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error Loading Products</AlertTitle>
-            <AlertDescription>
-              {error instanceof Error
-                ? error.message
-                : "Failed to load products."}
-            </AlertDescription>
-          </Alert>
-        </div>
-      )}
-
-      {!isLoading && !error && products.length > 0 && (
-        <div className="container mx-auto max-w-7xl px-4 py-12">
-          <div className="mb-8 text-center">
             <EditableText
               value={title}
-              onChange={handleTitleChange}
-              as="h2"
-              className="mb-4 text-center text-2xl font-bold"
-              style={{ fontFamily: theme.fonts.heading }}
+              onChange={handleUpdate("title")}
+              as="h4"
+              style={{ color: theme.colors.primary }}
               isEditable={isEditable}
-              placeholder="Enter title..."
-            />
-            <EditableText
-              value={subtitle || ""}
-              onChange={handleSubtitleChange}
-              as="p"
-              className="text-muted-foreground mx-auto max-w-3xl text-center"
-              style={{ fontFamily: theme.fonts.body }}
-              isEditable={isEditable}
-              placeholder="Enter subtitle..."
-              multiline={true}
             />
           </div>
 
-          <div className="flex gap-6 overflow-x-auto px-4">
-            {products.map(product => (
-              <div key={product.id} className="shrink-0">
-                <div
-                  className="relative transform cursor-pointer transition-transform duration-200"
-                  onClick={() =>
-                    !isEditable && onProductClick?.(product.slug || "")
-                  }
-                >
-                  {isEditable && (
-                    <div className="absolute inset-0 z-10 bg-transparent" />
-                  )}
-                  <ProductCard8
-                    product={product}
-                    siteUser={isEditable ? undefined : siteUser}
-                  />
-                </div>
+          <EditableLink
+            href={buttonLink}
+            text={buttonText}
+            onChange={handleLinkChange}
+            isEditable={isEditable}
+            siteUser={siteUser}
+            className="group flex items-center gap-2 text-sm font-bold transition-colors hover:opacity-80 md:text-base"
+            style={{ color: theme.colors.primary }}
+          >
+            {buttonText || "View All Products"}
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1 md:h-5 md:w-5" />
+          </EditableLink>
+        </div>
+
+        {/* Product Grid - 2 columns on mobile, 4 on desktop */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 lg:grid-cols-4">
+          {isLoading &&
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-[280px] animate-pulse rounded-2xl bg-gray-100 md:h-[420px]"
+              />
+            ))}
+
+          {error && (
+            <div className="col-span-2 lg:col-span-4">
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error Loading Products</AlertTitle>
+                <AlertDescription>Failed to load products.</AlertDescription>
+              </Alert>
+            </div>
+          )}
+
+          {!isLoading &&
+            !error &&
+            products.map(product => (
+              <div
+                key={product.id}
+                onClick={() =>
+                  !isEditable && onProductClick?.(product.slug || "")
+                }
+                className={isEditable ? "" : "cursor-pointer"}
+              >
+                <ProductCard11
+                  product={product}
+                  siteUser={isEditable ? undefined : siteUser}
+                />
               </div>
             ))}
-          </div>
-        </div>
-      )}
 
-      {!isLoading && !error && products.length === 0 && (
-        <div className="bg-muted/50 rounded-lg py-12 text-center">
-          <ShoppingBag className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-          <h3 className="text-foreground mb-2 text-lg font-semibold">
-            No Products Found
-          </h3>
-          <p className="text-muted-foreground">
-            Add some products to your inventory to display them here.
-          </p>
+          {!isLoading && !error && products.length === 0 && (
+            <div className="col-span-2 rounded-3xl border-2 border-dashed border-neutral-200 py-20 text-center lg:col-span-4">
+              <ShoppingBag className="mx-auto mb-6 h-12 w-12 text-neutral-200" />
+              <h3 className="text-lg font-bold text-neutral-400">
+                No Products Found
+              </h3>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+    </section>
   );
 };
-
-export default ProductsStyle8;

@@ -9,12 +9,7 @@ export interface ProductsData {
     | "product-6"
     | "product-7"
     | "product-8"
-    | "product-9"
-    | "product-10"
-    | "product-10"
-    | "product-11"
-    | "product-12"
-    | "product-13";
+    | "product-9";
 
   title: string;
   subtitle?: string;
@@ -49,37 +44,33 @@ export const DEFAULT_PRODUCTS_MAP: Record<ProductsData["style"], ProductsData> =
     "product-2": { ...defaultProductsData, style: "product-2" },
     "product-3": { ...defaultProductsData, style: "product-3" },
     "product-4": { ...defaultProductsData, style: "product-4" },
-    "product-5": { ...defaultProductsData, style: "product-5" },
-    "product-6": { ...defaultProductsData, style: "product-6" },
-    "product-7": { ...defaultProductsData, style: "product-7" },
-    "product-8": { ...defaultProductsData, style: "product-8" },
-    "product-9": {
+    "product-5": {
       ...defaultProductsData,
-      style: "product-9",
+      style: "product-5",
       title: "Featured Collection",
     },
-    "product-10": {
+    "product-6": {
       ...defaultProductsData,
-      style: "product-10",
+      style: "product-6",
       title: "Best Selling",
     },
-    "product-11": {
+    "product-7": {
       ...defaultProductsData,
-      style: "product-11",
+      style: "product-7",
       title: "Featured Collections",
       subtitle: "Top sale on this week",
     },
-    "product-12": {
+    "product-8": {
       ...defaultProductsData,
-      style: "product-12",
+      style: "product-8",
       title: "New Arrivals",
       subtitle: "Discover the latest additions to our collection",
       buttonText: "View All Products",
       buttonLink: "/products",
     },
-    "product-13": {
+    "product-9": {
       ...defaultProductsData,
-      style: "product-13",
+      style: "product-9",
       title: "Featured Products",
     },
   };

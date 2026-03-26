@@ -198,14 +198,6 @@ export function Footer({
         return FooterStyle7;
       case "style-8":
         return FooterStyle8;
-      case "style-9":
-        return FooterStyle9;
-      case "style-10":
-        return FooterStyle10;
-      case "style-11":
-        return FooterStyle11;
-      case "style-12":
-        return FooterStyle12;
       default:
         return FooterStyle1;
     }

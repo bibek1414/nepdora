@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Heart,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
+import { Mail, Phone, Heart, CheckCircle, AlertCircle } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { NewsletterForm } from "./shared/newsletter-form";
@@ -53,81 +46,33 @@ export function FooterStyle1({
 
   const pathname = usePathname();
 
+  // Get the first three sections for the grid layout
+  const mainSections = data.sections.slice(0, 3);
+
   return (
     <div className="group relative">
-      <footer className="bg-background border-t">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {/* Company Info */}
-            <div className="lg:col-span-2">
-              {/* Logo */}
-              <div className="mb-4">
-                <FooterLogo footerData={data} getImageUrl={getImageUrl} />
-              </div>
-
-              <p className="text-muted-foreground mb-6 max-w-md">
-                {data.description}
-              </p>
-
-              {/* Contact Info */}
-              <div className="mb-6 space-y-2">
-                {data.contactInfo.email && (
-                  <div className="text-muted-foreground flex items-center">
-                    <Mail className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.email}</span>
-                  </div>
-                )}
-                {data.contactInfo.phone && (
-                  <div className="text-muted-foreground flex items-center">
-                    <Phone className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.phone}</span>
-                  </div>
-                )}
-                {data.contactInfo.address && (
-                  <div className="text-muted-foreground flex items-center">
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.address}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Social Links */}
-              <div className="flex space-x-4">
-                {data.socialLinks.map(social => (
-                  <Link
-                    key={social.id}
-                    href={social.href || "#"}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
-                    target={
-                      social.href?.startsWith("http") ? "_blank" : undefined
-                    }
-                    rel={
-                      social.href?.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                  >
-                    <SocialIcon
-                      platform={social.platform}
-                      className="h-4 w-4"
-                    />
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Link Sections */}
-            {data.sections.map(section => (
-              <div key={section.id}>
-                <h4 className="text-foreground mb-4 font-semibold">
+      <footer
+        style={{
+          background: theme.colors.primary,
+          fontFamily: theme.fonts.heading,
+        }}
+        className="px-4 py-16 text-gray-100 sm:px-6 lg:px-8"
+      >
+        <div className="mx-auto max-w-7xl">
+          {/* Footer links grid */}
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+            {/* Info Section */}
+            {mainSections.map((section, index) => (
+              <div key={section.id} className="col-span-1">
+                <h3 className="mb-4 text-xl font-semibold text-white">
                   {section.title}
-                </h4>
+                </h3>
                 <ul className="space-y-2">
                   {section.links.map(link => (
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-muted-foreground hover:text-foreground text-left text-sm transition-colors"
+                          className="text-left text-white/80 transition-colors hover:text-white"
                           onClick={
                             isEditable ? e => e.preventDefault() : undefined
                           }
@@ -142,7 +87,7 @@ export function FooterStyle1({
                             pathname,
                             isEditable
                           )}
-                          className="text-muted-foreground hover:text-foreground block text-left text-sm transition-colors"
+                          className="block text-white/80 transition-colors hover:text-white"
                           target={
                             link.href?.startsWith("http") ||
                             link.href?.startsWith("mailto:")
@@ -164,60 +109,87 @@ export function FooterStyle1({
                 </ul>
               </div>
             ))}
-          </div>
 
-          {/* Newsletter */}
-          {data.newsletter.enabled && (
-            <div className="border-border mt-12 border-t pt-8">
-              <div className="mx-auto max-w-md text-center">
-                <h4 className="text-foreground mb-2 font-semibold">
+            {/* Newsletter Section */}
+            {data.newsletter.enabled && (
+              <div className="col-span-2 lg:col-span-2">
+                <h3 className="mb-4 text-xl font-semibold text-white">
                   {data.newsletter.title}
-                </h4>
-                <p className="text-muted-foreground mb-4 text-sm">
+                </h3>
+                <p className="mb-4 text-sm text-white/80">
                   {data.newsletter.description}
                 </p>
-                <NewsletterForm isEditable={isEditable} theme={theme} />
-              </div>
-            </div>
-          )}
 
-          {/* Copyright */}
-          <div className="border-border mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
-            <p className="text-muted-foreground flex items-center justify-center gap-1 text-sm">
-              {getProcessedCopyright(data.copyright, data.companyName)}
-              <Heart className="inline h-3 w-3 text-red-500" />
-            </p>
-            {data.policyLinks && data.policyLinks.length > 0 && (
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                {data.policyLinks.map(link => (
-                  <Link
-                    key={link.id}
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-                    target={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
-                  >
-                    {link.text}
-                  </Link>
-                ))}
+                {data.newsletter.enabled && (
+                  <NewsletterForm isEditable={isEditable} theme={theme} />
+                )}
               </div>
             )}
+          </div>
+
+          {/* Bottom section */}
+          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
+            {/* Logo and Company Name */}
+            <div className="mb-4 flex items-center md:mb-0">
+              <FooterLogo footerData={data} getImageUrl={getImageUrl} />
+            </div>
+
+            {/* Copyright */}
+            <div className="mb-4 flex flex-col items-center gap-2 md:mb-0 md:items-start md:text-left">
+              <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
+              {data.policyLinks && data.policyLinks.length > 0 && (
+                <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                  {data.policyLinks.map(link => (
+                    <Link
+                      key={link.id}
+                      href={generateLinkHref(
+                        link.href || "",
+                        siteUser,
+                        pathname,
+                        isEditable
+                      )}
+                      className="text-white/80 transition-colors hover:text-white"
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={isEditable ? e => e.preventDefault() : undefined}
+                    >
+                      {link.text}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Social links */}
+            <div className="flex items-center space-x-4">
+              {data.socialLinks.map(social => (
+                <Link
+                  key={social.id}
+                  href={social.href || "#"}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
+                  target={
+                    social.href?.startsWith("http") ? "_blank" : undefined
+                  }
+                  rel={
+                    social.href?.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
+                >
+                  <SocialIcon platform={social.platform} className="h-4 w-4" />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
