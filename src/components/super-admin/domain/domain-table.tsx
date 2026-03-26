@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Domain } from "@/types/super-admin/domain";
-import { Trash2, ExternalLink } from "lucide-react";
+import { Trash2, ExternalLink, Loader2, LogIn } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -9,6 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useTemplateToken } from "@/hooks/super-admin/components/use-template-token";
+import { toast } from "sonner";
+import { siteConfig } from "@/config/site";
 
 interface DomainTableProps {
   domains: Domain[];
@@ -32,6 +36,11 @@ export default function DomainTable({
   onDelete,
   onFrontendUrlClick,
 }: DomainTableProps) {
+  const [loggingInTenantId, setLoggingInTenantId] = useState<number | null>(
+    null
+  );
+  const templateTokenMutation = useTemplateToken();
+
   const handleFrontendUrlClick = (
     tenantSchemaName: string,
     domainId: number
@@ -39,6 +48,89 @@ export default function DomainTable({
     const url = `https://${tenantSchemaName}.nepdora.com`;
     window.open(url, "_blank", "noopener,noreferrer");
     onFrontendUrlClick(tenantSchemaName);
+  };
+
+  const setCrossDomainCookie = (
+    name: string,
+    value: string,
+    days: number = 7
+  ) => {
+    const baseDomain = siteConfig.baseDomain;
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${
+      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    }`;
+
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; domain=.${baseDomain}; path=/; SameSite=Lax${
+      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    }`;
+  };
+
+  const handleTemplateLogin = async (domain: Domain) => {
+    try {
+      setLoggingInTenantId(domain.tenant.id);
+
+      const response = await templateTokenMutation.mutateAsync({
+        client_id: domain.tenant.id,
+      });
+
+      const userData = {
+        user_id: response.owner.id,
+        id: response.owner.id,
+        email: response.owner.email,
+        role: response.owner.role,
+        sub_domain: response.client.schema_name,
+        domain: response.client.domain,
+        store_name: response.client.name,
+        has_profile: true,
+        has_profile_completed: true,
+      };
+
+      localStorage.setItem("authToken", response.access_token);
+      localStorage.setItem("refreshToken", response.refresh_token);
+      localStorage.setItem(
+        "authTokens",
+        JSON.stringify({
+          access_token: response.access_token,
+          refresh_token: response.refresh_token,
+        })
+      );
+      localStorage.setItem("authUser", JSON.stringify(userData));
+
+      setCrossDomainCookie("authToken", response.access_token);
+      setCrossDomainCookie("refreshToken", response.refresh_token);
+      setCrossDomainCookie("authUser", JSON.stringify(userData));
+
+      toast.success(`Logging into ${domain.tenant.name}...`);
+
+      const isLocalhost = window.location.hostname.includes("localhost");
+      let templateUrl: string;
+
+      if (isLocalhost) {
+        const port = window.location.port || "3000";
+        templateUrl = `http://${response.client.schema_name}.localhost:${port}/admin`;
+      } else {
+        templateUrl = `https://${response.client.schema_name}.${siteConfig.baseDomain}/admin`;
+      }
+
+      const separator = templateUrl.includes("?") ? "&" : "?";
+      const finalUrl = `${templateUrl}${separator}auth_token=${encodeURIComponent(
+        response.access_token
+      )}&refresh_token=${encodeURIComponent(response.refresh_token)}`;
+
+      window.location.href = finalUrl;
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Failed to login to tenant:", error);
+      toast.error(
+        error?.response?.data?.error?.message ||
+          error?.message ||
+          "Failed to login to tenant"
+      );
+      setLoggingInTenantId(null);
+    }
   };
 
   return (
@@ -108,6 +200,23 @@ export default function DomainTable({
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleTemplateLogin(domain);
+                        }}
+                        className="h-8 w-8 p-0 text-gray-400 transition-colors hover:text-blue-600"
+                        title="Open Template"
+                        disabled={loggingInTenantId !== null}
+                      >
+                        {loggingInTenantId === domain.tenant.id ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <LogIn size={16} />
+                        )}
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"
