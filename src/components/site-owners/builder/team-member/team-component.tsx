@@ -22,7 +22,7 @@ import { TeamStyle1 } from "./team-member-style/team-style-1";
 import { TeamStyle2 } from "./team-member-style/team-style-2";
 import { TeamStyle3 } from "./team-member-style/team-style-3";
 import { TeamStyle4 } from "./team-member-style/team-style-4";
-
+import { TeamStyle5 } from "./team-member-style/team-style-5";
 interface TeamComponentProps {
   component: TeamComponentData;
   isEditable?: boolean;
@@ -110,6 +110,15 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       case "team-4":
         return (
           <TeamStyle4
+            data={component.data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+            onMemberClick={commonProps.onMemberClick}
+          />
+        );
+      case "team-5":
+        return (
+          <TeamStyle5
             data={component.data}
             isEditable={isEditable}
             onUpdate={handleUpdate}

@@ -20,7 +20,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ServicesStyle1 } from "./services-style/services-style-1";
 import { ServicesStyle2 } from "./services-style/services-style-2";
-
+import { ServicesStyle3 } from "./services-style/services-style-3";
+import { ServicesStyle4 } from "./services-style/services-style-4";
 interface ServicesComponentProps {
   component: ServicesComponentData;
   isEditable?: boolean;
@@ -111,6 +112,22 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
       default:
         return (
           <ServicesStyle1
+            data={component.data}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
+      case "services-3":
+        return (
+          <ServicesStyle3
+            component={component}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
+      case "services-4":
+        return (
+          <ServicesStyle4
             data={component.data}
             {...commonProps}
             onUpdate={handleUpdate}
