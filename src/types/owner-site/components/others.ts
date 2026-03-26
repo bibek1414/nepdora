@@ -148,25 +148,49 @@ export const defaultOthersTemplate1Data: OthersTemplate1Data = {
   template: "others-1",
   heading: "Clarity You Can Trust",
   subtitle: "Features",
-  description: "Experience the world through lenses crafted for perfection.",
-  features: ["Precision-engineered lenses", "Lightweight frames"],
+  description:
+    "Experience the world through lenses crafted for perfection. Our eyewear combines advanced technology with timeless design to deliver unmatched visual comfort. Whether you're working, driving, or enjoying the outdoors, Nepglass ensures your vision is always crisp and clear.",
+  features: [
+    "Precision-engineered lenses for optimal clarity",
+    "Lightweight and durable frame materials",
+    "Tailored fit for all-day comfort",
+    "Advanced UV and blue light protection",
+  ],
   image: {
     url: "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=1000",
-    alt: "Person wearing stylish glasses",
+    alt: "Person wearing stylish glasses outdoors",
   },
   imagePosition: "left",
   buttonText: "Find Your Perfect Pair",
-  buttonLink: "/products",
+  buttonLink: "#",
 };
 
 export const defaultOthersTemplate2Data: OthersTemplate2Data = {
   template: "others-2",
   items: [
     {
-      id: "1",
+      id: "trust-1",
       title: "Free Eye Test",
-      description: "At partner clinics",
+      description: "Available at partner clinics",
       icon: "Eye",
+    },
+    {
+      id: "trust-2",
+      title: "Fast Delivery",
+      description: "Across Nepal",
+      icon: "Truck",
+    },
+    {
+      id: "trust-3",
+      title: "7-Day Returns",
+      description: "Hassle-free",
+      icon: "RotateCcw",
+    },
+    {
+      id: "trust-4",
+      title: "Warranty",
+      description: "On frames & lenses",
+      icon: "ShieldCheck",
     },
   ],
 };
@@ -177,10 +201,32 @@ export const defaultOthersTemplate3Data: OthersTemplate3Data = {
   description: "Thoughtfully designed eyewear.",
   items: [
     {
-      id: "1",
+      id: "why-1",
       title: "Timeless Style",
-      description: "Curated range",
+      description:
+        "A curated range of frames and sunglasses designed to suit every look.",
       icon: "Sparkles",
+    },
+    {
+      id: "why-2",
+      title: "Clear Vision",
+      description:
+        "Precision-crafted lenses focused on comfort, clarity, and protection.",
+      icon: "Eye",
+    },
+    {
+      id: "why-3",
+      title: "Built for Nepal",
+      description:
+        "Designed with local lifestyle, climate, and preferences in mind.",
+      icon: "MapPin",
+    },
+    {
+      id: "why-4",
+      title: "Trusted Care",
+      description:
+        "Personal guidance to help you find eyewear that truly fits you.",
+      icon: "Shield",
     },
   ],
 };
@@ -193,10 +239,41 @@ export const defaultOthersTemplate4Data: OthersTemplate4Data = {
     {
       id: "step-1",
       title: "Precision Design",
-      description: "Digital surfacing technology.",
+      description:
+        "Digital surfacing technology ensures lenses match your prescription perfectly.",
       image: {
-        url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
-        alt: "Design",
+        url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1171&auto=format&fit=crop",
+        alt: "Precision Design",
+      },
+    },
+    {
+      id: "step-2",
+      title: "Advanced Manufacturing",
+      description:
+        "High-quality materials and meticulous craftsmanship create durable, lightweight lenses.",
+      image: {
+        url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop",
+        alt: "Advanced Manufacturing",
+      },
+    },
+    {
+      id: "step-3",
+      title: "Expert Fitting",
+      description:
+        "Our specialists ensure lenses fit your frames and eyes comfortably for daily use.",
+      image: {
+        url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
+        alt: "Expert Fitting",
+      },
+    },
+    {
+      id: "step-4",
+      title: "Quality Assurance",
+      description:
+        "Each lens is tested for clarity, durability, and compliance with premium standards.",
+      image: {
+        url: "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=1000",
+        alt: "Quality Assurance",
       },
     },
   ],
@@ -207,7 +284,24 @@ export const defaultOthersTemplate5Data: OthersTemplate5Data = {
   badge: "Why Choose us",
   heading: "Why We're Your Best Choice",
   features: [
-    { id: "1", title: "Personalized Coaching", description: "Custom plans" },
+    {
+      id: "1",
+      title: "Personalized Coaching Plans",
+      description:
+        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
+    },
+    {
+      id: "2",
+      title: "Proven Success Strategies",
+      description:
+        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
+    },
+    {
+      id: "3",
+      title: "Flexible Scheduling Options",
+      description:
+        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
+    },
   ],
   image: {
     url: "https://images.pexels.com/photos/36485447/pexels-photo-36485447.jpeg",
