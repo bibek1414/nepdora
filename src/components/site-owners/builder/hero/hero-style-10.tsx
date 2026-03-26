@@ -118,7 +118,6 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
     });
   };
 
-
   const imageWidth = 800;
   const imageHeight = 800;
 
@@ -193,7 +192,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
 
               {/* Content on the Left */}
               <div
-                className={`relative z-10 flex h-full w-full max-w-[60%] flex-col justify-center p-8 sm:p-12 lg:p-16 ${textColorClass}`}
+                className={`relative z-50 flex h-full w-full max-w-[60%] flex-col justify-center p-8 sm:p-12 lg:p-16 ${textColorClass}`}
               >
                 {/* Main Title */}
                 <EditableText
@@ -202,7 +201,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                     handleCollectionUpdate(collection.id, "title", value)
                   }
                   as="h2"
-                  className="mb-8 text-3xl leading-tight font-medium tracking-tight whitespace-pre-line sm:text-4xl lg:text-5xl"
+                  className="z-10 mb-8 text-3xl leading-tight font-medium tracking-tight whitespace-pre-line sm:text-4xl lg:text-5xl"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}

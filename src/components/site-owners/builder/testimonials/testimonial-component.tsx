@@ -23,9 +23,6 @@ import { TestimonialStyle2 } from "./testimonial-style/testimonial-style-2";
 import { TestimonialStyle3 } from "./testimonial-style/testimonial-style-3";
 import { TestimonialStyle4 } from "./testimonial-style/testimonial-style-4";
 import { TestimonialStyle5 } from "./testimonial-style/testimonial-style-5";
-import { TestimonialStyle6 } from "./testimonial-style/testimonial-style-6";
-import { TestimonialStyle7 } from "./testimonial-style/testimonial-style-7";
-import { TestimonialStyle8 } from "./testimonial-style/testimonial-style-8";
 
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
