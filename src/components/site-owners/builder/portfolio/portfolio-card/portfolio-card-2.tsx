@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
-import { ExternalLink, Github } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, Github, Tag, ChevronRight } from "lucide-react";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -19,11 +21,21 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
   onClick,
 }) => {
   const pathname = usePathname();
-  // ✅ Fallback image
   const portfolioImage =
     portfolio.thumbnail_image || "/fallback/image-not-found.png";
 
-  // ✅ Theme handling
+  const getDetailsUrl = (): string => {
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/portfolio-details-draft"
+      : "/portfolio-details";
+    return generateLinkHref(
+      `${basePath}/${portfolio.slug}`,
+      siteUser,
+      pathname
+    );
+  };
+
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -40,30 +52,18 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
     },
   };
 
-  const getDetailsUrl = (): string => {
-    const isPreviewMode = pathname?.includes("/preview/");
-    const basePath = isPreviewMode
-      ? "/portfolio-details-draft"
-      : "/portfolio-details";
-    return generateLinkHref(
-      `${basePath}/${portfolio.slug}`,
-      siteUser,
-      pathname
-    );
-  };
-
-  const detailsUrl = getDetailsUrl();
-
-  // ✅ Click handler
   const handleClick = () => {
-    if (onClick) onClick();
-    else window.location.href = detailsUrl;
+    if (onClick) {
+      onClick();
+    } else {
+      const detailsUrl = getDetailsUrl();
+      window.location.href = detailsUrl;
+    }
   };
 
-  // ✅ Wrapper (Link or Div)
-  const Wrapper = siteUser
+  const CardWrapper = siteUser
     ? ({ children }: { children: React.ReactNode }) => (
-        <Link href={detailsUrl}>{children}</Link>
+        <Link href={getDetailsUrl()}>{children}</Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
         <div onClick={handleClick} className="cursor-pointer">
@@ -72,85 +72,133 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
       );
 
   return (
-    <Wrapper>
-      <div className="group relative flex flex-col overflow-hidden rounded-2xl bg-white transition duration-300 dark:bg-gray-900">
-        {/* Category */}
-        {portfolio.category?.name && (
-          <p
-            className="p-2 text-xs font-semibold tracking-wide uppercase"
-            style={{ color: theme.colors.primary }}
-          >
-            {portfolio.category.name}
-          </p>
-        )}
-
-        {/* Image Section */}
-        <div className="relative">
+    <CardWrapper>
+      <article className="group border-border hover:border-primary/50 flex flex-col gap-3 border-b pb-4 transition-all duration-300 sm:gap-4 sm:pb-5 md:flex-row md:gap-6 md:pb-6">
+        {/* Image */}
+        <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-lg sm:h-56 md:h-48 md:w-80 lg:h-56">
           <Image
             src={portfolioImage}
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
-            width={600}
-            height={400}
-            className="aspect-4/3 w-full object-cover transition-transform duration-500"
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 320px, 320px"
           />
+        </div>
 
-          {/* Hover overlay */}
-          <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {portfolio.project_url && (
-              <a
-                href={portfolio.project_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
-                className="h rounded-full bg-white p-2 text-gray-900 transition dark:bg-gray-800 dark:text-gray-100"
+        {/* Content */}
+        <div className="flex flex-1 flex-col justify-between gap-3 sm:gap-4">
+          <div>
+            {/* Category */}
+            {portfolio.category && (
+              <Badge
+                className="mb-2 text-xs sm:mb-3 sm:text-sm"
+                style={{
+                  background: theme.colors.secondary,
+                  color: theme.colors.text,
+                  fontFamily: theme.fonts.heading,
+                }}
               >
-                <ExternalLink className="h-5 w-5" />
-              </a>
+                {portfolio.category.name}
+              </Badge>
             )}
-            {portfolio.github_url && (
-              <a
-                href={portfolio.github_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
-                className="rounded-full bg-white p-2 text-gray-900 transition dark:bg-gray-800 dark:text-gray-100"
-              >
-                <Github className="h-5 w-5" />
-              </a>
+
+            {/* Title */}
+            <h3
+              className="mb-2 text-lg leading-tight font-bold sm:mb-3 sm:text-xl md:text-2xl"
+              style={{
+                color: theme.colors.primary,
+                fontFamily: theme.fonts.heading,
+              }}
+            >
+              {portfolio.title}
+            </h3>
+
+            {/* Description */}
+            <div
+              className="text-muted-foreground mb-3 line-clamp-2 text-xs leading-relaxed sm:mb-4 sm:line-clamp-3 sm:text-sm"
+              dangerouslySetInnerHTML={{
+                __html:
+                  (portfolio?.meta_description
+                    ? portfolio.meta_description.substring(0, 150)
+                    : "No content available") + "...",
+              }}
+            />
+
+            {/* Technologies */}
+            {portfolio.tags && portfolio.tags.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-1.5 sm:mb-4 sm:gap-2">
+                {portfolio.tags.map(tag => (
+                  <Badge
+                    key={tag.id}
+                    variant="outline"
+                    className="text-xs sm:text-sm"
+                  >
+                    <Tag className="mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                    <span className="max-w-[80px] truncate sm:max-w-none">
+                      {tag.name}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
             )}
           </div>
-        </div>
 
-        {/* Content Section */}
-        <div className="p-4">
-          {/* Title */}
-          <h3
-            className="text-base font-semibold text-gray-900 dark:text-white"
-            style={{ fontFamily: theme.fonts.heading }}
-          >
-            {portfolio.title}
-          </h3>
+          {/* Actions */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="group/btn w-full justify-start text-xs sm:w-auto sm:text-sm"
+              style={{ color: theme.colors.primary }}
+            >
+              <span className="sm:hidden">Details</span>
+              <span className="hidden sm:inline">View Details</span>
+              <ChevronRight className="ml-2 h-3 w-3 transition-transform group-hover/btn:translate-x-1 sm:h-4 sm:w-4" />
+            </Button>
 
-          {/* Tags */}
-          {portfolio.tags?.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {portfolio.tags.map(tag => (
-                <span
-                  key={tag.id}
-                  className="rounded-full px-2.5 py-0.5 text-xs font-medium"
-                  style={{
-                    backgroundColor: `${theme.colors.primary}15`,
-                    color: theme.colors.primary,
-                    fontFamily: theme.fonts.body,
-                  }}
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              {portfolio.project_url && (
+                <a
+                  href={portfolio.project_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="flex-1 sm:flex-none"
                 >
-                  #{tag.name}
-                </span>
-              ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs sm:w-auto sm:text-sm"
+                  >
+                    <ExternalLink className="mr-1.5 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                    <span className="sm:hidden">Demo</span>
+                    <span className="hidden sm:inline">Live Demo</span>
+                  </Button>
+                </a>
+              )}
+
+              {portfolio.github_url && (
+                <a
+                  href={portfolio.github_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  className="flex-1 sm:flex-none"
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-xs sm:w-auto sm:text-sm"
+                  >
+                    <Github className="mr-1.5 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                    Code
+                  </Button>
+                </a>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </Wrapper>
+      </article>
+    </CardWrapper>
   );
 };

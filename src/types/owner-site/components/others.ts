@@ -16,6 +16,12 @@ export interface OthersStatistic {
   value: string;
   label: string;
 }
+export interface OthersProcessCard {
+  id: number;
+  number: string;
+  title: string;
+  description: string;
+}
 
 export interface OthersProcessItem {
   id: string;
@@ -42,78 +48,6 @@ export interface OthersStepItem {
 
 export interface OthersTemplate1Data {
   template: "others-1";
-  subHeading: string;
-  heading: string;
-  features: OthersFeature[];
-  buttons: OthersButton[];
-  image: {
-    url: string;
-    alt: string;
-  };
-  experienceBadge: {
-    count: string;
-    text: string;
-  };
-  contact: {
-    label: string;
-    phone: string;
-  };
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-}
-
-export interface OthersTemplate2Data {
-  template: "others-2";
-  heading: string;
-  description: string;
-  buttons: OthersButton[];
-  statistics: OthersStatistic[];
-  leftImage: {
-    url: string;
-    alt: string;
-  };
-  rightImage: {
-    url: string;
-    alt: string;
-  };
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-}
-
-export interface OthersTemplate3Data {
-  template: "others-3";
-  processLabel: string;
-  heading: string;
-  processItems: OthersProcessItem[];
-  successLabel: string;
-  successHeading: string;
-  successDescription: string;
-  statistics: OthersStatistic[];
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-}
-
-export interface OthersCountryCard {
-  id: string;
-  label: string;
-}
-
-export interface OthersTemplate4Data {
-  template: "others-4";
-  subHeading: string;
-  heading: string;
-  buttons: OthersButton[];
-  countryCards: OthersCountryCard[];
-  backgroundType: "color" | "gradient" | "image";
-  backgroundColor?: string;
-  backgroundImageUrl?: string;
-}
-
-export interface OthersTemplate5Data {
-  template: "others-5";
   heading: string;
   subtitle: string;
   description: string;
@@ -127,27 +61,27 @@ export interface OthersTemplate5Data {
   buttonLink?: string;
 }
 
-export interface OthersTemplate6Data {
-  template: "others-6";
+export interface OthersTemplate2Data {
+  template: "others-2";
   items: OthersTrustItem[];
 }
 
-export interface OthersTemplate7Data {
-  template: "others-7";
+export interface OthersTemplate3Data {
+  template: "others-3";
   heading: string;
   description: string;
   items: OthersTrustItem[];
 }
 
-export interface OthersTemplate8Data {
-  template: "others-8";
+export interface OthersTemplate4Data {
+  template: "others-4";
   heading: string;
   subtitle: string;
   steps: OthersStepItem[];
 }
 
-export interface OthersTemplate9Data {
-  template: "others-9";
+export interface OthersTemplate5Data {
+  template: "others-5";
   badge: string;
   heading: string;
   features: OthersFeature[];
@@ -155,10 +89,36 @@ export interface OthersTemplate9Data {
     url: string;
     alt: string;
   };
-  accentColor: string; // The lime yellow color in the image
+  accentColor: string;
   backgroundType: "color" | "gradient" | "image";
   backgroundColor?: string;
   backgroundImageUrl?: string;
+}
+
+export interface OthersTemplate6Data {
+  template: "others-6";
+  subtitle?: string;
+  title: string;
+  processCards?: OthersProcessCard[];
+  images?: any[];
+}
+
+export interface OthersTemplate7Data {
+  template: "others-7";
+  subtitle?: string;
+  title: string;
+  description?: string;
+  images: any[];
+  buttonText?: string;
+}
+
+export interface OthersTemplate8Data {
+  template: "others-8";
+  subtitle?: string;
+  title: string;
+  description?: string;
+  images: any[];
+  buttonText?: string;
 }
 
 // Union type for all others templates
@@ -170,8 +130,7 @@ export type OthersData =
   | OthersTemplate5Data
   | OthersTemplate6Data
   | OthersTemplate7Data
-  | OthersTemplate8Data
-  | OthersTemplate9Data;
+  | OthersTemplate8Data;
 
 // Component and API interfaces
 export interface OthersComponentData {
@@ -184,324 +143,129 @@ export interface OthersComponentData {
   page?: number;
 }
 
-// Default data
+// Default data (Re-indexed)
 export const defaultOthersTemplate1Data: OthersTemplate1Data = {
   template: "others-1",
-  subHeading: "WHY CHOOSE US",
-  heading: "Experiencing Traditions Cultural Immersion",
-  features: [
-    {
-      id: "1",
-      title: "Marketing Services",
-      description:
-        "Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa loren ipsum",
-    },
-    {
-      id: "2",
-      title: "IT Maintenance",
-      description:
-        "Et purus duis sollicitudin dignissim habitant. Egestas nulla quis venenatis cras sed eu massa loren ipsum",
-    },
-  ],
-  buttons: [
-    {
-      id: "btn-1",
-      text: "Read More",
-      variant: "primary",
-      href: "#",
-    },
-  ],
-  image: {
-    url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1171&auto=format&fit=crop",
-    alt: "Why Choose Us Image",
-  },
-  experienceBadge: {
-    count: "25",
-    text: "Years Of experience",
-  },
-  contact: {
-    label: "Need help?",
-    phone: "(808) 555-0111",
-  },
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
-
-export const defaultOthersTemplate2Data: OthersTemplate2Data = {
-  template: "others-2",
-  heading: "Get our best offers quickly",
-  description:
-    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standard dummy",
-  buttons: [
-    {
-      id: "btn-1",
-      text: "Contact us",
-      variant: "outline",
-      href: "#",
-    },
-  ],
-  statistics: [
-    {
-      id: "stat-1",
-      value: "10k+",
-      label: "Complete project",
-    },
-    {
-      id: "stat-2",
-      value: "20+",
-      label: "Team member",
-    },
-    {
-      id: "stat-3",
-      value: "5k+",
-      label: "Winning award",
-    },
-    {
-      id: "stat-4",
-      value: "100+",
-      label: "Complete project",
-    },
-  ],
-  leftImage: {
-    url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop",
-    alt: "Office workspace",
-  },
-  rightImage: {
-    url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
-    alt: "Team collaboration",
-  },
-  backgroundType: "color",
-  backgroundColor: "#FFFFFF",
-};
-
-export const defaultOthersTemplate3Data: OthersTemplate3Data = {
-  template: "others-3",
-  processLabel: "PROCESS OVER VIEW",
-  heading: "Where Wanderlust Meets Reality Destinations",
-  processItems: [
-    {
-      id: "proc-1",
-      title: "Efficiency Experts",
-      description:
-        "Lorem Ipsum is simply dummy text th printing and typese Lorem Ipm been the industry's standard",
-    },
-    {
-      id: "proc-2",
-      title: "Global Entry",
-      description:
-        "Lorem Ipsum is simply dummy text th printing and typese Lorem Ipm been the industry's standard",
-    },
-    {
-      id: "proc-3",
-      title: "Passport Plus",
-      description:
-        "Lorem Ipsum is simply dummy text th printing and typese Lorem Ipm been the industry's standard",
-    },
-  ],
-  successLabel: "SUCCESS STORY",
-  successHeading: "Experiencing Traditions and Customs",
-  successDescription:
-    "Lorem Ipsum is simply dummy text the printing and typese Lorem Ipsum has been the industry's standardever",
-  statistics: [
-    { id: "stat-1", value: "200+", label: "Team member" },
-    { id: "stat-2", value: "20+", label: "Winning award" },
-    { id: "stat-3", value: "10k+", label: "Complete project" },
-    { id: "stat-4", value: "900+", label: "Client review" },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#F1F5F1",
-};
-
-export const defaultOthersTemplate4Data: OthersTemplate4Data = {
-  template: "others-4",
-  subHeading: "RELAX TRAVEL",
-  heading: "Visa Immigration\nFor A Brighter\nYou Future",
-  buttons: [
-    {
-      id: "btn-1",
-      text: "Contact Us",
-      variant: "outline",
-      href: "#",
-    },
-  ],
-  countryCards: [
-    { id: "card-1", label: "Germany" },
-    { id: "card-2", label: "South Korea" },
-    { id: "card-3", label: "South Africa" },
-    { id: "card-4", label: "Turkey" },
-    { id: "card-5", label: "Indonesia" },
-  ],
-  backgroundType: "color",
-  backgroundColor: "#EDE8E3",
-};
-
-export const defaultOthersTemplate5Data: OthersTemplate5Data = {
-  template: "others-5",
   heading: "Clarity You Can Trust",
   subtitle: "Features",
-  description:
-    "Experience the world through lenses crafted for perfection. Our eyewear combines advanced technology with timeless design to deliver unmatched visual comfort. Whether you're working, driving, or enjoying the outdoors, Nepglass ensures your vision is always crisp and clear.",
-  features: [
-    "Precision-engineered lenses for optimal clarity",
-    "Lightweight and durable frame materials",
-    "Tailored fit for all-day comfort",
-    "Advanced UV and blue light protection",
-  ],
+  description: "Experience the world through lenses crafted for perfection.",
+  features: ["Precision-engineered lenses", "Lightweight frames"],
   image: {
     url: "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=1000",
-    alt: "Person wearing stylish glasses outdoors",
+    alt: "Person wearing stylish glasses",
   },
   imagePosition: "left",
   buttonText: "Find Your Perfect Pair",
   buttonLink: "/products",
 };
 
-export const defaultOthersTemplate6Data: OthersTemplate6Data = {
-  template: "others-6",
+export const defaultOthersTemplate2Data: OthersTemplate2Data = {
+  template: "others-2",
   items: [
     {
-      id: "trust-1",
+      id: "1",
       title: "Free Eye Test",
-      description: "Available at partner clinics",
+      description: "At partner clinics",
       icon: "Eye",
-    },
-    {
-      id: "trust-2",
-      title: "Fast Delivery",
-      description: "Across Nepal",
-      icon: "Truck",
-    },
-    {
-      id: "trust-3",
-      title: "7-Day Returns",
-      description: "Hassle-free",
-      icon: "RotateCcw",
-    },
-    {
-      id: "trust-4",
-      title: "Warranty",
-      description: "On frames & lenses",
-      icon: "ShieldCheck",
     },
   ],
 };
 
-export const defaultOthersTemplate7Data: OthersTemplate7Data = {
-  template: "others-7",
+export const defaultOthersTemplate3Data: OthersTemplate3Data = {
+  template: "others-3",
   heading: "Why Choose NepGlass",
-  description:
-    "Thoughtfully designed eyewear that blends quality, comfort, and modern aesthetics for everyday life in Nepal.",
+  description: "Thoughtfully designed eyewear.",
   items: [
     {
-      id: "why-1",
+      id: "1",
       title: "Timeless Style",
-      description:
-        "A curated range of frames and sunglasses designed to suit every look.",
+      description: "Curated range",
       icon: "Sparkles",
     },
-    {
-      id: "why-2",
-      title: "Clear Vision",
-      description:
-        "Precision-crafted lenses focused on comfort, clarity, and protection.",
-      icon: "Eye",
-    },
-    {
-      id: "why-3",
-      title: "Built for Nepal",
-      description:
-        "Designed with local lifestyle, climate, and preferences in mind.",
-      icon: "MapPin",
-    },
-    {
-      id: "why-4",
-      title: "Trusted Care",
-      description:
-        "Personal guidance to help you find eyewear that truly fits you.",
-      icon: "Shield",
-    },
   ],
 };
 
-export const defaultOthersTemplate8Data: OthersTemplate8Data = {
-  template: "others-8",
+export const defaultOthersTemplate4Data: OthersTemplate4Data = {
+  template: "others-4",
   heading: "How We Make Your Lenses",
   subtitle: "Our Process",
   steps: [
     {
       id: "step-1",
       title: "Precision Design",
-      description:
-        "Digital surfacing technology ensures lenses match your prescription perfectly.",
+      description: "Digital surfacing technology.",
       image: {
-        url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1171&auto=format&fit=crop",
-        alt: "Precision Design",
-      },
-    },
-    {
-      id: "step-2",
-      title: "Advanced Manufacturing",
-      description:
-        "High-quality materials and meticulous craftsmanship create durable, lightweight lenses.",
-      image: {
-        url: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop",
-        alt: "Advanced Manufacturing",
-      },
-    },
-    {
-      id: "step-3",
-      title: "Expert Fitting",
-      description:
-        "Our specialists ensure lenses fit your frames and eyes comfortably for daily use.",
-      image: {
-        url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
-        alt: "Expert Fitting",
-      },
-    },
-    {
-      id: "step-4",
-      title: "Quality Assurance",
-      description:
-        "Each lens is tested for clarity, durability, and compliance with premium standards.",
-      image: {
-        url: "https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=1000",
-        alt: "Quality Assurance",
+        url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+        alt: "Design",
       },
     },
   ],
 };
 
-export const defaultOthersTemplate9Data: OthersTemplate9Data = {
-  template: "others-9",
+export const defaultOthersTemplate5Data: OthersTemplate5Data = {
+  template: "others-5",
   badge: "Why Choose us",
   heading: "Why We're Your Best Choice",
   features: [
-    {
-      id: "1",
-      title: "Personalized Coaching Plans",
-      description:
-        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
-    },
-    {
-      id: "2",
-      title: "Proven Success Strategies",
-      description:
-        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
-    },
-    {
-      id: "3",
-      title: "Flexible Scheduling Options",
-      description:
-        "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod",
-    },
+    { id: "1", title: "Personalized Coaching", description: "Custom plans" },
   ],
   image: {
     url: "https://images.pexels.com/photos/36485447/pexels-photo-36485447.jpeg",
     alt: "Professional team",
   },
-  accentColor: "#D4FF5F", // Lime yellow color from the image
+  accentColor: "#D4FF5F",
   backgroundType: "color",
   backgroundColor: "#FFFFFF",
+};
+
+export const defaultOthersTemplate6Data: OthersTemplate6Data = {
+  template: "others-6",
+  title: "Process Overview",
+  subtitle: "Process Overview",
+  processCards: [
+    {
+      id: 1,
+      number: "01",
+      title: "Visa Voyage Agency",
+      description: "Lorem Ipsum is simply dummy text the printing and typeser",
+    },
+    {
+      id: 2,
+      number: "02",
+      title: "International Access Visas",
+      description: "Lorem Ipsum is simply dummy text the printing and typeser",
+    },
+    {
+      id: 3,
+      number: "03",
+      title: "Gateway to Global Citizenship",
+      description: "Lorem Ipsum is simply dummy text the printing and typeser",
+    },
+  ],
+};
+
+export const defaultOthersTemplate7Data: OthersTemplate7Data = {
+  template: "others-7",
+  title: "The New Standard",
+  images: [
+    {
+      id: 1,
+      image:
+        "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  ],
+};
+
+export const defaultOthersTemplate8Data: OthersTemplate8Data = {
+  template: "others-8",
+  title: "Power for Professionals",
+  images: [
+    {
+      id: 1,
+      image:
+        "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
+  ],
 };
 
 // Default data map for all others templates
@@ -514,42 +278,30 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-6": defaultOthersTemplate6Data,
   "others-7": defaultOthersTemplate7Data,
   "others-8": defaultOthersTemplate8Data,
-  "others-9": defaultOthersTemplate9Data,
 };
 
 // Type guards
 export const isOthersTemplate1 = (
   data: OthersData
 ): data is OthersTemplate1Data => data.template === "others-1";
-
 export const isOthersTemplate2 = (
   data: OthersData
 ): data is OthersTemplate2Data => data.template === "others-2";
-
 export const isOthersTemplate3 = (
   data: OthersData
 ): data is OthersTemplate3Data => data.template === "others-3";
-
 export const isOthersTemplate4 = (
   data: OthersData
 ): data is OthersTemplate4Data => data.template === "others-4";
-
 export const isOthersTemplate5 = (
   data: OthersData
 ): data is OthersTemplate5Data => data.template === "others-5";
-
 export const isOthersTemplate6 = (
   data: OthersData
 ): data is OthersTemplate6Data => data.template === "others-6";
-
 export const isOthersTemplate7 = (
   data: OthersData
 ): data is OthersTemplate7Data => data.template === "others-7";
-
 export const isOthersTemplate8 = (
   data: OthersData
 ): data is OthersTemplate8Data => data.template === "others-8";
-
-export const isOthersTemplate9 = (
-  data: OthersData
-): data is OthersTemplate9Data => data.template === "others-9";

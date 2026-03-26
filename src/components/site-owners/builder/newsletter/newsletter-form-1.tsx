@@ -1,15 +1,14 @@
+"use client";
+
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/site-owners/button";
-import { Input } from "@/components/ui/input";
-import { Mail, Send, Loader2, CheckCircle } from "lucide-react";
-import { EditableText } from "@/components/ui/editable-text";
+import { Send, Loader2, CheckCircle } from "lucide-react";
+import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { toast } from "sonner";
+import { EditableText } from "@/components/ui/editable-text";
 import {
   NewsletterData,
   NewsletterFormSubmission,
 } from "@/types/owner-site/components/newsletter";
-import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 
 interface NewsletterForm1Props {
   data: NewsletterData;
@@ -34,29 +33,6 @@ export const NewsletterForm1: React.FC<NewsletterForm1Props> = ({
 
   const createNewsletter = useCreateNewsletter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!isPreview && siteUser && formData.email) {
-      createNewsletter.mutate(formData, {
-        onSuccess: () => {
-          setIsSubscribed(true);
-          setFormData({ email: "", is_subscribed: true });
-          setTimeout(() => setIsSubscribed(false), 3000);
-          toast.success("Successfully subscribed to newsletter!");
-        },
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onError: (error: any) => {
-          if (error?.status === 409) {
-            toast.error("This email is already subscribed to the newsletter.");
-          } else {
-            toast.error("Something went wrong. Please try again.");
-          }
-        },
-      });
-    }
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setFormData({ email: value, is_subscribed: true });
@@ -71,89 +47,117 @@ export const NewsletterForm1: React.FC<NewsletterForm1Props> = ({
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.email) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    if (!isPreview && siteUser && formData.email) {
+      createNewsletter.mutate(formData, {
+        onSuccess: () => {
+          setIsSubscribed(true);
+          setFormData({ email: "", is_subscribed: true });
+          setTimeout(() => setIsSubscribed(false), 3000);
+          toast.success("Successfully subscribed to our newsletter!");
+        },
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onError: (error: any) => {
+          if (error?.status === 409) {
+            toast.error("This email is already subscribed to the newsletter.");
+          } else {
+            toast.error("Something went wrong. Please try again.");
+          }
+        },
+      });
+    }
+  };
+
   // Success state
   if (isSubscribed && !isEditable) {
     return (
-      <Card className="mx-auto max-w-md border-green-200 bg-green-50 shadow-lg">
-        <CardContent className="p-8 text-center">
-          <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-600" />
-          <h3 className="mb-2 text-xl font-semibold text-green-800">
-            Thank you for subscribing!
-          </h3>
-          <p className="text-green-600">
-            You&apos;ll receive our newsletter updates soon.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="relative flex min-h-[400px] flex-col items-center justify-center gap-4 overflow-hidden rounded-[3rem] border border-gray-100 bg-gray-50 p-8 shadow-lg md:p-16">
+        <CheckCircle className="z-10 h-16 w-16 text-green-600" />
+        <h3 className="z-10 text-2xl font-semibold text-green-800">
+          Thank you for subscribing!
+        </h3>
+        <p className="z-10 text-green-600">
+          You&apos;ll receive our newsletter updates soon.
+        </p>
+
+        {/* Background Decor */}
+        <div className="bg-brand-100/50 pointer-events-none absolute top-0 right-0 -mt-20 -mr-20 h-80 w-80 rounded-full blur-[100px]" />
+        <div className="pointer-events-none absolute bottom-0 left-0 -mb-20 -ml-20 h-80 w-80 rounded-full bg-blue-100/50 blur-[100px]" />
+      </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-md bg-white">
-      <div className="p-8">
-        <div className="mb-6 text-center">
-          <EditableText
-            value={data.subtitle || ""}
-            onChange={value => updateData("subtitle", value)}
-            as="h1"
-            className="mb-4 text-lg text-gray-600"
-            isEditable={isEditable}
-            placeholder="Enter subtitle..."
-          />
-          <EditableText
-            value={data.description || ""}
-            onChange={value => updateData("description", value)}
-            as="p"
-            className="text-gray-500"
-            isEditable={isEditable}
-            placeholder="Enter description..."
-            multiline={true}
-          />
-        </div>
+    <div className="relative flex flex-col items-center gap-12 overflow-hidden rounded-[3rem] border border-gray-100 bg-gray-50 p-8 md:p-16 lg:flex-row">
+      <div className="relative z-10 w-full flex-1">
+        <EditableText
+          value={data.title}
+          onChange={value => updateData("title", value)}
+          as="h2"
+          className="text-navy-950 mb-6 text-3xl leading-tight font-semibold whitespace-pre-wrap md:text-5xl"
+          isEditable={isEditable}
+          placeholder="Enter title..."
+          multiline={true}
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Input
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder={data.placeholder_text || "Enter your email address"}
-              required
-              className="w-full border-gray-600 bg-white text-base shadow-sm placeholder:text-gray-500"
-              disabled={createNewsletter.isPending || isPreview}
-            />
-          </div>
-
-          <div className="flex justify-center">
-            <Button
-              type="submit"
-              disabled={
-                createNewsletter.isPending || isPreview || !formData.email
-              }
-              variant="default"
-              className="w-fit"
-            >
-              {createNewsletter.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Subscribing...
-                </>
-              ) : (
-                <>
-                  <Send className="mr-2 h-4 w-4" />
-                  {data.button_text}
-                </>
-              )}
-            </Button>
-          </div>
-
-          {data.show_privacy_note && data.privacy_note && (
-            <p className="mt-3 text-center text-xs text-gray-500">
-              {data.privacy_note}
-            </p>
-          )}
-        </form>
+        <EditableText
+          value={data.description || ""}
+          onChange={value => updateData("description", value)}
+          as="p"
+          className="max-w-md font-medium text-slate-500"
+          isEditable={isEditable}
+          placeholder="Enter description..."
+          multiline={true}
+        />
       </div>
+
+      <div className="relative z-10 w-full lg:w-[450px]">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-3 sm:flex-row"
+        >
+          <input
+            type="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder={data.placeholder_text || "Enter your executive email"}
+            className="focus:ring-brand-500/20 focus:border-brand-500 grow rounded-2xl border border-gray-200 bg-white px-6 py-4 font-medium text-gray-900 transition-all outline-none placeholder:text-gray-500 focus:ring-2 disabled:opacity-50"
+            disabled={createNewsletter.isPending || isPreview}
+            required
+          />
+          <button
+            type="submit"
+            disabled={
+              createNewsletter.isPending || isPreview || !formData.email
+            }
+            className="flex min-w-[120px] items-center justify-center gap-2 rounded-2xl bg-black px-8 py-4 text-xs font-semibold tracking-widest text-white shadow-xl transition-all disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {createNewsletter.isPending ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <>
+                {data.button_text} <Send size={16} />
+              </>
+            )}
+          </button>
+        </form>
+        {data.show_privacy_note && data.privacy_note && (
+          <p className="mt-4 text-[10px] leading-relaxed font-medium text-gray-400">
+            {data.privacy_note}
+          </p>
+        )}
+      </div>
+
+      {/* Background Decor */}
+      <div className="bg-brand-100/50 pointer-events-none absolute top-0 right-0 -mt-20 -mr-20 h-80 w-80 rounded-full blur-[100px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 -mb-20 -ml-20 h-80 w-80 rounded-full bg-blue-100/50 blur-[100px]" />
     </div>
   );
 };

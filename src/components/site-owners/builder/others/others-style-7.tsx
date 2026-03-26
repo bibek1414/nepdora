@@ -1,123 +1,168 @@
+"use client";
+
 import React from "react";
 import { OthersTemplate7Data } from "@/types/owner-site/components/others";
+import { EditableImage } from "@/components/ui/editable-image";
 import { EditableText } from "@/components/ui/editable-text";
+import { EditableLink } from "@/components/ui/editable-link";
+import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { Eye, Shield, MapPin, Sparkles } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface OthersTemplate7Props {
   othersData: OthersTemplate7Data;
   isEditable?: boolean;
+  siteUser?: string;
   onUpdate?: (updatedData: Partial<OthersTemplate7Data>) => void;
 }
 
-const getIconComponent = (iconName: string | undefined, className: string) => {
-  switch (iconName) {
-    case "Sparkles":
-      return <Sparkles className={className} />;
-    case "Eye":
-      return <Eye className={className} />;
-    case "MapPin":
-      return <MapPin className={className} />;
-    case "Shield":
-      return <Shield className={className} />;
-    default:
-      return <Sparkles className={className} />;
-  }
-};
-
 export const OthersTemplate7: React.FC<OthersTemplate7Props> = ({
   othersData,
+  siteUser,
   isEditable = false,
   onUpdate,
 }) => {
+  const { data, handleArrayItemUpdate, handleTextUpdate } = useBuilderLogic(
+    othersData,
+    onUpdate
+  );
+
   const { data: themeResponse } = useThemeQuery();
-  const theme = themeResponse?.data?.[0]?.data?.theme || {
-    colors: {
-      text: "#000000",
-      primary: "#111827",
-      secondary: "#374151",
-      background: "#FFFFFF",
-    },
-  };
+  const theme = themeResponse?.data?.[0]?.data?.theme;
 
-  const handleUpdate =
-    (field: keyof OthersTemplate7Data) => (value: string | any) => {
-      onUpdate?.({ [field]: value });
-    };
+  const activeImage =
+    data.images?.find((img: any) => img.is_active !== false) || data.images?.[0];
 
-  const handleItemUpdate = (
-    index: number,
-    field: "title" | "description",
-    value: string
-  ) => {
-    const newItems = [...(othersData.items || [])];
-    if (newItems[index]) {
-      newItems[index] = { ...newItems[index], [field]: value };
-      onUpdate?.({ items: newItems });
+  const handleImageUpdateLocal = (imageUrl: string, altText?: string) => {
+    if (activeImage && activeImage.id !== undefined) {
+      handleArrayItemUpdate(
+        "images",
+        activeImage.id
+      )({
+        image: imageUrl,
+        image_alt_description: altText,
+      });
     }
   };
 
-  return (
-    <section className="bg-white py-20">
-      <div className="container mx-auto max-w-7xl px-4">
-        {/* Heading */}
-        <div className="mb-14 max-w-5xl">
-          <EditableText
-            value={othersData.heading}
-            onChange={handleUpdate("heading")}
-            as="h4"
-            className="mb-2"
-            style={{ color: theme.colors.primary }}
-            isEditable={isEditable}
-            multiline
-          />
-          <EditableText
-            value={othersData.description}
-            onChange={handleUpdate("description")}
-            as="span"
-            isEditable={isEditable}
-            multiline
-          />
-        </div>
+  const getImageUrl = (image: any) => {
+    if (typeof image === "string") return image;
+    return "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=765&auto=format&fit=crop";
+  };
 
-        {/* Features */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {(othersData.items || []).map((item, index) => (
-            <div
-              key={item.id || index}
-              className="group rounded-2xl border border-gray-100 p-6 transition-all hover:border-gray-300"
-            >
-              <div
-                className="mb-4 inline-flex rounded-xl bg-gray-50 p-3 transition group-hover:bg-gray-100"
-                style={{ color: theme.colors.secondary }}
-              >
-                {getIconComponent(item.icon, "w-7 h-7")}
+  const currentBgClass = "bg-gradient-to-br from-indigo-950 to-navy-900";
+
+  return (
+    <section className="w-full space-y-2 py-8 sm:space-y-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div
+          className={`relative overflow-hidden rounded-3xl ${currentBgClass} group flex min-h-[360px] items-center text-white shadow-2xl md:min-h-[420px]`}
+          style={{ backgroundColor: "#1e1b4b" }}
+        >
+          <div className="pointer-events-none absolute inset-0 opacity-20">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-50"></div>
+          </div>
+
+          <div className="relative z-10 grid w-full grid-cols-1 items-center gap-8 p-8 md:grid-cols-2 md:p-16">
+            <div className="order-2 md:order-1 md:pr-12">
+              <div className="mb-6 inline-block rounded-full border border-white/10 bg-white/20 px-3 py-1 text-xs font-bold tracking-wider uppercase backdrop-blur-sm">
+                <EditableText
+                  value={data.subtitle || "Smartphone Deals"}
+                  onChange={handleTextUpdate("subtitle")}
+                  isEditable={isEditable}
+                  as="span"
+                />
               </div>
 
-              <EditableText
-                value={item.title}
-                onChange={val =>
-                  handleItemUpdate(index, "title", val as string)
-                }
-                as="h5"
-                style={{
-                  color: theme.colors.primary,
-                }}
-                isEditable={isEditable}
-                multiline
-              />
-              <EditableText
-                value={item.description}
-                onChange={val =>
-                  handleItemUpdate(index, "description", val as string)
-                }
-                as="p"
-                className="text-gray-600"
-                isEditable={isEditable}
-                multiline
-              />
+              <div className="mb-6 text-4xl leading-tight font-extrabold md:text-5xl">
+                <EditableText
+                  value={data.title || "The New Standard"}
+                  onChange={handleTextUpdate("title")}
+                  isEditable={isEditable}
+                  as="h2"
+                />
+              </div>
+
+              <div className="mb-8 text-lg leading-relaxed text-white/80">
+                <EditableText
+                  value={
+                    data.description ||
+                    "Unlock the potential of mobile photography with our latest flagship collection."
+                  }
+                  onChange={handleTextUpdate("description")}
+                  isEditable={isEditable}
+                  as="p"
+                  multiline
+                />
+              </div>
+
+              <div className="group/btn relative inline-flex">
+                <EditableLink
+                  text={data.buttonText || "Explore Collection"}
+                  href={activeImage?.link || "#"}
+                  onChange={(text, href) => {
+                    handleTextUpdate("buttonText")(text);
+                    if (activeImage && activeImage.id !== undefined) {
+                      handleArrayItemUpdate(
+                        "images",
+                        activeImage.id
+                      )({ link: href });
+                    }
+                  }}
+                  className="inline-flex transform items-center rounded-full px-8 py-3.5 font-bold shadow-lg transition-all hover:scale-105"
+                  style={{
+                    backgroundColor: theme?.colors?.primary || "#ffffff",
+                    color: theme?.colors?.primaryForeground || "#111827",
+                  }}
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  textPlaceholder="Explore Collection"
+                  hrefPlaceholder="#explore"
+                >
+                  {data.buttonText || "Explore Collection"}
+                  <ChevronRight size={18} className="ml-2" />
+                </EditableLink>
+              </div>
             </div>
-          ))}
+
+            <div className="relative order-1 flex justify-center md:order-2">
+              {activeImage ? (
+                <div className="group/image relative">
+                  <EditableImage
+                    src={getImageUrl(activeImage.image)}
+                    alt={
+                      activeImage.image_alt_description ||
+                      "Product Banner Image"
+                    }
+                    onImageChange={(imageUrl, altText) =>
+                      handleImageUpdateLocal(imageUrl, altText)
+                    }
+                    isEditable={isEditable}
+                    className="w-full max-w-sm object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:translate-x-4 group-hover:-rotate-2 md:max-w-md"
+                    s3Options={{
+                      folder: "banner-images",
+                    }}
+                    showAltEditor={isEditable}
+                    disableImageChange={true}
+                  />
+                  <ImageEditOverlay
+                    onImageSelect={handleImageUpdateLocal}
+                    imageWidth={800}
+                    imageHeight={800}
+                    isEditable={isEditable}
+                    label="Change"
+                    folder="banner-images"
+                    className="absolute top-0 right-0 z-20 flex items-center justify-center"
+                  />
+                </div>
+              ) : (
+                <div className="flex h-64 w-full max-w-sm items-center justify-center rounded-xl bg-white/10 md:max-w-md">
+                  <span className="text-white/50">No Image</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>

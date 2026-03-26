@@ -207,7 +207,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       },
       {
         id: "others-4",
-        name: "Visa Immigration Hero",
+        name: "Others Style 4",
         image: "/images/site-owners/others/others4.png",
       },
       {
@@ -229,11 +229,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "others-8",
         name: "Others Style 8",
         image: "/images/site-owners/others/others8.png",
-      },
-      {
-        id: "others-9",
-        name: "Others Style 9",
-        image: "/images/site-owners/others/others9.png",
       },
     ],
     experience: [
@@ -794,27 +789,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Banner Style 3",
         image: "/images/site-owners/banner/banner3.png",
       },
-      {
-        id: "banner-4",
-        name: "Banner Style 4",
-        image: "/images/site-owners/banner/banner4.png",
-      },
-      {
-        id: "banner-5",
-        name: "Banner Style 5",
-        image: "/images/site-owners/banner/banner5.png",
-      },
-      {
-        id: "banner-6",
-        name: "Banner Style 6",
-        image: "/images/site-owners/banner/banner6.png",
-      },
-      {
-        id: "banner-7",
-        name: "Banner Style 7",
-        image: "/images/site-owners/banner/banner7.png",
-      },
-      ],
+    ],
     blog: [
       {
         id: "blog-1",
@@ -880,11 +855,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Portfolio Style 3",
         image: "/images/site-owners/portfolio/portfolio3.png",
       },
-      {
-        id: "portfolio-4",
-        name: "Portfolio Style 4",
-        image: "/images/site-owners/portfolio/portfolio4.png",
-      },
     ],
     newsletter: [
       {
@@ -896,16 +866,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "newsletter-2",
         name: "Newsletter Style 2",
         image: "/images/site-owners/newsletter/newsletter2.png",
-      },
-      {
-        id: "newsletter-3",
-        name: "Newsletter Style 3",
-        image: "/images/site-owners/newsletter/newsletter3.png",
-      },
-      {
-        id: "newsletter-4",
-        name: "Newsletter Style 4",
-        image: "/images/site-owners/newsletter/newsletter4.png",
       },
     ],
     skills: [

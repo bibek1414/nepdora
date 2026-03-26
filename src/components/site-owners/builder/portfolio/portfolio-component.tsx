@@ -21,7 +21,6 @@ import Link from "next/link";
 import { PortfolioStyle1 } from "./portfolio-style/portfolio-style-1";
 import { PortfolioStyle2 } from "./portfolio-style/portfolio-style-2";
 import { PortfolioStyle3 } from "./portfolio-style/portfolio-style-3";
-import { PortfolioStyle4 } from "./portfolio-style/portfolio-style-4";
 
 interface PortfolioComponentProps {
   component: PortfolioComponentData;
@@ -102,8 +101,6 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
         return <PortfolioStyle2 {...commonProps} />;
       case "portfolio-3":
         return <PortfolioStyle3 {...commonProps} />;
-      case "portfolio-4":
-        return <PortfolioStyle4 {...commonProps} />;
       case "portfolio-1":
       default:
         return <PortfolioStyle1 {...commonProps} />;

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { PortfolioData } from "@/types/owner-site/components/portfolio";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/site-owners/button";
 
 interface PortfolioStyleProps {
   data: PortfolioData;
@@ -126,6 +126,7 @@ export const PortfolioStyle3: React.FC<PortfolioStyleProps> = ({
                   )}
                   <PortfolioCard3
                     portfolio={portfolios[currentProjectIndex]}
+                    index={currentProjectIndex}
                     siteUser={isEditable ? undefined : siteUser}
                     onClick={() =>
                       onPortfolioClick?.(portfolios[currentProjectIndex].slug)
@@ -155,7 +156,7 @@ export const PortfolioStyle3: React.FC<PortfolioStyleProps> = ({
                   size="icon"
                   onClick={goToNextProject}
                   disabled={isAnimating}
-                  className="h-12 w-12 rounded-full border-2"
+                  className="te h-12 w-12 rounded-full border-2"
                 >
                   <ChevronRight className="h-6 w-6" />
                 </Button>
