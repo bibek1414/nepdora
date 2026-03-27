@@ -32,6 +32,7 @@ export default function AddProductPage() {
   const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [previewData, setPreviewData] = React.useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   return (
     <div className="mx-auto bg-gray-50">
@@ -93,14 +94,15 @@ export default function AddProductPage() {
               type="submit"
               form="product-form"
               size="sm"
+              disabled={isSubmitting}
               className="rounded-xl bg-gray-900 px-4 py-2 text-white hover:bg-gray-800"
             >
-              Save Changes
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </div>
 
-        <ProductForm ref={formRef} />
+        <ProductForm ref={formRef} onLoadingChange={setIsSubmitting} />
         <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
           <DialogContent className="h-[90vh] max-w-[90vw] overflow-y-auto p-0 sm:max-w-5xl">
             <DialogHeader className="px-6 pt-6">

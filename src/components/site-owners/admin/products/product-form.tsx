@@ -54,6 +54,7 @@ interface ProductFormProps {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   product?: any | null;
   onClose?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 interface OptionValue {
@@ -164,7 +165,7 @@ const ThumbnailSelector: React.FC<{
 };
 
 const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
-  ({ product, onClose }: ProductFormProps, ref) => {
+  ({ product, onClose, onLoadingChange }: ProductFormProps, ref) => {
     const router = useRouter();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(
       null
@@ -231,8 +232,8 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
       defaultValues: {
         name: product?.name || "",
         description: product?.description || "",
-        price: product?.price || "0.00",
-        market_price: product?.market_price || "",
+        price: product?.price?.toString() || "0.00",
+        market_price: product?.market_price?.toString() || "",
         stock: product?.stock ?? 0,
         thumbnail_image: initialThumbnailImage,
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -313,8 +314,8 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
       form.reset({
         name: product.name || "",
         description: product.description || "",
-        price: product.price || "0.00",
-        market_price: product.market_price || "",
+        price: product.price?.toString() || "0.00",
+        market_price: product.market_price?.toString() || "",
         stock: product.stock ?? 0,
         thumbnail_image:
           initialThumbnailIndex !== null
@@ -479,11 +480,22 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
         }
       } catch (error) {
         console.error("Error submitting product:", error);
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("An unexpected error occurred while saving the product.");
+        }
       }
     };
 
     const isLoading =
       createProductMutation.isPending || updateProductMutation.isPending;
+
+    useEffect(() => {
+      if (onLoadingChange) {
+        onLoadingChange(isLoading);
+      }
+    }, [isLoading, onLoadingChange]);
 
     // Expose preview data to parent via ref
     React.useImperativeHandle(ref, () => ({
@@ -574,7 +586,12 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
               <Form {...form}>
                 <form
                   id="product-form"
-                  onSubmit={form.handleSubmit(onSubmit)}
+                  onSubmit={form.handleSubmit(onSubmit, errors => {
+                    console.error("Validation errors:", errors);
+                    toast.error(
+                      "Please check the form for errors. Some fields may be invalid."
+                    );
+                  })}
                   className="space-y-6"
                 >
                   {/* Two Column Layout - 70/30 split */}

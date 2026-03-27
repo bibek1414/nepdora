@@ -108,7 +108,10 @@ export const ProductSchema = z.object({
   meta_description: z.string().nullable().optional(),
   // NEW FIELDS
   fast_shipping: z.boolean().default(false),
-  warranty: z.string().max(20).nullable().optional(),
+  warranty: z
+    .string()
+    .max(200, "Warranty must be 200 characters or less")
+    .optional(),
   average_rating: z.number().min(0).max(5).optional(),
   reviews_count: z.number().min(0).optional(),
   options: z.array(ProductOptionSchema).optional(),
@@ -174,7 +177,7 @@ export const CreateProductSchema = z.object({
   fast_shipping: z.boolean(),
   warranty: z
     .string()
-    .max(20, "Warranty must be 20 characters or less")
+    .max(200, "Warranty must be 200 characters or less")
     .optional(),
   weight: z
     .string()
