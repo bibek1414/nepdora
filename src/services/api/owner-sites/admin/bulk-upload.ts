@@ -21,13 +21,19 @@ export interface DownloadTemplateResponse {
 }
 
 export const bulkUploadApi = {
-  // Bulk upload products via CSV
-  bulkUpload: async (file: File): Promise<BulkUploadResponse> => {
+  // Bulk upload products via CSV/Excel and optional ZIP for images
+  bulkUpload: async (
+    file: File,
+    zipFile?: File
+  ): Promise<BulkUploadResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const url = `${API_BASE_URL}/api/bulk-upload/`;
 
     const formData = new FormData();
     formData.append("file", file);
+    if (zipFile) {
+      formData.append("zip_file", zipFile);
+    }
 
     const response = await apiFetch(url, {
       method: "POST",

@@ -14,14 +14,15 @@ export const useBulkUpload = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (file: File) => bulkUploadApi.bulkUpload(file),
+    mutationFn: ({ file, zipFile }: { file: File; zipFile?: File | null }) =>
+      bulkUploadApi.bulkUpload(file, zipFile || undefined),
     onSuccess: data => {
       // Invalidate products list to refetch after bulk upload
       queryClient.invalidateQueries({ queryKey: ["products"] });
 
       if (data.success) {
         toast.success(
-          `Bulk upload completed!  products imported successfully.`
+          data.message || `Bulk upload completed! products imported successfully.`
         );
 
         if (data.failed && data.failed > 0) {

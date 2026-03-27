@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Upload, FileDown, X } from "lucide-react";
+import { Upload, FileDown, X, FileArchive } from "lucide-react";
 import {
   useBulkUpload,
   useDownloadTemplate,
@@ -25,7 +25,9 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
   onOpenChange,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedZipFile, setSelectedZipFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const zipFileInputRef = useRef<HTMLInputElement>(null);
 
   const bulkUploadMutation = useBulkUpload();
   const downloadTemplateMutation = useDownloadTemplate();
@@ -34,6 +36,10 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
   const isValidFileType = (fileName: string): boolean => {
     const validExtensions = [".xlsx", ".xls"];
     return validExtensions.some(ext => fileName.toLowerCase().endsWith(ext));
+  };
+
+  const isValidZipFile = (fileName: string): boolean => {
+    return fileName.toLowerCase().endsWith(".zip");
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +81,24 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
     }
   };
 
+  const handleZipFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (!isValidZipFile(file.name)) {
+        toast.error("Please select a ZIP file (.zip)");
+        return;
+      }
+      setSelectedZipFile(file);
+    }
+  };
+
+  const handleZipRemoveFile = () => {
+    setSelectedZipFile(null);
+    if (zipFileInputRef.current) {
+      zipFileInputRef.current.value = "";
+    }
+  };
+
   const handleUpload = async () => {
     if (!selectedFile) {
       toast.error("Please select a file to upload");
@@ -82,10 +106,17 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
     }
 
     try {
-      await bulkUploadMutation.mutateAsync(selectedFile);
+      await bulkUploadMutation.mutateAsync({
+        file: selectedFile,
+        zipFile: selectedZipFile,
+      });
       setSelectedFile(null);
+      setSelectedZipFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
+      }
+      if (zipFileInputRef.current) {
+        zipFileInputRef.current.value = "";
       }
       onOpenChange(false);
     } catch (error) {
@@ -105,8 +136,12 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
 
   const handleCancel = () => {
     setSelectedFile(null);
+    setSelectedZipFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
+    }
+    if (zipFileInputRef.current) {
+      zipFileInputRef.current.value = "";
     }
     onOpenChange(false);
   };
@@ -175,19 +210,61 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
             )}
           </div>
 
-          {/* Download Template Link */}
-          <div className="mt-4">
-            <button
-              type="button"
-              onClick={handleDownloadTemplate}
-              disabled={downloadTemplateMutation.isPending}
-              className="text-primary hover:text-primary flex cursor-pointer items-center gap-2 text-sm hover:underline disabled:opacity-50"
-            >
-              <FileDown className="h-4 w-4" />
-              {downloadTemplateMutation.isPending
-                ? "Downloading..."
-                : "Download sample Excel"}
-            </button>
+          {/* ZIP Upload and Download Template */}
+          <div className="mt-6 space-y-4 rounded-lg bg-gray-50 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <FileArchive className="h-4 w-4 text-primary" />
+                <span>Upload Product Images (ZIP)</span>
+              </div>
+              <input
+                ref={zipFileInputRef}
+                type="file"
+                accept=".zip"
+                onChange={handleZipFileSelect}
+                className="hidden"
+              />
+              {!selectedZipFile ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => zipFileInputRef.current?.click()}
+                  className="h-8 border-gray-300"
+                >
+                  Select ZIP
+                </Button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="max-w-[150px] truncate text-xs text-gray-500">
+                    {selectedZipFile.name}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleZipRemoveFile}
+                    className="h-7 w-7 p-0 hover:bg-gray-200"
+                  >
+                    <X className="h-3 w-3 text-gray-600" />
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-gray-200 pt-3">
+              <button
+                type="button"
+                onClick={handleDownloadTemplate}
+                disabled={downloadTemplateMutation.isPending}
+                className="flex cursor-pointer items-center gap-2 text-sm text-primary hover:underline disabled:opacity-50"
+              >
+                <FileDown className="h-4 w-4" />
+                {downloadTemplateMutation.isPending
+                  ? "Downloading..."
+                  : "Download sample Excel"}
+              </button>
+            </div>
           </div>
 
           {/* Action Buttons */}
