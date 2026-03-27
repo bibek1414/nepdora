@@ -4,15 +4,24 @@ import { getServerUser } from "@/hooks/use-jwt-server";
 import { capitalizeWords } from "@/lib/string-utils";
 import { extractSubdomain, siteConfig } from "@/config/site";
 import { getServerApiBaseUrl } from "@/config/server-site";
+import type { ComponentResponse } from "@/types/owner-site/components/components";
+import { EntityMetadata } from "./publish-page-cache";
 
 interface AdminPageMetadataOptions {
   pageName: string;
   pageDescription: string;
   pageRoute: string;
+  pageImage?: string | null;
 }
 
 interface SiteConfigMetadata {
   favicon?: string | null;
+}
+
+interface PublishContentMetadata {
+  title?: string | null;
+  description?: string | null;
+  image?: string | null;
 }
 
 const DEFAULT_ICONS: NonNullable<Metadata["icons"]> = {
@@ -34,6 +43,176 @@ const buildIconsMetadata = (
     apple: favicon,
   };
 };
+
+const stripHtml = (value: string): string =>
+  value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+
+const normalizeText = (value: unknown): string | null => {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const cleaned = stripHtml(value);
+  return cleaned.length > 0 ? cleaned : null;
+};
+
+const truncateText = (value: string, maxLength = 160): string => {
+  if (value.length <= maxLength) {
+    return value;
+  }
+
+  return `${value.slice(0, maxLength - 1).trimEnd()}…`;
+};
+
+const extractTitleFromComponent = (component: ComponentResponse): string | null => {
+  const data = component.data as unknown as Record<string, unknown>;
+
+  switch (component.component_type) {
+    case "hero":
+      return (
+        normalizeText(data.title) ||
+        normalizeText(data.subtitle) ||
+        normalizeText(data.description)
+      );
+    case "about":
+      return (
+        normalizeText(data.title) ||
+        normalizeText(data.heroTitle) ||
+        normalizeText(data.storyTitle) ||
+        normalizeText(data.smallTitle)
+      );
+    case "banner":
+    case "text_editor":
+    case "contact":
+    case "appointment":
+    case "newsletter":
+    case "cta":
+    case "gallery":
+    case "services":
+    case "products":
+    case "blog":
+    case "portfolio":
+    case "faq":
+    case "pricing":
+    case "our_clients":
+    case "others":
+    case "socials":
+      return normalizeText(data.title) || normalizeText(data.subtitle);
+    default:
+      return null;
+  }
+};
+
+const extractDescriptionFromComponent = (
+  component: ComponentResponse
+): string | null => {
+  const data = component.data as unknown as Record<string, unknown>;
+
+  switch (component.component_type) {
+    case "hero":
+    case "banner":
+    case "contact":
+    case "appointment":
+    case "newsletter":
+    case "cta":
+    case "gallery":
+    case "services":
+    case "products":
+    case "blog":
+    case "portfolio":
+    case "faq":
+    case "pricing":
+    case "our_clients":
+    case "others":
+    case "socials":
+      return (
+        normalizeText(data.description) ||
+        normalizeText(data.subtitle) ||
+        normalizeText(data.title)
+      );
+    case "about":
+      return (
+        normalizeText(data.description) ||
+        normalizeText(data.journeyDescription) ||
+        normalizeText(data.subSubtitle) ||
+        normalizeText(data.badgeDescription)
+      );
+    case "text_editor":
+      return (
+        normalizeText(data.content) ||
+        normalizeText(data.title)
+      );
+    default:
+      return null;
+  }
+};
+
+const extractImageFromComponent = (component: ComponentResponse): string | null => {
+  const data = component.data as unknown as Record<string, unknown>;
+
+  switch (component.component_type) {
+    case "hero":
+      return (
+        normalizeText(data.imageUrl) ||
+        normalizeText(data.backgroundImageUrl) ||
+        normalizeText(
+          Array.isArray(data.sliderImages)
+            ? (data.sliderImages[0] as Record<string, unknown> | undefined)?.url
+            : null
+        )
+      );
+    case "banner":
+      return normalizeText(
+        Array.isArray(data.images)
+          ? (data.images[0] as Record<string, unknown> | undefined)?.image
+          : null
+      );
+    case "about":
+      return (
+        normalizeText(data.heroImageUrl) ||
+        normalizeText(data.imageUrl) ||
+        normalizeText(data.journeyImageUrl) ||
+        normalizeText(data.mainImage)
+      );
+    default:
+      return null;
+  }
+};
+
+export function derivePublishContentMetadata(
+  pageName: string,
+  pageComponents: ComponentResponse[],
+  entityMetadata?: EntityMetadata
+): PublishContentMetadata {
+  const orderedComponents = [...pageComponents].sort(
+    (left, right) => left.order - right.order
+  );
+
+  const componentTitle = orderedComponents
+    .map(extractTitleFromComponent)
+    .find(Boolean);
+  const title =
+    normalizeText(entityMetadata?.title) ||
+    componentTitle ||
+    normalizeText(pageName);
+
+  const componentDescription = orderedComponents
+    .map(extractDescriptionFromComponent)
+    .find(Boolean);
+  const description =
+    normalizeText(entityMetadata?.description) || componentDescription;
+
+  const componentImage = orderedComponents
+    .map(extractImageFromComponent)
+    .find(Boolean);
+  const image = normalizeText(entityMetadata?.image) || componentImage;
+
+  return {
+    title,
+    description: description ? truncateText(description) : null,
+    image,
+  };
+}
 
 const getTenantDomainFromHeaders = async (): Promise<string | null> => {
   const headersList = await headers();
@@ -165,6 +344,7 @@ export async function generatePublishPageMetadata({
   pageName,
   pageDescription,
   pageRoute,
+  pageImage,
 }: AdminPageMetadataOptions): Promise<Metadata> {
   // Get the actual request headers to extract the host
   const headersList = await headers();
@@ -193,11 +373,13 @@ export async function generatePublishPageMetadata({
       description,
       type: "website",
       siteName: storeName,
+      ...(pageImage ? { images: [{ url: pageImage, alt: title }] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      ...(pageImage ? { images: [pageImage] } : {}),
     },
     ...(subDomain && {
       alternates: {

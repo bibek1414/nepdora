@@ -1,5 +1,8 @@
 import { Metadata } from "next";
-import { generatePublishPageMetadata } from "@/lib/metadata-utils";
+import {
+  derivePublishContentMetadata,
+  generatePublishPageMetadata,
+} from "@/lib/metadata-utils";
 import { getPublishedPagePayload } from "@/lib/publish-page-cache";
 import DynamicPageClient from "./dynamic-page-client";
 
@@ -16,12 +19,28 @@ export async function generateMetadata({
   const { siteUser, pageSlug } = await params;
   const currentPageSlug =
     pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
+  const contentSlug = pageSlug && pageSlug.length > 1 ? pageSlug[1] : undefined;
+  const pageData = await getPublishedPagePayload(
+    siteUser,
+    currentPageSlug,
+    contentSlug
+  ).catch(() => null);
+  const pageMetadata = derivePublishContentMetadata(
+    pageData?.pageTitle ||
+      currentPageSlug.charAt(0).toUpperCase() + currentPageSlug.slice(1),
+    pageData?.pageComponents || [],
+    pageData?.entityMetadata
+  );
 
   return generatePublishPageMetadata({
     pageName:
+      pageMetadata.title ||
       currentPageSlug.charAt(0).toUpperCase() + currentPageSlug.slice(1),
-    pageDescription: `Explore the ${currentPageSlug} page for ${siteUser}. View content, products, and services dynamically.`,
-    pageRoute: `/${siteUser}/${currentPageSlug}`,
+    pageDescription:
+      pageMetadata.description ||
+      `Explore the ${currentPageSlug} page for ${siteUser}. View content, products, and services dynamically.`,
+    pageRoute: `/${currentPageSlug}`,
+    pageImage: pageMetadata.image,
   });
 }
 
@@ -39,6 +58,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
     return {
       currentPageSlug,
       targetSlug: currentPageSlug,
+      pageTitle: currentPageSlug,
       contentSlug,
       pageComponents: [],
     };

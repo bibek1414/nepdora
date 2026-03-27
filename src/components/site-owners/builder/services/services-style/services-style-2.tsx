@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
-import { ServicesCard6 } from "../services-card/services-card6";
+import { ServicesCard2 } from "../services-card/services-card2";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Briefcase } from "lucide-react";
@@ -75,7 +75,7 @@ export const ServicesStyle2: React.FC<ServicesStyleProps> = ({
           {isEditable && (
             <div className="absolute inset-0 z-10 bg-transparent" />
           )}
-          <ServicesCard6
+          <ServicesCard2
             component={component}
             services={services.slice(0, pageSize)}
             isEditable={isEditable}

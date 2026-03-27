@@ -58,7 +58,7 @@ export const OurClientsStyle6: React.FC<OurClientsStyleProps> = ({
         <div className="absolute -top-1/4 -left-1/4 h-[150%] w-[150%] rotate-12 transform bg-linear-to-br from-white/10 to-transparent" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4">
+      <div className="relative z-10 container mx-auto max-w-7xl px-4">
         {(title || isEditable) && (
           <div className="mb-16 text-center">
             <EditableText

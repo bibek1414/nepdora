@@ -1032,6 +1032,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.experience,
       type: "section",
+      isSpecialized: true,
     },
     {
       id: "appointment-sections",

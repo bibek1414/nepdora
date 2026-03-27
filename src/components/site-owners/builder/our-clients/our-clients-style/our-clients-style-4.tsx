@@ -11,7 +11,7 @@ interface OurClientsStyleProps {
 
 export const OurClientsStyle4: React.FC<OurClientsStyleProps> = ({ data }) => {
   return (
-    <section className="bg-background py-8 md:py-12">
+    <section className="bg-background py-3 md:py-20">
       <div className="mx-auto max-w-7xl">
         <OurClients4 data={data} />
       </div>

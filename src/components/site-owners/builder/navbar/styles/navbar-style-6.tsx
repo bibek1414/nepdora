@@ -111,9 +111,9 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   };
 
   return (
-    <>
+    <div className="bg-white">
       <nav
-        className={`bg-background mx-auto flex max-w-7xl items-center justify-between p-4 lg:p-6 ${
+        className={`bg-white mx-auto flex max-w-7xl items-center justify-between p-4 lg:p-6 ${
           !isEditable ? "sticky top-0 z-40 border-b" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
       >
@@ -532,6 +532,6 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
           </div>
         </SheetContent>
       </Sheet>
-    </>
+    </div>
   );
 };

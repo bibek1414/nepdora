@@ -27,7 +27,7 @@ export const OurClientsStyle5: React.FC<OurClientsStyleProps> = ({
   };
 
   return (
-    <section className="bg-background border-t border-gray-100 py-20">
+    <section className="bg-background py-3 md:py-20">
       <div className="mx-auto max-w-7xl px-4">
         {title && (
           <div className="mb-4 text-center">
