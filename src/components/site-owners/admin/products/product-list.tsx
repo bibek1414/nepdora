@@ -327,17 +327,18 @@ const ProductList = () => {
 
                       <TableCell className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                            onClick={e => {
-                              e.stopPropagation();
-                              window.location.href = `/admin/products/edit/${product.slug}`;
-                            }}
+                          <Link
+                            href={`/admin/products/edit/${product.slug}`}
+                            onClick={e => e.stopPropagation()}
                           >
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </Link>
                           <Button
                             variant="ghost"
                             size="icon"
