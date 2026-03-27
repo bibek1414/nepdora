@@ -159,7 +159,6 @@ export const AboutUsTemplate12: React.FC<AboutUsTemplate12Props> = ({
         {/* Vision Row */}
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
-            className="order-2 h-[400px] overflow-hidden rounded-3xl shadow-2xl sm:h-[500px] lg:order-1"
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -170,7 +169,7 @@ export const AboutUsTemplate12: React.FC<AboutUsTemplate12Props> = ({
               alt={data.visionImageAlt}
               onImageChange={handleImageUpdate("visionImage", "visionImageAlt")}
               isEditable={isEditable}
-              className="h-full w-full object-cover"
+              className="h-full w-full rounded-3xl object-cover"
               width={1674}
               height={1000}
             />
