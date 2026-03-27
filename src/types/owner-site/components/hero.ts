@@ -594,6 +594,57 @@ export const defaultHeroTemplate16Data: HeroTemplate16Data = {
   imageAlt: "Office Meeting",
 };
 
+export interface HeroTemplate17Data {
+  template: "hero-17";
+  badge: string;
+  title: string;
+  description: string;
+  primaryButtonText: string;
+  primaryButtonHref: string;
+  secondaryButtonText: string;
+  secondaryButtonHref: string;
+  stat1Value: string;
+  stat1Label: string;
+  stat2Value: string;
+  stat2Label: string;
+  stat3Value: string;
+  stat3Label: string;
+  mainImageUrl: string;
+  mainImageAlt: string;
+  floatingImageUrl: string;
+  floatingImageAlt: string;
+  floatingBadgeIcon: string;
+  floatingBadgeTitle: string;
+  floatingBadgeSubtitle: string;
+}
+
+export const defaultHeroTemplate17Data: HeroTemplate17Data = {
+  template: "hero-17",
+  badge: "New Collection 2024",
+  title: "Unlock Your <br />Natural Glow",
+  description:
+    "Discover premium Korean skincare formulated with time-tested ingredients for radiant, healthy skin.",
+  primaryButtonText: "Shop Now",
+  primaryButtonHref: "#",
+  secondaryButtonText: "About Us",
+  secondaryButtonHref: "#",
+  stat1Value: "50K+",
+  stat1Label: "Happy Customers",
+  stat2Value: "4.9★",
+  stat2Label: "Average Rating",
+  stat3Value: "100%",
+  stat3Label: "Authentic",
+  mainImageUrl:
+    "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=900&h=900&fit=crop",
+  mainImageAlt: "Beautiful woman with glowing skin",
+  floatingImageUrl:
+    "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=200&h=250&fit=crop",
+  floatingImageAlt: "Featured serum",
+  floatingBadgeIcon: "🌸",
+  floatingBadgeTitle: "Best Seller",
+  floatingBadgeSubtitle: "5000+ sold",
+};
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -611,7 +662,8 @@ export type HeroData =
   | HeroTemplate13Data
   | HeroTemplate14Data
   | HeroTemplate15Data
-  | HeroTemplate16Data;
+  | HeroTemplate16Data
+  | HeroTemplate17Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -689,6 +741,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-14": defaultHeroTemplate14Data,
   "hero-15": defaultHeroTemplate15Data,
   "hero-16": defaultHeroTemplate16Data,
+  "hero-17": defaultHeroTemplate17Data,
 };
 
 // Type guards for each template
@@ -739,3 +792,6 @@ export const isHeroTemplate15 = (data: HeroData): data is HeroTemplate15Data =>
 
 export const isHeroTemplate16 = (data: HeroData): data is HeroTemplate16Data =>
   data.template === "hero-16";
+
+export const isHeroTemplate17 = (data: HeroData): data is HeroTemplate17Data =>
+  data.template === "hero-17";

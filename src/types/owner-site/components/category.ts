@@ -30,8 +30,13 @@ export const DEFAULT_CATEGORY_MAP: Record<CategoryData["style"], CategoryData> =
     "category-8": {
       ...defaultCategoryData,
       style: "category-8",
-      title: "Browse Categories",
-      subtitle: "",
+      title: "Build Your Perfect Skincare Routine",
+      subtitle:
+        "Answer a few questions about your skin type and concerns, and we'll create a personalized routine just for you.",
+      stats: [
+        { label: "Routines Created", value: "10K+" },
+        { label: "Satisfaction Rate", value: "96%" },
+      ],
     },
   };
 
@@ -43,6 +48,11 @@ export interface FeaturedContent {
   buttonHref?: string;
   backgroundImages?: string[];
   currentImageIndex?: number;
+}
+
+export interface CategoryStat {
+  label: string;
+  value: string;
 }
 
 export interface CategoryData {
@@ -61,4 +71,5 @@ export interface CategoryData {
   subtitle?: string;
   order?: number;
   featuredContent?: FeaturedContent;
+  stats?: CategoryStat[];
 }

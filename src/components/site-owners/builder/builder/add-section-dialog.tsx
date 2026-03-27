@@ -188,6 +188,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 16",
         image: "/images/site-owners/hero/hero16.png",
       },
+      {
+        id: "hero-17",
+        name: "Hero Style 17",
+        image: "/images/site-owners/hero/hero17.png",
+      },
     ],
     others: [
       {
@@ -384,6 +389,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Product Style 5",
         image: "/images/site-owners/products/product5.png",
       },
+      {
+        id: "product-6",
+        name: "Product Style 6",
+        image: "/images/site-owners/products/product6.png",
+      },
     ],
     product_details: [
       {
@@ -509,6 +519,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "category-7",
         name: "Category Style 7",
         image: "/images/site-owners/categories/category7.png",
+      },
+      {
+        id: "category-8",
+        name: "Category Style 8 (Routine)",
+        image: "/images/site-owners/categories/category8.png",
       },
     ],
     subcategory: [
@@ -663,6 +678,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "banner-3",
         name: "Banner Style 3",
         image: "/images/site-owners/banner/banner3.png",
+      },
+      {
+        id: "banner-4",
+        name: "Banner Style 4",
+        image: "/images/site-owners/banner/banner4.png",
       },
     ],
     blog: [

@@ -10,21 +10,6 @@ interface OthersTemplate2Props {
   onUpdate?: (updatedData: Partial<OthersTemplate2Data>) => void;
 }
 
-const getIconComponent = (iconName: string | undefined, className: string) => {
-  switch (iconName) {
-    case "Eye":
-      return <Eye className={className} />;
-    case "Truck":
-      return <Truck className={className} />;
-    case "RotateCcw":
-      return <RotateCcw className={className} />;
-    case "ShieldCheck":
-      return <ShieldCheck className={className} />;
-    default:
-      return <ShieldCheck className={className} />;
-  }
-};
-
 export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
   othersData,
   isEditable = false,
@@ -60,9 +45,6 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
             key={item.id || index}
             className="flex cursor-default flex-col items-center gap-2 rounded-xl p-4 transition-all hover:bg-gray-50"
           >
-            <div className="mb-2" style={{ color: theme.colors.secondary }}>
-              {getIconComponent(item.icon, "w-6 h-6")}
-            </div>
             <p
               className="text-sm font-semibold"
               style={{ color: theme.colors.primary }}

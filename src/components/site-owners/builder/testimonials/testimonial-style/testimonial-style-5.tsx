@@ -15,6 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface TestimonialStyleProps {
   data: TestimonialsComponentData["data"];
@@ -34,6 +35,26 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
   const { title = "What People Are Saying" } = data || {};
   const { data: testimonials = [], isLoading, error } = useTestimonials();
 
+  const { data: themeResponse } = useThemeQuery();
+
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+      accent: "#3B82F6",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  const colors = theme.colors as any;
+
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
   };
@@ -42,7 +63,12 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
     <section className="bg-background-light dark:bg-background-dark py-12 md:py-20">
       <div className="container mx-auto max-w-6xl px-4 md:px-8">
         <div className="mb-12 flex flex-col items-center justify-center text-center md:mb-20">
-          <Badge className="mb-6 rounded-full bg-[#b2f068] px-6 py-2 text-sm font-semibold tracking-wide text-black hover:bg-[#a1d95d]">
+          <Badge
+            className="mb-6 rounded-full px-6 py-2 text-sm font-semibold tracking-wide text-black hover:brightness-90"
+            style={{
+              backgroundColor: colors.primary,
+            }}
+          >
             Testimonials
           </Badge>
           <EditableText

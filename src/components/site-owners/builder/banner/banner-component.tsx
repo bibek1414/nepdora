@@ -16,10 +16,15 @@ import {
 import {
   BannerData,
   BannerComponentData,
+  BannerTemplate1Data,
+  BannerTemplate2Data,
+  BannerTemplate3Data,
+  BannerTemplate4Data,
 } from "@/types/owner-site/components/banner";
 import { BannerTemplate1 } from "./banner-template-1";
 import { BannerTemplate2 } from "./banner-template-2";
 import { BannerTemplate3 } from "./banner-template-3";
+import { BannerTemplate4 } from "./banner-template-4";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -56,7 +61,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
         data: {
           ...component.data,
           ...updatedData,
-        },
+        } as BannerData, // Type assertion since it's a union
       };
       onUpdate(componentId, updatedComponent);
     }
@@ -94,8 +99,7 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
       );
     }
 
-    const props = {
-      bannerData: component.data,
+    const commonProps = {
       isEditable,
       siteUser,
       onUpdate: handleUpdate,
@@ -108,11 +112,13 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
 
     switch (template) {
       case "banner-1":
-        return <BannerTemplate1 {...props} />;
+        return <BannerTemplate1 bannerData={component.data as BannerTemplate1Data} {...commonProps} />;
       case "banner-2":
-        return <BannerTemplate2 {...props} />;
+        return <BannerTemplate2 bannerData={component.data as BannerTemplate2Data} {...commonProps} />;
       case "banner-3":
-        return <BannerTemplate3 {...props} />;
+        return <BannerTemplate3 bannerData={component.data as BannerTemplate3Data} {...commonProps} />;
+      case "banner-4":
+        return <BannerTemplate4 bannerData={component.data as BannerTemplate4Data} {...commonProps} />;
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">

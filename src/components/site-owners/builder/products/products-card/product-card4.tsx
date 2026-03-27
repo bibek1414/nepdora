@@ -12,7 +12,6 @@ import {
   useRemoveFromWishlist,
   useWishlist,
 } from "@/hooks/customer/use-wishlist";
-import { useAuth } from "@/hooks/customer/use-auth";
 import { toast } from "sonner";
 import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -34,7 +33,6 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
 }) => {
   const pathname = usePathname();
   const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
   const { data: wishlistItems } = useWishlist();
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlist();

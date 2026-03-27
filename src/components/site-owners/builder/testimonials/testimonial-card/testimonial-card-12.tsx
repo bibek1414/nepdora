@@ -1,7 +1,9 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import { Testimonial } from "@/types/owner-site/admin/testimonial";
 import { Star } from "lucide-react";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 interface TestimonialCard12Props {
   testimonial: Testimonial;
@@ -23,6 +25,26 @@ export const TestimonialCard12: React.FC<TestimonialCard12Props> = ({
     }
     return `"I Love This Store"`; // fallback title
   };
+
+  const { data: themeResponse } = useThemeQuery();
+
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      text: "#0F172A",
+      primary: "#3B82F6",
+      primaryForeground: "#FFFFFF",
+      secondary: "#F59E0B",
+      secondaryForeground: "#1F2937",
+      background: "#FFFFFF",
+      accent: "#3B82F6",
+    },
+    fonts: {
+      body: "Inter",
+      heading: "Poppins",
+    },
+  };
+
+  const colors = theme.colors as any;
 
   return (
     <div
@@ -49,10 +71,12 @@ export const TestimonialCard12: React.FC<TestimonialCard12Props> = ({
             <Star
               key={i}
               className={`h-7 w-7 ${
-                i < 4
-                  ? "fill-[#b2f068] text-[#b2f068]"
-                  : "fill-gray-200 text-gray-200"
+                i < 4 ? "" : "fill-gray-200 text-gray-200"
               }`}
+              style={{
+                fill: i < 4 ? colors.primary : undefined,
+                color: i < 4 ? colors.primary : undefined,
+              }}
             />
           ))}
         </div>

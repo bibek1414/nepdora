@@ -192,9 +192,9 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   };
 
   return (
-    <>
+    <div className="bg-white">
       <nav
-        className={`bg-background flex items-center justify-between border-b p-4 ${
+        className={`flex items-center justify-between p-4 ${
           !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
       >
@@ -217,7 +217,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             )}
           </div>
 
-          <div className="hidden items-center gap-6 md:flex">
+          <div className="hidden items-center gap-6 bg-white md:flex">
             <div
               className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
             >
@@ -523,6 +523,6 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
       {!isEditable && (
         <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />
       )}
-    </>
+    </div>
   );
 };

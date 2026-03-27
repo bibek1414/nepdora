@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BannerData } from "@/types/owner-site/components/banner";
+import { BannerData, BannerTemplate1Data } from "@/types/owner-site/components/banner";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface BannerTemplateProps {
-  bannerData: BannerData;
+  bannerData: BannerTemplate1Data;
   isEditable?: boolean;
   siteUser?: string;
   onUpdate?: (updatedData: Partial<BannerData>) => void;

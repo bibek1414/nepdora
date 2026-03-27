@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BannerData } from "@/types/owner-site/components/banner";
+import { BannerData, BannerTemplate2Data } from "@/types/owner-site/components/banner";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { ChevronLeft, ChevronRight, Plus, X, Loader2 } from "lucide-react";
@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface BannerTemplateProps {
-  bannerData: BannerData;
+  bannerData: BannerTemplate2Data;
   isEditable?: boolean;
   siteUser?: string;
   onUpdate?: (updatedData: Partial<BannerData>) => void;
