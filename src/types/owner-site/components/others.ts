@@ -46,6 +46,17 @@ export interface OthersStepItem {
   };
 }
 
+export interface OthersDestination {
+  id: string;
+  name: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+  top: number;
+  left: number;
+}
+
 export interface OthersTemplate1Data {
   template: "others-1";
   heading: string;
@@ -132,7 +143,8 @@ export type OthersData =
   | OthersTemplate7Data
   | OthersTemplate8Data
   | OthersTemplate9Data
-  | OthersTemplate10Data;
+  | OthersTemplate10Data
+  | OthersTemplate11Data;
 
 export interface OthersRoutineStep {
   id: string;
@@ -171,6 +183,16 @@ export interface OthersTemplate10Data {
   title: string;
   subtitle: string;
   tips: OthersTip[];
+}
+
+export interface OthersTemplate11Data {
+  template: "others-11";
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  stats: OthersStatistic[];
+  destinations: OthersDestination[];
 }
 
 // Component and API interfaces
@@ -536,6 +558,69 @@ export const defaultOthersTemplate10Data: OthersTemplate10Data = {
   ],
 };
 
+export const defaultOthersTemplate11Data: OthersTemplate11Data = {
+  template: "others-11",
+  title: "Our Favourite Destinations",
+  description:
+    "Step into a world of wonder as we reveal our handpicked selection of favourite destinations, each promising a unique blend of captivating experiences and breathtaking beauty.",
+  buttonText: "Learn More",
+  buttonLink: "#",
+  stats: [
+    {
+      id: "stat-1",
+      value: "95%",
+      label: "Client Satisfaction",
+    },
+    {
+      id: "stat-2",
+      value: "55+",
+      label: "Destinations\nWorldwide",
+    },
+  ],
+  destinations: [
+    {
+      id: "dest-1",
+      name: "Spain",
+      image: {
+        url: "https://picsum.photos/seed/spain/600/600",
+        alt: "Spain",
+      },
+      top: 20,
+      left: 160,
+    },
+    {
+      id: "dest-2",
+      name: "India",
+      image: {
+        url: "https://picsum.photos/seed/india/600/600",
+        alt: "India",
+      },
+      top: 190,
+      left: 0,
+    },
+    {
+      id: "dest-3",
+      name: "Brazil",
+      image: {
+        url: "https://picsum.photos/seed/brazil/600/600",
+        alt: "Brazil",
+      },
+      top: 190,
+      left: 320,
+    },
+    {
+      id: "dest-4",
+      name: "New Zealand",
+      image: {
+        url: "https://picsum.photos/seed/nz/600/600",
+        alt: "New Zealand",
+      },
+      top: 360,
+      left: 160,
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -548,6 +633,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-8": defaultOthersTemplate8Data,
   "others-9": defaultOthersTemplate9Data,
   "others-10": defaultOthersTemplate10Data,
+  "others-11": defaultOthersTemplate11Data,
 };
 
 // Type guards
@@ -581,3 +667,6 @@ export const isOthersTemplate9 = (
 export const isOthersTemplate10 = (
   data: OthersData
 ): data is OthersTemplate10Data => data.template === "others-10";
+export const isOthersTemplate11 = (
+  data: OthersData
+): data is OthersTemplate11Data => data.template === "others-11";

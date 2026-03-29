@@ -203,7 +203,7 @@ export const FooterStyle11: React.FC<FooterStyle11Props> = ({
               <li className="flex items-start gap-3">
                 <Send className="mt-0.5 h-[18px] w-[18px] shrink-0 -rotate-45 text-gray-900 dark:text-gray-300" />
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {siteConfig?.email || "help@archi.com"}
+                  {siteConfig?.email || "help@nepdora.com"}
                 </span>
               </li>
               <li className="flex items-start gap-3">
