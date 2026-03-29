@@ -4,7 +4,7 @@ import Image, { type ImageProps } from "next/image";
 import { type Ref, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import {
-  GalleryData,
+  GalleryBaseData,
   GalleryImage,
 } from "@/types/owner-site/components/gallery";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
@@ -16,10 +16,10 @@ import { Plus, X, Loader2, ZoomIn } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 
 interface GalleryTemplateProps {
-  galleryData: GalleryData;
+  galleryData: GalleryBaseData;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<GalleryData>) => void;
+  onUpdate?: (updatedData: Partial<GalleryBaseData>) => void;
 }
 
 export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
@@ -203,7 +203,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                   return (
                     <motion.div
                       key={image.id}
-                      className="absolute top-0 left-0"
+                      className="absolute left-0 top-0"
                       style={{ zIndex: pos.zIndex }}
                       variants={photoVariants}
                       custom={{ x: pos.x, y: pos.y, order: pos.order }}
@@ -218,7 +218,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                           }
                         />
                         {isEditable && (
-                          <div className="absolute top-2 right-2 z-10 flex gap-2">
+                          <div className="absolute right-2 top-2 z-10 flex gap-2">
                             <Button
                               size="sm"
                               variant="destructive"
@@ -258,7 +258,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                     enableRandomRotation={false}
                   />
                   {isEditable && (
-                    <div className="absolute top-2 right-2 z-10 flex gap-2">
+                    <div className="absolute right-2 top-2 z-10 flex gap-2">
                       <Button
                         size="sm"
                         variant="destructive"
@@ -326,7 +326,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                 )}
               </div>
             )}
-            <DialogClose className="absolute top-2 right-2" />
+            <DialogClose className="absolute right-2 top-2" />
           </DialogContent>
         </Dialog>
       )}
@@ -381,12 +381,6 @@ const PhotoCard = ({
       getRandomNumberInRange(1, 4) * (Math.random() > 0.5 ? -1 : 1);
     setRotation(randomRotation);
   }, [enableRandomRotation]);
-
-  const handleUpdateTitle = (newTitle: string) => {
-    onImageChange?.(image.image as string); // Not really changing image, just title
-    // Wait, PhotoCard doesn't have actualIndex.
-    // It's better to pass onTitleChange?
-  };
 
   return (
     <motion.div

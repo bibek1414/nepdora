@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  GalleryData,
+  GalleryBaseData,
   GalleryImage,
 } from "@/types/owner-site/components/gallery";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
@@ -13,10 +13,10 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Image from "next/image";
 
 interface GalleryTemplateProps {
-  galleryData: GalleryData;
+  galleryData: GalleryBaseData;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<GalleryData>) => void;
+  onUpdate?: (updatedData: Partial<GalleryBaseData>) => void;
 }
 
 export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
@@ -128,7 +128,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
                 </div>
 
                 {isEditable && (
-                  <div className="absolute top-2 right-2 z-10 flex gap-2">
+                  <div className="absolute right-2 top-2 z-10 flex gap-2">
                     <Button
                       size="sm"
                       variant="destructive"
@@ -207,7 +207,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
                 )}
               </div>
             )}
-            <DialogClose className="absolute top-2 right-2" />
+            <DialogClose className="absolute right-2 top-2" />
           </DialogContent>
         </Dialog>
       )}

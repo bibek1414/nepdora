@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Trash2, RefreshCw } from "lucide-react";
 import {
   AlertDialog,
@@ -16,11 +15,14 @@ import {
 import {
   GalleryData,
   GalleryComponentData,
+  isGalleryBaseData,
+  isGalleryTemplate5Data,
 } from "@/types/owner-site/components/gallery";
 import { GalleryTemplate1 } from "./gallery-template-1";
 import { GalleryTemplate2 } from "./gallery-template-2";
 import { GalleryTemplate3 } from "./gallery-template-3";
 import { GalleryTemplate4 } from "./gallery-template-4";
+import { GalleryTemplate5 } from "./gallery-template-5";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -56,7 +58,7 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
         data: {
           ...component.data,
           ...updatedData,
-        },
+        } as GalleryData,
       };
       onUpdate(componentId, updatedComponent);
     }
@@ -91,8 +93,7 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
       );
     }
 
-    const props = {
-      galleryData: component.data,
+    const commonProps = {
       isEditable,
       siteUser,
       onUpdate: handleUpdate,
@@ -100,29 +101,45 @@ export const GalleryComponent: React.FC<GalleryComponentProps> = ({
 
     const template = component.data.template || "gallery-1";
 
-    switch (template) {
-      case "gallery-1":
-        return <GalleryTemplate1 {...props} />;
-      case "gallery-2":
-        return <GalleryTemplate2 {...props} />;
-      case "gallery-3":
-        return <GalleryTemplate3 {...props} />;
-      case "gallery-4":
-        return <GalleryTemplate4 {...props} />;
-      default:
-        return (
-          <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">
-            <div className="text-center">
-              <h2 className="text-xl font-bold text-yellow-700">
-                Unknown Gallery Template: {template}
-              </h2>
-              <p className="mt-2 text-yellow-600">
-                Please select a valid template in settings.
-              </p>
-            </div>
-          </div>
-        );
+    if (isGalleryTemplate5Data(component.data)) {
+      return <GalleryTemplate5 galleryData={component.data} {...commonProps} />;
     }
+
+    if (isGalleryBaseData(component.data)) {
+      switch (template) {
+        case "gallery-1":
+          return (
+            <GalleryTemplate1 galleryData={component.data} {...commonProps} />
+          );
+        case "gallery-2":
+          return (
+            <GalleryTemplate2 galleryData={component.data} {...commonProps} />
+          );
+        case "gallery-3":
+          return (
+            <GalleryTemplate3 galleryData={component.data} {...commonProps} />
+          );
+        case "gallery-4":
+          return (
+            <GalleryTemplate4 galleryData={component.data} {...commonProps} />
+          );
+        default:
+          break;
+      }
+    }
+
+    return (
+      <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-yellow-700">
+            Unknown Gallery Template: {template}
+          </h2>
+          <p className="mt-2 text-yellow-600">
+            Please select a valid template in settings.
+          </p>
+        </div>
+      </div>
+    );
   };
 
   return (

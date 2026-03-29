@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
-  GalleryData,
+  GalleryBaseData,
   GalleryImage,
   defaultGalleryData,
   TEMPLATE6_DEFAULT_IMAGES,
@@ -14,7 +14,7 @@ import { ChevronLeft, ChevronRight, Loader2, Plus, X } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Image from "next/image";
 
-const buildInitialData = (galleryData: GalleryData): GalleryData => {
+const buildInitialData = (galleryData: GalleryBaseData): GalleryBaseData => {
   if (galleryData.template !== "gallery-6") {
     return galleryData;
   }
@@ -40,10 +40,10 @@ const buildInitialData = (galleryData: GalleryData): GalleryData => {
 };
 
 interface GalleryTemplateProps {
-  galleryData: GalleryData;
+  galleryData: GalleryBaseData;
   isEditable?: boolean;
   siteUser?: string;
-  onUpdate?: (updatedData: Partial<GalleryData>) => void;
+  onUpdate?: (updatedData: Partial<GalleryBaseData>) => void;
 }
 
 export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
@@ -270,7 +270,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-60" />
 
                   {isEditable && (
-                    <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
+                    <div className="absolute right-4 top-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
                       <Button
                         size="sm"
                         variant="destructive"

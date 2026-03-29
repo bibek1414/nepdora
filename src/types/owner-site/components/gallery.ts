@@ -7,7 +7,7 @@ export interface GalleryImage {
   is_active: boolean;
 }
 
-export interface GalleryData {
+export interface GalleryBaseData {
   title: string;
   subtitle?: string;
   images: GalleryImage[];
@@ -16,10 +16,30 @@ export interface GalleryData {
     | "gallery-2"
     | "gallery-3"
     | "gallery-4"
-    | "gallery-5"
     | "gallery-6"
     | "gallery-7";
 }
+
+export interface Activity {
+  id: string;
+  name: string;
+  image: string;
+}
+
+export interface ActivityCategory {
+  id: string;
+  title: string;
+  description: string;
+  activities: Activity[];
+}
+
+export interface GalleryTemplate5Data {
+  template: "gallery-5";
+  title: string;
+  categories: ActivityCategory[];
+}
+
+export type GalleryData = GalleryBaseData | GalleryTemplate5Data;
 
 export interface GalleryComponentData {
   id: string | number;
@@ -42,7 +62,7 @@ export interface UpdateGalleryComponentRequest {
   order?: number;
 }
 
-export const defaultGalleryData: GalleryData = {
+export const defaultGalleryData: GalleryBaseData = {
   title: "Our Gallery",
   subtitle: "Explore our collection of images",
   images: [
@@ -142,13 +162,80 @@ export const TEMPLATE6_DEFAULT_IMAGES: GalleryImage[] = [
   },
 ];
 
+export const defaultGalleryTemplate5Data: GalleryTemplate5Data = {
+  template: "gallery-5",
+  title: "Leisure Activities",
+  categories: [
+    {
+      id: "cat-1",
+      title: "Sports & Adventure",
+      description:
+        "Sports and adventure encompass a spectrum of exhilarating physical activities.",
+      activities: [
+        {
+          id: "act-1-1",
+          name: "Tennis",
+          image:
+            "https://images.pexels.com/photos/5739200/pexels-photo-5739200.jpeg",
+        },
+        {
+          id: "act-1-2",
+          name: "Surf Board",
+          image:
+            "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=800&auto=format&fit=crop",
+        },
+      ],
+    },
+    {
+      id: "cat-2",
+      title: "Recreation & Leisure",
+      description:
+        "Indulge in relaxation and rejuvenation with our diverse range of recreational and leisure activities.",
+      activities: [
+        {
+          id: "act-2-1",
+          name: "Meditation",
+          image:
+            "https://images.pexels.com/photos/5928615/pexels-photo-5928615.jpeg",
+        },
+        {
+          id: "act-2-2",
+          name: "Spa",
+          image:
+            "https://images.pexels.com/photos/35884499/pexels-photo-35884499.jpeg",
+        },
+      ],
+    },
+    {
+      id: "cat-3",
+      title: "Beachside Relaxation",
+      description:
+        "Our beachside relaxation experiences, offering a perfect blend of sun, sand, and serenity.",
+      activities: [
+        {
+          id: "act-3-1",
+          name: "Party",
+          image:
+            "https://images.pexels.com/photos/5805250/pexels-photo-5805250.jpeg",
+        },
+        {
+          id: "act-3-2",
+          name: "Picnic",
+          image:
+            "https://images.pexels.com/photos/8380026/pexels-photo-8380026.jpeg",
+        },
+      ],
+    },
+  ],
+};
+
 export const DEFAULT_GALLERY_MAP: Record<GalleryData["template"], GalleryData> =
   {
     "gallery-1": { ...defaultGalleryData, template: "gallery-1" },
     "gallery-2": { ...defaultGalleryData, template: "gallery-2" },
     "gallery-3": { ...defaultGalleryData, template: "gallery-3" },
     "gallery-4": { ...defaultGalleryData, template: "gallery-4" },
-    "gallery-5": { ...defaultGalleryData, template: "gallery-5" },
+    "gallery-5": defaultGalleryTemplate5Data,
     "gallery-6": {
       ...defaultGalleryData,
       title: "How We Helped Clients Grow Smarter",
@@ -159,3 +246,15 @@ export const DEFAULT_GALLERY_MAP: Record<GalleryData["template"], GalleryData> =
     },
     "gallery-7": { ...defaultGalleryData, template: "gallery-7" },
   };
+
+export const isGalleryBaseData = (
+  data: GalleryData
+): data is GalleryBaseData => {
+  return data.template !== "gallery-5";
+};
+
+export const isGalleryTemplate5Data = (
+  data: GalleryData
+): data is GalleryTemplate5Data => {
+  return data.template === "gallery-5";
+};

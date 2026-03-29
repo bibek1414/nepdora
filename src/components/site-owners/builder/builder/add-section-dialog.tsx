@@ -687,6 +687,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Gallery Style 4",
         image: "/images/site-owners/gallery/gallery4.png",
       },
+      {
+        id: "gallery-5",
+        name: "Gallery Style 5",
+        image: "/images/site-owners/gallery/gallery5.png", // Using gallery 4 as placeholder
+      },
     ],
     banner: [
       {
