@@ -93,18 +93,6 @@ export const CategoryCard8: React.FC<CategoryCard8Props> = ({
 
       {/* Text Content */}
       <div className="flex-1 space-y-1.5">
-        <div className="flex items-center gap-2">
-          <span
-            className="text-[10px] font-bold uppercase tracking-[0.2em]"
-            style={{
-              color: colors.primary,
-              opacity: 0.7,
-              fontFamily: fonts.heading,
-            }}
-          >
-            {stepNumber ? `Step ${stepNumber}` : "Category"}
-          </span>
-        </div>
         <h3
           className="text-foreground/90 group-hover:text-foreground text-xl font-bold tracking-tight"
           style={{ fontFamily: fonts.heading }}

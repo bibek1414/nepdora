@@ -96,7 +96,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
         onChange={handleTextUpdate("subtitle")}
         isEditable={isEditable}
       />
-      <div className="mx-auto mt-10 flex h-[400px] w-full max-w-4xl items-center gap-2">
+      <div className="mx-auto mt-10 flex h-[400px] w-full max-w-7xl items-center gap-2">
         {filteredImages.map((image: GalleryImage, index: number) => {
           const actualIndex = data.images.findIndex(
             (img: GalleryImage) => img.id === image.id

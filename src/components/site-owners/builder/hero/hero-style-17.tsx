@@ -34,14 +34,14 @@ export const HeroTemplate17: React.FC<HeroTemplate17Props> = ({
     useBuilderLogic(heroData, onUpdate);
 
   return (
-    <section className="from-rose via-accent to-beige relative flex min-h-[90vh] items-center overflow-hidden bg-linear-to-br py-20 lg:min-h-[80vh] lg:py-0">
+    <section className="from-rose via-accent to-beige relative items-center py-32">
       {/* Background Glow Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="bg-peach/60 absolute top-1/4 right-1/4 h-[300px] w-[300px] rounded-full blur-3xl md:h-[500px] md:w-[500px]" />
         <div className="bg-rose/40 absolute bottom-1/4 left-1/4 h-[250px] w-[250px] rounded-full blur-3xl md:h-[400px] md:w-[400px]" />
       </div>
 
-      <div className="container-luxury relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20 xl:gap-32">
           {/* Left Content */}
           <motion.div

@@ -73,7 +73,6 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
           >
             <div className="relative z-10 space-y-6">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
                 <EditableText
                   value={data.card1.label}
                   onChange={(val: string) =>
@@ -147,7 +146,6 @@ export const BannerTemplate4: React.FC<BannerTemplateProps> = ({
           >
             <div className="relative z-10 space-y-6">
               <div className="flex items-center gap-2">
-                <Gift className="h-5 w-5" />
                 <EditableText
                   value={data.card2.label}
                   onChange={(val: string) =>
