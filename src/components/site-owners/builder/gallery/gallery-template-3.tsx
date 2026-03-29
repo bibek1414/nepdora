@@ -45,7 +45,6 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
       id: Date.now(),
@@ -63,7 +62,9 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
+    const updatedImages = data.images.filter(
+      (_: any, idx: number) => idx !== index
+    );
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
@@ -73,31 +74,33 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
     return URL.createObjectURL(image);
   };
 
-  const filteredImages = data.images.filter((img: GalleryImage) => img.is_active);
+  const filteredImages = data.images.filter(
+    (img: GalleryImage) => img.is_active
+  );
 
   return (
-    <>
-      <h1 className="mx-auto text-center text-3xl font-semibold">
-        <EditableText
-          value={data.title || "Our Latest Creations"}
-          onChange={handleTextUpdate("title")}
-          isEditable={isEditable}
-        />
-      </h1>
-      <p className="mx-auto mt-2 max-w-lg text-center text-sm text-slate-500">
-        <EditableText
-          value={
-            data.subtitle ||
-            "A visual collection of our most recent works - each piece crafted with intention, emotion, and style."
-          }
-          onChange={handleTextUpdate("subtitle")}
-          isEditable={isEditable}
-        />
-      </p>
-
+    <div className="mx-auto max-w-7xl px-4 py-20">
+      <EditableText
+        value={data.title || "Our Latest Creations"}
+        onChange={handleTextUpdate("title")}
+        isEditable={isEditable}
+        className="mb-2"
+        as="h1"
+      />
+      <EditableText
+        value={
+          data.subtitle ||
+          "A visual collection of our most recent works - each piece crafted with intention, emotion, and style."
+        }
+        as="p"
+        onChange={handleTextUpdate("subtitle")}
+        isEditable={isEditable}
+      />
       <div className="mx-auto mt-10 flex h-[400px] w-full max-w-4xl items-center gap-2">
         {filteredImages.map((image: GalleryImage, index: number) => {
-          const actualIndex = data.images.findIndex((img: GalleryImage) => img.id === image.id);
+          const actualIndex = data.images.findIndex(
+            (img: GalleryImage) => img.id === image.id
+          );
           return (
             <div
               key={image.id}
@@ -113,7 +116,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               ) : (
                 <div className="h-full w-full">
                   <ImageEditOverlay
-                    onImageSelect={(imageUrl) =>
+                    onImageSelect={imageUrl =>
                       handleImageUpdateLocal(actualIndex, imageUrl)
                     }
                     imageWidth={800}
@@ -158,7 +161,9 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               className="flex flex-col items-center gap-2"
             >
               <Plus className="h-8 w-8 text-gray-400" />
-              <span className="text-sm text-gray-500 font-medium">Add Image</span>
+              <span className="text-sm font-medium text-gray-500">
+                Add Image
+              </span>
             </button>
           </div>
         )}
@@ -167,12 +172,12 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
       <MediaLibraryDialog
         open={isMediaDialogOpen}
         onOpenChange={setIsMediaDialogOpen}
-        onSelect={(url) => {
+        onSelect={url => {
           handleAddImage(url);
           setIsMediaDialogOpen(false);
         }}
         folder="gallery-images"
       />
-    </>
+    </div>
   );
 };

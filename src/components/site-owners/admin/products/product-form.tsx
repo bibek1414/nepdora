@@ -416,7 +416,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
           const variantData: {
             price?: string;
             stock: number;
-            image?: File | string;
+            image?: File | string | null;
             options: Record<string, string>;
           } = {
             price: v.price || undefined,
@@ -428,6 +428,8 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
             variantData.image = v.image;
           } else if (typeof v.image === "string" && v.image.trim()) {
             variantData.image = v.image;
+          } else if (v.image === null) {
+            variantData.image = null;
           }
 
           return variantData;
@@ -444,7 +446,9 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
           thumbnail_image:
             data.thumbnail_image instanceof File
               ? data.thumbnail_image
-              : undefined,
+              : typeof data.thumbnail_image === "string"
+                ? data.thumbnail_image
+                : null,
           image_files: data.image_files || [],
           options:
             transformedOptions.length > 0 ? transformedOptions : undefined,

@@ -84,7 +84,6 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
       id: Date.now(),
@@ -102,7 +101,9 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
+    const updatedImages = data.images.filter(
+      (_: any, idx: number) => idx !== index
+    );
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
@@ -110,7 +111,9 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
   const getImageUrl = (image: string | File) =>
     typeof image === "string" ? image : URL.createObjectURL(image);
 
-  const filteredImages = data.images.filter((image: GalleryImage) => image.is_active);
+  const filteredImages = data.images.filter(
+    (image: GalleryImage) => image.is_active
+  );
 
   const updateFadeVisibility = useCallback(() => {
     const container = scrollContainerRef.current;
@@ -245,7 +248,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                 >
                   <div className="group relative h-full w-full overflow-hidden">
                     <ImageEditOverlay
-                      onImageSelect={(imageUrl) =>
+                      onImageSelect={imageUrl =>
                         handleImageUpdateLocal(actualIndex, imageUrl)
                       }
                       imageWidth={800}
@@ -335,7 +338,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
       <MediaLibraryDialog
         open={isMediaDialogOpen}
         onOpenChange={setIsMediaDialogOpen}
-        onSelect={(url) => {
+        onSelect={url => {
           handleAddImage(url);
           setIsMediaDialogOpen(false);
         }}

@@ -130,7 +130,48 @@ export type OthersData =
   | OthersTemplate5Data
   | OthersTemplate6Data
   | OthersTemplate7Data
-  | OthersTemplate8Data;
+  | OthersTemplate8Data
+  | OthersTemplate9Data
+  | OthersTemplate10Data;
+
+export interface OthersRoutineStep {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+}
+
+export interface OthersRoutine {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  stepCount: string;
+  steps: OthersRoutineStep[];
+}
+
+export interface OthersTemplate9Data {
+  template: "others-9";
+  label: string;
+  title: string;
+  subtitle: string;
+  routines: OthersRoutine[];
+}
+
+export interface OthersTip {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface OthersTemplate10Data {
+  template: "others-10";
+  label: string;
+  title: string;
+  subtitle: string;
+  tips: OthersTip[];
+}
 
 // Component and API interfaces
 export interface OthersComponentData {
@@ -362,6 +403,139 @@ export const defaultOthersTemplate8Data: OthersTemplate8Data = {
   ],
 };
 
+export const defaultOthersTemplate9Data: OthersTemplate9Data = {
+  template: "others-9",
+  label: "The basics",
+  title: "Your daily routine, simplified",
+  subtitle:
+    "Every great skin day starts with the right order. Here's the essential structure — morning and night.",
+  routines: [
+    {
+      id: "morning",
+      title: "Morning Routine",
+      description: "Protect & prep",
+      icon: "☀️",
+      stepCount: "5 steps",
+      steps: [
+        {
+          id: "m-1",
+          name: "Cleanser",
+          description: "Removes overnight oil and impurities",
+          icon: "🧴",
+        },
+        {
+          id: "m-2",
+          name: "Toner",
+          description: "Balances pH and preps skin",
+          icon: "💧",
+        },
+        {
+          id: "m-3",
+          name: "Serum",
+          description: "Targets concerns — acne, glow, pigmentation",
+          icon: "✨",
+        },
+        {
+          id: "m-4",
+          name: "Moisturizer",
+          description: "Locks in hydration and plumps skin",
+          icon: "🌿",
+        },
+        {
+          id: "m-5",
+          name: "Sunscreen",
+          description: "Shields from UV damage — never skip",
+          icon: "🛡️",
+        },
+      ],
+    },
+    {
+      id: "night",
+      title: "Night Routine",
+      description: "Repair & restore",
+      icon: "🌙",
+      stepCount: "4 steps",
+      steps: [
+        {
+          id: "n-1",
+          name: "Cleanser",
+          description: "Deep clean — remove makeup, SPF, pollutants",
+          icon: "🧴",
+        },
+        {
+          id: "n-2",
+          name: "Toner",
+          description: "Rebalances and soothes skin",
+          icon: "💧",
+        },
+        {
+          id: "n-3",
+          name: "Treatment / Serum",
+          description: "Retinol, AHA, niacinamide — repair overnight",
+          icon: "🔬",
+        },
+        {
+          id: "n-4",
+          name: "Night Cream",
+          description: "Rich moisture barrier while you sleep",
+          icon: "🌙",
+        },
+      ],
+    },
+  ],
+};
+
+export const defaultOthersTemplate10Data: OthersTemplate10Data = {
+  template: "others-10",
+  label: "Expert advice",
+  title: "Skincare tips that matter",
+  subtitle: "Simple, science-backed habits to get the most from your routine.",
+  tips: [
+    {
+      id: "1",
+      icon: "🧪",
+      title: "Layer thinnest to thickest",
+      description:
+        "Always apply products from lightest to heaviest — serums before moisturizers — so actives can absorb properly.",
+    },
+    {
+      id: "2",
+      icon: "⏱️",
+      title: "Wait between steps",
+      description:
+        "Give each layer 30–60 seconds to absorb before the next. This prevents pilling and improves efficacy.",
+    },
+    {
+      id: "3",
+      icon: "☀️",
+      title: "Sunscreen is non-negotiable",
+      description:
+        "SPF protects against premature aging, dark spots, and skin cancer. Apply every single morning, rain or shine.",
+    },
+    {
+      id: "4",
+      icon: "🔄",
+      title: "Introduce actives slowly",
+      description:
+        "Start new actives like retinol or AHA once or twice a week. Build frequency gradually to avoid irritation.",
+    },
+    {
+      id: "5",
+      icon: "💤",
+      title: "Sleep is your best serum",
+      description:
+        "Skin repairs itself at night. A consistent sleep schedule amplifies the effect of your nighttime routine.",
+    },
+    {
+      id: "6",
+      icon: "💦",
+      title: "Hydration starts from within",
+      description:
+        "Topical moisturizers help, but drinking enough water and a balanced diet are foundational to glowing skin.",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -372,6 +546,8 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-6": defaultOthersTemplate6Data,
   "others-7": defaultOthersTemplate7Data,
   "others-8": defaultOthersTemplate8Data,
+  "others-9": defaultOthersTemplate9Data,
+  "others-10": defaultOthersTemplate10Data,
 };
 
 // Type guards
@@ -399,3 +575,9 @@ export const isOthersTemplate7 = (
 export const isOthersTemplate8 = (
   data: OthersData
 ): data is OthersTemplate8Data => data.template === "others-8";
+export const isOthersTemplate9 = (
+  data: OthersData
+): data is OthersTemplate9Data => data.template === "others-9";
+export const isOthersTemplate10 = (
+  data: OthersData
+): data is OthersTemplate10Data => data.template === "others-10";

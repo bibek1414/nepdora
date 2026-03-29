@@ -48,8 +48,7 @@ export const defaultGalleryData: GalleryData = {
   images: [
     {
       id: 1,
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      image: "https://images.pexels.com/photos/361755/pexels-photo-361755.jpeg",
       image_alt_description: "Gallery image 1",
       title: "Mountain View",
       description: "Beautiful mountain landscape",
@@ -58,7 +57,7 @@ export const defaultGalleryData: GalleryData = {
     {
       id: 2,
       image:
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80",
+        "https://images.pexels.com/photos/4620843/pexels-photo-4620843.jpeg",
       image_alt_description: "Gallery image 2",
       title: "Forest Path",
       description: "Serene forest trail",
@@ -67,7 +66,7 @@ export const defaultGalleryData: GalleryData = {
     {
       id: 3,
       image:
-        "https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=800&q=80",
+        "https://images.pexels.com/photos/5241247/pexels-photo-5241247.jpeg",
       image_alt_description: "Gallery image 3",
       title: "Ocean Sunset",
       description: "Stunning ocean view",
@@ -76,7 +75,25 @@ export const defaultGalleryData: GalleryData = {
     {
       id: 4,
       image:
-        "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=800&q=80",
+        "https://images.pexels.com/photos/17154777/pexels-photo-17154777.jpeg",
+      image_alt_description: "Gallery image 4",
+      title: "Mountain Peak",
+      description: "Snow-capped mountains",
+      is_active: true,
+    },
+    {
+      id: 5,
+      image:
+        "https://images.pexels.com/photos/7290708/pexels-photo-7290708.jpeg",
+      image_alt_description: "Gallery image 4",
+      title: "Mountain Peak",
+      description: "Snow-capped mountains",
+      is_active: true,
+    },
+    {
+      id: 6,
+      image:
+        "https://images.pexels.com/photos/10608368/pexels-photo-10608368.jpeg",
       image_alt_description: "Gallery image 4",
       title: "Mountain Peak",
       description: "Snow-capped mountains",

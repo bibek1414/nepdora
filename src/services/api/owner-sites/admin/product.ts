@@ -33,22 +33,31 @@ const buildProductFormData = (
   const formData = new FormData();
 
   Object.entries(data).forEach(([key, value]) => {
-    if (value === null || value === undefined) return;
+    // Only skip undefined values, allow null for removal
+    if (value === undefined) return;
 
     if (key === "image_files" && Array.isArray(value)) {
-      let imageCount = 0;
       value.forEach(imageFile => {
         if (imageFile instanceof File) {
           formData.append("image_files", imageFile);
-          imageCount++;
+        } else if (typeof imageFile === "string" && imageFile.trim()) {
+          // Include existing image URLs so the backend knows to keep them
+          formData.append("image_files", imageFile);
         }
       });
-    } else if (key === "thumbnail_image" && value instanceof File) {
-      formData.append("thumbnail_image", value);
+    } else if (key === "thumbnail_image") {
+      if (value instanceof File) {
+        formData.append("thumbnail_image", value);
+      } else if (value === null) {
+        // Explicitly send an empty string or 'null' for removal
+        formData.append("thumbnail_image", "");
+      } else if (typeof value === "string") {
+        // Existing thumbnail URL
+        formData.append("thumbnail_image", value);
+      }
     } else if (key === "variants" && Array.isArray(value)) {
       // Handle variants
       const variantsData = value.map((variant, index) => {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         const variantData: any = {
           price: variant.price,
           stock: variant.stock,
@@ -58,7 +67,7 @@ const buildProductFormData = (
         // Handle variant image properly:
         // - If it's a File, append to FormData and reference it
         // - If it's a string URL, keep the URL (existing image)
-        // - If it's null/undefined, OMIT the field entirely (keep existing image)
+        // - If it's null, set to "" to indicate removal
         if (variant.image instanceof File) {
           const variantImageKey = `variant_image_${index}`;
           formData.append(variantImageKey, variant.image);
@@ -66,6 +75,9 @@ const buildProductFormData = (
         } else if (typeof variant.image === "string") {
           // Existing image URL - include it so backend knows to keep it
           variantData.image = variant.image;
+        } else if (variant.image === null) {
+          // Explicit removal
+          variantData.image = null;
         }
 
         return variantData;
@@ -76,6 +88,8 @@ const buildProductFormData = (
       console.log("Variants data:", JSON.stringify(variantsData, null, 2));
     } else if (key === "image_files") {
       return; // Already handled above
+    } else if (value === null) {
+      formData.append(key, "");
     } else if (typeof value === "boolean") {
       formData.append(key, value.toString());
     } else if (typeof value === "number") {
@@ -105,7 +119,7 @@ const validateFiles = (
   data: CreateProductRequest | UpdateProductRequest
 ): string[] => {
   const errors: string[] = [];
-  const maxSize = 5 * 1024 * 1024; // 5MB
+  const maxSize = 10 * 1024 * 1024; // 5MB
 
   // Check thumbnail image
   if (data.thumbnail_image instanceof File) {

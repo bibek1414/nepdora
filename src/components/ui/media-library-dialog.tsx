@@ -22,6 +22,7 @@ import {
 import Image from "next/image";
 import { useS3Files, useUploadS3, useDeleteS3 } from "@/hooks/use-s3";
 import { DEFAULT_MAX_IMAGE_SIZE, S3File } from "@/utils/s3";
+import { compressImage } from "@/utils/image-compression";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -55,6 +56,7 @@ export function MediaLibraryDialog({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [urlToDelete, setUrlToDelete] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const { data: files = [], isLoading } = useS3Files();
   const uploadMutation = useUploadS3();
@@ -70,18 +72,29 @@ export function MediaLibraryDialog({
     }
 
     // Only block if it's NOT an image and still too large,
-    // or if it's an image but ridiculously large (e.g. > 50MB) even for compression.
-    const MAX_RAW_SIZE = 5 * 1024 * 1024; // 5MB
+    // or if it's an image but ridiculously large (e.g. > 10MB) even for compression.
+    const MAX_RAW_SIZE = 10 * 1024 * 1024; // 10MB
     if (file.size > MAX_RAW_SIZE) {
-      toast.error("File is too large (max 5MB)");
+      toast.error("File is too large (max 10MB)");
       return;
     }
 
     try {
-      await uploadMutation.mutateAsync({ file, folder });
+      let fileToUpload = file;
+      if (file.size > DEFAULT_MAX_IMAGE_SIZE && file.type.startsWith("image/")) {
+        setIsCompressing(true);
+        fileToUpload = await compressImage(file, {
+          maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024),
+          useWebWorker: true,
+        });
+        setIsCompressing(false);
+      }
+
+      await uploadMutation.mutateAsync({ file: fileToUpload, folder });
       toast.success("Image uploaded successfully");
       // Don't close or auto-select, let user see the new image in the library
     } catch (error) {
+      setIsCompressing(false);
       // Error handled in hook
     }
   };
@@ -157,11 +170,11 @@ export function MediaLibraryDialog({
                       disabled={uploadMutation.isPending}
                     />
 
-                    {uploadMutation.isPending ? (
+                    {uploadMutation.isPending || isCompressing ? (
                       <div className="flex flex-col items-center gap-2">
                         <Loader2 className="h-6 w-6 animate-spin text-[#8C6A3C]" />
                         <span className="text-[10px] font-medium text-[#8C6A3C]">
-                          Uploading…
+                          {isCompressing ? "Optimizing…" : "Uploading…"}
                         </span>
                       </div>
                     ) : (

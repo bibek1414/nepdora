@@ -2,11 +2,12 @@
 
 import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { UploadCloud, X, AlertCircle, ImageIcon } from "lucide-react";
+import { UploadCloud, X, AlertCircle, ImageIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_MAX_IMAGE_SIZE } from "@/utils/s3";
+import { compressImage } from "@/utils/image-compression";
 
 interface ImageUploaderProps {
   value: File[] | string[] | File | string | null | undefined;
@@ -32,6 +33,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   );
   const [error, setError] = useState<string | null>(null);
   const [currentFiles, setCurrentFiles] = useState<File[]>([]);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   // Initialize previews from existing value
   useEffect(() => {
@@ -80,9 +82,9 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
     files.forEach((file, index) => {
       // Check file size - Relaxed for images because they will be compressed
-      const MAX_RAW_SIZE = 5 * 1024 * 1024; // 5MB
+      const MAX_RAW_SIZE = 10 * 1024 * 1024; // 10MB
       if (file.size > MAX_RAW_SIZE) {
-        errors.push(`File ${file.name} is too large. Max size: 5MB`);
+        errors.push(`File ${file.name} is too large. Max size: 10MB`);
         return;
       }
 
@@ -109,7 +111,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   };
 
   const onDrop = useCallback(
-    (acceptedFiles: File[], fileRejections: any[]) => {
+    async (acceptedFiles: File[], fileRejections: any[]) => {
       setError(null);
 
       // Handle rejections first
@@ -150,18 +152,33 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         if (validFiles.length === 0) return;
       }
 
+      // Compress large images
+      setIsCompressing(true);
+      const processedFiles = await Promise.all(
+        validFiles.map(async file => {
+          if (file.size > DEFAULT_MAX_IMAGE_SIZE && file.type.startsWith("image/")) {
+            return await compressImage(file, {
+              maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024),
+              useWebWorker: true,
+            });
+          }
+          return file;
+        })
+      );
+      setIsCompressing(false);
+
       let newFiles: File[];
       if (multiple) {
-        newFiles = [...currentFiles, ...validFiles];
+        newFiles = [...currentFiles, ...processedFiles];
       } else {
         // Single file mode - replace existing
-        newFiles = validFiles.slice(0, 1);
+        newFiles = processedFiles.slice(0, 1);
       }
 
       setCurrentFiles(newFiles);
 
       // Create new previews for added files
-      const newPreviews = validFiles.map(file => ({
+      const newPreviews = processedFiles.map(file => ({
         url: URL.createObjectURL(file),
         isFile: true,
       }));
@@ -250,7 +267,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         {...getRootProps()}
         className={`group border-border bg-muted/20 hover:bg-muted/30 relative cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
           isDragActive ? "border-primary bg-primary/5 scale-[1.02]" : ""
-        } ${disabled ? "cursor-not-allowed opacity-50" : ""} ${
+        } ${disabled || isCompressing ? "cursor-not-allowed opacity-50" : ""} ${
           error ? "border-destructive/50 bg-destructive/5" : ""
         }`}
       >
@@ -261,21 +278,28 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
               isDragActive ? "bg-primary/10" : "bg-muted"
             }`}
           >
-            <UploadCloud
-              className={`h-8 w-8 ${
-                isDragActive ? "text-primary" : "text-muted-foreground"
-              }`}
-            />
+            {isCompressing ? (
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            ) : (
+              <UploadCloud
+                className={`h-8 w-8 ${
+                  isDragActive ? "text-primary" : "text-muted-foreground"
+                }`}
+              />
+            )}
           </div>
           <div className="space-y-1">
             <p className="text-foreground text-sm font-medium">
-              {isDragActive
-                ? "Drop the files here..."
-                : `Click to upload ${multiple ? "images" : "an image"} or drag and drop`}
+              {isCompressing
+                ? "Compressing images..."
+                : isDragActive
+                  ? "Drop the files here..."
+                  : `Click to upload ${multiple ? "images" : "an image"} or drag and drop`}
             </p>
             <p className="text-muted-foreground text-xs">
-              Max {formatFileSize(maxFileSize)} • JPG, PNG, WebP, GIF
-              {multiple && ` • Up to ${maxFiles} files`}
+              {isCompressing
+                ? "Optimizing for web (max 500KB)..."
+                : `Max ${formatFileSize(maxFileSize)} • JPG, PNG, WebP, GIF ${multiple && ` • Up to ${maxFiles} files`}`}
             </p>
           </div>
         </div>
