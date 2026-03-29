@@ -1,7 +1,7 @@
 export interface TeamData {
   component_id?: string;
   component_type: "team";
-  style: "team-1" | "team-2" | "team-3" | "team-4" | "team-5";
+  style: "team-1" | "team-2" | "team-3" | "team-4" | "team-5" | "team-6";
 
   title: string;
   subtitle?: string;
@@ -33,4 +33,12 @@ export const DEFAULT_TEAM_MAP: Record<TeamData["style"], TeamData> = {
   "team-3": { ...defaultTeamData, style: "team-3" },
   "team-4": { ...defaultTeamData, style: "team-4" },
   "team-5": { ...defaultTeamData, style: "team-5" },
+  "team-6": {
+    ...defaultTeamData,
+    style: "team-6",
+    title: "Meet Our Travel Experts",
+    tag: "Our Team",
+    subtitle:
+      "Get to know the passionate individuals behind our travel company, dedicated to crafting unforgettable experiences.",
+  },
 };

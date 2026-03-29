@@ -56,13 +56,20 @@ export const defaultFAQData11: FAQData = {
   subtitle: "Everything you need to know about Nepglass.",
 };
 
+export const defaultFAQData6: FAQData = {
+  component_type: "faq",
+  style: "faq-6",
+  title: "Common Questions",
+  titleItalic: "The Most",
+};
+
 export const DEFAULT_FAQ_MAP: Record<FAQData["style"], FAQData> = {
   "faq-1": { ...defaultFAQData, style: "faq-1" },
   "faq-2": { ...defaultFAQData, style: "faq-2" },
   "faq-3": { ...defaultFAQData, style: "faq-3" },
   "faq-4": { ...defaultFAQData, style: "faq-4" },
   "faq-5": { ...defaultFAQData, style: "faq-5" },
-  "faq-6": { ...defaultFAQData, style: "faq-6" },
+  "faq-6": { ...defaultFAQData6, style: "faq-6" },
   "faq-7": { ...defaultFAQData, style: "faq-7" },
   "faq-8": { ...defaultFAQData, style: "faq-8" },
   "faq-9": { ...defaultFAQData, style: "faq-9" },

@@ -1,0 +1,102 @@
+import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
+import { EditableText } from "@/components/ui/editable-text";
+import { FAQComponentData } from "@/types/owner-site/components/faq";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { FaqCard6 } from "../faq-card/faq-card-6";
+import { AlertCircle, HelpCircle } from "lucide-react";
+
+interface FAQStyleProps {
+  data: FAQComponentData["data"];
+  isEditable?: boolean;
+  onUpdate?: (updatedData: Partial<FAQComponentData["data"]>) => void;
+}
+
+export const FAQStyle6: React.FC<FAQStyleProps> = ({
+  data,
+  isEditable = false,
+  onUpdate,
+}) => {
+  const { 
+    title = "Common Questions", 
+    titleItalic = "The Most",
+  } = data || {};
+  
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#C97B63",
+    }
+  };
+
+  const { data: faqs = [], isLoading, error } = useFAQs();
+
+  const handleTitleChange = (newTitle: string) => {
+    onUpdate?.({ title: newTitle });
+  };
+
+  const handleTitleItalicChange = (newTitleItalic: string) => {
+    onUpdate?.({ titleItalic: newTitleItalic });
+  };
+
+  const accentColor = theme?.colors?.primary || "#C97B63";
+
+  return (
+    <section className="bg-white overflow-hidden py-12 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-12 flex items-end justify-between md:mb-20">
+          <div className="flex flex-wrap items-baseline gap-x-3">
+            <EditableText
+              value={titleItalic || ""}
+              onChange={handleTitleItalicChange}
+              as="span"
+              className="font-serif text-3xl italic font-extralight md:text-4xl lg:text-5xl text-[#1A1A1A] leading-[1.1] tracking-tight"
+              isEditable={isEditable}
+              placeholder="The Most"
+            />
+            <EditableText
+              value={title}
+              onChange={handleTitleChange}
+              as="h2"
+              className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1A1A1A] leading-[1.1] tracking-tight"
+              isEditable={isEditable}
+              placeholder="Common Questions"
+            />
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+            <div className="lg:col-span-5 space-y-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-16 w-full rounded-lg" />
+              ))}
+            </div>
+            <div className="lg:col-span-7 h-[400px]">
+              <Skeleton className="h-full w-full rounded-lg" />
+            </div>
+          </div>
+        ) : error ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error Loading FAQs</AlertTitle>
+            <AlertDescription>
+              {error instanceof Error ? error.message : "Failed to load FAQs."}
+            </AlertDescription>
+          </Alert>
+        ) : faqs.length === 0 ? (
+          <div className="py-16 text-center">
+            <HelpCircle className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
+            <h3 className="text-foreground mb-4 text-2xl font-semibold">
+              No FAQs Available
+            </h3>
+          </div>
+        ) : (
+          <FaqCard6 faqs={faqs} accentColor={accentColor} />
+        )}
+      </div>
+    </section>
+  );
+};

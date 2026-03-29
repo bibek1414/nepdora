@@ -1,171 +1,100 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
-import { Plus, Minus } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { FAQ } from "@/types/owner-site/admin/faq";
-import { EditableImage } from "@/components/ui/editable-image";
-import { EditableText } from "@/components/ui/editable-text";
-import Image from "next/image";
 
 interface FAQCard6Props {
   faqs: FAQ[];
-  title?: string;
-  subtitle?: string;
-  leftImage?: string;
-  isEditable?: boolean;
-  onTitleChange?: (title: string) => void;
-  onSubtitleChange?: (subtitle: string) => void;
-  onLeftImageChange?: (url: string) => void;
+  accentColor?: string;
 }
 
 export const FaqCard6: React.FC<FAQCard6Props> = ({
   faqs,
-  title = "Frequently Asked Question",
-  subtitle = "You can look here question and answer.",
-  leftImage,
-  isEditable = false,
-  onTitleChange,
-  onSubtitleChange,
-  onLeftImageChange,
+  accentColor = "#C97B63",
 }) => {
-  const [openId, setOpenId] = useState<number | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  // Set initial active ID when faqs are loaded
+  React.useEffect(() => {
+    if (faqs.length > 0 && activeId === null) {
+      setActiveId(faqs[0].id);
+    }
+  }, [faqs, activeId]);
 
-  // Default image if not provided
-  const defaultLeftImage =
-    leftImage ||
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80";
+  const activeFaq = faqs.find((f: FAQ) => f.id === activeId) || faqs[0];
 
   return (
-    <section className="bg-gradient-to-b from-slate-950 to-slate-900 px-4 py-12">
-      <div className="mx-auto max-w-6xl">
-        <div
-          className={`grid grid-cols-1 items-center gap-8 transition-all duration-700 ease-out lg:grid-cols-2 ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-          }`}
-        >
-          {/* Left side - Image */}
-          <div className="flex items-center justify-center">
-            <div className="relative aspect-square w-full max-w-sm overflow-hidden rounded-xl shadow-2xl">
-              {isEditable && onLeftImageChange ? (
-                <EditableImage
-                  src={defaultLeftImage}
-                  alt="Professional coaching"
-                  isEditable={true}
-                  onImageChange={url => onLeftImageChange(url)}
-                  className="h-full w-full object-cover"
-                  width={600}
-                  height={600}
-                  placeholder={{
-                    width: 600,
-                    height: 600,
-                    text: "Add image",
+    <div className="grid grid-cols-1 items-stretch gap-12 lg:grid-cols-12 lg:gap-16 xl:gap-24">
+      {/* Questions List */}
+      <div className="flex flex-col justify-between lg:col-span-5 h-full">
+        <div className="divide-y divide-[#1A1A1A]/10">
+          {faqs.map((faq: FAQ) => (
+            <button
+              key={faq.id}
+              onClick={() => setActiveId(faq.id)}
+              className={`group flex w-full items-center justify-between py-5 text-left transition-all duration-500 ${
+                activeId === faq.id 
+                  ? "text-[#1A1A1A]" 
+                  : "text-[#1A1A1A]/40 hover:text-[#1A1A1A]"
+              }`}
+            >
+              <span className="font-serif text-sm leading-snug pr-6 transition-colors duration-500 md:text-base lg:text-[1.05rem]">
+                {faq.question}
+              </span>
+              <div
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#1A1A1A]/10 transition-all duration-700 ${
+                  activeId === faq.id
+                    ? "border-accent text-accent"
+                    : "text-[#1A1A1A]/30 group-hover:border-accent/50 group-hover:text-accent"
+                }`}
+                style={{ 
+                  borderColor: activeId === faq.id ? accentColor : undefined,
+                  color: activeId === faq.id ? accentColor : undefined
+                }}
+              >
+                <motion.div
+                  animate={{
+                    rotate: activeId === faq.id ? 0 : -45,
                   }}
-                />
-              ) : (
-                <Image
-                  src={defaultLeftImage}
-                  alt="Professional coaching"
-                  fill
-                  className="object-cover"
-                />
-              )}
-            </div>
-          </div>
-
-          {/* Right side - Content */}
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <EditableText
-                value={title}
-                onChange={onTitleChange || (() => {})}
-                as="p"
-                className="text-sm font-semibold tracking-wider text-blue-400 uppercase"
-                isEditable={isEditable}
-                placeholder="Enter label..."
-              />
-
-              <EditableText
-                value={subtitle}
-                onChange={onSubtitleChange || (() => {})}
-                as="h2"
-                className="text-4xl leading-tight font-bold text-white lg:text-5xl"
-                isEditable={isEditable}
-                placeholder="Enter subtitle..."
-                useHeadingFont={true}
-              />
-            </div>
-
-            {/* Accordion */}
-            <div className="space-y-2 pt-4">
-              {faqs.map((faq, index) => {
-                const isOpen = openId === faq.id;
-                return (
-                  <div
-                    key={faq.id}
-                    className={`overflow-hidden rounded-2xl border-2 border-slate-600 transition-all duration-500 ease-out hover:border-slate-500 ${
-                      isLoaded
-                        ? "translate-y-0 opacity-100"
-                        : "translate-y-2 opacity-0"
-                    }`}
-                    style={{
-                      transitionDelay: isLoaded ? `${index * 100}ms` : "0ms",
-                    }}
-                  >
-                    <button
-                      onClick={() =>
-                        setOpenId(openId === faq.id ? null : faq.id)
-                      }
-                      className="flex w-full cursor-pointer items-center justify-between bg-transparent px-6 py-4 transition-all duration-300 hover:bg-slate-800/30"
-                    >
-                      <h3 className="text-left text-lg font-bold text-white">
-                        {faq.question}
-                      </h3>
-                      <div className="ml-4 flex-shrink-0 transition-transform duration-500 ease-out">
-                        {isOpen ? (
-                          <Minus
-                            className="h-8 w-8 text-white"
-                            strokeWidth={1.5}
-                          />
-                        ) : (
-                          <Plus
-                            className="h-8 w-8 text-white"
-                            strokeWidth={1.5}
-                          />
-                        )}
-                      </div>
-                    </button>
-
-                    <div
-                      className={`overflow-hidden transition-all ${
-                        isOpen
-                          ? "max-h-96 duration-700 ease-in-out"
-                          : "max-h-0 duration-500 ease-out"
-                      }`}
-                    >
-                      <div className="border-t border-slate-700 bg-slate-900/50 px-6 py-4">
-                        <p
-                          className={`text-base leading-relaxed text-slate-300 transition-all ${
-                            isOpen
-                              ? "opacity-100 delay-100 duration-700 ease-in-out"
-                              : "opacity-0 duration-300 ease-out"
-                          }`}
-                        >
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <ArrowRight size={16} strokeWidth={1.2} />
+                </motion.div>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
-    </section>
+
+      {/* Answer Box */}
+      <div className="lg:col-span-7 h-full">
+        <div className="flex h-full flex-col justify-center rounded-lg bg-[#F5F0EB] p-8 md:p-10 lg:p-12 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeId}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h3 className="mb-8 max-w-lg font-serif text-2xl leading-[1.15] text-[#1A1A1A] md:text-3xl lg:text-[2.25rem]">
+                {activeFaq?.question}
+              </h3>
+              <div className="space-y-6">
+                {activeFaq?.answer.split("\n\n").map((para: string, i: number) => (
+                  <p
+                    key={i}
+                    className="font-sans text-xs leading-[1.8] text-[#1A1A1A]/60 md:text-sm lg:text-[0.95rem]"
+                  >
+                    {para}
+                  </p>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 };

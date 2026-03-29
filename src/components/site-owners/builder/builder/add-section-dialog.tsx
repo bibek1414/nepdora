@@ -204,7 +204,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "tours-1",
         name: "Tours Style 1",
-        image: "/images/site-owners/others/others12.png",
+        image: "/images/site-owners/tours/tours-1.png",
       },
     ],
     others: [
@@ -673,6 +673,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Team Style 5",
         image: "/images/site-owners/team/team5.png",
       },
+      {
+        id: "team-6",
+        name: "Team Style 6 (Travel Experts)",
+        image: "/images/site-owners/team/team6.png",
+      },
     ],
     gallery: [
       {
@@ -770,6 +775,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "faq-5",
         name: "FAQ Style 5",
         image: "/images/site-owners/faq/faq-5.png",
+      },
+      {
+        id: "faq-6",
+        name: "FAQ Style 6 (Interactive Tabs)",
+        image: "/images/site-owners/faq/faq-6.png", // Using placeholder pattern
       },
     ],
     portfolio: [
