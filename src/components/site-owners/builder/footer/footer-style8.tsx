@@ -68,7 +68,7 @@ export const FooterStyle8 = ({
 
   return (
     <footer className="w-full border-t border-black/5 bg-white font-sans text-black">
-      <div className="mx-auto max-w-360 px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Column 1: Logo & About */}
           <motion.div

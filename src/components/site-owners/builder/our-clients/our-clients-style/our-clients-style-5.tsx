@@ -46,8 +46,8 @@ export const OurClientsStyle5: React.FC<OurClientsStyleProps> = ({
           <EditableText
             value={subtitle}
             onChange={handleSubtitleChange}
-            as="p"
-            className="text-center text-xs font-semibold tracking-[0.3em] text-gray-400 uppercase"
+            as="h4"
+            className="text-center text-xs font-semibold"
             isEditable={isEditable}
             placeholder="Enter subtitle..."
           />
