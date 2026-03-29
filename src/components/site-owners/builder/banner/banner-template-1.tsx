@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { BannerData, BannerTemplate1Data } from "@/types/owner-site/components/banner";
+import {
+  BannerData,
+  BannerTemplate1Data,
+} from "@/types/owner-site/components/banner";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
@@ -26,7 +29,6 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     bannerData,
     onUpdate
   );
-
 
   const componentId = React.useId();
 
@@ -74,7 +76,6 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-
   // Get first active image
   const activeImage =
     data.images.find(img => img.is_active !== false) || data.images[0];
@@ -108,16 +109,15 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
         {activeImage ? (
           <div className="group relative h-32 overflow-hidden rounded-lg sm:h-40 md:h-48 lg:h-80">
             {/* Change Background Button - Only visible when editable */}
-              <ImageEditOverlay
-                onImageSelect={(url) => handleImageUpdateLocal(0, url)}
-                imageWidth={1920}
-                imageHeight={400}
-                isEditable={isEditable}
-                label="Change Image"
-                folder="banner-images"
-                className="absolute top-2 right-2 z-20"
-              />
-
+            <ImageEditOverlay
+              onImageSelect={url => handleImageUpdateLocal(0, url)}
+              imageWidth={1920}
+              imageHeight={400}
+              isEditable={isEditable}
+              label="Change Image"
+              folder="banner-images"
+              className="absolute top-2 right-2 z-20"
+            />
 
             {activeImage.link && !isEditable ? (
               <button

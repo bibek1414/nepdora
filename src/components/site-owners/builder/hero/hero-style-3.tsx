@@ -230,7 +230,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           height={600}
                           s3Options={{
                             folder: "hero-grid-images",
-                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -267,7 +266,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           height={600}
                           s3Options={{
                             folder: "hero-grid-images",
-                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -307,7 +305,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           height={600}
                           s3Options={{
                             folder: "hero-grid-images",
-                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -344,7 +341,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           height={600}
                           s3Options={{
                             folder: "hero-grid-images",
-                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -381,7 +377,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           height={600}
                           s3Options={{
                             folder: "hero-grid-images",
-                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -421,7 +416,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           height={600}
                           s3Options={{
                             folder: "hero-grid-images",
-                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{
@@ -458,7 +452,6 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
                           height={600}
                           s3Options={{
                             folder: "hero-grid-images",
-                            
                           }}
                           showAltEditor={isEditable}
                           placeholder={{

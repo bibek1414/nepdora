@@ -112,13 +112,33 @@ export const BannerComponent: React.FC<BannerComponentProps> = ({
 
     switch (template) {
       case "banner-1":
-        return <BannerTemplate1 bannerData={component.data as BannerTemplate1Data} {...commonProps} />;
+        return (
+          <BannerTemplate1
+            bannerData={component.data as BannerTemplate1Data}
+            {...commonProps}
+          />
+        );
       case "banner-2":
-        return <BannerTemplate2 bannerData={component.data as BannerTemplate2Data} {...commonProps} />;
+        return (
+          <BannerTemplate2
+            bannerData={component.data as BannerTemplate2Data}
+            {...commonProps}
+          />
+        );
       case "banner-3":
-        return <BannerTemplate3 bannerData={component.data as BannerTemplate3Data} {...commonProps} />;
+        return (
+          <BannerTemplate3
+            bannerData={component.data as BannerTemplate3Data}
+            {...commonProps}
+          />
+        );
       case "banner-4":
-        return <BannerTemplate4 bannerData={component.data as BannerTemplate4Data} {...commonProps} />;
+        return (
+          <BannerTemplate4
+            bannerData={component.data as BannerTemplate4Data}
+            {...commonProps}
+          />
+        );
       default:
         return (
           <div className="flex min-h-[200px] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-8">

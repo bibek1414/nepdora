@@ -119,15 +119,18 @@ export const DEFAULT_BANNER_MAP: Record<BannerData["template"], BannerData> = {
     bannerType: "Banner",
     card1: {
       title: "Spring Collection Just Dropped",
-      description: "Fresh formulas for your spring skincare refresh. Limited edition sets available.",
+      description:
+        "Fresh formulas for your spring skincare refresh. Limited edition sets available.",
       label: "New Arrivals",
       buttonText: "Shop Collection",
       link: "/products",
-      image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=200&h=300&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=200&h=300&fit=crop",
     },
     card2: {
       title: "Earn Points, Get Free Products",
-      description: "Join our loyalty program and earn 1 point for every $1 spent. Redeem for exclusive rewards.",
+      description:
+        "Join our loyalty program and earn 1 point for every $1 spent. Redeem for exclusive rewards.",
       label: "Glow Rewards",
       buttonText: "Join Now — It's Free",
       link: "/auth",

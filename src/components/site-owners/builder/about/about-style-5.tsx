@@ -275,7 +275,6 @@ export function AboutUsTemplate5({
                 priority
                 s3Options={{
                   folder: "about-us-images",
-                  
                 }}
               />
             )}

@@ -214,7 +214,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
           <div className="mt-6 space-y-4 rounded-lg bg-gray-50 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                <FileArchive className="h-4 w-4 text-primary" />
+                <FileArchive className="text-primary h-4 w-4" />
                 <span>Upload Product Images (ZIP)</span>
               </div>
               <input
@@ -257,7 +257,7 @@ const BulkUploadDialog: React.FC<BulkUploadDialogProps> = ({
                 type="button"
                 onClick={handleDownloadTemplate}
                 disabled={downloadTemplateMutation.isPending}
-                className="flex cursor-pointer items-center gap-2 text-sm text-primary hover:underline disabled:opacity-50"
+                className="text-primary flex cursor-pointer items-center gap-2 text-sm hover:underline disabled:opacity-50"
               >
                 <FileDown className="h-4 w-4" />
                 {downloadTemplateMutation.isPending

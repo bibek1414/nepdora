@@ -122,7 +122,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
     });
   };
 
-
   return (
     <div
       className="bg-background-light dark:bg-background-dark flex min-h-screen items-center justify-center p-4"
@@ -145,27 +144,29 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
               />
 
               {/* Hidden EditableImage for functionality only - no hover effects */}
-                <EditableImage
-                  src={collection.imageUrl}
-                  alt={collection.imageAlt}
-                  onImageChange={(url, alt) =>
-                    handleCollectionImageUpdate(collection.id, url, alt)
-                  }
-                  isEditable={false} // Disable hover effects
-                  className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-                  s3Options={{
-                    folder: "hero-collections",
-                  }}
-                  placeholder={{
-                    width: 800,
-                    height: 600,
-                    text: `Collection ${index + 1}`,
-                  }}
-                  disableImageChange={true}
-                />
+              <EditableImage
+                src={collection.imageUrl}
+                alt={collection.imageAlt}
+                onImageChange={(url, alt) =>
+                  handleCollectionImageUpdate(collection.id, url, alt)
+                }
+                isEditable={false} // Disable hover effects
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+                s3Options={{
+                  folder: "hero-collections",
+                }}
+                placeholder={{
+                  width: 800,
+                  height: 600,
+                  text: `Collection ${index + 1}`,
+                }}
+                disableImageChange={true}
+              />
 
               <ImageEditOverlay
-                onImageSelect={(url) => handleCollectionImageUpdate(collection.id, url)}
+                onImageSelect={url =>
+                  handleCollectionImageUpdate(collection.id, url)
+                }
                 imageWidth={800}
                 imageHeight={600}
                 isEditable={isEditable}
@@ -174,7 +175,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                 className="absolute top-4 left-4 z-20"
               />
             </div>
-
 
             {/* Content Overlay */}
             <div className="bg-opacity-10 absolute inset-0 flex flex-col justify-center bg-black/40 p-8 text-white">

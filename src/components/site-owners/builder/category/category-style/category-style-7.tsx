@@ -95,4 +95,3 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
     </section>
   );
 };
-

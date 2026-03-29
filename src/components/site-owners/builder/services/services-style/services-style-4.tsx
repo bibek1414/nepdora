@@ -7,8 +7,6 @@ import { EditableText } from "@/components/ui/editable-text";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ServicesCard4 } from "../services-card/services-card4";
 
-
-
 interface ServicesStyle4Props {
   data: ServicesComponentData["data"];
   isEditable?: boolean;

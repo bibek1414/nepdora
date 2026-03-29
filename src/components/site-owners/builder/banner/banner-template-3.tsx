@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { BannerData, BannerTemplate3Data } from "@/types/owner-site/components/banner";
+import {
+  BannerData,
+  BannerTemplate3Data,
+} from "@/types/owner-site/components/banner";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { Button } from "@/components/ui/button";
@@ -105,7 +108,6 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-
   // Get all active images
   const activeImages = data.images.filter(img => img.is_active !== false);
 
@@ -146,9 +148,14 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                     actualIndex >= 0 ? actualIndex : displayIndex;
 
                   return (
-                    <div key={image.id || displayIndex} className="group relative">
+                    <div
+                      key={image.id || displayIndex}
+                      className="group relative"
+                    >
                       <ImageEditOverlay
-                        onImageSelect={(url) => handleImageUpdateLocal(safeIndex, url)}
+                        onImageSelect={url =>
+                          handleImageUpdateLocal(safeIndex, url)
+                        }
                         imageWidth={800}
                         imageHeight={1000}
                         isEditable={isEditable}
@@ -156,7 +163,6 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                         folder="banner-images"
                         className="absolute top-2 right-2 z-20"
                       />
-
 
                       {image.link && !isEditable ? (
                         <button

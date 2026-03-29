@@ -135,7 +135,6 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
     }
   };
 
-
   if (heroSlides.length === 0) return null;
 
   const currentSlide = heroSlides[heroIndex];
@@ -161,7 +160,6 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
           </button>
         </div>
       )}
-
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -200,7 +198,9 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
             />
 
             <ImageEditOverlay
-              onImageSelect={(url) => handleSlideImageUpdate(url, undefined, heroIndex)}
+              onImageSelect={url =>
+                handleSlideImageUpdate(url, undefined, heroIndex)
+              }
               imageWidth={1920}
               imageHeight={1080}
               isEditable={isEditable}

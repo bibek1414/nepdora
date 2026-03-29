@@ -47,7 +47,6 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
       id: Date.now(),
@@ -65,7 +64,9 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
+    const updatedImages = data.images.filter(
+      (_: any, idx: number) => idx !== index
+    );
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
@@ -107,7 +108,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
             >
               <div className="group relative">
                 <ImageEditOverlay
-                  onImageSelect={(imageUrl) =>
+                  onImageSelect={imageUrl =>
                     handleImageUpdateLocal(index, imageUrl)
                   }
                   imageWidth={800}
@@ -166,7 +167,9 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
               className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 transition-colors hover:border-gray-400 hover:bg-gray-100"
             >
               <Plus className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-600 font-medium">Add Image</span>
+              <span className="text-sm font-medium text-gray-600">
+                Add Image
+              </span>
             </button>
           </div>
         )}
@@ -175,7 +178,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
       <MediaLibraryDialog
         open={isMediaDialogOpen}
         onOpenChange={setIsMediaDialogOpen}
-        onSelect={(url) => {
+        onSelect={url => {
           handleAddImage(url);
           setIsMediaDialogOpen(false);
         }}

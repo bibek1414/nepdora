@@ -67,7 +67,6 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
     setCurrentIndex(prev => (prev + 1) % slideGroups.length);
   };
 
-
   const backgroundSrc = backgroundImage || DEFAULT_BACKGROUND;
   const hasMultipleGroups = slideGroups.length > 1;
 
@@ -120,7 +119,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
     <section className="relative w-full py-12 sm:py-16 md:py-20 lg:py-24">
       <div className="group relative min-h-[600px] w-full overflow-hidden bg-gray-900/60 sm:min-h-[700px] md:min-h-[800px]">
         <ImageEditOverlay
-          onImageSelect={(imageUrl) => onBackgroundChange?.(imageUrl)}
+          onImageSelect={imageUrl => onBackgroundChange?.(imageUrl)}
           imageWidth={1920}
           imageHeight={1080}
           isEditable={isEditable}

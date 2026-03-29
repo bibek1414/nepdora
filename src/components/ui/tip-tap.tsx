@@ -285,7 +285,7 @@ const ResizableImageComponent = ({
         />
 
         {isSelected && !isResizing && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100 rounded-lg">
+          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
             <Button
               size="sm"
               variant="secondary"
@@ -1095,19 +1095,34 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
                   <ImageIcon className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-96 shadow-xl border-[#E8E4DF] rounded-2xl bg-[#FAFAF8] p-4">
+              <PopoverContent className="w-96 rounded-2xl border-[#E8E4DF] bg-[#FAFAF8] p-4 shadow-xl">
                 <Tabs defaultValue="upload" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 bg-[#F0EBE4] p-1 rounded-xl">
-                    <TabsTrigger value="upload" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1714] text-[#6B5C4E]">Upload</TabsTrigger>
-                    <TabsTrigger value="library" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1714] text-[#6B5C4E]">Library</TabsTrigger>
-                    <TabsTrigger value="url" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#1A1714] text-[#6B5C4E]">URL</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3 rounded-xl bg-[#F0EBE4] p-1">
+                    <TabsTrigger
+                      value="upload"
+                      className="rounded-lg text-[#6B5C4E] data-[state=active]:bg-white data-[state=active]:text-[#1A1714]"
+                    >
+                      Upload
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="library"
+                      className="rounded-lg text-[#6B5C4E] data-[state=active]:bg-white data-[state=active]:text-[#1A1714]"
+                    >
+                      Library
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="url"
+                      className="rounded-lg text-[#6B5C4E] data-[state=active]:bg-white data-[state=active]:text-[#1A1714]"
+                    >
+                      URL
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="library" className="pt-4">
-                    <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-[#DDD8D0] rounded-2xl bg-white hover:border-[#C0A888] hover:bg-[#FBF9F6] transition-all duration-200">
+                    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#DDD8D0] bg-white py-6 transition-all duration-200 hover:border-[#C0A888] hover:bg-[#FBF9F6]">
                       <Button
                         variant="ghost"
-                        className="flex flex-col h-auto gap-3 hover:bg-transparent"
+                        className="flex h-auto flex-col gap-3 hover:bg-transparent"
                         onClick={() => {
                           setIsMediaLibraryOpen(true);
                           setIsImageOpen(false); // Close popover
@@ -1117,8 +1132,12 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
                           <ImageIcon className="h-5 w-5" strokeWidth={1.75} />
                         </span>
                         <div className="space-y-1">
-                          <p className="text-sm font-semibold text-[#1A1714]">Open Media Library</p>
-                          <p className="text-xs text-[#A09080]">Choose from your existing images</p>
+                          <p className="text-sm font-semibold text-[#1A1714]">
+                            Open Media Library
+                          </p>
+                          <p className="text-xs text-[#A09080]">
+                            Choose from your existing images
+                          </p>
                         </div>
                       </Button>
                     </div>
@@ -1131,7 +1150,8 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
                         "rounded-2xl border-2 border-dashed border-[#DDD8D0] bg-white",
                         "px-4 py-10 text-center transition-all duration-200",
                         "hover:border-[#C0A888] hover:bg-[#FBF9F6]",
-                        uploadMutation.isPending && "pointer-events-none opacity-60"
+                        uploadMutation.isPending &&
+                          "pointer-events-none opacity-60"
                       )}
                     >
                       <input
@@ -1182,7 +1202,7 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
                     </div>
 
                     {imageUploadError && (
-                      <div className="rounded-lg bg-red-50 p-3 text-xs font-medium text-red-600 border border-red-100 italic">
+                      <div className="rounded-lg border border-red-100 bg-red-50 p-3 text-xs font-medium text-red-600 italic">
                         {imageUploadError}
                       </div>
                     )}

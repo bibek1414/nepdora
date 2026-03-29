@@ -42,10 +42,7 @@ export const ServicesCard4: React.FC<ServicesCard4Props> = ({
           <div className="relative mb-6 h-48 w-full overflow-hidden rounded-t-xl">
             <Image
               src={service.thumbnail_image}
-              alt={
-                service.thumbnail_image_alt_description ||
-                service.title
-              }
+              alt={service.thumbnail_image_alt_description || service.title}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

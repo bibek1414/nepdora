@@ -27,7 +27,6 @@ import { CategoryStyle6 } from "./category-style/category-style-6";
 import { CategoryStyle7 } from "./category-style/category-style-7";
 import { CategoryStyle8 } from "./category-style/category-style-8";
 
-
 interface CategoryComponentProps {
   component: CategoryComponentData;
   isEditable?: boolean;

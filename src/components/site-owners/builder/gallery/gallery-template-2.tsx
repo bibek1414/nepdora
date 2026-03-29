@@ -60,7 +60,6 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
     });
   };
 
-
   const handleAddImage = (imageUrl?: string) => {
     const newImage: GalleryImage = {
       id: Date.now(),
@@ -78,7 +77,9 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = data.images.filter((_: any, idx: number) => idx !== index);
+    const updatedImages = data.images.filter(
+      (_: any, idx: number) => idx !== index
+    );
     setData({ ...data, images: updatedImages });
     onUpdate?.({ images: updatedImages });
   };
@@ -212,11 +213,8 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                           image={image}
                           isEditable={isEditable}
                           onOpenLightbox={() => setSelectedImage(image)}
-                          onImageChange={(imageUrl) =>
-                            handleImageUpdateLocal(
-                              actualIndex,
-                              imageUrl
-                            )
+                          onImageChange={imageUrl =>
+                            handleImageUpdateLocal(actualIndex, imageUrl)
                           }
                         />
                         {isEditable && (
@@ -252,7 +250,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                     image={image}
                     isEditable={isEditable}
                     onOpenLightbox={() => setSelectedImage(image)}
-                    onImageChange={(imageUrl) =>
+                    onImageChange={imageUrl =>
                       handleImageUpdateLocal(actualIndex, imageUrl)
                     }
                     size={180}
@@ -288,7 +286,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
             className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-2 transition-colors hover:border-gray-400 hover:bg-gray-100"
           >
             <Plus className="h-5 w-5 text-gray-400" />
-            <span className="text-sm text-gray-600 font-medium">Add Image</span>
+            <span className="text-sm font-medium text-gray-600">Add Image</span>
           </button>
         </div>
       )}
@@ -296,7 +294,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
       <MediaLibraryDialog
         open={isMediaDialogOpen}
         onOpenChange={setIsMediaDialogOpen}
-        onSelect={(url) => {
+        onSelect={url => {
           handleAddImage(url);
           setIsMediaDialogOpen(false);
         }}
@@ -386,7 +384,7 @@ const PhotoCard = ({
 
   const handleUpdateTitle = (newTitle: string) => {
     onImageChange?.(image.image as string); // Not really changing image, just title
-    // Wait, PhotoCard doesn't have actualIndex. 
+    // Wait, PhotoCard doesn't have actualIndex.
     // It's better to pass onTitleChange?
   };
 
@@ -411,7 +409,7 @@ const PhotoCard = ({
       <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-sm">
         {isEditable && (
           <ImageEditOverlay
-            onImageSelect={(imageUrl) => onImageChange?.(imageUrl)}
+            onImageSelect={imageUrl => onImageChange?.(imageUrl)}
             imageWidth={800}
             imageHeight={1000}
             isEditable={isEditable}
@@ -424,7 +422,10 @@ const PhotoCard = ({
             src={getImageUrl(image.image)}
             alt={image.image_alt_description || "Gallery image"}
             fill
-            className={cn("rounded-3xl object-cover", !isEditable && "cursor-pointer")}
+            className={cn(
+              "rounded-3xl object-cover",
+              !isEditable && "cursor-pointer"
+            )}
             draggable={false}
             onClick={() => !isEditable && onOpenLightbox()}
           />

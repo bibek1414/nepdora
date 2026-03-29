@@ -180,7 +180,11 @@ export default function EditProductPage({ params }: EditProductPageProps) {
           </div>
         </div>
 
-        <ProductForm ref={formRef} product={product} onLoadingChange={setIsSubmitting} />
+        <ProductForm
+          ref={formRef}
+          product={product}
+          onLoadingChange={setIsSubmitting}
+        />
         <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
           <DialogContent className="h-[90vh] max-w-[90vw] overflow-y-auto p-0 sm:max-w-5xl">
             <DialogHeader className="px-6 pt-6">

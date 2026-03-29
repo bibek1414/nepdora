@@ -123,7 +123,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
             setData({ ...data, ...update });
             onUpdate?.(update);
           }}
-          
           onAltChange={handleAltUpdate("imageAlt")}
           isEditable={isEditable}
           className="h-screen w-full"

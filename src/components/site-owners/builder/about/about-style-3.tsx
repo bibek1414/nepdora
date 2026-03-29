@@ -37,7 +37,6 @@ export const AboutUsTemplate3: React.FC<AboutUsTemplate3Props> = ({
               priority
               s3Options={{
                 folder: "about-us-images",
-                
               }}
               showAltEditor={isEditable}
               placeholder={{

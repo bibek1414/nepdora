@@ -7,7 +7,10 @@ import {
   GetNavbarResponse,
   Navbar,
 } from "@/types/owner-site/components/navbar";
-import { Footer, GetFooterResponse } from "@/types/owner-site/components/footer";
+import {
+  Footer,
+  GetFooterResponse,
+} from "@/types/owner-site/components/footer";
 import { GetThemeResponse, Theme } from "@/types/owner-site/components/theme";
 
 const PAGE_REVALIDATE_SECONDS = 300;
@@ -90,14 +93,10 @@ async function getPublishedPageComponents(
         data?: ComponentResponse[];
         components?: ComponentResponse[];
       }
-  >(
-    siteUser,
-    `/api/pages/${pageSlug}/components/`,
-    {
-      revalidate: PAGE_REVALIDATE_SECONDS,
-      tags: [`tenant:${siteUser}:page:${pageSlug}`],
-    }
-  );
+  >(siteUser, `/api/pages/${pageSlug}/components/`, {
+    revalidate: PAGE_REVALIDATE_SECONDS,
+    tags: [`tenant:${siteUser}:page:${pageSlug}`],
+  });
 
   if (Array.isArray(data)) {
     return data;
@@ -113,8 +112,8 @@ async function getPublishedNavbar(
     siteUser,
     "/api/navbar/",
     {
-    revalidate: LAYOUT_REVALIDATE_SECONDS,
-    tags: [`tenant:${siteUser}:navbar`],
+      revalidate: LAYOUT_REVALIDATE_SECONDS,
+      tags: [`tenant:${siteUser}:navbar`],
     }
   );
 
@@ -131,8 +130,8 @@ async function getPublishedFooter(
     siteUser,
     "/api/footer/",
     {
-    revalidate: LAYOUT_REVALIDATE_SECONDS,
-    tags: [`tenant:${siteUser}:footer`],
+      revalidate: LAYOUT_REVALIDATE_SECONDS,
+      tags: [`tenant:${siteUser}:footer`],
     }
   );
 

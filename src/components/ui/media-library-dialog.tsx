@@ -81,7 +81,10 @@ export function MediaLibraryDialog({
 
     try {
       let fileToUpload = file;
-      if (file.size > DEFAULT_MAX_IMAGE_SIZE && file.type.startsWith("image/")) {
+      if (
+        file.size > DEFAULT_MAX_IMAGE_SIZE &&
+        file.type.startsWith("image/")
+      ) {
         setIsCompressing(true);
         fileToUpload = await compressImage(file, {
           maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024),

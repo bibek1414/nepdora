@@ -236,7 +236,8 @@ export function FooterStyle4({
             <div>
               <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
               <p>
-                Powered By <span className="font-medium text-white">Nepdora</span>
+                Powered By{" "}
+                <span className="font-medium text-white">Nepdora</span>
               </p>
             </div>
             {data.policyLinks && data.policyLinks.length > 0 && (

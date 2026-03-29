@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { BannerData, BannerTemplate2Data } from "@/types/owner-site/components/banner";
+import {
+  BannerData,
+  BannerTemplate2Data,
+} from "@/types/owner-site/components/banner";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableImage } from "@/components/ui/editable-image";
 import { ChevronLeft, ChevronRight, Plus, X, Loader2 } from "lucide-react";
@@ -81,7 +84,6 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     onUpdate?.({ images: updatedImages });
   };
 
-
   // Get all active images
   const allActiveImages = data.images.filter(img => img.is_active !== false);
 
@@ -131,7 +133,7 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
         {allActiveImages.length > 0 ? (
           <Card className="group relative aspect-3/1 w-full overflow-hidden py-0 md:aspect-4/1">
             <ImageEditOverlay
-              onImageSelect={(url) => handleImageUpdateLocal(currentSlide, url)}
+              onImageSelect={url => handleImageUpdateLocal(currentSlide, url)}
               imageWidth={1920}
               imageHeight={480}
               isEditable={isEditable}
@@ -139,7 +141,6 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
               folder="banner-slider-images"
               className="absolute top-2 right-2 z-20"
             />
-
 
             <div className="relative h-full w-full">
               {allActiveImages.map((image, imageIndex) => (

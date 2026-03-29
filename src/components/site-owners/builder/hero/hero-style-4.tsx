@@ -172,7 +172,6 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                 height={750}
                 s3Options={{
                   folder: "hero-images",
-                  
                 }}
                 showAltEditor={isEditable}
                 placeholder={{

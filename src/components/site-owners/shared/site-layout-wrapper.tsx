@@ -53,13 +53,13 @@ export function SiteLayoutWrapper({
 
   const navbarResponse = isPreview
     ? previewNavbarResponse
-    : initialNavbarResponse ?? null;
+    : (initialNavbarResponse ?? null);
   const footerResponse = isPreview
     ? previewFooterResponse
-    : initialFooterResponse ?? null;
+    : (initialFooterResponse ?? null);
   const themeResponse = isPreview
     ? previewThemeResponse
-    : initialThemeResponse ?? null;
+    : (initialThemeResponse ?? null);
 
   const [pageInfo, setPageInfo] = useState<{ isHome: boolean; title: string }>({
     isHome: true,

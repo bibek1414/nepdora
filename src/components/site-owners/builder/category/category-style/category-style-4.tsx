@@ -18,7 +18,9 @@ export const CategoryStyle4: React.FC<CategoryStyleProps> = ({
   onUpdate,
 }) => {
   const handleFeaturedContentUpdate = (
-    updatedFeaturedContent: Partial<CategoryComponentData["data"]["featuredContent"]>
+    updatedFeaturedContent: Partial<
+      CategoryComponentData["data"]["featuredContent"]
+    >
   ) => {
     onUpdate?.({
       featuredContent: {

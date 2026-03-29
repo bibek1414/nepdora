@@ -978,8 +978,10 @@ export function FooterEditorDialog({
                       placeholder="© 2025 Your Company. All rights reserved."
                       disabled={isLoading}
                     />
-                    <p className="mt-1 text-[11px] text-muted-foreground">
-                      Use <code className="bg-muted px-1 rounded">{`{year}`}</code> for a dynamic current year.
+                    <p className="text-muted-foreground mt-1 text-[11px]">
+                      Use{" "}
+                      <code className="bg-muted rounded px-1">{`{year}`}</code>{" "}
+                      for a dynamic current year.
                     </p>
                   </div>
                 </CardContent>

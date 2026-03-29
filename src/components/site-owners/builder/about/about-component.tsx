@@ -85,7 +85,7 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
   const renderTemplate = () => {
     if (!component.data) {
       return (
-        <div className="p-8 text-center text-red-500 border border-red-200 bg-red-50 rounded-lg">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-8 text-center text-red-500">
           Error: Component data missing.
         </div>
       );
@@ -124,17 +124,23 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
       return <AboutUsTemplate9 aboutUsData={component.data} {...commonProps} />;
     }
     if (isAboutUsTemplate10(component.data)) {
-      return <AboutUsTemplate10 aboutUsData={component.data} {...commonProps} />;
+      return (
+        <AboutUsTemplate10 aboutUsData={component.data} {...commonProps} />
+      );
     }
     if (isAboutUsTemplate11(component.data)) {
-      return <AboutUsTemplate11 aboutUsData={component.data} {...commonProps} />;
+      return (
+        <AboutUsTemplate11 aboutUsData={component.data} {...commonProps} />
+      );
     }
     if (isAboutUsTemplate12(component.data)) {
-      return <AboutUsTemplate12 aboutUsData={component.data} {...commonProps} />;
+      return (
+        <AboutUsTemplate12 aboutUsData={component.data} {...commonProps} />
+      );
     }
 
     return (
-      <div className="p-8 text-center border border-yellow-200 bg-yellow-50 rounded-lg">
+      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-8 text-center">
         Unknown template: {(component.data as any).template}
       </div>
     );
@@ -177,7 +183,8 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Section?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. Are you sure you want to delete this section?
+                  This action cannot be undone. Are you sure you want to delete
+                  this section?
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

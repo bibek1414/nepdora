@@ -21,16 +21,23 @@ export const uploadToS3 = async (
     // Compress image if it's larger than 500KB and it's an image
     if (file.size > DEFAULT_MAX_IMAGE_SIZE && file.type.startsWith("image/")) {
       const originalSizeKB = (file.size / 1024).toFixed(2);
-      console.log(`[Compression] Starting: ${file.name} (${originalSizeKB} KB)`);
-      
+      console.log(
+        `[Compression] Starting: ${file.name} (${originalSizeKB} KB)`
+      );
+
       fileToUpload = await compressImage(file, {
         maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024), // Convert to MB
         useWebWorker: true,
       });
 
       const compressedSizeKB = (fileToUpload.size / 1024).toFixed(2);
-      const reduction = (((file.size - fileToUpload.size) / file.size) * 100).toFixed(1);
-      console.log(`[Compression] Finished: ${fileToUpload.name} (${compressedSizeKB} KB) - Reduced by ${reduction}%`);
+      const reduction = (
+        ((file.size - fileToUpload.size) / file.size) *
+        100
+      ).toFixed(1);
+      console.log(
+        `[Compression] Finished: ${fileToUpload.name} (${compressedSizeKB} KB) - Reduced by ${reduction}%`
+      );
     }
 
     const formData = new FormData();

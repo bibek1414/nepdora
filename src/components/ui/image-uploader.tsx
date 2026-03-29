@@ -156,7 +156,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       setIsCompressing(true);
       const processedFiles = await Promise.all(
         validFiles.map(async file => {
-          if (file.size > DEFAULT_MAX_IMAGE_SIZE && file.type.startsWith("image/")) {
+          if (
+            file.size > DEFAULT_MAX_IMAGE_SIZE &&
+            file.type.startsWith("image/")
+          ) {
             return await compressImage(file, {
               maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024),
               useWebWorker: true,
@@ -279,7 +282,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             }`}
           >
             {isCompressing ? (
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader2 className="text-primary h-8 w-8 animate-spin" />
             ) : (
               <UploadCloud
                 className={`h-8 w-8 ${

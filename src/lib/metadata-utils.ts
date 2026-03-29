@@ -45,7 +45,10 @@ const buildIconsMetadata = (
 };
 
 const stripHtml = (value: string): string =>
-  value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  value
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
 const normalizeText = (value: unknown): string | null => {
   if (typeof value !== "string") {
@@ -64,7 +67,9 @@ const truncateText = (value: string, maxLength = 160): string => {
   return `${value.slice(0, maxLength - 1).trimEnd()}…`;
 };
 
-const extractTitleFromComponent = (component: ComponentResponse): string | null => {
+const extractTitleFromComponent = (
+  component: ComponentResponse
+): string | null => {
   const data = component.data as unknown as Record<string, unknown>;
 
   switch (component.component_type) {
@@ -138,16 +143,15 @@ const extractDescriptionFromComponent = (
         normalizeText(data.badgeDescription)
       );
     case "text_editor":
-      return (
-        normalizeText(data.content) ||
-        normalizeText(data.title)
-      );
+      return normalizeText(data.content) || normalizeText(data.title);
     default:
       return null;
   }
 };
 
-const extractImageFromComponent = (component: ComponentResponse): string | null => {
+const extractImageFromComponent = (
+  component: ComponentResponse
+): string | null => {
   const data = component.data as unknown as Record<string, unknown>;
 
   switch (component.component_type) {

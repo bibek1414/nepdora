@@ -14,7 +14,9 @@ export async function generateMetadata({
   params,
 }: PublishPageProps): Promise<Metadata> {
   const { siteUser } = await params;
-  const pageData = await getPublishedHomePagePayload(siteUser).catch(() => null);
+  const pageData = await getPublishedHomePagePayload(siteUser).catch(
+    () => null
+  );
   const pageMetadata = derivePublishContentMetadata(
     pageData?.pageTitle || "Home",
     pageData?.pageComponents || []

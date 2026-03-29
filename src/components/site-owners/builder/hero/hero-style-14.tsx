@@ -45,7 +45,6 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
     handleAltUpdate,
   } = useBuilderLogic(heroData, onUpdate);
 
-
   // Helper to highlight the span word in the title
   const renderTitle = () => {
     const title = data.title;
@@ -65,7 +64,7 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
   return (
     <section className="section-padding bg-background relative flex min-h-screen items-center justify-center overflow-hidden">
       <ImageEditOverlay
-        onImageSelect={(url) => {
+        onImageSelect={url => {
           const update = { imageUrl: url };
           setData({ ...data, ...update });
           onUpdate?.(update);

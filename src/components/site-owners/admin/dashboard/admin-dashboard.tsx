@@ -24,13 +24,9 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
     user?.website_type === "AGENCY_WEBSITE" ||
     user?.website_type === "CONSULTANCY_WEBSITE";
 
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useDashboardStats({ enabled: !isServiceSite });
+  const { data, isLoading, isError, error, refetch } = useDashboardStats({
+    enabled: !isServiceSite,
+  });
 
   // Fetch counts for stats cards
   const { data: contactsData, isLoading: isContactsLoading } = useGetContacts(

@@ -32,7 +32,8 @@ export const OthersTemplate7: React.FC<OthersTemplate7Props> = ({
   const theme = themeResponse?.data?.[0]?.data?.theme;
 
   const activeImage =
-    data.images?.find((img: any) => img.is_active !== false) || data.images?.[0];
+    data.images?.find((img: any) => img.is_active !== false) ||
+    data.images?.[0];
 
   const handleImageUpdateLocal = (imageUrl: string, altText?: string) => {
     if (activeImage && activeImage.id !== undefined) {

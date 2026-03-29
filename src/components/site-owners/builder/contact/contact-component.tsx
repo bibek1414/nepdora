@@ -103,7 +103,6 @@ export const ContactComponent: React.FC<ContactComponentProps> = ({
     }
   };
 
-
   return (
     <div className="group relative">
       {isEditable && (

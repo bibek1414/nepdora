@@ -39,8 +39,8 @@ export const ImageEditOverlay: React.FC<ImageEditOverlayProps> = ({
   return (
     <>
       <div
-        className={`${className} cursor-pointer opacity-0 transition-opacity group-hover:opacity-100 animate-in fade-in duration-200`}
-        onClick={(e) => {
+        className={`${className} animate-in fade-in cursor-pointer opacity-0 transition-opacity duration-200 group-hover:opacity-100`}
+        onClick={e => {
           e.stopPropagation();
           setIsMediaDialogOpen(true);
         }}
@@ -56,7 +56,7 @@ export const ImageEditOverlay: React.FC<ImageEditOverlayProps> = ({
             <ImagePlus className="h-4 w-4" />
             {label}
           </span>
-          <span className="mt-0.5 rounded-full bg-white/90 px-2 py-1 text-[11px] font-medium text-gray-800 shadow-sm backdrop-blur-sm border border-gray-100">
+          <span className="mt-0.5 rounded-full border border-gray-100 bg-white/90 px-2 py-1 text-[11px] font-medium text-gray-800 shadow-sm backdrop-blur-sm">
             Size: {imageWidth} × {imageHeight}px
           </span>
         </div>

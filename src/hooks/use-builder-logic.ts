@@ -84,8 +84,8 @@ export const useBuilderLogic = <T extends Record<string, any>>(
       } = { width: 600, quality: "auto", format: "auto" }
     ) => {
       if (!imageUrl) return "";
-      
-      // If it's a Cloudinary URL, we can still optimize it for now, 
+
+      // If it's a Cloudinary URL, we can still optimize it for now,
       // but new images will be S3 URLs which don't support these options natively.
       // For now, we'll just return the imageUrl as is if it's not a Cloudinary/Unsplash one.
       return imageUrl;

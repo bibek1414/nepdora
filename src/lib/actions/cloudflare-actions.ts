@@ -101,17 +101,19 @@ export async function addDomainToCloudflare(domainName: string) {
 
     if (!createZoneResponse.ok || !createZoneData.success) {
       console.error("Cloudflare Add Zone Error:", createZoneData.errors);
-      
+
       // Error 1061: Zone already exists
       if (createZoneData.errors?.[0]?.code === 1061) {
-        console.log(`Zone ${domainName} already exists in Cloudflare. Fetching existing zone...`);
+        console.log(
+          `Zone ${domainName} already exists in Cloudflare. Fetching existing zone...`
+        );
         const existingZoneRes = await checkDomainVerificationStatus(domainName);
         if (existingZoneRes.success && existingZoneRes.zoneId) {
           return {
             success: true,
             nameservers: existingZoneRes.nameservers,
             zoneId: existingZoneRes.zoneId,
-            message: "Existing zone found and reused."
+            message: "Existing zone found and reused.",
           };
         }
       }
@@ -368,7 +370,10 @@ export async function deleteDomainFromCloudflare(domainName: string) {
     const zoneRes = await checkDomainVerificationStatus(domainName);
     if (!zoneRes.success || !zoneRes.zoneId) {
       // If zone not found, it's already deleted or not there
-      return { success: true, message: "Zone not found in Cloudflare, skipping deletion." };
+      return {
+        success: true,
+        message: "Zone not found in Cloudflare, skipping deletion.",
+      };
     }
 
     const zoneId = zoneRes.zoneId;
@@ -392,7 +397,8 @@ export async function deleteDomainFromCloudflare(domainName: string) {
       console.error("Cloudflare Delete Zone Error:", data.errors);
       return {
         success: false,
-        error: data.errors?.[0]?.message || "Failed to delete zone from Cloudflare.",
+        error:
+          data.errors?.[0]?.message || "Failed to delete zone from Cloudflare.",
       };
     }
 
@@ -400,8 +406,9 @@ export async function deleteDomainFromCloudflare(domainName: string) {
     return { success: true };
   } catch (error: any) {
     console.error("Cloudflare Delete Exception:", error);
-    return { success: false, error: error.message || "Failed to delete zone from Cloudflare." };
+    return {
+      success: false,
+      error: error.message || "Failed to delete zone from Cloudflare.",
+    };
   }
 }
-
-
