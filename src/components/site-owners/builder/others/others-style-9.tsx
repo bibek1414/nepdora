@@ -108,13 +108,13 @@ export const OthersTemplate9: React.FC<OthersTemplate9Props> = ({
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl transition-shadow hover:shadow-2xl"
+              className="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white"
             >
               <div className="border-b border-slate-100 p-8 md:p-10">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-start gap-5">
                     <div
-                      className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-3xl shadow-inner ${
+                      className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-3xl ${
                         rIdx === 0
                           ? "bg-amber-50 text-amber-500"
                           : "bg-indigo-50 text-indigo-500"
