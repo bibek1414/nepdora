@@ -31,6 +31,7 @@ import {
   isHeroTemplate15,
   isHeroTemplate16,
   isHeroTemplate17,
+  isHeroTemplate18,
 } from "@/types/owner-site/components/hero";
 import { HeroTemplate1 } from "./hero-style-1";
 import { HeroTemplate2 } from "./hero-style-2";
@@ -49,6 +50,7 @@ import { HeroTemplate14 } from "./hero-style-14";
 import { HeroTemplate15 } from "./hero-style-15";
 import { HeroTemplate16 } from "./hero-style-16";
 import { HeroTemplate17 } from "./hero-style-17";
+import { HeroTemplate18 } from "./hero-style-18";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -172,6 +174,9 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
     }
     if (isHeroTemplate17(component.data)) {
       return <HeroTemplate17 heroData={component.data} {...commonProps} />;
+    }
+    if (isHeroTemplate18(component.data)) {
+      return <HeroTemplate18 heroData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates

@@ -618,6 +618,25 @@ export interface HeroTemplate17Data {
   floatingBadgeSubtitle: string;
 }
 
+export interface HeroTemplate18Data {
+  template: "hero-18";
+  eyebrow: string;
+  title: string;
+  description: string;
+  primaryButtonText: string;
+  primaryButtonHref: string;
+  secondaryButtonText: string;
+  secondaryButtonHref: string;
+  mapIconUrl: string;
+  mapIconAlt: string;
+  airplaneIconUrl: string;
+  airplaneIconAlt: string;
+  polaroid1Url: string;
+  polaroid1Alt: string;
+  polaroid2Url: string;
+  polaroid2Alt: string;
+}
+
 export const defaultHeroTemplate17Data: HeroTemplate17Data = {
   template: "hero-17",
   badge: "New Collection 2024",
@@ -645,6 +664,28 @@ export const defaultHeroTemplate17Data: HeroTemplate17Data = {
   floatingBadgeSubtitle: "5000+ sold",
 };
 
+export const defaultHeroTemplate18Data: HeroTemplate18Data = {
+  template: "hero-18",
+  eyebrow: "Tailored Travel Experiences for Unforgettable Adventures",
+  title: "Craft Your Ultimate Dream Getaway",
+  description:
+    "Design your perfect escape with our tailored travel services, ensuring every detail of your dream vacation is meticulously planned and flawlessly executed",
+  primaryButtonText: "Book Now",
+  primaryButtonHref: "#",
+  secondaryButtonText: "Learn More",
+  secondaryButtonHref: "#",
+  mapIconUrl:
+    "https://cdn.prod.website-files.com/65fab07abb0beb90e59749bd/65fd903f275685d6e088dffa_Map%20Icon.svg",
+  mapIconAlt: "Map Icon",
+  airplaneIconUrl:
+    "https://cdn.prod.website-files.com/65fab07abb0beb90e59749bd/65fd8c344e5e2ed428a8c2bc_Banner%20Home%202.svg",
+  airplaneIconAlt: "Airplane Icon",
+  polaroid1Url: "https://picsum.photos/seed/canyon/400/500",
+  polaroid1Alt: "Canyon",
+  polaroid2Url: "https://picsum.photos/seed/lake/400/500",
+  polaroid2Alt: "Lake",
+};
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -663,7 +704,8 @@ export type HeroData =
   | HeroTemplate14Data
   | HeroTemplate15Data
   | HeroTemplate16Data
-  | HeroTemplate17Data;
+  | HeroTemplate17Data
+  | HeroTemplate18Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -742,6 +784,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-15": defaultHeroTemplate15Data,
   "hero-16": defaultHeroTemplate16Data,
   "hero-17": defaultHeroTemplate17Data,
+  "hero-18": defaultHeroTemplate18Data,
 };
 
 // Type guards for each template
@@ -795,3 +838,6 @@ export const isHeroTemplate16 = (data: HeroData): data is HeroTemplate16Data =>
 
 export const isHeroTemplate17 = (data: HeroData): data is HeroTemplate17Data =>
   data.template === "hero-17";
+
+export const isHeroTemplate18 = (data: HeroData): data is HeroTemplate18Data =>
+  data.template === "hero-18";

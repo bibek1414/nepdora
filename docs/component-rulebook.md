@@ -3,8 +3,8 @@
 This guide turns the `@beautifulMention` callout into a repeatable checklist whenever a new builder component is born. Every component section should live inside a `@beautifulMention` wrapper in the docs, and the implementation should honor the layout, text/link/image, theme, and variant rules listed below.
 
 ## @beautifulMention Layout Shell
-- Start each component with a `section` or `div` that mirrors the builder frame: `mx-auto max-w-7xl px-4 sm:px-6 lg:px-8` inside `container` as needed so nothing stretches uncomfortably on large screens.
-- Layer in the semantic `aria` role that matches the component (example: `section` for content blocks, `nav` for menus) and keep the outer wrapper responsible for spacing, background, and any `max-w-7xl` constraint.
+- **Standard Layout Shell**: Always use a two-layer structure for sections. The outer element (e.g., `section`) should be full-width to accommodate backgrounds, while the immediate child should be a content wrapper with `mx-auto max-w-7xl px-4 sm:px-6 lg:px-8`. This prevents content from stretching on ultra-wide screens.
+- Layer in the semantic `aria` role that matches the component and keep the outer wrapper responsible for spacing, background, and full-width effects.
 - Inject `@beautifulMention` comments/descriptions in the doc version so the team can see which guideline bullet the implementation follows.
 
 ## @beautifulMention Text Strategy
@@ -23,7 +23,14 @@ This guide turns the `@beautifulMention` callout into a repeatable checklist whe
 - Guards: Check `link.target` defaults to `_self`, and only reach for `_blank` when the experience explicitly requires it; cite that decision in the `@beautifulMention` note.
 - Link containers should stay within the `max-w-7xl` grid and receive the same vertical rhythm as the text around them.
 - When links double as buttons, use the theme primary color for the background/border and `theme.colors.primaryForeground` for the label so editing states stay consistent with the overall palette.
-- If the `EditableLink` contains inline icons (e.g., `<ChevronRight/>`), embed them inside the link body and make sure hover/transition classes (like `group-hover`) share the same wrapper so the icon respects the primary palette described in `@beautifulMention`.
+- If the `EditableLink` contains inline icons (e.g., `<ChevronRight/>`), embed them inside the link body as children. Pass the text prop for the editor, but also render it inside the children for the display. This ensures hover/transition classes (like `group-hover`) share the same wrapper.
+  - **Good Pattern**:
+    ```tsx
+    <EditableLink text={data.buttonText} ...>
+      {data.buttonText}
+      <ArrowRight className="..." />
+    </EditableLink>
+    ```
 
 ## @beautifulMention Image Strategy
 - Wrap imagery inside `EditableImage`, supply sensible `alt` text, and pass `priority` only when the hero image really matters for the first paint.
@@ -39,6 +46,15 @@ This guide turns the `@beautifulMention` callout into a repeatable checklist whe
 - **Subtle Hover Effects**: Hover states should be professional and understated. Avoid overly aggressive scaling or intense color changes. Prefer smooth, short transitions (e.g., `transition-all duration-200`).
 - **Clean Flow**: Ensure components follow a logical flow, maintaining consistent vertical rhythm and whitespace. Align elements to the grid defined in the Layout Shell.
 
+## @beautifulMention Mobile Responsiveness Strategy
+- **Mobile-First Design**: Always build with a mobile-first approach. Use Tailwind's prefix-free classes for mobile styles and add breakpoint prefixes (e.g., `md:`, `lg:`) for larger screens.
+- **Responsive Typography**: Scale font sizes using responsive utilities. Headings should be readable on small screens without overwhelming the layout.
+  - **Example**: `className="text-3xl md:text-5xl font-bold"`
+- **Stacking & Grids**: Ensure that multi-column layouts on desktop (e.g., side-by-side text and image) stack vertically on mobile. Use `flex-col md:flex-row` or responsive grid columns `grid-cols-1 md:grid-cols-2`.
+- **Spacing & Padding**: Maintain consistent vertical rhythm. Use smaller vertical padding on mobile (e.g., `py-12`) and increase it for desktop (e.g., `md:py-24`). Always keep horizontal padding at `px-4` minimum on mobile.
+- **Touch-Friendly Elements**: Ensure `EditableLink` buttons and interactive elements have a minimum size (standard touch targets) to be easily tappable on mobile devices.
+- **Image Scaling**: Images inside `EditableImage` should use responsive width classes (like `w-full` on mobile) or appropriate aspect ratios to ensure they scale correctly without breaking the layout.
+
 ## @beautifulMention Variant + Prefers
 - Define a `template` literal type (for example, `hero-17`) and add it to the union in the shared `types` file along with the default data, type guard, and map entry. Capture this registration process in the `@beautifulMention` variant note.
 - The new style must appear in the `add-section-dialog` templates list so the builder can prefer that variant from the UI. Note the preferred placement (hero, feature, testimonial) inside `@beautifulMention` so the next person can follow the intent.
@@ -51,6 +67,7 @@ This guide turns the `@beautifulMention` callout into a repeatable checklist whe
 1. Analyze the target component area and write the `@beautifulMention` checklist in this document before touching code.
 2. Draft the data type+default record, add `max-w-7xl` skeleton, and document the text/link/image/theme approach inside `@beautifulMention` so the review can verify compliance quickly.
 3. Wire the component into the renderer and `add-section-dialog`, calling out the registration steps inside the final `@beautifulMention` block.
+4. **Verify Mobile Responsiveness**: Test the component across common breakpoints (mobile, tablet, desktop) and ensure the layout, typography, and interactive elements follow the "Mobile Responsiveness Strategy".
 
 Keep every future component aligned with these `@beautifulMention` anchors so we get consistent builder behavior and predictable renders.
 
