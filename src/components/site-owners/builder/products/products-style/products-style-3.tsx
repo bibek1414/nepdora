@@ -146,8 +146,8 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="-left-4 bg-white/80 shadow-md hover:bg-white md:-left-12" />
-              <CarouselNext className="-right-4 bg-white/80 shadow-md hover:bg-white md:-right-12" />
+              <CarouselPrevious className="-left-4 border-black bg-white/80 text-black shadow-md ring-black hover:bg-white md:-left-12" />
+              <CarouselNext className="-right-4 border-black bg-white/80 text-black shadow-md ring-black hover:bg-white md:-right-12" />
             </Carousel>
           </div>
         )}
