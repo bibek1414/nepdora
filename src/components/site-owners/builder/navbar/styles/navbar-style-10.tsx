@@ -4,12 +4,21 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import NextImage from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, ArrowUpRight, ChevronDown, ShoppingCart } from "lucide-react";
+import { Menu, X, ArrowUpRight, ChevronDown, ShoppingCart, User, Heart, Package, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { useAuth } from "@/hooks/customer/use-auth";
+import { useWishlist } from "@/hooks/customer/use-wishlist";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { NavbarLogo } from "../navbar-logo";
 import { generateLinkHref } from "@/lib/link-utils";
 import {
@@ -51,6 +60,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+
+  const { isAuthenticated, user, logout } = useAuth();
+  const { data: wishlistData } = useWishlist();
+  const wishlistCount = wishlistData?.length || 0;
   const pathname = usePathname();
   const router = useRouter();
   const servicesRef = useRef<HTMLDivElement>(null);
@@ -117,6 +130,32 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
     if (onToggleCart) onToggleCart();
   };
 
+  const handleProfileAction = (action: string) => {
+    if (disableClicks || isEditable) return;
+
+    switch (action) {
+      case "profile":
+        router.push(generateLinkHref("/profile", siteUser, pathname));
+        break;
+      case "wishlist":
+        router.push(generateLinkHref("/wishlist", siteUser, pathname));
+        break;
+      case "orders":
+        router.push(generateLinkHref("/orders", siteUser, pathname));
+        break;
+      case "logout":
+        logout();
+        break;
+    }
+    setIsOpen(false);
+  };
+
+  const handleLoginClick = () => {
+    if (disableClicks || isEditable) return;
+    router.push(generateLinkHref("/login", siteUser, pathname));
+    setIsOpen(false);
+  };
+
   return (
     <header
       className={`inset-x-0 z-50 flex items-center justify-between px-3 transition-all duration-300 sm:px-4 ${
@@ -124,7 +163,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
       }`}
     >
       {/* Desktop Header */}
-      <div className="relative container mx-auto hidden h-16 w-full items-center justify-between rounded-full border border-gray-100 bg-white/95 px-4 backdrop-blur-md md:px-8 lg:flex xl:h-20">
+      <div className="relative mx-auto hidden h-16 w-full max-w-7xl items-center justify-between rounded-full border border-gray-100 bg-white/95 px-4 backdrop-blur-md md:px-8 lg:flex xl:h-20">
         {/* Logo - Left aligned */}
         <div className="z-20 flex cursor-pointer items-center gap-2">
           {isEditable && onEditLogo ? (
@@ -278,6 +317,78 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
               </Link>
             )
           )}
+
+          {navbarData.enableLogin && (
+            <div className={disableClicks ? "pointer-events-auto" : ""}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={`flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 transition-all hover:border-gray-300 hover:shadow-md ${disableClicks || isEditable ? "cursor-default opacity-60" : "cursor-pointer"}`}
+                    onClick={disableClicks ? e => e.preventDefault() : undefined}
+                  >
+                    <User size={18} />
+                  </button>
+                </DropdownMenuTrigger>
+                {!disableClicks && !isEditable && (
+                  <DropdownMenuContent className="w-48" align="end">
+                    {isAuthenticated ? (
+                      <>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => handleProfileAction("profile")}
+                        >
+                          <User className="mr-2 h-4 w-4" />
+                          My Profile
+                        </DropdownMenuItem>
+                        {(!user?.website_type ||
+                          user.website_type === "ecommerce") && (
+                          <>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => handleProfileAction("wishlist")}
+                            >
+                              <Heart className="mr-2 h-4 w-4" />
+                              <div className="flex w-full items-center justify-between">
+                                <span>Wishlist</span>
+                                {wishlistCount > 0 && (
+                                  <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                    {wishlistCount}
+                                  </span>
+                                )}
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => handleProfileAction("orders")}
+                            >
+                              <Package className="mr-2 h-4 w-4" />
+                              My Orders
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-600 focus:text-red-600"
+                          onClick={() => handleProfileAction("logout")}
+                        >
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Logout
+                        </DropdownMenuItem>
+                      </>
+                    ) : (
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={handleLoginClick}
+                      >
+                        <User className="mr-2 h-4 w-4" />
+                        Login / Register
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                )}
+              </DropdownMenu>
+            </div>
+          )}
         </div>
       </div>
 
@@ -378,6 +489,57 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             </div>
 
             <div className="mt-auto pt-6">
+              {navbarData.enableLogin && (
+                <div className="mb-6 space-y-3 border-b border-gray-100 pb-6">
+                  {isAuthenticated ? (
+                    <>
+                      <button
+                        onClick={() => handleProfileAction("profile")}
+                        className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
+                      >
+                        <User size={20} className="text-gray-500" /> My Profile
+                      </button>
+                      {(!user?.website_type || user.website_type === "ecommerce") && (
+                        <>
+                          <button
+                            onClick={() => handleProfileAction("wishlist")}
+                            className="flex w-full items-center justify-between py-2 text-base font-medium text-gray-800"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Heart size={20} className="text-gray-500" /> Wishlist
+                            </div>
+                            {wishlistCount > 0 && (
+                              <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                {wishlistCount}
+                              </span>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => handleProfileAction("orders")}
+                            className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
+                          >
+                            <Package size={20} className="text-gray-500" /> My Orders
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => handleProfileAction("logout")}
+                        className="flex w-full items-center gap-3 py-2 text-base font-medium text-red-600"
+                      >
+                        <LogOut size={20} /> Logout
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={handleLoginClick}
+                      className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
+                    >
+                      <User size={20} className="text-gray-500" /> Login / Register
+                    </button>
+                  )}
+                </div>
+              )}
+
               {buttons.map(button => (
                 <Link
                   key={button.id}

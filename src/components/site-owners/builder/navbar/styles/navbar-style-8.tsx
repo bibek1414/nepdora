@@ -54,6 +54,7 @@ interface NavbarStyleProps {
   onToggleCart?: () => void;
   disableClicks?: boolean;
   onUpdateBanner?: (text: string) => void;
+  onUpdateTopBar?: (topBarItems: any[]) => void;
 }
 
 export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
@@ -66,8 +67,9 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
   onEditCart,
   disableClicks = false,
   onUpdateBanner,
+  onUpdateTopBar,
 }) => {
-  const { data, handleTextUpdate, handleArrayItemUpdate } = useBuilderLogic(
+  const { data, handleTextUpdate, setData } = useBuilderLogic(
     navbarData,
     undefined
   );
@@ -206,14 +208,16 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                 text={topBarLink.text}
                 href={topBarLink.href || "#shop"}
                 onChange={(text, href) => {
-                  const newItems = topBarItems
+                  const newItems = topBarItems && topBarItems.length > 0
                     ? [...topBarItems]
-                    : [{ id: "1", text: "Shop Now", href: "#shop" }];
+                    : [topBarLink];
                   newItems[0] = { ...newItems[0], text, href };
-                  handleArrayItemUpdate(
-                    "topBarItems",
-                    topBarLink.id
-                  )(newItems[0]);
+                  
+                  setData({ ...data, topBarItems: newItems });
+                  
+                  if (onUpdateTopBar) {
+                    onUpdateTopBar(newItems);
+                  }
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}

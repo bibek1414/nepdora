@@ -15,37 +15,35 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import {
-  ExperienceData,
-  isExperienceTemplate1,
-  isExperienceTemplate2,
-} from "@/types/owner-site/components/experience";
-import { ExperienceStyle1 } from "./experience-style-1";
-import { ExperienceStyle2 } from "./experience-style-2";
+  ToursData,
+  isToursTemplate1,
+} from "@/types/owner-site/components/tours";
+import { ToursStyle1 } from "./tours-style-1";
 
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
 
-interface ExperienceComponentData {
+interface ToursComponentData {
   id: string | number;
   component_id?: string;
-  component_type?: "experience";
-  data: ExperienceData;
-  type?: "experience";
+  component_type?: "tours";
+  data: ToursData;
+  type?: "tours";
   order: number;
   page?: number;
 }
 
-interface ExperienceComponentProps {
-  component: ExperienceComponentData;
+interface ToursComponentProps {
+  component: ToursComponentData;
   isEditable?: boolean;
   pageSlug: string;
   siteUser: string;
   onReplace?: (componentId: string, categoryId?: string) => void;
 }
 
-export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
+export const ToursComponent: React.FC<ToursComponentProps> = ({
   component,
   isEditable = false,
   pageSlug,
@@ -53,19 +51,19 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
   onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteExperienceMutation = useDeleteComponentMutation(
+  const deleteToursMutation = useDeleteComponentMutation(
     pageSlug,
-    "experience"
+    "tours"
   );
-  const updateExperienceMutation = useUpdateComponentMutation(
+  const updateToursMutation = useUpdateComponentMutation(
     pageSlug,
-    "experience"
+    "tours"
   );
 
-  const handleUpdate = (updatedData: Partial<ExperienceData>) => {
+  const handleUpdate = (updatedData: Partial<ToursData>) => {
     const componentId = component.component_id || component.id.toString();
 
-    updateExperienceMutation.mutate({
+    updateToursMutation.mutate({
       componentId,
       data: updatedData,
     });
@@ -74,20 +72,20 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
   const handleDelete = () => {
     const componentId = component.component_id || component.id.toString();
 
-    deleteExperienceMutation.mutate(componentId, {
+    deleteToursMutation.mutate(componentId, {
       onSuccess: () => {
         setIsDeleteDialogOpen(false);
       },
     });
   };
 
-  const renderExperienceTemplate = () => {
+  const renderToursTemplate = () => {
     if (!component.data) {
       return (
         <div className="flex min-h-[20vh] items-center justify-center border border-red-200 bg-red-50 px-4 py-10">
           <div className="text-center">
             <h2 className="text-xl font-bold text-red-600">
-              Error: Missing Experience Data
+              Error: Missing Tours Data
             </h2>
             <p className="mt-2 text-red-500">Component ID: {component.id}</p>
           </div>
@@ -101,15 +99,9 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
       onUpdate: handleUpdate,
     };
 
-    if (isExperienceTemplate1(component.data)) {
+    if (isToursTemplate1(component.data)) {
       return (
-        <ExperienceStyle1 experienceData={component.data} {...commonProps} />
-      );
-    }
-
-    if (isExperienceTemplate2(component.data)) {
-      return (
-        <ExperienceStyle2 experienceData={component.data} {...commonProps} />
+        <ToursStyle1 toursData={component.data} {...commonProps} />
       );
     }
 
@@ -118,7 +110,7 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
       <div className="flex min-h-[20vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-10">
         <div className="text-center">
           <h2 className="text-xl font-bold text-yellow-700">
-            Unknown Experience Template: {(component.data as any).template}
+            Unknown Tours Template: {(component.data as any).template}
           </h2>
           <p className="mt-2 text-yellow-600">
             Please select a valid template.
@@ -134,7 +126,7 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
         <>
           <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100">
             <Link
-              href={`/admin/collections/${(component.data as any).collectionSlug || "experience"}`}
+              href={`/admin/collections/${(component.data as any).collectionSlug || "tours"}`}
               target="_blank"
               rel="noopener"
             >
@@ -151,11 +143,11 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
               size="sm"
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
-              disabled={deleteExperienceMutation.isPending}
+              disabled={deleteToursMutation.isPending}
               className="h-8 w-fit justify-start px-3"
             >
               <Trash2 className="mr-1 h-4 w-4" />
-              {deleteExperienceMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteToursMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
             <Button
               size="sm"
@@ -163,7 +155,7 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
               onClick={() =>
                 onReplace?.(
                   component.component_id || component.id.toString(),
-                  "experience-sections"
+                  "tours-sections"
                 )
               }
               className="h-8 w-fit justify-start bg-white px-3"
@@ -190,9 +182,9 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
                 <AlertDialogAction
                   onClick={handleDelete}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  disabled={deleteExperienceMutation.isPending}
+                  disabled={deleteToursMutation.isPending}
                 >
-                  {deleteExperienceMutation.isPending
+                  {deleteToursMutation.isPending
                     ? "Deleting..."
                     : "Delete"}
                 </AlertDialogAction>
@@ -202,7 +194,7 @@ export const ExperienceComponent: React.FC<ExperienceComponentProps> = ({
         </>
       )}
 
-      {renderExperienceTemplate()}
+      {renderToursTemplate()}
     </div>
   );
 };

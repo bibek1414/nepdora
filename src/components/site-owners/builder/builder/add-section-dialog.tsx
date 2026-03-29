@@ -33,6 +33,7 @@ import {
   Users,
   LogIn,
   Database,
+  MapPin,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -197,6 +198,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "hero-18",
         name: "Hero Style 18",
         image: "/images/site-owners/hero/hero18.png",
+      },
+    ],
+    tours: [
+      {
+        id: "tours-1",
+        name: "Tours Style 1",
+        image: "/images/site-owners/others/others12.png",
       },
     ],
     others: [
@@ -1081,6 +1089,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["experience", "work", "history", "career"],
       hasTemplates: true,
       templates: templates.experience,
+      type: "section",
+      isSpecialized: true,
+    },
+    {
+      id: "tours-sections",
+      label: "Tours",
+      icon: MapPin,
+      keywords: ["tours", "travel", "destinations", "vacation"],
+      hasTemplates: true,
+      templates: templates.tours,
       type: "section",
       isSpecialized: true,
     },

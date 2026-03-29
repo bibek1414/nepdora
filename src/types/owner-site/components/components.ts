@@ -32,6 +32,7 @@ import { ExperienceData } from "./experience";
 import { AuthFormData } from "./auth-form-map";
 import { CollectionsData } from "./collections";
 import { SocialsData } from "./socials";
+import { ToursData } from "./tours";
 
 export interface ComponentTypeMap {
   hero: HeroData;
@@ -69,6 +70,7 @@ export interface ComponentTypeMap {
   skills: SkillsData;
   experience: ExperienceData;
   socials: SocialsData;
+  tours: ToursData;
 }
 
 // Generic interfaces
