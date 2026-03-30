@@ -1,7 +1,8 @@
-export const DEFAULT_MAX_IMAGE_SIZE = 500 * 1024; // 500kb
 import { siteConfig } from "@/config/site";
 import { apiFetch } from "@/lib/api-client";
+import { createHeaders } from "./headers";
 const API_BASE_URL = siteConfig.apiBaseUrl;
+export const DEFAULT_MAX_IMAGE_SIZE = 500 * 1024; // 500kb
 export interface S3File {
   name: string;
   url: string;
@@ -45,6 +46,7 @@ export const uploadToS3 = async (
     formData.append("folder", folder);
 
     const response = await apiFetch(`${API_BASE_URL}/api/s3/upload/`, {
+      headers: createHeaders(),
       method: "POST",
       body: formData,
     });

@@ -273,6 +273,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Others Style 12 (Vacation Planning)",
         image: "/images/site-owners/others/others12.png",
       },
+      {
+        id: "others-13",
+        name: "Others Style 13 (Stats)",
+        image: "/images/site-owners/others/others13.png",
+      },
     ],
     experience: [
       {
@@ -671,6 +676,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "testimonial-5",
         name: "Testimonials Style 5",
         image: "/images/site-owners/testimonials/testimonial5.png",
+      },
+      {
+        id: "testimonial-6",
+        name: "Testimonials Style 6 (Success Stories)",
+        image: "/images/site-owners/testimonials/testimonial6.png",
       },
     ],
     team: [

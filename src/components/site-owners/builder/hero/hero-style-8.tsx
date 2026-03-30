@@ -115,7 +115,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     alt={data.badge2Text || "TITI Certified"}
                     onImageChange={url => onUpdate?.({ badge2Image: url })}
                     isEditable={isEditable}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-contain mt-2"
                   />
                 </div>
                 <EditableText

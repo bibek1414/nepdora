@@ -145,7 +145,8 @@ export type OthersData =
   | OthersTemplate9Data
   | OthersTemplate10Data
   | OthersTemplate11Data
-  | OthersTemplate12Data;
+  | OthersTemplate12Data
+  | OthersTemplate13Data;
 
 export interface OthersRoutineStep {
   id: string;
@@ -206,6 +207,11 @@ export interface OthersTemplate12Data {
     alt: string;
   };
   steps: OthersProcessItem[];
+}
+
+export interface OthersTemplate13Data {
+  template: "others-13";
+  stats: OthersStatistic[];
 }
 
 // Component and API interfaces
@@ -670,6 +676,15 @@ export const defaultOthersTemplate12Data: OthersTemplate12Data = {
     },
   ],
 };
+export const defaultOthersTemplate13Data: OthersTemplate13Data = {
+  template: "others-13",
+  stats: [
+    { id: "stat-1", value: "10+", label: "Years Experience" },
+    { id: "stat-2", value: "1000+", label: "Students Placed" },
+    { id: "stat-3", value: "100+", label: "Partner Universities" },
+    { id: "stat-4", value: "98%", label: "Visa Success Rate" },
+  ],
+};
 
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
@@ -685,6 +700,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-10": defaultOthersTemplate10Data,
   "others-11": defaultOthersTemplate11Data,
   "others-12": defaultOthersTemplate12Data,
+  "others-13": defaultOthersTemplate13Data,
 };
 
 // Type guards
@@ -724,3 +740,6 @@ export const isOthersTemplate11 = (
 export const isOthersTemplate12 = (
   data: OthersData
 ): data is OthersTemplate12Data => data.template === "others-12";
+export const isOthersTemplate13 = (
+  data: OthersData
+): data is OthersTemplate13Data => data.template === "others-13";
