@@ -45,7 +45,7 @@ export function SmartTopLoaderClient({
 
     if (isPreview) return previewColor;
     if (isPublished) return publishedColor;
-    
+
     return "#4b74f5";
   }, [subdomain, pathname, previewColor, publishedColor]);
 

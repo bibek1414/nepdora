@@ -62,7 +62,6 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
   const [formInitialized, setFormInitialized] = useState(false);
   // Remove manual file state as ImageUploader handles it via form state
 
-
   const form = useForm<ServicesFormValues>({
     resolver: zodResolver(servicesFormSchema),
     defaultValues: {
@@ -91,7 +90,6 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
       setFormInitialized(true);
     }
   }, [service, isEditMode, form, formInitialized]);
-
 
   const handleSubmit = (data: ServicesFormValues) => {
     const transformedData = {

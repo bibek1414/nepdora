@@ -17,6 +17,8 @@ export default async function SmartTopLoader() {
     );
   } catch (error) {
     console.error("SmartTopLoader error:", error);
-    return <SmartTopLoaderClient previewColor="#4b74f5" publishedColor="#4b74f5" />;
+    return (
+      <SmartTopLoaderClient previewColor="#4b74f5" publishedColor="#4b74f5" />
+    );
   }
 }

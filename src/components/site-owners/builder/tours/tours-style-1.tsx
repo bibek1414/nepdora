@@ -250,8 +250,10 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
                             fontStyle: "italic",
                           }}
                         >
-                         From Rs.{" "}
-                          {Number(currentTour.data.Price || currentTour.data.price).toLocaleString("en-IN")}
+                          From Rs.{" "}
+                          {Number(
+                            currentTour.data.Price || currentTour.data.price
+                          ).toLocaleString("en-IN")}
                         </span>
                       </div>
                     )}
@@ -275,13 +277,13 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
                 <div className="absolute bottom-10 left-6 z-20 flex gap-4 md:left-10">
                   <button
                     onClick={prev}
-                    className="flex h-12 w-16 items-center justify-center rounded-full bg-white shadow-lg transition-all hover:scale-110 hover:bg-gray-50 active:scale-90 md:w-19 cursor-pointer"
+                    className="flex h-12 w-16 cursor-pointer items-center justify-center rounded-full bg-white shadow-lg transition-all hover:scale-110 hover:bg-gray-50 active:scale-90 md:w-19"
                   >
                     <ChevronLeft className="h-5 w-8 md:w-10" />
                   </button>
                   <button
                     onClick={next}
-                    className="flex h-12 w-16 items-center justify-center rounded-full bg-white shadow-lg transition-all hover:scale-110 hover:bg-gray-50 active:scale-90 md:w-19 cursor-pointer"
+                    className="flex h-12 w-16 cursor-pointer items-center justify-center rounded-full bg-white shadow-lg transition-all hover:scale-110 hover:bg-gray-50 active:scale-90 md:w-19"
                   >
                     <ChevronRight className="h-5 w-8 md:w-10" />
                   </button>

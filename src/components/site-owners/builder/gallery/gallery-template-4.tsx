@@ -270,7 +270,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-60" />
 
                   {isEditable && (
-                    <div className="absolute right-4 top-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
+                    <div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 transition-opacity group-hover/card:opacity-100">
                       <Button
                         size="sm"
                         variant="destructive"

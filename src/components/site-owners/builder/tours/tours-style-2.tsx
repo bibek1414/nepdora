@@ -44,7 +44,7 @@ function HorizontalCard({ tour, theme }: { tour: any; theme: any }) {
           {/* Title + arrow */}
           <div className="mb-5 flex items-start justify-between">
             <h3
-              className="pr-3 font-serif text-2xl font-normal leading-tight text-[#1A1A1A]"
+              className="pr-3 font-serif text-2xl leading-tight font-normal text-[#1A1A1A]"
               style={{
                 fontFamily: theme.fonts.heading,
                 color: theme.colors.text,
@@ -61,7 +61,7 @@ function HorizontalCard({ tour, theme }: { tour: any; theme: any }) {
 
           {/* Description */}
           <p
-            className="text-base leading-relaxed text-[#1A1A1A]/55 line-clamp-3"
+            className="line-clamp-3 text-base leading-relaxed text-[#1A1A1A]/55"
             style={{ color: theme.colors.text, opacity: 0.6 }}
           >
             {tour.data.Description}
@@ -69,8 +69,8 @@ function HorizontalCard({ tour, theme }: { tour: any; theme: any }) {
         </div>
 
         {/* Duration & price — stacked, with divider line above */}
-        <div className="mt-6 border-t border-[#E8E3DC] pt-5 flex flex-col gap-3">
-          <div className="flex items-center gap-3 font-serif text-base italic text-[#1A1A1A]/70">
+        <div className="mt-6 flex flex-col gap-3 border-t border-[#E8E3DC] pt-5">
+          <div className="flex items-center gap-3 font-serif text-base text-[#1A1A1A]/70 italic">
             <Clock
               size={18}
               className="shrink-0"
@@ -80,7 +80,7 @@ function HorizontalCard({ tour, theme }: { tour: any; theme: any }) {
               {tour.data.Duration || "N/A"}
             </span>
           </div>
-          <div className="flex items-center gap-3 font-serif text-base italic text-[#1A1A1A]/70">
+          <div className="flex items-center gap-3 font-serif text-base text-[#1A1A1A]/70 italic">
             <Tag
               size={18}
               className="shrink-0"
@@ -122,7 +122,7 @@ function VerticalCard({ tour, theme }: { tour: any; theme: any }) {
         {/* Title + arrow */}
         <div className="mb-4 flex items-start justify-between">
           <h3
-            className="pr-3 font-serif text-2xl font-normal leading-tight text-[#1A1A1A]"
+            className="pr-3 font-serif text-2xl leading-tight font-normal text-[#1A1A1A]"
             style={{
               fontFamily: theme.fonts.heading,
               color: theme.colors.text,
@@ -139,15 +139,15 @@ function VerticalCard({ tour, theme }: { tour: any; theme: any }) {
 
         {/* Description */}
         <p
-          className="flex-1 text-base leading-relaxed text-[#1A1A1A]/55 line-clamp-3"
+          className="line-clamp-3 flex-1 text-base leading-relaxed text-[#1A1A1A]/55"
           style={{ color: theme.colors.text, opacity: 0.6 }}
         >
           {tour.data.Description}
         </p>
 
         {/* Duration & price — side by side, with divider line above */}
-        <div className="mt-6 border-t border-[#E8E3DC] pt-5 flex items-center justify-between">
-          <div className="flex items-center gap-3 font-serif text-base italic text-[#1A1A1A]/70">
+        <div className="mt-6 flex items-center justify-between border-t border-[#E8E3DC] pt-5">
+          <div className="flex items-center gap-3 font-serif text-base text-[#1A1A1A]/70 italic">
             <Clock
               size={18}
               className="shrink-0"
@@ -157,7 +157,7 @@ function VerticalCard({ tour, theme }: { tour: any; theme: any }) {
               {tour.data.Duration || "N/A"}
             </span>
           </div>
-          <div className="flex items-center gap-3 font-serif text-base italic text-[#1A1A1A]/70">
+          <div className="flex items-center gap-3 font-serif text-base text-[#1A1A1A]/70 italic">
             <Tag
               size={18}
               className="shrink-0"
@@ -215,7 +215,7 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h2"
-            className="mb-2 text-4xl font-normal leading-tight md:text-5xl"
+            className="mb-2 text-4xl leading-tight font-normal md:text-5xl"
             style={{
               fontFamily: theme.fonts.heading,
               color: theme.colors.text,
@@ -235,7 +235,7 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
             Failed to load tours.
           </div>
         ) : tours.length === 0 ? (
-          <div className="flex h-40 items-center justify-center italic text-gray-500">
+          <div className="flex h-40 items-center justify-center text-gray-500 italic">
             No tours found in the collection.
           </div>
         ) : (
@@ -244,11 +244,7 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
             {tours.slice(0, 2).length > 0 && (
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {tours.slice(0, 2).map((tour: any) => (
-                  <HorizontalCard
-                    key={tour.id}
-                    tour={tour}
-                    theme={theme}
-                  />
+                  <HorizontalCard key={tour.id} tour={tour} theme={theme} />
                 ))}
               </div>
             )}
@@ -257,11 +253,7 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
             {tours.slice(2, 5).length > 0 && (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {tours.slice(2, 5).map((tour: any) => (
-                  <VerticalCard
-                    key={tour.id}
-                    tour={tour}
-                    theme={theme}
-                  />
+                  <VerticalCard key={tour.id} tour={tour} theme={theme} />
                 ))}
               </div>
             )}

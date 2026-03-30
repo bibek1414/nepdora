@@ -43,7 +43,6 @@ export const useNavbarQuery = (enabled: boolean = true) => {
   });
 };
 
-
 // use-navbar.ts updates
 export const useCreateNavbarMutation = () => {
   const socket = useWebsiteSocketContext();

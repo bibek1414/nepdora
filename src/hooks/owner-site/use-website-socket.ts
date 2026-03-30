@@ -187,8 +187,15 @@ export const useWebsiteSocket = ({
 
             // Update both base slug and draft slug caches
             const mainSlug = data.page_slug;
-            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
-              queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+            [
+              mainSlug,
+              `${mainSlug}-draft`,
+              mainSlug.replace("-draft", ""),
+            ].forEach(s => {
+              queryClient.setQueryData(
+                ["pageComponents", s, statusKey],
+                updater
+              );
             });
           }
           break;
@@ -201,10 +208,17 @@ export const useWebsiteSocket = ({
                 c.component_id === data.component_id ? { ...c, ...data } : c
               );
             };
-            
+
             const mainSlug = data.page_slug;
-            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
-              queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+            [
+              mainSlug,
+              `${mainSlug}-draft`,
+              mainSlug.replace("-draft", ""),
+            ].forEach(s => {
+              queryClient.setQueryData(
+                ["pageComponents", s, statusKey],
+                updater
+              );
             });
           }
           break;
@@ -214,7 +228,11 @@ export const useWebsiteSocket = ({
 
           if (componentId) {
             ["preview", "published"].forEach(status => {
-              const slugsToUpdate = [pageSlug, `${pageSlug}-draft`, pageSlug.replace("-draft", "")];
+              const slugsToUpdate = [
+                pageSlug,
+                `${pageSlug}-draft`,
+                pageSlug.replace("-draft", ""),
+              ];
               slugsToUpdate.forEach(s => {
                 queryClient.setQueryData(
                   ["pageComponents", s, status],
@@ -238,10 +256,19 @@ export const useWebsiteSocket = ({
             const statusKey =
               firstComp.status === "draft" ? "preview" : "published";
             const mainSlug = firstComp.page_slug;
-            const newData = [...data].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-            
-            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
-              queryClient.setQueryData(["pageComponents", s, statusKey], newData);
+            const newData = [...data].sort(
+              (a, b) => (a.order ?? 0) - (b.order ?? 0)
+            );
+
+            [
+              mainSlug,
+              `${mainSlug}-draft`,
+              mainSlug.replace("-draft", ""),
+            ].forEach(s => {
+              queryClient.setQueryData(
+                ["pageComponents", s, statusKey],
+                newData
+              );
             });
           } else {
             queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
@@ -254,7 +281,7 @@ export const useWebsiteSocket = ({
             if (firstComp) {
               const statusKey =
                 firstComp.status === "draft" ? "preview" : "published";
-              
+
               const updater = (old: any[] | undefined) => {
                 if (!old) return data;
                 // Merge new replaced components with existing ones
@@ -279,8 +306,15 @@ export const useWebsiteSocket = ({
               };
 
               const mainSlug = firstComp.page_slug;
-              [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
-                queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+              [
+                mainSlug,
+                `${mainSlug}-draft`,
+                mainSlug.replace("-draft", ""),
+              ].forEach(s => {
+                queryClient.setQueryData(
+                  ["pageComponents", s, statusKey],
+                  updater
+                );
               });
             }
           } else if (data && data.component_id) {
@@ -294,8 +328,15 @@ export const useWebsiteSocket = ({
             };
 
             const mainSlug = data.page_slug;
-            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
-              queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+            [
+              mainSlug,
+              `${mainSlug}-draft`,
+              mainSlug.replace("-draft", ""),
+            ].forEach(s => {
+              queryClient.setQueryData(
+                ["pageComponents", s, statusKey],
+                updater
+              );
             });
           } else {
             queryClient.invalidateQueries({ queryKey: ["pageComponents"] });

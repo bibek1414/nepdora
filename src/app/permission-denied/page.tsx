@@ -56,9 +56,8 @@ export default function PermissionDeniedPage() {
             Permission denied
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            You’re logged in, but you’re trying to access an admin/builder
-            page for a different tenant. Please log in again to the correct
-            account.
+            You’re logged in, but you’re trying to access an admin/builder page
+            for a different tenant. Please log in again to the correct account.
           </p>
 
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
@@ -86,4 +85,3 @@ export default function PermissionDeniedPage() {
     </div>
   );
 }
-

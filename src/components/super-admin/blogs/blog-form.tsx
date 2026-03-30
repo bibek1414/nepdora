@@ -129,7 +129,6 @@ const BlogForm: React.FC<BlogFormProps> = ({
     }
   }, [blog, isEditMode, form, formInitialized]);
 
-
   const handleTagToggle = (tag: BlogTag) => {
     const currentTagIds = form.getValues("tag_ids") || [];
     let newTagIds: number[];

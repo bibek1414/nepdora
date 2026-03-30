@@ -122,7 +122,7 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
 
           {/* Title and Description */}
           <ContentLink>
-            <p className="text-xl font-semibold text-slate-900 dark:text-white line-clamp-2">
+            <p className="line-clamp-2 text-xl font-semibold text-slate-900 dark:text-white">
               {blog.title}
             </p>
           </ContentLink>

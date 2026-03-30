@@ -203,7 +203,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                   return (
                     <motion.div
                       key={image.id}
-                      className="absolute left-0 top-0"
+                      className="absolute top-0 left-0"
                       style={{ zIndex: pos.zIndex }}
                       variants={photoVariants}
                       custom={{ x: pos.x, y: pos.y, order: pos.order }}
@@ -218,7 +218,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                           }
                         />
                         {isEditable && (
-                          <div className="absolute right-2 top-2 z-10 flex gap-2">
+                          <div className="absolute top-2 right-2 z-10 flex gap-2">
                             <Button
                               size="sm"
                               variant="destructive"
@@ -258,7 +258,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                     enableRandomRotation={false}
                   />
                   {isEditable && (
-                    <div className="absolute right-2 top-2 z-10 flex gap-2">
+                    <div className="absolute top-2 right-2 z-10 flex gap-2">
                       <Button
                         size="sm"
                         variant="destructive"
@@ -326,7 +326,7 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
                 )}
               </div>
             )}
-            <DialogClose className="absolute right-2 top-2" />
+            <DialogClose className="absolute top-2 right-2" />
           </DialogContent>
         </Dialog>
       )}

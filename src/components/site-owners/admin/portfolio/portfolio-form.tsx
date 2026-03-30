@@ -98,7 +98,6 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   // Remove manual file state as ImageUploader handles it via form state
 
-
   const form = useForm<PortfolioFormValues>({
     resolver: zodResolver(portfolioFormSchema),
     defaultValues: {
@@ -165,7 +164,6 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
     formInitialized,
     form,
   ]);
-
 
   const handleTagToggle = (tag: PortfolioTag) => {
     const currentTagIds = form.getValues("tags") || [];

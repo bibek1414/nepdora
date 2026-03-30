@@ -49,7 +49,6 @@ export const useThemeQuery = (enabled: boolean = true) => {
   });
 };
 
-
 export const useCreateThemeMutation = () => {
   const socket = useContext(WebsiteSocketContext);
   const queryClient = useQueryClient();

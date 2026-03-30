@@ -459,7 +459,9 @@ export async function proxy(request: NextRequest) {
           !!request.cookies.get("authUser")?.value;
         if (
           hasAuthCookies &&
-          (!expectedSubdomain || !authSubdomain || authSubdomain !== expectedSubdomain)
+          (!expectedSubdomain ||
+            !authSubdomain ||
+            authSubdomain !== expectedSubdomain)
         ) {
           return redirectToPermissionDenied(request);
         }

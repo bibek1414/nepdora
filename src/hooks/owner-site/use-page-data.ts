@@ -23,11 +23,14 @@ export function usePageData(siteUser: string, pageSlug: string) {
   const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
     usePageComponentsQuery(pageSlug);
 
-  const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery(isPreview);
+  const { data: navbarResponse, isLoading: isNavbarLoading } =
+    useNavbarQuery(isPreview);
 
-  const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery(isPreview);
+  const { data: footerResponse, isLoading: isFooterLoading } =
+    useFooterQuery(isPreview);
 
-  const { data: themeResponse, isLoading: isThemeLoading } = useThemeQuery(isPreview);
+  const { data: themeResponse, isLoading: isThemeLoading } =
+    useThemeQuery(isPreview);
 
   const isLoading =
     isComponentsLoading || isNavbarLoading || isFooterLoading || isThemeLoading;

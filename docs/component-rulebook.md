@@ -86,6 +86,7 @@ Keep every future component aligned with these `@beautifulMention` anchors so we
 - Share this rulebook inside the `@beautifulMention` wrapper for each new component so reviewers and builders can quickly verify layout, typography, links, images, theme usage, and variant registration before the code lands.
 
 ## @beautifulMention: Others Style 12 (Exclusive Tours)
+
 - Template Registration: Added `OthersTemplate12Data` and default map in `types/owner-site/components/others.ts`.
 - Text Approach: Used `EditableText` with semantic tags (e.g., `h2`, `h3`, `p`, `span`) to keep formatting intact while utilizing the theme heading font for titles.
 - Link Strategy: Replaced the 'VIEW ALL TOURS' button with `EditableLink` using `theme.primary` and `theme.primaryForeground`.

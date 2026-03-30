@@ -208,13 +208,14 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                 text={topBarLink.text}
                 href={topBarLink.href || "#shop"}
                 onChange={(text, href) => {
-                  const newItems = topBarItems && topBarItems.length > 0
-                    ? [...topBarItems]
-                    : [topBarLink];
+                  const newItems =
+                    topBarItems && topBarItems.length > 0
+                      ? [...topBarItems]
+                      : [topBarLink];
                   newItems[0] = { ...newItems[0], text, href };
-                  
+
                   setData({ ...data, topBarItems: newItems });
-                  
+
                   if (onUpdateTopBar) {
                     onUpdateTopBar(newItems);
                   }

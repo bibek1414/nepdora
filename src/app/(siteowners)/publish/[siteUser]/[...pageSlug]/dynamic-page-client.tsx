@@ -35,8 +35,6 @@ export default function DynamicPageClient({
 
   const hasContent = pageComponents.length > 0;
 
-
-
   return (
     <>
       {hasContent ? (

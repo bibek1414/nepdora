@@ -12,7 +12,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { CTAData, isCTATemplate1, isCTATemplate2 } from "@/types/owner-site/components/cta";
+import {
+  CTAData,
+  isCTATemplate1,
+  isCTATemplate2,
+} from "@/types/owner-site/components/cta";
 import { CTATemplate1 } from "./cta-style-1";
 import { CTATemplate2 } from "./cta-style-2";
 import {

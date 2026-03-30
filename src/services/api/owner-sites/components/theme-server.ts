@@ -7,13 +7,16 @@ export const getCachedThemes = cache(async (): Promise<GetThemeResponse> => {
   return await useThemeApi.getThemes();
 });
 
-export const getCachedThemesPublished = cache(async (): Promise<GetThemeResponse> => {
-  return await useThemeApi.getThemesPublished();
-});
+export const getCachedThemesPublished = cache(
+  async (): Promise<GetThemeResponse> => {
+    return await useThemeApi.getThemesPublished();
+  }
+);
 
 export async function getSmartThemeColors() {
   const tenantDomain = await getTenantDomain();
-  if (!tenantDomain) return { previewColor: "#4b74f5", publishedColor: "#4b74f5" };
+  if (!tenantDomain)
+    return { previewColor: "#4b74f5", publishedColor: "#4b74f5" };
 
   try {
     const [previewTheme, publishedTheme] = await Promise.all([
@@ -21,8 +24,10 @@ export async function getSmartThemeColors() {
       getCachedThemesPublished(),
     ]);
 
-    const previewColor = previewTheme?.data?.[0]?.data?.theme?.colors?.primary || "#4b74f5";
-    const publishedColor = publishedTheme?.data?.[0]?.data?.theme?.colors?.primary || "#4b74f5";
+    const previewColor =
+      previewTheme?.data?.[0]?.data?.theme?.colors?.primary || "#4b74f5";
+    const publishedColor =
+      publishedTheme?.data?.[0]?.data?.theme?.colors?.primary || "#4b74f5";
 
     return { previewColor, publishedColor };
   } catch (error) {

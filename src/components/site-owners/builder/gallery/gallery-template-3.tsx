@@ -136,7 +136,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                 </div>
               )}
               {isEditable && (
-                <div className="absolute right-2 top-2 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="absolute top-2 right-2 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                   <Button
                     size="sm"
                     variant="destructive"

@@ -53,14 +53,8 @@ export const ToursComponent: React.FC<ToursComponentProps> = ({
   onReplace,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteToursMutation = useDeleteComponentMutation(
-    pageSlug,
-    "tours"
-  );
-  const updateToursMutation = useUpdateComponentMutation(
-    pageSlug,
-    "tours"
-  );
+  const deleteToursMutation = useDeleteComponentMutation(pageSlug, "tours");
+  const updateToursMutation = useUpdateComponentMutation(pageSlug, "tours");
 
   const handleUpdate = (updatedData: Partial<ToursData>) => {
     const componentId = component.component_id || component.id.toString();
@@ -102,14 +96,10 @@ export const ToursComponent: React.FC<ToursComponentProps> = ({
     };
 
     if (isToursTemplate1(component.data)) {
-      return (
-        <ToursStyle1 toursData={component.data} {...commonProps} />
-      );
+      return <ToursStyle1 toursData={component.data} {...commonProps} />;
     }
     if (isToursTemplate2(component.data)) {
-      return (
-        <ToursStyle2 toursData={component.data} {...commonProps} />
-      );
+      return <ToursStyle2 toursData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates
@@ -191,9 +181,7 @@ export const ToursComponent: React.FC<ToursComponentProps> = ({
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deleteToursMutation.isPending}
                 >
-                  {deleteToursMutation.isPending
-                    ? "Deleting..."
-                    : "Delete"}
+                  {deleteToursMutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

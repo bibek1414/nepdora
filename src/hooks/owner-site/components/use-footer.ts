@@ -43,7 +43,6 @@ export const useFooterQuery = (enabled: boolean = true) => {
   });
 };
 
-
 export const useCreateFooterMutation = () => {
   const socket = useWebsiteSocketContext();
   const queryClient = useQueryClient();

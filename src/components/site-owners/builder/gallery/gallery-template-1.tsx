@@ -128,7 +128,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
                 </div>
 
                 {isEditable && (
-                  <div className="absolute right-2 top-2 z-10 flex gap-2">
+                  <div className="absolute top-2 right-2 z-10 flex gap-2">
                     <Button
                       size="sm"
                       variant="destructive"
@@ -207,7 +207,7 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
                 )}
               </div>
             )}
-            <DialogClose className="absolute right-2 top-2" />
+            <DialogClose className="absolute top-2 right-2" />
           </DialogContent>
         </Dialog>
       )}
