@@ -17,7 +17,7 @@ export default function DynamicPageClient({
   pageSlug,
 }: DynamicPageClientProps) {
   const { data: pagesData = [], isLoading: isPagesLoading } =
-    usePages("preview");
+    usePages();
 
   const currentPageData = React.useMemo(() => {
     const slugFromUrl = pageSlug && pageSlug.length > 0 ? pageSlug[0] : "home";
