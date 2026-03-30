@@ -106,7 +106,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     data: pageComponentsResponse,
     isLoading: isPageComponentsLoading,
     error: pageComponentsError,
-  } = usePageComponentsQuery(pageSlug, "preview");
+  } = usePageComponentsQuery(pageSlug);
 
   const [droppedComponents, setDroppedComponents] = useState<
     ComponentResponse[]
