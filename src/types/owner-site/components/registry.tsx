@@ -35,6 +35,7 @@ import { DEFAULT_EXPERIENCE_MAP } from "./experience";
 import { DEFAULT_COLLECTIONS_MAP } from "./collections";
 import { DEFAULT_SOCIALS_MAP } from "./socials";
 import { DEFAULT_TOURS_MAP } from "./tours";
+import { DEFAULT_COUNTRIES_MAP, DEFAULT_COUNTRY_DETAILS_MAP } from "./countries";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -73,6 +74,8 @@ import SkillsComponent from "@/components/site-owners/builder/skills/skills-comp
 import { ExperienceComponent } from "@/components/site-owners/builder/experience/experience-component";
 import { SocialsComponent } from "@/components/site-owners/builder/socials/socials-component";
 import { ToursComponent } from "@/components/site-owners/builder/tours/tours-component";
+import { CountriesComponent } from "@/components/site-owners/builder/countries/countries-component";
+import { CountryDetailsComponent } from "@/components/site-owners/builder/countries/country-details-component";
 
 export type ComponentCategory =
   | "basic"
@@ -441,5 +444,24 @@ export const COMPONENT_REGISTRY: {
       DEFAULT_TOURS_MAP[variant as keyof typeof DEFAULT_TOURS_MAP] ||
       DEFAULT_TOURS_MAP["tours-1"],
     component: ToursComponent,
+  },
+  countries: {
+    type: "countries",
+    displayName: "Countries",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_COUNTRIES_MAP[variant as keyof typeof DEFAULT_COUNTRIES_MAP] ||
+      DEFAULT_COUNTRIES_MAP["countries-style-1"],
+    component: CountriesComponent,
+  },
+  country_details: {
+    type: "country_details",
+    displayName: "Country Details",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_COUNTRY_DETAILS_MAP[
+        variant as keyof typeof DEFAULT_COUNTRY_DETAILS_MAP
+      ] || DEFAULT_COUNTRY_DETAILS_MAP["country-details-style-1"],
+    component: CountryDetailsComponent,
   },
 };

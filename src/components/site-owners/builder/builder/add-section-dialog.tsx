@@ -34,6 +34,7 @@ import {
   LogIn,
   Database,
   MapPin,
+  Globe,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -212,6 +213,22 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/tours/tours-2.png", // Assuming this image exists or will be added
       },
     ],
+    countries: [
+      {
+        id: "countries-style-1",
+        name: "Countries Grid",
+        image: "/images/site-owners/placeholder.png",
+        description: "Premium study destination grid",
+      },
+    ],
+    country_details: [
+      {
+        id: "country-details-style-1",
+        name: "Country Details",
+        image: "/images/site-owners/placeholder.png",
+        description: "Comprehensive destination page with universities",
+      },
+    ],
     others: [
       {
         id: "others-1",
@@ -277,6 +294,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "others-13",
         name: "Others Style 13 (Stats)",
         image: "/images/site-owners/others/others13.png",
+      },
+      {
+        id: "others-14",
+        name: "Others Style 14 (Process)",
+        image: "/images/site-owners/others/others14.png",
       },
     ],
     experience: [
@@ -1146,6 +1168,27 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.tours,
       type: "section",
+      isSpecialized: true,
+    },
+    {
+      id: "countries-sections",
+      label: "Countries",
+      icon: Globe,
+      keywords: ["countries", "destinations", "study abroad", "international"],
+      hasTemplates: true,
+      templates: templates.countries,
+      type: "countries" as any,
+      popular: true,
+    },
+    {
+      id: "country-details-sections",
+      label: "Country Details",
+      icon: Globe,
+      keywords: ["country", "details", "destination info", "universities"],
+      description: "Setup layout for your single study destination view",
+      hasTemplates: true,
+      templates: templates.country_details,
+      type: "country_details" as any,
       isSpecialized: true,
     },
     {

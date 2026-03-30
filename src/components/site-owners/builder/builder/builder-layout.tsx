@@ -52,6 +52,7 @@ import {
   DEFAULT_LOGIN_MAP,
   DEFAULT_SIGNUP_MAP,
 } from "@/types/owner-site/components/auth-form-map";
+import { DEFAULT_COUNTRY_DETAILS_MAP } from "@/types/owner-site/components/countries";
 
 interface BuilderLayoutProps {
   params: {
@@ -98,6 +99,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createOrderConfirmationPageMutation = useCreatePage();
   const createLoginPageMutation = useCreatePage();
   const createSignupPageMutation = useCreatePage();
+  const createCountryDetailsPageMutation = useCreatePage();
   const deletePageMutation = useDeletePage();
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
   const [isCreatingLoginPage, setIsCreatingLoginPage] = useState(false);
@@ -129,6 +131,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     useCreateComponentMutation("checkout");
   const createOrderConfirmationComponentMutation =
     useCreateComponentMutation("order-confirmation");
+  const createCountryDetailsComponentMutation =
+    useCreateComponentMutation("country-details");
 
   // Process page components
   const pageComponents = React.useMemo(() => {
@@ -228,6 +232,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       if (componentType === "services") {
         ensureServiceDetailsPageExists();
       }
+      if (componentType === "countries") {
+        ensureCountryDetailsPageExists();
+      }
     } catch (error) {
       console.error(`Failed to ${mode} ${componentType} component:`, error);
       // Toast is handled by the mutation hook
@@ -281,6 +288,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const [isCreatingCheckoutPage, setIsCreatingCheckoutPage] = useState(false);
   const [isCreatingOrderConfirmationPage, setIsCreatingOrderConfirmationPage] =
     useState(false);
+  const [isCreatingCountryPage, setIsCreatingCountryPage] = useState(false);
 
   const hasAttemptedCreateProduct = useRef(false);
   const ensureProductDetailsPageExists = useCallback(() => {
@@ -535,6 +543,48 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     isCreatingOrderConfirmationPage,
     createOrderConfirmationPageMutation,
     createOrderConfirmationComponentMutation,
+  ]);
+
+  const hasAttemptedCreateCountry = useRef(false);
+  const ensureCountryDetailsPageExists = useCallback(() => {
+    if (
+      !isPagesLoading &&
+      pagesData &&
+      !pagesData.find(
+        p => p.slug === "country-details" || p.slug === "country-details-draft"
+      ) &&
+      !isCreatingCountryPage &&
+      !hasAttemptedCreateCountry.current
+    ) {
+      hasAttemptedCreateCountry.current = true;
+      setIsCreatingCountryPage(true);
+      createCountryDetailsPageMutation.mutate(
+        { title: "Country Details" },
+        {
+          onSuccess: (data: Page) => {
+            const defaultData =
+              DEFAULT_COUNTRY_DETAILS_MAP["country-details-style-1"];
+            createCountryDetailsComponentMutation.mutate({
+              componentType: "country_details",
+              data: defaultData,
+              silent: true,
+              pageSlug: data.slug,
+            });
+            setIsCreatingCountryPage(false);
+          },
+          onError: () => {
+            setIsCreatingCountryPage(false);
+            hasAttemptedCreateCountry.current = false;
+          },
+        }
+      );
+    }
+  }, [
+    isPagesLoading,
+    pagesData,
+    isCreatingCountryPage,
+    createCountryDetailsPageMutation,
+    createCountryDetailsComponentMutation,
   ]);
 
   const hasAttemptedCreateLogin = useRef(false);
@@ -926,6 +976,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       "experience-sections": "experience",
       "socials-sections": "socials",
       "tours-sections": "tours",
+      "countries-sections": "countries",
+      "country-details-sections": "country_details",
     };
 
     const type = sectionToType[sectionId];

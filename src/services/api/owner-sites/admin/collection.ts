@@ -141,6 +141,9 @@ export const collectionAPI = {
 
       const response = await apiFetch(url.toString(), {
         method: "DELETE",
+        headers: {
+          ...createHeaders(),
+        },
       }).catch(fetchError => {
         console.error("Network error:", fetchError);
         throw new Error(
@@ -309,6 +312,9 @@ export const collectionAPI = {
 
       const response = await apiFetch(url.toString(), {
         method: "DELETE",
+        headers: {
+          ...createHeaders(),
+        },
       }).catch(fetchError => {
         console.error("Network error:", fetchError);
         throw new Error(

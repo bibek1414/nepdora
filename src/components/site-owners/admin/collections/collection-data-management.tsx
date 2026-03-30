@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Search, Filter, Trash2, Edit, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,6 +42,7 @@ import { CollectionData } from "@/types/owner-site/admin/collection";
 import { CollectionDataDialog } from "./collection-data-dialog";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 
 interface CollectionDataManagementProps {
   slug: string;
@@ -53,6 +54,8 @@ export function CollectionDataManagement({
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [showDataDialog, setShowDataDialog] = useState(false);
   const [editingData, setEditingData] = useState<CollectionData | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -63,8 +66,15 @@ export function CollectionDataManagement({
   const { data: collectionDataResponse, isLoading: dataLoading } =
     useCollectionData(slug, {
       ...filters,
+      page: page.toString(),
+      page_size: PAGE_SIZE.toString(),
       ...(searchQuery && { search: searchQuery }),
     });
+
+  // Reset to page 1 when search or filters change
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, filters]);
   const deleteDataMutation = useDeleteCollectionData();
   const { data: collections } = useCollections();
 
@@ -361,14 +371,20 @@ export function CollectionDataManagement({
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                        onClick={() => handleEdit(data)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(data);
+                        }}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => confirmDelete(data)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          confirmDelete(data);
+                        }}
                         className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -379,6 +395,16 @@ export function CollectionDataManagement({
               ))}
             </TableBody>
           </Table>
+
+          {!dataLoading && collectionDataResponse && (
+            <div className="border-t border-black/5">
+              <SimplePagination
+                currentPage={page}
+                totalPages={Math.ceil(collectionDataResponse.count / PAGE_SIZE)}
+                onPageChange={setPage}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -390,21 +416,30 @@ export function CollectionDataManagement({
       />
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete this data entry. This action cannot
-              be undone.
+              This will permanently delete
+              {dataToDelete && nameField && dataToDelete.data[nameField.name]
+                ? ` "${dataToDelete.data[nameField.name]}"`
+                : " this data entry"}
+              . This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteDataMutation.isPending}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={(e) => {
+                e.preventDefault();
+                handleDelete();
+              }}
+              disabled={deleteDataMutation.isPending}
+              className="bg-red-600 text-white hover:bg-red-700"
             >
-              Delete
+              {deleteDataMutation.isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

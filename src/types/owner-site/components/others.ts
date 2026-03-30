@@ -146,7 +146,16 @@ export type OthersData =
   | OthersTemplate10Data
   | OthersTemplate11Data
   | OthersTemplate12Data
-  | OthersTemplate13Data;
+  | OthersTemplate13Data
+  | OthersTemplate14Data;
+
+export interface OthersProcessStep {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  icon: string;
+}
 
 export interface OthersRoutineStep {
   id: string;
@@ -213,7 +222,12 @@ export interface OthersTemplate13Data {
   template: "others-13";
   stats: OthersStatistic[];
 }
-
+export interface OthersTemplate14Data {
+  template: "others-14";
+  heading: string;
+  description: string;
+  steps: OthersProcessStep[];
+}
 // Component and API interfaces
 export interface OthersComponentData {
   id: string | number;
@@ -686,6 +700,56 @@ export const defaultOthersTemplate13Data: OthersTemplate13Data = {
   ],
 };
 
+export const defaultOthersTemplate14Data: OthersTemplate14Data = {
+  template: "others-14",
+  heading: "Your Journey to Study Abroad",
+  description: "A simple, transparent process that takes you from dream to reality in 6 easy steps",
+  steps: [
+    {
+      id: "step-1",
+      number: "01",
+      title: "Free Counseling",
+      description: "Meet our expert counselors to discuss your goals, budget, and preferences",
+      icon: "MessageSquare",
+    },
+    {
+      id: "step-2",
+      number: "02",
+      title: "University Selection",
+      description: "We shortlist the best universities and courses based on your profile",
+      icon: "Search",
+    },
+    {
+      id: "step-3",
+      number: "03",
+      title: "Application & Docs",
+      description: "Complete support with applications, SOPs, and document preparation",
+      icon: "FileText",
+    },
+    {
+      id: "step-4",
+      number: "04",
+      title: "Offer Letter",
+      description: "Receive admission offers from your chosen universities",
+      icon: "CheckCircle",
+    },
+    {
+      id: "step-5",
+      number: "05",
+      title: "Visa Processing",
+      description: "Expert guidance through the entire visa application process",
+      icon: "Plane",
+    },
+    {
+      id: "step-6",
+      number: "06",
+      title: "Pre-Departure",
+      description: "Final briefing, accommodation help, and airport pickup arrangement",
+      icon: "GraduationCap",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -701,6 +765,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-11": defaultOthersTemplate11Data,
   "others-12": defaultOthersTemplate12Data,
   "others-13": defaultOthersTemplate13Data,
+  "others-14": defaultOthersTemplate14Data,
 };
 
 // Type guards
@@ -743,3 +808,6 @@ export const isOthersTemplate12 = (
 export const isOthersTemplate13 = (
   data: OthersData
 ): data is OthersTemplate13Data => data.template === "others-13";
+export const isOthersTemplate14 = (
+  data: OthersData
+): data is OthersTemplate14Data => data.template === "others-14";

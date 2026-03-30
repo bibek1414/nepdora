@@ -183,7 +183,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       items: [
         { name: "Collections", href: "/admin/collections", icon: Database },
       ],
-      hideForService: true,
     },
     {
       items: [{ name: "Customers", href: "/admin/customers", icon: Users }],

@@ -33,6 +33,7 @@ import { AuthFormData } from "./auth-form-map";
 import { CollectionsData } from "./collections";
 import { SocialsData } from "./socials";
 import { ToursData } from "./tours";
+import { CountriesData, CountryDetailsData } from "./countries";
 
 export interface ComponentTypeMap {
   hero: HeroData;
@@ -71,6 +72,8 @@ export interface ComponentTypeMap {
   experience: ExperienceData;
   socials: SocialsData;
   tours: ToursData;
+  countries: CountriesData;
+  country_details: CountryDetailsData;
 }
 
 // Generic interfaces

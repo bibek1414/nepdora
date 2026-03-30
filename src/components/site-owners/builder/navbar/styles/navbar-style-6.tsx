@@ -111,10 +111,10 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   };
 
   return (
-    <div className="bg-white">
+    <div className="border-b bg-white">
       <nav
         className={`mx-auto flex max-w-7xl items-center justify-between bg-white p-4 lg:p-6 ${
-          !isEditable ? "sticky top-0 z-40 border-b" : ""
+          !isEditable ? "sticky top-0 z-40" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
       >
         {/* Logo - Left side */}
