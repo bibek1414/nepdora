@@ -37,45 +37,12 @@ export const useFooterQuery = (enabled: boolean = true) => {
         });
       });
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
     retry: 2,
     enabled,
   });
 };
 
-export const useFooterQueryPublished = (enabled: boolean = true) => {
-  const socket = useWebsiteSocketContext();
-  return useQuery({
-    queryKey: [...FOOTER_QUERY_KEY, "published"],
-    queryFn: () => {
-      if (!socket.enabled) {
-        return useFooterApi.getFooterPublished();
-      }
-      return new Promise<any>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("footer", message => {
-          unsubscribe();
-          resolve({
-            data: message.data || null,
-            message: message.data ? "Footer retrieved" : "No footer found",
-          });
-        });
-
-        setTimeout(() => {
-          unsubscribe();
-          reject(new Error("Timeout waiting for published footer"));
-        }, 10000);
-
-        socket.sendMessage({
-          action: "get_footer",
-          status: "published",
-        });
-      });
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 2,
-    enabled,
-  });
-};
 
 export const useCreateFooterMutation = () => {
   const socket = useWebsiteSocketContext();

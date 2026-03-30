@@ -29,57 +29,13 @@ export default function DynamicPageClient({
   const handleBacktoHome = React.useCallback(() => {
     router.push(`/publish/${siteUser}`);
   }, [router, siteUser]);
-  const handleProductClick = React.useCallback(
-    (productSlug: string) => {
-      router.push(`/publish/${siteUser}/product-details/${productSlug}`);
-    },
-    [router, siteUser]
-  );
-  const handleBlogClick = React.useCallback(
-    (blogSlug: string) => {
-      router.push(`/publish/${siteUser}/blog-details/${blogSlug}`);
-    },
-    [router, siteUser]
-  );
-  const handleServiceClick = React.useCallback(
-    (serviceSlug: string) => {
-      router.push(`/publish/${siteUser}/service-details/${serviceSlug}`);
-    },
-    [router, siteUser]
-  );
-  const handleCategoryClick = React.useCallback(
-    (categoryId: number) => {
-      router.push(`/publish/${siteUser}/categories/${categoryId}`);
-    },
-    [router, siteUser]
-  );
-  const handleSubCategoryClick = React.useCallback(
-    (subcategoryId: number) => {
-      router.push(`/publish/${siteUser}/subcategories/${subcategoryId}`);
-    },
-    [router, siteUser]
-  );
-  const handlePortfolioClick = React.useCallback(
-    (portfolioSlug: string) => {
-      router.push(`/publish/${siteUser}/portfolio-details/${portfolioSlug}`);
-    },
-    [router, siteUser]
-  );
-
   const handleComponentUpdate = () => {
     // Component update handlers (not used in publish mode)
   };
 
   const hasContent = pageComponents.length > 0;
 
-  // Prefetch common routes for faster navigation
-  React.useEffect(() => {
-    router.prefetch(`/publish/${siteUser}`);
-    router.prefetch(`/publish/${siteUser}/products`);
-    router.prefetch(`/publish/${siteUser}/services`);
-    router.prefetch(`/publish/${siteUser}/blog`);
-    router.prefetch(`/publish/${siteUser}/contact`);
-  }, [router, siteUser]);
+
 
   return (
     <>
@@ -88,13 +44,7 @@ export default function DynamicPageClient({
           components={pageComponents}
           siteUser={siteUser}
           pageSlug={initialPageSlug}
-          onProductClick={handleProductClick}
-          onBlogClick={handleBlogClick}
           onComponentUpdate={handleComponentUpdate}
-          onServiceClick={handleServiceClick}
-          onCategoryClick={handleCategoryClick}
-          onSubCategoryClick={handleSubCategoryClick}
-          onPortfolioClick={handlePortfolioClick}
           productSlug={contentSlug}
           blogSlug={contentSlug}
           serviceSlug={contentSlug}

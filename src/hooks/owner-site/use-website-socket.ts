@@ -108,90 +108,104 @@ export const useWebsiteSocket = ({
       }
 
       switch (action) {
-        case "pages_list":
-          queryClient.setQueryData(["pages"], data);
+        case "pages_list": {
+          const status = message.status || "preview";
+          queryClient.setQueryData(["pages", status], data);
           break;
-        case "page_created":
-          queryClient.invalidateQueries({ queryKey: ["pages"] });
+        }
+        case "page_created": {
+          const status = data?.status === "draft" ? "preview" : "published";
+          queryClient.invalidateQueries({ queryKey: ["pages", status] });
           if (data) queryClient.setQueryData(["pages", data.slug], data);
           break;
-        case "page_updated":
-          queryClient.invalidateQueries({ queryKey: ["pages"] });
+        }
+        case "page_updated": {
+          const status = data?.status === "draft" ? "preview" : "published";
+          queryClient.invalidateQueries({ queryKey: ["pages", status] });
           if (data) {
             queryClient.setQueryData(["pages", data.slug], data);
             queryClient.invalidateQueries({ queryKey: ["pages", data.slug] });
           }
           break;
+        }
         case "page_published":
-          queryClient.invalidateQueries({ queryKey: ["pages"] });
+          queryClient.invalidateQueries({ queryKey: ["pages", "preview"] });
+          queryClient.invalidateQueries({ queryKey: ["pages", "published"] });
           if (slug || data?.slug) {
             queryClient.invalidateQueries({
               queryKey: ["pages", slug || data?.slug],
             });
           }
           break;
-        case "page_deleted":
+        case "page_deleted": {
           const deletedSlug = slug || data?.slug || message.slug;
-          queryClient.invalidateQueries({ queryKey: ["pages"] });
+          queryClient.invalidateQueries({ queryKey: ["pages", "preview"] });
+          queryClient.invalidateQueries({ queryKey: ["pages", "published"] });
           if (deletedSlug) {
             queryClient.removeQueries({ queryKey: ["pages", deletedSlug] });
           }
           break;
+        }
         case "component_created":
           if (data) {
             const statusKey = data.status === "draft" ? "preview" : "published";
-            queryClient.setQueryData(
-              ["pageComponents", data.page_slug, statusKey],
-              (old: any[] | undefined) => {
-                if (!old) return [data];
-                // Avoid duplicates
-                if (old.some(c => c.component_id === data.component_id))
-                  return old;
+            const updater = (old: any[] | undefined) => {
+              if (!old) return [data];
+              // Avoid duplicates
+              if (old.some(c => c.component_id === data.component_id))
+                return old;
 
-                const newComponents = [...old];
+              const newComponents = [...old];
 
-                // Shift existing components if there's an order conflict
-                const insertOrder = data.order;
-                if (typeof insertOrder === "number") {
-                  newComponents.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-                  const conflict = newComponents.some(
-                    c => c.order === insertOrder
-                  );
-                  if (conflict) {
-                    for (let i = 0; i < newComponents.length; i++) {
-                      if (
-                        typeof newComponents[i].order === "number" &&
-                        newComponents[i].order >= insertOrder
-                      ) {
-                        newComponents[i] = {
-                          ...newComponents[i],
-                          order: newComponents[i].order + 1,
-                        };
-                      }
+              // Shift existing components if there's an order conflict
+              const insertOrder = data.order;
+              if (typeof insertOrder === "number") {
+                newComponents.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+                const conflict = newComponents.some(
+                  c => c.order === insertOrder
+                );
+                if (conflict) {
+                  for (let i = 0; i < newComponents.length; i++) {
+                    if (
+                      typeof newComponents[i].order === "number" &&
+                      newComponents[i].order >= insertOrder
+                    ) {
+                      newComponents[i] = {
+                        ...newComponents[i],
+                        order: newComponents[i].order + 1,
+                      };
                     }
                   }
                 }
-
-                newComponents.push(data);
-                return newComponents.sort(
-                  (a, b) => (a.order ?? 0) - (b.order ?? 0)
-                );
               }
-            );
+
+              newComponents.push(data);
+              return newComponents.sort(
+                (a, b) => (a.order ?? 0) - (b.order ?? 0)
+              );
+            };
+
+            // Update both base slug and draft slug caches
+            const mainSlug = data.page_slug;
+            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
+              queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+            });
           }
           break;
         case "component_updated":
           if (data) {
             const statusKey = data.status === "draft" ? "preview" : "published";
-            queryClient.setQueryData(
-              ["pageComponents", data.page_slug, statusKey],
-              (old: any[] | undefined) => {
-                if (!old) return old;
-                return old.map(c =>
-                  c.component_id === data.component_id ? { ...c, ...data } : c
-                );
-              }
-            );
+            const updater = (old: any[] | undefined) => {
+              if (!old) return old;
+              return old.map(c =>
+                c.component_id === data.component_id ? { ...c, ...data } : c
+              );
+            };
+            
+            const mainSlug = data.page_slug;
+            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
+              queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+            });
           }
           break;
         case "component_deleted":
@@ -199,16 +213,17 @@ export const useWebsiteSocket = ({
           const pageSlug = message.page_slug || data?.page_slug;
 
           if (componentId) {
-            // We might not know the status, so we might need to update both or invalidate if unsure.
-            // But usually builders work on "preview" (draft).
             ["preview", "published"].forEach(status => {
-              queryClient.setQueryData(
-                ["pageComponents", pageSlug, status],
-                (old: any[] | undefined) => {
-                  if (!old) return old;
-                  return old.filter(c => c.component_id !== componentId);
-                }
-              );
+              const slugsToUpdate = [pageSlug, `${pageSlug}-draft`, pageSlug.replace("-draft", "")];
+              slugsToUpdate.forEach(s => {
+                queryClient.setQueryData(
+                  ["pageComponents", s, status],
+                  (old: any[] | undefined) => {
+                    if (!old) return old;
+                    return old.filter(c => c.component_id !== componentId);
+                  }
+                );
+              });
             });
           }
 
@@ -218,15 +233,16 @@ export const useWebsiteSocket = ({
             });
           }
           break;
-        case "component_order_updated":
           if (data && Array.isArray(data) && data.length > 0) {
             const firstComp = data[0];
             const statusKey =
               firstComp.status === "draft" ? "preview" : "published";
-            queryClient.setQueryData(
-              ["pageComponents", firstComp.page_slug, statusKey],
-              [...data].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-            );
+            const mainSlug = firstComp.page_slug;
+            const newData = [...data].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            
+            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
+              queryClient.setQueryData(["pageComponents", s, statusKey], newData);
+            });
           } else {
             queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
           }
@@ -238,44 +254,49 @@ export const useWebsiteSocket = ({
             if (firstComp) {
               const statusKey =
                 firstComp.status === "draft" ? "preview" : "published";
-              queryClient.setQueryData(
-                ["pageComponents", firstComp.page_slug, statusKey],
-                (old: any[] | undefined) => {
-                  if (!old) return data;
-                  // Merge new replaced components with existing ones
-                  const newDataMap = new Map();
-                  data.forEach(d => newDataMap.set(d.component_id, d));
+              
+              const updater = (old: any[] | undefined) => {
+                if (!old) return data;
+                // Merge new replaced components with existing ones
+                const newDataMap = new Map();
+                data.forEach(d => newDataMap.set(d.component_id, d));
 
-                  const mergedList = old.map(c => {
-                    if (newDataMap.has(c.component_id)) {
-                      const updated = newDataMap.get(c.component_id);
-                      newDataMap.delete(c.component_id);
-                      return updated;
-                    }
-                    return c;
-                  });
+                const mergedList = old.map(c => {
+                  if (newDataMap.has(c.component_id)) {
+                    const updated = newDataMap.get(c.component_id);
+                    newDataMap.delete(c.component_id);
+                    return updated;
+                  }
+                  return c;
+                });
 
-                  // Any remaining components in `data` are additions
-                  const additions = Array.from(newDataMap.values());
+                // Any remaining components in `data` are additions
+                const additions = Array.from(newDataMap.values());
 
-                  return [...mergedList, ...additions].sort(
-                    (a, b) => (a.order ?? 0) - (b.order ?? 0)
-                  );
-                }
-              );
+                return [...mergedList, ...additions].sort(
+                  (a, b) => (a.order ?? 0) - (b.order ?? 0)
+                );
+              };
+
+              const mainSlug = firstComp.page_slug;
+              [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
+                queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+              });
             }
           } else if (data && data.component_id) {
             // If data is just one component object
             const statusKey = data.status === "draft" ? "preview" : "published";
-            queryClient.setQueryData(
-              ["pageComponents", data.page_slug, statusKey],
-              (old: any[] | undefined) => {
-                if (!old) return [data];
-                return old
-                  .map(c => (c.component_id === data.component_id ? data : c))
-                  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-              }
-            );
+            const updater = (old: any[] | undefined) => {
+              if (!old) return [data];
+              return old
+                .map(c => (c.component_id === data.component_id ? data : c))
+                .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            };
+
+            const mainSlug = data.page_slug;
+            [mainSlug, `${mainSlug}-draft`, mainSlug.replace("-draft", "")].forEach(s => {
+              queryClient.setQueryData(["pageComponents", s, statusKey], updater);
+            });
           } else {
             queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
           }

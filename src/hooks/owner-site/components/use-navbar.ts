@@ -37,45 +37,12 @@ export const useNavbarQuery = (enabled: boolean = true) => {
         });
       });
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
     retry: 2,
     enabled,
   });
 };
 
-export const useNavbarQueryPublished = (enabled: boolean = true) => {
-  const socket = useWebsiteSocketContext();
-  return useQuery({
-    queryKey: [...NAVBAR_QUERY_KEY, "published"],
-    queryFn: () => {
-      if (!socket.enabled) {
-        return useNavbarApi.getNavbarPublished();
-      }
-      return new Promise<any>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("navbar", message => {
-          unsubscribe();
-          resolve({
-            data: message.data || null,
-            message: message.data ? "Navbar retrieved" : "No navbar found",
-          });
-        });
-
-        setTimeout(() => {
-          unsubscribe();
-          reject(new Error("Timeout waiting for published navbar"));
-        }, 10000);
-
-        socket.sendMessage({
-          action: "get_navbar",
-          status: "published",
-        });
-      });
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 2,
-    enabled,
-  });
-};
 
 // use-navbar.ts updates
 export const useCreateNavbarMutation = () => {

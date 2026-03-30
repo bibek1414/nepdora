@@ -2,18 +2,9 @@
 
 import { NavbarComponent } from "@/components/site-owners/builder/navbar/navbar-component";
 import { Footer as FooterComponent } from "@/components/site-owners/builder/footer/footer-component";
-import {
-  useNavbarQuery,
-  useNavbarQueryPublished,
-} from "@/hooks/owner-site/components/use-navbar";
-import {
-  useFooterQuery,
-  useFooterQueryPublished,
-} from "@/hooks/owner-site/components/use-footer";
-import {
-  useThemeQuery,
-  useThemeQueryPublished,
-} from "@/hooks/owner-site/components/use-theme";
+import { useNavbarQuery } from "@/hooks/owner-site/components/use-navbar";
+import { useFooterQuery } from "@/hooks/owner-site/components/use-footer";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
 import { InnerPageHeader } from "@/components/site-owners/builder/navbar/inner-page-header";
 import { useEffect, useState } from "react";
@@ -46,10 +37,6 @@ export function SiteLayoutWrapper({
     useFooterQuery(isPreview);
 
   const { data: previewThemeResponse } = useThemeQuery(isPreview);
-
-  useNavbarQueryPublished(false);
-  useFooterQueryPublished(false);
-  useThemeQueryPublished(false);
 
   const navbarResponse = isPreview
     ? previewNavbarResponse

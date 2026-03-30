@@ -4,7 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { QueryProvider } from "@/providers/query-provider";
-import TopLoader from "@/components/top-loader";
+import SmartTopLoader from "@/components/smart-top-loader";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/CartContext";
@@ -74,7 +74,7 @@ export default function RootLayout({
                 <TextSelectionProvider>
                   <CartProvider>
                     <Suspense fallback={null}>
-                      <TopLoader />
+                      <SmartTopLoader />
                     </Suspense>
                     {children}
                     <Analytics />

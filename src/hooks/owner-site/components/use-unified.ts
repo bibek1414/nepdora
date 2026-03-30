@@ -26,18 +26,15 @@ const generateUUID = () => {
 export const usePageComponentsQuery = <
   T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
 >(
-  pageSlug: string,
-  status: "preview" | "published" = "published"
+  pageSlug: string
 ) => {
   const socket = useWebsiteSocketContext();
 
   return useQuery({
-    queryKey: ["pageComponents", pageSlug, status],
+    queryKey: ["pageComponents", pageSlug, "preview"],
     queryFn: () => {
       if (!socket.enabled) {
-        return status === "published"
-          ? componentsApi.getPageComponentsPublished(pageSlug)
-          : componentsApi.getPageComponents(pageSlug);
+        return componentsApi.getPageComponents(pageSlug);
       }
       return new Promise<ComponentResponse<T>[]>((resolve, reject) => {
         const unsubscribe = socket.subscribe(
@@ -63,7 +60,7 @@ export const usePageComponentsQuery = <
         socket.sendMessage({
           action: "list_components",
           slug: pageSlug,
-          status,
+          status: "preview",
         });
       });
     },
@@ -71,16 +68,9 @@ export const usePageComponentsQuery = <
     // Since we are using sockets, maybe we don't need to refetch on window focus as much
     // if we have real-time updates.
     refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: 0,
+    gcTime: 1 * 60 * 1000,
   });
-};
-export const usePageComponentsQueryPublished = <
-  T extends keyof ComponentTypeMap = keyof ComponentTypeMap,
->(
-  pageSlug: string
-) => {
-  return usePageComponentsQuery<T>(pageSlug, "published");
 };
 
 // Generic hook for fetching components by type

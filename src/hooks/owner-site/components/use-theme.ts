@@ -43,46 +43,12 @@ export const useThemeQuery = (enabled: boolean = true) => {
         });
       });
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // 5 minutes
     retry: 2,
     enabled,
   });
 };
 
-export const useThemeQueryPublished = (enabled: boolean = true) => {
-  const socket = useContext(WebsiteSocketContext);
-
-  return useQuery({
-    queryKey: ["themes", "published"],
-    queryFn: () => {
-      if (!socket || !socket.enabled || !enabled) {
-        return useThemeApi.getThemesPublished();
-      }
-      return new Promise<GetThemeResponse>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("themes_list", (message: any) => {
-          unsubscribe();
-          resolve({
-            data: message.data || [],
-            message: "Themes retrieved successfully",
-          });
-        });
-
-        setTimeout(() => {
-          unsubscribe();
-          reject(new Error("Timeout waiting for published themes list"));
-        }, 10000);
-
-        socket.sendMessage({
-          action: "list_themes",
-          status: "published",
-        });
-      });
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 2,
-    enabled,
-  });
-};
 
 export const useCreateThemeMutation = () => {
   const socket = useContext(WebsiteSocketContext);

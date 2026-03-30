@@ -2,19 +2,10 @@
 
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  usePageComponentsQuery,
-  usePageComponentsQueryPublished,
-} from "./components/use-unified";
-import {
-  useNavbarQuery,
-  useNavbarQueryPublished,
-} from "./components/use-navbar";
-import {
-  useFooterQuery,
-  useFooterQueryPublished,
-} from "./components/use-footer";
-import { useThemeQuery, useThemeQueryPublished } from "./components/use-theme";
+import { usePageComponentsQuery } from "./components/use-unified";
+import { useNavbarQuery } from "./components/use-navbar";
+import { useFooterQuery } from "./components/use-footer";
+import { useThemeQuery } from "./components/use-theme";
 import {
   ComponentTypeMap,
   ComponentResponse,
@@ -30,21 +21,13 @@ export function usePageData(siteUser: string, pageSlug: string) {
   const isPublish = pathname?.startsWith("/publish") || false;
 
   const { data: pageComponentsResponse, isLoading: isComponentsLoading } =
-    isPreview
-      ? usePageComponentsQuery(pageSlug, "preview")
-      : usePageComponentsQueryPublished(pageSlug);
+    usePageComponentsQuery(pageSlug);
 
-  const { data: navbarResponse, isLoading: isNavbarLoading } = isPreview
-    ? useNavbarQuery()
-    : useNavbarQueryPublished();
+  const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery(isPreview);
 
-  const { data: footerResponse, isLoading: isFooterLoading } = isPreview
-    ? useFooterQuery()
-    : useFooterQueryPublished();
+  const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery(isPreview);
 
-  const { data: themeResponse, isLoading: isThemeLoading } = isPreview
-    ? useThemeQuery()
-    : useThemeQueryPublished();
+  const { data: themeResponse, isLoading: isThemeLoading } = useThemeQuery(isPreview);
 
   const isLoading =
     isComponentsLoading || isNavbarLoading || isFooterLoading || isThemeLoading;
@@ -76,11 +59,7 @@ export function usePageData(siteUser: string, pageSlug: string) {
   }, [pageComponentsResponse]);
 
   // routePrefix should NOT end with a slash to avoid double slashes when concatenated with /products/...
-  const routePrefix = isPreview
-    ? `/preview/${siteUser}`
-    : isPublish
-      ? `/publish/${siteUser}`
-      : "";
+  const routePrefix = isPreview ? `/preview/${siteUser}` : "";
 
   const navigation = {
     handleBacktoHome: () => {
@@ -96,11 +75,8 @@ export function usePageData(siteUser: string, pageSlug: string) {
       const basePath = isPreview ? "/blog-details-draft" : "/blog-details";
       router.push(`${routePrefix}${basePath}/${blogSlug}`);
     },
-    handleServiceClick: (serviceSlug: string, _order: number) => {
-      const basePath = isPreview
-        ? "/service-details-draft"
-        : "/service-details";
-      router.push(`${routePrefix}${basePath}/${serviceSlug}`);
+    handleServiceClick: (serviceSlug: string) => {
+      router.push(`${routePrefix}/service-details-draft/${serviceSlug}`);
     },
     handleCategoryClick: (categoryId: number, _order: number) => {
       // Categories usually link to a category-draft or similar in preview?
@@ -110,11 +86,8 @@ export function usePageData(siteUser: string, pageSlug: string) {
     handleSubCategoryClick: (subcategoryId: number, _order: number) => {
       router.push(`${routePrefix}/subcategories/${subcategoryId}`);
     },
-    handlePortfolioClick: (portfolioSlug: string, _order: number) => {
-      const basePath = isPreview
-        ? "/portfolio-details-draft"
-        : "/portfolio-details";
-      router.push(`${routePrefix}${basePath}/${portfolioSlug}`);
+    handlePortfolioClick: (portfolioSlug: string) => {
+      router.push(`${routePrefix}/portfolio-details-draft/${portfolioSlug}`);
     },
   };
 

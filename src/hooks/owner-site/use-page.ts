@@ -19,14 +19,14 @@ export const PAGES_QUERY_KEY = (
 export const PAGE_QUERY_KEY = (slug: string) => ["pages", slug];
 
 // Get all pages
-export const usePages = (status: "preview" | "published" = "preview") => {
+export const usePages = () => {
   const socket = useContext(WebsiteSocketContext);
 
   return useQuery({
-    queryKey: PAGES_QUERY_KEY(status),
+    queryKey: PAGES_QUERY_KEY("preview"),
     queryFn: () => {
       if (!socket || !socket.enabled) {
-        return pageApi.getPages(status);
+        return pageApi.getPages("preview");
       }
       return new Promise<Page[]>((resolve, reject) => {
         const unsubscribe = socket.subscribe("pages_list", (message: any) => {
@@ -41,11 +41,11 @@ export const usePages = (status: "preview" | "published" = "preview") => {
 
         socket.sendMessage({
           action: "list_pages",
-          status,
+          status: "preview",
         });
       });
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0,
   });
 };
 

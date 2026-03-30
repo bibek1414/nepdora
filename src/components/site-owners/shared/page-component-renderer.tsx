@@ -13,12 +13,12 @@ interface PageComponentRendererProps {
   components: PageComponent[];
   siteUser: string;
   pageSlug: string;
-  onProductClick: (productSlug: string, order: number) => void;
-  onBlogClick: (blogSlug: string, order: number) => void;
-  onServiceClick: (serviceSlug: string, order: number) => void;
-  onCategoryClick: (categoryId: number, order: number) => void;
-  onSubCategoryClick: (subcategoryId: number, order: number) => void;
-  onPortfolioClick: (portfolioSlug: string, order: number) => void;
+  onProductClick?: (productSlug: string, order: number) => void;
+  onBlogClick?: (blogSlug: string, order: number) => void;
+  onServiceClick?: (serviceSlug: string, order: number) => void;
+  onCategoryClick?: (categoryId: number, order: number) => void;
+  onSubCategoryClick?: (subcategoryId: number, order: number) => void;
+  onPortfolioClick?: (portfolioSlug: string, order: number) => void;
   onComponentUpdate: (componentId: string, newData: any) => void;
   productSlug?: string;
   blogSlug?: string;
