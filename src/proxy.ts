@@ -29,7 +29,10 @@ function safeDecodeJWT(token: string): any | null {
       base64.length + ((4 - (base64.length % 4)) % 4),
       "="
     );
-    return JSON.parse(atob(padded));
+    const decoded = atob(padded);
+    // Match the repo's `decodeJWT()` behavior (handles unicode payloads).
+    const jsonStr = decodeURIComponent(escape(decoded));
+    return JSON.parse(jsonStr);
   } catch {
     return null;
   }
@@ -106,7 +109,15 @@ function getSubdomainFromAuth(request: NextRequest): string | null {
   try {
     const authUserCookie = request.cookies.get("authUser");
     if (authUserCookie?.value) {
-      const userData = JSON.parse(authUserCookie.value);
+      // Cookies can be URL-encoded depending on how they were written.
+      // Try raw JSON first, then fall back to URL-decoding.
+      let userData: any | null = null;
+      try {
+        userData = JSON.parse(authUserCookie.value);
+      } catch {
+        const decoded = decodeURIComponent(authUserCookie.value);
+        userData = JSON.parse(decoded);
+      }
       return userData.sub_domain || null;
     }
     const authToken = request.cookies.get("authToken");
@@ -118,6 +129,16 @@ function getSubdomainFromAuth(request: NextRequest): string | null {
     console.error("Error extracting subdomain from auth:", error);
   }
   return null;
+}
+
+function redirectToPermissionDenied(request: NextRequest): NextResponse {
+  const protocol = request.url.includes("localhost") ? "http" : "https";
+  const target = new URL(`/permission-denied`, `${protocol}://${rootDomain}`);
+
+  // Keep original query string if any (useful for debugging/support).
+  if (request.nextUrl.search) target.search = request.nextUrl.search;
+
+  return NextResponse.redirect(target);
 }
 
 // ─────────────────────────────────────────────
@@ -371,6 +392,7 @@ export async function proxy(request: NextRequest) {
     "/on-boarding",
     "/websocket-worker.js",
     "/subscription",
+    "/permission-denied",
   ];
 
   // ── 3. Request on *.nepdora.com subdomain ─────────────────────────────────
@@ -379,6 +401,20 @@ export async function proxy(request: NextRequest) {
   if (subdomain) {
     // Bypass admin / builder routes
     if (allowedPaths.some(p => pathname.startsWith(p))) {
+      // Tenant isolation: prevent a logged-in user for one tenant
+      // from loading admin/builder UI on a different tenant host.
+      if (pathname.startsWith("/admin") || pathname.startsWith("/builder")) {
+        const authSubdomain = getSubdomainFromAuth(request);
+        const hasAuthCookies =
+          !!request.cookies.get("authToken")?.value ||
+          !!request.cookies.get("authUser")?.value;
+        // If we can't even determine which tenant the cookie belongs to,
+        // fail closed and deny access when user appears authenticated.
+        if (hasAuthCookies && (!authSubdomain || authSubdomain !== subdomain)) {
+          return redirectToPermissionDenied(request);
+        }
+      }
+
       return NextResponse.next();
     }
 
@@ -399,11 +435,6 @@ export async function proxy(request: NextRequest) {
     const host = request.headers.get("host") || "";
     const hostname = host.split(":")[0];
 
-    // Bypass admin / builder routes
-    if (allowedPaths.some(p => pathname.startsWith(p))) {
-      return NextResponse.next();
-    }
-
     // Look up which tenant owns this custom domain
     let cacheEntry = getCached(hostname);
 
@@ -415,6 +446,26 @@ export async function proxy(request: NextRequest) {
         timestamp: Date.now(),
       };
       setCached(hostname, cacheEntry);
+    }
+
+    // Tenant isolation: prevent a logged-in user for one tenant
+    // from loading admin/builder UI on a different tenant host.
+    if (allowedPaths.some(p => pathname.startsWith(p))) {
+      if (pathname.startsWith("/admin") || pathname.startsWith("/builder")) {
+        const authSubdomain = getSubdomainFromAuth(request);
+        const expectedSubdomain = cacheEntry.subdomain;
+        const hasAuthCookies =
+          !!request.cookies.get("authToken")?.value ||
+          !!request.cookies.get("authUser")?.value;
+        if (
+          hasAuthCookies &&
+          (!expectedSubdomain || !authSubdomain || authSubdomain !== expectedSubdomain)
+        ) {
+          return redirectToPermissionDenied(request);
+        }
+      }
+
+      return NextResponse.next();
     }
 
     if (cacheEntry.subdomain) {
