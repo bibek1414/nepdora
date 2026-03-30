@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BlogPost, BlogTag, BlogCategory } from "@/types/super-admin/blog";
@@ -51,9 +51,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Check, ChevronsUpDown, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Tiptap from "@/components/ui/tip-tap";
 import { toast } from "sonner";
+import { ImageUploader } from "@/components/ui/image-uploader";
 
 interface BlogFormProps {
   blog?: BlogPost | null;
@@ -92,9 +92,6 @@ const BlogForm: React.FC<BlogFormProps> = ({
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogFormSchema),
     defaultValues: {
@@ -119,6 +116,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
         content: blog.content || "",
         meta_title: blog.meta_title || "",
         meta_description: blog.meta_description || "",
+        thumbnail_image: blog.thumbnail_image || null,
         thumbnail_image_alt_description:
           blog.thumbnail_image_alt_description || "",
         category_id: blog.category?.id || null,
@@ -131,11 +129,6 @@ const BlogForm: React.FC<BlogFormProps> = ({
     }
   }, [blog, isEditMode, form, formInitialized]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSelectedFile(file);
-    form.setValue("thumbnail_image", file, { shouldValidate: true });
-  };
 
   const handleTagToggle = (tag: BlogTag) => {
     const currentTagIds = form.getValues("tag_ids") || [];
@@ -228,13 +221,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
   };
 
   const handleSubmit = (data: BlogFormValues) => {
-    const transformedData = {
-      ...data,
-      tag_ids: data.tag_ids && Array.isArray(data.tag_ids) ? data.tag_ids : [],
-      thumbnail_image: selectedFile || data.thumbnail_image,
-    };
-
-    onSubmit(transformedData);
+    onSubmit(data);
   };
 
   const safeAllTags = Array.isArray(allTags) ? allTags : [];
@@ -306,62 +293,17 @@ const BlogForm: React.FC<BlogFormProps> = ({
                         Thumbnail Image
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          ref={fileInputRef}
-                          onChange={handleFileChange}
-                          className="text-xs file:text-xs sm:text-sm sm:file:text-sm"
+                        <ImageUploader
+                          value={field.value}
+                          onChange={field.onChange}
+                          disabled={isLoading}
+                          multiple={false}
                         />
                       </FormControl>
-                      <FormDescription className="text-xs sm:text-sm">
-                        {isEditMode && "Leave empty to keep current image."}
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                {isEditMode && blog?.thumbnail_image && !selectedFile && (
-                  <div className="mt-2">
-                    <p className="text-xs text-gray-600 sm:text-sm">
-                      Current image:
-                    </p>
-                    <Image
-                      src={blog.thumbnail_image}
-                      alt="Current thumbnail"
-                      width={128}
-                      height={128}
-                      className="mt-1 h-auto max-w-full rounded-md object-cover"
-                    />
-                  </div>
-                )}
-                {selectedFile && (
-                  <div className="mt-2">
-                    <p className="text-xs text-gray-600 sm:text-sm">
-                      New image selected:
-                    </p>
-                    <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center">
-                      <span className="min-w-0 flex-1 truncate text-xs sm:text-sm">
-                        {selectedFile.name}
-                      </span>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="text-xs sm:text-sm"
-                        onClick={() => {
-                          setSelectedFile(null);
-                          if (fileInputRef.current) {
-                            fileInputRef.current.value = "";
-                          }
-                          form.setValue("thumbnail_image", null);
-                        }}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                )}
                 <FormField
                   control={form.control}
                   name="thumbnail_image_alt_description"

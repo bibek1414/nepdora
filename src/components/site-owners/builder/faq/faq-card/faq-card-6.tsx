@@ -27,30 +27,30 @@ export const FaqCard6: React.FC<FAQCard6Props> = ({
   return (
     <div className="grid grid-cols-1 items-stretch gap-12 lg:grid-cols-12 lg:gap-16 xl:gap-24">
       {/* Questions List */}
-      <div className="flex flex-col justify-between lg:col-span-5 h-full">
-        <div className="divide-y divide-[#1A1A1A]/10">
+      <div className="flex h-full cursor-pointer flex-col justify-between lg:col-span-5">
+        <div className="cursor-pointer divide-y divide-[#1A1A1A]/10">
           {faqs.map((faq: FAQ) => (
             <button
               key={faq.id}
               onClick={() => setActiveId(faq.id)}
               className={`group flex w-full items-center justify-between py-5 text-left transition-all duration-500 ${
-                activeId === faq.id 
-                  ? "text-[#1A1A1A]" 
+                activeId === faq.id
+                  ? "text-[#1A1A1A]"
                   : "text-[#1A1A1A]/40 hover:text-[#1A1A1A]"
               }`}
             >
-              <span className="font-serif text-sm leading-snug pr-6 transition-colors duration-500 md:text-base lg:text-[1.05rem]">
+              <span className="cursor-pointer pr-6 font-serif text-sm leading-snug transition-colors duration-500 md:text-base lg:text-[1.05rem]">
                 {faq.question}
               </span>
               <div
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#1A1A1A]/10 transition-all duration-700 ${
                   activeId === faq.id
                     ? "border-accent text-accent"
-                    : "text-[#1A1A1A]/30 group-hover:border-accent/50 group-hover:text-accent"
+                    : "group-hover:border-accent/50 group-hover:text-accent text-[#1A1A1A]/30"
                 }`}
-                style={{ 
+                style={{
                   borderColor: activeId === faq.id ? accentColor : undefined,
-                  color: activeId === faq.id ? accentColor : undefined
+                  color: activeId === faq.id ? accentColor : undefined,
                 }}
               >
                 <motion.div
@@ -68,8 +68,8 @@ export const FaqCard6: React.FC<FAQCard6Props> = ({
       </div>
 
       {/* Answer Box */}
-      <div className="lg:col-span-7 h-full">
-        <div className="flex h-full flex-col justify-center rounded-lg bg-[#F5F0EB] p-8 md:p-10 lg:p-12 overflow-hidden">
+      <div className="h-full lg:col-span-7">
+        <div className="flex h-full flex-col justify-center overflow-hidden rounded-lg bg-[#F5F0EB] p-8 md:p-10 lg:p-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeId}
@@ -82,14 +82,16 @@ export const FaqCard6: React.FC<FAQCard6Props> = ({
                 {activeFaq?.question}
               </h3>
               <div className="space-y-6">
-                {activeFaq?.answer.split("\n\n").map((para: string, i: number) => (
-                  <p
-                    key={i}
-                    className="font-sans text-xs leading-[1.8] text-[#1A1A1A]/60 md:text-sm lg:text-[0.95rem]"
-                  >
-                    {para}
-                  </p>
-                ))}
+                {activeFaq?.answer
+                  .split("\n\n")
+                  .map((para: string, i: number) => (
+                    <p
+                      key={i}
+                      className="font-sans text-xs leading-[1.8] text-[#1A1A1A]/60 md:text-sm lg:text-[0.95rem]"
+                    >
+                      {para}
+                    </p>
+                  ))}
               </div>
             </motion.div>
           </AnimatePresence>

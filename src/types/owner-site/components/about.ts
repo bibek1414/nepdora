@@ -528,6 +528,30 @@ export const defaultAboutUs12Data: AboutUs12Data = {
   visionImageAlt: "XInfin Vision - Global Innovation",
 };
 
+export interface AboutUs13Data {
+  template: "about-13";
+  badge: string;
+  title: string;
+  description: string;
+  mainImage: string;
+  secondaryImage: string;
+  svgUrl: string;
+}
+
+export const defaultAboutUs13Data: AboutUs13Data = {
+  template: "about-13",
+  badge: "About Us",
+  title: "Unveiling the Heart of Our Travel Passion",
+  description:
+    "Delve into the essence of our travel passion as we unveil the beating heart behind every journey, driven by a relentless pursuit of exploration and discovery.",
+  mainImage:
+    "https://images.pexels.com/photos/7368202/pexels-photo-7368202.jpeg",
+  secondaryImage:
+    "https://images.pexels.com/photos/29890131/pexels-photo-29890131.jpeg",
+  svgUrl:
+    "https://cdn.prod.website-files.com/65fab07abb0beb90e59749bd/660436b87c5c859535a7b7f6_Vector%207.svg",
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -541,7 +565,8 @@ export type AboutUsData =
   | AboutUs9Data
   | AboutUs10Data
   | AboutUs11Data
-  | AboutUs12Data;
+  | AboutUs12Data
+  | AboutUs13Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -585,7 +610,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs9Data>
     | Partial<AboutUs10Data>
     | Partial<AboutUs11Data>
-    | Partial<AboutUs12Data>;
+    | Partial<AboutUs12Data>
+    | Partial<AboutUs13Data>;
   order?: number;
 }
 
@@ -621,6 +647,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-10": defaultAboutUs10Data,
   "about-11": defaultAboutUs11Data,
   "about-12": defaultAboutUs12Data,
+  "about-13": defaultAboutUs13Data,
 };
 
 // Type guards for each template
@@ -659,3 +686,6 @@ export const isAboutUsTemplate11 = (data: AboutUsData): data is AboutUs11Data =>
 
 export const isAboutUsTemplate12 = (data: AboutUsData): data is AboutUs12Data =>
   data.template === "about-12";
+
+export const isAboutUsTemplate13 = (data: AboutUsData): data is AboutUs13Data =>
+  data.template === "about-13";
