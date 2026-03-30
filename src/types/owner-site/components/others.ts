@@ -144,7 +144,8 @@ export type OthersData =
   | OthersTemplate8Data
   | OthersTemplate9Data
   | OthersTemplate10Data
-  | OthersTemplate11Data;
+  | OthersTemplate11Data
+  | OthersTemplate12Data;
 
 export interface OthersRoutineStep {
   id: string;
@@ -193,6 +194,18 @@ export interface OthersTemplate11Data {
   buttonLink: string;
   stats: OthersStatistic[];
   destinations: OthersDestination[];
+}
+
+export interface OthersTemplate12Data {
+  template: "others-12";
+  heading: string;
+  buttonText: string;
+  buttonLink: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+  steps: OthersProcessItem[];
 }
 
 // Component and API interfaces
@@ -621,6 +634,43 @@ export const defaultOthersTemplate11Data: OthersTemplate11Data = {
   ],
 };
 
+export const defaultOthersTemplate12Data: OthersTemplate12Data = {
+  template: "others-12",
+  heading: "Simplify Your Vacation Planning Experience",
+  buttonText: "Book Now",
+  buttonLink: "#",
+  image: {
+    url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?q=80&w=800&auto=format&fit=crop",
+    alt: "Happy travelers",
+  },
+  steps: [
+    {
+      id: "01",
+      title: "Consultation",
+      description:
+        "Begin by scheduling a consultation with our experienced travel experts. During this session, we'll discuss your preferences, interests, and budget to understand your travel goals fully.",
+    },
+    {
+      id: "02",
+      title: "Customized Itinerary Creation",
+      description:
+        "Based on your consultation, our team will craft a personalized itinerary tailored to your specifications. We'll handle all the details, from selecting accommodations and arranging transportation to curating activities and excursions.",
+    },
+    {
+      id: "03",
+      title: "Review and Adjustments",
+      description:
+        "Once the itinerary is complete, we'll present it to you for review. We welcome your feedback and are happy to make any necessary adjustments to ensure it meets your expectations and desires.",
+    },
+    {
+      id: "04",
+      title: "Seamless Execution",
+      description:
+        "With your approval, we'll take care of all the arrangements, leaving you free to relax and anticipate your upcoming adventure.",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -634,6 +684,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-9": defaultOthersTemplate9Data,
   "others-10": defaultOthersTemplate10Data,
   "others-11": defaultOthersTemplate11Data,
+  "others-12": defaultOthersTemplate12Data,
 };
 
 // Type guards
@@ -670,3 +721,6 @@ export const isOthersTemplate10 = (
 export const isOthersTemplate11 = (
   data: OthersData
 ): data is OthersTemplate11Data => data.template === "others-11";
+export const isOthersTemplate12 = (
+  data: OthersData
+): data is OthersTemplate12Data => data.template === "others-12";

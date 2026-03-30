@@ -122,14 +122,9 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
 
           {/* Title and Description */}
           <ContentLink>
-            <p className="text-xl font-semibold text-slate-900 dark:text-white">
+            <p className="text-xl font-semibold text-slate-900 dark:text-white line-clamp-2">
               {blog.title}
             </p>
-            {excerpt && (
-              <p className="mt-3 text-base text-slate-600 dark:text-slate-400">
-                {excerpt}
-              </p>
-            )}
           </ContentLink>
         </div>
 

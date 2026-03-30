@@ -206,6 +206,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Tours Style 1",
         image: "/images/site-owners/tours/tours-1.png",
       },
+      {
+        id: "tours-2",
+        name: "Tours Style 2",
+        image: "/images/site-owners/tours/tours-2.png", // Assuming this image exists or will be added
+      },
     ],
     others: [
       {
@@ -263,6 +268,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Others Style 11 (Destinations)",
         image: "/images/site-owners/others/others11.png",
       },
+      {
+        id: "others-12",
+        name: "Others Style 12 (Vacation Planning)",
+        image: "/images/site-owners/others/others12.png",
+      },
     ],
     experience: [
       {
@@ -315,6 +325,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "CTA Style 1",
         image: "/images/site-owners/cta/cta1.png",
         description: "Image-based CTA with feature icons",
+      },
+      {
+        id: "cta-2",
+        name: "CTA Style 2",
+        image: "/images/site-owners/cta/cta2.png",
+        description: "Modern collage style with animations",
       },
     ],
     appointment: [

@@ -36,6 +36,7 @@ import {
   Check,
   ChevronsUpDown,
 } from "lucide-react";
+import { toast } from "sonner";
 import {
   Command,
   CommandEmpty,
@@ -312,7 +313,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
         ...prev,
         logoImage: siteConfig?.logo || "",
       }));
-      alert("Failed to remove logo. Please try again.");
+      toast.error("Failed to remove logo. Please try again.");
     }
   };
 

@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import Tiptap from "@/components/ui/tip-tap";
+import { ImageUploader } from "@/components/ui/image-uploader";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -59,10 +60,8 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
 }) => {
   const isEditMode = Boolean(service);
   const [formInitialized, setFormInitialized] = useState(false);
+  // Remove manual file state as ImageUploader handles it via form state
 
-  // Add state to track the selected file
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<ServicesFormValues>({
     resolver: zodResolver(servicesFormSchema),
@@ -83,6 +82,7 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
         description: service.description || "",
         meta_title: service.meta_title || "",
         meta_description: service.meta_description || "",
+        thumbnail_image: service.thumbnail_image,
         thumbnail_image_alt_description:
           service.thumbnail_image_alt_description || "",
         service_category: service.service_category?.id || null,
@@ -92,18 +92,10 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
     }
   }, [service, isEditMode, form, formInitialized]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setSelectedFile(file);
-    // Update the form value directly
-    form.setValue("thumbnail_image", file, { shouldValidate: true });
-  };
 
   const handleSubmit = (data: ServicesFormValues) => {
     const transformedData = {
       ...data,
-      // Ensure the selected file is included
-      thumbnail_image: selectedFile || data.thumbnail_image,
       service_category: data.service_category || null,
     };
 
@@ -321,11 +313,10 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
                 <FormItem>
                   <FormLabel>Thumbnail Image</FormLabel>
                   <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      onChange={handleFileChange}
+                    <ImageUploader
+                      value={field.value}
+                      onChange={field.onChange}
+                      multiple={false}
                     />
                   </FormControl>
                   <FormDescription>
@@ -335,40 +326,6 @@ const ServicesForm: React.FC<ServicesFormProps> = ({
                 </FormItem>
               )}
             />
-            {isEditMode && service?.thumbnail_image && !selectedFile && (
-              <div className="mt-2">
-                <p className="text-sm text-gray-600">Current image:</p>
-                <Image
-                  src={service.thumbnail_image}
-                  alt="Current thumbnail"
-                  width={128}
-                  height={128}
-                  className="mt-1 rounded-md object-cover"
-                />
-              </div>
-            )}
-            {selectedFile && (
-              <div className="mt-2">
-                <p className="text-sm text-gray-600">New image selected:</p>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">{selectedFile.name}</span>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedFile(null);
-                      if (fileInputRef.current) {
-                        fileInputRef.current.value = "";
-                      }
-                      form.setValue("thumbnail_image", null);
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              </div>
-            )}
             <FormField
               control={form.control}
               name="thumbnail_image_alt_description"

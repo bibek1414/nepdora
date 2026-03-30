@@ -91,9 +91,9 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
         <div className="absolute inset-0 bg-linear-to-r from-gray-900/95 via-gray-900/80 to-transparent"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto flex h-full flex-col justify-center px-4 text-white md:px-8">
+      <div className="z-10 mx-auto max-w-7xl text-white">
         <motion.div
-          className="mt-6 max-w-4xl sm:mt-10"
+          className="mt-6 sm:mt-10"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}

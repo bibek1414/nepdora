@@ -17,8 +17,10 @@ import {
 import {
   ToursData,
   isToursTemplate1,
+  isToursTemplate2,
 } from "@/types/owner-site/components/tours";
 import { ToursStyle1 } from "./tours-style-1";
+import { ToursStyle2 } from "./tours-style-2";
 
 import {
   useDeleteComponentMutation,
@@ -102,6 +104,11 @@ export const ToursComponent: React.FC<ToursComponentProps> = ({
     if (isToursTemplate1(component.data)) {
       return (
         <ToursStyle1 toursData={component.data} {...commonProps} />
+      );
+    }
+    if (isToursTemplate2(component.data)) {
+      return (
+        <ToursStyle2 toursData={component.data} {...commonProps} />
       );
     }
 

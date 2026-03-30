@@ -26,6 +26,7 @@ import {
   isOthersTemplate9,
   isOthersTemplate10,
   isOthersTemplate11,
+  isOthersTemplate12,
 } from "@/types/owner-site/components/others";
 import { OthersTemplate1 } from "./others-style-1";
 import { OthersTemplate2 } from "./others-style-2";
@@ -38,6 +39,7 @@ import { OthersTemplate8 } from "./others-style-8";
 import { OthersTemplate9 } from "./others-style-9";
 import { OthersTemplate10 } from "./others-style-10";
 import { OthersTemplate11 } from "./others-style-11";
+import { OthersTemplate12 } from "./others-style-12";
 
 import {
   useDeleteComponentMutation,
@@ -144,6 +146,9 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
     }
     if (isOthersTemplate11(component.data)) {
       return <OthersTemplate11 othersData={component.data} {...commonProps} />;
+    }
+    if (isOthersTemplate12(component.data)) {
+      return <OthersTemplate12 othersData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates

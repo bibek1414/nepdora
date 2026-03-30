@@ -12,8 +12,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { CTAData, isCTATemplate1 } from "@/types/owner-site/components/cta";
+import { CTAData, isCTATemplate1, isCTATemplate2 } from "@/types/owner-site/components/cta";
 import { CTATemplate1 } from "./cta-style-1";
+import { CTATemplate2 } from "./cta-style-2";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -91,6 +92,10 @@ export const CTAComponent: React.FC<CTAComponentProps> = ({
     // Type-safe template rendering using type guards
     if (isCTATemplate1(component.data)) {
       return <CTATemplate1 ctaData={component.data} {...commonProps} />;
+    }
+
+    if (isCTATemplate2(component.data)) {
+      return <CTATemplate2 ctaData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates

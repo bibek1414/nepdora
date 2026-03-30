@@ -62,7 +62,7 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
 
   return (
     <section id="services-8" className="bg-gray-50/50 py-20">
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
         <motion.div
           className="mx-auto mb-16 max-w-3xl text-center"
           initial={{ opacity: 0, y: 20 }}

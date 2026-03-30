@@ -4,7 +4,17 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import NextImage from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, ArrowUpRight, ChevronDown, ShoppingCart, User, Heart, Package, LogOut } from "lucide-react";
+import {
+  Menu,
+  X,
+  ArrowUpRight,
+  ChevronDown,
+  ShoppingCart,
+  User,
+  Heart,
+  Package,
+  LogOut,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
@@ -60,6 +70,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const navbarRef = useRef<HTMLElement>(null);
 
   const { isAuthenticated, user, logout } = useAuth();
   const { data: wishlistData } = useWishlist();
@@ -84,6 +95,34 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
   };
 
   const primaryColor = theme.colors.primary;
+
+  // Set navbar height CSS variable for non-editable mode
+  useEffect(() => {
+    if (navbarRef.current && !isEditable) {
+      const updateNavbarHeight = () => {
+        const height = navbarRef.current?.getBoundingClientRect().height;
+        if (height) {
+          document.documentElement.style.setProperty(
+            "--navbar-height",
+            `${height}px`
+          );
+        }
+      };
+
+      updateNavbarHeight();
+
+      // Use ResizeObserver to handle height changes
+      const resizeObserver = new ResizeObserver(updateNavbarHeight);
+      resizeObserver.observe(navbarRef.current);
+
+      return () => {
+        resizeObserver.disconnect();
+        if (!isEditable) {
+          document.documentElement.style.removeProperty("--navbar-height");
+        }
+      };
+    }
+  }, [isEditable]);
 
   const linkClass = (path: string, isActive: boolean) =>
     `text-sm font-medium transition-colors ${
@@ -158,6 +197,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
 
   return (
     <header
+      ref={navbarRef}
       className={`inset-x-0 z-50 flex items-center justify-between px-3 transition-all duration-300 sm:px-4 ${
         !isEditable ? "fixed top-2 sm:top-4" : "relative py-4"
       }`}
@@ -324,7 +364,9 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                 <DropdownMenuTrigger asChild>
                   <button
                     className={`flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 transition-all hover:border-gray-300 hover:shadow-md ${disableClicks || isEditable ? "cursor-default opacity-60" : "cursor-pointer"}`}
-                    onClick={disableClicks ? e => e.preventDefault() : undefined}
+                    onClick={
+                      disableClicks ? e => e.preventDefault() : undefined
+                    }
                   >
                     <User size={18} />
                   </button>
@@ -499,14 +541,16 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                       >
                         <User size={20} className="text-gray-500" /> My Profile
                       </button>
-                      {(!user?.website_type || user.website_type === "ecommerce") && (
+                      {(!user?.website_type ||
+                        user.website_type === "ecommerce") && (
                         <>
                           <button
                             onClick={() => handleProfileAction("wishlist")}
                             className="flex w-full items-center justify-between py-2 text-base font-medium text-gray-800"
                           >
                             <div className="flex items-center gap-3">
-                              <Heart size={20} className="text-gray-500" /> Wishlist
+                              <Heart size={20} className="text-gray-500" />{" "}
+                              Wishlist
                             </div>
                             {wishlistCount > 0 && (
                               <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
@@ -518,7 +562,8 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                             onClick={() => handleProfileAction("orders")}
                             className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
                           >
-                            <Package size={20} className="text-gray-500" /> My Orders
+                            <Package size={20} className="text-gray-500" /> My
+                            Orders
                           </button>
                         </>
                       )}
@@ -534,7 +579,8 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                       onClick={handleLoginClick}
                       className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
                     >
-                      <User size={20} className="text-gray-500" /> Login / Register
+                      <User size={20} className="text-gray-500" /> Login /
+                      Register
                     </button>
                   )}
                 </div>

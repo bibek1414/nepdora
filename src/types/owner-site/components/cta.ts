@@ -24,8 +24,20 @@ export interface CTATemplate1Data {
   overlayOpacity?: number;
 }
 
+export interface CTATemplate2Data {
+  template: "cta-2";
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonHref: string;
+  image1: string;
+  image2: string;
+  image3: string;
+  backgroundColor?: string;
+}
+
 // Union type for all CTA templates
-export type CTAData = CTATemplate1Data;
+export type CTAData = CTATemplate1Data | CTATemplate2Data;
 
 // Component and API interfaces
 export interface CTAComponentData {
@@ -64,11 +76,29 @@ export const defaultCTATemplate1Data: CTATemplate1Data = {
   overlayOpacity: 0.2,
 };
 
+export const defaultCTATemplate2Data: CTATemplate2Data = {
+  template: "cta-2",
+  title:
+    "<em class='italic font-normal'>Ready To Embark</em> On Your Next Adventure?",
+  description:
+    "Are you prepared to embark on your next thrilling escapade? Whether you're yearning for a tranquil retreat amidst nature's embrace or seeking adrenaline-pumping adventures in far-off lands, now is the perfect moment to seize the opportunity.",
+  buttonText: "BOOK NOW",
+  buttonHref: "#",
+  image1: "https://images.pexels.com/photos/4004058/pexels-photo-4004058.jpeg",
+  image2: "https://images.pexels.com/photos/4645982/pexels-photo-4645982.jpeg",
+  image3: "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg",
+  backgroundColor: "#F5F3EF",
+};
+
 // Default data map for all CTA templates
 export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-1": defaultCTATemplate1Data,
+  "cta-2": defaultCTATemplate2Data,
 };
 
 // Type guards for each template
 export const isCTATemplate1 = (data: CTAData): data is CTATemplate1Data =>
   data.template === "cta-1";
+
+export const isCTATemplate2 = (data: CTAData): data is CTATemplate2Data =>
+  data.template === "cta-2";

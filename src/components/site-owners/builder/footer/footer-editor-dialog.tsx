@@ -40,6 +40,7 @@ import {
   ChevronsUpDown,
   Shield,
 } from "lucide-react";
+import { toast } from "sonner";
 import {
   Command,
   CommandEmpty,
@@ -447,7 +448,7 @@ export function FooterEditorDialog({
         ...prev,
         logoImage: siteConfig?.logo || "",
       }));
-      alert("Failed to remove logo. Please try again.");
+      toast.error("Failed to remove logo. Please try again.");
     }
   };
 
@@ -615,7 +616,7 @@ export function FooterEditorDialog({
     );
 
     if (!availablePlatform) {
-      alert("All social platforms are already added.");
+      toast.info("All social platforms are already added.");
       return;
     }
 

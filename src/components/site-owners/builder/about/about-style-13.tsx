@@ -39,23 +39,6 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
         height: "700px",
       }}
     >
-      {/* Decorative SVG */}
-      <img
-        src={data.svgUrl}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute select-none"
-        style={{
-          top: "-100px",
-          left: "-100px",
-          width: "460px",
-          height: "auto",
-          opacity: 0.35,
-          transform: "rotate(90deg)",
-        }}
-        referrerPolicy="no-referrer"
-      />
-
       {/* Main content */}
       <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-8">
         <div className="flex w-full items-center">
@@ -81,11 +64,6 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="mb-6 leading-[1.06]"
-              style={{
-                fontSize: "clamp(2.4rem, 3.8vw, 5rem)",
-                fontWeight: 400,
-                fontFamily: headingFont,
-              }}
             >
               <EditableText
                 value={data.title}

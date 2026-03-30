@@ -82,7 +82,7 @@ export const ServiceDetail3: React.FC<{ slug: string; siteUser?: string }> = ({
             </Badge>
           </div>
 
-          <h1 className="mb-8 w-full truncate text-4xl leading-tight font-black text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="mb-8 w-full text-4xl leading-tight font-black text-white drop-shadow-lg">
             {service.title}
           </h1>
 
@@ -111,7 +111,7 @@ export const ServiceDetail3: React.FC<{ slug: string; siteUser?: string }> = ({
                             : `/`
                           : "/"
                       }
-                      className="text-muted-foreground hover:text-primary flex items-center gap-2 font-medium transition-colors"
+                      className="flex items-center gap-2 font-medium text-black transition-colors"
                     >
                       <Home className="h-4 w-4" />
                       Home
@@ -120,7 +120,7 @@ export const ServiceDetail3: React.FC<{ slug: string; siteUser?: string }> = ({
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="text-foreground max-w-[150px] truncate font-semibold sm:max-w-[250px]">
+                  <BreadcrumbPage className="text-black">
                     {service.title}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
