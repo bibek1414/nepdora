@@ -34,9 +34,8 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
 
   return (
     <section
-      className="relative overflow-hidden text-white"
+      className="relative overflow-hidden"
       style={{
-        backgroundColor: bgColor,
         height: "700px",
       }}
     >
@@ -67,7 +66,6 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="mb-3 block font-serif text-sm italic"
-              style={{ color: accentColor }}
             >
               <EditableText
                 value={data.badge}
@@ -82,7 +80,7 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-6 leading-[1.06] text-white"
+              className="mb-6 leading-[1.06]"
               style={{
                 fontSize: "clamp(2.4rem, 3.8vw, 5rem)",
                 fontWeight: 400,
@@ -103,7 +101,6 @@ export const AboutUsTemplate13: React.FC<AboutUsTemplate13Props> = ({
               viewport={{ once: true }}
               transition={{ delay: 0.2, duration: 0.7 }}
               style={{
-                color: "rgba(255,255,255,0.72)",
                 fontSize: "0.9rem",
                 lineHeight: 1.7,
                 maxWidth: "400px",

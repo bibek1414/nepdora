@@ -66,7 +66,7 @@ export const DEFAULT_PRODUCTS_MAP: Record<ProductsData["style"], ProductsData> =
       title: "New Arrivals",
       subtitle: "Discover the latest additions to our collection",
       buttonText: "View All Products",
-      buttonLink: "/products",
+      buttonLink: "#",
     },
     "product-9": {
       ...defaultProductsData,
