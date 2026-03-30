@@ -6,6 +6,7 @@ import {
   ContactFilters,
 } from "@/types/owner-site/admin/contact";
 import { getApiBaseUrl } from "@/config/site";
+import { createHeaders } from "@/utils/headers";
 
 export const contactAPI = {
   getContacts: async (
@@ -25,7 +26,7 @@ export const contactAPI = {
     const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        ...createHeaders(),
       },
     });
 

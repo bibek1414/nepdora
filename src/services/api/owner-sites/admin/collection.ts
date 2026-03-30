@@ -10,6 +10,7 @@ import {
   UpdateCollectionDataInput,
   UpdateCollectionInput,
 } from "@/types/owner-site/admin/collection";
+import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 
 export const collectionAPI = {
@@ -70,7 +71,7 @@ export const collectionAPI = {
       const response = await apiFetch(url.toString(), {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          ...createHeaders(),
         },
         body: JSON.stringify(collectionData),
       }).catch(fetchError => {
@@ -107,7 +108,7 @@ export const collectionAPI = {
       const response = await apiFetch(url.toString(), {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
+          ...createHeaders(),
         },
         body: JSON.stringify(collectionData),
       }).catch(fetchError => {
@@ -233,7 +234,7 @@ export const collectionAPI = {
       const response = await apiFetch(url.toString(), {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          ...createHeaders(),
         },
         body: JSON.stringify(dataInput),
       }).catch(fetchError => {
@@ -273,7 +274,7 @@ export const collectionAPI = {
       const response = await apiFetch(url.toString(), {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
+          ...createHeaders(),
         },
         body: JSON.stringify(dataInput),
       }).catch(fetchError => {

@@ -8,6 +8,7 @@ import {
 } from "@/types/owner-site/admin/appointment";
 import { getApiBaseUrl } from "@/config/site";
 import { handleApiError } from "@/utils/api-error";
+import { createHeaders } from "@/utils/headers";
 
 export const appointmentAPI = {
   // Get all appointments with filters
@@ -49,7 +50,7 @@ export const appointmentAPI = {
     const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        ...createHeaders(),
       },
     });
 
@@ -113,7 +114,7 @@ export const appointmentAPI = {
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
+          ...createHeaders(),
         },
       }
     );
