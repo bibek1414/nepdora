@@ -14,8 +14,7 @@ interface PreviewPageClientProps {
 export default function PreviewPageClient({
   siteUser,
 }: PreviewPageClientProps) {
-  const { data: pagesData = [], isLoading: isPagesLoading } =
-    usePages("preview");
+  const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
 
   const homePage = React.useMemo(() => {
     if (isPagesLoading) return null;
