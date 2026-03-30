@@ -552,6 +552,35 @@ export const defaultAboutUs13Data: AboutUs13Data = {
     "https://cdn.prod.website-files.com/65fab07abb0beb90e59749bd/660436b87c5c859535a7b7f6_Vector%207.svg",
 };
 
+export interface AboutUs14Data {
+  template: "about-14";
+  eyebrow: string;
+  title: string;
+  description: string;
+  mainImage1: string;
+  mainImage2: string;
+  visionTitle: string;
+  visionDescription: string;
+  visionImage: string;
+}
+
+export const defaultAboutUs14Data: AboutUs14Data = {
+  template: "about-14",
+  eyebrow: "Who We Are?",
+  title: "Our Commitment, Vision, Mission, And Values",
+  description:
+    "At The Express Travel, our foundation is built upon a steadfast commitment to excellence, a visionary approach to travel, a clear mission, and a set of deeply ingrained values. Our commitment drives every aspect of our operations, ensuring that every traveler's experience exceeds expectations. From meticulously curated itineraries to personalized customer service, we spare no effort in delivering unforgettable journeys.",
+  mainImage1:
+    "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=800&auto=format&fit=crop",
+  mainImage2:
+    "https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=600&auto=format&fit=crop",
+  visionTitle: "Our Vision",
+  visionDescription:
+    "Our vision encompasses more than just facilitating travel; it's about transforming the way people explore the world. We aspire to redefine the travel industry by pioneering innovative technologies, promoting sustainable practices, and fostering meaningful connections between travelers and the destinations they visit. With a forward-thinking mindset, we constantly seek out new opportunities to enhance the travel experience and leave a positive impact on the communities we touch.",
+  visionImage:
+    "https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=900&auto=format&fit=crop",
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -566,7 +595,8 @@ export type AboutUsData =
   | AboutUs10Data
   | AboutUs11Data
   | AboutUs12Data
-  | AboutUs13Data;
+  | AboutUs13Data
+  | AboutUs14Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -611,7 +641,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs10Data>
     | Partial<AboutUs11Data>
     | Partial<AboutUs12Data>
-    | Partial<AboutUs13Data>;
+    | Partial<AboutUs13Data>
+    | Partial<AboutUs14Data>;
   order?: number;
 }
 
@@ -648,6 +679,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-11": defaultAboutUs11Data,
   "about-12": defaultAboutUs12Data,
   "about-13": defaultAboutUs13Data,
+  "about-14": defaultAboutUs14Data,
 };
 
 // Type guards for each template
@@ -689,3 +721,6 @@ export const isAboutUsTemplate12 = (data: AboutUsData): data is AboutUs12Data =>
 
 export const isAboutUsTemplate13 = (data: AboutUsData): data is AboutUs13Data =>
   data.template === "about-13";
+
+export const isAboutUsTemplate14 = (data: AboutUsData): data is AboutUs14Data =>
+  data.template === "about-14";
