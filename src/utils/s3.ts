@@ -1,8 +1,10 @@
 import { siteConfig } from "@/config/site";
 import { apiFetch } from "@/lib/api-client";
 import { createHeaders } from "./headers";
+import { getAuthToken, getAuthTokenCustomer } from "./auth";
 const API_BASE_URL = siteConfig.apiBaseUrl;
 export const DEFAULT_MAX_IMAGE_SIZE = 500 * 1024; // 500kb
+
 export interface S3File {
   name: string;
   url: string;
@@ -46,7 +48,9 @@ export const uploadToS3 = async (
     formData.append("folder", folder);
 
     const response = await apiFetch(`${API_BASE_URL}/api/s3/upload/`, {
-      headers: createHeaders(),
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
       method: "POST",
       body: formData,
     });
@@ -68,7 +72,11 @@ export const listS3Files = async (
   folder: string = "nepdora"
 ): Promise<S3File[]> => {
   try {
-    const response = await apiFetch(`${API_BASE_URL}/api/s3/files/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/s3/files/`, {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    });
     if (!response.ok) throw new Error("Failed to list files");
     const data = await response.json();
     return data.files || [];
@@ -82,7 +90,10 @@ export const deleteS3Files = async (urls: string[]): Promise<void> => {
   try {
     const response = await apiFetch(`${API_BASE_URL}/api/s3/delete/`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ urls }),
     });
     if (!response.ok) throw new Error("Failed to delete file(s)");
