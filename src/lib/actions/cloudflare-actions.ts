@@ -1,5 +1,53 @@
 "use server";
 
+import { query } from "dns-query";
+
+export async function verifyDomainDNS(domainName: string) {
+  try {
+    console.log(`[DNS] Verifying domain ${domainName} using dns-query...`);
+
+    // Using well-known DoH endpoints for reliability
+    const endpoints = ["https://cloudflare-dns.com/dns-query", "https://dns.google/dns-query"];
+
+    // 1. Try to find NS records (best indicator of a valid registered domain)
+    const nsResult = await query(
+      {
+        question: { type: "NS", name: domainName },
+      },
+      { endpoints }
+    );
+
+    if (nsResult.answers && nsResult.answers.length > 0) {
+      console.log(`[DNS] Found NS records for ${domainName}, verification successful.`);
+      return { success: true };
+    }
+
+    // 2. Fallback to A records
+    const aResult = await query(
+      {
+        question: { type: "A", name: domainName },
+      },
+      { endpoints }
+    );
+
+    if (aResult.answers && aResult.answers.length > 0) {
+      console.log(`[DNS] Found A records for ${domainName}, verification successful.`);
+      return { success: true };
+    }
+
+    return {
+      success: false,
+      error: "Domain verification failed. No NS or A records found. Please ensure the domain is registered and has valid DNS records.",
+    };
+  } catch (error: any) {
+    console.error("[DNS] Exception during domain verification:", error);
+    return {
+      success: false,
+      error: `DNS verification failed: ${error.message || "Unknown error"}`,
+    };
+  }
+}
+
 export async function getAccountNameservers() {
   try {
     const apiToken = process.env.CLOUDFLARE_API_TOKEN;
@@ -159,6 +207,7 @@ export async function addDomainToCloudflare(domainName: string) {
     return {
       success: true,
       nameservers: nameServers,
+      zoneId,
     };
   } catch (error: any) {
     console.error("Cloudflare API Exception:", error);
@@ -231,6 +280,7 @@ export async function checkDomainVerificationStatus(domainName: string) {
 
 export async function checkDnsAndAddToCloudflare(domainName: string) {
   try {
+    console.log(`Checking DNS for ${domainName} using Cloudflare DoH...`);
     // 1. Resolve NS records securely using Cloudflare DNS-over-HTTPS (DoH)
     const response = await fetch(
       `https://cloudflare-dns.com/dns-query?name=${domainName}&type=NS`,
@@ -263,6 +313,8 @@ export async function checkDnsAndAddToCloudflare(domainName: string) {
       ns.toLowerCase().includes("cloudflare.com")
     );
 
+    console.log(`Found NS records for ${domainName}:`, nsRecords);
+
     if (!hasCloudflareNs) {
       return {
         success: false,
@@ -271,6 +323,9 @@ export async function checkDnsAndAddToCloudflare(domainName: string) {
     }
 
     // 3. DNS is valid! Proceed to add to Cloudflare.
+    console.log(
+      `DNS check passed for ${domainName}. Proceeding to add to Cloudflare...`
+    );
     const addResult = await addDomainToCloudflare(domainName);
 
     if (!addResult.success) {
@@ -296,10 +351,11 @@ export async function addVercelDnsRecords(zoneId: string, domainName: string) {
   try {
     const apiToken = process.env.CLOUDFLARE_API_TOKEN;
     if (!apiToken) {
+      console.error("Cloudflare API Token missing during record creation.");
       return { success: false, error: "Cloudflare API Token not configured." };
     }
 
-    console.log(`Adding DNS records for ${domainName} in zone ${zoneId}`);
+    console.log(`[DNS] Adding records for ${domainName} in zone ${zoneId}`);
 
     // root domain A record
     const aRecordRes = await fetch(
@@ -321,7 +377,24 @@ export async function addVercelDnsRecords(zoneId: string, domainName: string) {
     );
 
     const aRecordData = await aRecordRes.json();
-    console.log("A Record Response:", aRecordData);
+
+    if (!aRecordData.success) {
+      // 81058: The record already exists.
+      if (aRecordData.errors?.[0]?.code === 81058) {
+        console.log(`[DNS] A record (@) already exists for ${domainName}.`);
+      } else {
+        console.error(
+          `[DNS] Failed to add A record:`,
+          JSON.stringify(aRecordData.errors)
+        );
+        return {
+          success: false,
+          error: aRecordData.errors?.[0]?.message || "Failed to add A record",
+        };
+      }
+    } else {
+      console.log(`[DNS] Successfully added A record (@) for ${domainName}.`);
+    }
 
     // www CNAME record
     const cnameRes = await fetch(
@@ -343,15 +416,35 @@ export async function addVercelDnsRecords(zoneId: string, domainName: string) {
     );
 
     const cnameData = await cnameRes.json();
-    console.log("CNAME Record Response:", cnameData);
+
+    if (!cnameData.success) {
+      // 81058: The record already exists.
+      if (cnameData.errors?.[0]?.code === 81058) {
+        console.log(
+          `[DNS] CNAME record (www) already exists for ${domainName}.`
+        );
+      } else {
+        console.error(
+          `[DNS] Failed to add CNAME record:`,
+          JSON.stringify(cnameData.errors)
+        );
+        return {
+          success: false,
+          error: cnameData.errors?.[0]?.message || "Failed to add CNAME record",
+        };
+      }
+    } else {
+      console.log(
+        `[DNS] Successfully added CNAME record (www) for ${domainName}.`
+      );
+    }
 
     return {
       success: true,
-      aRecord: aRecordData,
-      cnameRecord: cnameData,
+      message: "DNS records provisioned successfully.",
     };
   } catch (error: any) {
-    console.error("Failed to add DNS records:", error);
+    console.error("[DNS] Exception adding DNS records:", error);
     return {
       success: false,
       error: error.message || "Failed to add DNS records",

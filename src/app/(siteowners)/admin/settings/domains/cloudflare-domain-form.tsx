@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -5,6 +6,8 @@ import {
   addDomainToCloudflare,
   checkDomainVerificationStatus,
   checkDnsAndAddToCloudflare,
+  addVercelDnsRecords,
+  verifyDomainDNS,
 } from "@/lib/actions/cloudflare-actions";
 import {
   saveCustomDomain,
@@ -384,10 +387,27 @@ export default function CloudflareDomainForm({
     setError(null);
     setNewDomainAdded(false);
 
+    // 1. Verify Domain via DNS-Query Package first
+    const verifyResult = await verifyDomainDNS(domain);
+    if (!verifyResult.success) {
+      setError(verifyResult.error || "Domain could not be verified. Ensure it is registered and has active DNS records.");
+      setIsLoading(false);
+      return;
+    }
+
+    // 2. Only proceed if DNS is verified
+    console.log(`Domain ${domain} verified successfully. Proceeding with Cloudflare and Vercel setup.`);
+
     const saveResult = await saveCustomDomain(domain);
     if (saveResult.success && saveResult.domain) {
       // PROACTIVE: Add to Cloudflare immediately so we get real nameservers
-      await addDomainToCloudflare(domain);
+      const cfRes = await addDomainToCloudflare(domain);
+
+      // PROACTIVE: Add DNS records immediately if we have a zoneId
+      if (cfRes.success && cfRes.zoneId) {
+        console.log(`Proactively adding DNS records for ${domain}...`);
+        await addVercelDnsRecords(cfRes.zoneId, domain);
+      }
 
       // PROACTIVE: Add to Vercel immediately so it's visible in Vercel console right away
       const vercelRes = await addDomainToVercel(domain);
