@@ -106,7 +106,6 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        variants={fadeInUp}
       >
         {country.Image && (
           <Image
