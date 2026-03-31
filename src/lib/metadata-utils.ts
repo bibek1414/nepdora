@@ -16,6 +16,7 @@ interface AdminPageMetadataOptions {
 
 interface SiteConfigMetadata {
   favicon?: string | null;
+  business_name?: string | null;
 }
 
 interface PublishContentMetadata {
@@ -362,8 +363,23 @@ export async function generatePublishPageMetadata({
   // Extract subdomain from the actual request
   const subDomain = extractSubdomain(url);
 
-  // Use subdomain as store name or fallback
-  const storeName = capitalizeWords(subDomain || "Nepdora");
+  // Determine fallback store name from host if subdomain is missing (for custom domains)
+  let fallbackName = "Nepdora";
+  if (!subDomain) {
+    const hostParts = host.split(".");
+    if (hostParts[0] === "www" && hostParts.length > 2) {
+      fallbackName = hostParts[1];
+    } else if (host !== siteConfig.baseDomain) {
+      fallbackName = hostParts[0];
+    }
+  } else {
+    fallbackName = subDomain;
+  }
+
+  // Use business name from metadata if available, otherwise use the derived fallback
+  const storeName = capitalizeWords(
+    siteMetadata?.business_name || fallbackName
+  );
 
   const title = `${storeName} | ${pageName}`;
   const description = pageDescription.replace(/\{storeName\}/g, storeName);
