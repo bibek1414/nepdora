@@ -26,6 +26,7 @@ import { motion } from "framer-motion";
 // Template Card Component
 interface TemplateCardProps {
   template: Template;
+  onImportSuccess?: () => void;
 }
 
 const formatTemplateName = (name: string): string => {
@@ -35,11 +36,10 @@ const formatTemplateName = (name: string): string => {
     .join(" ");
 };
 
-export const TemplateCard = ({ template }: TemplateCardProps) => {
+export const TemplateCard = ({ template, onImportSuccess }: TemplateCardProps) => {
   const router = useRouter();
   const { user } = useAuth();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const { mutate: importTemplate, isPending } = useImportTemplate();
   const { openPreview } = usePreviewTemplate();
 
@@ -65,7 +65,9 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
     importTemplate(template.id, {
       onSuccess: () => {
         setShowConfirmDialog(false);
-        setShowLoadingScreen(true);
+        if (onImportSuccess) {
+          onImportSuccess();
+        }
 
         // Navigate to builder after 5 seconds
         setTimeout(() => {
@@ -81,15 +83,12 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
       onError: error => {
         console.error("Import failed:", error);
         setShowConfirmDialog(false);
-        setShowLoadingScreen(false);
       },
     });
   };
 
   return (
     <>
-      <LoadingScreen isVisible={showLoadingScreen} />
-
       <motion.div
         layout
         initial={{ opacity: 0, y: 20 }}

@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { useGetTemplates } from "@/hooks/owner-site/admin/use-template";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Pagination from "@/components/ui/pagination";
 import { TemplateCard } from "./template-card";
 import { Search, X, Layout } from "lucide-react";
 import useDebouncer from "@/hooks/use-debouncer";
+import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
 
 const TemplateList = () => {
   const [filters, setFilters] = useState({
@@ -18,6 +18,7 @@ const TemplateList = () => {
     page_size: 12,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const debouncedSearchTerm = useDebouncer(searchTerm, 300);
 
   useEffect(() => {
@@ -106,7 +107,7 @@ const TemplateList = () => {
               Error loading templates. Please try again later.
             </AlertDescription>
           </Alert>
-        ) : isLoading || isFetching ? (
+        ) : isLoading ? (
           <LoadingSkeleton />
         ) : !templatesData ||
           !templatesData.results ||
@@ -133,7 +134,11 @@ const TemplateList = () => {
           <>
             <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {templatesData.results.map(template => (
-                <TemplateCard key={template.id} template={template} />
+                <TemplateCard
+                  key={template.id}
+                  template={template}
+                  onImportSuccess={() => setShowLoadingScreen(true)}
+                />
               ))}
             </div>
 
@@ -149,6 +154,7 @@ const TemplateList = () => {
           </>
         )}
       </div>
+      <LoadingScreen isVisible={showLoadingScreen} />
     </div>
   );
 };

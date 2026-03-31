@@ -22,9 +22,6 @@ export const useImportTemplate = () => {
       return templateAPI.importTemplate(templateId);
     },
     onSuccess: data => {
-      // Invalidate relevant queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ["templates"] });
-
       console.log("Template imported successfully:", data);
     },
     onError: error => {
