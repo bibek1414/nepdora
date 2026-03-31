@@ -9,10 +9,12 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 export async function getDomains(
   page = 1,
   pageSize = 10,
-  paymentEnabled?: boolean
+  paymentEnabled?: boolean,
+  search?: string
 ): Promise<PaginatedResponse<Domain>> {
   let url = `${API_BASE_URL}/api/domains/?page=${page}&page_size=${pageSize}`;
   if (paymentEnabled) url += "&payment=enabled";
+  if (search) url += `&search=${encodeURIComponent(search)}`;
 
   const res = await apiFetch(url, {
     method: "GET",

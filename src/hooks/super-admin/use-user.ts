@@ -7,16 +7,17 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 // GET users
 export async function getUsers(
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
+  search?: string
 ): Promise<PaginatedResponse<User>> {
-  const res = await fetch(
-    `${API_BASE_URL}/api/user-lists/?page=${page}&page_size=${pageSize}`,
-    {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    }
-  );
+  let url = `${API_BASE_URL}/api/user-lists/?page=${page}&page_size=${pageSize}`;
+  if (search) url += `&search=${encodeURIComponent(search)}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store",
+  });
 
   if (!res.ok) throw new Error("Failed to fetch users");
   return res.json();
@@ -33,10 +34,10 @@ export async function deleteUser(userId: number): Promise<void> {
 }
 
 // React Query hooks
-export function useUsers(page: number, pageSize: number) {
+export function useUsers(page: number, pageSize: number, search?: string) {
   return useQuery<PaginatedResponse<User>, Error>({
-    queryKey: ["users", page, pageSize],
-    queryFn: () => getUsers(page, pageSize),
+    queryKey: ["users", page, pageSize, search],
+    queryFn: () => getUsers(page, pageSize, search),
   });
 }
 

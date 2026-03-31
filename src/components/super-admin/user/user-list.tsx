@@ -5,7 +5,10 @@ import UserTable from "@/components/super-admin/user/user-table";
 import Pagination from "@/components/ui/pagination";
 import { useUsers, useDeleteUser } from "@/hooks/super-admin/use-user";
 import { Button } from "@/components/ui/button";
-import { Trash2, Users } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useDebouncer } from "@/hooks/use-debouncer";
+import { Trash2, Users, Search } from "lucide-react";
+import { useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,9 +23,20 @@ import {
 export default function UsersPage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebouncer(searchTerm, 500);
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
 
-  const { data, isLoading, isError, error } = useUsers(page, pageSize);
+  const { data, isLoading, isError, error } = useUsers(
+    page,
+    pageSize,
+    debouncedSearch
+  );
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
   const deleteUserMutation = useDeleteUser();
 
   const handleDeleteClick = (userId: number) => {
@@ -75,9 +89,20 @@ export default function UsersPage() {
             Manage system users and their store associations
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <Users size={16} />
-          <span>Total: {data?.count || 0} users</span>
+        <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
+          <div className="relative w-full max-w-sm sm:w-80">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder="Search users..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-500 whitespace-nowrap">
+            <Users size={16} />
+            <span>Total: {data?.count || 0} users</span>
+          </div>
         </div>
       </div>
 

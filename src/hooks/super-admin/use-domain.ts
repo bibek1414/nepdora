@@ -13,10 +13,10 @@ import { Domain } from "@/types/super-admin/domain";
 
 // ── Query ─────────────────────────────────────────────────────────────────────
 
-export function useDomains(page: number, pageSize: number) {
+export function useDomains(page: number, pageSize: number, search?: string) {
   return useQuery<PaginatedResponse<Domain>, Error>({
-    queryKey: ["domains", page, pageSize],
-    queryFn: () => getDomains(page, pageSize),
+    queryKey: ["domains", page, pageSize, search],
+    queryFn: () => getDomains(page, pageSize, undefined, search),
   });
 }
 

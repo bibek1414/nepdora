@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, Search } from "lucide-react";
 
 import DomainTable from "@/components/super-admin/domain/domain-table";
 import { DomainDetailsDialog } from "@/components/super-admin/domain/domain-details-dialog";
 import Pagination from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useDebouncer } from "@/hooks/use-debouncer";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,11 +27,19 @@ import { Domain } from "@/types/super-admin/domain";
 export default function DomainsPage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(30);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebouncer(searchTerm, 500);
 
   const { data, isLoading, isError, error, refetch } = useDomains(
     page,
-    pageSize
+    pageSize,
+    debouncedSearch
   );
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
   const deleteMutation = useDeleteDomain();
 
   // Dialog states
@@ -107,6 +117,15 @@ export default function DomainsPage() {
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Domains</h1>
+        </div>
+        <div className="relative w-full max-w-sm sm:w-80">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search domains..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="pl-9"
+          />
         </div>
       </div>
       {/* Main Table */}
