@@ -37,6 +37,7 @@ import {
   useCreateComponentMutation,
   useGenericReplaceComponentMutation,
 } from "@/hooks/owner-site/components/use-unified";
+import { useResetUi } from "@/hooks/owner-site/components/use-reset-ui";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
 import { StickyFormattingToolbar } from "./sticky-formatting-toolbar";
 import BuilderSkeleton from "./builder-skeleton";
@@ -53,6 +54,12 @@ import {
   DEFAULT_SIGNUP_MAP,
 } from "@/types/owner-site/components/auth-form-map";
 import { DEFAULT_COUNTRY_DETAILS_MAP } from "@/types/owner-site/components/countries";
+import { MetaBar } from "./meta-bar";
+import { SEOModal } from "./seo-modal";
+import { PublishModal } from "./publish-modal";
+import { LiveSiteModal } from "./live-site-modal";
+import { ResetConfirmationModal } from "./reset-confirmation-modal";
+import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 
 interface BuilderLayoutProps {
   params: {
@@ -75,7 +82,24 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     string | undefined
   >(undefined);
   const [pendingReplaceId, setPendingReplaceId] = useState<string | null>(null);
+  const [deviceMode, setDeviceMode] = useState<"desktop" | "tablet" | "mobile">(
+    "desktop"
+  );
+  const [hasChanges, setHasChanges] = useState(false);
+  const [isSEOModalOpen, setIsSEOModalOpen] = useState(false);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [isLiveSiteModalOpen, setIsLiveSiteModalOpen] = useState(false);
+  const [isResetConfirmationModalOpen, setIsResetConfirmationModalOpen] =
+    useState(false);
 
+  // SEO state
+  const [seoMetadata, setSeoMetadata] = useState({
+    title: "Premium Eyewear Made for Nepal",
+    description:
+      "Thoughtfully designed eyewear that blends comfort, clarity, and modern style for everyday life.",
+    slug: "/" + pageSlug,
+    isIndexed: true,
+  });
   // Dialog states
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
   const [isPageTemplateDialogOpen, setIsPageTemplateDialogOpen] =
@@ -88,6 +112,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createFooterMutation = useCreateFooterMutation();
   const replaceFooterMutation = useReplaceFooterMutation();
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
+
+  const { mutate: resetUi, isPending: isResetUiPending } = useResetUi();
+  const { mutate: publish, isPending: isPublishPending } = usePublishSite();
 
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
@@ -110,6 +137,55 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     error: pageComponentsError,
   } = usePageComponentsQuery(pageSlug);
 
+  // Persistence logic: Detect unpublished changes on mount
+  useEffect(() => {
+    if (pageComponentsResponse && Array.isArray(pageComponentsResponse)) {
+      const hasDrafts = pageComponentsResponse.some(
+        (comp: any) =>
+          comp.status === "draft" ||
+          comp.status === "modified" ||
+          comp.is_draft === true
+      );
+      if (hasDrafts) {
+        setHasChanges(true);
+      }
+    }
+  }, [pageComponentsResponse]);
+
+  const handleSaveSEO = (data: typeof seoMetadata) => {
+    setSeoMetadata(data);
+    setHasChanges(true);
+    toast.success("SEO metadata updated locally");
+  };
+
+  const handlePublish = async () => {
+    publish(undefined, {
+      onSuccess: () => {
+        setHasChanges(false);
+        setIsPublishModalOpen(false);
+        setIsLiveSiteModalOpen(true);
+      },
+    });
+  };
+
+  const handleUndo = () => {
+    if (!hasChanges) return;
+    setIsResetConfirmationModalOpen(true);
+  };
+
+  const handleConfirmReset = () => {
+    resetUi(undefined, {
+      onSuccess: () => {
+        setHasChanges(false);
+        setIsResetConfirmationModalOpen(false);
+        toast.success("Site reset successfully");
+      },
+      onError: () => {
+        setIsResetConfirmationModalOpen(false);
+      },
+    });
+  };
+
   const [droppedComponents, setDroppedComponents] = useState<
     ComponentResponse[]
   >([]);
@@ -119,6 +195,19 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Mutations
   const createComponentMutation = useCreateComponentMutation(pageSlug);
   const replaceComponentMutation = useGenericReplaceComponentMutation(pageSlug);
+
+  // Wrap mutations to track changes
+  const createComponent = async (args: any) => {
+    const res = await createComponentMutation.mutateAsync(args);
+    setHasChanges(true);
+    return res;
+  };
+
+  const replaceComponent = async (args: any) => {
+    const res = await replaceComponentMutation.mutateAsync(args);
+    setHasChanges(true);
+    return res;
+  };
   const createProductDetailsComponentMutation =
     useCreateComponentMutation("product-details");
   const createBlogDetailsComponentMutation =
@@ -190,7 +279,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
     try {
       if (mode === "replace" && replaceId) {
-        const result = await replaceComponentMutation.mutateAsync({
+        const result = await replaceComponent({
           componentId: replaceId,
           componentType,
           data,
@@ -199,7 +288,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         });
         componentId = result.component_id;
       } else {
-        const result = await createComponentMutation.mutateAsync({
+        const result = await createComponent({
           componentType,
           data,
           insertIndex,
@@ -742,10 +831,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   };
 
   const handlePageCreated = (page: Page) => {
+    setHasChanges(true);
     router.push(`/builder/${siteUser}/${page.slug}`);
   };
 
   const handlePageDeleted = (deletedSlug: string) => {
+    setHasChanges(true);
     if (currentPage === deletedSlug && pagesData.length > 1) {
       const remainingPages = pagesData.filter(
         page => page.slug !== deletedSlug
@@ -829,6 +920,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     if (pendingCategoryFilter === "navbar-sections") {
       replaceNavbarMutation.mutate(payload, {
         onSuccess: () => {
+          setHasChanges(true);
           setPendingCategoryFilter(undefined);
           setPendingReplaceId(null);
           // Auto-create service details page if Navbar Style 14 is selected
@@ -843,6 +935,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     } else {
       createNavbarMutation.mutate(payload, {
         onSuccess: () => {
+          setHasChanges(true);
           // Auto-create service details page if Navbar Style 14 is selected
           if (finalData.style === "style-14") {
             ensureServiceDetailsPageExists();
@@ -894,6 +987,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     if (pendingCategoryFilter === "footer-sections") {
       replaceFooterMutation.mutate(payload, {
         onSuccess: () => {
+          setHasChanges(true);
           setPendingCategoryFilter(undefined);
           setPendingReplaceId(null);
           if (footerData.style === "style-12") {
@@ -907,6 +1001,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     } else {
       createFooterMutation.mutate(payload, {
         onSuccess: () => {
+          setHasChanges(true);
           // Auto-create service details page if Navbar Style 14 is selected
           if (footerData.style === "style-12") {
             ensureServiceDetailsPageExists();
@@ -1015,12 +1110,57 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
         {/* Top Navigation */}
         <TopNavigation
-          pages={pagesData}
-          currentPage={currentPage}
-          siteUser={siteUser}
-          onPageChange={handlePageChange}
+          hasChanges={hasChanges}
+          onUndo={handleUndo}
+          isUndoPending={isResetUiPending}
+          onPublish={() => setIsPublishModalOpen(true)}
+          onOpenTheme={() => {}}
+          onOpenLiveSite={() => setIsLiveSiteModalOpen(true)}
+          onOpenPreview={() => setIsPublishModalOpen(true)}
+          liveSiteUrl={
+            siteUser
+              ? `https://${siteUser}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`
+              : "/"
+          }
+        />
+        {/* MetaBar moved to CanvasArea */}
+        <SEOModal
+          open={isSEOModalOpen}
+          onOpenChange={setIsSEOModalOpen}
+          pageTitle={pagesData.find(p => p.slug === pageSlug)?.title || "Page"}
+          initialData={seoMetadata}
+          onSave={handleSaveSEO}
         />
 
+        <PublishModal
+          open={isPublishModalOpen}
+          onOpenChange={setIsPublishModalOpen}
+          onPublish={handlePublish}
+          isPublishing={isPublishPending}
+          previewUrl={`/preview/${siteUser}/${pageSlug}`}
+          publishStatus={{
+            reviewed: true,
+            seoSet: true,
+            ready: true,
+          }}
+        />
+
+        <ResetConfirmationModal
+          open={isResetConfirmationModalOpen}
+          onOpenChange={setIsResetConfirmationModalOpen}
+          onConfirm={handleConfirmReset}
+          isReseting={isResetUiPending}
+        />
+
+        <LiveSiteModal
+          open={isLiveSiteModalOpen}
+          onOpenChange={setIsLiveSiteModalOpen}
+          siteUrl={
+            siteUser
+              ? `https://${siteUser}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`
+              : "https://yourdomain.com"
+          }
+        />
         {/* Sticky Formatting Toolbar */}
         <StickyFormattingToolbar />
 
@@ -1053,6 +1193,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     error={pageComponentsError}
                     onAddSection={handleAddSection}
                     onReplaceSection={handleReplaceSection}
+                    onOrderChange={() => setHasChanges(true)}
                     onProductClick={() => {
                       router.push(`/builder/${siteUser}/product-details`);
                     }}
@@ -1065,6 +1206,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     onServiceClick={() => {
                       router.push(`/builder/${siteUser}/service-details`);
                     }}
+                    seoMetadata={seoMetadata}
+                    onEditSEO={() => setIsSEOModalOpen(true)}
                   />
                 </div>
               </div>

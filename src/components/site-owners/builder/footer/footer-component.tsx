@@ -41,6 +41,7 @@ interface FooterProps {
   isEditable?: boolean;
   siteUser?: string;
   onReplace?: (category: string) => void;
+  onUpdate?: () => void;
 }
 
 const defaultFooterData: FooterData = {
@@ -107,6 +108,7 @@ export function Footer({
   isEditable = false,
   siteUser,
   onReplace,
+  onUpdate,
 }: FooterProps) {
   const [showEditor, setShowEditor] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -172,12 +174,14 @@ export function Footer({
       id: footer.id,
       data: newData,
     });
+    onUpdate?.();
     setShowEditor(false);
   };
 
   const handleConfirmDelete = () => {
     if (!isEditable) return;
     deleteFooter(footer.id);
+    onUpdate?.();
     setIsDeleteDialogOpen(false);
   };
 
@@ -251,6 +255,7 @@ export function Footer({
             id: footer.id,
             data: { ...footerData, ...newData },
           });
+          onUpdate?.();
         }}
       />
 

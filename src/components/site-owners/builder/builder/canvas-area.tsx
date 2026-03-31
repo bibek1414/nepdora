@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 import { ComponentTypeMap } from "@/types/owner-site/components/components";
 import { CanvasSkeleton } from "./builder-skeleton";
+import { MetaBar } from "./meta-bar";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -37,6 +38,15 @@ interface CanvasAreaProps {
   onBlogClick?: (blogSlug: string, order: number) => void;
   onPortfolioClick?: (portfolioSlug: string, order: number) => void;
   onServiceClick?: (serviceSlug: string, order: number) => void;
+  // SEO props
+  seoMetadata?: {
+    title: string;
+    description: string;
+    slug: string;
+    isIndexed: boolean;
+  };
+  onEditSEO?: () => void;
+  onOrderChange?: () => void;
 }
 
 export const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -53,6 +63,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onBlogClick,
   onPortfolioClick,
   onServiceClick,
+  seoMetadata,
+  onEditSEO,
+  onOrderChange,
 }) => {
   // Local state to manage component order optimistically
   const [pageComponents, setPageComponents] = useState<ComponentResponse[]>(
@@ -96,8 +109,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
       // Update the backend
       updateOrderMutation.mutate({ orderUpdates });
+
+      // Signal that changes have been made
+      onOrderChange?.();
     },
-    [pageComponents, updateOrderMutation]
+    [pageComponents, updateOrderMutation, onOrderChange]
   );
 
   // Handle drag end
@@ -167,7 +183,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       siteUser: "", // siteUser not needed in builder cards for most components
       pageSlug: currentPageSlug,
       onReplace: onReplaceSection,
-      onUpdate: () => {}, // Handled by individual components internally via hooks
+      onUpdate: () => onOrderChange?.(), 
     };
 
     // Specific props (empty handlers for builder mode)
@@ -300,6 +316,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
+      {/* SEO Meta Section */}
+      {seoMetadata && onEditSEO && (
+        <MetaBar
+          title={seoMetadata.title}
+          description={seoMetadata.description}
+          slug={seoMetadata.slug}
+          isIndexed={seoMetadata.isIndexed}
+          onEdit={onEditSEO}
+        />
+      )}
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative mb-4 border-b">
@@ -307,6 +333,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             navbar={navbar}
             siteUser=""
             onReplace={category => onReplaceSection("navbar", category)}
+            onUpdate={() => onOrderChange?.()}
           />
         </div>
       ) : null}
@@ -367,6 +394,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             isEditable={true}
             siteUser=""
             onReplace={() => onReplaceSection(footer.id, "footer-sections")}
+            onUpdate={() => onOrderChange?.()}
           />
         </div>
       ) : null}

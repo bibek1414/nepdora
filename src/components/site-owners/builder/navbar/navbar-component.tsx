@@ -43,6 +43,7 @@ interface NavbarComponentProps {
   siteUser: string;
   disableClicks?: boolean;
   onReplace?: (category: string) => void;
+  onUpdate?: () => void;
 }
 
 const styleMap = {
@@ -77,6 +78,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
   siteUser,
   disableClicks = false,
   onReplace,
+  onUpdate,
 }) => {
   const { user } = useAuth();
   const { mutate: updateNavbar, isPending: isUpdating } =
@@ -104,12 +106,14 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
       id: navbar.id,
       data: { ...navbarData, ...data },
     });
+    onUpdate?.();
   };
 
   const handleDeleteNavbar = () => {
     if (!isEditable) return;
 
     deleteNavbar(navbar.id);
+    onUpdate?.();
   };
 
   const handleUpdateBanner = (bannerText: string) => {
@@ -122,6 +126,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         bannerText: bannerText,
       },
     });
+    onUpdate?.();
   };
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleUpdateTopBar = (topBarItems: any[]) => {
@@ -134,6 +139,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         topBarItems: topBarItems,
       },
     });
+    onUpdate?.();
   };
 
   const handleEditLink = (link: NavbarLink) => {
@@ -150,7 +156,9 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         links: updatedLinks,
       },
     });
+    onUpdate?.();
   };
+
 
   const handleDeleteLink = (linkId: string) => {
     if (!isEditable) return;
@@ -164,7 +172,9 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         links: updatedLinks,
       },
     });
+    onUpdate?.();
   };
+
 
   const handleAddLink = () => {
     if (!isEditable) return;
@@ -182,6 +192,7 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
         links: [...navbarData.links, newLink],
       },
     });
+    onUpdate?.();
   };
 
   const StyleComponent =

@@ -1,58 +1,44 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Page } from "@/types/owner-site/components/page";
 import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import {
   ArrowLeft,
   Palette,
-  ExternalLink,
   RotateCcw,
-  Loader2,
   Upload,
+  ExternalLinkIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
-import { useResetUi } from "@/hooks/owner-site/components/use-reset-ui";
-import { useCustomDomain } from "@/hooks/use-custom-domain";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Globe, Eye } from "lucide-react";
+import { cn } from "@/lib/utils";
+import "@/components/site-owners/builder/builder/builder.css";
 
 interface TopNavigationProps {
-  pages: Page[];
-  currentPage: string;
-  onPageChange: (pageSlug: string) => void;
-  siteUser: string;
-  isSidebarCollapsed?: boolean;
+  hasChanges: boolean;
+  onUndo: () => void;
+  isUndoPending?: boolean;
+  onPublish: () => void;
+  onOpenTheme: () => void;
+  onOpenLiveSite: () => void;
+  onOpenPreview: () => void;
+  liveSiteUrl: string;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
-  pages,
-  currentPage,
-  onPageChange,
-  siteUser,
-  isSidebarCollapsed = false,
+  hasChanges,
+  onUndo,
+  onPublish,
+  onOpenLiveSite,
+  onOpenPreview,
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
-  const { mutate: publish, isPending } = usePublishSite();
-  const { mutate: resetUi, isPending: isResetUiPending } = useResetUi();
-  const { customDomain } = useCustomDomain();
-
-  const liveSiteUrl = customDomain ? `https://${customDomain}` : "/";
 
   return (
     <header className="fixed top-0 right-0 left-0 z-45 h-16 border-b bg-white">
-      <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="flex h-full items-center justify-between px-4">
         {/* Left Section - Dashboard & Page Management */}
         <div className="flex items-center gap-4">
+          <img src="/nepdora-logooo.svg" className="mr-3" />
           {/* Dashboard Button */}
           <Link href="/admin" target="_blank" rel="noopener noreferrer">
             <Button
@@ -64,10 +50,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               Dashboard
             </Button>
           </Link>
-        </div>
-
-        {/* Right Section - Actions */}
-        <div className="flex items-center space-x-2">
           <Button
             variant="outline"
             onClick={() => setIsThemeDialogOpen(true)}
@@ -76,69 +58,38 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <Palette className="mr-2 h-4 w-4" />
             Theme Settings
           </Button>
+        </div>
 
-          <Link href={liveSiteUrl} target="_blank" rel="noopener noreferrer">
-            <Button
-              variant="outline"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-            >
-              Live Site
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+        {/* Right Section - Actions */}
+        <div className="flex items-center space-x-2">
+          <button className="builder-btn-outline" onClick={onOpenLiveSite}>
+            <Globe className="h-3.5 w-3.5" />
+            Live site
+            <ExternalLinkIcon className="text-builder-text-muted ml-1 h-2.5 w-2.5" />
+          </button>
+          <button className="builder-btn-ghost" onClick={onOpenPreview}>
+            <Eye className="h-3.5 w-3.5" />
+            Preview
+            {hasChanges && (
+              <span className="ml-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-amber-700 uppercase">
+                edits
+              </span>
+            )}
+          </button>
+          <button
+            className={cn("builder-btn-undo", hasChanges && "has-changes")}
+            onClick={onUndo}
+            title="Undo unsaved changes"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Undo changes
+          </button>
 
-          <Link
-            href={`/preview/${siteUser}/${currentPage}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="outline"
-              className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-            >
-              Preview
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-                disabled={isResetUiPending}
-              >
-                <RotateCcw className="mr-2 h-4 w-4" />
-                {isResetUiPending ? "Resetting..." : "Reset UI"}
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action will reset all your changes to the published
-                  version. This cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => resetUi()}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                >
-                  Yes, reset everything
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <Button
-            variant="outline"
-            className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-            onClick={() => publish()}
-            disabled={isPending}
-          >
-            <Upload className="mr-2 h-4 w-4" />
-            {isPending ? "Publishing..." : "Publish"}
-          </Button>
+
+          <button className="builder-btn-publish group" onClick={onPublish}>
+            <Upload className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-px" />
+            Publish changes
+          </button>
         </div>
       </div>
 
@@ -147,22 +98,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         open={isThemeDialogOpen}
         onOpenChange={setIsThemeDialogOpen}
       />
-      {/* Reset UI Loading Overlay */}
-      {isResetUiPending && (
-        <div className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
-          <div className="flex flex-col items-center gap-4 text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Resetting your site...
-              </h3>
-              <p className="text-sm text-gray-500">
-                Reverting changes and fetching the latest data.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
+
