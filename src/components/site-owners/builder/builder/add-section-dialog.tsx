@@ -1178,6 +1178,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.countries,
       type: "countries" as any,
+      isSpecialized: true,
       popular: true,
     },
     {
