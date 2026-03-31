@@ -10,6 +10,7 @@ export interface Newsletter {
 export interface CreateNewsletterRequest {
   email: string;
   is_subscribed?: boolean;
+  website_url?: string;
 }
 
 export interface CreateNewsletterResponse {

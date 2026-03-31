@@ -19,6 +19,7 @@ import {
   useSubmitAppointmentForm,
   useGetAppointmentReasons,
 } from "@/hooks/owner-site/admin/use-appointment";
+import { toast } from "sonner";
 
 interface AppointmentForm1Props {
   data: AppointmentData;
@@ -43,6 +44,7 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
     date: "",
     time: "",
     reason_id: undefined,
+    website_url: "",
   });
   const [formErrors, setFormErrors] = useState<Record<string, string[]>>({});
 
@@ -67,6 +69,22 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
     e.preventDefault();
     setFormErrors({});
 
+    if (formData.website_url) {
+      setFormData({
+        full_name: "",
+        email: "",
+        phone: "",
+        message: "",
+        date: "",
+        time: "",
+        reason_id: undefined,
+        website_url: "",
+      });
+      setFormErrors({});
+      toast.success("Successfully booked!");
+      return;
+    }
+
     if (!isPreview && siteUser) {
       submitAppointment.mutate(formData, {
         onSuccess: () => {
@@ -78,6 +96,7 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
             date: "",
             time: "",
             reason_id: undefined,
+            website_url: "",
           });
           setFormErrors({});
         },
@@ -106,6 +125,16 @@ export const AppointmentForm1: React.FC<AppointmentForm1Props> = ({
       <Card className="bg-white shadow-lg">
         <CardContent className="p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot field */}
+            <input
+              type="text"
+              name="website_url"
+              className="sr-only"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.website_url}
+              onChange={handleInputChange}
+            />
             {/* Full Name */}
             <div>
               <Label htmlFor="full_name" className="text-sm font-medium">

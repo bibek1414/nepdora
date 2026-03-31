@@ -28,6 +28,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
     name: "",
     phone_number: "",
     message: "",
+    website_url: "",
   });
 
   const { data: siteConfig } = useSiteConfig();
@@ -36,11 +37,22 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (formData.website_url) {
+      setFormData({
+        name: "",
+        phone_number: "",
+        message: "",
+        website_url: "",
+      });
+      return;
+    }
+
     if (isPreview) {
       setFormData({
         name: "",
         phone_number: "",
         message: "",
+        website_url: "",
       });
       return;
     }
@@ -52,6 +64,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
             name: "",
             phone_number: "",
             message: "",
+            website_url: "",
           });
         },
         onError: (error: any) => {
@@ -63,6 +76,7 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
         name: "",
         phone_number: "",
         message: "",
+        website_url: "",
       });
     }
   };
@@ -223,6 +237,16 @@ export const ContactForm3: React.FC<ContactForm3Props> = ({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot field */}
+            <input
+              type="text"
+              name="website_url"
+              className="sr-only"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.website_url}
+              onChange={handleInputChange}
+            />
             {/* Full Name */}
             <label className="flex flex-col gap-2">
               <span className="text-sm font-semibold">Name</span>

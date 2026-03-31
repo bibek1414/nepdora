@@ -38,6 +38,7 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
     email: "",
     phone_number: "",
     message: "",
+    website_url: "",
   });
 
   const { data: themeResponse } = useThemeQuery();
@@ -62,12 +63,24 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (formData.website_url) {
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
+        website_url: "",
+      });
+      return;
+    }
+
     if (isPreview) {
       setFormData({
         name: "",
         email: "",
         phone_number: "",
         message: "",
+        website_url: "",
       });
       return;
     }
@@ -80,6 +93,7 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
             email: "",
             phone_number: "",
             message: "",
+            website_url: "",
           });
         },
       });
@@ -89,6 +103,7 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
         email: "",
         phone_number: "",
         message: "",
+        website_url: "",
       });
     }
   };
@@ -184,6 +199,16 @@ export const ContactForm1: React.FC<ContactForm1Props> = ({
 
             <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm md:p-10">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot field */}
+                <input
+                  type="text"
+                  name="website_url"
+                  className="sr-only"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website_url}
+                  onChange={handleInputChange}
+                />
                 {/* Full Name */}
                 <label className="flex flex-col gap-2">
                   <span className="text-sm font-medium text-gray-700">

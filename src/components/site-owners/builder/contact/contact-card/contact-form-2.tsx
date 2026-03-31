@@ -29,6 +29,7 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
     email: "",
     phone_number: "",
     message: "",
+    website_url: "",
   });
 
   const { data: themeResponse } = useThemeQuery();
@@ -53,12 +54,24 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (formData.website_url) {
+      setFormData({
+        name: "",
+        email: "",
+        phone_number: "",
+        message: "",
+        website_url: "",
+      });
+      return;
+    }
+
     if (isPreview) {
       setFormData({
         name: "",
         email: "",
         phone_number: "",
         message: "",
+        website_url: "",
       });
       return;
     }
@@ -71,6 +84,7 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
             email: "",
             phone_number: "",
             message: "",
+            website_url: "",
           });
         },
         onError: (error: any) => {
@@ -83,6 +97,7 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
         email: "",
         phone_number: "",
         message: "",
+        website_url: "",
       });
     }
   };
@@ -208,6 +223,16 @@ export const ContactForm2: React.FC<ContactForm2Props> = ({
           {/* Right Content: Form */}
           <div className="flex flex-col justify-center">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot field */}
+              <input
+                type="text"
+                name="website_url"
+                className="sr-only"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData.website_url}
+                onChange={handleInputChange}
+              />
               {/* Full Name */}
               <label className="flex flex-col gap-2">
                 <span className="text-sm font-medium">

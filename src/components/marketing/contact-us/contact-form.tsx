@@ -22,6 +22,14 @@ export const ContactForm = () => {
     const email = formData.get("email") as string;
     const phone = formData.get("phone") as string;
     const message = formData.get("message") as string;
+    const websiteUrl = formData.get("website_url") as string;
+
+    // Honeypot check
+    if (websiteUrl) {
+      toast.success("Message sent successfully");
+      setFormKey(prev => prev + 1);
+      return;
+    }
 
     const submissionData: ContactFormData = {
       name: `${firstName} ${lastName}`.trim(),
@@ -50,6 +58,14 @@ export const ContactForm = () => {
         onSubmit={handleSubmit}
         className="space-y-4 sm:space-y-6"
       >
+        {/* Honeypot field */}
+        <input
+          type="text"
+          name="website_url"
+          className="sr-only"
+          tabIndex={-1}
+          autoComplete="off"
+        />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input
             type="text"

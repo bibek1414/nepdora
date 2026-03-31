@@ -12,11 +12,19 @@ interface NewsletterFormProps {
 
 export const NewsletterForm = ({ isEditable, theme }: NewsletterFormProps) => {
   const [email, setEmail] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
   const mutation = useCreateNewsletter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || isEditable || mutation.isPending) return;
+
+    if (websiteUrl) {
+      toast.success("Successfully subscribed!");
+      setEmail("");
+      setWebsiteUrl("");
+      return;
+    }
 
     try {
       await mutation.mutateAsync({
@@ -33,6 +41,16 @@ export const NewsletterForm = ({ isEditable, theme }: NewsletterFormProps) => {
   return (
     <div className="space-y-3">
       <form onSubmit={handleSubmit} className="flex w-full">
+        {/* Honeypot field */}
+        <input
+          type="text"
+          name="website_url"
+          className="sr-only"
+          tabIndex={-1}
+          autoComplete="off"
+          value={websiteUrl}
+          onChange={e => setWebsiteUrl(e.target.value)}
+        />
         <input
           type="email"
           placeholder="Enter your email"

@@ -19,6 +19,7 @@ import {
   useSubmitAppointmentForm,
   useGetAppointmentReasons,
 } from "@/hooks/owner-site/admin/use-appointment";
+import { toast } from "sonner";
 import { EditableText } from "@/components/ui/editable-text";
 
 interface AppointmentForm2Props {
@@ -44,6 +45,7 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
     date: "",
     time: "",
     reason_id: undefined,
+    website_url: "",
   });
   const [formErrors, setFormErrors] = useState<Record<string, string[]>>({});
 
@@ -64,6 +66,22 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
     e.preventDefault();
     setFormErrors({});
 
+    if (formData.website_url) {
+      setFormData({
+        full_name: "",
+        email: "",
+        phone: "",
+        message: "",
+        date: "",
+        time: "",
+        reason_id: undefined,
+        website_url: "",
+      });
+      setFormErrors({});
+      toast.success("Successfully booked!");
+      return;
+    }
+
     if (!isPreview && siteUser) {
       submitAppointment.mutate(formData, {
         onSuccess: () => {
@@ -75,6 +93,7 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
             date: "",
             time: "",
             reason_id: undefined,
+            website_url: "",
           });
           setFormErrors({});
         },
@@ -135,7 +154,7 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                 {data.contact_info?.email && (
                   <div className="flex items-start gap-4">
                     <div
-                      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
                       style={{ backgroundColor: `${theme.colors.primary}15` }}
                     >
                       <Mail
@@ -160,7 +179,7 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                 {data.contact_info?.phone && (
                   <div className="flex items-start gap-4">
                     <div
-                      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
                       style={{ backgroundColor: `${theme.colors.primary}15` }}
                     >
                       <Phone
@@ -185,7 +204,7 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
                 {data.contact_info?.address && (
                   <div className="flex items-start gap-4">
                     <div
-                      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
                       style={{ backgroundColor: `${theme.colors.primary}15` }}
                     >
                       <MapPin
@@ -270,6 +289,16 @@ export const AppointmentForm2: React.FC<AppointmentForm2Props> = ({
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Honeypot field */}
+              <input
+                type="text"
+                name="website_url"
+                className="sr-only"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData.website_url}
+                onChange={handleInputChange}
+              />
               {/* Full Name */}
               <div>
                 <Label htmlFor="full_name" className="text-sm font-medium">

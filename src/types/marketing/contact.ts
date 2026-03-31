@@ -3,6 +3,7 @@ export interface ContactFormData {
   email: string;
   phone_number: string;
   message: string;
+  website_url?: string;
 }
 
 export interface ContactResponse {

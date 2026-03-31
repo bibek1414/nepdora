@@ -34,6 +34,7 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
     phone_number: "",
     message: "",
     email: "",
+    website_url: "",
   });
 
   const { data: themeResponse } = useThemeQuery();
@@ -44,9 +45,15 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
     e.preventDefault();
     if (isEditable) return;
 
+    if (formData.website_url) {
+      setFormData({ name: "", phone_number: "", message: "", email: "", website_url: "" });
+      toast.success("Message sent successfully");
+      return;
+    }
+
     submitContactMutation.mutate(formData, {
       onSuccess: () => {
-        setFormData({ name: "", phone_number: "", message: "", email: "" });
+        setFormData({ name: "", phone_number: "", message: "", email: "", website_url: "" });
       },
     });
   };
@@ -67,6 +74,16 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
       {/* Form Side */}
       <div className="rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-2xl shadow-gray-200/50 md:p-12">
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Honeypot field */}
+          <input
+            type="text"
+            name="website_url"
+            className="sr-only"
+            tabIndex={-1}
+            autoComplete="off"
+            value={formData.website_url}
+            onChange={e => setFormData({ ...formData, website_url: e.target.value })}
+          />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {/* Floating Input Name */}
             <Input
@@ -114,7 +131,7 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
                 setFormData({ ...formData, message: e.target.value })
               }
               placeholder="How can we help you?"
-              className="peer w-full resize-none rounded-[1.5rem] border border-gray-100 bg-gray-50 px-6 py-4 pt-8 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-gray-900/5"
+              className="peer w-full resize-none rounded-3xl border border-gray-100 bg-gray-50 px-6 py-4 pt-8 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-gray-900/5"
             />
           </div>
 

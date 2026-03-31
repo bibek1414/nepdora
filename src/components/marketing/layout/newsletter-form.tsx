@@ -7,11 +7,19 @@ import { useNewsletter } from "@/hooks/use-newsletter";
 
 export const NewsletterForm = () => {
   const [email, setEmail] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
   const { mutate, isPending } = useNewsletter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
+
+    if (websiteUrl) {
+      setEmail("");
+      setWebsiteUrl("");
+      toast.success("Successfully subscribed!");
+      return;
+    }
 
     mutate(email, {
       onSuccess: () => {
@@ -26,6 +34,16 @@ export const NewsletterForm = () => {
       className="flex flex-col space-y-2.5 sm:space-y-3"
       onSubmit={handleSubmit}
     >
+      {/* Honeypot field */}
+      <input
+        type="text"
+        name="website_url"
+        className="sr-only"
+        tabIndex={-1}
+        autoComplete="off"
+        value={websiteUrl}
+        onChange={e => setWebsiteUrl(e.target.value)}
+      />
       <input
         type="email"
         placeholder="Enter your email address"

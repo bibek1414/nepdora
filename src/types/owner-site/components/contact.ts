@@ -57,6 +57,7 @@ export interface ContactFormSubmission {
   email?: string;
   phone_number?: string;
   message: string;
+  website_url?: string;
 }
 
 export const defaultContactData1: ContactData = {

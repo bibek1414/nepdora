@@ -28,6 +28,7 @@ export interface AppointmentFormData {
   time?: string;
   reason_id?: number;
   status?: "pending" | "completed" | "cancelled";
+  website_url?: string;
 }
 
 export interface PaginatedAppointments {
