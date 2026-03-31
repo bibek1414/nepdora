@@ -26,11 +26,7 @@ import {
   useReplaceFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
 import { FooterData } from "@/types/owner-site/components/footer";
-import { ComponentSidebar } from "@/components/site-owners/builder/builder/component-sidebar";
-import { MetaBar } from "./meta-bar";
-import { SEOModal } from "./seo-modal";
-import { PublishModal } from "./publish-modal";
-import { LiveSiteModal } from "./live-site-modal";
+import { ComponentOutlineSidebar } from "@/components/site-owners/builder/builder/component-outline-sidebar";
 import { toast } from "sonner";
 import {
   ComponentResponse,
@@ -79,22 +75,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     string | undefined
   >(undefined);
   const [pendingReplaceId, setPendingReplaceId] = useState<string | null>(null);
-
-  // New UI states
-  const [deviceMode, setDeviceMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
-  const [hasChanges, setHasChanges] = useState(false);
-  const [isSEOModalOpen, setIsSEOModalOpen] = useState(false);
-  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
-  const [isLiveSiteModalOpen, setIsLiveSiteModalOpen] = useState(false);
-  const [isPublishInProgress, setIsPublishInProgress] = useState(false);
-
-  // SEO state
-  const [seoMetadata, setSeoMetadata] = useState({
-    title: "Premium Eyewear Made for Nepal",
-    description: "Thoughtfully designed eyewear that blends comfort, clarity, and modern style for everyday life.",
-    slug: "/" + pageSlug,
-    isIndexed: true
-  });
 
   // Dialog states
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
@@ -1006,33 +986,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   };
 
-  const handleSaveSEO = (data: typeof seoMetadata) => {
-    setSeoMetadata(data);
-    setHasChanges(true);
-    toast.success("SEO metadata updated locally");
-  };
-
-  const handlePublish = async () => {
-    setIsPublishInProgress(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setHasChanges(false);
-      setIsPublishModalOpen(false);
-      toast.success("Site published successfully!");
-    } catch (error) {
-      toast.error("Failed to publish site");
-    } finally {
-      setIsPublishInProgress(false);
-    }
-  };
-
-  const handleUndo = () => {
-    if (!hasChanges) return;
-    setHasChanges(false);
-    toast.info("Changes reverted to last published version");
-  };
-
   const isInitialLoading =
     isNavbarLoading || isFooterLoading || isPagesLoading || isCreatingHomePage;
 
@@ -1043,26 +996,37 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   return (
     <TextSelectionProvider>
       <DndProvider backend={HTML5Backend}>
-        <div className="flex h-screen flex-col bg-builder-bg overflow-hidden font-sans">
-          {/* Top Navigation */}
-          <TopNavigation
-            pages={pagesData}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-            siteUser={siteUser}
-            deviceMode={deviceMode}
-            setDeviceMode={setDeviceMode}
-            hasChanges={hasChanges}
-            onUndo={handleUndo}
-            onPublish={() => setIsPublishModalOpen(true)}
-            onOpenTheme={() => {}}
-            onOpenLiveSite={() => setIsLiveSiteModalOpen(true)}
-            onOpenPreview={() => window.open(`/preview/${siteUser}/${pageSlug}`, "_blank")}
-            liveSiteUrl={siteUser ? `https://${siteUser}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}` : "/"}
-          />
+        {/* All Dialog Components */}
+        <AddSectionDialog
+          open={isAddSectionDialogOpen}
+          onOpenChange={isOpen => {
+            setIsAddSectionDialogOpen(isOpen);
+            if (!isOpen) {
+              setPendingReplaceId(null);
+              setPendingCategoryFilter(undefined);
+            }
+          }}
+          onComponentClick={handleComponentClick}
+          onNavbarSelect={handleNavbarSelectFromDialog}
+          onFooterSelect={handleFooterSelectFromDialog}
+          websiteType={user?.website_type || "ecommerce"}
+          categoryFilter={pendingCategoryFilter}
+        />
 
-          <div className="flex flex-1 overflow-hidden relative">
-            {/* Left Sidebar - Pages */}
+        {/* Top Navigation */}
+        <TopNavigation
+          pages={pagesData}
+          currentPage={currentPage}
+          siteUser={siteUser}
+          onPageChange={handlePageChange}
+        />
+
+        {/* Sticky Formatting Toolbar */}
+        <StickyFormattingToolbar />
+
+        {/* Main Layout */}
+        <div className="bg-background flex min-h-screen flex-col">
+          <div className="flex flex-1">
             <PageManagementSidebar
               pages={pagesData}
               currentPage={currentPage}
@@ -1072,101 +1036,46 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               siteUser={siteUser}
             />
 
-            {/* Center Area */}
-            <main className="flex-1 flex flex-col overflow-hidden relative">
-              {/* Meta information bar */}
-              <MetaBar 
-                title={seoMetadata.title}
-                description={seoMetadata.description}
-                slug={seoMetadata.slug}
-                isIndexed={seoMetadata.isIndexed}
-                onEdit={() => setIsSEOModalOpen(true)}
-              />
+            <div className="flex flex-1 flex-col">
+              <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
+                <div className="mx-auto max-w-7xl origin-top scale-75">
+                  <div className="py-4"></div>
 
-              {/* Site Canvas */}
-              <CanvasArea
-                droppedComponents={droppedComponents}
-                navbar={navbarResponse?.data}
-                onAddNavbar={() => setIsNavbarDialogOpen(true)}
-                footer={footerResponse?.data}
-                onAddFooter={() => setIsAddSectionDialogOpen(true)}
-                currentPageSlug={currentPage}
-                pageComponents={pageComponents}
-                isLoading={isPageComponentsLoading}
-                error={pageComponentsError as Error}
-                deviceMode={deviceMode}
-                onAddSection={handleAddSection}
-                onReplaceSection={handleReplaceSection}
-                onProductClick={() => {
-                  router.push(`/builder/${siteUser}/product-details`);
-                }}
-                onBlogClick={() => {
-                  router.push(`/builder/${siteUser}/blog-details`);
-                }}
-                onPortfolioClick={() => {
-                  router.push(`/builder/${siteUser}/portfolio-details`);
-                }}
-                onServiceClick={() => {
-                  router.push(`/builder/${siteUser}/service-details`);
-                }}
-              />
-              
-              <StickyFormattingToolbar />
-            </main>
+                  <CanvasArea
+                    droppedComponents={droppedComponents}
+                    navbar={navbarResponse?.data}
+                    onAddNavbar={() => setIsNavbarDialogOpen(true)}
+                    footer={footerResponse?.data}
+                    onAddFooter={() => setIsAddSectionDialogOpen(true)}
+                    currentPageSlug={currentPage}
+                    pageComponents={pageComponents}
+                    isLoading={isPageComponentsLoading}
+                    error={pageComponentsError}
+                    onAddSection={handleAddSection}
+                    onReplaceSection={handleReplaceSection}
+                    onProductClick={() => {
+                      router.push(`/builder/${siteUser}/product-details`);
+                    }}
+                    onBlogClick={() => {
+                      router.push(`/builder/${siteUser}/blog-details`);
+                    }}
+                    onPortfolioClick={() => {
+                      router.push(`/builder/${siteUser}/portfolio-details`);
+                    }}
+                    onServiceClick={() => {
+                      router.push(`/builder/${siteUser}/service-details`);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
 
-            {/* Right Sidebar - Components */}
-            <ComponentSidebar
-              siteUser={siteUser}
-              onComponentClick={(id) => {
-                setPendingCategoryFilter(id);
-                setIsAddSectionDialogOpen(true);
-              }}
+            <ComponentOutlineSidebar
+              currentPageSlug={currentPage}
+              components={pageComponents}
+              isLoading={isPageComponentsLoading}
             />
           </div>
-
-          {/* Modals */}
-          <SEOModal 
-            open={isSEOModalOpen} 
-            onOpenChange={setIsSEOModalOpen}
-            pageTitle={pagesData.find(p => p.slug === pageSlug)?.title || "Page"}
-            initialData={seoMetadata}
-            onSave={handleSaveSEO}
-          />
-
-          <PublishModal 
-            open={isPublishModalOpen}
-            onOpenChange={setIsPublishModalOpen}
-            onPublish={handlePublish}
-            isPublishing={isPublishInProgress}
-            publishStatus={{
-              reviewed: true,
-              seoSet: true,
-              ready: true
-            }}
-          />
-
-          <LiveSiteModal 
-            open={isLiveSiteModalOpen}
-            onOpenChange={setIsLiveSiteModalOpen}
-            siteUrl={siteUser ? `https://${siteUser}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}` : "https://yourdomain.com"}
-          />
-
-          {/* Legacy Dialogs kept for functionality */}
-          <AddSectionDialog
-            open={isAddSectionDialogOpen}
-            onOpenChange={isOpen => {
-              setIsAddSectionDialogOpen(isOpen);
-              if (!isOpen) {
-                setPendingReplaceId(null);
-                setPendingCategoryFilter(undefined);
-              }
-            }}
-            onComponentClick={handleComponentClick}
-            onNavbarSelect={handleNavbarSelectFromDialog}
-            onFooterSelect={handleFooterSelectFromDialog}
-            websiteType={user?.website_type || "ecommerce"}
-            categoryFilter={pendingCategoryFilter}
-          />
         </div>
       </DndProvider>
     </TextSelectionProvider>
