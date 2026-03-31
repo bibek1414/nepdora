@@ -197,8 +197,8 @@ export function derivePublishContentMetadata(
     .find(Boolean);
   const title =
     normalizeText(entityMetadata?.title) ||
-    componentTitle ||
-    normalizeText(pageName);
+    normalizeText(pageName) ||
+    componentTitle;
 
   const componentDescription = orderedComponents
     .map(extractDescriptionFromComponent)

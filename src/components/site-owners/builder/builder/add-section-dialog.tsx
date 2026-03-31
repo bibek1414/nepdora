@@ -1577,6 +1577,40 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     });
   }, [query, filteredComponents]);
 
+  const searchResults = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+
+    const results: { component: ComponentItem; templates: TemplateItem[] }[] = [];
+
+    filteredComponents.forEach(component => {
+      // Check if category itself matches
+      const isCategoryMatch = [component.label, ...(component.keywords || [])]
+        .some(k => k.toLowerCase().includes(q));
+
+      const matchingTemplates = (component.templates || []).filter(t => {
+        // If category matches, show all its templates, otherwise filter by template name/description
+        if (isCategoryMatch) return true;
+        const haystack = [t.name, t.description || ""].join(" ").toLowerCase();
+        return haystack.includes(q);
+      });
+
+      if (matchingTemplates.length > 0) {
+        results.push({
+          component,
+          templates: matchingTemplates.filter(
+            template =>
+              !template.showForWebsiteTypes ||
+              template.showForWebsiteTypes.includes(websiteType)
+          ),
+        });
+      }
+    });
+
+    return results.filter(r => r.templates.length > 0);
+  }, [query, filteredComponents, websiteType]);
+
+
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
   };
@@ -1884,18 +1918,27 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
               <label htmlFor="component-search" className="sr-only">
                 Search components
               </label>
-              <div className="relative">
-                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-                <input
-                  id="component-search"
-                  type="text"
-                  value={query}
-                  autoFocus
-                  onChange={event => setQuery(event.target.value)}
-                  placeholder="Search components..."
-                  className="border-muted focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border bg-white py-2 pr-3 pl-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                />
-              </div>
+                <div className="relative">
+                  <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                  <input
+                    id="component-search"
+                    type="text"
+                    value={query}
+                    autoFocus
+                    onChange={event => setQuery(event.target.value)}
+                    placeholder="Search sections..."
+                    className="border-muted focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border bg-white py-2 pr-9 pl-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                  />
+                  {query && (
+                    <button
+                      onClick={() => setQuery("")}
+                      className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-1 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
             </div>
 
             {/* Components List */}
@@ -1931,7 +1974,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
           <div className="flex flex-1 flex-col overflow-hidden">
             {/* Sticky Header Section */}
             <div className="sticky top-0 z-10 border-b bg-white px-6 pt-6 pb-4">
-              {!selectedCategory ? (
+              {query.trim() ? (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Search Results for "{query}"
+                  </h2>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Found {searchResults.reduce((acc, curr) => acc + curr.templates.length, 0)} templates
+                  </p>
+                </div>
+              ) : !selectedCategory ? (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">
                     Featured Templates
@@ -1972,10 +2024,81 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
               )}
             </div>
 
+
             {/* Scrollable Templates Area */}
             <div className="flex-1 overflow-auto">
               <div className="p-6">
-                {!selectedCategory ? (
+                {query.trim() ? (
+                  /* Search Results Grouped View */
+                  <div className="space-y-12">
+                    {searchResults.map(({ component, templates }) => (
+                      <div key={component.id}>
+                        <div className="mb-6 flex items-center gap-2 border-l-4 border-blue-500 pl-4">
+                          <component.icon className="h-5 w-5 text-blue-600" />
+                          <h3 className="text-lg font-bold text-gray-900">
+                            {component.label}
+                          </h3>
+                          <span className="ml-2 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                            {templates.length} styles
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-6">
+                          {templates.map(template => (
+                            <div
+                              key={template.id}
+                              className="group cursor-pointer"
+                              onClick={() =>
+                                handleTemplateSelect(component.id, template.id)
+                              }
+                            >
+                              <div className="relative overflow-hidden rounded-lg border border-gray-200 transition-all hover:border-blue-400">
+                                <div className="relative flex aspect-video items-center justify-center bg-transparent">
+                                  <img
+                                    src={
+                                      template.image ||
+                                      "/fallback/image-not-found.png"
+                                    }
+                                    alt={template.name}
+                                    width={800}
+                                    height={200}
+                                    className="h-auto w-full rounded"
+                                    onError={e => {
+                                      e.currentTarget.src =
+                                        "/fallback/image-not-found.png";
+                                    }}
+                                  />
+                                </div>
+                                <div className="bg-white p-3">
+                                  <h3 className="text-sm font-medium text-gray-900">
+                                    {template.name}
+                                  </h3>
+                                  {template.description && (
+                                    <p className="mt-1 text-xs text-gray-500">
+                                      {template.description}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    {searchResults.length === 0 && (
+                      <div className="flex h-64 flex-col items-center justify-center text-center">
+                        <div className="rounded-full bg-gray-100 p-4">
+                          <Search className="h-8 w-8 text-gray-400" />
+                        </div>
+                        <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                          No templates found
+                        </h3>
+                        <p className="mt-2 text-gray-600">
+                          Try searching for something else or browse categories
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ) : !selectedCategory ? (
                   /* Featured Templates Grid */
                   <div className="grid grid-cols-3 gap-6">
                     {currentTemplates.map(({ component, template }) => (
@@ -2077,6 +2200,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                   </div>
                 )}
               </div>
+
             </div>
           </div>
         </div>
