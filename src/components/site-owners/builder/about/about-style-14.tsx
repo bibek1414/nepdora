@@ -111,7 +111,7 @@ export const AboutUsTemplate14: React.FC<AboutUsTemplate14Props> = ({
               <EditableImage
                 src={data.mainImage1}
                 alt="Main Commitment Image"
-                className="h-full w-full object-cover"
+                className="h-full w-full rounded-2xl object-cover"
                 onImageChange={handleImageUpdate("mainImage1")}
                 isEditable={isEditable}
                 width={600}
@@ -125,7 +125,7 @@ export const AboutUsTemplate14: React.FC<AboutUsTemplate14Props> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="absolute overflow-hidden shadow-xl"
+              className="absolute overflow-hidden"
               style={{
                 width: "45%",
                 height: "100%",
@@ -138,7 +138,7 @@ export const AboutUsTemplate14: React.FC<AboutUsTemplate14Props> = ({
               <EditableImage
                 src={data.mainImage2}
                 alt="Overlapping Experience Image"
-                className="h-full w-full object-cover"
+                className="h-full w-full rounded-2xl object-cover"
                 onImageChange={handleImageUpdate("mainImage2")}
                 isEditable={isEditable}
                 width={400}
@@ -218,12 +218,11 @@ export const AboutUsTemplate14: React.FC<AboutUsTemplate14Props> = ({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="h-[300px] w-full overflow-hidden md:h-[400px]"
             >
               <EditableImage
                 src={data.visionImage}
                 alt={data.visionTitle}
-                className="h-full w-full object-cover"
+                className="h-full w-full rounded-2xl object-cover"
                 onImageChange={handleImageUpdate("visionImage")}
                 isEditable={isEditable}
                 width={800}

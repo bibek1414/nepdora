@@ -720,27 +720,31 @@ export const defaultOthersTemplate13Data: OthersTemplate13Data = {
 export const defaultOthersTemplate14Data: OthersTemplate14Data = {
   template: "others-14",
   heading: "Your Journey to Study Abroad",
-  description: "A simple, transparent process that takes you from dream to reality in 6 easy steps",
+  description:
+    "A simple, transparent process that takes you from dream to reality in 6 easy steps",
   steps: [
     {
       id: "step-1",
       number: "01",
       title: "Free Counseling",
-      description: "Meet our expert counselors to discuss your goals, budget, and preferences",
+      description:
+        "Meet our expert counselors to discuss your goals, budget, and preferences",
       icon: "MessageSquare",
     },
     {
       id: "step-2",
       number: "02",
       title: "University Selection",
-      description: "We shortlist the best universities and courses based on your profile",
+      description:
+        "We shortlist the best universities and courses based on your profile",
       icon: "Search",
     },
     {
       id: "step-3",
       number: "03",
       title: "Application & Docs",
-      description: "Complete support with applications, SOPs, and document preparation",
+      description:
+        "Complete support with applications, SOPs, and document preparation",
       icon: "FileText",
     },
     {
@@ -754,14 +758,16 @@ export const defaultOthersTemplate14Data: OthersTemplate14Data = {
       id: "step-5",
       number: "05",
       title: "Visa Processing",
-      description: "Expert guidance through the entire visa application process",
+      description:
+        "Expert guidance through the entire visa application process",
       icon: "Plane",
     },
     {
       id: "step-6",
       number: "06",
       title: "Pre-Departure",
-      description: "Final briefing, accommodation help, and airport pickup arrangement",
+      description:
+        "Final briefing, accommodation help, and airport pickup arrangement",
       icon: "GraduationCap",
     },
   ],
@@ -772,7 +778,7 @@ export const defaultOthersTemplate15Data: OthersTemplate15Data = {
   badge: "Why Choose Us",
   heading: "Nepal's Most Trusted Education Consultancy",
   description:
-    "For over 15 years, Brainstorm Global Education has been transforming dreams into reality. We combine expertise with personalized attention to ensure your success.",
+    "For over 15 years, Nep Expert has been transforming dreams into reality. We combine expertise with personalized attention to ensure your success.",
   trustBadges: [
     { id: "trust-1", value: "2009", label: "Established" },
     { id: "trust-2", value: "A+", label: "Rating" },

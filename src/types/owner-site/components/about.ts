@@ -581,6 +581,25 @@ export const defaultAboutUs14Data: AboutUs14Data = {
     "https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=900&auto=format&fit=crop",
 };
 
+export interface AboutUs15Data {
+  template: "about-15";
+  badge: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+}
+
+export const defaultAboutUs15Data: AboutUs15Data = {
+  template: "about-15",
+  badge: "About Us",
+  title: "Empowering Dreams, Shaping Futures Since 2015",
+  description:
+    "Nep Expert is Nepal's trusted partner for international education. We've helped thousands of students achieve their dreams of studying at top universities worldwide.",
+  buttonText: "Get Started",
+  buttonLink: "/contact",
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -596,7 +615,8 @@ export type AboutUsData =
   | AboutUs11Data
   | AboutUs12Data
   | AboutUs13Data
-  | AboutUs14Data;
+  | AboutUs14Data
+  | AboutUs15Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -642,7 +662,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs11Data>
     | Partial<AboutUs12Data>
     | Partial<AboutUs13Data>
-    | Partial<AboutUs14Data>;
+    | Partial<AboutUs14Data>
+    | Partial<AboutUs15Data>;
   order?: number;
 }
 
@@ -680,6 +701,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-12": defaultAboutUs12Data,
   "about-13": defaultAboutUs13Data,
   "about-14": defaultAboutUs14Data,
+  "about-15": defaultAboutUs15Data,
 };
 
 // Type guards for each template
@@ -724,3 +746,6 @@ export const isAboutUsTemplate13 = (data: AboutUsData): data is AboutUs13Data =>
 
 export const isAboutUsTemplate14 = (data: AboutUsData): data is AboutUs14Data =>
   data.template === "about-14";
+
+export const isAboutUsTemplate15 = (data: AboutUsData): data is AboutUs15Data =>
+  data.template === "about-15";

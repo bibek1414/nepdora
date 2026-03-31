@@ -42,7 +42,7 @@ export const TeamStyle1: React.FC<TeamStyleProps> = ({
             value={subtitle}
             onChange={handleSubtitleChange}
             as="p"
-            className="mb-2 text-lg font-semibold text-blue-600"
+            className="mb-2 text-lg font-semibold"
             isEditable={isEditable}
             placeholder="Enter subtitle..."
           />
@@ -50,7 +50,7 @@ export const TeamStyle1: React.FC<TeamStyleProps> = ({
             value={title}
             onChange={handleTitleChange}
             as="h1"
-            className="text-5xl font-bold text-[#001a4d]"
+            className="text-5xl font-bold"
             isEditable={isEditable}
             placeholder="Enter title..."
           />

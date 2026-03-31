@@ -159,7 +159,7 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
                     href={activeMember.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-700 transition-colors hover:text-blue-600"
+                    className="text-gray-700 transition-colors"
                   >
                     <Facebook size={18} />
                   </a>
@@ -179,7 +179,7 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
                     href={activeMember.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-700 transition-colors hover:text-blue-700"
+                    className="text-gray-700 transition-colors"
                   >
                     <Linkedin size={18} />
                   </a>
