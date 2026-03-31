@@ -4,49 +4,22 @@ import {
   SendMessageRequest,
 } from "@/types/owner-site/admin/conversations";
 import { getApiBaseUrl } from "@/config/site";
+import { createHeaders } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
 
 // Use the vapebox subdomain for all API calls
 const API_BASE_URL = getApiBaseUrl();
-/**
- * Handles API responses robustly
- */
-async function handleResponse(res: Response) {
-  if (!res.ok) {
-    let errorMessage = `API request failed: ${res.status} ${res.statusText}`;
-
-    try {
-      // Try parsing JSON error
-      const err = await res.json();
-      if (err?.message) errorMessage = err.message;
-    } catch {
-      // Fallback to text
-      const text = await res.text().catch(() => "");
-      if (text) errorMessage = text;
-    }
-
-    // Include the URL for easier debugging
-    errorMessage += ` (URL: ${res.url})`;
-
-    throw new Error(errorMessage);
-  }
-
-  try {
-    // Return JSON if available, otherwise null
-    const text = await res.text();
-    return text ? JSON.parse(text) : null;
-  } catch (err) {
-    console.error("Failed to parse JSON:", err);
-    return null;
-  }
-}
 
 export const useConversationsApi = {
   /**
    * 📨 Get all conversations for a given pageId
    */
   async getConversations(pageId: string) {
-    const res = await apiFetch(`${API_BASE_URL}/api/conversations/${pageId}`);
-    return handleResponse(res);
+    const res = await apiFetch(`${API_BASE_URL}/api/conversations/${pageId}`, {
+      headers: createHeaders(),
+    });
+    await handleApiError(res);
+    return res.json();
   },
 
   /**
@@ -54,29 +27,27 @@ export const useConversationsApi = {
    */
   async getConversationMessages(conversationId: string) {
     const res = await apiFetch(
-      `${API_BASE_URL}/api/conversation-messages/${conversationId}`
+      `${API_BASE_URL}/api/conversation-messages/${conversationId}`,
+      {
+        headers: createHeaders(),
+      }
     );
-    return handleResponse(res);
+    await handleApiError(res);
+    return res.json();
   },
 
-  /**
-   * Fetches the Facebook page access token from the backend
-   */
   /**
    * Fetches the Facebook page access token from your backend.
    * Supports multiple integrations and optional filtering by pageId.
    */
   async getPageAccessToken(pageId?: string): Promise<string> {
     try {
-      const response = await apiFetch(
-        `${API_BASE_URL}/api/facebook` // ✅ use your backend API base
-      );
+      const response = await apiFetch(`${API_BASE_URL}/api/facebook`, {
+        headers: createHeaders(),
+      });
 
+      await handleApiError(response);
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch page access token");
-      }
 
       if (!Array.isArray(data) || data.length === 0) {
         throw new Error("No Facebook integrations found");

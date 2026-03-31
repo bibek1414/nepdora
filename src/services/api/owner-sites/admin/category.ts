@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
-import { getAuthToken } from "@/utils/auth";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
   GetCategoriesResponse,
@@ -106,9 +105,7 @@ export const useCategoryApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/category/`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -127,13 +124,11 @@ export const useCategoryApi = {
     const API_BASE_URL = getApiBaseUrl();
 
     let body: BodyInit;
-    let headers: HeadersInit = {};
+    let headers: HeadersInit;
 
     if (data instanceof FormData) {
       body = data;
-      headers = {
-        Authorization: `Bearer ${getAuthToken()}`,
-      };
+      headers = createHeadersTokenOnly();
     } else {
       body = JSON.stringify(data);
       headers = createHeaders();

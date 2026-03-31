@@ -7,7 +7,9 @@ import {
   PaginatedPopupFormResponse,
 } from "@/types/owner-site/admin/popup";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeadersTokenOnly } from "@/utils/headers";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
+
 export const popupApi = {
   // Popup CRUD operations
   getPopups: async (): Promise<PopUp[]> => {
@@ -15,11 +17,9 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup/`, {
       method: "GET",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
     });
-    if (!response.ok) throw new Error("Failed to fetch popups");
+    await handleApiError(response);
     return response.json();
   },
 
@@ -28,11 +28,9 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
       method: "GET",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
     });
-    if (!response.ok) throw new Error("Failed to fetch popup");
+    await handleApiError(response);
     return response.json();
   },
 
@@ -42,14 +40,9 @@ export const popupApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/popup/`, {
       method: "POST",
       body: data,
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeadersTokenOnly(),
     });
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to create popup");
-    }
+    await handleApiError(response);
     return response.json();
   },
 
@@ -59,14 +52,9 @@ export const popupApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
       method: "PATCH",
       body: data,
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeadersTokenOnly(),
     });
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to update popup");
-    }
+    await handleApiError(response);
     return response.json();
   },
 
@@ -75,11 +63,9 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
       method: "DELETE",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
     });
-    if (!response.ok) throw new Error("Failed to delete popup");
+    await handleApiError(response);
   },
 
   // PopupForm operations with pagination
@@ -100,11 +86,9 @@ export const popupApi = {
 
     const response = await apiFetch(url, {
       method: "GET",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
     });
-    if (!response.ok) throw new Error("Failed to fetch popup forms");
+    await handleApiError(response);
     return response.json();
   },
 
@@ -113,11 +97,9 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "GET",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
     });
-    if (!response.ok) throw new Error("Failed to fetch popup form");
+    await handleApiError(response);
     return response.json();
   },
 
@@ -126,15 +108,10 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
       body: JSON.stringify(data),
     });
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to submit form");
-    }
+    await handleApiError(response);
     return response.json();
   },
 
@@ -146,15 +123,10 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "PATCH",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
       body: JSON.stringify(data),
     });
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to update form");
-    }
+    await handleApiError(response);
     return response.json();
   },
 
@@ -163,11 +135,9 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "DELETE",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
     });
-    if (!response.ok) throw new Error("Failed to delete form");
+    await handleApiError(response);
   },
 
   getActivePopup: async (): Promise<PopUp | null> => {
@@ -177,12 +147,10 @@ export const popupApi = {
       `${API_BASE_URL}/api/popup/?is_active=true`,
       {
         method: "GET",
-        headers: {
-          ...createHeadersTokenOnly(),
-        },
+        headers: createHeaders(),
       }
     );
-    if (!response.ok) throw new Error("Failed to fetch active popup");
+    await handleApiError(response);
     const data = await response.json();
 
     // Additional check to ensure the popup is actually active
@@ -199,20 +167,14 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
       body: JSON.stringify({
         popup: popupId,
         ...formData,
       }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to submit form");
-    }
-
+    await handleApiError(response);
     return { success: true, message: "Form submitted successfully!" };
   },
 };

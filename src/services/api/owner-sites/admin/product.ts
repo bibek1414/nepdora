@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
-import { getAuthToken } from "@/utils/auth";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
   GetProductsResponse,
@@ -253,7 +252,7 @@ export const productApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/product/`, {
       method: "POST",
-
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -281,10 +280,7 @@ export const productApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/product/${slug}/`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-        // Don't set Content-Type header - let the browser set it with boundary
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 

@@ -6,7 +6,9 @@ import {
   CreateVideoData,
   UpdateVideoData,
 } from "@/types/owner-site/admin/videos";
-import { createHeadersTokenOnly } from "@/utils/headers";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
+
 export const videosAPI = {
   // Get all videos
   getVideos: async (): Promise<Videos> => {
@@ -15,13 +17,10 @@ export const videosAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch  videos: ${response.status}`);
-    }
-
+    await handleApiError(response);
     const data = await response.json();
     return data;
   },
@@ -33,16 +32,11 @@ export const videosAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "POST",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to create  video: ${response.status}`);
-    }
-
+    await handleApiError(response);
     const video = await response.json();
     return video;
   },
@@ -54,16 +48,11 @@ export const videosAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "PATCH",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to update  video: ${response.status}`);
-    }
-
+    await handleApiError(response);
     const video = await response.json();
     return video;
   },
@@ -75,13 +64,9 @@ export const videosAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "DELETE",
-      headers: {
-        ...createHeadersTokenOnly(),
-      },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to delete  video: ${response.status}`);
-    }
+    await handleApiError(response);
   },
 };

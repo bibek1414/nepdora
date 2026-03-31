@@ -6,6 +6,8 @@ import {
   BookingData,
 } from "@/types/owner-site/admin/booking";
 import { getApiBaseUrl } from "@/config/site";
+import { createHeaders } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
 
 export const bookingAPI = {
   getBookings: async (
@@ -15,10 +17,6 @@ export const bookingAPI = {
 
     const { page = 1, page_size = 10, search } = filters;
 
-    // User provided URL: https://batoma.nepdora.baliyoventures.com//api/collections/booking/data/
-    // Assuming BASE_API_URL handles the domain part or we should strictly use what's provided if it is tenant specific.
-    // However, for generic implementation I should use BASE_API_URL.
-    // I will append /api/collections/booking/data/
     const url = new URL(`${BASE_API_URL}/api/collections/booking/data/`);
     url.searchParams.append("page", page.toString());
     url.searchParams.append("page_size", page_size.toString());
@@ -28,15 +26,10 @@ export const bookingAPI = {
     }
     const response = await apiFetch(url.toString(), {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch bookings: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -45,17 +38,12 @@ export const bookingAPI = {
     const response = await apiFetch(
       `${BASE_API_URL}/api/collections/booking/data/${id}/`,
       {
-        // Assuming ID is part of path or query? Usually path.
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: createHeaders(),
       }
     );
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch booking: ${response.status}`);
-    }
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -68,17 +56,12 @@ export const bookingAPI = {
       `${BASE_API_URL}/api/collections/booking/data/${id}/`,
       {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: createHeaders(),
         body: JSON.stringify({ data }),
       }
     );
 
-    if (!response.ok) {
-      throw new Error(`Failed to update booking: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 };

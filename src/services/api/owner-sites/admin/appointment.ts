@@ -49,9 +49,7 @@ export const appointmentAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "GET",
-      headers: {
-        ...createHeaders(),
-      },
+      headers: createHeaders(),
     });
 
     await handleApiError(response);
@@ -65,9 +63,7 @@ export const appointmentAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const response = await apiFetch(`${BASE_API_URL}/api/appointments/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
       body: JSON.stringify(appointmentData),
     });
 
@@ -83,9 +79,7 @@ export const appointmentAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const response = await apiFetch(`${BASE_API_URL}/api/appointments/${id}/`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
       body: JSON.stringify(data),
     });
 
@@ -98,9 +92,7 @@ export const appointmentAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const response = await apiFetch(`${BASE_API_URL}/api/appointments/${id}/`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
     });
 
     await handleApiError(response);
@@ -113,9 +105,7 @@ export const appointmentAPI = {
       `${BASE_API_URL}/api/appointment-reasons/`,
       {
         method: "GET",
-        headers: {
-          ...createHeaders(),
-        },
+        headers: createHeaders(),
       }
     );
 

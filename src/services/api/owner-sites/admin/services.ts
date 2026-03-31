@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
-import { getAuthToken } from "@/utils/auth";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
   ServicesPost,
@@ -81,10 +80,7 @@ export const servicesApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/service/`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-        // Don't set Content-Type header - let the browser set it with boundary
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -101,10 +97,7 @@ export const servicesApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/service/${slug}/`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-        // Don't set Content-Type header - let the browser set it with boundary
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -116,9 +109,7 @@ export const servicesApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/service/${slug}/`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeaders(),
     });
 
     await handleApiError(response);
@@ -172,9 +163,7 @@ export const serviceCategoryApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/service-category/`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -193,9 +182,7 @@ export const serviceCategoryApi = {
       `${API_BASE_URL}/api/service-category/${slug}/`,
       {
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
+        headers: createHeadersTokenOnly(),
         body: formData,
       }
     );
@@ -210,9 +197,7 @@ export const serviceCategoryApi = {
       `${API_BASE_URL}/api/service-category/${slug}/`,
       {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
+        headers: createHeaders(),
       }
     );
 

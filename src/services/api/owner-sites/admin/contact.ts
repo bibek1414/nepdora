@@ -7,6 +7,7 @@ import {
 } from "@/types/owner-site/admin/contact";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
 
 export const contactAPI = {
   getContacts: async (
@@ -25,15 +26,10 @@ export const contactAPI = {
     }
     const response = await apiFetch(url.toString(), {
       method: "GET",
-      headers: {
-        ...createHeaders(),
-      },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch contacts: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -41,18 +37,13 @@ export const contactAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const response = await apiFetch(`${BASE_API_URL}/api/contact/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
       body: JSON.stringify({
         ...contactData,
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to create contact: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -63,16 +54,11 @@ export const contactAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const response = await apiFetch(`${BASE_API_URL}/api/contact/${id}/`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to update contact: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -80,13 +66,9 @@ export const contactAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const response = await apiFetch(`${BASE_API_URL}/api/contact/${id}/`, {
       method: "DELETE",
-      headers: {
-        ...createHeaders(),
-      },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to delete contact: ${response.status}`);
-    }
+    await handleApiError(response);
   },
 };

@@ -1,6 +1,7 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { SiteConfig } from "@/types/owner-site/admin/site-config";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 
 export const siteConfigAPI = {
@@ -10,9 +11,7 @@ export const siteConfigAPI = {
       const url = new URL(`${BASE_API_URL}/api/site-config/`);
       const response = await apiFetch(url.toString(), {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: createHeaders(),
         cache: "no-store",
       });
 
@@ -41,12 +40,9 @@ export const siteConfigAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/site-config/`);
 
-      const headers: HeadersInit = {};
-
-      // Add authorization if token provided
-      if (accessToken) {
-        headers["Authorization"] = `Bearer ${accessToken}`;
-      }
+      const headers = accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : createHeadersTokenOnly();
 
       const response = await apiFetch(url.toString(), {
         method: "POST",
@@ -84,12 +80,9 @@ export const siteConfigAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/site-config/${configId}/`);
 
-      const headers: HeadersInit = {};
-
-      // Add authorization if token provided
-      if (accessToken) {
-        headers["Authorization"] = `Bearer ${accessToken}`;
-      }
+      const headers = accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : createHeadersTokenOnly();
 
       const response = await apiFetch(url.toString(), {
         method: "PATCH",
@@ -126,12 +119,9 @@ export const siteConfigAPI = {
       const BASE_API_URL = getApiBaseUrl();
       const url = new URL(`${BASE_API_URL}/api/site-config/${configId}/`);
 
-      const headers: HeadersInit = {};
-
-      // Add authorization if token provided
-      if (accessToken) {
-        headers["Authorization"] = `Bearer ${accessToken}`;
-      }
+      const headers = accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : createHeaders();
 
       const response = await apiFetch(url.toString(), {
         method: "DELETE",

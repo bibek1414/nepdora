@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
-import { getAuthToken } from "@/utils/auth";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
   GetSubCategoriesResponse,
@@ -110,9 +109,7 @@ export const useSubCategoryApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/sub-category/`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -135,9 +132,7 @@ export const useSubCategoryApi = {
 
     if (data instanceof FormData) {
       body = data;
-      headers = {
-        Authorization: `Bearer ${getAuthToken()}`,
-      };
+      headers = createHeadersTokenOnly();
     } else {
       body = JSON.stringify(data);
       headers = createHeaders();

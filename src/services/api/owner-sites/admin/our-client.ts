@@ -5,6 +5,8 @@ import {
   OurClientFilters,
 } from "@/types/owner-site/admin/our-client";
 import { getApiBaseUrl } from "@/config/site";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
 
 export const ourClientAPI = {
   getOurClients: async (
@@ -21,15 +23,10 @@ export const ourClientAPI = {
     }
     const response = await apiFetch(url.toString(), {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch our clients: ${response.status}`);
-    }
-
+    await handleApiError(response);
     const data = await response.json();
     return data;
   },
@@ -49,13 +46,11 @@ export const ourClientAPI = {
 
     const response = await apiFetch(`${BASE_API_URL}/api/our-client/`, {
       method: "POST",
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to create our client: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -73,13 +68,11 @@ export const ourClientAPI = {
 
     const response = await apiFetch(`${BASE_API_URL}/api/our-client/${id}/`, {
       method: "PATCH",
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to update our client: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -87,10 +80,9 @@ export const ourClientAPI = {
     const BASE_API_URL = getApiBaseUrl();
     const response = await apiFetch(`${BASE_API_URL}/api/our-client/${id}/`, {
       method: "DELETE",
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to delete our client: ${response.status}`);
-    }
+    await handleApiError(response);
   },
 };

@@ -7,6 +7,8 @@ import {
   ImportTemplateResponse,
 } from "@/types/owner-site/admin/template";
 import { getApiBaseUrl } from "@/config/site";
+import { createHeaders } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
 
 export const templateAPI = {
   getTemplates: async (
@@ -26,15 +28,10 @@ export const templateAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch templates: ${response.status}`);
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 
@@ -45,21 +42,13 @@ export const templateAPI = {
 
     const response = await apiFetch(`${BASE_API_URL}/api/import-template/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
       body: JSON.stringify({
         template_id: templateId,
       }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || `Failed to import template: ${response.status}`
-      );
-    }
-
+    await handleApiError(response);
     return await response.json();
   },
 

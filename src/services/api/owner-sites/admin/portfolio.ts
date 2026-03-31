@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
-import { getAuthToken } from "@/utils/auth";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
   Portfolio,
@@ -115,11 +114,7 @@ export const portfolioApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/portfolio-tags/`, {
       method: "POST",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeaders(),
       body: JSON.stringify(tagData),
     });
 
@@ -133,11 +128,7 @@ export const portfolioApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/portfolio/category/`, {
       method: "POST",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeaders(),
       body: JSON.stringify(categoryData),
     });
 
@@ -151,9 +142,7 @@ export const portfolioApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/portfolio/`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -170,9 +159,7 @@ export const portfolioApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeadersTokenOnly(),
       body: formData,
     });
 
@@ -184,9 +171,7 @@ export const portfolioApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/portfolio/${slug}/`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeaders(),
     });
 
     await handleApiError(response);
@@ -201,11 +186,7 @@ export const portfolioApi = {
       `${API_BASE_URL}/api/portfolio/category/${id}/`,
       {
         method: "PATCH",
-        headers: {
-          ...createHeaders(),
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
+        headers: createHeaders(),
         body: JSON.stringify(categoryData),
       }
     );
@@ -220,9 +201,7 @@ export const portfolioApi = {
       `${API_BASE_URL}/api/portfolio/category/${id}/`,
       {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
+        headers: createHeaders(),
       }
     );
 
@@ -238,11 +217,7 @@ export const portfolioApi = {
       `${API_BASE_URL}/api/portfolio-tags/${id}/`,
       {
         method: "PATCH",
-        headers: {
-          ...createHeaders(),
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
+        headers: createHeaders(),
         body: JSON.stringify(tagData),
       }
     );
@@ -257,9 +232,7 @@ export const portfolioApi = {
       `${API_BASE_URL}/api/portfolio-tags/${id}/`,
       {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
+        headers: createHeaders(),
       }
     );
 

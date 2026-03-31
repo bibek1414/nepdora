@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
-import { createHeaders } from "@/utils/headers";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 import {
   TestimonialResponse,
@@ -58,6 +58,7 @@ export const testimonialsApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/testimonial/`, {
       method: "POST",
       body: formData,
+      headers: createHeadersTokenOnly(),
     });
 
     await handleApiError(response);
@@ -74,6 +75,7 @@ export const testimonialsApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/testimonial/${id}/`, {
       method: "PATCH",
       body: formData,
+      headers: createHeadersTokenOnly(),
     });
 
     await handleApiError(response);

@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
-import { getAuthToken } from "@/utils/auth";
 import { handleApiError } from "@/utils/api-error";
 import { Skill, CreateSkill } from "@/types/owner-site/admin/skill";
 
@@ -22,11 +21,7 @@ export const skillApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/skills/`, {
       method: "POST",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeaders(),
       body: JSON.stringify(skillData),
     });
 
@@ -38,11 +33,7 @@ export const skillApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/skills/${id}/`, {
       method: "PATCH",
-      headers: {
-        ...createHeaders(),
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeaders(),
       body: JSON.stringify(skillData),
     });
 
@@ -54,9 +45,7 @@ export const skillApi = {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/skills/${id}/`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+      headers: createHeaders(),
     });
 
     await handleApiError(response);

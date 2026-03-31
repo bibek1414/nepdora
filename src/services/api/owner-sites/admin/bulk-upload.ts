@@ -1,7 +1,7 @@
 import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { handleApiError } from "@/utils/api-error";
-import { createHeaders } from "@/utils/headers";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 
 export interface BulkUploadResponse {
   success: boolean;
@@ -38,6 +38,7 @@ export const bulkUploadApi = {
     const response = await apiFetch(url, {
       method: "POST",
       body: formData,
+      headers: createHeadersTokenOnly(),
     });
 
     await handleApiError(response);

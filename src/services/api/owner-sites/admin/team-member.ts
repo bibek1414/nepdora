@@ -1,7 +1,7 @@
 import { apiFetch } from "@/lib/api-client";
-import { createHeadersTokenOnly } from "@/utils/headers";
 import { getApiBaseUrl } from "@/config/site";
 import { Members, TEAM } from "@/types/owner-site/admin/team-member";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
 
 export const teamAPI = {
@@ -12,9 +12,7 @@ export const teamAPI = {
 
       const response = await apiFetch(url.toString(), {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: createHeaders(),
       });
 
       await handleApiError(response);
@@ -36,10 +34,7 @@ export const teamAPI = {
       const response = await apiFetch(url.toString(), {
         method: "POST",
         body: memberData,
-        headers: {
-          ...createHeadersTokenOnly(),
-        },
-        // Don't set Content-Type header - let browser set it with boundary for FormData
+        headers: createHeadersTokenOnly(),
       }).catch(fetchError => {
         // Handle network errors
         console.error("Network error:", fetchError);
@@ -48,7 +43,6 @@ export const teamAPI = {
         );
       });
 
-      // Check if response exists (network error would throw above)
       if (!response) {
         throw new Error("No response from server");
       }
@@ -73,10 +67,7 @@ export const teamAPI = {
       const response = await apiFetch(url.toString(), {
         method: "PATCH",
         body: memberData,
-        headers: {
-          ...createHeadersTokenOnly(),
-        },
-        // Don't set Content-Type header - let browser set it with boundary for FormData
+        headers: createHeadersTokenOnly(),
       }).catch(fetchError => {
         // Handle network errors
         console.error("Network error:", fetchError);
@@ -85,7 +76,6 @@ export const teamAPI = {
         );
       });
 
-      // Check if response exists (network error would throw above)
       if (!response) {
         throw new Error("No response from server");
       }
@@ -109,9 +99,7 @@ export const teamAPI = {
 
       const response = await apiFetch(url.toString(), {
         method: "DELETE",
-        headers: {
-          ...createHeadersTokenOnly(),
-        },
+        headers: createHeaders(),
       }).catch(fetchError => {
         // Handle network errors
         console.error("Network error:", fetchError);
@@ -120,7 +108,6 @@ export const teamAPI = {
         );
       });
 
-      // Check if response exists (network error would throw above)
       if (!response) {
         throw new Error("No response from server");
       }

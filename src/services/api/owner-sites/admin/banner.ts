@@ -5,6 +5,8 @@ import {
   Banner,
   UpdateBannerWithImagesRequest,
 } from "@/types/owner-site/admin/banner";
+import { createHeaders, createHeadersTokenOnly } from "@/utils/headers";
+import { handleApiError } from "@/utils/api-error";
 
 const prepareFormData = (
   data: CreateBannerWithImagesRequest | UpdateBannerWithImagesRequest,
@@ -53,10 +55,10 @@ export const bannerApi = {
   getBanners: async (): Promise<Banner[]> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await apiFetch(`${API_BASE_URL}/api/banners/`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch banners");
-    }
+    const response = await apiFetch(`${API_BASE_URL}/api/banners/`, {
+      headers: createHeaders(),
+    });
+    await handleApiError(response);
     return response.json();
   },
 
@@ -64,10 +66,10 @@ export const bannerApi = {
   getBanner: async (id: number): Promise<Banner> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await apiFetch(`${API_BASE_URL}/api/banners/${id}/`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch banner");
-    }
+    const response = await apiFetch(`${API_BASE_URL}/api/banners/${id}/`, {
+      headers: createHeaders(),
+    });
+    await handleApiError(response);
     return response.json();
   },
 
@@ -82,20 +84,10 @@ export const bannerApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/banners/`, {
       method: "POST",
       body: formData,
-      // Don't set Content-Type header - let browser set it with boundary for multipart/form-data
+      headers: createHeadersTokenOnly(),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      let errorData;
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        errorData = { error: errorText };
-      }
-      throw new Error(`Failed to create banner: ${JSON.stringify(errorData)}`);
-    }
-
+    await handleApiError(response);
     return response.json();
   },
 
@@ -111,20 +103,10 @@ export const bannerApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/banners/${id}/`, {
       method: "PATCH",
       body: formData,
-      // Don't set Content-Type header - let browser set it with boundary for multipart/form-data
+      headers: createHeadersTokenOnly(),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      let errorData;
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        errorData = { error: errorText };
-      }
-      throw new Error(`Failed to update banner: ${JSON.stringify(errorData)}`);
-    }
-
+    await handleApiError(response);
     return response.json();
   },
 
@@ -134,10 +116,9 @@ export const bannerApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/banners/${id}/`, {
       method: "DELETE",
+      headers: createHeaders(),
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to delete banner");
-    }
+    await handleApiError(response);
   },
 };

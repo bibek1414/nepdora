@@ -127,9 +127,7 @@ export const orderApi = {
       `${API_BASE_URL}/api/get-order/${orderNumber}/`,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: createHeaders(),
       }
     );
     await handleApiError(response);
