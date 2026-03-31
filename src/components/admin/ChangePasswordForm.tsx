@@ -73,168 +73,90 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <Card className="mx-auto w-full max-w-md border-none shadow-none">
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="old_password"
-              render={({ field }) => (
-                <FormItem className="space-y-0">
+    <div className="w-full">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="old_password"
+            render={({ field }) => (
+              <FormItem className="space-y-1.5">
+                <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                  Current Password
+                </FormLabel>
+                <FormControl>
                   <div className="relative">
-                    <FloatingInput
-                      id="old_password"
+                    <Input
                       type={showOldPassword ? "text" : "password"}
+                      placeholder="Enter current password"
                       disabled={isPending}
                       className={cn(
-                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                        form.formState.errors.old_password &&
-                          "border-red-300 focus:border-red-500 focus:ring-red-500"
+                        "h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 pr-10 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none",
+                        form.formState.errors.old_password && "border-red-300 focus:border-red-500 focus:ring-red-500"
                       )}
                       {...field}
                     />
-                    <FloatingLabel htmlFor="old_password">
-                      <Lock className="mr-2 h-4 w-4" />
-                      Old Password
-                    </FloatingLabel>
                     <button
                       type="button"
                       onClick={() => setShowOldPassword(!showOldPassword)}
-                      className="text-muted-foreground absolute top-1/2 right-3 z-10 -translate-y-1/2"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6c7a91] hover:text-[#0d1117] transition-colors"
                     >
-                      {showOldPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showOldPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {form.formState.errors.old_password && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {form.formState.errors.old_password.message}
-                    </p>
-                  )}
-                </FormItem>
-              )}
-            />
+                </FormControl>
+                <FormMessage className="text-xs text-red-500 mt-1" />
+              </FormItem>
+            )}
+          />
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="new_password"
               render={({ field }) => (
-                <FormItem className="space-y-0">
-                  <div className="relative">
-                    <FloatingInput
-                      id="new_password"
-                      type={showNewPassword ? "text" : "password"}
-                      disabled={isPending}
-                      className={cn(
-                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                        form.formState.errors.new_password &&
-                          "border-red-300 focus:border-red-500 focus:ring-red-500"
-                      )}
-                      {...field}
-                    />
-                    <FloatingLabel htmlFor="new_password">
-                      <Lock className="mr-2 h-4 w-4" />
-                      New Password
-                    </FloatingLabel>
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="text-muted-foreground absolute top-1/2 right-3 z-10 -translate-y-1/2"
-                    >
-                      {showNewPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                    New Password
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showNewPassword ? "text" : "password"}
+                        placeholder="Min 8 characters"
+                        disabled={isPending}
+                        className={cn(
+                          "h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 pr-10 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none",
+                          form.formState.errors.new_password && "border-red-300 focus:border-red-500 focus:ring-red-500"
+                        )}
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6c7a91] hover:text-[#0d1117] transition-colors"
+                      >
+                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </FormControl>
                   {newPassword && newPassword.length > 0 && (
-                    <div className="mt-2 space-y-1 text-xs">
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          newPassword.length >= 8
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            newPassword.length >= 8
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        At least 8 characters
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                      <div className={cn("flex items-center text-[10px] font-semibold uppercase tracking-wider", newPassword.length >= 8 ? "text-green-600" : "text-gray-400")}>
+                        <CheckCircle className="mr-1.5 h-3 w-3" />
+                        8+ Chars
                       </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[a-z]/.test(newPassword)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[a-z]/.test(newPassword)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One lowercase letter
+                      <div className={cn("flex items-center text-[10px] font-semibold uppercase tracking-wider", /[A-Z]/.test(newPassword) ? "text-green-600" : "text-gray-400")}>
+                        <CheckCircle className="mr-1.5 h-3 w-3" />
+                        Uppercase
                       </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[A-Z]/.test(newPassword)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[A-Z]/.test(newPassword)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One uppercase letter
-                      </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[0-9]/.test(newPassword)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[0-9]/.test(newPassword)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One number
+                      <div className={cn("flex items-center text-[10px] font-semibold uppercase tracking-wider", /[0-9]/.test(newPassword) ? "text-green-600" : "text-gray-400")}>
+                        <CheckCircle className="mr-1.5 h-3 w-3" />
+                        Number
                       </div>
                     </div>
                   )}
-                  {form.formState.errors.new_password && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {form.formState.errors.new_password.message}
-                    </p>
-                  )}
+                  <FormMessage className="text-xs text-red-500 mt-1" />
                 </FormItem>
               )}
             />
@@ -243,67 +165,55 @@ export function ChangePasswordForm() {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem className="space-y-0">
-                  <div className="relative">
-                    <FloatingInput
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      disabled={isPending}
-                      className={cn(
-                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                        form.formState.errors.confirmPassword &&
-                          "border-red-300 focus:border-red-500 focus:ring-red-500"
-                      )}
-                      {...field}
-                    />
-                    <FloatingLabel htmlFor="confirmPassword">
-                      <Lock className="mr-2 h-4 w-4" />
-                      Confirm New Password
-                    </FloatingLabel>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="text-muted-foreground absolute top-1/2 right-3 z-10 -translate-y-1/2"
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                  {form.formState.errors.confirmPassword && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {form.formState.errors.confirmPassword.message}
-                    </p>
-                  )}
+                <FormItem className="space-y-1.5">
+                  <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                    Confirm Password
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Repeat new password"
+                        disabled={isPending}
+                        className={cn(
+                          "h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 pr-10 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none",
+                          form.formState.errors.confirmPassword && "border-red-300 focus:border-red-500 focus:ring-red-500"
+                        )}
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6c7a91] hover:text-[#0d1117] transition-colors"
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-xs text-red-500 mt-1" />
                 </FormItem>
               )}
             />
+          </div>
 
+          <div className="flex justify-end pt-2">
             <Button
               type="submit"
               disabled={isPending}
-              className={cn(
-                "flex w-full justify-center rounded-lg bg-gray-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-gray-800 focus:outline-none",
-                isPending ? "cursor-not-allowed opacity-70" : ""
-              )}
+              className="h-10 rounded-full bg-blue-600 px-8 text-[13px] font-semibold text-white shadow-sm hover:bg-blue-700 transition-all min-w-[160px]"
             >
               {isPending ? (
-                <span className="flex items-center">
+                <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Updating...
-                </span>
+                </>
               ) : (
-                "Update Password"
+                "Update password"
               )}
             </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

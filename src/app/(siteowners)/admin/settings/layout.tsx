@@ -29,6 +29,12 @@ const settingsItems: SettingItem[] = [
     description: "Manage your domain settings and configurations",
     path: "/admin/settings/domains",
   },
+  {
+    id: "account",
+    title: "Account",
+    description: "Manage your profile and security settings",
+    path: "/admin/settings/account",
+  },
 ];
 
 interface SettingsLayoutProps {
@@ -42,16 +48,21 @@ export default async function SettingsLayout({
 }: SettingsLayoutProps) {
   const user = await getServerUser();
   return (
-    <div className="mx-auto px-20 py-20">
-      <div className="mb-3">
-        <h1 className="px-2 text-2xl font-bold tracking-tight text-gray-900">
+    <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mb-8 mt-4">
+        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           Settings
         </h1>
+        <p className="mt-2 text-sm text-gray-500">
+          Manage your store configuration, branding, delivery, domains, and account security.
+        </p>
       </div>
 
-      <SettingsTabs items={settingsItems} websiteType={user?.website_type} />
+      <div className="mb-8 cursor-pointer">
+        <SettingsTabs items={settingsItems} websiteType={user?.website_type} />
+      </div>
 
-      <div className="mt-2">{children}</div>
+      <div className="mt-6">{children}</div>
     </div>
   );
 }

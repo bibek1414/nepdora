@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -372,12 +371,22 @@ export default function CloudflareDomainForm({
 }: {
   existingDomains: CustomDomain[];
 }) {
+  const isInternalDomain = (domain: string) => {
+    const lowercaseDomain = domain.toLowerCase();
+    return (
+      lowercaseDomain.includes("localhost") ||
+      lowercaseDomain.includes(".nepdora.baliyoventures.com") ||
+      lowercaseDomain.includes(".nepdora.com")
+    );
+  };
+
   const [domain, setDomain] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [newDomainAdded, setNewDomainAdded] = useState(false);
-  const [localDomains, setLocalDomains] =
-    useState<CustomDomain[]>(existingDomains);
+  const [localDomains, setLocalDomains] = useState<CustomDomain[]>(
+    existingDomains.filter(d => !isInternalDomain(d.domain))
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -390,13 +399,18 @@ export default function CloudflareDomainForm({
     // 1. Verify Domain via DNS-Query Package first
     const verifyResult = await verifyDomainDNS(domain);
     if (!verifyResult.success) {
-      setError(verifyResult.error || "Domain could not be verified. Ensure it is registered and has active DNS records.");
+      setError(
+        verifyResult.error ||
+          "Domain could not be verified. Ensure it is registered and has active DNS records."
+      );
       setIsLoading(false);
       return;
     }
 
     // 2. Only proceed if DNS is verified
-    console.log(`Domain ${domain} verified successfully. Proceeding with Cloudflare and Vercel setup.`);
+    console.log(
+      `Domain ${domain} verified successfully. Proceeding with Cloudflare and Vercel setup.`
+    );
 
     const saveResult = await saveCustomDomain(domain);
     if (saveResult.success && saveResult.domain) {
@@ -416,7 +430,9 @@ export default function CloudflareDomainForm({
       }
 
       setNewDomainAdded(true);
-      setLocalDomains([...localDomains, saveResult.domain]);
+      if (!isInternalDomain(saveResult.domain.domain)) {
+        setLocalDomains([...localDomains, saveResult.domain]);
+      }
       setDomain("");
     } else {
       setError(`Failed to save domain: ${saveResult.error}`);

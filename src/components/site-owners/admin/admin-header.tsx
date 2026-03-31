@@ -213,17 +213,10 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuItem
-                    onClick={() => handleNavigation("/admin/profile")}
-                  >
-                    <UserIcon className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={() => handleNavigation("/admin/change-password")}
+                    onClick={() => handleNavigation("/admin/settings/account")}
                   >
                     <Settings className="mr-2 h-4 w-4" />
-                    <span>Change Password</span>
+                    <span>Settings</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>

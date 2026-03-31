@@ -45,23 +45,29 @@ export default function SettingsTabs({
   };
 
   return (
-    <Tabs value={getCurrentTab()} onValueChange={handleTabChange}>
-      <TabsList className="flex">
+    <div className="border-b border-gray-200">
+      <nav className="-mb-px flex space-x-8" aria-label="Tabs">
         {filteredItems.map(item => {
           const isActive = getCurrentTab() === item.id;
           return (
-            <TabsTrigger
+            <button
               key={item.id}
-              value={item.id}
-              className={`flex w-fit cursor-pointer items-center gap-1 ${
-                isActive ? "rounded-full bg-[#f3f4f6]" : "bg-white"
-              }`}
+              onClick={() => handleTabChange(item.id)}
+              className={`
+                whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium cursor-pointer
+                ${
+                  isActive
+                    ? "border-blue-600 text-blue-600"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                }
+              `}
+              aria-current={isActive ? "page" : undefined}
             >
-              <span className="hidden sm:inline">{item.title}</span>
-            </TabsTrigger>
+              {item.title}
+            </button>
           );
         })}
-      </TabsList>
-    </Tabs>
+      </nav>
+    </div>
   );
 }

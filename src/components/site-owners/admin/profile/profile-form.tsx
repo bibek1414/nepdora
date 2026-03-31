@@ -130,201 +130,158 @@ export const ProfileForm = () => {
   }
 
   return (
-    <div className="max-w-2xl">
-      {/* Profile Settings Form */}
-      <div className="max-w-4xl">
-        <Card className="border-none shadow-none">
-          <CardContent className="pt-6">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
+    <div className="w-full">
+      <div className="p-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+              <FormField
+                control={form.control}
+                name="first_name"
+                render={({ field }) => (
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                      First Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your first name"
+                        {...field}
+                        className="h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="last_name"
+                render={({ field }) => (
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                      Last Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your last name"
+                        {...field}
+                        className="h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+
+              <div className="space-y-1.5">
+                <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                  Email Address
+                </FormLabel>
+                <Input
+                  value={profile?.email || ""}
+                  disabled
+                  className="h-11 rounded-[12px] border-[#e2e8f0] bg-[#f8fafc] px-4 text-[13px] text-[#5b6e8c] cursor-not-allowed border-dashed focus-visible:ring-0"
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="phone_number"
+                render={({ field }) => (
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                      Phone Number
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your phone number"
+                        {...field}
+                        className="h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+
+              <div className="md:col-span-2">
+                <FormField
+                  control={form.control}
+                  name="website_type"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                        Website Type
+                      </FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="flex flex-row gap-6 mt-1"
+                        >
+                          <FormItem className="flex items-center space-y-0 space-x-2">
+                            <FormControl>
+                              <RadioGroupItem value="ecommerce" className="border-blue-600 text-blue-600" />
+                            </FormControl>
+                            <FormLabel className="font-semibold text-sm text-[#0d1117] cursor-pointer">
+                              E-commerce
+                              {profile?.website_type === "ecommerce" && (
+                                <span className="ml-2 bg-[#e8f5e9] text-[#2e7d32] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                  Default
+                                </span>
+                              )}
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-y-0 space-x-2">
+                            <FormControl>
+                              <RadioGroupItem value="service" className="border-blue-600 text-blue-600" />
+                            </FormControl>
+                            <FormLabel className="font-semibold text-sm text-[#0d1117] cursor-pointer">
+                              Service
+                              {profile?.website_type === "service" && (
+                                <span className="ml-2 bg-[#e8f5e9] text-[#2e7d32] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                  Default
+                                </span>
+                              )}
+                            </FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#f0f2f5]">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => form.reset()}
+                disabled={!form.formState.isDirty || updateProfile.isPending}
+                className="h-10 rounded-full border-[#e2e8f0] px-6 text-[13px] font-semibold text-[#1f2a48] hover:bg-[#f8fafc] hover:border-[#cbd5e1] shadow-none"
               >
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">
-                      Personal Information
-                    </h3>
-                    <div className="grid gap-6 md:grid-cols-2">
-                      <FormField
-                        control={form.control}
-                        name="first_name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                              <User className="h-4 w-4" />
-                              <span>First Name</span>
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your first name"
-                                {...field}
-                                className="focus:border-primary focus:ring-primary h-11 border-gray-300"
-                              />
-                            </FormControl>
-                            <FormMessage className="text-xs" />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="last_name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                              <User className="h-4 w-4" />
-                              <span>Last Name</span>
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your last name"
-                                {...field}
-                                className="focus:border-primary focus:ring-primary h-11 border-gray-300"
-                              />
-                            </FormControl>
-                            <FormMessage className="text-xs" />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">
-                      Contact Information
-                    </h3>
-                    <div className="grid gap-6 md:grid-cols-2">
-                      <div className="space-y-2">
-                        <FormLabel className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                          <Mail className="h-4 w-4" />
-                          <span>Email Address</span>
-                        </FormLabel>
-                        <Input
-                          value={profile?.email || ""}
-                          disabled
-                          className="h-11 cursor-not-allowed border-gray-300 bg-gray-50 text-gray-600"
-                        />
-                      </div>
-
-                      <FormField
-                        control={form.control}
-                        name="phone_number"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                              <Smartphone className="h-4 w-4" />
-                              <span>Phone Number</span>
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your phone number"
-                                {...field}
-                                className="focus:border-primary focus:ring-primary h-11 border-gray-300"
-                              />
-                            </FormControl>
-                            <FormMessage className="text-xs" />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase">
-                      Website Configuration
-                    </h3>
-                    <FormField
-                      control={form.control}
-                      name="website_type"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormLabel className="text-sm font-medium text-gray-700">
-                            Website Type
-                          </FormLabel>
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              className="flex flex-col space-y-1"
-                            >
-                              <FormItem className="flex items-center space-y-0 space-x-3">
-                                <FormControl>
-                                  <RadioGroupItem value="ecommerce" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  E-commerce
-                                  {profile?.website_type === "ecommerce" && (
-                                    <span className="ml-2 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
-                                      Currently Active
-                                    </span>
-                                  )}
-                                </FormLabel>
-                              </FormItem>
-                              <FormItem className="flex items-center space-y-0 space-x-3">
-                                <FormControl>
-                                  <RadioGroupItem value="service" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  Service
-                                  {profile?.website_type === "service" && (
-                                    <span className="ml-2 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
-                                      Currently Active
-                                    </span>
-                                  )}
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between border-t pt-6">
-                  <div className="text-sm text-gray-500">
-                    {form.formState.isDirty && (
-                      <div className="flex items-center space-x-2">
-                        <div className="bg-primary h-2 w-2 rounded-full"></div>
-                        <span>You have unsaved changes</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex space-x-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => form.reset()}
-                      disabled={
-                        !form.formState.isDirty || updateProfile.isPending
-                      }
-                      className="h-11 rounded-lg border-gray-300 px-6 font-medium"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={
-                        !form.formState.isDirty || updateProfile.isPending
-                      }
-                      className="bg-primary hover:bg-primary/80 h-11 rounded-lg px-8 font-semibold text-white shadow-md transition-all"
-                    >
-                      {updateProfile.isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Saving Changes...
-                        </>
-                      ) : (
-                        "Save Changes"
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+                Discard
+              </Button>
+              <Button
+                type="submit"
+                disabled={!form.formState.isDirty || updateProfile.isPending}
+                className="h-10 rounded-full bg-blue-600 px-8 text-[13px] font-semibold text-white shadow-sm hover:bg-blue-700 transition-all"
+              >
+                {updateProfile.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update account"
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );
