@@ -364,6 +364,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/cta/cta2.png",
         description: "Modern collage style with animations",
       },
+      {
+        id: "cta-3",
+        name: "CTA Style 3",
+        image: "/images/site-owners/cta/cta3.png",
+        description: "Premium CTA with stats and trust indicators",
+      },
     ],
     appointment: [
       {

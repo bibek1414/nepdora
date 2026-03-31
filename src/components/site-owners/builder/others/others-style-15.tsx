@@ -84,14 +84,17 @@ export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({
             <div className="mb-3">
               <Badge
                 variant="outline"
-                className="border-primary/20 text-primary mb-3 text-sm font-semibold uppercase tracking-wider"
-                style={{ color: colors.primary, borderColor: `${colors.primary}33` }}
+                className="border-primary/20 text-primary r mb-3 text-sm font-semibold"
+                style={{
+                  color: colors.primary,
+                  borderColor: `${colors.primary}33`,
+                }}
               >
                 <EditableText
                   value={data.badge}
                   onChange={handleTextUpdate("badge")}
                   isEditable={isEditable}
-                  as="span"
+                  as="p"
                 />
               </Badge>
             </div>
@@ -122,24 +125,27 @@ export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({
             className="flex flex-wrap gap-4 lg:justify-end"
           >
             {data.trustBadges?.map((stat, index) => (
-              <Card key={stat.id} className="rounded-lg px-6 py-4 text-center shadow-sm">
+              <Card
+                key={stat.id}
+                className="rounded-lg px-6 py-4 text-center shadow-sm"
+              >
                 <div
                   className="text-2xl font-bold"
                   style={{ color: colors.primary }}
                 >
                   <EditableText
                     value={stat.value}
-                    onChange={(val) => handleStatUpdate(index, "value", val)}
+                    onChange={val => handleStatUpdate(index, "value", val)}
                     isEditable={isEditable}
-                    as="span"
+                    as="h3"
                   />
                 </div>
-                <div className="text-muted-foreground text-xs uppercase tracking-wide">
+                <div className="text-muted-foreground text-xs">
                   <EditableText
                     value={stat.label}
-                    onChange={(val) => handleStatUpdate(index, "label", val)}
+                    onChange={val => handleStatUpdate(index, "label", val)}
                     isEditable={isEditable}
-                    as="span"
+                    as="p"
                   />
                 </div>
               </Card>
@@ -159,7 +165,7 @@ export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="hover:border-primary group h-full transition-all duration-300">
+                <Card className="group h-full transition-all duration-300">
                   <CardHeader>
                     <div
                       className="bg-primary/10 group-hover:bg-primary mb-0 flex h-12 w-12 items-center justify-center rounded-lg transition-colors"
@@ -175,9 +181,11 @@ export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({
                     <CardTitle className="pt-4 text-lg">
                       <EditableText
                         value={feature.title}
-                        onChange={(val) => handleFeatureUpdate(index, "title", val)}
+                        onChange={val =>
+                          handleFeatureUpdate(index, "title", val)
+                        }
                         isEditable={isEditable}
-                        as="span"
+                        as="h5"
                         style={{ fontFamily: theme?.fonts?.heading }}
                       />
                     </CardTitle>
@@ -186,9 +194,11 @@ export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({
                     <CardDescription className="text-sm">
                       <EditableText
                         value={feature.description}
-                        onChange={(val) => handleFeatureUpdate(index, "description", val)}
+                        onChange={val =>
+                          handleFeatureUpdate(index, "description", val)
+                        }
                         isEditable={isEditable}
-                        as="span"
+                        as="p"
                         multiline
                       />
                     </CardDescription>

@@ -36,8 +36,28 @@ export interface CTATemplate2Data {
   backgroundColor?: string;
 }
 
+export interface CTATemplate3Stat {
+  id: string;
+  value: string;
+  label: string;
+}
+
+export interface CTATemplate3Data {
+  template: "cta-3";
+  badge: string;
+  title: string;
+  description: string;
+  button1Text: string;
+  button1Href?: string;
+  button2Text: string;
+  button2Href?: string;
+  stats: CTATemplate3Stat[];
+  imageUrl: string;
+  imageAlt?: string;
+}
+
 // Union type for all CTA templates
-export type CTAData = CTATemplate1Data | CTATemplate2Data;
+export type CTAData = CTATemplate1Data | CTATemplate2Data | CTATemplate3Data;
 
 // Component and API interfaces
 export interface CTAComponentData {
@@ -90,10 +110,31 @@ export const defaultCTATemplate2Data: CTATemplate2Data = {
   backgroundColor: "#F5F3EF",
 };
 
+export const defaultCTATemplate3Data: CTATemplate3Data = {
+  template: "cta-3",
+  badge: "Free Consultation",
+  title: "Ready to Start Your\nStudy Abroad Journey?",
+  description:
+    "Get personalized guidance from our expert counselors. We've helped 2,000+ students achieve their dreams.",
+  button1Text: "Book Free Consultation",
+  button1Href: "#",
+  button2Text: "Call Now",
+  button2Href: "tel:+9771234567890",
+  imageUrl:
+    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&h=600&fit=crop",
+  imageAlt: "Students celebrating graduation",
+  stats: [
+    { id: "cta-3-stat-1", value: "2,000+", label: "Students Placed" },
+    { id: "cta-3-stat-2", value: "98%", label: "Visa Success" },
+    { id: "cta-3-stat-3", value: "5", label: "Countries" },
+  ],
+};
+
 // Default data map for all CTA templates
 export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-1": defaultCTATemplate1Data,
   "cta-2": defaultCTATemplate2Data,
+  "cta-3": defaultCTATemplate3Data,
 };
 
 // Type guards for each template
@@ -102,3 +143,6 @@ export const isCTATemplate1 = (data: CTAData): data is CTATemplate1Data =>
 
 export const isCTATemplate2 = (data: CTAData): data is CTATemplate2Data =>
   data.template === "cta-2";
+
+export const isCTATemplate3 = (data: CTAData): data is CTATemplate3Data =>
+  data.template === "cta-3";
