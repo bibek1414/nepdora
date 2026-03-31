@@ -322,7 +322,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                   </div>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  <p className="max-w-md truncate text-xs text-black/50">
+                  <p className="max-w-xs truncate text-xs text-black/50">
                     {item.message || "—"}
                   </p>
                 </TableCell>
