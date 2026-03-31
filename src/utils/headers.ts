@@ -36,3 +36,18 @@ export const createHeadersCustomer = (
 
   return headers;
 };
+
+export const createHeadersTokenOnly = (
+  includeAuth: boolean = true
+): HeadersInit => {
+  const headers: HeadersInit = {};
+
+  if (includeAuth) {
+    const token = getAuthToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
+  return headers;
+};

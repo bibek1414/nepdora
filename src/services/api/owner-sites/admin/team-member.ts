@@ -1,6 +1,5 @@
 import { apiFetch } from "@/lib/api-client";
-// services/api/owner-sites/admin/team-member.ts
-
+import { createHeadersTokenOnly } from "@/utils/headers";
 import { getApiBaseUrl } from "@/config/site";
 import { Members, TEAM } from "@/types/owner-site/admin/team-member";
 import { handleApiError } from "@/utils/api-error";
@@ -37,6 +36,9 @@ export const teamAPI = {
       const response = await apiFetch(url.toString(), {
         method: "POST",
         body: memberData,
+        headers: {
+          ...createHeadersTokenOnly(),
+        },
         // Don't set Content-Type header - let browser set it with boundary for FormData
       }).catch(fetchError => {
         // Handle network errors
@@ -69,8 +71,11 @@ export const teamAPI = {
       const url = new URL(`${BASE_API_URL}/api/team-member/${id}/`);
 
       const response = await apiFetch(url.toString(), {
-        method: "PUT",
+        method: "PATCH",
         body: memberData,
+        headers: {
+          ...createHeadersTokenOnly(),
+        },
         // Don't set Content-Type header - let browser set it with boundary for FormData
       }).catch(fetchError => {
         // Handle network errors
@@ -104,6 +109,9 @@ export const teamAPI = {
 
       const response = await apiFetch(url.toString(), {
         method: "DELETE",
+        headers: {
+          ...createHeadersTokenOnly(),
+        },
       }).catch(fetchError => {
         // Handle network errors
         console.error("Network error:", fetchError);

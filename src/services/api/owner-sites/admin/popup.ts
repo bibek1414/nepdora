@@ -7,13 +7,18 @@ import {
   PaginatedPopupFormResponse,
 } from "@/types/owner-site/admin/popup";
 import { getApiBaseUrl } from "@/config/site";
-
+import { createHeadersTokenOnly } from "@/utils/headers";
 export const popupApi = {
   // Popup CRUD operations
   getPopups: async (): Promise<PopUp[]> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await apiFetch(`${API_BASE_URL}/api/popup/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/`, {
+      method: "GET",
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
+    });
     if (!response.ok) throw new Error("Failed to fetch popups");
     return response.json();
   },
@@ -21,7 +26,12 @@ export const popupApi = {
   getPopup: async (id: number): Promise<PopUp> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
+      method: "GET",
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
+    });
     if (!response.ok) throw new Error("Failed to fetch popup");
     return response.json();
   },
@@ -32,6 +42,9 @@ export const popupApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/popup/`, {
       method: "POST",
       body: data,
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
     });
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -44,8 +57,11 @@ export const popupApi = {
     const API_BASE_URL = getApiBaseUrl();
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
-      method: "PUT",
+      method: "PATCH",
       body: data,
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
     });
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -59,6 +75,9 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup/${id}/`, {
       method: "DELETE",
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
     });
     if (!response.ok) throw new Error("Failed to delete popup");
   },
@@ -79,7 +98,12 @@ export const popupApi = {
     const queryString = params.toString();
     const url = `${API_BASE_URL}/api/popup-form/${queryString ? `?${queryString}` : ""}`;
 
-    const response = await apiFetch(url);
+    const response = await apiFetch(url, {
+      method: "GET",
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
+    });
     if (!response.ok) throw new Error("Failed to fetch popup forms");
     return response.json();
   },
@@ -87,7 +111,12 @@ export const popupApi = {
   getPopupForm: async (id: number): Promise<PopUpForm> => {
     const API_BASE_URL = getApiBaseUrl();
 
-    const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`);
+    const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
+      method: "GET",
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
+    });
     if (!response.ok) throw new Error("Failed to fetch popup form");
     return response.json();
   },
@@ -98,7 +127,7 @@ export const popupApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        ...createHeadersTokenOnly(),
       },
       body: JSON.stringify(data),
     });
@@ -118,7 +147,7 @@ export const popupApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
+        ...createHeadersTokenOnly(),
       },
       body: JSON.stringify(data),
     });
@@ -134,6 +163,9 @@ export const popupApi = {
 
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/${id}/`, {
       method: "DELETE",
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
     });
     if (!response.ok) throw new Error("Failed to delete form");
   },
@@ -142,7 +174,13 @@ export const popupApi = {
     const API_BASE_URL = getApiBaseUrl();
 
     const response = await apiFetch(
-      `${API_BASE_URL}/api/popup/?is_active=true`
+      `${API_BASE_URL}/api/popup/?is_active=true`,
+      {
+        method: "GET",
+        headers: {
+          ...createHeadersTokenOnly(),
+        },
+      }
     );
     if (!response.ok) throw new Error("Failed to fetch active popup");
     const data = await response.json();
@@ -162,7 +200,7 @@ export const popupApi = {
     const response = await apiFetch(`${API_BASE_URL}/api/popup-form/`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        ...createHeadersTokenOnly(),
       },
       body: JSON.stringify({
         popup: popupId,

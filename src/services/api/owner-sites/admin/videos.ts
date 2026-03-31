@@ -6,7 +6,7 @@ import {
   CreateVideoData,
   UpdateVideoData,
 } from "@/types/owner-site/admin/videos";
-
+import { createHeadersTokenOnly } from "@/utils/headers";
 export const videosAPI = {
   // Get all videos
   getVideos: async (): Promise<Videos> => {
@@ -33,7 +33,9 @@ export const videosAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
       body: JSON.stringify(data),
     });
 
@@ -51,8 +53,10 @@ export const videosAPI = {
     const url = new URL(`${BASE_API_URL}/api/videos/${id}/`);
 
     const response = await apiFetch(url.toString(), {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: "PATCH",
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
       body: JSON.stringify(data),
     });
 
@@ -71,7 +75,9 @@ export const videosAPI = {
 
     const response = await apiFetch(url.toString(), {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        ...createHeadersTokenOnly(),
+      },
     });
 
     if (!response.ok) {

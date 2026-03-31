@@ -44,6 +44,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const SimplePagination = ({
   currentPage,
@@ -86,6 +96,7 @@ const SimplePagination = ({
 const PopupListPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPopup, setEditingPopup] = useState<PopUp | null>(null);
+  const [popupToDelete, setPopupToDelete] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
@@ -110,7 +121,17 @@ const PopupListPage: React.FC = () => {
   };
 
   const handleDelete = (id: number) => {
-    deletePopupMutation.mutate(id);
+    setPopupToDelete(id);
+  };
+
+  const handleConfirmDelete = () => {
+    if (popupToDelete !== null) {
+      deletePopupMutation.mutate(popupToDelete, {
+        onSuccess: () => {
+          setPopupToDelete(null);
+        },
+      });
+    }
   };
 
   const handleStatusToggle = (popup: PopUp, isActive: boolean) => {
@@ -332,6 +353,31 @@ const PopupListPage: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog
+          open={popupToDelete !== null}
+          onOpenChange={open => !open && setPopupToDelete(null)}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the
+                popup and remove it from your website.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmDelete}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {deletePopupMutation.isPending ? "Deleting..." : "Delete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
