@@ -212,10 +212,10 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
                   {highlights.map((item: string, i: number) => (
                     <div
                       key={i}
-                      className="group flex items-start gap-4 rounded-xl border border-slate-100 bg-white p-6 transition-all duration-300 hover:border-slate-200 hover:shadow-sm"
+                      className="flex items-start gap-4 rounded-xl border border-slate-100 bg-white p-6 transition-all duration-300 hover:border-slate-200 hover:shadow-sm"
                     >
                       <div
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-50 transition-colors group-hover:bg-slate-100"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-50 transition-colors"
                         style={{ color: theme?.colors?.primary }}
                       >
                         <Award className="h-5 w-5" />
@@ -331,7 +331,7 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
                 <div
                   key={uni.id}
                   className={cn(
-                    "group relative flex flex-col overflow-hidden rounded-xl border border-slate-100 bg-white p-6 transition-all duration-300",
+                    "relative flex flex-col overflow-hidden rounded-xl border border-slate-100 bg-white p-6 transition-all duration-300",
                     "hover:border-transparent hover:shadow-xl hover:shadow-slate-200/50"
                   )}
                 >

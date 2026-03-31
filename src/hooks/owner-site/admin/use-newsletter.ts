@@ -4,6 +4,7 @@ import {
   CreateNewsletterRequest,
   Newsletter,
 } from "@/types/owner-site/admin/newsletter";
+import { toast } from "sonner";
 
 // Query Keys
 export const newsletterKeys = {
@@ -46,6 +47,23 @@ export const useUpdateNewsletter = () => {
     },
     onError: (error: Error) => {
       console.error("Failed to update newsletter:", error);
+    },
+  });
+};
+
+export const useDeleteNewsletter = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: newsletterApi.deleteNewsletter,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: newsletterKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
+      toast.success("Newsletter subscription deleted successfully");
+    },
+    onError: error => {
+      toast.error("Failed to delete newsletter");
+      console.error("Delete newsletter error:", error);
     },
   });
 };

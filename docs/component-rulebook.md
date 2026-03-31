@@ -50,6 +50,7 @@ This guide turns the `@beautifulMention` callout into a repeatable checklist whe
 
 - **Avoid Excessive Shadows**: Use subtle shadows (`shadow-sm` or `shadow`) sparingly. Deep or heavy shadows can make the UI feel dated.
 - **Subtle Hover Effects**: Hover states should be professional and understated. Avoid overly aggressive scaling or intense color changes. Prefer smooth, short transitions (e.g., `transition-all duration-200`).
+- **Simplify Hover Interactions**: Avoid using `group` and `group-hover` for complex, synchronized animations across multiple child elements (e.g., scaling images while moving icons and expanding text simultaneously). Such effects can feel "busy" and distracting. Instead, favor single-component hover effects or very subtle, independent transitions to maintain a clean, premium aesthetic.
 - **Clean Flow**: Ensure components follow a logical flow, maintaining consistent vertical rhythm and whitespace. Align elements to the grid defined in the Layout Shell.
 
 ## @beautifulMention Mobile Responsiveness Strategy

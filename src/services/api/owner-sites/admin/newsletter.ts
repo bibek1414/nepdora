@@ -62,4 +62,13 @@ export const newsletterApi = {
     await handleApiError(response);
     return response.json();
   },
+
+  deleteNewsletter: async (id: number): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await apiFetch(`${API_BASE_URL}/api/newsletter/${id}/`, {
+      method: "DELETE",
+      headers: createHeaders(),
+    });
+    await handleApiError(response);
+  },
 };

@@ -75,4 +75,18 @@ export const contactAPI = {
 
     return await response.json();
   },
+
+  deleteContact: async (id: number): Promise<void> => {
+    const BASE_API_URL = getApiBaseUrl();
+    const response = await apiFetch(`${BASE_API_URL}/api/contact/${id}/`, {
+      method: "DELETE",
+      headers: {
+        ...createHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete contact: ${response.status}`);
+    }
+  },
 };

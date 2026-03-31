@@ -63,7 +63,8 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                 <Link
                   key={country.id}
                   href={`${baseRoute}/${country.data.slug}`}
-                  className={`group block ${
+                  onClick={(e) => isEditable && e.preventDefault()}
+                  className={`block ${
                     index === 0 ? "lg:col-span-2 lg:row-span-2" : ""
                   }`}
                 >
@@ -79,7 +80,7 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                             src={country.data.Image}
                             alt={`Study in ${country.data.name}`}
                             fill
-                            className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                            className="object-cover transition-transform duration-1000 hover:scale-105"
                           />
                         ) : (
                           <div className="bg-muted flex h-full w-full items-center justify-center">
@@ -88,7 +89,7 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                             </span>
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-80" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 transition-opacity duration-500 hover:opacity-80" />
                       </div>
 
                       <div className="absolute right-0 bottom-0 left-0 p-6 text-white md:p-8">
@@ -103,11 +104,11 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                             >
                               Study in {country.data.name}
                             </h3>
-                            <p className="mb-0 line-clamp-2 max-h-0 overflow-hidden text-sm font-medium text-white/90 transition-all duration-500 group-hover:max-h-20 md:text-base">
+                            <p className="mb-0 line-clamp-2 text-sm font-medium text-white/90 transition-all duration-500 md:text-base">
                               {country.data.tagline || country.data.content}
                             </p>
                           </div>
-                          <div className="group-hover:bg-primary group-hover:border-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 text-white shadow-lg backdrop-blur-md transition-all duration-500 group-hover:rotate-45">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-primary/20 text-white shadow-lg backdrop-blur-md transition-all duration-500 hover:rotate-45 hover:bg-primary hover:border-primary">
                             <ArrowUpRight className="h-5 w-5" />
                           </div>
                         </div>

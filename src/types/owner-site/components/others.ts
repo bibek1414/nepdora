@@ -147,7 +147,8 @@ export type OthersData =
   | OthersTemplate11Data
   | OthersTemplate12Data
   | OthersTemplate13Data
-  | OthersTemplate14Data;
+  | OthersTemplate14Data
+  | OthersTemplate15Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -227,6 +228,22 @@ export interface OthersTemplate14Data {
   heading: string;
   description: string;
   steps: OthersProcessStep[];
+}
+
+export interface OthersFeature15 {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface OthersTemplate15Data {
+  template: "others-15";
+  badge: string;
+  heading: string;
+  description: string;
+  trustBadges: OthersStatistic[];
+  features: OthersFeature15[];
 }
 // Component and API interfaces
 export interface OthersComponentData {
@@ -750,6 +767,63 @@ export const defaultOthersTemplate14Data: OthersTemplate14Data = {
   ],
 };
 
+export const defaultOthersTemplate15Data: OthersTemplate15Data = {
+  template: "others-15",
+  badge: "Why Choose Us",
+  heading: "Nepal's Most Trusted Education Consultancy",
+  description:
+    "For over 15 years, Brainstorm Global Education has been transforming dreams into reality. We combine expertise with personalized attention to ensure your success.",
+  trustBadges: [
+    { id: "trust-1", value: "2009", label: "Established" },
+    { id: "trust-2", value: "A+", label: "Rating" },
+    { id: "trust-3", value: "Licensed", label: "By Govt." },
+  ],
+  features: [
+    {
+      id: "f-1",
+      icon: "Shield",
+      title: "100% Genuine Guidance",
+      description:
+        "No fake promises. We provide honest counseling based on your profile and realistic chances.",
+    },
+    {
+      id: "f-2",
+      icon: "Users",
+      title: "Experienced Counselors",
+      description:
+        "Our team has helped 10,000+ students achieve their study abroad dreams successfully.",
+    },
+    {
+      id: "f-3",
+      icon: "Clock",
+      title: "Fast Processing",
+      description:
+        "Quick application processing with dedicated support throughout your journey.",
+    },
+    {
+      id: "f-4",
+      icon: "Award",
+      title: "High Success Rate",
+      description:
+        "98% visa success rate and excellent track record with top universities worldwide.",
+    },
+    {
+      id: "f-5",
+      icon: "HeartHandshake",
+      title: "End-to-End Support",
+      description:
+        "From first consultation to airport pickup abroad — we're with you every step.",
+    },
+    {
+      id: "f-6",
+      icon: "Globe",
+      title: "500+ University Partners",
+      description:
+        "Direct partnerships with leading universities across USA, UK, Australia, Canada & NZ.",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -766,6 +840,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-12": defaultOthersTemplate12Data,
   "others-13": defaultOthersTemplate13Data,
   "others-14": defaultOthersTemplate14Data,
+  "others-15": defaultOthersTemplate15Data,
 };
 
 // Type guards
@@ -811,3 +886,6 @@ export const isOthersTemplate13 = (
 export const isOthersTemplate14 = (
   data: OthersData
 ): data is OthersTemplate14Data => data.template === "others-14";
+export const isOthersTemplate15 = (
+  data: OthersData
+): data is OthersTemplate15Data => data.template === "others-15";

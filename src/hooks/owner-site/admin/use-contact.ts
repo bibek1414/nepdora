@@ -57,3 +57,20 @@ export const useUpdateContact = () => {
     },
   });
 };
+
+export const useDeleteContact = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: contactAPI.deleteContact,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
+      toast.success("Contact deleted successfully");
+    },
+    onError: error => {
+      toast.error("Failed to delete contact");
+      console.error("Delete contact error:", error);
+    },
+  });
+};

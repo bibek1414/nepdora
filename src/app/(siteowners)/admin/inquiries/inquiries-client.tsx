@@ -8,6 +8,7 @@ import {
   Bell,
   ChevronRight,
   ChevronLeft,
+  Trash2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,15 +20,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import { Contact } from "@/types/owner-site/admin/contact";
 import { Newsletter } from "@/types/owner-site/admin/newsletter";
 import { PopUpForm } from "@/types/owner-site/admin/popup";
 import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
-
-import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
-import { usePopupForms } from "@/hooks/owner-site/admin/use-popup";
-import { useNewsletters } from "@/hooks/owner-site/admin/use-newsletter";
+import {
+  useGetContacts,
+  useDeleteContact,
+} from "@/hooks/owner-site/admin/use-contact";
+import {
+  usePopupForms,
+  useDeletePopupForm,
+} from "@/hooks/owner-site/admin/use-popup";
+import {
+  useNewsletters,
+  useDeleteNewsletter,
+} from "@/hooks/owner-site/admin/use-newsletter";
 import ContactDetailsDialog from "@/components/site-owners/admin/contact/contact-details-dialog";
 import { NewsletterDetailsDialog } from "@/components/site-owners/admin/newsletter/newsletter-details-dialog";
 import { PopupFormDetailsDialog } from "@/components/site-owners/admin/popup/popup-form-details-dialog";
@@ -84,6 +103,10 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
   const [page, setPage] = useState(1);
   const { data: unreadCounts } = useUnreadCounts();
 
+  // Delete State
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteConfirmOpen] = useState(false);
+
   // Debounce search
   const [debouncedSearch, setDebouncedSearch] = useState("");
   useEffect(() => {
@@ -116,6 +139,17 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
     usePopupForms(popupFilters);
   const { data: newslettersData, isLoading: loadingNewsletters } =
     useNewsletters(...newsletterArgs);
+
+  // Delete Hooks
+  const { mutate: deleteContact, isPending: deletingContact } =
+    useDeleteContact();
+  const { mutate: deletePopupForm, isPending: deletingPopup } =
+    useDeletePopupForm();
+  const { mutate: deleteNewsletter, isPending: deletingNewsletter } =
+    useDeleteNewsletter();
+
+  const isDeleting =
+    deletingContact || deletingPopup || deletingNewsletter;
 
   const isLoading =
     (selectedView === "contact" && loadingContacts) ||
@@ -155,6 +189,30 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
   const openDialog = (id: number) => {
     setSelectedId(id);
     setIsDialogOpen(true);
+  };
+
+  const openDeleteDialog = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    setDeleteId(id);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleDelete = () => {
+    if (!deleteId) return;
+
+    if (selectedView === "contact") {
+      deleteContact(deleteId, {
+        onSuccess: () => setIsDeleteConfirmOpen(false),
+      });
+    } else if (selectedView === "popup") {
+      deletePopupForm(deleteId, {
+        onSuccess: () => setIsDeleteConfirmOpen(false),
+      });
+    } else if (selectedView === "newsletter") {
+      deleteNewsletter(deleteId, {
+        onSuccess: () => setIsDeleteConfirmOpen(false),
+      });
+    }
   };
 
   // Get current data and counts
@@ -221,6 +279,9 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
               <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
                 Date
               </TableHead>
+              <TableHead className="w-10 px-6 py-3 text-right text-xs font-normal text-black/60">
+                Action
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -270,6 +331,16 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                     {formatDate(item.created_at)}
                   </span>
                 </TableCell>
+                <TableCell className="px-6 py-4 text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={e => item.id && openDeleteDialog(e, item.id)}
+                    className="h-8 w-8 rounded-full p-0 text-black/40 hover:bg-red-50 hover:text-red-500"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -290,6 +361,9 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
               </TableHead>
               <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
                 Date
+              </TableHead>
+              <TableHead className="w-10 px-6 py-3 text-right text-xs font-normal text-black/60">
+                Action
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -328,6 +402,16 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                     {formatDate(item.created_at)}
                   </span>
                 </TableCell>
+                <TableCell className="px-6 py-4 text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={e => openDeleteDialog(e, item.id)}
+                    className="h-8 w-8 rounded-full p-0 text-black/40 hover:bg-red-50 hover:text-red-500"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -348,6 +432,9 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
             </TableHead>
             <TableHead className="px-6 py-3 text-right text-xs font-normal text-black/60">
               Date
+            </TableHead>
+            <TableHead className="w-10 px-6 py-3 text-right text-xs font-normal text-black/60">
+              Action
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -390,6 +477,16 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                 <span className="text-xs text-black/40">
                   {formatDate(item.created_at)}
                 </span>
+              </TableCell>
+              <TableCell className="px-6 py-4 text-right">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={e => item.id !== undefined && openDeleteDialog(e, item.id)}
+                  className="h-8 w-8 rounded-full p-0 text-black/40 hover:bg-red-50 hover:text-red-500"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
@@ -506,6 +603,33 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
             onFormChange={setSelectedId}
           />
         )}
+
+        <AlertDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteConfirmOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete
+                this inquiry from your records.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="bg-red-600 text-white hover:bg-red-700 focus:ring-red-600"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
