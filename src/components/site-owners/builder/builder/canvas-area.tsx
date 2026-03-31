@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 import { ComponentTypeMap } from "@/types/owner-site/components/components";
 import { CanvasSkeleton } from "./builder-skeleton";
+import { cn } from "@/lib/utils";
+import "./builder.css";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -30,6 +32,7 @@ interface CanvasAreaProps {
   pageComponents: ComponentResponse[];
   isLoading: boolean;
   error: Error | null;
+  deviceMode?: 'desktop' | 'tablet' | 'mobile';
 
   onAddSection: (position?: "above" | "below", index?: number) => void;
   onReplaceSection: (componentId: string, category?: string) => void;
@@ -47,6 +50,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   pageComponents: initialPageComponents,
   isLoading,
   error,
+  deviceMode = 'desktop',
   onAddSection,
   onReplaceSection,
   onProductClick,
@@ -74,27 +78,22 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   // Handle component reordering (used by both drag-drop and arrows)
   const handleReorder = useCallback(
     (sourceIndex: number, destinationIndex: number) => {
-      // Create a new array with the reordered items
       const reorderedComponents = Array.from(pageComponents);
       const [movedComponent] = reorderedComponents.splice(sourceIndex, 1);
       reorderedComponents.splice(destinationIndex, 0, movedComponent);
 
-      // Update the order values
       const updatedComponents = reorderedComponents.map((component, index) => ({
         ...component,
         order: index,
       }));
 
-      // Optimistically update the UI
       setPageComponents(updatedComponents);
 
-      // Create the order updates for the backend
       const orderUpdates = updatedComponents.map((component, index) => ({
         componentId: component.component_id,
         order: index,
       }));
 
-      // Update the backend
       updateOrderMutation.mutate({ orderUpdates });
     },
     [pageComponents, updateOrderMutation]
@@ -104,17 +103,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   const handleDragEnd = useCallback(
     (result: DropResult) => {
       const { destination, source } = result;
-
-      // If no destination, do nothing
-      if (!destination) {
-        return;
-      }
-
-      // If dropped in the same position, do nothing
-      if (destination.index === source.index) {
-        return;
-      }
-
+      if (!destination || destination.index === source.index) return;
       handleReorder(source.index, destination.index);
     },
     [handleReorder]
@@ -123,23 +112,18 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   // Handle arrow button clicks
   const handleMoveUp = useCallback(
     (componentIndex: number) => {
-      if (componentIndex > 0) {
-        handleReorder(componentIndex, componentIndex - 1);
-      }
+      if (componentIndex > 0) handleReorder(componentIndex, componentIndex - 1);
     },
     [handleReorder]
   );
 
   const handleMoveDown = useCallback(
     (componentIndex: number) => {
-      if (componentIndex < pageComponents.length - 1) {
-        handleReorder(componentIndex, componentIndex + 1);
-      }
+      if (componentIndex < pageComponents.length - 1) handleReorder(componentIndex, componentIndex + 1);
     },
     [handleReorder, pageComponents.length]
   );
 
-  // Handle add section above/below by delegating to parent
   const handleAddSection = useCallback(
     (position: "above" | "below", index: number) => {
       onAddSection(position, index);
@@ -147,7 +131,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     [onAddSection]
   );
 
-  // Component renderer with proper typing
   const renderComponent = (component: ComponentResponse, index: number) => {
     const type = component.component_type as keyof ComponentTypeMap;
     const config = COMPONENT_REGISTRY[type];
@@ -158,19 +141,16 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     }
 
     const Component = config.component;
-
-    // Common props for builder mode
     const commonProps = {
       key: `${component.component_type}-${component.id}`,
       component: component,
       isEditable: true,
-      siteUser: "", // siteUser not needed in builder cards for most components
+      siteUser: "",
       pageSlug: currentPageSlug,
       onReplace: onReplaceSection,
-      onUpdate: () => {}, // Handled by individual components internally via hooks
+      onUpdate: () => {},
     };
 
-    // Specific props (empty handlers for builder mode)
     const specificProps = {
       onProductClick: onProductClick || (() => {}),
       onBlogClick: onBlogClick || (() => {}),
@@ -184,7 +164,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
     };
 
     const componentElement = <Component {...commonProps} {...specificProps} />;
-
     const isFirst = index === 0;
     const isLastComponent = index === pageComponents.length - 1;
     const isHovered = hoveredComponentIndex === index;
@@ -200,16 +179,11 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
             ref={provided.innerRef}
             {...provided.draggableProps}
             id={component.component_id}
-            className={`group relative scroll-mt-24 ${snapshot.isDragging ? "l z-50" : ""}`}
-            style={{
-              ...provided.draggableProps.style,
-              ...(snapshot.isDragging && {
-                // Counter the parent scale(0.7) during drag
-                transform: provided.draggableProps.style?.transform
-                  ? `${provided.draggableProps.style.transform}`
-                  : undefined,
-              }),
-            }}
+            className={cn(
+              "group relative scroll-mt-24 transition-all duration-200",
+              snapshot.isDragging && "z-50"
+            )}
+            style={provided.draggableProps.style}
             onMouseEnter={() => setHoveredComponentIndex(index)}
             onMouseLeave={() => setHoveredComponentIndex(null)}
           >
@@ -219,77 +193,75 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
               aria-hidden
             />
 
+            {/* Section Label */}
+            <div className={cn(
+              "builder-section-label transition-all duration-200 opacity-0 group-hover:opacity-100",
+              isHovered && "bg-blue-50/50 opacity-100"
+            )}
+            onClick={() => handleAddSection("above", index)}
+            >
+              ☰ {COMPONENT_REGISTRY[type]?.displayName || type} section — click to edit
+            </div>
+
             {/* Hover Add Section Controls */}
-            {isHovered && (
+            {isHovered && !snapshot.isDragging && (
               <>
-                {/* Add Section Above Button */}
                 <div className="absolute -top-6 left-1/2 z-30 -translate-x-1/2 transform">
                   <Button
                     onClick={() => handleAddSection("above", index)}
                     variant="outline"
                     size="sm"
-                    className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                    className="h-7 gap-1 border border-dashed border-blue-300 bg-white text-[11px] text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <Plus className="h-3 w-3" />
-                    Add Section Above
+                    Add Above
                   </Button>
                 </div>
-
-                {/* Add Section Below Button */}
                 <div className="absolute -bottom-6 left-1/2 z-30 -translate-x-1/2 transform">
                   <Button
                     onClick={() => handleAddSection("below", index)}
                     variant="outline"
                     size="sm"
-                    className="gap-1 border border-dashed border-blue-300 bg-white text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                    className="h-7 gap-1 border border-dashed border-blue-300 bg-white text-[11px] text-blue-600 shadow-sm hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <Plus className="h-3 w-3" />
-                    Add Section Below
+                    Add Below
                   </Button>
                 </div>
               </>
             )}
 
             {/* Control buttons container */}
-            <div className="absolute top-2 -left-12 z-20 flex flex-col gap-1">
-              {/* Arrow controls */}
+            <div className="absolute top-10 -left-12 z-20 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="flex flex-col gap-0.5">
                 <button
                   onClick={() => handleMoveUp(index)}
                   disabled={isFirst}
-                  className={`rounded border bg-white p-1 shadow-md transition-colors ${
-                    isFirst
-                      ? "cursor-not-allowed text-gray-300"
-                      : "cursor-pointer text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                  }`}
-                  title={isFirst ? "Already at top" : "Move up"}
+                  className={cn(
+                    "rounded border bg-white p-1 shadow-sm transition-colors",
+                    isFirst ? "cursor-not-allowed text-gray-200" : "cursor-pointer text-gray-500 hover:bg-gray-50 hover:text-builder-accent"
+                  )}
                 >
-                  <ChevronUp className="h-4 w-4" />
+                  <ChevronUp className="h-3.5 w-3.5" />
                 </button>
-
                 <button
                   onClick={() => handleMoveDown(index)}
                   disabled={isLastComponent}
-                  className={`rounded border bg-white p-1 shadow-md transition-colors ${
-                    isLastComponent
-                      ? "cursor-not-allowed text-gray-300"
-                      : "cursor-pointer text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                  }`}
-                  title={isLastComponent ? "Already at bottom" : "Move down"}
+                  className={cn(
+                    "rounded border bg-white p-1 shadow-sm transition-colors",
+                    isLastComponent ? "cursor-not-allowed text-gray-200" : "cursor-pointer text-gray-500 hover:bg-gray-50 hover:text-builder-accent"
+                  )}
                 >
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
 
-            {/* Component wrapper with visual feedback */}
-            <div
-              className={`transition-all duration-150 ${
-                snapshot.isDragging
-                  ? "scale-[0.5] rounded-xl shadow-2xl ring-4 ring-blue-500"
-                  : "rounded-lg hover:ring-2 hover:ring-gray-300"
-              }`}
-            >
+            {/* Component wrapper */}
+            <div className={cn(
+              "transition-all duration-150 rounded-md overflow-hidden",
+              snapshot.isDragging ? "ring-4 ring-blue-500/50" : "hover:ring-2 hover:ring-builder-accent/20"
+            )}>
               {componentElement}
             </div>
           </div>
@@ -299,77 +271,79 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   };
 
   return (
-    <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
-      {/* Navbar Section */}
-      {navbar ? (
-        <div className="group relative mb-4 border-b">
-          <NavbarComponent
-            navbar={navbar}
-            siteUser=""
-            onReplace={category => onReplaceSection("navbar", category)}
-          />
-        </div>
-      ) : null}
-
-      {/* Main Content Area with Drag and Drop */}
-      <div className="min-h-[400px]">
-        {/* Loading state */}
-        {isLoading && <CanvasSkeleton />}
-        {/* Error state */}
-        {error && (
-          <div className="mx-8 my-4 rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-sm text-red-600">
-              Error loading components: {error.message || "Unknown error"}
-            </p>
+    <div className="builder-canvas-wrapper scrollbar-hide">
+      <div className={cn(
+        "builder-canvas-frame min-h-screen",
+        deviceMode === 'tablet' && "tablet",
+        deviceMode === 'mobile' && "mobile"
+      )}>
+        {/* Site Preview Nav */}
+        {navbar && (
+          <div className="border-b bg-white">
+            <NavbarComponent
+              navbar={navbar}
+              siteUser=""
+              onReplace={category => onReplaceSection("navbar", category)}
+            />
           </div>
         )}
-        {/* Draggable Components */}
-        {!isLoading && pageComponents.length > 0 && (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="page-components" type="COMPONENT">
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`space-y-8 py-4 ${
-                    snapshot.isDraggingOver ? "bg-blue-50" : ""
-                  } transition-colors duration-200`}
-                >
-                  {pageComponents.map((component, index) => (
-                    <React.Fragment key={component.component_id}>
-                      {/* Render the component */}
-                      {renderComponent(component, index)}
-                    </React.Fragment>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-        )}
-        {/* Empty state */}
-        {!isLoading && pageComponents.length === 0 && (
-          <div className="p-8">
-            <PlaceholderManager
-              isLoading={isLoading}
-              pageComponentsLength={pageComponents.length}
-              onAddSection={() => handleAddSection("below", 0)}
+
+        {/* Main Content Area */}
+        <div className="min-h-[400px] bg-white">
+          {isLoading && <CanvasSkeleton />}
+          {error && (
+            <div className="mx-8 my-4 rounded-lg border border-red-200 bg-red-50 p-4">
+              <p className="text-sm text-red-600">
+                Error loading components: {error.message || "Unknown error"}
+              </p>
+            </div>
+          )}
+          {!isLoading && pageComponents.length > 0 && (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="page-components" type="COMPONENT">
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={cn(
+                      "transition-colors duration-200",
+                      snapshot.isDraggingOver ? "bg-blue-50/30" : ""
+                    )}
+                  >
+                    {pageComponents.map((component, index) => (
+                      <React.Fragment key={component.component_id}>
+                        {renderComponent(component, index)}
+                      </React.Fragment>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
+          {!isLoading && pageComponents.length === 0 && (
+            <div className="p-8">
+              <PlaceholderManager
+                isLoading={isLoading}
+                pageComponentsLength={pageComponents.length}
+                onAddSection={() => handleAddSection("below", 0)}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Footer Section */}
+        {footer && (
+          <div className="border-t bg-white">
+            <FooterComponent
+              footer={footer}
+              isEditable={true}
+              siteUser=""
+              onReplace={() => onReplaceSection(footer.id, "footer-sections")}
             />
           </div>
         )}
       </div>
-
-      {/* Footer Section */}
-      {footer ? (
-        <div className="group relative border-t">
-          <FooterComponent
-            footer={footer}
-            isEditable={true}
-            siteUser=""
-            onReplace={() => onReplaceSection(footer.id, "footer-sections")}
-          />
-        </div>
-      ) : null}
     </div>
   );
 };
