@@ -29,6 +29,8 @@ export async function generateMetadata({
       `Explore the homepage for ${siteUser}. View content, products, and services dynamically.`,
     pageRoute: "/",
     pageImage: pageMetadata.image,
+    metaTitle: pageData?.metaTitle,
+    metaDescription: pageData?.metaDescription,
   });
 }
 

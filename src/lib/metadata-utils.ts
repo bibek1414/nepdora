@@ -12,6 +12,8 @@ interface AdminPageMetadataOptions {
   pageDescription: string;
   pageRoute: string;
   pageImage?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
 }
 
 interface SiteConfigMetadata {
@@ -273,6 +275,8 @@ export async function generateAdminPageMetadata({
   pageName,
   pageDescription,
   pageRoute,
+  metaTitle,
+  metaDescription,
 }: AdminPageMetadataOptions): Promise<Metadata> {
   const user = await getServerUser();
   const siteMetadata = await getSiteConfigForMetadata(user?.sub_domain);
@@ -281,8 +285,10 @@ export async function generateAdminPageMetadata({
   const storeName = capitalizeWords(rawStoreName);
   const subDomain = user?.sub_domain || "";
 
-  const title = `${storeName} | ${pageName} | Admin Dashboard`;
-  const description = pageDescription.replace(/\{storeName\}/g, storeName);
+  const title =
+    metaTitle || `${storeName} | ${pageName} | Admin Dashboard`;
+  const description =
+    metaDescription || pageDescription.replace(/\{storeName\}/g, storeName);
 
   return {
     title,
@@ -311,6 +317,8 @@ export async function generatePreviewPageMetadata({
   pageName,
   pageDescription,
   pageRoute,
+  metaTitle,
+  metaDescription,
 }: AdminPageMetadataOptions): Promise<Metadata> {
   const user = await getServerUser();
   const siteMetadata = await getSiteConfigForMetadata(user?.sub_domain);
@@ -319,8 +327,9 @@ export async function generatePreviewPageMetadata({
   const storeName = capitalizeWords(rawStoreName);
   const subDomain = user?.sub_domain || "";
 
-  const title = `${storeName} | ${pageName} | Preview`;
-  const description = pageDescription.replace(/\{storeName\}/g, storeName);
+  const title = metaTitle || `${storeName} | ${pageName} | Preview`;
+  const description =
+    metaDescription || pageDescription.replace(/\{storeName\}/g, storeName);
 
   return {
     title,
@@ -350,6 +359,8 @@ export async function generatePublishPageMetadata({
   pageDescription,
   pageRoute,
   pageImage,
+  metaTitle,
+  metaDescription,
 }: AdminPageMetadataOptions): Promise<Metadata> {
   // Get the actual request headers to extract the host
   const headersList = await headers();
@@ -381,8 +392,9 @@ export async function generatePublishPageMetadata({
     siteMetadata?.business_name || fallbackName
   );
 
-  const title = `${storeName} | ${pageName}`;
-  const description = pageDescription.replace(/\{storeName\}/g, storeName);
+  const title = metaTitle || `${storeName} | ${pageName}`;
+  const description =
+    metaDescription || pageDescription.replace(/\{storeName\}/g, storeName);
 
   return {
     title,

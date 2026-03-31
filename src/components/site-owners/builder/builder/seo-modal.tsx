@@ -25,16 +25,14 @@ interface SEOModalProps {
   onOpenChange: (open: boolean) => void;
   pageTitle: string;
   initialData: {
-    title: string;
-    description: string;
+    meta_title: string;
+    meta_description: string;
     slug: string;
-    isIndexed: boolean;
   };
   onSave: (data: {
-    title: string;
-    description: string;
+    meta_title: string;
+    meta_description: string;
     slug: string;
-    isIndexed: boolean;
   }) => void;
 }
 
@@ -53,7 +51,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
     }
   }, [open, initialData]);
 
-  const handleChange = (field: string, value: string | boolean) => {
+  const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -62,8 +60,8 @@ export const SEOModal: React.FC<SEOModalProps> = ({
     onOpenChange(false);
   };
 
-  const titleLength = formData.title.length;
-  const descLength = formData.description.length;
+  const titleLength = (formData.meta_title || "").length;
+  const descLength = (formData.meta_description || "").length;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -90,8 +88,8 @@ export const SEOModal: React.FC<SEOModalProps> = ({
               </span>
             </Label>
             <Input
-              value={formData.title}
-              onChange={e => handleChange("title", e.target.value)}
+              value={formData.meta_title || ""}
+              onChange={e => handleChange("meta_title", e.target.value)}
               className="border-builder-border-strong focus-visible:ring-builder-accent focus-visible:border-builder-accent bg-builder-surface-2 h-10 text-[13px] focus-visible:ring-1"
               placeholder="e.g. Home | VisionNepal"
             />
@@ -122,8 +120,8 @@ export const SEOModal: React.FC<SEOModalProps> = ({
               </span>
             </Label>
             <Textarea
-              value={formData.description}
-              onChange={e => handleChange("description", e.target.value)}
+              value={formData.meta_description || ""}
+              onChange={e => handleChange("meta_description", e.target.value)}
               className="border-builder-border-strong focus-visible:ring-builder-accent focus-visible:border-builder-accent bg-builder-surface-2 h-24 resize-none text-[13px] focus-visible:ring-1"
               placeholder="A brief description of your page for search engines..."
             />
@@ -146,37 +144,17 @@ export const SEOModal: React.FC<SEOModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-builder-text-secondary text-xs font-semibold">
-                URL slug
-              </Label>
-              <Input
-                value={formData.slug}
-                onChange={e => handleChange("slug", e.target.value)}
-                className="border-builder-border-strong focus-visible:ring-builder-accent focus-visible:border-builder-accent bg-builder-surface-2 h-10 font-mono text-xs focus-visible:ring-1"
-                placeholder="e.g. /about"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-builder-text-secondary text-xs font-semibold">
-                Search indexing
-              </Label>
-              <Select
-                value={formData.isIndexed ? "index" : "no-index"}
-                onValueChange={val =>
-                  handleChange("isIndexed", val === "index")
-                }
-              >
-                <SelectTrigger className="border-builder-border-strong focus:ring-builder-accent bg-builder-surface-2 h-10 text-[13px] focus:ring-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="index">Index this page</SelectItem>
-                  <SelectItem value="no-index">No-index (private)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-1.5">
+            <Label className="text-builder-text-secondary text-xs font-semibold">
+              URL slug
+            </Label>
+            <Input
+              value={formData.slug}
+              onChange={e => handleChange("slug", e.target.value)}
+              className="border-builder-border-strong focus-visible:ring-builder-accent focus-visible:border-builder-accent bg-builder-surface-2 h-10 font-mono text-xs focus-visible:ring-1"
+              placeholder="e.g. /about"
+              disabled
+            />
           </div>
         </div>
 

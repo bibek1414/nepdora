@@ -18,6 +18,7 @@ import {
   usePages,
   useCreatePage,
   useDeletePage,
+  useUpdatePage,
 } from "@/hooks/owner-site/use-page";
 import { Page } from "@/types/owner-site/components/page";
 import {
@@ -60,6 +61,7 @@ import { PublishModal } from "./publish-modal";
 import { LiveSiteModal } from "./live-site-modal";
 import { ResetConfirmationModal } from "./reset-confirmation-modal";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
+import { useCustomDomain } from "@/hooks/use-custom-domain";
 
 interface BuilderLayoutProps {
   params: {
@@ -72,6 +74,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const router = useRouter();
   const { siteUser, pageSlug } = params;
   const { user } = useAuth();
+  const { customDomain } = useCustomDomain();
+
+  const liveSiteUrl = customDomain ? `https://${customDomain}` : "/";
 
   // Dialog states
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
@@ -94,11 +99,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
 
   // SEO state
   const [seoMetadata, setSeoMetadata] = useState({
-    title: "Premium Eyewear Made for Nepal",
-    description:
-      "Thoughtfully designed eyewear that blends comfort, clarity, and modern style for everyday life.",
+    meta_title: "",
+    meta_description: "",
     slug: "/" + pageSlug,
-    isIndexed: true,
   });
   // Dialog states
   const [isNavbarDialogOpen, setIsNavbarDialogOpen] = useState(false);
@@ -128,6 +131,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const createSignupPageMutation = useCreatePage();
   const createCountryDetailsPageMutation = useCreatePage();
   const deletePageMutation = useDeletePage();
+  const updatePageMutation = useUpdatePage();
   const [isCreatingHomePage, setIsCreatingHomePage] = useState(false);
   const [isCreatingLoginPage, setIsCreatingLoginPage] = useState(false);
   const [isCreatingSignupPage, setIsCreatingSignupPage] = useState(false);
@@ -152,10 +156,45 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     }
   }, [pageComponentsResponse]);
 
+  // Initialize SEO metadata from pagesData
+  useEffect(() => {
+    if (!isPagesLoading && pagesData.length > 0) {
+      const page = pagesData.find(
+        p => p.slug === pageSlug || p.slug === `${pageSlug}-draft`
+      );
+      if (page) {
+        setSeoMetadata({
+          meta_title: page.meta_title || "",
+          meta_description: page.meta_description || "",
+          slug: page.slug,
+        });
+      }
+    }
+  }, [pagesData, isPagesLoading, pageSlug]);
+
   const handleSaveSEO = (data: typeof seoMetadata) => {
     setSeoMetadata(data);
-    setHasChanges(true);
-    toast.success("SEO metadata updated locally");
+    const toastId = "seo-update";
+    toast.loading("Updating SEO metadata...", { id: toastId });
+    updatePageMutation.mutate(
+      {
+        slug: pageSlug,
+        data: {
+          meta_title: data.meta_title,
+          meta_description: data.meta_description,
+          title: pagesData.find(p => p.slug === pageSlug)?.title, // Keep title same
+        },
+      },
+      {
+        onSuccess: () => {
+          setHasChanges(true);
+          toast.success("SEO metadata updated successfully", { id: toastId });
+        },
+        onError: () => {
+          toast.error("Failed to update SEO metadata", { id: toastId });
+        },
+      }
+    );
   };
 
   const handlePublish = async () => {
@@ -1117,11 +1156,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onOpenTheme={() => {}}
           onOpenLiveSite={() => setIsLiveSiteModalOpen(true)}
           onOpenPreview={() => setIsPublishModalOpen(true)}
-          liveSiteUrl={
-            siteUser
-              ? `https://${siteUser}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`
-              : "/"
-          }
+          liveSiteUrl={liveSiteUrl}
         />
         {/* MetaBar moved to CanvasArea */}
         <SEOModal
@@ -1155,11 +1190,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         <LiveSiteModal
           open={isLiveSiteModalOpen}
           onOpenChange={setIsLiveSiteModalOpen}
-          siteUrl={
-            siteUser
-              ? `https://${siteUser}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`
-              : "https://yourdomain.com"
-          }
+          siteUrl={liveSiteUrl}
         />
         {/* Sticky Formatting Toolbar */}
         <StickyFormattingToolbar />

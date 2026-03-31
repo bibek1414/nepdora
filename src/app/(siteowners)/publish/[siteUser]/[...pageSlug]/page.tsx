@@ -41,6 +41,8 @@ export async function generateMetadata({
       `Explore the ${currentPageSlug} page for ${siteUser}. View content, products, and services dynamically.`,
     pageRoute: `/${currentPageSlug}`,
     pageImage: pageMetadata.image,
+    metaTitle: pageData?.metaTitle,
+    metaDescription: pageData?.metaDescription,
   });
 }
 

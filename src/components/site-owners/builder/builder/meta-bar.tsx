@@ -4,10 +4,9 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/site-owners/button";
 
 interface MetaBarProps {
-  title: string;
-  description: string;
+  meta_title: string;
+  meta_description: string;
   slug: string;
-  isIndexed: boolean;
   onEdit: () => void;
 }
 
@@ -39,10 +38,9 @@ const MetaItem = ({
 );
 
 export const MetaBar: React.FC<MetaBarProps> = ({
-  title,
-  description,
+  meta_title,
+  meta_description,
   slug,
-  isIndexed,
   onEdit,
 }) => {
   return (
@@ -50,14 +48,14 @@ export const MetaBar: React.FC<MetaBarProps> = ({
       <div className="mx-auto flex h-11 items-center px-4">
         <MetaItem
           label="Title"
-          value={title}
+          value={meta_title}
           onClick={onEdit}
           className="border-r border-gray-100 pl-0"
         />
 
         <MetaItem
           label="Description"
-          value={description}
+          value={meta_description}
           onClick={onEdit}
           className="border-r border-gray-100"
         />
@@ -70,32 +68,6 @@ export const MetaBar: React.FC<MetaBarProps> = ({
           onClick={onEdit}
           className="border-r border-gray-100"
         />
-
-        <div
-          onClick={onEdit}
-          className="flex cursor-pointer items-center gap-2 px-4 py-1.5 hover:bg-gray-50"
-        >
-          <span className="text-[10px] font-medium tracking-wide text-gray-400">
-            Index
-          </span>
-
-          <span
-            className={cn(
-              "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium",
-              isIndexed
-                ? "border-green-200 bg-green-50 text-green-700"
-                : "border-yellow-200 bg-yellow-50 text-yellow-700"
-            )}
-          >
-            <span
-              className={cn(
-                "h-1.5 w-1.5 rounded-full",
-                isIndexed ? "bg-green-500" : "bg-yellow-500"
-              )}
-            />
-            {isIndexed ? "Indexed" : "No Index"}
-          </span>
-        </div>
 
         {/* Right Side */}
         <div className="ml-auto">

@@ -34,6 +34,8 @@ type PublishPagePayload = {
   contentSlug?: string;
   pageComponents: ComponentResponse[];
   entityMetadata?: EntityMetadata;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
 };
 
 type PublishLayoutPayload = {
@@ -305,6 +307,8 @@ export async function getPublishedPagePayload(
     contentSlug,
     pageComponents,
     entityMetadata,
+    metaTitle: currentPage?.meta_title,
+    metaDescription: currentPage?.meta_description,
   };
 }
 
@@ -321,6 +325,8 @@ export async function getPublishedHomePagePayload(
     targetSlug,
     pageTitle: homePage?.title || "Home",
     pageComponents,
+    metaTitle: homePage?.meta_title,
+    metaDescription: homePage?.meta_description,
   };
 }
 

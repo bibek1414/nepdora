@@ -40,10 +40,9 @@ interface CanvasAreaProps {
   onServiceClick?: (serviceSlug: string, order: number) => void;
   // SEO props
   seoMetadata?: {
-    title: string;
-    description: string;
+    meta_title: string;
+    meta_description: string;
     slug: string;
-    isIndexed: boolean;
   };
   onEditSEO?: () => void;
   onOrderChange?: () => void;
@@ -319,10 +318,9 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       {/* SEO Meta Section */}
       {seoMetadata && onEditSEO && (
         <MetaBar
-          title={seoMetadata.title}
-          description={seoMetadata.description}
+          meta_title={seoMetadata.meta_title}
+          meta_description={seoMetadata.meta_description}
           slug={seoMetadata.slug}
-          isIndexed={seoMetadata.isIndexed}
           onEdit={onEditSEO}
         />
       )}
