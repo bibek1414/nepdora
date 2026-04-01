@@ -153,7 +153,8 @@ export type OthersData =
   | OthersTemplate17Data
   | OthersTemplate18Data
   | OthersTemplate19Data
-  | OthersTemplate20Data;
+  | OthersTemplate20Data
+  | OthersTemplate21Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -295,6 +296,29 @@ export interface OthersTemplate18Data {
     alt: string;
   };
 }
+
+export interface OthersTemplate21Card {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  bgColor: string;
+  iconColor: string;
+  buttonText: string;
+  buttonLink: string;
+}
+
+export interface OthersTemplate21Data {
+  template: "others-21";
+  heading: string;
+  leftCards: OthersTemplate21Card[];
+  rightCards: OthersTemplate21Card[];
+  centerImage: {
+    url: string;
+    alt: string;
+  };
+}
+
 // Component and API interfaces
 export interface OthersComponentData {
   id: string | number;
@@ -1210,6 +1234,61 @@ export const defaultOthersTemplate20Data: OthersTemplate20Data = {
   ],
 };
 
+export const defaultOthersTemplate21Data: OthersTemplate21Data = {
+  template: "others-21",
+  heading: "Building strong futures through care\nlearning and nutrition",
+  leftCards: [
+    {
+      id: "mental-wellness",
+      title: "Mental wellness",
+      description:
+        "Providing vital psychological resources and safe spaces for children to heal.",
+      icon: "Flower2",
+      bgColor: "#E8E8F4",
+      iconColor: "#4A4A8A",
+      buttonText: "Learn more",
+      buttonLink: "#",
+    },
+    {
+      id: "skills-workshop",
+      title: "Skills workshop",
+      description: "Developing vocational skills guiding adults toward independence.",
+      icon: "Puzzle",
+      bgColor: "#E6F9F1",
+      iconColor: "#2D6A4F",
+      buttonText: "Learn more",
+      buttonLink: "#",
+    },
+  ],
+  rightCards: [
+    {
+      id: "academic-tutoring",
+      title: "Academic tutoring",
+      description: "Bridging educational gaps via tech personalized rural learning.",
+      icon: "BookOpen",
+      bgColor: "#FDFBD8",
+      iconColor: "#5A5A40",
+      buttonText: "Learn more",
+      buttonLink: "#",
+    },
+    {
+      id: "nutritional-aid",
+      title: "Nutritional aid",
+      description:
+        "Ensuring every child receives healthy meals to fuel learning and growth.",
+      icon: "Utensils",
+      bgColor: "#FDF2F2",
+      iconColor: "#8B3030",
+      buttonText: "Learn more",
+      buttonLink: "#",
+    },
+  ],
+  centerImage: {
+    url: "https://picsum.photos/seed/future-care/1000/1400",
+    alt: "Children in community",
+  },
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -1232,6 +1311,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-18": defaultOthersTemplate18Data,
   "others-19": defaultOthersTemplate19Data,
   "others-20": defaultOthersTemplate20Data,
+  "others-21": defaultOthersTemplate21Data,
 };
 
 // Type guards
@@ -1295,3 +1375,6 @@ export const isOthersTemplate19 = (
 export const isOthersTemplate20 = (
   data: OthersData
 ): data is OthersTemplate20Data => data.template === "others-20";
+export const isOthersTemplate21 = (
+  data: OthersData
+): data is OthersTemplate21Data => data.template === "others-21";
