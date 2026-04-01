@@ -44,7 +44,7 @@ export const MetaBar: React.FC<MetaBarProps> = ({
   onEdit,
 }) => {
   return (
-    <div className="sticky top-0 z-30 w-full border-b bg-white ">
+    <div className="sticky top-0 z-40 w-full shrink-0 border-b border-gray-200 bg-white">
       <div className="flex h-11 items-center px-4">
         <MetaItem
           label="Title"

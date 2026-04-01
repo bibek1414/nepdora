@@ -1200,8 +1200,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         <StickyFormattingToolbar />
 
         {/* Main Layout */}
-        <div className="bg-background flex min-h-screen flex-col pt-16">
-          <div className="flex flex-1">
+        <div className="bg-background flex h-screen flex-col overflow-hidden pt-16">
+          <div className="flex min-h-0 flex-1">
             <PageManagementSidebar
               pages={pagesData}
               currentPage={currentPage}
@@ -1211,46 +1211,48 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               siteUser={siteUser}
             />
 
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <div className="flex-1 overflow-auto bg-gray-200">
-                <MetaBar
-                  meta_title={seoMetadata.meta_title}
-                  meta_description={seoMetadata.meta_description}
-                  slug={seoMetadata.slug}
-                  onEdit={() => setIsSEOModalOpen(true)}
-                />
-                <div className="p-6">
-                  <div className="mx-auto max-w-7xl origin-top scale-75">
-                    <CanvasArea
-                    droppedComponents={droppedComponents}
-                    navbar={navbarResponse?.data}
-                    onAddNavbar={() => setIsNavbarDialogOpen(true)}
-                    footer={footerResponse?.data}
-                    onAddFooter={() => setIsAddSectionDialogOpen(true)}
-                    currentPageSlug={currentPage}
-                    pageComponents={pageComponents}
-                    isLoading={isPageComponentsLoading}
-                    error={pageComponentsError}
-                    onAddSection={handleAddSection}
-                    onReplaceSection={handleReplaceSection}
-                    onOrderChange={() => setHasChanges(true)}
-                    onProductClick={() => {
-                      router.push(`/builder/${siteUser}/product-details`);
-                    }}
-                    onBlogClick={() => {
-                      router.push(`/builder/${siteUser}/blog-details`);
-                    }}
-                    onPortfolioClick={() => {
-                      router.push(`/builder/${siteUser}/portfolio-details`);
-                    }}
-                    onServiceClick={() => {
-                      router.push(`/builder/${siteUser}/service-details`);
-                    }}
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+              <div className="relative min-h-0 flex-1 overflow-auto bg-gray-200">
+                <div className="flex min-h-full flex-col">
+                  <MetaBar
+                    meta_title={seoMetadata.meta_title}
+                    meta_description={seoMetadata.meta_description}
+                    slug={seoMetadata.slug}
+                    onEdit={() => setIsSEOModalOpen(true)}
                   />
+                  <div className="flex-1 p-6">
+                    <div className="mx-auto max-w-7xl origin-top scale-75">
+                      <CanvasArea
+                        droppedComponents={droppedComponents}
+                        navbar={navbarResponse?.data}
+                        onAddNavbar={() => setIsNavbarDialogOpen(true)}
+                        footer={footerResponse?.data}
+                        onAddFooter={() => setIsAddSectionDialogOpen(true)}
+                        currentPageSlug={currentPage}
+                        pageComponents={pageComponents}
+                        isLoading={isPageComponentsLoading}
+                        error={pageComponentsError}
+                        onAddSection={handleAddSection}
+                        onReplaceSection={handleReplaceSection}
+                        onOrderChange={() => setHasChanges(true)}
+                        onProductClick={() => {
+                          router.push(`/builder/${siteUser}/product-details`);
+                        }}
+                        onBlogClick={() => {
+                          router.push(`/builder/${siteUser}/blog-details`);
+                        }}
+                        onPortfolioClick={() => {
+                          router.push(`/builder/${siteUser}/portfolio-details`);
+                        }}
+                        onServiceClick={() => {
+                          router.push(`/builder/${siteUser}/service-details`);
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
             <ComponentOutlineSidebar
               currentPageSlug={currentPage}
