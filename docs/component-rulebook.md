@@ -135,8 +135,8 @@ These rules apply to every component, without exception.
 
 - Hover states must be **subtle and professional**. No aggressive scaling or intense color changes.
 - Standard transition: `transition-all duration-200` (150–200ms).
-- Avoid `group` + `group-hover` for complex synchronized animations across multiple children (scaling image + moving icon + expanding text simultaneously = too busy).
-- Prefer single-element hover effects or very subtle independent transitions.
+- **No Group Hovers**: Avoid using `group` + `group-hover` to trigger multiple animations at once (e.g., scaling an image, moving an icon, and changing text color together). This feels "too busy".
+- **Single Component Hover**: Apply hover effects only to single elements (like the image alone or the entire card alone) for a cleaner, more controlled feel.
 - Avoid bouncy or springy animations unless the product is playful by design.
 
 ---
