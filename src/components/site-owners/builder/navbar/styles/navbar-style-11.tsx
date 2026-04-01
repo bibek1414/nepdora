@@ -139,8 +139,8 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        {/* Desktop Navigation - Centered */}
-        <div className="hidden flex-1 items-center justify-center gap-x-8 lg:flex">
+        {/* Desktop Navigation - Right Aligned */}
+        <div className="hidden flex-1 items-center justify-end gap-x-8 lg:flex pr-8">
           {links.map(link => (
             <div key={link.id}>
               {isEditable && onEditLink && onDeleteLink ? (
