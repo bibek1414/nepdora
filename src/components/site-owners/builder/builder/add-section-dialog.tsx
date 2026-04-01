@@ -305,6 +305,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Others Style 15 (Why Choose Us)",
         image: "/images/site-owners/others/others15.png",
       },
+      {
+        id: "others-16",
+        name: "Others Style 16 (Programs)",
+        image: "https://picsum.photos/seed/others16/600/400",
+      },
     ],
     experience: [
       {

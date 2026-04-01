@@ -120,7 +120,10 @@ These rules apply to every component, without exception.
 - Everything else is neutral: white, off-white, light grey, dark grey, near-black.
 - No rainbow UI. Don't assign different colors to every card or section decoratively.
 - Backgrounds: white or very light grey by default. Avoid heavy-colored sections unless explicitly required by variant.
-- If using a tinted section, use `--accent-subtle` (10–15% opacity) — never a saturated wash.
+- **Subtle Tints**: For cards, badges, or section backgrounds that require a hint of color (e.g., light blue, light yellow), **NEVER** use hardcoded hex values like `bg-[#f8faf9]`. Instead, use the `hexToRgba` utility with a theme token:
+  ```tsx
+  style={{ backgroundColor: hexToRgba(theme.colors.primary, 0.1) }}
+  ```
 - Base background on white and text on near-black unless a variant explicitly overrides. Accent color lives in `EditableLink` buttons via `theme.colors.primary` and `theme.colors.primaryForeground`.
 
 ### Shadows
@@ -285,7 +288,8 @@ Before shipping, verify every item:
 - ❌ Complex `group-hover` chains (scale image + move icon + expand text simultaneously)
 - ❌ Muted grey for primary data labels — use high-contrast text
 - ❌ `<h2><EditableText /></h2>` — wrap via `as` prop, never with a parent semantic tag
-- ❌ Hardcoded hex colors or font names in `className` — use Tailwind neutrals or `style` with theme tokens
+- ❌ Hardcoded hex colors or font names in `className` — use Tailwind neutrals or `style` with theme tokens (e.g., `theme.colors.primary`).
+- ❌ Arbitrary "subtle" hex colors (e.g., `bg-[#f8faf9]`, `bg-[#EEF2FF]`) — use `hexToRgba(token, opacity)` instead.
 
 ---
 

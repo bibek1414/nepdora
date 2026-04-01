@@ -49,3 +49,28 @@ export const getButtonVariant = (variant: string) => {
       return "default";
   }
 };
+
+/**
+ * Converts a hex color string to an RGBA color string with the specified opacity.
+ * @param hex - The hex color string (e.g., "#3B82F6" or "3B82F6").
+ * @param opacity - The opacity value (0 to 1).
+ * @returns The RGBA color string.
+ */
+export function hexToRgba(hex: string, opacity: number = 1): string {
+  if (!hex) return `rgba(0, 0, 0, ${opacity})`;
+
+  let cleanHex = hex.replace("#", "");
+
+  if (cleanHex.length === 3) {
+    cleanHex = cleanHex
+      .split("")
+      .map(char => char + char)
+      .join("");
+  }
+
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}

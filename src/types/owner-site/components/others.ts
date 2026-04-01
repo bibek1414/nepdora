@@ -148,7 +148,8 @@ export type OthersData =
   | OthersTemplate12Data
   | OthersTemplate13Data
   | OthersTemplate14Data
-  | OthersTemplate15Data;
+  | OthersTemplate15Data
+  | OthersTemplate16Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -244,6 +245,25 @@ export interface OthersTemplate15Data {
   description: string;
   trustBadges: OthersStatistic[];
   features: OthersFeature15[];
+}
+
+export interface OthersProgramItem {
+  id: string;
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+}
+
+export interface OthersTemplate16Data {
+  template: "others-16";
+  badge: string;
+  heading: string;
+  programs: OthersProgramItem[];
+  trustBadgeLabel: string;
+  trustBadgeText: string;
 }
 // Component and API interfaces
 export interface OthersComponentData {
@@ -830,6 +850,48 @@ export const defaultOthersTemplate15Data: OthersTemplate15Data = {
   ],
 };
 
+export const defaultOthersTemplate16Data: OthersTemplate16Data = {
+  template: "others-16",
+  badge: "Our Programs",
+  heading:
+    "Empowering global change through dedicated support and immediate action",
+  programs: [
+    {
+      id: "p-1",
+      title: "Education fosters lasting hope",
+      description:
+        "Providing access to education that empowers to a brighter future.",
+      image: {
+        url: "https://picsum.photos/seed/edu-1/600/400",
+        alt: "Education fosters lasting hope",
+      },
+    },
+    {
+      id: "p-2",
+      title: "Nutritious meals that restore hope",
+      description:
+        "Providing healthy, hearty food to those who need it most.",
+      image: {
+        url: "https://picsum.photos/seed/food-1/600/400",
+        alt: "Nutritious meals that restore hope",
+      },
+    },
+    {
+      id: "p-3",
+      title: "Empowering lives through skills",
+      description:
+        "Offering training programs that equip individuals with valuable skills.",
+      image: {
+        url: "https://picsum.photos/seed/skills-1/600/400",
+        alt: "Empowering lives through skills",
+      },
+    },
+  ],
+  trustBadgeLabel: "Trust",
+  trustBadgeText:
+    "Join the 850+ partners funding our essential child safety initiatives",
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -847,6 +909,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-13": defaultOthersTemplate13Data,
   "others-14": defaultOthersTemplate14Data,
   "others-15": defaultOthersTemplate15Data,
+  "others-16": defaultOthersTemplate16Data,
 };
 
 // Type guards
@@ -895,3 +958,6 @@ export const isOthersTemplate14 = (
 export const isOthersTemplate15 = (
   data: OthersData
 ): data is OthersTemplate15Data => data.template === "others-15";
+export const isOthersTemplate16 = (
+  data: OthersData
+): data is OthersTemplate16Data => data.template === "others-16";
