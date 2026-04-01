@@ -18,3 +18,16 @@ export interface ChangePasswordRequest {
   old_password?: string;
   new_password?: string;
 }
+export interface UserStatusResponse {
+  is_deleted: boolean;
+  exists: boolean;
+  id?: number;
+  email?: string;
+  deleted_at?: string;
+  message: string;
+}
+
+export interface UserActionResponse {
+  message: string;
+  success?: boolean;
+}

@@ -21,6 +21,8 @@ import { useAuthRedirect } from "@/hooks/use-auth-redirect";
 import { signIn } from "next-auth/react";
 import GoogleLoginButton from "@/components/ui/GoogleLoginButton";
 import { useSearchParams } from "next/navigation";
+import { useUserStatus, useRecoverUser } from "@/hooks/use-user";
+import { UserStatusResponse } from "@/types/user";
 
 const GOOGLE_AUTH_ERROR_COOKIE = "google_auth_error";
 
@@ -37,6 +39,13 @@ export function LoginForm({
   const [attemptCount, setAttemptCount] = useState(0);
   const [isResendingVerification, setIsResendingVerification] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const [softDeletedStatus, setSoftDeletedStatus] =
+    useState<UserStatusResponse | null>(null);
+  const { mutateAsync: checkStatus, isPending: isCheckingStatus } =
+    useUserStatus();
+  const { mutateAsync: recoverAccount, isPending: isRecovering } =
+    useRecoverUser();
 
   const {
     register,
@@ -155,6 +164,26 @@ export function LoginForm({
       setFormError(null);
       clearErrors();
 
+      // Proactively check user status if login fails or as a preliminary step
+      // The user wants to check status when user login.
+      // We can check it before trying to log in or after a specific error.
+      // But according to the request "now whene user login check the status"
+
+      const statusData = await checkStatus(data.email);
+      if (statusData.is_deleted) {
+        setSoftDeletedStatus(statusData);
+        setFormError({
+          message: "This account was deleted. Click below to recover it.",
+          type: "warning",
+          action: {
+            label: "Recover my account",
+            href: "#",
+            onClick: () => handleRecoverAccount(statusData.id!),
+          },
+        });
+        return;
+      }
+
       await login(data);
       setAttemptCount(0);
     } catch (error: unknown) {
@@ -217,6 +246,25 @@ export function LoginForm({
 
   const handleGoogleLogin = () => {
     signIn("google", { callbackUrl: "/auth/google/callback" });
+  };
+
+  const handleRecoverAccount = async (userId: number) => {
+    try {
+      await recoverAccount(userId);
+      toast.success("Account recovered!", {
+        description:
+          "Your account has been successfully recovered. You can now log in.",
+      });
+      setSoftDeletedStatus(null);
+      setFormError({
+        message: "Your account has been recovered. Please sign in to continue.",
+        type: "info",
+      });
+    } catch (error: any) {
+      toast.error("Failed to recover account", {
+        description: error.message || "An unexpected error occurred.",
+      });
+    }
   };
 
   return (
@@ -304,7 +352,7 @@ export function LoginForm({
                     <div className="mt-2">
                       <button
                         type="button"
-                        className="font-medium underline hover:no-underline"
+                        className="cursor-pointer font-medium underline hover:underline"
                         onClick={formError.action.onClick}
                         disabled={isResendingVerification}
                       >

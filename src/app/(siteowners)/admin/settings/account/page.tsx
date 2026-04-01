@@ -4,6 +4,7 @@ import { ChangePasswordForm } from "@/components/admin/ChangePasswordForm";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { User, Lock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DeleteAccountButton } from "@/components/site-owners/admin/profile/delete-account-button";
 
 export default function AccountSettingsPage() {
   return (
@@ -59,9 +60,7 @@ export default function AccountSettingsPage() {
             Once you delete your account, all of your store data will be permanently removed. 
             This action cannot be undone.
           </p>
-          <Button variant="destructive" className="rounded-full bg-[#fee9e6] border border-[#ffcdc7] text-[#c2410c] hover:bg-[#ffded8] px-6 text-[13px] font-600 shadow-none">
-            Delete Account
-          </Button>
+          <DeleteAccountButton />
         </div>
       </div>
     </div>

@@ -41,3 +41,28 @@ export const useChangePassword = () => {
       userAPI.changePassword(data, tokens?.access_token),
   });
 };
+
+export const useUserStatus = () => {
+  return useMutation({
+    mutationFn: (email: string) => userAPI.checkStatus(email),
+  });
+};
+
+export const useSoftDeleteUser = () => {
+  const { tokens, logout } = useAuth();
+
+  return useMutation({
+    mutationFn: (id: number) => userAPI.softDelete(id, tokens?.access_token),
+    onSuccess: () => {
+      logout();
+    },
+  });
+};
+
+export const useRecoverUser = () => {
+  const { tokens } = useAuth();
+
+  return useMutation({
+    mutationFn: (id: number) => userAPI.recover(id, tokens?.access_token),
+  });
+};
