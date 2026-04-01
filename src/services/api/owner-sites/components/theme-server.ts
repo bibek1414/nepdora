@@ -31,7 +31,6 @@ export async function getSmartThemeColors() {
 
     return { previewColor, publishedColor };
   } catch (error) {
-    console.error("Error fetching theme colors for top loader:", error);
     return { previewColor: "#4b74f5", publishedColor: "#4b74f5" };
   }
 }

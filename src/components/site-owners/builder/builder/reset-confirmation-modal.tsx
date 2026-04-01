@@ -58,14 +58,14 @@ export const ResetConfirmationModal: React.FC<ResetConfirmationModalProps> = ({
         <DialogFooter className="bg-builder-surface-2 border-builder-border flex flex-row items-center justify-end gap-3 border-t px-6 py-4">
           <Button
             variant="ghost"
-            className="text-builder-text-secondary hover:text-builder-text-primary h-10 px-4 text-xs font-bold hover:bg-white"
+            className="h-10 px-4 text-xs border"
             onClick={() => onOpenChange(false)}
             disabled={isReseting}
           >
             Keep my edits
           </Button>
           <Button
-            className="h-10 bg-red-600 px-6 text-xs font-bold text-white shadow-lg shadow-red-200 transition-all hover:-translate-y-px hover:bg-red-700 active:translate-y-0"
+            className="h-10 bg-red-600 px-6 text-xs text-white shadow-lg shadow-red-200 transition-all hover:-translate-y-px hover:bg-red-700 active:translate-y-0"
             onClick={onConfirm}
             disabled={isReseting}
           >

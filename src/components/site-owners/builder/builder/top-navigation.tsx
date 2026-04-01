@@ -22,14 +22,15 @@ interface TopNavigationProps {
   onOpenLiveSite: () => void;
   onOpenPreview: () => void;
   liveSiteUrl: string;
+  previewUrl: string;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
   hasChanges,
   onUndo,
   onPublish,
-  onOpenLiveSite,
-  onOpenPreview,
+  liveSiteUrl,
+  previewUrl,
 }) => {
   const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
 
@@ -62,20 +63,19 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
         {/* Right Section - Actions */}
         <div className="flex items-center space-x-2">
-          <button className="builder-btn-outline" onClick={onOpenLiveSite}>
+          <Link
+            href={liveSiteUrl}
+            target="_blank"
+            className="builder-btn-outline"
+          >
             <Globe className="h-3.5 w-3.5" />
             Live site
             <ExternalLinkIcon className="text-builder-text-muted ml-1 h-2.5 w-2.5" />
-          </button>
-          <button className="builder-btn-ghost" onClick={onOpenPreview}>
+          </Link>
+          <Link href={previewUrl} target="_blank" className="builder-btn-ghost">
             <Eye className="h-3.5 w-3.5" />
             Preview
-            {hasChanges && (
-              <span className="ml-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-amber-700 uppercase">
-                edits
-              </span>
-            )}
-          </button>
+          </Link>
           <button
             className={cn("builder-btn-undo", hasChanges && "has-changes")}
             onClick={onUndo}
@@ -84,7 +84,6 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <RotateCcw className="h-3.5 w-3.5" />
             Undo changes
           </button>
-
 
           <button className="builder-btn-publish group" onClick={onPublish}>
             <Upload className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-px" />
@@ -101,4 +100,3 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
     </header>
   );
 };
-

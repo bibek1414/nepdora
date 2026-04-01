@@ -58,7 +58,6 @@ import { DEFAULT_COUNTRY_DETAILS_MAP } from "@/types/owner-site/components/count
 import { MetaBar } from "./meta-bar";
 import { SEOModal } from "./seo-modal";
 import { PublishModal } from "./publish-modal";
-import { LiveSiteModal } from "./live-site-modal";
 import { ResetConfirmationModal } from "./reset-confirmation-modal";
 import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 import { useCustomDomain } from "@/hooks/use-custom-domain";
@@ -75,9 +74,27 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { siteUser, pageSlug } = params;
   const { user } = useAuth();
   const { customDomain } = useCustomDomain();
+  const [host, setHost] = useState<string>("");
 
-  const liveSiteUrl = customDomain ? `https://${customDomain}` : "/";
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHost(window.location.host);
+    }
+  }, []);
 
+  const liveSiteUrl = React.useMemo(() => {
+    if (customDomain) return `https://${customDomain}`;
+    if (!host) return "/";
+
+    const hostParts = host.split(".");
+    // If we have a subdomain (e.g., admin.nepdora.com or bibek.localhost:3000),
+    // extract the base domain
+    const baseDomain =
+      hostParts.length > 1 ? hostParts.slice(1).join(".") : host;
+    const protocol = window.location.protocol;
+
+    return `${protocol}//${siteUser}.${baseDomain}`;
+  }, [customDomain, host, siteUser]);
   // Dialog states
   const [isAddSectionDialogOpen, setIsAddSectionDialogOpen] = useState(false);
   const [pendingInsertIndex, setPendingInsertIndex] = useState<
@@ -87,9 +104,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     string | undefined
   >(undefined);
   const [pendingReplaceId, setPendingReplaceId] = useState<string | null>(null);
-  const [deviceMode, setDeviceMode] = useState<"desktop" | "tablet" | "mobile">(
-    "desktop"
-  );
+
   const [hasChanges, setHasChanges] = useState(false);
   const [isSEOModalOpen, setIsSEOModalOpen] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
@@ -1154,9 +1169,12 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           isUndoPending={isResetUiPending}
           onPublish={() => setIsPublishModalOpen(true)}
           onOpenTheme={() => {}}
-          onOpenLiveSite={() => setIsLiveSiteModalOpen(true)}
-          onOpenPreview={() => setIsPublishModalOpen(true)}
+          onOpenLiveSite={() => window.open(liveSiteUrl, "_blank")}
+          onOpenPreview={() =>
+            window.open(`/preview/${siteUser}/${pageSlug}`, "_blank")
+          }
           liveSiteUrl={liveSiteUrl}
+          previewUrl={`/preview/${siteUser}/${pageSlug}`}
         />
         {/* MetaBar moved to CanvasArea */}
         <SEOModal
@@ -1173,6 +1191,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           onPublish={handlePublish}
           isPublishing={isPublishPending}
           previewUrl={`/preview/${siteUser}/${pageSlug}`}
+          domainName={customDomain || liveSiteUrl.replace(/^https?:\/\//, "")}
+          pageCount={pagesData.length}
+          componentCount={pageComponents.length}
+          onUndo={handleUndo}
           publishStatus={{
             reviewed: true,
             seoSet: true,
@@ -1187,11 +1209,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           isReseting={isResetUiPending}
         />
 
-        <LiveSiteModal
-          open={isLiveSiteModalOpen}
-          onOpenChange={setIsLiveSiteModalOpen}
-          siteUrl={liveSiteUrl}
-        />
         {/* Sticky Formatting Toolbar */}
         <StickyFormattingToolbar />
 
