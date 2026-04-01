@@ -706,6 +706,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Services Style 4",
         image: "/images/site-owners/services/services-4.png",
       },
+      {
+        id: "services-5",
+        name: "Services Style 5 (Impact Hover)",
+        image: "/images/site-owners/services/services-5.png",
+      },
     ],
     contact: [
       {

@@ -1,7 +1,7 @@
 export interface ServicesData {
   component_id?: string;
   component_type: "services";
-  style: "services-1" | "services-2" | "services-3" | "services-4";
+  style: "services-1" | "services-2" | "services-3" | "services-4" | "services-5";
   title: string;
   subtitle?: string;
   order?: number;
@@ -10,6 +10,9 @@ export interface ServicesData {
   italicWord?: string;
   buttonText?: string;
   buttonLink?: string;
+  // Additional fields for services-5
+  trustBadge?: string;
+  trustText?: string;
 }
 
 export interface ServicesComponentData {
@@ -34,4 +37,11 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
     "services-2": { ...defaultServicesData, style: "services-2" },
     "services-3": { ...defaultServicesData, style: "services-3" },
     "services-4": { ...defaultServicesData, style: "services-4" },
+    "services-5": {
+      ...defaultServicesData,
+      style: "services-5",
+      title: "From rural healthcare access to modern classroom resources to uplifting",
+      trustBadge: "Trust",
+      trustText: "Join the 850+ partners funding our essential child safety initiatives",
+    },
   };

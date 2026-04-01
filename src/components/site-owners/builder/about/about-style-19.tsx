@@ -175,8 +175,8 @@ export const AboutUsTemplate19: React.FC<AboutUsTemplate19Props> = ({
                 }
                 className="flex cursor-pointer items-center gap-4 rounded-[20px] px-10 py-5 text-[17px] font-bold transition-colors"
                 style={{
-                  backgroundColor: hexToRgba(theme.colors.primary, 0.1),
-                  color: theme.colors.text,
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
                 }}
               >
                 {data.ctaText} <ArrowUpRight size={20} strokeWidth={2.5} />

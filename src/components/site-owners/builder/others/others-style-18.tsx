@@ -3,7 +3,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { OthersTemplate18Data, OthersAvatar, OthersTag } from "@/types/owner-site/components/others";
+import {
+  OthersTemplate18Data,
+  OthersAvatar,
+  OthersTag,
+} from "@/types/owner-site/components/others";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { EditableText } from "@/components/ui/editable-text";
@@ -42,18 +46,12 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
   );
 
   return (
-    <section 
-      className="w-full"
-      style={{ backgroundColor: theme.colors.background }}
-    >
-      <div className="mx-auto max-w-7xl px-6 md:px-10 py-12 md:py-20 lg:py-0">
-
+    <section className="w-full">
+      <div className="mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-20 lg:py-24">
         {/* Outer grid — left content | right image */}
         <div className="grid lg:grid-cols-[1fr_490px] lg:items-stretch">
-
           {/* ── Left Column ── */}
-          <div className="flex flex-col py-0 lg:py-10 lg:pr-10 gap-0">
-
+          <div className="flex flex-col gap-0 py-0 lg:py-10 lg:pr-10">
             {/* Heading block */}
             <motion.div
               initial={{ opacity: 0, y: 18 }}
@@ -67,7 +65,7 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
                 value={data.heading}
                 onChange={handleTextUpdate("heading")}
                 isEditable={isEditable}
-                className="text-[1.9rem] font-bold leading-[1.22] tracking-tight text-gray-900"
+                className="text-[1.9rem] leading-[1.22] font-bold tracking-tight text-gray-900"
                 style={{ fontFamily: theme.fonts.heading }}
                 multiline
               />
@@ -85,7 +83,9 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
                 <EditableLink
                   text={data.buttonText}
                   href={data.buttonLink}
-                  onChange={(text, href) => onUpdate?.({ buttonText: text, buttonLink: href })}
+                  onChange={(text, href) =>
+                    onUpdate?.({ buttonText: text, buttonLink: href })
+                  }
                   isEditable={isEditable}
                   className="inline-flex cursor-pointer items-center gap-2 rounded-2xl px-5 py-3 text-[13.5px] font-semibold transition-all hover:opacity-90 active:scale-95"
                   style={{
@@ -107,7 +107,7 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="rounded-xl bg-white px-7 py-6 shadow-sm border border-gray-100"
+              className="rounded-xl border border-gray-100 bg-white px-7 py-6 shadow-sm"
             >
               {/* Stat + avatars row */}
               <div className="flex items-center justify-between gap-4">
@@ -117,16 +117,21 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
                     value={data.statValue}
                     onChange={handleTextUpdate("statValue")}
                     isEditable={isEditable}
-                    className="text-[1.9rem] font-bold leading-none tracking-tight text-gray-900"
+                    className="text-[1.9rem] leading-none font-bold tracking-tight text-gray-900"
                   />
                 </div>
                 <div className="flex -space-x-3">
                   {data.avatars?.map((avatar: OthersAvatar, i: number) => (
-                    <div key={avatar.id || i} className="h-10 w-10 overflow-hidden rounded-full border-[3px] border-white bg-gray-100">
+                    <div
+                      key={avatar.id || i}
+                      className="h-10 w-10 overflow-hidden rounded-full border-[3px] border-white bg-gray-100"
+                    >
                       <EditableImage
                         src={avatar.url}
                         alt={avatar.id}
-                        onImageChange={(url) => handleArrayItemUpdate("avatars", avatar.id)({ url })}
+                        onImageChange={url =>
+                          handleArrayItemUpdate("avatars", avatar.id)({ url })
+                        }
                         isEditable={isEditable}
                         className="h-full w-full cursor-pointer object-cover"
                       />
@@ -151,15 +156,16 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
                   <span
                     key={tag.id || i}
                     className="rounded-xl px-4 py-2 text-[12.5px] font-semibold"
-                    style={{ 
+                    style={{
                       backgroundColor: hexToRgba(theme.colors.primary, 0.08),
-                      color: theme.colors.primary 
                     }}
                   >
                     <EditableText
                       as="span"
                       value={tag.label}
-                      onChange={(val) => handleArrayItemUpdate("tags", tag.id)({ label: val })}
+                      onChange={val =>
+                        handleArrayItemUpdate("tags", tag.id)({ label: val })
+                      }
                       isEditable={isEditable}
                       className="cursor-pointer"
                     />
@@ -167,7 +173,6 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
                 ))}
               </div>
             </motion.div>
-
           </div>
 
           {/* ── Right Column — Image stretches full column height ── */}
@@ -176,24 +181,19 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65, delay: 0.1 }}
-            className="relative overflow-hidden rounded-xl my-5 lg:my-10"
+            className="relative my-5 rounded-xl lg:my-10"
             style={{ minHeight: "560px" }}
           >
             <EditableImage
               src={data.mainImage.url}
               alt={data.mainImage.alt}
-              onImageChange={(url) => onUpdate?.({ mainImage: { ...data.mainImage, url } })}
+              onImageChange={url =>
+                onUpdate?.({ mainImage: { ...data.mainImage, url } })
+              }
               isEditable={isEditable}
-              className="absolute inset-0 h-full w-full cursor-pointer object-cover object-top"
+              className="inset-0 h-135 w-full cursor-pointer rounded-2xl object-cover object-top"
             />
           </motion.div>
-<EditableImage
-              src={data.mainImage.url}
-              alt={data.mainImage.alt}
-              onImageChange={(url) => onUpdate?.({ mainImage: { ...data.mainImage, url } })}
-              isEditable={isEditable}
-              className="absolute inset-0 h-full w-full cursor-pointer object-cover object-top"
-            />
         </div>
       </div>
     </section>

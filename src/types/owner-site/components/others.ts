@@ -151,7 +151,8 @@ export type OthersData =
   | OthersTemplate15Data
   | OthersTemplate16Data
   | OthersTemplate17Data
-  | OthersTemplate18Data;
+  | OthersTemplate18Data
+  | OthersTemplate19Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -1024,6 +1025,60 @@ export const defaultOthersTemplate18Data: OthersTemplate18Data = {
   },
 };
 
+export interface OthersTemplate19Item {
+  id: string;
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+}
+
+export interface OthersTemplate19Data {
+  template: "others-19";
+  heading: string;
+  items: OthersTemplate19Item[];
+  trustBadge: string;
+  trustText: string;
+}
+
+export const defaultOthersTemplate19Data: OthersTemplate19Data = {
+  template: "others-19",
+  heading: "From rural healthcare access to modern classroom resources to uplifting",
+  items: [
+    {
+      id: "1",
+      title: "Education creates hope",
+      description: "Help with daily tasks to maintain comfort, and independence at home.",
+      image: {
+        url: "https://picsum.photos/seed/edu1/600/500",
+        alt: "Education creates hope",
+      },
+    },
+    {
+      id: "2",
+      title: "Send gift for children",
+      description: "Timely prompts and organization for safe, accurate medication schedules.",
+      image: {
+        url: "https://picsum.photos/seed/gift2/600/500",
+        alt: "Send gift for children",
+      },
+    },
+    {
+      id: "3",
+      title: "Meals that restore hope",
+      description: "Continuous support and supervision for full peace of mind, day or night.",
+      image: {
+        url: "https://picsum.photos/seed/meal3/600/500",
+        alt: "Meals that restore hope",
+      },
+    },
+  ],
+  trustBadge: "Trust",
+  trustText: "Join the 850+ partners funding our essential child safety initiatives",
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -1044,6 +1099,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-16": defaultOthersTemplate16Data,
   "others-17": defaultOthersTemplate17Data,
   "others-18": defaultOthersTemplate18Data,
+  "others-19": defaultOthersTemplate19Data,
 };
 
 // Type guards
@@ -1101,3 +1157,6 @@ export const isOthersTemplate17 = (
 export const isOthersTemplate18 = (
   data: OthersData
 ): data is OthersTemplate18Data => data.template === "others-18";
+export const isOthersTemplate19 = (
+  data: OthersData
+): data is OthersTemplate19Data => data.template === "others-19";
