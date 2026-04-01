@@ -59,7 +59,6 @@ import { MetaBar } from "./meta-bar";
 import { SEOModal } from "./seo-modal";
 import { PublishModal } from "./publish-modal";
 import { ResetConfirmationModal } from "./reset-confirmation-modal";
-import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 import { useCustomDomain } from "@/hooks/use-custom-domain";
 
 interface BuilderLayoutProps {
@@ -132,7 +131,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
 
   const { mutate: resetUi, isPending: isResetUiPending } = useResetUi();
-  const { mutate: publish, isPending: isPublishPending } = usePublishSite();
 
   const { data: pagesData = [], isLoading: isPagesLoading } = usePages();
   const createPageMutation = useCreatePage();
@@ -212,14 +210,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
     );
   };
 
-  const handlePublish = async () => {
-    publish(undefined, {
-      onSuccess: () => {
-        setHasChanges(false);
-        setIsPublishModalOpen(false);
-        setIsLiveSiteModalOpen(true);
-      },
-    });
+  const handlePublishSuccess = () => {
+    setHasChanges(false);
+    setIsPublishModalOpen(false);
+    setIsLiveSiteModalOpen(true);
   };
 
   const handleUndo = () => {
@@ -1188,18 +1182,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         <PublishModal
           open={isPublishModalOpen}
           onOpenChange={setIsPublishModalOpen}
-          onPublish={handlePublish}
-          isPublishing={isPublishPending}
-          previewUrl={`/preview/${siteUser}/${pageSlug}`}
+          onSuccess={handlePublishSuccess}
           domainName={customDomain || liveSiteUrl.replace(/^https?:\/\//, "")}
           pageCount={pagesData.length}
           componentCount={pageComponents.length}
           onUndo={handleUndo}
-          publishStatus={{
-            reviewed: true,
-            seoSet: true,
-            ready: true,
-          }}
         />
 
         <ResetConfirmationModal
@@ -1213,7 +1200,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         <StickyFormattingToolbar />
 
         {/* Main Layout */}
-        <div className="bg-background flex min-h-screen flex-col">
+        <div className="bg-background flex min-h-screen flex-col pt-16">
           <div className="flex flex-1">
             <PageManagementSidebar
               pages={pagesData}
@@ -1224,12 +1211,17 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
               siteUser={siteUser}
             />
 
-            <div className="flex flex-1 flex-col">
-              <div className="mt-10 flex-1 overflow-auto bg-gray-200 p-6">
-                <div className="mx-auto max-w-7xl origin-top scale-75">
-                  <div className="py-4"></div>
-
-                  <CanvasArea
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <div className="flex-1 overflow-auto bg-gray-200">
+                <MetaBar
+                  meta_title={seoMetadata.meta_title}
+                  meta_description={seoMetadata.meta_description}
+                  slug={seoMetadata.slug}
+                  onEdit={() => setIsSEOModalOpen(true)}
+                />
+                <div className="p-6">
+                  <div className="mx-auto max-w-7xl origin-top scale-75">
+                    <CanvasArea
                     droppedComponents={droppedComponents}
                     navbar={navbarResponse?.data}
                     onAddNavbar={() => setIsNavbarDialogOpen(true)}
@@ -1254,12 +1246,11 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
                     onServiceClick={() => {
                       router.push(`/builder/${siteUser}/service-details`);
                     }}
-                    seoMetadata={seoMetadata}
-                    onEditSEO={() => setIsSEOModalOpen(true)}
                   />
                 </div>
               </div>
             </div>
+          </div>
 
             <ComponentOutlineSidebar
               currentPageSlug={currentPage}

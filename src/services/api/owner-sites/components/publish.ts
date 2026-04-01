@@ -1,10 +1,14 @@
+import { apiFetch } from "@/lib/api-client";
+import { getApiBaseUrl } from "@/config/site";
+import { createHeaders } from "@/utils/headers";
+
+const API_BASE_URL = getApiBaseUrl();
+
 const publishSiteApi = async () => {
   try {
-    const response = await fetch("/api/publish-site", {
+    const response = await apiFetch(`${API_BASE_URL}/api/publish-all/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: createHeaders(),
       body: JSON.stringify({}), // empty payload
     });
 

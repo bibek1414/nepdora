@@ -6,46 +6,36 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  X,
-  Check,
-  ArrowRight,
-  Loader2,
-  Globe,
-  ShieldCheck,
-  Layout,
-  Eye,
-  RotateCcw,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Loader2, Globe, Layout } from "lucide-react";
+import { usePublishSite } from "@/hooks/owner-site/components/use-publish";
 
 interface PublishModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onPublish: () => void;
+  onSuccess: () => void;
   onUndo: () => void;
-  isPublishing: boolean;
-  previewUrl: string;
   domainName: string;
   pageCount: number;
   componentCount: number;
-  publishStatus: {
-    reviewed: boolean;
-    seoSet: boolean;
-    ready: boolean;
-  };
 }
 
 export const PublishModal: React.FC<PublishModalProps> = ({
   open,
   onOpenChange,
-  onPublish,
-  isPublishing,
+  onSuccess,
   domainName,
   pageCount,
   componentCount,
-  publishStatus,
 }) => {
+  const { mutate: publish, isPending: isPublishing } = usePublishSite();
+
+  const handlePublish = () => {
+    publish(undefined, {
+      onSuccess: () => {
+        onSuccess();
+      },
+    });
+  };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-builder-radius-lg max-w-[440px] overflow-hidden border-0 bg-white p-0 shadow-2xl outline-none">
@@ -107,7 +97,7 @@ export const PublishModal: React.FC<PublishModalProps> = ({
           </Button>
           <button
             disabled={isPublishing}
-            onClick={onPublish}
+            onClick={handlePublish}
             className="builder-btn-publish flex h-10 items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-xs font-bold text-white shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5 hover:bg-blue-700 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isPublishing ? (

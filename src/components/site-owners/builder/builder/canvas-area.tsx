@@ -19,7 +19,6 @@ import { Button } from "@/components/ui/button";
 import { COMPONENT_REGISTRY } from "@/types/owner-site/components/registry";
 import { ComponentTypeMap } from "@/types/owner-site/components/components";
 import { CanvasSkeleton } from "./builder-skeleton";
-import { MetaBar } from "./meta-bar";
 
 interface CanvasAreaProps {
   droppedComponents: ComponentResponse[];
@@ -38,13 +37,6 @@ interface CanvasAreaProps {
   onBlogClick?: (blogSlug: string, order: number) => void;
   onPortfolioClick?: (portfolioSlug: string, order: number) => void;
   onServiceClick?: (serviceSlug: string, order: number) => void;
-  // SEO props
-  seoMetadata?: {
-    meta_title: string;
-    meta_description: string;
-    slug: string;
-  };
-  onEditSEO?: () => void;
   onOrderChange?: () => void;
 }
 
@@ -62,8 +54,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
   onBlogClick,
   onPortfolioClick,
   onServiceClick,
-  seoMetadata,
-  onEditSEO,
   onOrderChange,
 }) => {
   // Local state to manage component order optimistically
@@ -315,15 +305,6 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
 
   return (
     <div className="rounded-lg border-2 border-dashed bg-white transition-colors">
-      {/* SEO Meta Section */}
-      {seoMetadata && onEditSEO && (
-        <MetaBar
-          meta_title={seoMetadata.meta_title}
-          meta_description={seoMetadata.meta_description}
-          slug={seoMetadata.slug}
-          onEdit={onEditSEO}
-        />
-      )}
       {/* Navbar Section */}
       {navbar ? (
         <div className="group relative mb-4 border-b">
