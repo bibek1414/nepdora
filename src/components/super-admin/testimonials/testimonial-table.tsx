@@ -14,16 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
 
@@ -33,31 +23,12 @@ export const TestimonialsTable = ({
   onDelete,
   isLoading,
 }: TestimonialsTableProps) => {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [testimonialToDelete, setTestimonialToDelete] =
-    useState<Testimonial | null>(null);
-
   const handleDeleteClick = (
     testimonial: Testimonial,
     e: React.MouseEvent
   ): void => {
     e.stopPropagation(); // Prevent triggering the row click event
-    setTestimonialToDelete(testimonial);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteConfirm = (): void => {
-    if (testimonialToDelete) {
-      onDelete(testimonialToDelete.id);
-      setDeleteDialogOpen(false);
-      setTestimonialToDelete(null);
-      toast.success("Testimonial deleted successfully");
-    }
-  };
-
-  const handleDeleteCancel = (): void => {
-    setDeleteDialogOpen(false);
-    setTestimonialToDelete(null);
+    onDelete(testimonial);
   };
 
   const handleRowClick = (testimonial: Testimonial): void => {
@@ -107,31 +78,7 @@ export const TestimonialsTable = ({
   }
 
   return (
-    <>
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Testimonial</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete {testimonialToDelete?.name}&apos;s
-              testimonial? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleDeleteCancel}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <div>
+    <div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -213,7 +160,6 @@ export const TestimonialsTable = ({
             ))}
           </TableBody>
         </Table>
-      </div>
-    </>
+    </div>
   );
 };

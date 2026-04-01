@@ -17,11 +17,16 @@ import { TestimonialsHeader } from "./testimonial-header";
 import { TestimonialsTable } from "./testimonial-table";
 import { TestimonialModal } from "./testimonial-modal";
 import { Input } from "@/components/ui/input";
+import { DeleteConfirmDialog } from "@/components/ui/delete-confirm-dialog";
+import { toast } from "sonner";
 
 export default function TestimonialList() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
+  const [testimonialToDelete, setTestimonialToDelete] =
+    useState<Testimonial | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
   const [page, setPage] = useState(1);
@@ -62,12 +67,22 @@ export default function TestimonialList() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: number): Promise<void> => {
+  const handleDelete = (testimonial: Testimonial): void => {
+    setTestimonialToDelete(testimonial);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!testimonialToDelete) return;
+
     try {
-      await deleteMutation.mutateAsync(id);
+      await deleteMutation.mutateAsync(testimonialToDelete.id);
+      toast.success("Testimonial deleted successfully");
+      setIsDeleteDialogOpen(false);
+      setTestimonialToDelete(null);
     } catch (error) {
-      // Error is already handled by the hook
       console.error("Delete failed:", error);
+      toast.error("Failed to delete testimonial");
     }
   };
 
@@ -174,6 +189,15 @@ export default function TestimonialList() {
           testimonial={editingTestimonial}
           onSubmit={handleSubmit}
           isLoading={isSubmitting}
+        />
+
+        <DeleteConfirmDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          onConfirm={handleConfirmDelete}
+          isLoading={deleteMutation.isPending}
+          title="Delete Testimonial"
+          description={`Are you sure you want to delete the testimonial from "${testimonialToDelete?.name}"? This action cannot be undone.`}
         />
       </div>
     </div>
