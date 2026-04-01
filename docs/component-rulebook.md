@@ -138,6 +138,8 @@ These rules apply to every component, without exception.
 - **No Group Hovers**: Avoid using `group` + `group-hover` to trigger multiple animations at once (e.g., scaling an image, moving an icon, and changing text color together). This feels "too busy".
 - **Single Component Hover**: Apply hover effects only to single elements (like the image alone or the entire card alone) for a cleaner, more controlled feel.
 - Avoid bouncy or springy animations unless the product is playful by design.
+- **Interactive Cursors**: Every clickable or interactive element (buttons, cards with click handlers, links) MUST have `cursor-pointer`. This is non-negotiable for UX.
+
 
 ---
 
@@ -267,6 +269,8 @@ Before shipping, verify every item:
 - [ ] Interactive states exist for all buttons, links, and rows (hover, focus, active)
 - [ ] Content stays within `max-w-7xl` wrapper
 - [ ] Component registered in `add-section-dialog` and dispatcher
+- [ ] All clickable/interactive elements (buttons, links, cards) have `cursor-pointer` utility
+
 
 ---
 
@@ -290,6 +294,8 @@ Before shipping, verify every item:
 - ❌ `<h2><EditableText /></h2>` — wrap via `as` prop, never with a parent semantic tag
 - ❌ Hardcoded hex colors or font names in `className` — use Tailwind neutrals or `style` with theme tokens (e.g., `theme.colors.primary`).
 - ❌ Arbitrary "subtle" hex colors (e.g., `bg-[#f8faf9]`, `bg-[#EEF2FF]`) — use `hexToRgba(token, opacity)` instead.
+- ❌ Clickable elements (divs, spans, cards) without `cursor-pointer` utility.
+
 
 ---
 

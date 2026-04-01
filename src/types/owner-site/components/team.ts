@@ -1,7 +1,7 @@
 export interface TeamData {
   component_id?: string;
   component_type: "team";
-  style: "team-1" | "team-2" | "team-3" | "team-4" | "team-5" | "team-6";
+  style: "team-1" | "team-2" | "team-3" | "team-4" | "team-5" | "team-6" | "team-7";
 
   title: string;
   subtitle?: string;
@@ -40,5 +40,11 @@ export const DEFAULT_TEAM_MAP: Record<TeamData["style"], TeamData> = {
     tag: "Our Team",
     subtitle:
       "Get to know the passionate individuals behind our travel company, dedicated to crafting unforgettable experiences.",
+  },
+  "team-7": {
+    ...defaultTeamData,
+    style: "team-7",
+    title: "Dedicated volunteers driving our mission for change",
+    subtitle: "Our Team",
   },
 };

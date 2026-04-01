@@ -686,6 +686,78 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
   polaroid2Alt: "Lake",
 };
 
+export interface HeroTemplate19Slide {
+  id: string;
+  badge: string;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  label: string;
+  iconName: string; // Map to Lucide icons like 'Utensils', 'Users', 'Droplets', 'Baby'
+}
+
+export interface HeroTemplate19Data {
+  template: "hero-19";
+  slides: HeroTemplate19Slide[];
+  primaryButtonText: string;
+  primaryButtonHref: string;
+  autoplayDuration?: number;
+}
+
+export const defaultHeroTemplate19Data: HeroTemplate19Data = {
+  template: "hero-19",
+  autoplayDuration: 5000,
+  primaryButtonText: "Get in touch",
+  primaryButtonHref: "#",
+  slides: [
+    {
+      id: "1",
+      badge: "Transforms lives with us today",
+      title: "Small acts of kindness change lives",
+      description:
+        "Together we empower underprivileged communities through education, care, opportunity, and long term sustainable support.",
+      image: "https://picsum.photos/seed/impact-1/1920/1080",
+      imageAlt: "Feeding hungry",
+      label: "Feeding hungry",
+      iconName: "Utensils",
+    },
+    {
+      id: "2",
+      badge: "Transforms lives with us today",
+      title: "Small acts of kindness change lives",
+      description:
+        "Together we empower underprivileged communities through education, care, opportunity, and long term sustainable support.",
+      image: "https://picsum.photos/seed/impact-2/1920/1080",
+      imageAlt: "Teaching youth",
+      label: "Teaching youth",
+      iconName: "Users",
+    },
+    {
+      id: "3",
+      badge: "Transforms lives with us today",
+      title: "Small acts of kindness change lives",
+      description:
+        "Together we empower underprivileged communities through education, care, opportunity, and long term sustainable support.",
+      image: "https://picsum.photos/seed/impact-3/1920/1080",
+      imageAlt: "Clean water",
+      label: "Clean water",
+      iconName: "Droplets",
+    },
+    {
+      id: "4",
+      badge: "Transforms lives with us today",
+      title: "Small acts of kindness change lives",
+      description:
+        "Together we empower underprivileged communities through education, care, opportunity, and long term sustainable support.",
+      image: "https://picsum.photos/seed/impact-4/1920/1080",
+      imageAlt: "Feeding kids",
+      label: "Feeding kids",
+      iconName: "Baby",
+    },
+  ],
+};
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -705,7 +777,8 @@ export type HeroData =
   | HeroTemplate15Data
   | HeroTemplate16Data
   | HeroTemplate17Data
-  | HeroTemplate18Data;
+  | HeroTemplate18Data
+  | HeroTemplate19Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -785,6 +858,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-16": defaultHeroTemplate16Data,
   "hero-17": defaultHeroTemplate17Data,
   "hero-18": defaultHeroTemplate18Data,
+  "hero-19": defaultHeroTemplate19Data,
 };
 
 // Type guards for each template
@@ -841,3 +915,6 @@ export const isHeroTemplate17 = (data: HeroData): data is HeroTemplate17Data =>
 
 export const isHeroTemplate18 = (data: HeroData): data is HeroTemplate18Data =>
   data.template === "hero-18";
+
+export const isHeroTemplate19 = (data: HeroData): data is HeroTemplate19Data =>
+  data.template === "hero-19";

@@ -696,6 +696,37 @@ export const defaultAboutUs18Data: AboutUs18Data = {
   ],
 };
 
+export interface AboutUs19Data {
+  template: "about-19";
+  badge: string;
+  title: string;
+  largeImage: string;
+  imageAlt: string;
+  smallImage: string;
+  smallImageAlt: string;
+  stats: AboutUsStat[];
+  ctaText: string;
+  ctaLink: string;
+}
+
+export const defaultAboutUs19Data: AboutUs19Data = {
+  template: "about-19",
+  badge: "About us",
+  title:
+    "Empower future generations, provide food, and achieve lasting impact now for our community",
+  largeImage: "https://picsum.photos/seed/about-large/1000/1100",
+  imageAlt: "Children in community",
+  smallImage: "https://picsum.photos/seed/about-small/1000/600",
+  smallImageAlt: "Child portrait",
+  stats: [
+    { id: "1", label: "Educational mentorship", value: "95%" },
+    { id: "2", label: "Community wellness", value: "98%" },
+    { id: "3", label: "Vocational training", value: "91%" },
+  ],
+  ctaText: "Discover more",
+  ctaLink: "#",
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -715,7 +746,8 @@ export type AboutUsData =
   | AboutUs15Data
   | AboutUs16Data
   | AboutUs17Data
-  | AboutUs18Data;
+  | AboutUs18Data
+  | AboutUs19Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -765,7 +797,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs15Data>
     | Partial<AboutUs16Data>
     | Partial<AboutUs17Data>
-    | Partial<AboutUs18Data>;
+    | Partial<AboutUs18Data>
+    | Partial<AboutUs19Data>;
   order?: number;
 }
 
@@ -807,6 +840,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-16": defaultAboutUs16Data,
   "about-17": defaultAboutUs17Data,
   "about-18": defaultAboutUs18Data,
+  "about-19": defaultAboutUs19Data,
 };
 
 // Type guards for each template
@@ -863,3 +897,6 @@ export const isAboutUsTemplate17 = (data: AboutUsData): data is AboutUs17Data =>
 
 export const isAboutUsTemplate18 = (data: AboutUsData): data is AboutUs18Data =>
   data.template === "about-18";
+
+export const isAboutUsTemplate19 = (data: AboutUsData): data is AboutUs19Data =>
+  data.template === "about-19";

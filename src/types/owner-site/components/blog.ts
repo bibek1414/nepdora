@@ -11,6 +11,10 @@ export interface BlogData {
     | "blog-8";
   title: string;
   subtitle?: string;
+  badge?: string;
+  footerText?: string;
+  buttonText?: string;
+  buttonLink?: string;
   order?: number;
 }
 

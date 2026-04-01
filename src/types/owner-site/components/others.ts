@@ -149,7 +149,8 @@ export type OthersData =
   | OthersTemplate13Data
   | OthersTemplate14Data
   | OthersTemplate15Data
-  | OthersTemplate16Data;
+  | OthersTemplate16Data
+  | OthersTemplate17Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -892,6 +893,85 @@ export const defaultOthersTemplate16Data: OthersTemplate16Data = {
     "Join the 850+ partners funding our essential child safety initiatives",
 };
 
+export interface OthersProcessStep17 {
+  id: string;
+  title: string;
+  description: string;
+  smallImage: {
+    url: string;
+    alt: string;
+  };
+  bigImage: {
+    url: string;
+    alt: string;
+  };
+  buttonText: string;
+  buttonLink: string;
+}
+
+export interface OthersTemplate17Data {
+  template: "others-17";
+  badge: string;
+  heading: string;
+  steps: OthersProcessStep17[];
+}
+
+export const defaultOthersTemplate17Data: OthersTemplate17Data = {
+  template: "others-17",
+  badge: "Process",
+  heading: "Simple steps to start making impact and see real transformation",
+  steps: [
+    {
+      id: "step-1",
+      title: "Choose impact area",
+      description:
+        "Choose the cause that resonates with you most, and help build lasting, impactful change today.",
+      smallImage: {
+        url: "https://picsum.photos/seed/step-small-1/400/500",
+        alt: "Choose impact area small",
+      },
+      bigImage: {
+        url: "https://picsum.photos/seed/children-fence/800/1200",
+        alt: "Choose impact area big",
+      },
+      buttonText: "Discover more",
+      buttonLink: "#",
+    },
+    {
+      id: "step-2",
+      title: "Personalize your gift",
+      description:
+        "Select the cause you care about most and help create true meaningful, lasting change today with.",
+      smallImage: {
+        url: "https://picsum.photos/seed/step-small-2/400/500",
+        alt: "Personalize your gift small",
+      },
+      bigImage: {
+        url: "https://picsum.photos/seed/children-gift/800/1200",
+        alt: "Personalize your gift big",
+      },
+      buttonText: "Discover more",
+      buttonLink: "#",
+    },
+    {
+      id: "step-3",
+      title: "View the results",
+      description:
+        "Pick the cause you care about deeply, and begin creating meaningful, lasting change right now.",
+      smallImage: {
+        url: "https://picsum.photos/seed/step-small-3/400/500",
+        alt: "View the results small",
+      },
+      bigImage: {
+        url: "https://picsum.photos/seed/children-smile/800/1200",
+        alt: "View the results big",
+      },
+      buttonText: "Discover more",
+      buttonLink: "#",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -910,6 +990,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-14": defaultOthersTemplate14Data,
   "others-15": defaultOthersTemplate15Data,
   "others-16": defaultOthersTemplate16Data,
+  "others-17": defaultOthersTemplate17Data,
 };
 
 // Type guards
@@ -961,3 +1042,6 @@ export const isOthersTemplate15 = (
 export const isOthersTemplate16 = (
   data: OthersData
 ): data is OthersTemplate16Data => data.template === "others-16";
+export const isOthersTemplate17 = (
+  data: OthersData
+): data is OthersTemplate17Data => data.template === "others-17";

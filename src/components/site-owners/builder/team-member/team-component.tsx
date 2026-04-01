@@ -24,6 +24,7 @@ import { TeamStyle3 } from "./team-member-style/team-style-3";
 import { TeamStyle4 } from "./team-member-style/team-style-4";
 import { TeamStyle5 } from "./team-member-style/team-style-5";
 import { TeamStyle6 } from "./team-member-style/team-style-6";
+import { TeamStyle7 } from "./team-member-style/team-style-7";
 
 interface TeamComponentProps {
   component: TeamComponentData;
@@ -130,6 +131,19 @@ export const TeamComponent: React.FC<TeamComponentProps> = ({
       case "team-6":
         return (
           <TeamStyle6
+            data={component.data}
+            isEditable={isEditable}
+            onUpdate={handleUpdate}
+            onMemberClick={(memberId: number) => {
+              if (onMemberClick && component.order !== undefined) {
+                onMemberClick(memberId, component.order);
+              }
+            }}
+          />
+        );
+      case "team-7":
+        return (
+          <TeamStyle7
             data={component.data}
             isEditable={isEditable}
             onUpdate={handleUpdate}

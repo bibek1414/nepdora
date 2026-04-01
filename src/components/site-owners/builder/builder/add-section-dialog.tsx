@@ -200,6 +200,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 18",
         image: "/images/site-owners/hero/hero18.png",
       },
+      {
+        id: "hero-19",
+        name: "Hero Style 19 (Impact Slider)",
+        image: "/images/site-owners/placeholder.png",
+      },
     ],
     tours: [
       {
@@ -308,7 +313,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "others-16",
         name: "Others Style 16 (Programs)",
-        image: "https://picsum.photos/seed/others16/600/400",
+        image: "/images/site-owners/others/others16.png",
+      },
+      {
+        id: "others-17",
+        name: "Others Style 17 (Interactive Process)",
+        image: "/images/site-owners/others/others17.png",
       },
     ],
     experience: [
@@ -772,6 +782,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Team Style 6 (Travel Experts)",
         image: "/images/site-owners/team/team6.png",
       },
+      {
+        id: "team-7",
+        name: "Team Style 7 (Volunteers)",
+        image: "/images/site-owners/team/team7.png",
+      },
     ],
     gallery: [
       {
@@ -842,6 +857,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "blog-4",
         name: "Blog Style 4",
         image: "/images/site-owners/blogs/blog4.png",
+      },
+      {
+        id: "blog-5",
+        name: "Blog Style 5",
+        image: "/images/site-owners/blogs/blog5.png",
       },
     ],
     faq: [
