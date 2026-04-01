@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { OthersTemplate20Data } from "@/types/owner-site/components/others";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
@@ -139,6 +139,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
                 }}
               >
                 {data.donateButtonText}
+                <ChevronRight size={18} />
               </EditableLink>
             </div>
           </div>
