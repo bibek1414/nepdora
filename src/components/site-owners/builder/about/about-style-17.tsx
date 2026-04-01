@@ -121,14 +121,8 @@ export const AboutUsTemplate17: React.FC<AboutUsTemplate17Props> = ({
           <div className="space-y-5">
             {data.items.map((item, index) => (
               <div key={index} className="flex items-center gap-4">
-                <div
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                  style={{ backgroundColor: theme.colors.text }}
-                >
-                  <CheckCircle2
-                    className="h-3.5 w-3.5"
-                    style={{ color: theme.colors.background }}
-                  />
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
                 </div>
                 <EditableText
                   value={item}

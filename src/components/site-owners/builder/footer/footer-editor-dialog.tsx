@@ -73,7 +73,6 @@ import {
 import { uploadToS3 } from "@/utils/s3";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { useDebouncer } from "@/hooks/use-debouncer";
 
 interface FooterEditorDialogProps {
   open: boolean;
@@ -237,42 +236,11 @@ export function FooterEditorDialog({
   const [editingData, setEditingData] = useState<FooterData>(footerData);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [uploadLogoError, setUploadLogoError] = useState<string | null>(null);
-
-  const debouncedContactInfo = useDebouncer(editingData.contactInfo, 1000);
-
   // Use site config hooks for logo and social links
   const { data: siteConfig, isLoading: isSiteConfigLoading } = useSiteConfig();
   const patchSiteConfigMutation = usePatchSiteConfig();
 
-  // Sync contact info to site configuration
-  useEffect(() => {
-    const syncContactInfo = async () => {
-      if (!siteConfig?.id || !debouncedContactInfo) return;
-
-      const hasChanged =
-        debouncedContactInfo.email !== siteConfig.email ||
-        debouncedContactInfo.phone !== siteConfig.phone ||
-        debouncedContactInfo.address !== siteConfig.address;
-
-      if (hasChanged) {
-        try {
-          const formData = new FormData();
-          formData.append("email", debouncedContactInfo.email || "");
-          formData.append("phone", debouncedContactInfo.phone || "");
-          formData.append("address", debouncedContactInfo.address || "");
-
-          await patchSiteConfigMutation.mutateAsync({
-            id: siteConfig.id,
-            data: formData,
-          });
-        } catch (error) {
-          console.error("Failed to sync contact info:", error);
-        }
-      }
-    };
-
-    syncContactInfo();
-  }, [debouncedContactInfo, siteConfig, patchSiteConfigMutation]);
+  // Sync logo and social links from site config when component mounts or site config changes
 
   // Check if newsletter should be shown (not for FooterStyle5)
   const showNewsletter = footerStyle !== "FooterStyle5";
@@ -344,7 +312,7 @@ export function FooterEditorDialog({
     }
   }, [siteConfig]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Process sections and links to ensure internal links have -draft suffix
     const processedSections = editingData.sections.map(section => ({
       ...section,
@@ -360,6 +328,30 @@ export function FooterEditorDialog({
         return link;
       }),
     }));
+
+    // Sync contact info to site configuration if changed
+    if (siteConfig?.id) {
+      const hasChanged =
+        (editingData.contactInfo.email || "") !== (siteConfig.email || "") ||
+        (editingData.contactInfo.phone || "") !== (siteConfig.phone || "") ||
+        (editingData.contactInfo.address || "") !== (siteConfig.address || "");
+
+      if (hasChanged) {
+        try {
+          const formData = new FormData();
+          formData.append("email", editingData.contactInfo.email || "");
+          formData.append("phone", editingData.contactInfo.phone || "");
+          formData.append("address", editingData.contactInfo.address || "");
+
+          await patchSiteConfigMutation.mutateAsync({
+            id: siteConfig.id,
+            data: formData,
+          });
+        } catch (error) {
+          console.error("Failed to sync contact info on save:", error);
+        }
+      }
+    }
 
     onSave({
       ...editingData,

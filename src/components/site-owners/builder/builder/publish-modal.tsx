@@ -67,7 +67,7 @@ export const PublishModal: React.FC<PublishModalProps> = ({
                 <Layout className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-[13px] font-bold leading-tight text-slate-900">
+                <p className="text-[13px] leading-tight font-bold text-slate-900">
                   Site updates detected
                 </p>
                 <p className="mt-0.5 text-[11px] text-slate-600">
@@ -98,7 +98,7 @@ export const PublishModal: React.FC<PublishModalProps> = ({
           <button
             disabled={isPublishing}
             onClick={handlePublish}
-            className="flex h-10 items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-xs font-bold text-white shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5 hover:bg-blue-700 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-xs font-bold text-white shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5 hover:bg-blue-700 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isPublishing ? (
               <>

@@ -48,7 +48,7 @@ export interface TestimonialFormProps {
 export interface TestimonialsTableProps {
   testimonials: Testimonial[];
   onEdit: (testimonial: Testimonial) => void;
-  onDelete: (id: number) => void;
+  onDelete: (testimonial: Testimonial) => void;
   isLoading: boolean;
 }
 

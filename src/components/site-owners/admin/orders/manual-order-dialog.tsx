@@ -13,6 +13,7 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DeleteConfirmDialog } from "@/components/ui/delete-confirm-dialog";
 import {
   Dialog,
   DialogContent,
@@ -119,6 +120,12 @@ export function ManualOrderDialog({
   const [selectedProductForVariant, setSelectedProductForVariant] =
     useState<Product | null>(null);
   const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<{
+    productId: string;
+    variantId?: number;
+    name: string;
+  } | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -469,13 +476,28 @@ export function ManualOrderDialog({
     });
   };
 
-  const handleRemoveItem = (productId: string, variantId?: number) => {
+  const handleRemoveItem = (
+    productId: string,
+    variantId: number | undefined,
+    name: string
+  ) => {
+    setItemToDelete({ productId, variantId, name });
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmRemoveItem = () => {
+    if (!itemToDelete) return;
     setOrderItems(prev =>
       prev.filter(
         item =>
-          !(item.product_id === productId && item.variant_id === variantId)
+          !(
+            item.product_id === itemToDelete.productId &&
+            item.variant_id === itemToDelete.variantId
+          )
       )
     );
+    setShowDeleteConfirm(false);
+    setItemToDelete(null);
   };
 
   const getProductDisplayName = (item: OrderItem) => {
@@ -961,7 +983,8 @@ export function ManualOrderDialog({
                               onClick={() =>
                                 handleRemoveItem(
                                   item.product_id,
-                                  item.variant_id
+                                  item.variant_id,
+                                  getProductDisplayName(item)
                                 )
                               }
                               className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 hover:text-red-600"
@@ -1227,6 +1250,13 @@ export function ManualOrderDialog({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <DeleteConfirmDialog
+        open={showDeleteConfirm}
+        onOpenChange={setShowDeleteConfirm}
+        onConfirm={confirmRemoveItem}
+        title="Remove Item"
+        description={`Are you sure you want to remove "${itemToDelete?.name}" from this order?`}
+      />
     </>
   );
 }

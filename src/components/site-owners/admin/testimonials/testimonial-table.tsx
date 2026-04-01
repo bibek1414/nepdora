@@ -114,7 +114,7 @@ export const TestimonialsTable = ({
               <TableCell className="px-6 py-4 text-right">
                 <TableActionButtons
                   onEdit={() => onEdit(testimonial)}
-                  onDelete={() => onDelete(testimonial.id)}
+                  onDelete={() => onDelete(testimonial)}
                 />
               </TableCell>
             </TableRow>

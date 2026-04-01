@@ -53,10 +53,7 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
   };
 
   return (
-    <section
-      className="w-full py-20 md:py-32"
-      style={{ backgroundColor: theme.colors.background }}
-    >
+    <section className="w-full py-20 md:py-32">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         {/* Header */}
         <div className="mb-24 text-center">
@@ -77,7 +74,6 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
               isEditable={isEditable}
               as="span"
               className="tracking-tight"
-              style={{ color: theme.colors.text }}
             />
           </motion.div>
           <motion.div
@@ -91,17 +87,16 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
               onChange={handleTextUpdate("heading")}
               isEditable={isEditable}
               as="h2"
-              className="mx-auto max-w-3xl text-4xl font-bold leading-tight md:text-5xl"
+              className="mx-auto max-w-3xl text-4xl leading-tight font-bold md:text-5xl"
               style={{
                 fontFamily: theme.fonts.heading,
-                color: theme.colors.text,
               }}
             />
           </motion.div>
         </div>
 
         {/* 3-column grid — vertical dividers on desktop */}
-        <div className="grid grid-cols-1 divide-y divide-gray-200 md:grid-cols-3 md:divide-y-0 md:divide-x md:divide-gray-300/70">
+        <div className="grid grid-cols-1 divide-y divide-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0 md:divide-gray-300/70">
           {data.programs?.map((program: OthersProgramItem, index: number) => (
             <motion.div
               key={program.id || index}
@@ -120,8 +115,7 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
                   }
                   isEditable={isEditable}
                   as="h3"
-                  className="text-lg font-bold leading-snug"
-                  style={{ color: theme.colors.text }}
+                  className="text-lg leading-snug font-bold"
                 />
               </div>
 
@@ -136,7 +130,6 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
                   as="p"
                   multiline
                   className="text-[15px] leading-relaxed opacity-70"
-                  style={{ color: theme.colors.text }}
                 />
               </div>
 
@@ -188,7 +181,6 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
               isEditable={isEditable}
               as="p"
               className="text-center text-sm font-medium sm:text-left"
-              style={{ color: theme.colors.text }}
             />
           </div>
         </motion.div>

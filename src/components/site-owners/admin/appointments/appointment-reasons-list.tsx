@@ -51,6 +51,7 @@ import {
 import { AppointmentReason } from "@/types/owner-site/admin/appointment";
 import { getApiBaseUrl } from "@/config/site";
 import { toast } from "sonner";
+import { DeleteConfirmDialog } from "@/components/ui/delete-confirm-dialog";
 
 const AppointmentReasonsList = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -58,6 +59,9 @@ const AppointmentReasonsList = () => {
   const [selectedReason, setSelectedReason] =
     useState<AppointmentReason | null>(null);
   const [reasonName, setReasonName] = useState("");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [reasonToDelete, setReasonToDelete] =
+    useState<AppointmentReason | null>(null);
   const queryClient = useQueryClient();
 
   // Fetch reasons
@@ -168,8 +172,15 @@ const AppointmentReasonsList = () => {
   };
 
   const handleDeleteClick = (reason: AppointmentReason) => {
-    if (confirm(`Are you sure you want to delete "${reason.name}"?`)) {
-      deleteReason.mutate(reason.id);
+    setReasonToDelete(reason);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (reasonToDelete) {
+      deleteReason.mutate(reasonToDelete.id);
+      setIsDeleteDialogOpen(false);
+      setReasonToDelete(null);
     }
   };
 
@@ -430,6 +441,15 @@ const AppointmentReasonsList = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      <DeleteConfirmDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={confirmDelete}
+        title="Delete Appointment Reason"
+        description={`Are you sure you want to delete the appointment reason "${reasonToDelete?.name}"? This action cannot be undone.`}
+        isLoading={deleteReason.isPending}
+      />
     </div>
   );
 };
