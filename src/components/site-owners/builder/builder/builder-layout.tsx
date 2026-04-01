@@ -1187,6 +1187,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           pageCount={pagesData.length}
           componentCount={pageComponents.length}
           onUndo={handleUndo}
+          siteUser={siteUser}
         />
 
         <ResetConfirmationModal

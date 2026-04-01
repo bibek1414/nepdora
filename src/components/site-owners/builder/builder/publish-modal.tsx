@@ -17,6 +17,7 @@ interface PublishModalProps {
   domainName: string;
   pageCount: number;
   componentCount: number;
+  siteUser?: string;
 }
 
 export const PublishModal: React.FC<PublishModalProps> = ({
@@ -26,8 +27,9 @@ export const PublishModal: React.FC<PublishModalProps> = ({
   domainName,
   pageCount,
   componentCount,
+  siteUser,
 }) => {
-  const { mutate: publish, isPending: isPublishing } = usePublishSite();
+  const { mutate: publish, isPending: isPublishing } = usePublishSite(siteUser);
 
   const handlePublish = () => {
     publish(undefined, {
