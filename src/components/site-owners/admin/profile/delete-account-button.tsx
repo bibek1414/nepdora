@@ -63,9 +63,9 @@ export function DeleteAccountButton() {
             Are you absolutely sure?
           </AlertDialogTitle>
           <AlertDialogDescription className="text-sm text-[#5b6e8c]">
-            This action will delete your account. Your data will be
-            preserved but you will no longer be able to log in unless you
-            recover your account.
+            This action will delete your account. Your data will be preserved
+            for 7 days, but you will not be able to log in unless you recover
+            your account within that period.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
