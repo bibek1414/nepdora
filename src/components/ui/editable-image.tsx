@@ -44,6 +44,7 @@ interface EditableImageProps {
     | "bottom-right"
     | "bottom-left";
   inputId?: string;
+  style?: React.CSSProperties;
 }
 
 export const EditableImage: React.FC<EditableImageProps> = ({
@@ -70,6 +71,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   dimensionGuideText,
   buttonPosition = "center",
   inputId,
+  style,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -132,6 +134,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
           isEditable && "group cursor-pointer",
           className
         )}
+        style={style}
         onClick={handleImageClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}

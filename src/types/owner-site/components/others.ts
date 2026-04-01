@@ -152,7 +152,8 @@ export type OthersData =
   | OthersTemplate16Data
   | OthersTemplate17Data
   | OthersTemplate18Data
-  | OthersTemplate19Data;
+  | OthersTemplate19Data
+  | OthersTemplate20Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -822,6 +823,22 @@ export const defaultOthersTemplate14Data: OthersTemplate14Data = {
   ],
 };
 
+export interface OthersFeature15 {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface OthersTemplate15Data {
+  template: "others-15";
+  badge: string;
+  heading: string;
+  description: string;
+  trustBadges: OthersStatistic[];
+  features: OthersFeature15[];
+}
+
 export const defaultOthersTemplate15Data: OthersTemplate15Data = {
   template: "others-15",
   badge: "Why Choose Us",
@@ -879,6 +896,25 @@ export const defaultOthersTemplate15Data: OthersTemplate15Data = {
   ],
 };
 
+export interface OthersProgramItem {
+  id: string;
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+}
+
+export interface OthersTemplate16Data {
+  template: "others-16";
+  badge: string;
+  heading: string;
+  programs: OthersProgramItem[];
+  trustBadgeLabel: string;
+  trustBadgeText: string;
+}
+
 export const defaultOthersTemplate16Data: OthersTemplate16Data = {
   template: "others-16",
   badge: "Our Programs",
@@ -898,8 +934,7 @@ export const defaultOthersTemplate16Data: OthersTemplate16Data = {
     {
       id: "p-2",
       title: "Nutritious meals that restore hope",
-      description:
-        "Providing healthy, hearty food to those who need it most.",
+      description: "Providing healthy, hearty food to those who need it most.",
       image: {
         url: "https://picsum.photos/seed/food-1/600/400",
         alt: "Nutritious meals that restore hope",
@@ -1000,14 +1035,43 @@ export const defaultOthersTemplate17Data: OthersTemplate17Data = {
   ],
 };
 
+export interface OthersAvatar {
+  id: string;
+  url: string;
+}
+
+export interface OthersTag {
+  id: string;
+  label: string;
+}
+
+export interface OthersTemplate18Data {
+  template: "others-18";
+  heading: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  statValue: string;
+  statDescription: string;
+  avatars: OthersAvatar[];
+  tags: OthersTag[];
+  mainImage: {
+    url: string;
+    alt: string;
+  };
+}
+
 export const defaultOthersTemplate18Data: OthersTemplate18Data = {
   template: "others-18",
-  heading: "Full-circle youth development programs providing shelter with passion and care",
-  description: "Choose the cause that resonates with you most, and help build lasting, impactful change today.",
+  heading:
+    "Full-circle youth development programs providing shelter with passion and care",
+  description:
+    "Choose the cause that resonates with you most, and help build lasting, impactful change today.",
   buttonText: "Discover more",
   buttonLink: "#",
   statValue: "86.2%",
-  statDescription: "Our community initiatives provide essential nutrition and academic mentoring to ensure students stay in school and succeed.",
+  statDescription:
+    "Our community initiatives provide essential nutrition and academic mentoring to ensure students stay in school and succeed.",
   avatars: [
     { id: "a1", url: "https://i.pravatar.cc/150?u=a1" },
     { id: "a2", url: "https://i.pravatar.cc/150?u=a2" },
@@ -1025,58 +1089,125 @@ export const defaultOthersTemplate18Data: OthersTemplate18Data = {
   },
 };
 
-export interface OthersTemplate19Item {
-  id: string;
-  title: string;
-  description: string;
-  image: {
-    url: string;
-    alt: string;
-  };
-}
-
 export interface OthersTemplate19Data {
   template: "others-19";
   heading: string;
-  items: OthersTemplate19Item[];
-  trustBadge: string;
-  trustText: string;
+  projectsCompletedLabel: string;
+  resilientLiving: {
+    title: string;
+    description: string;
+    items: { id: string; label: string }[];
+    buttonText: string;
+    buttonLink: string;
+  };
+  portraitImage: {
+    url: string;
+    alt: string;
+  };
+  landscapeImage: {
+    url: string;
+    alt: string;
+  };
+  bottomDescription: string;
+  bottomButtonText: string;
+  bottomButtonLink: string;
 }
 
 export const defaultOthersTemplate19Data: OthersTemplate19Data = {
   template: "others-19",
-  heading: "From rural healthcare access to modern classroom resources to uplifting",
-  items: [
+  heading: "Bringing hope and support to forgotten communities worldwide",
+  projectsCompletedLabel: "1300 Projects completed",
+  resilientLiving: {
+    title: "Resilient living",
+    description:
+      "Your support helps communities adapt to climate change and secure food.",
+    items: [
+      { id: "1", label: "Community support programs." },
+      { id: "2", label: "Food security initiatives." },
+    ],
+    buttonText: "Get started",
+    buttonLink: "#",
+  },
+  portraitImage: {
+    url: "https://picsum.photos/seed/child-portrait/800/1100",
+    alt: "Child portrait",
+  },
+  landscapeImage: {
+    url: "https://picsum.photos/seed/child-landscape/800/560",
+    alt: "Children in community",
+  },
+  bottomDescription:
+    "Your contribution enables to adjust to climate change and ensure food security.",
+  bottomButtonText: "Discover more",
+  bottomButtonLink: "#",
+};
+
+export interface OthersTemplate20AccordionItem {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface OthersTemplate20Data {
+  template: "others-20";
+  heading: string;
+  accordionItems: OthersTemplate20AccordionItem[];
+  donateButtonText: string;
+  donateButtonLink: string;
+  bentoImages: {
+    id: string;
+    url: string;
+    alt: string;
+  }[];
+}
+
+export const defaultOthersTemplate20Data: OthersTemplate20Data = {
+  template: "others-20",
+  heading: "Where kindness meets with action and hope together",
+  accordionItems: [
     {
-      id: "1",
-      title: "Education creates hope",
-      description: "Help with daily tasks to maintain comfort, and independence at home.",
-      image: {
-        url: "https://picsum.photos/seed/edu1/600/500",
-        alt: "Education creates hope",
-      },
+      id: "water",
+      title: "Purified clean water",
+      description:
+        "Our efforts bring safe drinking water to communities in need, improving health and quality of life for countless families.",
     },
     {
-      id: "2",
-      title: "Send gift for children",
-      description: "Timely prompts and organization for safe, accurate medication schedules.",
-      image: {
-        url: "https://picsum.photos/seed/gift2/600/500",
-        alt: "Send gift for children",
-      },
+      id: "growth",
+      title: "Knowledge growth",
+      description:
+        "By providing access to education, we empower individuals and communities and creating lasting change.",
     },
     {
-      id: "3",
-      title: "Meals that restore hope",
-      description: "Continuous support and supervision for full peace of mind, day or night.",
-      image: {
-        url: "https://picsum.photos/seed/meal3/600/500",
-        alt: "Meals that restore hope",
-      },
+      id: "healthcare",
+      title: "Healthcare",
+      description:
+        "We deliver essential medical care to underserved areas, ensuring people receive the treatment they deserve.",
     },
   ],
-  trustBadge: "Trust",
-  trustText: "Join the 850+ partners funding our essential child safety initiatives",
+  donateButtonText: "Donate now",
+  donateButtonLink: "#",
+  bentoImages: [
+    {
+      id: "bento-a",
+      url: "https://picsum.photos/seed/bento-a/500/800",
+      alt: "Community help",
+    },
+    {
+      id: "bento-b",
+      url: "https://picsum.photos/seed/bento-b/500/400",
+      alt: "Food distribution",
+    },
+    {
+      id: "bento-c",
+      url: "https://picsum.photos/seed/bento-c/500/400",
+      alt: "Healthcare clinic",
+    },
+    {
+      id: "bento-d",
+      url: "https://picsum.photos/seed/bento-d/500/800",
+      alt: "Water project",
+    },
+  ],
 };
 
 // Default data map for all others templates
@@ -1100,6 +1231,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-17": defaultOthersTemplate17Data,
   "others-18": defaultOthersTemplate18Data,
   "others-19": defaultOthersTemplate19Data,
+  "others-20": defaultOthersTemplate20Data,
 };
 
 // Type guards
@@ -1160,3 +1292,6 @@ export const isOthersTemplate18 = (
 export const isOthersTemplate19 = (
   data: OthersData
 ): data is OthersTemplate19Data => data.template === "others-19";
+export const isOthersTemplate20 = (
+  data: OthersData
+): data is OthersTemplate20Data => data.template === "others-20";
