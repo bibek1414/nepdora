@@ -150,7 +150,8 @@ export type OthersData =
   | OthersTemplate14Data
   | OthersTemplate15Data
   | OthersTemplate16Data
-  | OthersTemplate17Data;
+  | OthersTemplate17Data
+  | OthersTemplate18Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -265,6 +266,32 @@ export interface OthersTemplate16Data {
   programs: OthersProgramItem[];
   trustBadgeLabel: string;
   trustBadgeText: string;
+}
+
+export interface OthersAvatar {
+  id: string;
+  url: string;
+}
+
+export interface OthersTag {
+  id: string;
+  label: string;
+}
+
+export interface OthersTemplate18Data {
+  template: "others-18";
+  heading: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  statValue: string;
+  statDescription: string;
+  avatars: OthersAvatar[];
+  tags: OthersTag[];
+  mainImage: {
+    url: string;
+    alt: string;
+  };
 }
 // Component and API interfaces
 export interface OthersComponentData {
@@ -972,6 +999,31 @@ export const defaultOthersTemplate17Data: OthersTemplate17Data = {
   ],
 };
 
+export const defaultOthersTemplate18Data: OthersTemplate18Data = {
+  template: "others-18",
+  heading: "Full-circle youth development programs providing shelter with passion and care",
+  description: "Choose the cause that resonates with you most, and help build lasting, impactful change today.",
+  buttonText: "Discover more",
+  buttonLink: "#",
+  statValue: "86.2%",
+  statDescription: "Our community initiatives provide essential nutrition and academic mentoring to ensure students stay in school and succeed.",
+  avatars: [
+    { id: "a1", url: "https://i.pravatar.cc/150?u=a1" },
+    { id: "a2", url: "https://i.pravatar.cc/150?u=a2" },
+    { id: "a3", url: "https://i.pravatar.cc/150?u=a3" },
+  ],
+  tags: [
+    { id: "t1", label: "Mentorship" },
+    { id: "t2", label: "Caregiving" },
+    { id: "t3", label: "Nutrition" },
+    { id: "t4", label: "Empowerment" },
+  ],
+  mainImage: {
+    url: "https://picsum.photos/seed/youth-shelter/800/1200",
+    alt: "Child holding a wooden house model",
+  },
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -991,6 +1043,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-15": defaultOthersTemplate15Data,
   "others-16": defaultOthersTemplate16Data,
   "others-17": defaultOthersTemplate17Data,
+  "others-18": defaultOthersTemplate18Data,
 };
 
 // Type guards
@@ -1045,3 +1098,6 @@ export const isOthersTemplate16 = (
 export const isOthersTemplate17 = (
   data: OthersData
 ): data is OthersTemplate17Data => data.template === "others-17";
+export const isOthersTemplate18 = (
+  data: OthersData
+): data is OthersTemplate18Data => data.template === "others-18";

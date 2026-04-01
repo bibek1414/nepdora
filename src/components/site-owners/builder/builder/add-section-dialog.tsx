@@ -320,6 +320,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Others Style 17 (Interactive Process)",
         image: "/images/site-owners/others/others17.png",
       },
+      {
+        id: "others-18",
+        name: "Others Style 18 (Youth Development)",
+        image: "/images/site-owners/others/others18.png",
+      },
     ],
     experience: [
       {
@@ -477,17 +482,22 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "about-16",
         name: "About Style 16",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/about/about16.png",
       },
       {
         id: "about-17",
         name: "About Style 17 (Mission)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/about/about17.png",
       },
       {
         id: "about-18",
         name: "About Style 18 (Values)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/about/about18.png",
+      },
+      {
+        id: "about-19",
+        name: "About Style 19 (Impact)",
+        image: "/images/site-owners/about/about19.png",
       },
     ],
     products: [
