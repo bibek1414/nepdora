@@ -7,11 +7,11 @@ import {
   RotateCcw,
   Upload,
   ExternalLinkIcon,
+  Globe,
+  Eye,
 } from "lucide-react";
 import Link from "next/link";
-import { Globe, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
-import "@/components/site-owners/builder/builder/builder.css";
 
 interface TopNavigationProps {
   hasChanges: boolean;
@@ -66,18 +66,26 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           <Link
             href={liveSiteUrl}
             target="_blank"
-            className="builder-btn-outline"
+            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[13px] font-medium text-slate-900 transition-all hover:border-slate-300 hover:bg-slate-50"
           >
             <Globe className="h-3.5 w-3.5" />
             Live site
-            <ExternalLinkIcon className="text-builder-text-muted ml-1 h-2.5 w-2.5" />
+            <ExternalLinkIcon className="ml-1 h-2.5 w-2.5 text-slate-400" />
           </Link>
-          <Link href={previewUrl} target="_blank" className="builder-btn-ghost">
+          <Link
+            href={previewUrl}
+            target="_blank"
+            className="flex items-center gap-1.25 rounded-lg bg-transparent px-2.5 py-1.5 text-[13px] font-medium text-slate-600 transition-all hover:bg-slate-50 hover:text-slate-900"
+          >
             <Eye className="h-3.5 w-3.5" />
             Preview
           </Link>
           <button
-            className={cn("builder-btn-undo", hasChanges && "has-changes")}
+            className={cn(
+              "flex cursor-pointer items-center gap-1.25 rounded-lg border border-dashed border-slate-200 bg-transparent px-2.5 py-1.5 text-[13px] font-medium text-slate-600 transition-all hover:border-amber-500 hover:bg-amber-50 hover:text-amber-600",
+              hasChanges &&
+                "cursor-pointer border-amber-500 bg-amber-100 text-amber-700"
+            )}
             onClick={onUndo}
             title="Undo unsaved changes"
           >
@@ -85,7 +93,10 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             Undo changes
           </button>
 
-          <button className="builder-btn-publish group" onClick={onPublish}>
+          <button
+            className="group flex cursor-pointer items-center gap-1.75 rounded-lg bg-blue-600 px-[18px] py-[7px] text-[13px] font-bold text-white shadow-sm shadow-blue-600/30 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/35 active:translate-y-0"
+            onClick={onPublish}
+          >
             <Upload className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-px" />
             Publish changes
           </button>

@@ -65,14 +65,14 @@ export const SEOModal: React.FC<SEOModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="rounded-builder-radius-lg max-w-[560px] gap-0 overflow-hidden border-0 p-0">
+      <DialogContent className="max-w-[560px] gap-0 overflow-hidden border-0 p-0 rounded-xl">
         <div className="bg-white p-5 pb-0">
           <div className="flex items-start justify-between">
             <div>
-              <DialogTitle className="text-builder-text-primary text-lg font-semibold">
+              <DialogTitle className="text-lg font-semibold text-slate-900">
                 Page SEO & Metadata
               </DialogTitle>
-              <p className="text-builder-text-secondary mt-1 text-xs">
+              <p className="mt-1 text-xs text-slate-600">
                 Editing: {pageTitle} — affects search engine visibility
               </p>
             </div>
@@ -81,20 +81,20 @@ export const SEOModal: React.FC<SEOModalProps> = ({
 
         <div className="flex flex-col gap-4 bg-white p-5">
           <div className="space-y-1.5">
-            <Label className="text-builder-text-secondary text-xs font-semibold">
+            <Label className="text-xs font-semibold text-slate-600">
               Page title{" "}
-              <span className="text-builder-text-muted font-normal">
+              <span className="font-normal text-slate-400">
                 (appears in browser tab & search results)
               </span>
             </Label>
             <Input
               value={formData.meta_title || ""}
               onChange={e => handleChange("meta_title", e.target.value)}
-              className="border-builder-border-strong focus-visible:ring-builder-accent focus-visible:border-builder-accent bg-builder-surface-2 h-10 text-[13px] focus-visible:ring-1"
+              className="h-10 border-slate-300 bg-slate-50 text-[13px] focus-visible:border-blue-600 focus-visible:ring-1 focus-visible:ring-blue-600"
               placeholder="e.g. Home | VisionNepal"
             />
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-builder-text-muted">
+              <span className="text-slate-400">
                 Recommended: 50–60 characters
               </span>
               <span
@@ -104,7 +104,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
                     ? "text-red-500"
                     : titleLength > 50
                       ? "text-amber-500"
-                      : "text-builder-text-secondary"
+                      : "text-slate-600"
                 )}
               >
                 {titleLength} / 60
@@ -113,20 +113,20 @@ export const SEOModal: React.FC<SEOModalProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-builder-text-secondary text-xs font-semibold">
+            <Label className="text-xs font-semibold text-slate-600">
               Meta description{" "}
-              <span className="text-builder-text-muted font-normal">
+              <span className="font-normal text-slate-400">
                 (shown in Google results)
               </span>
             </Label>
             <Textarea
               value={formData.meta_description || ""}
               onChange={e => handleChange("meta_description", e.target.value)}
-              className="border-builder-border-strong focus-visible:ring-builder-accent focus-visible:border-builder-accent bg-builder-surface-2 h-24 resize-none text-[13px] focus-visible:ring-1"
+              className="h-24 resize-none border-slate-300 bg-slate-50 text-[13px] focus-visible:border-blue-600 focus-visible:ring-1 focus-visible:ring-blue-600"
               placeholder="A brief description of your page for search engines..."
             />
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-builder-text-muted">
+              <span className="text-slate-400">
                 Recommended: 120–160 characters
               </span>
               <span
@@ -136,7 +136,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
                     ? "text-red-500"
                     : descLength > 120
                       ? "text-amber-500"
-                      : "text-builder-text-secondary"
+                      : "text-slate-600"
                 )}
               >
                 {descLength} / 160
@@ -145,35 +145,35 @@ export const SEOModal: React.FC<SEOModalProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-builder-text-secondary text-xs font-semibold">
+            <Label className="text-xs font-semibold text-slate-600">
               URL slug
             </Label>
             <Input
               value={formData.slug}
               onChange={e => handleChange("slug", e.target.value)}
-              className="border-builder-border-strong focus-visible:ring-builder-accent focus-visible:border-builder-accent bg-builder-surface-2 h-10 font-mono text-xs focus-visible:ring-1"
+              className="h-10 border-slate-300 bg-slate-50 font-mono text-xs focus-visible:border-blue-600 focus-visible:ring-1 focus-visible:ring-blue-600"
               placeholder="e.g. /about"
               disabled
             />
           </div>
         </div>
 
-        <DialogFooter className="bg-builder-surface border-builder-border flex items-center justify-between gap-0 border-t p-5 pt-3">
-          <div className="text-builder-text-muted flex items-center gap-1.5 text-xs">
+        <DialogFooter className="flex items-center justify-between gap-0 border-t border-slate-200 bg-white p-5 pt-3">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400">
             <Info className="h-3.5 w-3.5" />
             <span>Changes save when you publish</span>
           </div>
           <div className="flex gap-2.5">
             <Button
               variant="ghost"
-              className="text-builder-text-secondary hover:bg-builder-surface-2 h-9 px-4 text-xs font-medium"
+              className="h-9 px-4 text-xs font-medium text-slate-600 hover:bg-slate-50"
               onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>
             <button
               onClick={handleSave}
-              className="builder-btn-publish group flex items-center gap-2 py-1 text-sm transition-all"
+              className="group flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-1 text-sm font-bold text-white transition-all hover:bg-blue-700"
             >
               <Check className="h-4 w-4 transition-transform group-hover:scale-110" />
               Save changes

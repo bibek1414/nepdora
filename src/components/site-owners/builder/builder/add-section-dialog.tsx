@@ -459,6 +459,21 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "About Style 15",
         image: "/images/site-owners/about/about15.png",
       },
+      {
+        id: "about-16",
+        name: "About Style 16",
+        image: "/images/site-owners/placeholder.png",
+      },
+      {
+        id: "about-17",
+        name: "About Style 17 (Mission)",
+        image: "/images/site-owners/placeholder.png",
+      },
+      {
+        id: "about-18",
+        name: "About Style 18 (Values)",
+        image: "/images/site-owners/placeholder.png",
+      },
     ],
     products: [
       {
@@ -1007,6 +1022,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/navbars/navbar10.png",
         description: "Floating design with services dropdown",
         showForWebsiteTypes: ["ecommerce", "service"],
+      },
+      {
+        id: "navbar-11",
+        name: "Navbar with Language Switcher",
+        image: "/images/site-owners/navbars/navbar11.png",
+        description: "Includes language switcher",
       },
     ],
     // FOOTER TEMPLATES
@@ -1581,12 +1602,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    const results: { component: ComponentItem; templates: TemplateItem[] }[] = [];
+    const results: { component: ComponentItem; templates: TemplateItem[] }[] =
+      [];
 
     filteredComponents.forEach(component => {
       // Check if category itself matches
-      const isCategoryMatch = [component.label, ...(component.keywords || [])]
-        .some(k => k.toLowerCase().includes(q));
+      const isCategoryMatch = [
+        component.label,
+        ...(component.keywords || []),
+      ].some(k => k.toLowerCase().includes(q));
 
       const matchingTemplates = (component.templates || []).filter(t => {
         // If category matches, show all its templates, otherwise filter by template name/description
@@ -1609,7 +1633,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
 
     return results.filter(r => r.templates.length > 0);
   }, [query, filteredComponents, websiteType]);
-
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -1918,27 +1941,26 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
               <label htmlFor="component-search" className="sr-only">
                 Search components
               </label>
-                <div className="relative">
-                  <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-                  <input
-                    id="component-search"
-                    type="text"
-                    value={query}
-                    autoFocus
-                    onChange={event => setQuery(event.target.value)}
-                    placeholder="Search sections..."
-                    className="border-muted focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border bg-white py-2 pr-9 pl-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                  />
-                  {query && (
-                    <button
-                      onClick={() => setQuery("")}
-                      className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-1 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-
+              <div className="relative">
+                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                <input
+                  id="component-search"
+                  type="text"
+                  value={query}
+                  autoFocus
+                  onChange={event => setQuery(event.target.value)}
+                  placeholder="Search sections..."
+                  className="border-muted focus-visible:ring-ring focus-visible:ring-offset-background w-full rounded-md border bg-white py-2 pr-9 pl-9 text-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                />
+                {query && (
+                  <button
+                    onClick={() => setQuery("")}
+                    className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-1 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Components List */}
@@ -1980,7 +2002,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                     Search Results for "{query}"
                   </h2>
                   <p className="mt-1 text-sm text-gray-600">
-                    Found {searchResults.reduce((acc, curr) => acc + curr.templates.length, 0)} templates
+                    Found{" "}
+                    {searchResults.reduce(
+                      (acc, curr) => acc + curr.templates.length,
+                      0
+                    )}{" "}
+                    templates
                   </p>
                 </div>
               ) : !selectedCategory ? (
@@ -2023,7 +2050,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                 </div>
               )}
             </div>
-
 
             {/* Scrollable Templates Area */}
             <div className="flex-1 overflow-auto">
@@ -2200,7 +2226,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
                   </div>
                 )}
               </div>
-
             </div>
           </div>
         </div>

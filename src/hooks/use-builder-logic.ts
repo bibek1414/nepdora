@@ -71,6 +71,24 @@ export const useBuilderLogic = <T extends Record<string, any>>(
       },
     [handleArrayItemUpdate]
   );
+  
+  const handleArrayUpdate = useCallback(
+    (field: keyof T) => (value: any[]) => {
+      const updatedData = { ...data, [field]: value };
+      setData(updatedData);
+      onUpdate?.({ [field]: value } as Partial<T>);
+    },
+    [data, onUpdate]
+  );
+
+  const handleMultipleUpdate = useCallback(
+    (updates: Partial<T>) => {
+      const updatedData = { ...data, ...updates };
+      setData(updatedData);
+      onUpdate?.(updates);
+    },
+    [data, onUpdate]
+  );
 
   const getImageUrl = useCallback(
     (
@@ -100,6 +118,8 @@ export const useBuilderLogic = <T extends Record<string, any>>(
     handleImageUpdate,
     handleAltUpdate,
     handleArrayItemUpdate,
+    handleArrayUpdate,
+    handleMultipleUpdate,
     handleButtonUpdate,
     getImageUrl,
   };

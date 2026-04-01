@@ -25,7 +25,7 @@ export const ResetConfirmationModal: React.FC<ResetConfirmationModalProps> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="rounded-builder-radius-lg max-w-[400px] gap-0 overflow-hidden border-0 p-0 shadow-2xl">
+      <DialogContent className="max-w-[400px] gap-0 overflow-hidden border-0 p-0 rounded-xl shadow-2xl">
         {/* Header with Icon */}
         <div className="bg-white p-6 pb-4">
           <div className="flex items-start justify-between">
@@ -35,10 +35,10 @@ export const ResetConfirmationModal: React.FC<ResetConfirmationModalProps> = ({
           </div>
 
           <div className="mt-4">
-            <DialogTitle className="text-builder-text-primary text-xl font-bold">
+            <DialogTitle className="text-xl font-bold text-slate-900">
               Reset all changes?
             </DialogTitle>
-            <DialogDescription className="text-builder-text-secondary mt-2 text-[13px] leading-relaxed">
+            <DialogDescription className="mt-2 text-[13px] leading-relaxed text-slate-600">
               This will revert your site to the last published version. All your
               current unsaved edits will be permanently lost. This action cannot
               be undone.
@@ -55,7 +55,7 @@ export const ResetConfirmationModal: React.FC<ResetConfirmationModalProps> = ({
         </div>
 
         {/* Footer */}
-        <DialogFooter className="bg-builder-surface-2 border-builder-border flex flex-row items-center justify-end gap-3 border-t px-6 py-4">
+        <DialogFooter className="flex flex-row items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4">
           <Button
             variant="ghost"
             className="h-10 px-4 text-xs border"

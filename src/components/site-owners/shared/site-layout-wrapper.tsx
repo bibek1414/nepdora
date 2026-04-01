@@ -53,11 +53,11 @@ export function SiteLayoutWrapper({
     title: "",
   });
 
-  const isStyle11 = navbarResponse?.data?.data?.style === "style-11";
+  const isStyle7 = navbarResponse?.data?.data?.style === "style-7";
   const isLoading = isPreview ? isNavbarLoading || isFooterLoading : false;
 
   useEffect(() => {
-    if (!pathname || !isStyle11) return;
+    if (!pathname || !isStyle7) return;
 
     let isHome = false;
     let title = "";
@@ -93,7 +93,7 @@ export function SiteLayoutWrapper({
     }
 
     setPageInfo({ isHome, title });
-  }, [pathname, siteUser, isStyle11]);
+  }, [pathname, siteUser, isStyle7]);
 
   return (
     <div className="bg-background min-h-screen">
@@ -109,7 +109,7 @@ export function SiteLayoutWrapper({
       )}
 
       {/* Breadcrumb for Style-11 */}
-      {isStyle11 && !pageInfo.isHome && (
+      {isStyle7 && !pageInfo.isHome && (
         <InnerPageHeader
           title={pageInfo.title || "Page"}
           currentPage={pageInfo.title || "Page"}

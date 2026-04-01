@@ -31,6 +31,9 @@ import {
   isAboutUsTemplate13,
   isAboutUsTemplate14,
   isAboutUsTemplate15,
+  isAboutUsTemplate16,
+  isAboutUsTemplate17,
+  isAboutUsTemplate18,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
@@ -47,6 +50,9 @@ import { AboutUsTemplate12 } from "./about-style-12";
 import { AboutUsTemplate13 } from "./about-style-13";
 import { AboutUsTemplate14 } from "./about-style-14";
 import { AboutUsTemplate15 } from "./about-style-15";
+import { AboutUsTemplate16 } from "./about-style-16";
+import { AboutUsTemplate17 } from "./about-style-17";
+import { AboutUsTemplate18 } from "./about-style-18";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -157,10 +163,25 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
         <AboutUsTemplate15 aboutUsData={component.data} {...commonProps} />
       );
     }
+    if (isAboutUsTemplate16(component.data)) {
+      return (
+        <AboutUsTemplate16 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate17(component.data)) {
+      return (
+        <AboutUsTemplate17 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate18(component.data)) {
+      return (
+        <AboutUsTemplate18 aboutUsData={component.data} {...commonProps} />
+      );
+    }
 
     return (
-      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-8 text-center">
-        Unknown template: {(component.data as any).template}
+      <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-8 text-center text-yellow-600">
+        Unknown template: {(component.data as { template: string }).template}
       </div>
     );
   };

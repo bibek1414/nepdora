@@ -38,15 +38,15 @@ export const PublishModal: React.FC<PublishModalProps> = ({
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="rounded-builder-radius-lg max-w-[440px] overflow-hidden border-0 bg-white p-0 shadow-2xl outline-none">
+      <DialogContent className="max-w-[440px] overflow-hidden rounded-xl border-0 bg-white p-0 shadow-2xl outline-none">
         {/* Header */}
         <div className="bg-white p-6 pb-2">
           <div className="flex items-start justify-between">
             <div>
-              <DialogTitle className="text-builder-text-primary text-xl font-bold">
+              <DialogTitle className="text-xl font-bold text-slate-900">
                 Publish changes to live site
               </DialogTitle>
-              <div className="text-builder-text-secondary mt-2 flex items-center gap-1.5 text-[13px]">
+              <div className="mt-2 flex items-center gap-1.5 text-[13px] text-slate-600">
                 <Globe className="h-3.5 w-3.5 text-blue-600" />
                 <span>
                   Your site will be live at{" "}
@@ -67,10 +67,10 @@ export const PublishModal: React.FC<PublishModalProps> = ({
                 <Layout className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-builder-text-primary text-[13px] leading-tight font-bold">
+                <p className="text-[13px] font-bold leading-tight text-slate-900">
                   Site updates detected
                 </p>
-                <p className="text-builder-text-secondary mt-0.5 text-[11px]">
+                <p className="mt-0.5 text-[11px] text-slate-600">
                   All changes are ready to be published.
                 </p>
               </div>
@@ -87,10 +87,10 @@ export const PublishModal: React.FC<PublishModalProps> = ({
         </div>
 
         {/* Footer */}
-        <DialogFooter className="bg-builder-surface-2/50 flex flex-row items-center justify-end gap-3 border-t border-gray-100 px-6 py-4">
+        <DialogFooter className="flex flex-row items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/50 px-6 py-4">
           <Button
             variant="ghost"
-            className="text-builder-text-secondary hover:text-builder-text-primary h-10 px-4 text-xs font-bold transition-all hover:bg-white"
+            className="h-10 px-4 text-xs font-bold text-slate-600 transition-all hover:bg-white hover:text-slate-900"
             onClick={() => onOpenChange(false)}
           >
             Cancel
@@ -98,7 +98,7 @@ export const PublishModal: React.FC<PublishModalProps> = ({
           <button
             disabled={isPublishing}
             onClick={handlePublish}
-            className="builder-btn-publish flex h-10 items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-xs font-bold text-white shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5 hover:bg-blue-700 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-10 items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-xs font-bold text-white shadow-lg shadow-blue-200 transition-all hover:-translate-y-0.5 hover:bg-blue-700 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isPublishing ? (
               <>

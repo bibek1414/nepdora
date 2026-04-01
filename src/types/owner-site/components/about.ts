@@ -600,6 +600,102 @@ export const defaultAboutUs15Data: AboutUs15Data = {
   buttonLink: "/contact",
 };
 
+export interface AboutUs16Data {
+  template: "about-16";
+  badgeText: string;
+  title: string;
+  backgroundImage: string;
+  imageAlt: string;
+}
+
+export const defaultAboutUs16Data: AboutUs16Data = {
+  template: "about-16",
+  badgeText: "● About us",
+  title: "About Care-hands",
+  backgroundImage: "https://picsum.photos/seed/charity-hero/1920/1080",
+  imageAlt: "Child in need",
+};
+
+export interface AboutUs17Data {
+  template: "about-17";
+  title: string;
+  description: string;
+  ctaText: string;
+  ctaLink: string;
+  mainImage: string;
+  imageAlt: string;
+  items: string[];
+  stats: Array<{ id: string; value: string; label: string }>;
+}
+
+export const defaultAboutUs17Data: AboutUs17Data = {
+  template: "about-17",
+  title: "We walk beside families with empathy and care",
+  description:
+    "We support local families through dedicated, compassionate community programs that change lives.",
+  ctaText: "Get in touch",
+  ctaLink: "#",
+  mainImage: "https://picsum.photos/seed/volunteers-mission/800/1000",
+  imageAlt: "Volunteers with food box",
+  items: [
+    "Daily food and hygiene support for vulnerable families",
+    "Community health checkups and basic medical assistance access",
+    "Emotional support and counseling for individuals and caregivers",
+    "Comfort-focused aid and long-term care for those in need",
+  ],
+  stats: [
+    { id: "1", value: "200%", label: "Certified caregivers" },
+    { id: "2", value: "150+", label: "Communities reached" },
+  ],
+};
+
+export interface AboutUs18Item {
+  id: string;
+  title: string;
+  image: string;
+}
+
+export interface AboutUs18Data {
+  template: "about-18";
+  badge: string;
+  title: string;
+  description: string;
+  ctaText: string;
+  ctaLink: string;
+  mainImage: string;
+  imageAlt: string;
+  items: AboutUs18Item[];
+}
+
+export const defaultAboutUs18Data: AboutUs18Data = {
+  template: "about-18",
+  badge: "Why choose us",
+  title: "Compassionate experts leading your community support",
+  description:
+    "Our dedicated volunteers and medical experts provide personalized care, helping you achieve lasting recovery and real health results together.",
+  ctaText: "Get in touch",
+  ctaLink: "#",
+  mainImage: "https://picsum.photos/seed/care-child/800/1200",
+  imageAlt: "Man and child",
+  items: [
+    {
+      id: "1",
+      title: "Community-first approach",
+      image: "https://picsum.photos/seed/community-1/100/100",
+    },
+    {
+      id: "2",
+      title: "Proven results",
+      image: "https://picsum.photos/seed/results-1/100/100",
+    },
+    {
+      id: "3",
+      title: "Verified impact",
+      image: "https://picsum.photos/seed/impact-1/100/100",
+    },
+  ],
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -616,7 +712,10 @@ export type AboutUsData =
   | AboutUs12Data
   | AboutUs13Data
   | AboutUs14Data
-  | AboutUs15Data;
+  | AboutUs15Data
+  | AboutUs16Data
+  | AboutUs17Data
+  | AboutUs18Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -663,7 +762,10 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs12Data>
     | Partial<AboutUs13Data>
     | Partial<AboutUs14Data>
-    | Partial<AboutUs15Data>;
+    | Partial<AboutUs15Data>
+    | Partial<AboutUs16Data>
+    | Partial<AboutUs17Data>
+    | Partial<AboutUs18Data>;
   order?: number;
 }
 
@@ -702,6 +804,9 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-13": defaultAboutUs13Data,
   "about-14": defaultAboutUs14Data,
   "about-15": defaultAboutUs15Data,
+  "about-16": defaultAboutUs16Data,
+  "about-17": defaultAboutUs17Data,
+  "about-18": defaultAboutUs18Data,
 };
 
 // Type guards for each template
@@ -749,3 +854,12 @@ export const isAboutUsTemplate14 = (data: AboutUsData): data is AboutUs14Data =>
 
 export const isAboutUsTemplate15 = (data: AboutUsData): data is AboutUs15Data =>
   data.template === "about-15";
+
+export const isAboutUsTemplate16 = (data: AboutUsData): data is AboutUs16Data =>
+  data.template === "about-16";
+
+export const isAboutUsTemplate17 = (data: AboutUsData): data is AboutUs17Data =>
+  data.template === "about-17";
+
+export const isAboutUsTemplate18 = (data: AboutUsData): data is AboutUs18Data =>
+  data.template === "about-18";
