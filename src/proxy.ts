@@ -131,21 +131,13 @@ function getSubdomainFromAuth(request: NextRequest): string | null {
   return null;
 }
 
-function redirectToPermissionDenied(
-  request: NextRequest,
-  tenant?: string | null
-): NextResponse {
-  const protocol = request.url.includes("localhost") ? "http" : "https";
-  const target = new URL(`/permission-denied`, `${protocol}://${rootDomain}`);
+function redirectToPermissionDenied(request: NextRequest): NextResponse {
+  const url = new URL(request.url);
+  const target = new URL("/permission-denied", url.origin);
 
-  // Keep original query string if any (useful for debugging/support).
-  if (request.nextUrl.search) target.search = request.nextUrl.search;
-
-  // Pass the target tenant if provided, to help the permission-denied page
-  // construct a helpful login link back to the correct account.
-  if (tenant) {
-    target.searchParams.set("tenant", tenant);
-  }
+  // Keep original query string if any (except tenant if we want it truly clean,
+  // but let's keep it for other params that might be useful).
+  if (url.search) target.search = url.search;
 
   return NextResponse.redirect(target);
 }
@@ -423,7 +415,7 @@ export async function proxy(request: NextRequest) {
           const pathSegments = pathname.split("/");
           const pathTenant = pathSegments[2]; // /builder/[siteUser]/...
           if (pathTenant && pathTenant !== subdomain) {
-            return redirectToPermissionDenied(request, subdomain);
+            return redirectToPermissionDenied(request);
           }
         }
 
@@ -431,7 +423,7 @@ export async function proxy(request: NextRequest) {
         // If we can't even determine which tenant the cookie belongs to,
         // fail closed and deny access when user appears authenticated.
         if (hasAuthCookies && (!authSubdomain || authSubdomain !== subdomain)) {
-          return redirectToPermissionDenied(request, subdomain);
+          return redirectToPermissionDenied(request);
         }
       }
 
@@ -487,7 +479,7 @@ export async function proxy(request: NextRequest) {
             !authSubdomain ||
             authSubdomain !== expectedSubdomain)
         ) {
-          return redirectToPermissionDenied(request, expectedSubdomain);
+          return redirectToPermissionDenied(request);
         }
       }
 
