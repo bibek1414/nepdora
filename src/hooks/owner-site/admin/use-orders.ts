@@ -18,6 +18,7 @@ export const useCreateOrder = () => {
     }) => orderApi.createOrder(orderData, includeToken),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
   });
 };
@@ -29,6 +30,7 @@ export const useCreateAdminOrder = () => {
       orderApi.createAdminOrder(orderData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
   });
 };

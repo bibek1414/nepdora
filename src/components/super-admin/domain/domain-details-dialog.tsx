@@ -245,24 +245,6 @@ export const DomainDetailsDialog: React.FC<DomainDetailsDialogProps> = ({
                       )}
                     </dd>
                   </div>
-                  <div>
-                    <dt className="mb-0.5 text-xs text-gray-400">
-                      Preview URL
-                    </dt>
-                    <dd>
-                      <a
-                        href={frontendUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-blue-500 transition hover:text-blue-700 hover:underline"
-                      >
-                        <span className="max-w-[180px] break-all sm:max-w-none">
-                          {frontendUrl}
-                        </span>
-                        <ExternalLink className="h-3 w-3 shrink-0" />
-                      </a>
-                    </dd>
-                  </div>
                 </dl>
               </section>
             </div>

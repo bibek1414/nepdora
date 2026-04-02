@@ -21,6 +21,7 @@ export const useGetContacts = (
 };
 
 export const useSubmitContactForm = (siteUser: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: ContactFormSubmission) => {
       // Transform ContactFormSubmission to ContactFormData format
@@ -35,6 +36,8 @@ export const useSubmitContactForm = (siteUser: string) => {
     },
     onSuccess: data => {
       toast.success("Message sent successfully");
+      queryClient.invalidateQueries({ queryKey: ["contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
     onError: error => {
       toast.error("Failed to send message");

@@ -99,6 +99,7 @@ export const useCreatePopupForm = () => {
     mutationFn: popupApi.createPopupForm,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["popup-forms"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
   });
 };
@@ -124,6 +125,7 @@ export const useDeletePopupForm = () => {
     mutationFn: popupApi.deletePopupForm,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["popup-forms"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
   });
 };
@@ -142,6 +144,7 @@ export const usePopupSubmit = () => {
     }) => popupApi.submitForm(popupId, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["popup-forms"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
   });
 };

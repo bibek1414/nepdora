@@ -5,6 +5,6 @@ export const useUnreadCounts = () => {
   return useQuery({
     queryKey: ["unread-counts"],
     queryFn: statsApi.getUnreadCounts,
-    refetchInterval: 60 * 1000, // Refresh every minute
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };

@@ -39,6 +39,7 @@ export const useSubmitAppointmentForm = (siteUser: string) => {
     onSuccess: () => {
       toast.success("Appointment booked successfully!");
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to book appointment");

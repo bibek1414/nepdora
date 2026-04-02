@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 
-import { headers } from "next/headers";
-
 export const metadata: Metadata = {
   title: "Permission Denied | Nepdora",
   description:
@@ -10,16 +8,13 @@ export const metadata: Metadata = {
 };
 
 export default async function PermissionDeniedPage() {
-  const headersList = await headers();
-  const host = headersList.get("host") || "";
   const protocol = siteConfig.isDev ? "http" : siteConfig.protocol;
 
   const homeUrl = `${protocol}://${siteConfig.isDev ? `localhost:${siteConfig.frontendDevPort}` : siteConfig.baseDomain}/`;
-  const loginUrl = `${protocol}://${host}/admin/login`;
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 p-6 text-gray-900">
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-8 shadow-xl">
+      <div className="w-full max-w-2xl rounded-2xl bg-white p-8">
         <div className="flex flex-col items-center text-center">
           <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
             {/* Simple inline illustration (lock + warning) */}
@@ -72,18 +67,6 @@ export default async function PermissionDeniedPage() {
             >
               Go to home
             </a>
-
-            <a
-              href={loginUrl}
-              className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50"
-            >
-              Login
-            </a>
-          </div>
-
-          <div className="mt-6 text-xs text-gray-500">
-            If you think this is a mistake, contact support and mention the
-            tenant you’re trying to access.
           </div>
         </div>
       </div>

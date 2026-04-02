@@ -8,6 +8,8 @@ import { generatePreviewPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
 import { WebsiteSocketProvider } from "@/providers/website-socket-provider";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+import { SubscriptionBlocker } from "@/components/site-owners/admin/subscription/subscription-blocker";
 
 interface PreviewLayoutProps {
   children: React.ReactNode;
@@ -37,13 +39,18 @@ export default async function PreviewLayout({
     <>
       <DynamicFavicon />
       <GoogleAnalytics />
-      <WebsiteSocketProvider schema_name={siteUser} enabled={true}>
-        <DynamicFontProvider>
-          <SiteLayoutWrapper siteUser={siteUser}>{children}</SiteLayoutWrapper>
-          <WhatsApp />
-          <PopupManager />
-        </DynamicFontProvider>
-      </WebsiteSocketProvider>
+      <SubscriptionProvider>
+        <WebsiteSocketProvider schema_name={siteUser} enabled={true}>
+          <DynamicFontProvider>
+            <SiteLayoutWrapper siteUser={siteUser}>
+              {children}
+            </SiteLayoutWrapper>
+            <WhatsApp />
+            <PopupManager />
+          </DynamicFontProvider>
+        </WebsiteSocketProvider>
+        <SubscriptionBlocker />
+      </SubscriptionProvider>
     </>
   );
 }

@@ -31,6 +31,7 @@ export const useCreateNewsletter = () => {
       newsletterApi.createNewsletter(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: newsletterKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ["unread-counts"] });
     },
   });
 };

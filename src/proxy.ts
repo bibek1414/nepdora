@@ -131,12 +131,21 @@ function getSubdomainFromAuth(request: NextRequest): string | null {
   return null;
 }
 
-function redirectToPermissionDenied(request: NextRequest): NextResponse {
+function redirectToPermissionDenied(
+  request: NextRequest,
+  tenant?: string | null
+): NextResponse {
   const protocol = request.url.includes("localhost") ? "http" : "https";
   const target = new URL(`/permission-denied`, `${protocol}://${rootDomain}`);
 
   // Keep original query string if any (useful for debugging/support).
   if (request.nextUrl.search) target.search = request.nextUrl.search;
+
+  // Pass the target tenant if provided, to help the permission-denied page
+  // construct a helpful login link back to the correct account.
+  if (tenant) {
+    target.searchParams.set("tenant", tenant);
+  }
 
   return NextResponse.redirect(target);
 }
@@ -403,18 +412,18 @@ export async function proxy(request: NextRequest) {
     if (allowedPaths.some(p => pathname.startsWith(p))) {
       // Tenant isolation: prevent a logged-in user for one tenant
       // from loading admin/builder UI on a different tenant host.
-      if (pathname.startsWith("/admin") || pathname.startsWith("/builder")) {
+      if (pathname.startsWith("/admin") || pathname.startsWith("/builder") || pathname.startsWith("/preview")) {
         const authSubdomain = getSubdomainFromAuth(request);
         const hasAuthCookies =
           !!request.cookies.get("authToken")?.value ||
           !!request.cookies.get("authUser")?.value;
 
         // 1. Check builder-specific path mismatch (e.g. sazal.host/builder/bibek/...)
-        if (pathname.startsWith("/builder")) {
+        if (pathname.startsWith("/builder") || pathname.startsWith("/preview")) {
           const pathSegments = pathname.split("/");
           const pathTenant = pathSegments[2]; // /builder/[siteUser]/...
           if (pathTenant && pathTenant !== subdomain) {
-            return redirectToPermissionDenied(request);
+            return redirectToPermissionDenied(request, subdomain);
           }
         }
 
@@ -422,7 +431,7 @@ export async function proxy(request: NextRequest) {
         // If we can't even determine which tenant the cookie belongs to,
         // fail closed and deny access when user appears authenticated.
         if (hasAuthCookies && (!authSubdomain || authSubdomain !== subdomain)) {
-          return redirectToPermissionDenied(request);
+          return redirectToPermissionDenied(request, subdomain);
         }
       }
 
@@ -462,7 +471,11 @@ export async function proxy(request: NextRequest) {
     // Tenant isolation: prevent a logged-in user for one tenant
     // from loading admin/builder UI on a different tenant host.
     if (allowedPaths.some(p => pathname.startsWith(p))) {
-      if (pathname.startsWith("/admin") || pathname.startsWith("/builder")) {
+      if (
+        pathname.startsWith("/admin") ||
+        pathname.startsWith("/builder") ||
+        pathname.startsWith("/preview")
+      ) {
         const authSubdomain = getSubdomainFromAuth(request);
         const expectedSubdomain = cacheEntry.subdomain;
         const hasAuthCookies =
@@ -474,7 +487,7 @@ export async function proxy(request: NextRequest) {
             !authSubdomain ||
             authSubdomain !== expectedSubdomain)
         ) {
-          return redirectToPermissionDenied(request);
+          return redirectToPermissionDenied(request, expectedSubdomain);
         }
       }
 
@@ -499,7 +512,7 @@ export async function proxy(request: NextRequest) {
       const userSubdomain = getSubdomainFromAuth(request);
       if (
         userSubdomain &&
-        (pathname.startsWith("/admin") || pathname.startsWith("/builder"))
+        (pathname.startsWith("/admin") || pathname.startsWith("/builder") || pathname.startsWith("/preview"))
       ) {
         const host = request.headers.get("host") || "";
         const protocol = request.url.includes("localhost") ? "http" : "https";
