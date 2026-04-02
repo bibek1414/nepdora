@@ -43,3 +43,8 @@ next-env.d.ts
 about_us_generator.py
 tsx_generator.py
 
+
+# agent
+.agent/
+.agents/
+.gemini/
