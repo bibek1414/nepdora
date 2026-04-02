@@ -727,6 +727,61 @@ export const defaultAboutUs19Data: AboutUs19Data = {
   ctaLink: "#",
 };
 
+export interface AboutUs20Item {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  image: string;
+}
+
+export interface AboutUs20Data {
+  template: "about-20";
+  badge: string;
+  title: string;
+  items: AboutUs20Item[];
+}
+
+export const defaultAboutUs20Data: AboutUs20Data = {
+  template: "about-20",
+  badge: "OUR MISSION",
+  title: "We provide essential support to vulnerable communities",
+  items: [
+    {
+      id: "1",
+      number: "01",
+      title: "Providing wholesome food that fuels hope and spreads joy.",
+      description:
+        "We work to ensure communities have access to nutritious meals, empowering them with the resources to thrive and create a brighter future.",
+      buttonText: "Discover more",
+      buttonLink: "#",
+      image: "https://picsum.photos/seed/food/800/600",
+    },
+    {
+      id: "2",
+      number: "02",
+      title: "Bring joy and hope by sending a gift to children",
+      description:
+        "Through our gift-giving programs, we bring smiles to children, offering them not just toys but a sense of care and hope for a better tomorrow.",
+      buttonText: "Discover more",
+      buttonLink: "#",
+      image: "https://picsum.photos/seed/gift/800/600",
+    },
+    {
+      id: "3",
+      number: "03",
+      title: "Clean water for every community",
+      description:
+        "Access to clean water is a fundamental human right. We build sustainable water systems to ensure health and prosperity for all.",
+      buttonText: "Discover more",
+      buttonLink: "#",
+      image: "https://picsum.photos/seed/water/800/600",
+    },
+  ],
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -747,7 +802,8 @@ export type AboutUsData =
   | AboutUs16Data
   | AboutUs17Data
   | AboutUs18Data
-  | AboutUs19Data;
+  | AboutUs19Data
+  | AboutUs20Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -798,7 +854,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs16Data>
     | Partial<AboutUs17Data>
     | Partial<AboutUs18Data>
-    | Partial<AboutUs19Data>;
+    | Partial<AboutUs19Data>
+    | Partial<AboutUs20Data>;
   order?: number;
 }
 
@@ -841,6 +898,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-17": defaultAboutUs17Data,
   "about-18": defaultAboutUs18Data,
   "about-19": defaultAboutUs19Data,
+  "about-20": defaultAboutUs20Data,
 };
 
 // Type guards for each template
@@ -900,3 +958,6 @@ export const isAboutUsTemplate18 = (data: AboutUsData): data is AboutUs18Data =>
 
 export const isAboutUsTemplate19 = (data: AboutUsData): data is AboutUs19Data =>
   data.template === "about-19";
+
+export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
+  data.template === "about-20";
