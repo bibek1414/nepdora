@@ -38,6 +38,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -79,6 +80,13 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
 
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   const { data: categoriesData } = useCategories();
   const { data: subCategoriesData } = useSubCategories();
@@ -192,11 +200,15 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
   };
 
   return (
-    <div className="bg-white">
+    <div
+      className="bg-white"
+      style={{ backgroundColor: navbarData.backgroundColor || "white" }}
+    >
       <nav
         className={`flex items-center justify-between p-4 ${
           !isEditable ? "sticky top-16 z-40 mx-auto max-w-7xl" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
+        style={{ color: navbarData.textColor || "inherit" }}
       >
         <div className="flex items-center gap-8">
           <div className={disableClicks ? "pointer-events-auto" : ""}>
@@ -217,7 +229,10 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             )}
           </div>
 
-          <div className="hidden items-center gap-6 bg-white md:flex">
+          <div 
+            className="hidden items-center gap-6 md:flex"
+            style={{ backgroundColor: navbarData.backgroundColor || "white" }}
+          >
             <div
               className={`relative hidden max-w-md flex-1 md:block ${disableClicks ? "pointer-events-auto" : ""}`}
             >
@@ -234,7 +249,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                    className="cursor-pointer text-sm font-medium transition-colors hover:opacity-80"
                   >
                     {link.text}
                   </Link>
@@ -283,13 +298,18 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                       : "cursor-pointer hover:opacity-80"
                   }`}
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
+                  style={{ color: navbarData.textColor || "inherit" }}
                 >
                   Categories
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               {!disableClicks && (
-                <DropdownMenuContent className="w-56" align="start">
+                <DropdownMenuContent 
+                  className="w-56" 
+                  align="start"
+                  style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                >
                   {categories.map(category => {
                     const categorySubCategories = getSubCategoriesForCategory(
                       category.id
@@ -301,7 +321,10 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                           <DropdownMenuSubTrigger className="cursor-pointer">
                             <span>{category.name}</span>
                           </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent className="w-48">
+                          <DropdownMenuSubContent 
+                            className="w-48"
+                            style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                          >
                             <DropdownMenuItem
                               className="cursor-pointer font-medium"
                               onClick={() =>
@@ -364,7 +387,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   onClick={e => e.preventDefault()}
                   variant={getButtonVariant(button.variant)}
                   size="sm"
-                  className="cursor-pointer bg-black text-white hover:bg-black/90"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  className="cursor-pointer transition-colors hover:opacity-90"
                 >
                   {button.text}
                 </Button>
@@ -375,7 +402,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
-                className={`bg-black text-white hover:bg-black/90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                }}
+                className={`transition-colors hover:opacity-90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
@@ -416,7 +447,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   variant="default"
                   size="sm"
                   onClick={isEditable ? undefined : handleLoginClick}
-                  className={`bg-black text-white hover:bg-black/90 ${
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  className={`transition-colors hover:opacity-90 ${
                     isEditable
                       ? "pointer-events-none opacity-60"
                       : disableClicks
@@ -432,7 +467,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                     <Button
                       variant="default"
                       size="sm"
-                      className={`flex items-center gap-1 bg-black text-white hover:bg-black/90 ${
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                      }}
+                      className={`flex items-center gap-1 transition-colors hover:opacity-90 ${
                         isEditable || disableClicks
                           ? "pointer-events-auto cursor-default opacity-60"
                           : ""
@@ -441,13 +480,20 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                         disableClicks ? e => e.preventDefault() : undefined
                       }
                     >
-                      <User className="h-4 w-4" />
+                      <User
+                        className="h-4 w-4"
+                        style={{ color: theme.colors.primaryForeground }}
+                      />
                       {user?.first_name || "Profile"}
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   {!disableClicks && !isEditable && (
-                    <DropdownMenuContent className="w-48" align="end">
+                    <DropdownMenuContent 
+                      className="w-48" 
+                      align="end"
+                      style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                    >
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() => handleProfileAction("profile")}

@@ -31,6 +31,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
 import { generateLinkHref } from "@/lib/link-utils";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -83,6 +84,13 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
 
   const router = useRouter();
   const pathname = usePathname();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   const toggleCart = () => {
     if (disableClicks) return;
@@ -138,18 +146,23 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
   return (
     <>
       <header
-        className={`border-b border-gray-100 bg-white ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
+        className={`border-b border-gray-100 ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
+        style={{
+          backgroundColor: data.backgroundColor || "white",
+          color: data.textColor || "inherit",
+        }}
       >
         {/* Main Header */}
-        <div className="bg-white py-4 md:py-6">
+        <div className="py-4 md:py-6" style={{ backgroundColor: "transparent" }}>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-4 md:gap-8">
               {/* Mobile Menu Button */}
               <button
-                className="pointer-events-auto -ml-2 p-2 text-gray-600 md:hidden"
+                className="pointer-events-auto -ml-2 p-2 opacity-70 transition-opacity hover:opacity-100 md:hidden"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                 disabled={disableClicks}
+                style={{ color: data.textColor || "inherit" }}
               >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -195,12 +208,12 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       className={`hidden flex-col items-end leading-tight md:flex ${disableClicks || isEditable ? "cursor-default opacity-60" : "cursor-pointer hover:opacity-80"}`}
                       onClick={handleAccountClick}
                     >
-                      <span className="text-[10px] font-medium text-gray-500">
+                      <span className="text-[10px] font-medium opacity-60">
                         {isAuthenticated
                           ? `Hello, ${(profile as any)?.first_name || user?.first_name || "User"}`
                           : "Hello, Sign In"}
                       </span>
-                      <span className="text-navy-900 flex items-center gap-1 text-sm font-medium">
+                      <span className="flex items-center gap-1 text-sm font-medium">
                         My Account{" "}
                         <ChevronDown
                           size={12}
@@ -212,23 +225,24 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     {/* Account Dropdown */}
                     {isAuthenticated && !disableClicks && !isEditable && (
                       <div
-                        className={`absolute top-full right-0 z-50 mt-2 w-56 rounded-2xl border border-gray-100 bg-white py-2 transition-all duration-200 ${isAccountOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"}`}
+                        className={`absolute top-full right-0 z-50 mt-2 w-56 rounded-2xl border border-gray-100 py-2 transition-all duration-200 ${isAccountOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"}`}
+                        style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
                       >
                         <div
                           onClick={() => handleProfileAction("profile")}
-                          className="hover:text-brand-600 flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                          className="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:opacity-70"
                         >
                           <User size={18} /> My Profile
                         </div>
                         <div
                           onClick={() => handleProfileAction("orders")}
-                          className="hover:text-brand-600 flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                          className="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:opacity-70"
                         >
                           <Package size={18} /> My Orders
                         </div>
                         <div
                           onClick={() => handleProfileAction("wishlist")}
-                          className="hover:text-brand-600 flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                          className="flex cursor-pointer items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:opacity-70"
                         >
                           <Heart size={18} /> Wishlist
                         </div>
@@ -255,10 +269,10 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       <EditableItem>
                         <button
                           onClick={onEditCart}
-                          className="group relative flex cursor-pointer items-center gap-2 rounded-full p-2 transition-colors hover:bg-gray-50"
+                          className="group relative flex cursor-pointer items-center gap-2 rounded-full p-2 transition-colors hover:opacity-80"
                         >
                           <div className="relative">
-                            <ShoppingCart className="group-hover:text-brand-600 h-6 w-6 text-gray-700 transition-colors" />
+                            <ShoppingCart className="h-6 w-6 transition-colors" />
                             {itemCount > 0 && (
                               <span className="absolute -top-1.5 -right-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] leading-none font-bold text-white ring-2 ring-white">
                                 {itemCount}
@@ -266,10 +280,10 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                             )}
                           </div>
                           <div className="hidden flex-col items-start leading-none lg:flex">
-                            <span className="text-[10px] font-medium text-gray-500">
+                            <span className="text-[10px] font-medium opacity-60">
                               My Cart
                             </span>
-                            <span className="text-navy-900 text-xs font-bold">
+                            <span className="text-xs font-bold">
                               Rs.
                               {Number(totalPrice.toFixed(2)).toLocaleString(
                                 "en-IN"
@@ -283,11 +297,11 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                         onClick={
                           disableClicks ? e => e.preventDefault() : toggleCart
                         }
-                        className={`group relative flex items-center gap-2 rounded-full p-2 transition-colors hover:bg-gray-50 ${disableClicks ? "pointer-events-none cursor-default opacity-60" : "cursor-pointer"}`}
+                        className={`group relative flex items-center gap-2 rounded-full p-2 transition-colors hover:opacity-80 ${disableClicks ? "pointer-events-none cursor-default opacity-60" : "cursor-pointer"}`}
                         aria-label={`Shopping cart with ${itemCount} items`}
                       >
                         <div className="relative">
-                          <ShoppingCart className="group-hover:text-brand-600 h-6 w-6 text-gray-700 transition-colors" />
+                          <ShoppingCart className="h-6 w-6 transition-colors" />
                           {itemCount > 0 && (
                             <span className="absolute -top-1.5 -right-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] leading-none font-bold text-white ring-2 ring-white">
                               {itemCount}
@@ -295,10 +309,10 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                           )}
                         </div>
                         <div className="hidden flex-col items-start leading-none lg:flex">
-                          <span className="text-[10px] font-medium text-gray-500">
+                          <span className="text-[10px] font-medium opacity-60">
                             My Cart
                           </span>
-                          <span className="text-navy-900 text-xs font-bold">
+                          <span className="text-xs font-bold">
                             Rs.
                             {Number(totalPrice.toFixed(2)).toLocaleString(
                               "en-IN"
@@ -326,12 +340,15 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
         </div>
 
         {/* Category & Builder Links Navigation Bar */}
-        <div className="hidden border-t border-gray-100 bg-white md:block">
+        <div
+          className="hidden border-t border-gray-100 md:block"
+          style={{ backgroundColor: "transparent" }}
+        >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="pointer-events-auto flex items-center gap-8">
               {/* All Categories Dropdown Trigger */}
               <div className="group relative cursor-pointer py-3">
-                <div className="text-navy-900 flex items-center gap-2 text-sm font-medium">
+                <div className="flex items-center gap-2 text-sm font-medium">
                   <Menu size={18} />
                   All Categories
                   <ChevronDown
@@ -340,7 +357,10 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   />
                 </div>
                 {/* Dropdown Menu */}
-                <div className="invisible absolute top-full left-0 z-40 w-64 translate-y-2 transform rounded-b-lg border border-gray-100 bg-white opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div 
+                  className="invisible absolute top-full left-0 z-40 w-64 translate-y-2 transform rounded-b-lg border border-gray-100 opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+                  style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                >
                   <div className="px-5 py-2">
                     {categories.map(category => (
                       <Link
@@ -352,7 +372,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                           isEditable,
                           disableClicks
                         )}
-                        className="hover:text-brand-600 block border-b border-gray-50 py-2 text-sm font-medium text-gray-900"
+                        className="block border-b border-gray-50 py-2 text-sm font-medium hover:opacity-80"
                         onClick={e => {
                           handleLinkClick(e);
                           setIsMenuOpen(false);
@@ -370,7 +390,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                 {links.map(link =>
                   isEditable && onEditLink && onDeleteLink ? (
                     <EditableItem key={link.id}>
-                      <span className="hover:text-brand-600 cursor-pointer text-sm font-medium whitespace-nowrap text-gray-600 transition-colors">
+                      <span className="cursor-pointer text-sm font-medium whitespace-nowrap transition-colors hover:opacity-80">
                         {link.text}
                       </span>
                     </EditableItem>
@@ -400,7 +420,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                       className={`text-sm font-medium whitespace-nowrap transition-colors ${
                         pathname.includes(link.href)
                           ? "text-brand-600 font-semibold"
-                          : "hover:text-brand-600 text-gray-600"
+                          : "hover:opacity-80"
                       } ${disableClicks ? "pointer-events-none cursor-default opacity-60" : "cursor-pointer"}`}
                     >
                       {link.text}
@@ -414,19 +434,26 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && !disableClicks && !isEditable && (
-          <div className="pointer-events-auto fixed inset-0 z-40 overflow-y-auto bg-white md:hidden">
-            <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 p-4">
-              <span className="text-navy-900 text-lg font-bold">Menu</span>
+          <div 
+            className="pointer-events-auto fixed inset-0 z-40 overflow-y-auto md:hidden"
+            style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+          >
+            <div 
+              className="flex items-center justify-between border-b border-gray-100 p-4"
+              style={{ backgroundColor: data.backgroundColor || "white" }}
+            >
+              <span className="text-lg font-bold">Menu</span>
               <button
                 onClick={() => setIsMenuOpen(false)}
                 aria-label="Close menu"
+                style={{ color: data.textColor || "inherit" }}
               >
                 <X size={24} />
               </button>
             </div>
 
             <div className="space-y-4 p-4">
-              <div className="mb-2 text-xs font-bold tracking-wider text-gray-400 uppercase">
+              <div className="mb-2 text-xs font-bold tracking-wider opacity-40 uppercase">
                 Builder Links
               </div>
               {links.map(link => (
@@ -455,13 +482,13 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     handleLinkClick(e, link.href);
                     setIsMenuOpen(false);
                   }}
-                  className="block border-b border-gray-50 py-2 text-sm font-medium text-gray-900"
+                  className="block border-b border-gray-50 py-2 text-sm font-medium transition-colors hover:opacity-70"
                 >
                   {link.text}
                 </Link>
               ))}
 
-              <div className="mt-4 mb-2 text-xs font-bold tracking-wider text-gray-400 uppercase">
+              <div className="mt-4 mb-2 text-xs font-bold tracking-wider opacity-40 uppercase">
                 Categories
               </div>
               {categories.map(category => (
@@ -490,7 +517,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     handleProfileAction("profile");
                     setIsMenuOpen(false);
                   }}
-                  className="block cursor-pointer text-sm text-gray-600"
+                  className="block cursor-pointer text-sm opacity-70 hover:opacity-100"
                 >
                   My Account
                 </div>
@@ -499,7 +526,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     handleProfileAction("orders");
                     setIsMenuOpen(false);
                   }}
-                  className="block cursor-pointer text-sm text-gray-600"
+                  className="block cursor-pointer text-sm opacity-70 hover:opacity-100"
                 >
                   Orders
                 </div>
@@ -515,7 +542,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     handleLinkClick(e);
                     setIsMenuOpen(false);
                   }}
-                  className="block text-sm text-gray-600"
+                  className="block text-sm opacity-70 hover:opacity-100"
                 >
                   Compare Products
                 </Link>
@@ -531,7 +558,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     handleLinkClick(e);
                     setIsMenuOpen(false);
                   }}
-                  className="block text-sm text-gray-600"
+                  className="block text-sm opacity-70 hover:opacity-100"
                 >
                   Help Center
                 </Link>

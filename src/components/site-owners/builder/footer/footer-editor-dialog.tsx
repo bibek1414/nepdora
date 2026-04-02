@@ -73,6 +73,73 @@ import {
 import { uploadToS3 } from "@/utils/s3";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Palette, RefreshCcw } from "lucide-react";
+
+const predefinedColors = [
+  "#3B82F6",
+  "#EF4444",
+  "#10B981",
+  "#F59E0B",
+  "#8B5CF6",
+  "#EC4899",
+  "#06B6D4",
+  "#84CC16",
+  "#FFFFFF",
+  "#6366F1",
+  "#14B8A6",
+  "#F43F5E",
+  "#22C55E",
+  "#A855F7",
+  "#0EA5E9",
+  "#EAB308",
+  "#DC2626",
+  "#000000",
+];
+
+const ColorPicker = ({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) => {
+  return (
+    <div className="space-y-2">
+      <Label className="text-xs">{label}</Label>
+      <div className="flex flex-wrap gap-1 mb-2">
+        {predefinedColors.map(color => (
+          <button
+            key={color}
+            type="button"
+            className={cn(
+              "h-6 w-6 cursor-pointer rounded-full border border-gray-200 transition-transform hover:scale-110",
+              value === color && "ring-2 ring-primary ring-offset-1"
+            )}
+            style={{ backgroundColor: color }}
+            onClick={() => onChange(color)}
+          />
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="color"
+          value={value || "#000000"}
+          onChange={e => onChange(e.target.value)}
+          className="h-8 w-8 cursor-pointer rounded border p-0"
+        />
+        <Input
+          type="text"
+          value={value || ""}
+          onChange={e => onChange(e.target.value)}
+          className="h-8 flex-1 text-xs"
+          placeholder="#000000"
+        />
+      </div>
+    </div>
+  );
+};
 
 interface FooterEditorDialogProps {
   open: boolean;
@@ -723,7 +790,7 @@ export function FooterEditorDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-6xl">
+      <DialogContent className="max-h-[90vh] max-w-3xl!">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Edit3 className="h-5 w-5" />
@@ -732,37 +799,41 @@ export function FooterEditorDialog({
         </DialogHeader>
 
         <Tabs defaultValue="logo" className="w-full">
-          <TabsList className={`grid w-full ${tabsGridCols}`}>
-            <TabsTrigger value="logo" className="flex items-center gap-1">
+          <TabsList className={`grid w-full grid-cols-8`}>
+            <TabsTrigger value="logo" className="flex items-center gap-1 cursor-pointer">
               <ImageIcon className="h-4 w-4" />
               Logo
             </TabsTrigger>
-            <TabsTrigger value="company" className="flex items-center gap-1">
+            <TabsTrigger value="appearance" className="flex items-center gap-1 cursor-pointer">
+              <Palette className="h-4 w-4" />
+              Appearance
+            </TabsTrigger>
+            <TabsTrigger value="company" className="flex items-center gap-1 cursor-pointer">
               <Building className="h-4 w-4" />
               Company
             </TabsTrigger>
-            <TabsTrigger value="contact" className="flex items-center gap-1">
+            <TabsTrigger value="contact" className="flex items-center gap-1 cursor-pointer">
               <Phone className="h-4 w-4" />
               Contact
             </TabsTrigger>
             {showNewsletter && (
               <TabsTrigger
                 value="newsletter"
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 cursor-pointer"
               >
                 <Mail className="h-4 w-4" />
                 Newsletter
               </TabsTrigger>
             )}
-            <TabsTrigger value="sections" className="flex items-center gap-1">
+            <TabsTrigger value="sections" className="flex items-center gap-1 cursor-pointer">
               <Link className="h-4 w-4" />
               Sections
             </TabsTrigger>
-            <TabsTrigger value="policies" className="flex items-center gap-1">
+            <TabsTrigger value="policies" className="flex items-center gap-1 cursor-pointer">
               <Shield className="h-4 w-4" />
               Policies
             </TabsTrigger>
-            <TabsTrigger value="social" className="flex items-center gap-1">
+            <TabsTrigger value="social" className="flex items-center gap-1 cursor-pointer">
               <Share2 className="h-4 w-4" />
               Social
             </TabsTrigger>
@@ -774,7 +845,7 @@ export function FooterEditorDialog({
               <Card className="border-none">
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label className="text-xs" htmlFor="footer-logo-text">
+                    <Label className="text-xs cursor-pointer" htmlFor="footer-logo-text">
                       Logo Text
                     </Label>
                     <Input
@@ -881,7 +952,7 @@ export function FooterEditorDialog({
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="text" id="footer-text-only" />
                         <Label
-                          className="text-sm font-normal"
+                          className="text-sm font-normal cursor-pointer"
                           htmlFor="footer-text-only"
                         >
                           Text
@@ -896,7 +967,7 @@ export function FooterEditorDialog({
                         <Label
                           htmlFor="footer-image-only"
                           className={cn(
-                            "text-sm font-normal",
+                            "text-sm font-normal cursor-pointer",
                             !editingData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -912,7 +983,7 @@ export function FooterEditorDialog({
                         <Label
                           htmlFor="footer-both"
                           className={cn(
-                            "text-sm font-normal",
+                            "text-sm font-normal cursor-pointer",
                             !editingData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -920,6 +991,51 @@ export function FooterEditorDialog({
                         </Label>
                       </div>
                     </RadioGroup>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Appearance Tab */}
+            <TabsContent value="appearance" className="space-y-6">
+              <Card className="border-none">
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium flex items-center gap-2">
+                        <Palette className="h-4 w-4" />
+                        Footer Colors
+                      </Label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs gap-1"
+                        onClick={() => {
+                          updateBasicInfo("backgroundColor", "white");
+                          updateBasicInfo("textColor", "black");
+                        }}
+                      >
+                        <RefreshCcw className="h-3 w-3" />
+                        Reset
+                      </Button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-8">
+                      <ColorPicker
+                        label="Background Color"
+                        value={editingData.backgroundColor || ""}
+                        onChange={value =>
+                          updateBasicInfo("backgroundColor", value)
+                        }
+                      />
+                      <ColorPicker
+                        label="Text Color"
+                        value={editingData.textColor || ""}
+                        onChange={value =>
+                          updateBasicInfo("textColor", value)
+                        }
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1052,15 +1168,16 @@ export function FooterEditorDialog({
                   <CardContent className="space-y-4">
                     <div className="flex items-center gap-2">
                       <input
+                        id="newsletter-enabled"
                         type="checkbox"
                         checked={editingData.newsletter.enabled}
                         onChange={e =>
                           updateNewsletter("enabled", e.target.checked)
                         }
-                        className="border-border rounded"
+                        className="border-border rounded cursor-pointer"
                         disabled={isLoading}
                       />
-                      <label className="text-sm">
+                      <label className="text-sm cursor-pointer" htmlFor="newsletter-enabled">
                         Enable newsletter subscription
                       </label>
                     </div>

@@ -50,7 +50,14 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
   const mainSection2 = data.sections[1];
 
   return (
-    <footer className="w-full overflow-hidden border-t border-gray-200 bg-gray-50 px-6 pt-16 pb-8 font-sans text-gray-900 transition-colors duration-300 md:px-12 lg:px-24 dark:border-white/5 dark:bg-[#020205] dark:text-white">
+    <footer
+      className="w-full overflow-hidden border-t px-6 pt-16 pb-8 font-sans transition-colors duration-300 md:px-12 lg:px-24"
+      style={{
+        backgroundColor: footerData.backgroundColor || undefined,
+        color: footerData.textColor || "inherit",
+        borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)",
+      }}
+    >
       <div className="mx-auto max-w-7xl">
         {/* Big Title Section */}
         {(data.logoType === "text" || data.logoType === "both") &&
@@ -59,7 +66,12 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
               {/* Subtle glow effect behind the text */}
               <div className="pointer-events-none absolute top-1/2 left-1/2 h-24 w-3/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/5 blur-[80px] transition-colors duration-300 dark:bg-blue-900/10" />
 
-              <h1 className="bg-linear-to-b from-gray-900 via-gray-400 to-gray-50 bg-clip-text text-center font-serif text-[13.5vw] leading-[0.8] font-medium tracking-tighter text-transparent transition-all duration-300 select-none dark:from-white dark:via-gray-500 dark:to-[#020205]">
+              <h1 
+                className="bg-linear-to-b bg-clip-text text-center font-serif text-[13.5vw] leading-[0.8] font-medium tracking-tighter text-transparent transition-all duration-300 select-none"
+                style={{ 
+                  backgroundImage: `linear-gradient(to bottom, ${footerData.textColor || (theme.colors?.text || "#000")}, transparent)`
+                }}
+              >
                 {data.logoText}
               </h1>
             </div>
@@ -80,19 +92,22 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
               />
             ) : null}
 
-            <p className="max-w-sm text-sm leading-relaxed text-gray-600 transition-colors duration-300 dark:text-gray-400">
+            <p className="max-w-sm text-sm leading-relaxed opacity-80">
               {data.description ||
                 "We're committed to delivering exceptional care with compassion, trust, and integrity. From your first visit to long-term support, your health and comfort are always our priority."}
             </p>
 
-            <hr className="w-full border-gray-200 transition-colors duration-300 dark:border-gray-900" />
+            <hr 
+              className="w-full transition-colors duration-300" 
+              style={{ borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)" }}
+            />
 
             <div className="flex flex-col items-start space-y-2 text-left">
-              <h3 className="text-base font-semibold text-gray-900 transition-colors duration-300 dark:text-white">
+              <h3 className="text-base font-semibold">
                 Visit Us
               </h3>
 
-              <address className="text-sm leading-relaxed whitespace-pre-line text-gray-600 not-italic transition-colors duration-300 dark:text-gray-400">
+              <address className="text-sm leading-relaxed whitespace-pre-line opacity-80 not-italic transition-colors duration-300">
                 {data.contactInfo.address ||
                   "123 Wellness Avenue, Suite\n405, New York, NY 10016\nUnited States"}
               </address>
@@ -101,7 +116,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
 
           {/* Column 2: Main Pages Links */}
           <div className="lg:col-span-4">
-            <h3 className="mb-6 text-xl font-semibold text-gray-900 transition-colors duration-300 dark:text-white">
+            <h3 className="mb-6 text-xl font-semibold">
               {mainSection1?.title || "Main Pages"}
             </h3>
             <div className="grid grid-cols-2 gap-x-8 gap-y-3">
@@ -142,10 +157,10 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
 
           {/* Column 3: Newsletter */}
           <div className="pl-0 lg:col-span-4 lg:pl-8">
-            <h3 className="mb-4 text-xl font-semibold text-gray-900 transition-colors duration-300 dark:text-white">
+            <h3 className="mb-4 text-xl font-semibold">
               {data.newsletter.title || "Newsletter"}
             </h3>
-            <p className="mb-6 max-w-xs text-sm text-gray-600 transition-colors duration-300 dark:text-gray-400">
+            <p className="mb-6 max-w-xs text-sm opacity-80">
               {data.newsletter.description ||
                 "Let's transform your vision into results and discuss your vision with us."}
             </p>
@@ -157,9 +172,12 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-center justify-between space-y-4 border-t border-gray-200 pt-6 transition-colors duration-300 md:flex-row md:space-y-0 dark:border-gray-900">
+        <div 
+          className="flex flex-col items-center justify-between space-y-4 border-t pt-6 transition-colors duration-300 md:flex-row md:space-y-0"
+          style={{ borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)" }}
+        >
           <div className="flex flex-col items-center gap-2 md:items-start">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs opacity-60">
               {getProcessedCopyright(data.copyright, data.companyName)}
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (
@@ -173,7 +191,7 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
                       pathname,
                       isEditable
                     )}
-                    className="text-xs text-gray-500 transition-colors hover:text-gray-900 dark:hover:text-white"
+                    className="text-xs opacity-60 transition-colors hover:opacity-100"
                     onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
@@ -187,7 +205,11 @@ export const FooterStyle10: React.FC<FooterStyle10Props> = ({
               <Link
                 key={social.id}
                 href={social.href || "#"}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-white transition-colors hover:bg-gray-700"
+                className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:opacity-80"
+                style={{ 
+                  backgroundColor: theme.colors?.primary || "#000",
+                  color: theme.colors?.primaryForeground || "#fff"
+                }}
                 target={social.href?.startsWith("http") ? "_blank" : undefined}
                 rel={
                   social.href?.startsWith("http")
@@ -214,7 +236,7 @@ const FooterLink: React.FC<{
     return (
       <button
         type="button"
-        className="w-fit text-left text-sm text-gray-500 transition-colors hover:text-black dark:text-gray-400 dark:hover:text-white"
+      className="w-fit text-sm opacity-80 transition-colors hover:opacity-100"
         onClick={e => e.preventDefault()}
       >
         {children}
@@ -225,7 +247,7 @@ const FooterLink: React.FC<{
   return (
     <Link
       href={href || "#"}
-      className="w-fit text-sm text-gray-500 transition-colors hover:text-black dark:text-gray-400 dark:hover:text-white"
+      className="w-fit text-sm transition-colors opacity-70 hover:opacity-100"
     >
       {children}
     </Link>

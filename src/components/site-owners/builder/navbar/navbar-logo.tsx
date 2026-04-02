@@ -69,7 +69,10 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
                 </span>
               </div>
             )}
-            <span className="text-base font-bold sm:text-lg md:text-xl">
+            <span
+              className="text-base font-bold sm:text-lg md:text-xl"
+              style={{ color: navbarData.textColor || "inherit" }}
+            >
               {logoText}
             </span>
           </div>
@@ -79,7 +82,10 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
       default:
         return (
           <div className="flex items-center justify-start">
-            <span className="text-base font-bold sm:text-lg md:text-xl">
+            <span
+              className="text-base font-bold sm:text-lg md:text-xl"
+              style={{ color: navbarData.textColor || "inherit" }}
+            >
               {logoText}
             </span>
           </div>

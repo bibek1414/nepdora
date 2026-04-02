@@ -53,10 +53,11 @@ export function FooterStyle1({
     <div className="group relative">
       <footer
         style={{
-          background: theme.colors.primary,
+          background: footerData.backgroundColor || theme.colors.primary,
           fontFamily: theme.fonts.heading,
+          color: footerData.textColor || "white",
         }}
-        className="px-4 py-16 text-gray-100 sm:px-6 lg:px-8"
+        className="px-4 py-16 sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-7xl">
           {/* Footer links grid */}
@@ -64,7 +65,7 @@ export function FooterStyle1({
             {/* Info Section */}
             {mainSections.map((section, index) => (
               <div key={section.id} className="col-span-1">
-                <h3 className="mb-4 text-xl font-semibold text-white">
+                <h3 className="mb-4 text-xl font-semibold">
                   {section.title}
                 </h3>
                 <ul className="space-y-2">
@@ -72,7 +73,7 @@ export function FooterStyle1({
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-left text-white/80 transition-colors hover:text-white"
+                          className="text-left transition-colors opacity-80 hover:opacity-100"
                           onClick={
                             isEditable ? e => e.preventDefault() : undefined
                           }
@@ -87,7 +88,6 @@ export function FooterStyle1({
                             pathname,
                             isEditable
                           )}
-                          className="block text-white/80 transition-colors hover:text-white"
                           target={
                             link.href?.startsWith("http") ||
                             link.href?.startsWith("mailto:")
@@ -100,6 +100,7 @@ export function FooterStyle1({
                               ? "noopener noreferrer"
                               : undefined
                           }
+                          className="block text-sm transition-colors opacity-80 hover:opacity-100"
                         >
                           {link.text}
                         </Link>
@@ -113,10 +114,10 @@ export function FooterStyle1({
             {/* Newsletter Section */}
             {data.newsletter.enabled && (
               <div className="col-span-2 lg:col-span-2">
-                <h3 className="mb-4 text-xl font-semibold text-white">
+                <h3 className="mb-4 text-xl font-semibold">
                   {data.newsletter.title}
                 </h3>
-                <p className="mb-4 text-sm text-white/80">
+                <p className="mb-4 text-sm opacity-80">
                   {data.newsletter.description}
                 </p>
 
@@ -128,7 +129,7 @@ export function FooterStyle1({
           </div>
 
           {/* Bottom section */}
-          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm text-gray-200 md:flex-row">
+          <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm opacity-80 md:flex-row">
             {/* Logo and Company Name */}
             <div className="mb-4 flex items-center md:mb-0">
               <FooterLogo footerData={data} getImageUrl={getImageUrl} />
@@ -148,7 +149,7 @@ export function FooterStyle1({
                         pathname,
                         isEditable
                       )}
-                      className="text-white/80 transition-colors hover:text-white"
+                      className="opacity-80 transition-colors hover:opacity-100"
                       target={
                         link.href?.startsWith("http") ||
                         link.href?.startsWith("mailto:")

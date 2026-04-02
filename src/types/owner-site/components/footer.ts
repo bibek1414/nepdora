@@ -44,6 +44,8 @@ export interface FooterData {
   copyright: string;
   policyLinks?: FooterLink[];
   style: string;
+  backgroundColor?: string;
+  textColor?: string;
 }
 
 // The full footer object as stored in the database

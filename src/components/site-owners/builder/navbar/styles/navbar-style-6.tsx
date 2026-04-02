@@ -29,6 +29,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { Heart, Package, LogOut, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { AppointmentForm } from "@/components/site-owners/builder/appointment/navbar-dialog/appointment-form";
 import { defaultAppointmentData } from "@/types/owner-site/components/appointment";
@@ -69,6 +70,13 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
   const router = useRouter();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   const toggleMobileMenu = () => {
     if (disableClicks) return;
@@ -111,11 +119,18 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
   };
 
   return (
-    <div className="border-b bg-white">
+    <div
+      className="border-b bg-white"
+      style={{
+        backgroundColor: navbarData.backgroundColor || "white",
+        color: navbarData.textColor || "inherit",
+      }}
+    >
       <nav
-        className={`mx-auto flex max-w-7xl items-center justify-between bg-white p-4 lg:p-6 ${
+        className={`mx-auto flex max-w-7xl items-center justify-between p-4 lg:p-6 ${
           !isEditable ? "sticky top-0 z-40" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
+        style={{ backgroundColor: "transparent" }}
       >
         {/* Logo - Left side */}
         <div className="flex min-w-0 flex-1 items-center lg:gap-6">
@@ -150,7 +165,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-base font-medium text-black transition-colors hover:text-black/80"
+                    className="cursor-pointer text-base font-medium transition-colors hover:opacity-80"
                   >
                     {link.text}
                   </Link>
@@ -181,7 +196,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   className={`text-base font-medium transition-colors ${
                     disableClicks
                       ? "cursor-default opacity-60"
-                      : "cursor-pointer text-black hover:text-black/80"
+                      : "cursor-pointer hover:opacity-80"
                   }`}
                 >
                   {link.text}
@@ -199,7 +214,11 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                     onClick={e => e.preventDefault()}
                     variant="default"
                     size="default"
-                    className="cursor-pointer bg-black px-6 py-2 text-base text-white hover:bg-black/90"
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                    }}
+                    className="cursor-pointer px-6 py-2 text-base transition-colors hover:opacity-90"
                   >
                     {button.text}
                   </Button>
@@ -210,7 +229,11 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   variant="default"
                   size="default"
                   onClick={disableClicks ? e => e.preventDefault() : undefined}
-                  className={`bg-black px-6 py-2 text-base text-white hover:bg-black/90 ${
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  className={`px-6 py-2 text-base transition-colors hover:opacity-90 ${
                     disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
                       : ""
@@ -254,7 +277,11 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                 <Button
                   variant="default"
                   size="default"
-                  className={`bg-black px-6 py-2 text-base text-white hover:bg-black/90 ${
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  className={`px-6 py-2 text-base transition-colors hover:opacity-90 ${
                     disableClicks
                       ? "pointer-events-auto cursor-default opacity-60"
                       : ""
@@ -281,7 +308,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={`flex items-center gap-1 p-2 text-black transition-colors hover:text-black/80 ${
+                      className={`flex items-center gap-1 p-2 transition-colors hover:opacity-80 ${
                         disableClicks || isEditable
                           ? "cursor-default opacity-60"
                           : "cursor-pointer"
@@ -302,7 +329,11 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                     </Button>
                   </DropdownMenuTrigger>
                   {!disableClicks && !isEditable && (
-                    <DropdownMenuContent className="w-48" align="end">
+                    <DropdownMenuContent 
+                      className="w-48" 
+                      align="end"
+                      style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                    >
                       {isAuthenticated ? (
                         <>
                           <DropdownMenuItem
@@ -380,9 +411,13 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
 
       {/* Mobile Menu Sheet */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="right" className="w-1/2 sm:max-w-md">
+        <SheetContent 
+          side="right" 
+          className="w-1/2 sm:max-w-md"
+          style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+        >
           <SheetHeader className="flex flex-row items-center justify-between border-b pb-4">
-            <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
+            <SheetTitle className="text-lg font-semibold" style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
           </SheetHeader>
 
           <div className="mt-6 flex h-[calc(100vh-100px)] flex-col">
@@ -393,7 +428,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   <EditableItem key={link.id}>
                     <Button
                       variant="ghost"
-                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
+                      className="h-12 w-full justify-start px-4 text-lg font-normal hover:bg-white/10 hover:opacity-80"
                       onClick={e => e.preventDefault()}
                     >
                       {link.text}
@@ -403,7 +438,7 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   <SheetClose asChild key={link.id}>
                     <Button
                       variant="ghost"
-                      className="h-12 w-full justify-start px-4 text-lg font-normal text-black hover:bg-gray-100"
+                      className="h-12 w-full justify-start px-4 text-lg font-normal hover:bg-white/10 hover:opacity-80"
                       asChild={!disableClicks}
                     >
                       <Link
@@ -448,7 +483,11 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                       onClick={e => e.preventDefault()}
                       variant="default"
                       size="default"
-                      className="w-full cursor-pointer justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90"
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                      }}
+                      className="w-full cursor-pointer justify-center py-3 text-base font-medium transition-colors hover:opacity-90"
                     >
                       {button.text}
                     </Button>
@@ -461,7 +500,11 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                       onClick={
                         disableClicks ? e => e.preventDefault() : undefined
                       }
-                      className={`w-full justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90 ${
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                      }}
+                      className={`w-full justify-center py-3 text-base font-medium transition-colors hover:opacity-90 ${
                         disableClicks
                           ? "pointer-events-auto cursor-default opacity-60"
                           : ""
@@ -507,7 +550,11 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                   <Button
                     variant="default"
                     size="default"
-                    className={`w-full justify-center bg-black py-3 text-base font-medium text-white hover:bg-black/90 ${
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                    }}
+                    className={`w-full justify-center py-3 text-base font-medium transition-colors hover:opacity-90 ${
                       disableClicks
                         ? "pointer-events-auto cursor-default opacity-60"
                         : ""

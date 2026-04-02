@@ -60,7 +60,10 @@ export const FooterLogo = ({ footerData, getImageUrl }: FooterLogoProps) => {
                 </span>
               </div>
             )}
-            <span className="text-base font-bold sm:text-lg md:text-xl">
+            <span
+              className="text-base font-bold sm:text-lg md:text-xl"
+              style={{ color: footerData.textColor || "inherit" }}
+            >
               {displayText}
             </span>
           </div>
@@ -70,7 +73,10 @@ export const FooterLogo = ({ footerData, getImageUrl }: FooterLogoProps) => {
       default:
         return (
           <div className="flex items-center justify-start">
-            <span className="text-base font-bold sm:text-lg md:text-xl">
+            <span
+              className="text-base font-bold sm:text-lg md:text-xl"
+              style={{ color: footerData.textColor || "inherit" }}
+            >
               {displayText}
             </span>
           </div>

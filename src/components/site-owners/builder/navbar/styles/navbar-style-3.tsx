@@ -30,6 +30,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { Heart, Package, LogOut, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -74,6 +75,13 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
   const router = useRouter();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   const toggleCart = () => {
     if (disableClicks) return;
@@ -125,8 +133,14 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
 
   return (
     <>
-      <div className="bg-white">
-        <div className="flex h-10 items-center justify-center bg-black px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+      <div
+        className="bg-white"
+        style={{ backgroundColor: navbarData.backgroundColor || "white" }}
+      >
+        <div 
+          className="flex h-10 items-center justify-center px-4 text-sm font-medium sm:px-6 lg:px-8"
+          style={{ backgroundColor: theme.colors.primary, color: theme.colors.primaryForeground }}
+        >
           {isEditable ? (
             <EditableText
               value={bannerText}
@@ -137,7 +151,8 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             />
           ) : (
             <div
-              className="prose prose-sm max-w-none leading-relaxed text-white"
+              className="prose prose-sm max-w-none leading-relaxed"
+              style={{ color: theme.colors.primaryForeground }}
               dangerouslySetInnerHTML={{ __html: bannerText }}
             />
           )}
@@ -149,6 +164,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
             className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
               disableClicks ? "pointer-events-none" : ""
             }`}
+            style={{ color: navbarData.textColor || "inherit" }}
           >
             <div className="border-b border-gray-200">
               <div className="flex h-16 items-center">
@@ -159,10 +175,10 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                       setIsMobileMenuOpen(true);
                     }
                   }}
-                  className={`relative rounded-md bg-white p-2 text-gray-400 lg:hidden ${
+                  className={`relative rounded-md bg-transparent p-2 opacity-60 lg:hidden ${
                     disableClicks || isEditable
-                      ? "cursor-default opacity-60"
-                      : "hover:bg-gray-100 hover:text-gray-500"
+                      ? "cursor-default opacity-40"
+                      : "hover:opacity-100"
                   }`}
                   disabled={disableClicks || isEditable}
                 >
@@ -203,8 +219,8 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                             <Link
                               href={link.href}
                               onClick={e => e.preventDefault()}
-                              className="mt-6 flex items-center text-sm font-medium text-black transition-colors hover:text-black/80"
-                            >
+                            className="mt-6 flex items-center text-sm font-medium transition-colors hover:opacity-80"
+                          >
                               {link.text}
                             </Link>
                           </EditableItem>
@@ -230,10 +246,10 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                                 : undefined
                             }
                             onClick={e => handleLinkClick(e, link.href)}
-                            className={`flex items-center text-sm font-medium hover:text-gray-800 ${
+                            className={`flex items-center text-sm font-medium transition-colors ${
                               disableClicks
                                 ? "cursor-default opacity-60"
-                                : "cursor-pointer"
+                                : "cursor-pointer hover:opacity-80"
                             }`}
                           >
                             {link.text}
@@ -252,7 +268,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                           <Link
                             href={button.href}
                             onClick={e => e.preventDefault()}
-                            className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                            className="cursor-pointer text-sm font-medium transition-colors hover:opacity-80"
                           >
                             {button.text}
                           </Link>
@@ -280,7 +296,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                               : undefined
                           }
                           onClick={e => handleLinkClick(e, button.href)}
-                          className={`text-sm font-medium hover:text-gray-800 ${
+                          className={`text-sm font-medium transition-colors hover:opacity-80 ${
                             disableClicks
                               ? "cursor-default opacity-60"
                               : "cursor-pointer"
@@ -305,10 +321,10 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                         e.preventDefault();
                         if (disableClicks || isEditable) return;
                       }}
-                      className={`p-2 text-gray-400 ${
+                      className={`p-2 transition-colors ${
                         disableClicks || isEditable
                           ? "cursor-default opacity-60"
-                          : "cursor-pointer hover:text-gray-500"
+                          : "cursor-pointer hover:opacity-100"
                       }`}
                     >
                       <span className="sr-only">Search</span>
@@ -322,10 +338,10 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                           <Button
                             variant="ghost"
                             size="sm"
-                            className={`flex items-center gap-1 p-2 text-gray-400 ${
+                            className={`flex items-center gap-1 p-2 transition-colors ${
                               disableClicks || isEditable
                                 ? "cursor-default opacity-60"
-                                : "cursor-pointer hover:text-gray-500"
+                                : "cursor-pointer hover:opacity-100"
                             }`}
                             onClick={
                               disableClicks
@@ -441,9 +457,13 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
 
       {/* Mobile Menu */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="left" className="w-full max-w-xs overflow-y-auto">
+        <SheetContent 
+          side="left" 
+          className="w-full max-w-xs overflow-y-auto"
+          style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+        >
           <SheetHeader>
-            <SheetTitle>Menu</SheetTitle>
+            <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
           </SheetHeader>
 
           <div className="mt-2">
@@ -456,7 +476,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                       <Link
                         href={link.href}
                         onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-black transition-colors hover:text-black/80"
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
                       >
                         {link.text}
                       </Link>
@@ -485,7 +505,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                           : undefined
                       }
                       onClick={e => handleLinkClick(e, link.href)}
-                      className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
+                      className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
                     >
                       {link.text}
                     </Link>
@@ -504,7 +524,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                         <Link
                           href={button.href}
                           onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium text-black transition-colors hover:text-black/80"
+                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
                         >
                           {button.text}
                         </Link>
@@ -533,7 +553,7 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                             : undefined
                         }
                         onClick={e => handleLinkClick(e, button.href)}
-                        className="-m-2 block cursor-pointer p-2 font-medium text-gray-900 hover:text-gray-700"
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-100"
                       >
                         {button.text}
                       </Link>

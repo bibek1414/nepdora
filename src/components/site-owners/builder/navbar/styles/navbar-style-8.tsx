@@ -34,6 +34,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useProductsWithParams } from "@/hooks/owner-site/admin/use-product";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -83,6 +84,13 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
   const { isAuthenticated, user, logout } = useAuth();
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
@@ -201,7 +209,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                   }}
                   as="span"
                   isEditable={isEditable}
-                  className="text-inherit"
+                  className="text-inherit opacity-80"
                 />
               </span>
               <EditableLink
@@ -230,7 +238,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                 </>
               </EditableLink>
             </div>
-            <div className="hidden items-center gap-4 text-gray-300 sm:flex">
+            <div className="hidden items-center gap-4 opacity-70 sm:flex">
               <div className="hidden items-center gap-6 md:flex">
                 {links.slice(0, 3).map((link: NavbarLink) =>
                   isEditable && onEditLink && onDeleteLink ? (
@@ -238,7 +246,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                       <Link
                         href={link.href}
                         onClick={e => e.preventDefault()}
-                        className="cursor-pointer text-sm font-medium text-white transition-colors hover:text-white/80"
+                        className="cursor-pointer text-sm font-medium transition-colors hover:opacity-80"
                       >
                         {link.text}
                       </Link>
@@ -282,8 +290,14 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
         </div>
 
         {/* Main White Navbar */}
-        <div className="border-b border-gray-100 bg-white py-5 sm:py-6">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8 lg:px-8">
+        <div
+          className="border-b border-gray-100 bg-white py-5 sm:py-6"
+          style={{ backgroundColor: data.backgroundColor || "white" }}
+        >
+            <div
+              className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8 lg:px-8"
+              style={{ color: data.textColor || "inherit" }}
+            >
             {/* Logo */}
             <div
               className={
@@ -313,22 +327,26 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
               ref={searchRef}
             >
               <form onSubmit={handleSearchSubmit} className="relative w-full">
-                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 opacity-40" />
                 <input
                   type="text"
                   placeholder="Search anything..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  className="w-full rounded-full border border-gray-100 bg-gray-50/50 py-3 pr-4 pl-11 text-sm transition-all focus:border-transparent focus:ring-2 focus:ring-black focus:outline-none"
+                  className="w-full rounded-full border border-gray-100 bg-gray-50/50 py-3 pr-4 pl-11 text-sm transition-all focus:border-transparent focus:ring-2 focus:outline-none"
+                  style={{ "--tw-ring-color": theme.colors.primary } as any}
                   disabled={disableClicks || isEditable}
                 />
 
                 {/* Search Results Dropdown */}
                 {isSearchFocused && searchQuery.length > 0 && (
-                  <div className="-lg absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-xl border border-gray-100 bg-white">
+                  <div 
+                    className="-lg absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-xl border border-gray-100"
+                    style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                  >
                     {isSearchLoading ? (
-                      <div className="p-4 text-center text-sm text-gray-500">
+                      <div className="p-4 text-center text-sm opacity-50">
                         Searching...
                       </div>
                     ) : productsData.length > 0 ? (
@@ -343,7 +361,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                               isEditable,
                               disableClicks
                             )}
-                            className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50"
+                            className="flex items-center gap-3 px-4 py-2 hover:opacity-80"
                             onClick={() => setIsSearchFocused(false)}
                           >
                             {product.thumbnail_image ? (
@@ -356,14 +374,14 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                               />
                             ) : (
                               <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
-                                <Search className="h-4 w-4 text-gray-400" />
+                                <Search className="h-4 w-4 opacity-40" />
                               </div>
                             )}
                             <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-medium text-gray-900">
+                              <p className="truncate text-sm font-medium opacity-100">
                                 {product.name}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs opacity-60">
                                 Rs.
                                 {parseFloat(
                                   product.price || "0"
@@ -374,7 +392,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                         ))}
                       </div>
                     ) : (
-                      <div className="p-4 text-center text-sm text-gray-500">
+                      <div className="p-4 text-center text-sm opacity-50">
                         No products found
                       </div>
                     )}
@@ -396,7 +414,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                         <Link
                           href={link.href}
                           onClick={e => e.preventDefault()}
-                          className="cursor-pointer text-sm font-medium text-gray-900 transition-colors hover:text-gray-600"
+                          className="cursor-pointer text-sm font-medium transition-colors hover:opacity-80"
                         >
                           {link.text}
                         </Link>
@@ -424,10 +442,10 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                             : undefined
                         }
                         onClick={e => handleLinkClick(e, link.href)}
-                        className={`text-sm font-medium text-gray-900 transition-colors ${
+                        className={`text-sm font-medium transition-colors ${
                           disableClicks
                             ? "cursor-default opacity-60"
-                            : "cursor-pointer hover:text-gray-600"
+                            : "cursor-pointer hover:opacity-80"
                         }`}
                       >
                         {link.text}
@@ -505,7 +523,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={`flex items-center gap-1 p-2 text-black transition-colors hover:text-black/80 ${
+                        className={`flex items-center gap-1 p-2 transition-colors hover:opacity-80 ${
                           disableClicks || isEditable
                             ? "cursor-default opacity-60"
                             : "cursor-pointer"
@@ -526,7 +544,11 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                       </Button>
                     </DropdownMenuTrigger>
                     {!disableClicks && !isEditable && (
-                      <DropdownMenuContent className="w-48" align="end">
+                      <DropdownMenuContent 
+                        className="w-48" 
+                        align="end"
+                        style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                      >
                         {isAuthenticated ? (
                           <>
                             <DropdownMenuItem

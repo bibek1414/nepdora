@@ -72,14 +72,20 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
   const helpSection = data.sections[1];
 
   return (
-    <footer className="w-full bg-white pt-20 pb-10 font-sans text-gray-900 dark:bg-[#020205] dark:text-gray-100">
+    <footer
+      className="w-full pt-20 pb-10 font-sans"
+      style={{
+        backgroundColor: footerData.backgroundColor || undefined,
+        color: footerData.textColor || "inherit",
+      }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Logo, Newsletter, Social */}
           <div className="flex flex-col space-y-6 lg:col-span-4 lg:pr-12">
             <FooterLogo footerData={data} getImageUrl={getImageUrl} />
 
-            <p className="max-w-[280px] text-base text-gray-600 dark:text-gray-400">
+            <p className="max-w-[280px] text-base opacity-70">
               {data.newsletter.description ||
                 "Sign up today and get $20 off your first order."}
             </p>
@@ -97,7 +103,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="text-gray-900 transition-colors hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
+                  className="transition-colors hover:opacity-70"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }
@@ -115,7 +121,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
           {/* Column 2: Collection */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold text-gray-900 dark:text-white">
+            <h3 className="mb-6 text-base font-semibold">
               Collection
             </h3>
             <ul className="flex flex-col space-y-4">
@@ -128,7 +134,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
                       pathname,
                       isEditable
                     )}
-                    className="text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    className="text-sm opacity-80 transition-colors hover:opacity-100"
                   >
                     {category.name}
                   </Link>
@@ -142,7 +148,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
           {/* Column 3: Company */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold text-gray-900 dark:text-white">
+            <h3 className="mb-6 text-base font-semibold">
               {companySection?.title || "Company"}
             </h3>
             <ul className="flex flex-col space-y-4">
@@ -166,7 +172,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
           {/* Column 4: Need Help */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold text-gray-900 dark:text-white">
+            <h3 className="mb-6 text-base font-semibold">
               {helpSection?.title || "Need Help"}
             </h3>
             <ul className="flex flex-col space-y-4">
@@ -190,25 +196,25 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
           {/* Column 5: Exclusive Services */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold text-gray-900 dark:text-white">
+            <h3 className="mb-6 text-base font-semibold">
               Exclusive Services
             </h3>
             <ul className="flex flex-col space-y-5">
               <li className="flex items-start gap-3">
-                <Phone className="mt-0.5 h-[18px] w-[18px] shrink-0 text-gray-900 dark:text-gray-300" />
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+                <Phone className="mt-0.5 h-[18px] w-[18px] shrink-0" />
+                <span className="text-sm opacity-80">
                   {siteConfig?.phone || "+1666 8888"}
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <Send className="mt-0.5 h-[18px] w-[18px] shrink-0 -rotate-45 text-gray-900 dark:text-gray-300" />
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+                <Send className="mt-0.5 h-[18px] w-[18px] shrink-0 -rotate-45" />
+                <span className="text-sm opacity-80">
                   {siteConfig?.email || "help@nepdora.com"}
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-[18px] w-[18px] shrink-0 text-gray-900 dark:text-gray-300" />
-                <span className="text-sm leading-relaxed whitespace-pre-line text-gray-500 dark:text-gray-400">
+                <MapPin className="mt-0.5 h-[18px] w-[18px] shrink-0" />
+                <span className="text-sm leading-relaxed whitespace-pre-line opacity-70">
                   {siteConfig?.address ||
                     "2972 Westheimer Rd.\nSanta Ana, Illinois\n85486"}
                 </span>
@@ -219,7 +225,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
         {/* Bottom Bar */}
         <div className="mt-16 flex flex-col items-center justify-between border-t border-gray-100 pt-8 pb-4 md:flex-row dark:border-gray-800">
-          <p className="mb-4 text-xs text-gray-500 md:mb-0 dark:text-gray-400">
+          <p className="mb-4 text-xs opacity-70 md:mb-0">
             {getProcessedCopyright(data.copyright, data.companyName)}
           </p>
 
@@ -256,7 +262,7 @@ const FooterLink: React.FC<{
     return (
       <button
         type="button"
-        className="w-fit text-left text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+      className="w-fit text-sm opacity-80 transition-colors hover:opacity-100"
         onClick={e => e.preventDefault()}
       >
         {children}
@@ -277,7 +283,7 @@ const FooterLink: React.FC<{
           ? "noopener noreferrer"
           : undefined
       }
-      className="w-fit text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+      className="w-fit text-sm transition-colors opacity-70 hover:opacity-100"
     >
       {children}
     </Link>

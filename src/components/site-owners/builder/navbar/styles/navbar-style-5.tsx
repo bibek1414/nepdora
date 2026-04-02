@@ -121,13 +121,20 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
 
   return (
     <>
-      <div className="-md bg-white">
-        <header className="relative bg-white">
+      <div
+        className="-md bg-white"
+        style={{ backgroundColor: navbarData.backgroundColor || "white" }}
+      >
+        <header
+          className="relative bg-white"
+          style={{ backgroundColor: "transparent" }}
+        >
           <nav
             aria-label="Top"
             className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
               disableClicks ? "pointer-events-none" : ""
             }`}
+            style={{ color: navbarData.textColor || "inherit" }}
           >
             <div className="flex h-20 items-center justify-between">
               {/* Left: Logo */}
@@ -169,7 +176,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           }}
                           isEditable={isEditable}
                           siteUser={siteUser}
-                          className="flex cursor-pointer items-center gap-1.5 font-medium text-black transition-colors hover:text-black/80"
+                          className="flex cursor-pointer items-center gap-1.5 font-medium transition-colors hover:opacity-80"
                           textPlaceholder="Link text..."
                           hrefPlaceholder="Enter URL..."
                         />
@@ -196,7 +203,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                             : undefined
                         }
                         onClick={e => handleLinkClick(e, link.href)}
-                        className={`font-medium text-black transition-colors hover:text-black/80 ${
+                        className={`font-medium transition-colors hover:opacity-80 ${
                           disableClicks
                             ? "cursor-default opacity-60"
                             : "cursor-pointer"
@@ -226,14 +233,14 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={e => disableClicks && e.preventDefault()}
-                          className={`rounded-full p-2 transition-colors hover:bg-gray-100 ${
+                          className={`rounded-full p-2 transition-colors hover:opacity-100 ${
                             disableClicks
                               ? "cursor-default opacity-60"
                               : "cursor-pointer"
                           }`}
                           aria-label={social.label}
                         >
-                          <Icon className="h-5 w-5 text-black hover:text-black/80" />
+                          <Icon className="h-5 w-5 opacity-70 hover:opacity-100" />
                         </Link>
                       );
                     })}
@@ -247,7 +254,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         <Button
                           variant="ghost"
                           size="sm"
-                          className={`flex items-center gap-1 p-2 text-black transition-colors hover:text-black/80 ${
+                          className={`flex items-center gap-1 p-2 transition-colors hover:opacity-80 ${
                             disableClicks || isEditable
                               ? "cursor-default opacity-60"
                               : "cursor-pointer"
@@ -268,7 +275,11 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         </Button>
                       </DropdownMenuTrigger>
                       {!disableClicks && !isEditable && (
-                        <DropdownMenuContent className="w-48" align="end">
+                        <DropdownMenuContent 
+                          className="w-48" 
+                          align="end"
+                          style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                        >
                           {isAuthenticated ? (
                             <>
                               <DropdownMenuItem

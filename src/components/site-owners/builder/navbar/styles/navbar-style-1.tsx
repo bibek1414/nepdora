@@ -24,6 +24,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { Heart, Package, LogOut, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -64,6 +65,13 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
   const router = useRouter();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   const toggleCart = () => {
     if (disableClicks) return;
@@ -112,6 +120,10 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
         className={`bg-background flex items-center justify-between p-4 ${
           !isEditable ? "sticky top-16 z-40 border-b" : ""
         } ${disableClicks ? "pointer-events-none" : ""}`}
+        style={{
+          backgroundColor: navbarData.backgroundColor || undefined,
+          color: navbarData.textColor || undefined,
+        }}
       >
         <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
           {leftLinks.map(link =>
@@ -120,7 +132,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 <Link
                   href={link.href}
                   onClick={e => e.preventDefault()}
-                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                  className="cursor-pointer text-sm font-medium transition-colors hover:opacity-80"
                 >
                   {link.text}
                 </Link>
@@ -183,7 +195,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 <Link
                   href={link.href}
                   onClick={e => e.preventDefault()}
-                  className="cursor-pointer text-sm font-medium text-black transition-colors hover:text-black/80"
+                  className="cursor-pointer text-sm font-medium transition-colors hover:opacity-80"
                 >
                   {link.text}
                 </Link>
@@ -218,6 +230,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 }`}
                 style={{
                   pointerEvents: disableClicks ? "auto" : undefined,
+                  color: navbarData.textColor || "inherit",
                 }}
               >
                 {link.text}
@@ -231,7 +244,11 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   onClick={e => e.preventDefault()}
                   variant={getButtonVariant(button.variant)}
                   size="sm"
-                  className="cursor-pointer"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  className="cursor-pointer transition-colors hover:opacity-90"
                 >
                   {button.text}
                 </Button>
@@ -242,7 +259,11 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                 variant={getButtonVariant(button.variant)}
                 size="sm"
                 onClick={disableClicks ? e => e.preventDefault() : undefined}
-                className={`${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                }}
+                className={`transition-colors hover:opacity-90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
                 asChild={!disableClicks}
               >
                 {disableClicks ? (
@@ -283,7 +304,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={`flex items-center gap-1 p-2 text-black ${
+                    className={`flex items-center gap-1 p-2 ${
                       disableClicks || isEditable
                         ? "cursor-default opacity-60"
                         : "cursor-pointer hover:opacity-80"
@@ -304,7 +325,11 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                   </Button>
                 </DropdownMenuTrigger>
                 {!disableClicks && !isEditable && (
-                  <DropdownMenuContent className="w-48" align="end">
+                  <DropdownMenuContent 
+                    className="w-48" 
+                    align="end"
+                    style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                  >
                     {isAuthenticated ? (
                       <>
                         <DropdownMenuItem

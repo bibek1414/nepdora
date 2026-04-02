@@ -67,7 +67,16 @@ export const FooterStyle8 = ({
     })) || [];
 
   return (
-    <footer className="w-full border-t border-black/5 bg-white font-sans text-black">
+    <footer
+      className="w-full border-t border-black/5 font-sans"
+      style={{
+        backgroundColor: data.backgroundColor || "white",
+        color: data.textColor || "black",
+        borderColor: data.textColor
+          ? data.textColor + "10"
+          : "rgba(0,0,0,0.05)",
+      }}
+    >
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Column 1: Logo & About */}
@@ -82,7 +91,7 @@ export const FooterStyle8 = ({
               <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
 
-            <p className="text-sm leading-relaxed text-gray-600">
+            <p className="text-sm leading-relaxed opacity-70">
               {data.description ||
                 "With many years of experience and expertise, we customize solutions to meet the specific needs of businesses."}
             </p>
@@ -92,7 +101,7 @@ export const FooterStyle8 = ({
                 <a
                   key={social.id}
                   href={social.href || "#"}
-                  className="text-gray-700 transition-colors duration-200 hover:text-black"
+                  className="transition-colors duration-200 hover:opacity-70"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -133,36 +142,28 @@ export const FooterStyle8 = ({
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="mb-6 text-lg font-semibold text-black">
-              Contact Info
-            </h3>
+            <h3 className="mb-6 text-lg font-semibold">Contact Info</h3>
             <div className="space-y-6 text-sm">
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-black opacity-60">
-                  Address:
-                </p>
-                <p className="max-w-[220px] leading-relaxed text-gray-600">
+                <p className="text-sm font-semibold opacity-50">Address:</p>
+                <p className="max-w-[220px] leading-relaxed opacity-70">
                   {data.contactInfo?.address || "Location not specified"}
                 </p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-black opacity-60">
-                  Email:
-                </p>
+                <p className="text-sm font-semibold opacity-50">Email:</p>
                 <a
                   href={`mailto:${data.contactInfo?.email}`}
-                  className="text-gray-600 transition-colors hover:text-black"
+                  className="opacity-70 transition-colors hover:opacity-100"
                 >
                   {data.contactInfo?.email || "email@example.com"}
                 </a>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-black opacity-60">
-                  Phone:
-                </p>
+                <p className="text-sm font-semibold opacity-60">Phone:</p>
                 <a
                   href={`tel:${data.contactInfo?.phone}`}
-                  className="text-gray-600 transition-colors hover:text-black"
+                  className="opacity-70 transition-colors hover:opacity-100"
                 >
                   {data.contactInfo?.phone || "Phone not specified"}
                 </a>
@@ -178,10 +179,10 @@ export const FooterStyle8 = ({
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <h3 className="mb-6 text-lg font-semibold text-black">
+              <h3 className="mb-6 text-lg font-semibold">
                 {data.newsletter?.title || "Newsletter"}
               </h3>
-              <p className="mb-6 text-sm leading-relaxed text-gray-600">
+              <p className="mb-6 text-sm leading-relaxed opacity-70">
                 {data.newsletter?.description ||
                   "Join our subscribers list to get latest news and special offers."}
               </p>
@@ -197,7 +198,14 @@ export const FooterStyle8 = ({
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-center justify-between space-y-4 border-t border-black/10 pt-8 text-sm text-gray-700 md:flex-row md:space-y-0">
+        <div
+          className="flex flex-col items-center justify-between space-y-4 border-t pt-8 text-sm opacity-70 md:flex-row md:space-y-0"
+          style={{
+            borderColor: data.textColor
+              ? data.textColor + "10"
+              : "rgba(0,0,0,0.1)",
+          }}
+        >
           <p className="text-center md:text-left">
             {getProcessedCopyright(data.copyright, data.companyName)}
           </p>
@@ -211,7 +219,7 @@ export const FooterStyle8 = ({
                   pathname,
                   isEditable
                 )}
-                className="transition-colors hover:text-black"
+                className="cursor-pointer transition-colors hover:opacity-100"
               >
                 {link.text}
               </Link>
@@ -232,13 +240,13 @@ const FooterLink: React.FC<{
 }> = ({ href, children, isEditable, siteUser, pathname }) => (
   <li>
     {isEditable ? (
-      <span className="block cursor-default transition-colors duration-200 hover:text-black">
+      <span className="block cursor-pointer transition-colors duration-200 hover:opacity-100">
         {children}
       </span>
     ) : (
       <Link
         href={generateLinkHref(href, siteUser, pathname, isEditable)}
-        className="block transition-colors duration-200 hover:text-black"
+        className="block cursor-pointer transition-colors duration-200 hover:opacity-100"
       >
         {children}
       </Link>
@@ -268,14 +276,14 @@ const ServicesSection = ({
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
-      <h3 className="mb-6 text-lg font-semibold text-black">{title}</h3>
+      <h3 className="mb-6 text-lg font-semibold">{title}</h3>
       {isLoading ? (
-        <div className="flex items-center space-x-2 text-sm text-gray-500">
+        <div className="flex items-center space-x-2 text-sm opacity-50">
           <Loader2 className="h-4 w-4 animate-spin" />
           <span>Loading...</span>
         </div>
       ) : services.length > 0 ? (
-        <ul className="space-y-3 text-sm text-gray-600">
+        <ul className="space-y-3 text-sm opacity-70">
           {services.map(service => (
             <FooterLink
               key={service.id}
@@ -289,7 +297,7 @@ const ServicesSection = ({
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-gray-600">No services available</p>
+        <p className="text-sm opacity-70">No services available</p>
       )}
     </motion.div>
   );

@@ -61,7 +61,6 @@ export function FooterStyle3({
 
   // Get colors from theme with fallbacks
   const primaryColor = theme.colors?.primary || "#3B82F6";
-  const secondaryColor = theme.colors?.secondary || "#F59E0B";
   const primaryForeground = theme.colors?.primaryForeground || "#FFFFFF";
   const secondaryForeground = theme.colors?.secondaryForeground || "#1F2937";
 
@@ -97,18 +96,29 @@ export function FooterStyle3({
   );
 
   return (
-    <div className="group relative" style={{ backgroundColor: primaryColor }}>
-      <footer className="relative mx-auto mt-12 max-w-7xl pt-12 text-white sm:mt-16 sm:pt-16 md:mt-20 md:pt-20">
+    <div
+      className="group relative"
+      style={{ backgroundColor: footerData.backgroundColor || primaryColor }}
+    >
+      <footer
+        className="relative mx-auto mt-12 max-w-7xl pt-12 sm:mt-16 sm:pt-16 md:mt-20 md:pt-20"
+        style={{ color: footerData.textColor || "white" }}
+      >
         {/* Floating CTA Bar */}
         <div
-          className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border border-white/10 p-4 shadow-2xl sm:w-[90%] sm:rounded-3xl sm:p-6 md:w-[80%] md:flex-row md:rounded-full md:p-12"
-          style={{ backgroundColor: primaryColor }}
+          className="absolute top-0 left-1/2 flex w-[95%] min-w-[288px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-between rounded-2xl border p-4 shadow-2xl transition-colors sm:w-[90%] sm:rounded-3xl sm:p-6 md:w-[80%] md:flex-row md:rounded-full md:p-12"
+          style={{
+            backgroundColor: footerData.backgroundColor || primaryColor,
+            borderColor: footerData.textColor
+              ? footerData.textColor + "20"
+              : "rgba(255,255,255,0.1)",
+          }}
         >
           <div className="mb-3 flex items-center gap-2 sm:mb-4 sm:gap-3 md:mb-0 md:gap-4">
             <div
               className="flex h-10 w-10 items-center justify-center rounded-full text-white sm:h-11 sm:w-11 md:h-12 md:w-12"
               style={{
-                backgroundColor: secondaryColor,
+                backgroundColor: primaryColor,
                 color: secondaryForeground,
               }}
             >
@@ -136,13 +146,20 @@ export function FooterStyle3({
             </h3>
           </div>
 
-          <div className="mx-4 hidden h-8 w-px bg-white/20 sm:mx-6 sm:h-10 md:mx-8 md:block md:h-12"></div>
+          <div
+            className="mx-4 hidden h-8 w-px sm:mx-6 sm:h-10 md:mx-8 md:block md:h-12"
+            style={{
+              backgroundColor: footerData.textColor
+                ? footerData.textColor + "20"
+                : "rgba(255,255,255,0.2)",
+            }}
+          ></div>
 
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <div
               className="flex h-10 w-10 items-center justify-center rounded-full text-white sm:h-11 sm:w-11 md:h-12 md:w-12"
               style={{
-                backgroundColor: secondaryColor,
+                backgroundColor: primaryColor,
                 color: secondaryForeground,
               }}
             >
@@ -179,21 +196,9 @@ export function FooterStyle3({
           {/* Brand Column */}
           <div className="space-y-4 sm:space-y-5 md:space-y-6">
             <div className="flex items-center gap-2 sm:gap-2.5">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-full text-white sm:h-9 sm:w-9 md:h-10 md:w-10"
-                style={{
-                  backgroundColor: primaryForeground,
-                  color: primaryColor,
-                }}
-              >
-                <Plane
-                  size={16}
-                  className="-rotate-45 fill-current sm:h-5 sm:w-5 md:h-5 md:w-5"
-                />
-              </div>
               <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
-            <p className="text-xs leading-relaxed text-white sm:text-sm">
+            <p className="text-xs leading-relaxed opacity-90 sm:text-sm">
               {data.description}
             </p>
             <div className="flex gap-2.5 sm:gap-3 md:gap-4">
@@ -201,7 +206,7 @@ export function FooterStyle3({
                 <Link
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900 sm:h-8 sm:w-8"
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 transition-all hover:bg-white/10 hover:opacity-80 sm:h-8 sm:w-8"
                   target={
                     social.href?.startsWith("http") ? "_blank" : undefined
                   }
@@ -229,9 +234,9 @@ export function FooterStyle3({
               {(servicesSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-2 text-white/90 transition-colors hover:text-white"
+                  className="flex cursor-pointer items-center gap-2 opacity-80 transition-colors hover:opacity-100"
                 >
-                  <span style={{ color: secondaryColor }}>✓</span>
+                  <span style={{ color: primaryColor }}>✓</span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -242,7 +247,7 @@ export function FooterStyle3({
                     className="transition-colors hover:text-inherit"
                     style={
                       {
-                        "--hover-color": secondaryColor,
+                        "--hover-color": primaryColor,
                       } as React.CSSProperties
                     }
                     target={
@@ -275,9 +280,9 @@ export function FooterStyle3({
               {(usefulLinksSection?.links || []).map(link => (
                 <li
                   key={link.id}
-                  className="flex cursor-pointer items-center gap-2 text-white/90 transition-colors hover:text-white"
+                  className="flex cursor-pointer items-center gap-2 opacity-80 transition-colors hover:opacity-100"
                 >
-                  <span style={{ color: secondaryColor }}>&gt;</span>
+                  <span style={{ color: primaryColor }}>&gt;</span>
                   <Link
                     href={generateLinkHref(
                       link.href || "",
@@ -288,7 +293,7 @@ export function FooterStyle3({
                     className="transition-colors hover:text-inherit"
                     style={
                       {
-                        "--hover-color": secondaryColor,
+                        "--hover-color": primaryColor,
                       } as React.CSSProperties
                     }
                     target={
@@ -317,7 +322,7 @@ export function FooterStyle3({
             <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
               {data.newsletter.title}
             </h4>
-            <p className="mb-3 text-xs leading-relaxed text-white/90 sm:mb-4 sm:text-sm">
+            <p className="mb-3 text-xs leading-relaxed opacity-80 sm:mb-4 sm:text-sm">
               {data.newsletter.description}
             </p>
 
@@ -328,8 +333,15 @@ export function FooterStyle3({
         </div>
 
         <div
-          className="flex flex-col items-center justify-between gap-3 px-3 py-6 text-[10px] leading-relaxed sm:gap-4 sm:px-4 sm:py-7 sm:text-xs md:flex-row md:gap-0 md:px-6 md:py-8 lg:px-12"
-          style={{ color: `${primaryForeground}80` }}
+          className="flex flex-col items-center justify-between gap-3 border-t px-3 py-6 text-[10px] leading-relaxed sm:gap-4 sm:px-4 sm:py-7 sm:text-xs md:flex-row md:gap-0 md:px-6 md:py-8 lg:px-12"
+          style={{
+            color: footerData.textColor
+              ? footerData.textColor + "80"
+              : "rgba(255,255,255,0.5)",
+            borderColor: footerData.textColor
+              ? footerData.textColor + "20"
+              : "rgba(255,255,255,0.1)",
+          }}
         >
           <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:justify-start md:gap-8">

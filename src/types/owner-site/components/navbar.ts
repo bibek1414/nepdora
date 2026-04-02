@@ -28,6 +28,8 @@ export interface NavbarData {
   enableLogin?: boolean;
   bannerText?: string;
   topBarItems?: TopBarItem[];
+  backgroundColor?: string;
+  textColor?: string;
 }
 
 export interface Navbar {

@@ -68,6 +68,73 @@ import {
   usePatchSiteConfig,
 } from "@/hooks/owner-site/admin/use-site-config";
 import { User } from "@/types/auth/auth";
+import { Palette, RefreshCcw } from "lucide-react";
+
+const predefinedColors = [
+  "#3B82F6",
+  "#EF4444",
+  "#10B981",
+  "#F59E0B",
+  "#8B5CF6",
+  "#EC4899",
+  "#06B6D4",
+  "#84CC16",
+  "#FFFFFF",
+  "#6366F1",
+  "#14B8A6",
+  "#F43F5E",
+  "#22C55E",
+  "#A855F7",
+  "#0EA5E9",
+  "#EAB308",
+  "#DC2626",
+  "#000000",
+];
+
+const ColorPicker = ({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) => {
+  return (
+    <div className="space-y-2">
+      <Label className="text-xs">{label}</Label>
+      <div className="flex flex-wrap gap-1 mb-2">
+        {predefinedColors.map(color => (
+          <button
+            key={color}
+            type="button"
+            className={cn(
+              "h-6 w-6 cursor-pointer rounded-full border border-gray-200 transition-transform hover:scale-110",
+              value === color && "ring-2 ring-primary ring-offset-1"
+            )}
+            style={{ backgroundColor: color }}
+            onClick={() => onChange(color)}
+          />
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="color"
+          value={value || "#000000"}
+          onChange={e => onChange(e.target.value)}
+          className="h-8 w-8 cursor-pointer rounded border p-0"
+        />
+        <Input
+          type="text"
+          value={value || ""}
+          onChange={e => onChange(e.target.value)}
+          className="h-8 flex-1 text-xs"
+          placeholder="#000000"
+        />
+      </div>
+    </div>
+  );
+};
 
 interface NavbarEditorDialogProps {
   isOpen: boolean;
@@ -457,7 +524,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[85vh] max-w-4xl">
+      <DialogContent className="max-h-[85vh] max-w-3xl!">
         <DialogHeader>
           <DialogTitle>Navbar Editor</DialogTitle>
           <DialogDescription>
@@ -466,23 +533,27 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
         </DialogHeader>
 
         <Tabs defaultValue="logo" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="logo" className="flex items-center gap-1">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="logo" className="flex items-center gap-1 cursor-pointer">
               <Type className="h-4 w-4" />
               Logo
               {siteConfig?.logo && (
                 <span className="ml-1 h-2 w-2 rounded-full bg-green-500" />
               )}
             </TabsTrigger>
-            <TabsTrigger value="links" className="flex items-center gap-1">
+            <TabsTrigger value="appearance" className="flex items-center gap-1 cursor-pointer">
+              <Palette className="h-4 w-4" />
+              Appearance
+            </TabsTrigger>
+            <TabsTrigger value="links" className="flex items-center gap-1 cursor-pointer">
               <LinkIcon className="h-4 w-4" />
               Links
             </TabsTrigger>
-            <TabsTrigger value="buttons" className="flex items-center gap-1">
+            <TabsTrigger value="buttons" className="flex items-center gap-1 cursor-pointer">
               <SquareMousePointer className="h-4 w-4" />
               Buttons
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-1">
+            <TabsTrigger value="settings" className="flex items-center gap-1 cursor-pointer">
               <Settings className="h-4 w-4" />
               Settings
             </TabsTrigger>
@@ -493,7 +564,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
               <Card className="border-none shadow-none">
                 <CardContent className="space-y-6 px-0">
                   <div className="space-y-2">
-                    <Label className="text-xs" htmlFor="logo-text">
+                    <Label className="text-xs cursor-pointer" htmlFor="logo-text">
                       Logo Text
                     </Label>
                     <Input
@@ -597,7 +668,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="text" id="text-only" />
                         <Label
-                          className="text-sm font-normal"
+                          className="text-sm font-normal cursor-pointer"
                           htmlFor="text-only"
                         >
                           Text Only
@@ -612,7 +683,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         <Label
                           htmlFor="image-only"
                           className={cn(
-                            "text-sm font-normal",
+                            "text-sm font-normal cursor-pointer",
                             !navbarData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -628,7 +699,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         <Label
                           htmlFor="both"
                           className={cn(
-                            "text-sm font-normal",
+                            "text-sm font-normal cursor-pointer",
                             !navbarData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -636,6 +707,50 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         </Label>
                       </div>
                     </RadioGroup>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="appearance" className="space-y-6">
+              <Card className="border-none shadow-none">
+                <CardContent className="space-y-6 px-0">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium flex items-center gap-2">
+                        <Palette className="h-4 w-4" />
+                        Navbar Colors
+                      </Label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs gap-1"
+                        onClick={() => {
+                          handleInputChange("backgroundColor", "white");
+                          handleInputChange("textColor", "black");
+                        }}
+                      >
+                        <RefreshCcw className="h-3 w-3" />
+                        Reset
+                      </Button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                      <ColorPicker
+                        label="Background Color"
+                        value={navbarData.backgroundColor || ""}
+                        onChange={value =>
+                          handleInputChange("backgroundColor", value)
+                        }
+                      />
+                      <ColorPicker
+                        label="Text Color"
+                        value={navbarData.textColor || ""}
+                        onChange={value =>
+                          handleInputChange("textColor", value)
+                        }
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -854,6 +969,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         }
                       />
                     </div>
+
                   </div>
                 </CardContent>
               </Card>

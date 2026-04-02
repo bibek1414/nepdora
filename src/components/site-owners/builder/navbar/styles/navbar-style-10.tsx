@@ -126,7 +126,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
 
   const linkClass = (path: string, isActive: boolean) =>
     `text-sm font-medium transition-colors ${
-      isActive ? "font-semibold" : "text-gray-600 hover:opacity-80"
+      isActive ? "font-semibold opacity-100" : "opacity-70 hover:opacity-100"
     }`;
 
   // Close dropdown when clicking outside
@@ -203,7 +203,13 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
       }`}
     >
       {/* Desktop Header */}
-      <div className="relative mx-auto hidden h-16 w-full max-w-7xl items-center justify-between rounded-full border border-gray-100 bg-white/95 px-4 backdrop-blur-md md:px-8 lg:flex xl:h-20">
+      <div
+        className="relative mx-auto hidden h-16 w-full max-w-7xl items-center justify-between rounded-full border border-gray-100 px-4 backdrop-blur-md md:px-8 lg:flex xl:h-20"
+        style={{
+          backgroundColor: data.backgroundColor || "rgba(255, 255, 255, 0.95)",
+          color: data.textColor || "inherit",
+        }}
+      >
         {/* Logo - Left aligned */}
         <div className="z-20 flex cursor-pointer items-center gap-2">
           {isEditable && onEditLogo ? (
@@ -260,8 +266,8 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             <div
               className={`flex items-center gap-1 text-sm font-medium transition-colors ${
                 pathname.includes("/services")
-                  ? "font-semibold"
-                  : "text-gray-600 hover:opacity-80"
+                  ? "font-semibold opacity-100"
+                  : "opacity-70 hover:opacity-100"
               }`}
               style={
                 pathname.includes("/services") ? { color: primaryColor } : {}
@@ -283,7 +289,8 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute top-full left-0 z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl"
+                  className="absolute top-full left-0 z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-gray-100 shadow-xl"
+                  style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
                 >
                   <div className="py-2">
                     {services.map((service, index) => (
@@ -299,7 +306,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                       >
                         <Link
                           href={getDetailsUrl(service.slug)}
-                          className="block px-6 py-3 text-sm text-gray-700 transition-colors duration-200 hover:opacity-80"
+                          className="block px-6 py-3 text-sm transition-colors duration-200 hover:opacity-80"
                           style={{
                             color:
                               pathname === getDetailsUrl(service.slug)
@@ -324,7 +331,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
           {buttons.map(button =>
             isEditable && onEditButton ? (
               <EditableItem key={button.id}>
-                <div className="flex items-center gap-3 rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-6 text-gray-900">
+                <div className="flex items-center gap-3 rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-6">
                   <span className="text-sm font-semibold">{button.text}</span>
                   <div
                     className="flex h-9 w-9 items-center justify-center rounded-full text-white"
@@ -344,7 +351,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                   isEditable,
                   disableClicks
                 )}
-                className="hover:border-primary-300 group flex items-center gap-3 rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-6 text-gray-900 transition-all hover:shadow-md"
+                className="hover:border-primary-300 group flex items-center gap-3 rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-6 transition-all hover:shadow-md"
                 onClick={e => handleLinkClick(e, button.href)}
               >
                 <span className="text-sm font-semibold">{button.text}</span>
@@ -363,10 +370,8 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className={`flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 transition-all hover:border-gray-300 hover:shadow-md ${disableClicks || isEditable ? "cursor-default opacity-60" : "cursor-pointer"}`}
-                    onClick={
-                      disableClicks ? e => e.preventDefault() : undefined
-                    }
+                    className={`flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 transition-all hover:border-gray-300 hover:shadow-md ${disableClicks || isEditable ? "cursor-default opacity-60" : "cursor-pointer"}`}
+                    style={{ backgroundColor: data.backgroundColor || "white" }}
                   >
                     <User size={18} />
                   </button>
@@ -441,7 +446,8 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
 
       {/* Mobile Menu Toggle */}
       <button
-        className="ml-auto rounded-full border border-gray-100 bg-white/90 p-1.5 text-gray-700 shadow-md sm:p-2 lg:hidden"
+        className="ml-auto rounded-full border border-gray-100 p-1.5 shadow-md sm:p-2 lg:hidden"
+        style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disableClicks}
       >
@@ -456,10 +462,12 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 flex flex-col gap-4 overflow-y-auto bg-white px-4 pt-16 pb-6 shadow-xl lg:hidden"
+            className="fixed inset-0 z-40 flex flex-col gap-4 overflow-y-auto px-4 pt-16 pb-6 shadow-xl lg:hidden"
+            style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
           >
             <button
-              className="absolute top-4 right-4 rounded-full border border-gray-100 bg-white/90 p-1.5 text-gray-700 shadow-md sm:p-2"
+              className="absolute top-4 right-4 rounded-full border border-gray-100 p-1.5 shadow-md sm:p-2"
+              style={{ backgroundColor: data.backgroundColor || "white" }}
               onClick={() => setIsOpen(false)}
             >
               <X size={20} />
@@ -475,7 +483,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                   isEditable,
                   disableClicks
                 )}
-                className="flex items-center justify-between border-b border-gray-50 py-3 text-base font-medium text-gray-800"
+                className="flex items-center justify-between border-b border-gray-50 py-3 text-base font-medium opacity-80 hover:opacity-100"
                 onClick={() => setIsOpen(false)}
               >
                 {link.text}
@@ -485,7 +493,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             {/* Mobile Services */}
             <div className="border-b border-gray-50">
               <button
-                className="flex w-full items-center justify-between py-3 text-base font-medium text-gray-800"
+                className="flex w-full items-center justify-between py-3 text-base font-medium opacity-80 hover:opacity-100"
                 onClick={() => setIsServicesOpen(!isServicesOpen)}
               >
                 Services
@@ -509,7 +517,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                         <Link
                           key={service.id}
                           href={getDetailsUrl(service.slug)}
-                          className="block py-2 text-sm text-gray-600 hover:opacity-80"
+                          className="block py-2 text-sm opacity-70 hover:opacity-100"
                           style={{
                             color:
                               pathname === getDetailsUrl(service.slug)
@@ -537,19 +545,19 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                     <>
                       <button
                         onClick={() => handleProfileAction("profile")}
-                        className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
+                        className="flex w-full items-center gap-3 py-2 text-base font-medium opacity-80 hover:opacity-100"
                       >
-                        <User size={20} className="text-gray-500" /> My Profile
+                        <User size={20} className="opacity-60" /> My Profile
                       </button>
                       {(!user?.website_type ||
                         user.website_type === "ecommerce") && (
                         <>
                           <button
                             onClick={() => handleProfileAction("wishlist")}
-                            className="flex w-full items-center justify-between py-2 text-base font-medium text-gray-800"
+                            className="flex w-full items-center justify-between py-2 text-base font-medium opacity-80 hover:opacity-100"
                           >
                             <div className="flex items-center gap-3">
-                              <Heart size={20} className="text-gray-500" />{" "}
+                              <Heart size={20} className="opacity-60" />{" "}
                               Wishlist
                             </div>
                             {wishlistCount > 0 && (
@@ -560,9 +568,9 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                           </button>
                           <button
                             onClick={() => handleProfileAction("orders")}
-                            className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
+                            className="flex w-full items-center gap-3 py-2 text-base font-medium opacity-80 hover:opacity-100"
                           >
-                            <Package size={20} className="text-gray-500" /> My
+                            <Package size={20} className="opacity-60" /> My
                             Orders
                           </button>
                         </>
@@ -577,9 +585,9 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                   ) : (
                     <button
                       onClick={handleLoginClick}
-                      className="flex w-full items-center gap-3 py-2 text-base font-medium text-gray-800"
+                      className="flex w-full items-center gap-3 py-2 text-base font-medium opacity-80 hover:opacity-100"
                     >
-                      <User size={20} className="text-gray-500" /> Login /
+                      <User size={20} className="opacity-60" /> Login /
                       Register
                     </button>
                   )}

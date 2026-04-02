@@ -35,6 +35,7 @@ import {
 import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { useRouter } from "next/navigation";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -73,6 +74,13 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
   const wishlistCount = wishlistData?.length || 0;
   const router = useRouter();
   const pathname = usePathname();
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   const toggleMobileMenu = () => {
     if (disableClicks) return;
@@ -115,7 +123,11 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
 
   return (
     <header
-      className={`w-full border-b bg-white/80 backdrop-blur-md ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
+      className={`w-full border-b backdrop-blur-md ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
+      style={{
+        backgroundColor: navbarData.backgroundColor || "rgba(255, 255, 255, 0.8)",
+        color: navbarData.textColor || "inherit",
+      }}
     >
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo - Left Side */}
@@ -148,10 +160,10 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                   <Link
                     href={link.href}
                     onClick={e => e.preventDefault()}
-                    className="group relative py-2 text-sm font-medium text-gray-700 transition-colors hover:text-black"
+                    className="group relative cursor-pointer py-2 text-sm font-medium transition-colors hover:opacity-80"
                   >
                     {link.text}
-                    <span className="absolute inset-x-0 -bottom-1 h-0.5 scale-x-0 bg-black transition-transform group-hover:scale-x-100" />
+                    <span className="absolute inset-x-0 -bottom-1 h-0.5 scale-x-0 bg-current transition-transform group-hover:scale-x-100" />
                   </Link>
                 </EditableItem>
               ) : (
@@ -179,12 +191,12 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                   className={`group relative py-2 text-sm font-medium transition-colors ${
                     disableClicks
                       ? "cursor-default opacity-60"
-                      : "text-gray-700 hover:text-black"
+                      : "cursor-pointer hover:opacity-80"
                   }`}
                 >
                   {link.text}
                   {!disableClicks && (
-                    <span className="absolute inset-x-0 -bottom-1 h-0.5 scale-x-0 bg-black transition-transform group-hover:scale-x-100" />
+                    <span className="absolute inset-x-0 -bottom-1 h-0.5 scale-x-0 bg-current transition-transform group-hover:scale-x-100" />
                   )}
                 </Link>
               )}
@@ -204,7 +216,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={`h-10 w-10 text-gray-700 hover:bg-gray-100 hover:text-black ${
+                    className={`h-10 w-10 hover:opacity-80 ${
                       disableClicks || isEditable
                         ? "cursor-default opacity-60"
                         : "cursor-pointer"
@@ -221,7 +233,10 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                   >
                     {isAuthenticated ? (
                       <>
-                        <div className="px-2 py-1.5 text-sm font-semibold text-gray-900">
+                        <div
+                          className="px-2 py-1.5 text-sm font-semibold"
+                          style={{ color: navbarData.textColor || "inherit" }}
+                        >
                           {user?.first_name
                             ? `${user.first_name}'s Account`
                             : "My Account"}
@@ -287,7 +302,11 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                   <EditableItem>
                     <Button
                       size="sm"
-                      className="rounded-full bg-black px-6 hover:bg-gray-800"
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                      }}
+                      className="rounded-full px-6 transition-colors hover:opacity-90"
                     >
                       {button.text}
                     </Button>
@@ -295,10 +314,14 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                 ) : (
                   <Button
                     size="sm"
-                    className={`rounded-full bg-black px-6 hover:bg-gray-800 ${
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                    }}
+                    className={`rounded-full px-6 transition-colors hover:opacity-90 ${
                       disableClicks
                         ? "pointer-events-auto cursor-default opacity-60"
-                        : ""
+                        : "cursor-pointer"
                     }`}
                     asChild={!disableClicks}
                   >
@@ -353,7 +376,10 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="right" className="w-full sm:max-w-xs">
           <SheetHeader className="border-b pb-6">
-            <SheetTitle className="text-left text-xl font-bold">
+            <SheetTitle
+              className="text-left text-xl font-bold"
+              style={{ color: navbarData.textColor || "inherit" }}
+            >
               Menu
             </SheetTitle>
           </SheetHeader>
@@ -381,7 +407,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                         disableClicks
                       )}
                       onClick={handleLinkClick}
-                      className="block px-2 py-3 text-lg font-medium text-gray-900 hover:text-black"
+                      className="block cursor-pointer px-2 py-3 text-lg font-medium hover:opacity-80"
                     >
                       {link.text}
                     </Link>
@@ -397,7 +423,13 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                 <div key={button.id}>
                   {isEditable && onEditButton ? (
                     <EditableItem>
-                      <Button className="w-full rounded-full bg-black py-6">
+                      <Button
+                        style={{
+                          backgroundColor: theme.colors.primary,
+                          color: theme.colors.primaryForeground,
+                        }}
+                        className="w-full rounded-full py-6 transition-colors hover:opacity-90"
+                      >
                         {button.text}
                       </Button>
                     </EditableItem>
@@ -411,7 +443,11 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                           isEditable,
                           disableClicks
                         )}
-                        className="flex h-12 w-full items-center justify-center rounded-full bg-black text-base font-semibold text-white transition-colors hover:bg-gray-800"
+                        style={{
+                          backgroundColor: theme.colors.primary,
+                          color: theme.colors.primaryForeground,
+                        }}
+                        className="flex h-12 w-full items-center justify-center rounded-full text-base font-semibold transition-colors hover:opacity-90"
                       >
                         {button.text}
                       </Link>

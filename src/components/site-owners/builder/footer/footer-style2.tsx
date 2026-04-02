@@ -58,7 +58,14 @@ export function FooterStyle2({
 
   return (
     <div className="group relative">
-      <footer className="bg-background-light dark:bg-background-dark font-display border-t px-4 py-12 sm:px-6 lg:px-8">
+      <footer
+        className="font-display border-t px-4 py-12 sm:px-6 lg:px-8"
+        style={{
+          backgroundColor: footerData.backgroundColor || undefined,
+          color: footerData.textColor || "inherit",
+          borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)",
+        }}
+      >
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Company Info - Takes 2 columns on large screens */}
@@ -68,26 +75,26 @@ export function FooterStyle2({
                 <FooterLogo footerData={data} getImageUrl={getImageUrl} />
               </div>
 
-              <p className="text-text-light dark:text-text-dark mb-6 max-w-md">
+              <p className="mb-6 max-w-md opacity-80">
                 {data.description}
               </p>
 
               {/* Contact Info */}
               <div className="mb-6 space-y-2">
                 {data.contactInfo.email && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
+                  <div className="flex items-center opacity-80">
                     <Mail className="mr-2 h-4 w-4" />
                     <span className="text-sm">{data.contactInfo.email}</span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
+                  <div className="flex items-center opacity-80">
                     <Phone className="mr-2 h-4 w-4" />
                     <span className="text-sm">{data.contactInfo.phone}</span>
                   </div>
                 )}
                 {data.contactInfo.address && (
-                  <div className="text-text-light dark:text-text-dark flex items-center">
+                  <div className="flex items-center opacity-80">
                     <MapPin className="mr-2 h-4 w-4" />
                     <span className="text-sm">{data.contactInfo.address}</span>
                   </div>
@@ -96,7 +103,7 @@ export function FooterStyle2({
 
               {/* Social Links - Horizontal Layout */}
               <div>
-                <h4 className="text-heading-light dark:text-heading-dark mb-3 font-semibold">
+                <h4 className="mb-3 font-semibold">
                   Follow Us
                 </h4>
                 {data.socialLinks.length > 0 ? (
@@ -105,7 +112,7 @@ export function FooterStyle2({
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white hover:text-gray-900"
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white/10 hover:opacity-80"
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -144,7 +151,7 @@ export function FooterStyle2({
                       <li key={link.id}>
                         {isEditable ? (
                           <button
-                            className="text-text-light dark:text-text-dark hover:text-primary text-left transition-colors dark:hover:text-white"
+                            className="text-left transition-colors opacity-80 hover:opacity-100"
                             onClick={
                               isEditable ? e => e.preventDefault() : undefined
                             }
@@ -183,12 +190,15 @@ export function FooterStyle2({
               ))}
             {/* Newsletter Section */}
             {data.newsletter?.enabled && (
-              <div className="mt-12 border-t border-gray-300 pt-8 dark:border-gray-700">
+              <div 
+                className="mt-12 border-t pt-8"
+                style={{ borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)" }}
+              >
                 <div className="mx-auto max-w-md text-center">
                   <h4 className="text-heading-light dark:text-heading-dark mb-2 font-semibold">
                     {data.newsletter.title}
                   </h4>
-                  <p className="text-text-light dark:text-text-dark mb-4 text-sm">
+                  <p className="mb-4 text-sm opacity-80">
                     {data.newsletter.description}
                   </p>
                   <NewsletterForm isEditable={isEditable} theme={theme} />
@@ -198,8 +208,11 @@ export function FooterStyle2({
           </div>
 
           {/* Copyright */}
-          <div className="mx-auto mt-12 flex flex-col items-center gap-4 border-t border-gray-300 pt-8 text-center dark:border-gray-700">
-            <p className="text-text-light dark:text-text-dark flex items-center justify-center gap-1 text-sm">
+          <div 
+            className="mx-auto mt-12 flex flex-col items-center gap-4 border-t pt-8 text-center"
+            style={{ borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)" }}
+          >
+            <p className="flex items-center justify-center gap-1 text-sm opacity-80">
               {getProcessedCopyright(data.copyright, data.companyName)}
               <Heart className="inline h-3 w-3 text-red-500" />
             </p>
@@ -214,7 +227,7 @@ export function FooterStyle2({
                       pathname,
                       isEditable
                     )}
-                    className="text-text-light dark:text-text-dark hover:text-primary text-sm transition-colors"
+                            className="text-sm transition-colors opacity-80 hover:opacity-100"
                     target={
                       link.href?.startsWith("http") ||
                       link.href?.startsWith("mailto:")

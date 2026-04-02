@@ -22,7 +22,7 @@ interface FooterStyle5Props {
 const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <h3 className="mb-6 text-2xl font-bold tracking-wide text-white uppercase">
+  <h3 className="mb-6 text-2xl font-bold tracking-wide uppercase">
     {children}
   </h3>
 );
@@ -39,21 +39,21 @@ const LinkItem: React.FC<{
   return (
     <li className="mb-3">
       {isEditable ? (
-        <span className="group flex cursor-default items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white">
+        <span className="group flex cursor-pointer items-center text-[15px] font-medium opacity-80 transition-colors duration-200 hover:opacity-100">
           <ChevronRight
             size={16}
-            className="mr-2 text-gray-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-white"
+            className="mr-2 opacity-70 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
           />
           {label}
         </span>
       ) : (
         <Link
           href={generateLinkHref(href, siteUser, pathname, isEditable)}
-          className="group flex items-center text-[15px] font-medium text-gray-300 transition-colors duration-200 hover:text-white"
+          className="group flex cursor-pointer items-center text-[15px] font-medium opacity-80 transition-colors duration-200 hover:opacity-100"
         >
           <ChevronRight
             size={16}
-            className="mr-2 text-gray-400 transition-all duration-200 group-hover:translate-x-1 group-hover:text-white"
+            className="mr-2 opacity-70 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
           />
           {label}
         </Link>
@@ -99,7 +99,13 @@ export function FooterStyle5({
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[#0b1221] pt-16 pb-8 font-sans text-white">
+    <footer
+      className="relative overflow-hidden pt-16 pb-8 font-sans"
+      style={{
+        backgroundColor: footerData.backgroundColor || "#0b1221",
+        color: footerData.textColor || "white",
+      }}
+    >
       {/* Subtle Background Elements to mimic the bridge/cityscape watermark */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -184,7 +190,7 @@ export function FooterStyle5({
                 <a
                   key={social.id}
                   href={social.href || "#"}
-                  className="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition-all duration-300 hover:border-white hover:bg-white hover:text-[#0b1221]"
+                  className="flex h-10 w-10 items-center justify-center rounded border border-current opacity-70 transition-all duration-300 hover:opacity-100"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -210,10 +216,10 @@ export function FooterStyle5({
         {data.newsletter?.enabled && (
           <div className="mb-12 border-t border-gray-800 pt-12">
             <div className="mx-auto max-w-md text-center">
-              <h3 className="mb-4 text-xl font-bold tracking-wide text-white uppercase">
+              <h3 className="mb-4 text-xl font-bold tracking-wide  uppercase">
                 {data.newsletter.title}
               </h3>
-              <p className="mb-6 text-sm text-gray-400">
+              <p className="mb-6 text-sm opacity-70">
                 {data.newsletter.description}
               </p>
               <NewsletterForm isEditable={isEditable} theme={theme} />
@@ -222,10 +228,13 @@ export function FooterStyle5({
         )}
 
         {/* Separator */}
-        <div className="mb-8 h-px w-full bg-gray-800" />
+        <div 
+          className="mb-8 h-px w-full" 
+          style={{ backgroundColor: footerData.textColor ? footerData.textColor + "20" : "rgba(255,255,255,0.1)" }}
+        />
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-400 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 text-sm opacity-70 md:flex-row">
           {/* Left: Copyright */}
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
             <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
@@ -243,7 +252,7 @@ export function FooterStyle5({
                   pathname,
                   isEditable
                 )}
-                className="transition-colors hover:text-white"
+                className="cursor-pointer transition-colors hover:opacity-100"
                 target={
                   link.href?.startsWith("http") ||
                   link.href?.startsWith("mailto:")

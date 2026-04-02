@@ -47,7 +47,15 @@ export function FooterStyle4({
   const section2 = data.sections[1];
 
   return (
-    <footer className="border-t border-gray-800 bg-[#1A1A1A] font-sans text-white">
+    <footer
+      style={{
+        backgroundColor: footerData.backgroundColor || "#1A1A1A",
+        color: footerData.textColor || "white",
+        borderColor: footerData.textColor
+          ? footerData.textColor + "20"
+          : "rgba(255,255,255,0.1)",
+      }}
+    >
       <div className="mx-auto w-full max-w-[1440px]">
         {/* Top Section */}
         <div className="flex flex-col lg:flex-row">
@@ -56,16 +64,16 @@ export function FooterStyle4({
             <div className="mb-6 flex items-center gap-3">
               <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
-            <p className="max-w-md text-lg leading-relaxed text-gray-400">
+            <p className="max-w-md text-lg leading-relaxed opacity-70">
               {data.description}
             </p>
 
             {data.newsletter?.enabled && (
               <div className="mt-12">
-                <h3 className="mb-6 text-lg font-medium text-white">
+                <h3 className="mb-6 text-lg font-medium">
                   {data.newsletter.title}
                 </h3>
-                <p className="mb-6 text-sm leading-relaxed text-gray-400">
+                <p className="mb-6 text-sm leading-relaxed opacity-70">
                   {data.newsletter.description}
                 </p>
                 <NewsletterForm isEditable={isEditable} theme={theme} />
@@ -76,18 +84,23 @@ export function FooterStyle4({
           {/* Column 2 & 3 & 4 Container */}
           <div className="flex w-full flex-col md:flex-row lg:w-[60%]">
             {/* Links Columns */}
-            <div className="flex flex-1 gap-12 border-b border-gray-800 p-8 sm:gap-20 md:border-r md:border-b-0 lg:p-16">
+            <div
+              className="flex flex-1 gap-12 border-b p-8 sm:gap-20 md:border-r md:border-b-0 lg:p-16"
+              style={{
+                borderColor: footerData.textColor
+                  ? footerData.textColor + "20"
+                  : "rgba(255,255,255,0.1)",
+              }}
+            >
               {/* Quick Links (Section 1) */}
               {section1 && (
                 <div className="flex flex-col gap-6">
-                  <h3 className="text-lg font-medium text-white">
-                    {section1.title}
-                  </h3>
+                  <h3 className="text-lg font-medium">{section1.title}</h3>
                   <ul className="space-y-4">
                     {section1.links.map(link => (
                       <li key={link.id}>
                         {isEditable ? (
-                          <span className="cursor-default font-medium text-gray-400 transition-colors hover:text-white">
+                          <span className="cursor-pointer font-medium opacity-70 transition-colors hover:opacity-100">
                             {link.text}
                           </span>
                         ) : (
@@ -98,7 +111,7 @@ export function FooterStyle4({
                               pathname,
                               isEditable
                             )}
-                            className="font-medium text-gray-400 transition-colors hover:text-white"
+                            className="font-medium opacity-70 transition-colors hover:opacity-100"
                             target={
                               link.href?.startsWith("http") ||
                               link.href?.startsWith("mailto:")
@@ -124,14 +137,12 @@ export function FooterStyle4({
               {/* Pages (Section 2) */}
               {section2 && (
                 <div className="flex flex-col gap-6">
-                  <h3 className="text-lg font-medium text-white">
-                    {section2.title}
-                  </h3>
+                  <h3 className="text-lg font-medium">{section2.title}</h3>
                   <ul className="space-y-4">
                     {section2.links.map(link => (
                       <li key={link.id}>
                         {isEditable ? (
-                          <span className="cursor-default font-medium text-gray-400 transition-colors hover:text-white">
+                          <span className="cursor-pointer font-medium opacity-70 transition-colors hover:opacity-100">
                             {link.text}
                           </span>
                         ) : (
@@ -142,7 +153,7 @@ export function FooterStyle4({
                               pathname,
                               isEditable
                             )}
-                            className="font-medium text-gray-400 transition-colors hover:text-white"
+                            className="font-medium opacity-70 transition-colors hover:opacity-100"
                             target={
                               link.href?.startsWith("http") ||
                               link.href?.startsWith("mailto:")
@@ -171,10 +182,10 @@ export function FooterStyle4({
               {data.contactInfo.address && (
                 <div className="flex items-start gap-4">
                   <div className="mt-1">
-                    <MapPin className="h-6 w-6 stroke-[1.5] text-white" />
+                    <MapPin className="h-6 w-6 stroke-[1.5]" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-lg leading-snug font-medium text-white">
+                    <span className="text-lg leading-snug font-medium">
                       {data.contactInfo.address}
                     </span>
                   </div>
@@ -183,13 +194,13 @@ export function FooterStyle4({
 
               <div className="flex items-start gap-4">
                 <div className="mt-1">
-                  <Mail className="h-6 w-6 stroke-[1.5] text-white" />
+                  <Mail className="h-6 w-6 stroke-[1.5]" />
                 </div>
                 <div className="flex flex-col">
                   {data.contactInfo.email && (
                     <a
                       href={`mailto:${data.contactInfo.email}`}
-                      className="text-lg font-medium text-white transition-colors hover:text-gray-300"
+                      className="text-lg font-medium transition-colors hover:opacity-80"
                     >
                       {data.contactInfo.email}
                     </a>
@@ -197,7 +208,7 @@ export function FooterStyle4({
                   {data.contactInfo.phone && (
                     <a
                       href={`tel:${data.contactInfo.phone}`}
-                      className="mt-1 text-lg font-medium text-white transition-colors hover:text-gray-300"
+                      className="mt-1 text-lg font-medium transition-colors hover:opacity-80"
                     >
                       {data.contactInfo.phone}
                     </a>
@@ -209,14 +220,21 @@ export function FooterStyle4({
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-start justify-between gap-6 border-t border-gray-800 px-8 py-8 md:flex-row md:items-center lg:px-16">
+        <div
+          className="flex flex-col items-start justify-between gap-6 border-t px-8 py-8 md:flex-row md:items-center lg:px-16"
+          style={{
+            borderColor: footerData.textColor
+              ? footerData.textColor + "20"
+              : "rgba(255,255,255,0.1)",
+          }}
+        >
           {/* Social Links */}
-          <div className="flex items-center gap-6 font-medium text-white">
+          <div className="flex items-center gap-6 font-medium">
             {data.socialLinks.map(social => (
               <a
                 key={social.id}
                 href={social.href || "#"}
-                className="group flex items-center gap-1 transition-colors hover:text-gray-300"
+                className="group flex items-center gap-1 transition-colors hover:opacity-80"
                 target={social.href?.startsWith("http") ? "_blank" : undefined}
                 rel={
                   social.href?.startsWith("http")
@@ -226,18 +244,17 @@ export function FooterStyle4({
               >
                 <SocialIcon platform={social.platform} className="h-4 w-4" />
                 <span>{social.platform}</span>
-                <ChevronRight className="h-4 w-4 text-white group-hover:text-gray-300" />
+                <ChevronRight className="h-4 w-4 group-hover:opacity-80" />
               </a>
             ))}
           </div>
 
           {/* Copyright & Policies */}
-          <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed text-gray-300 md:items-end md:text-right md:text-base">
+          <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed md:items-end md:text-right md:text-base">
             <div>
               <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
               <p>
-                Powered By{" "}
-                <span className="font-medium text-white">Nepdora</span>
+                Powered By <span className="font-medium">Nepdora</span>
               </p>
             </div>
             {data.policyLinks && data.policyLinks.length > 0 && (
@@ -251,7 +268,7 @@ export function FooterStyle4({
                       pathname,
                       isEditable
                     )}
-                    className="text-sm text-gray-400 transition-colors hover:text-white"
+                    className="cursor-pointer text-sm opacity-70 transition-colors hover:opacity-100"
                     target={
                       link.href?.startsWith("http") ||
                       link.href?.startsWith("mailto:")

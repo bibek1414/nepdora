@@ -36,6 +36,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -83,6 +84,13 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
   const { data: wishlistData } = useWishlist();
   const wishlistCount = wishlistData?.length || 0;
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: {
+      primary: "#000000",
+      primaryForeground: "#FFFFFF",
+    },
+  };
 
   const [topBarItems, setTopBarItems] = useState<TopBarItem[]>(
     initialTopBarItems || [
@@ -185,8 +193,14 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
 
   return (
     <>
-      <div className="bg-white">
-        <div className="bg-black">
+      <div
+        className="bg-white"
+        style={{ backgroundColor: navbarData.backgroundColor || "white" }}
+      >
+        <div 
+          className="transition-colors"
+          style={{ backgroundColor: theme.colors.primary }}
+        >
           <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-xs sm:px-6 lg:px-8">
             <div className="flex items-center gap-4">
               {links.slice(0, 3).map((link, index) => (
@@ -203,7 +217,8 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                         }}
                         isEditable={isEditable}
                         siteUser={siteUser}
-                        className="flex cursor-pointer items-center gap-1.5 text-white hover:text-white/80"
+                        className="flex cursor-pointer items-center gap-1.5 transition-colors hover:opacity-80"
+                        style={{ color: theme.colors.primaryForeground }}
                         textPlaceholder="Link text..."
                         hrefPlaceholder="Enter URL..."
                       />
@@ -230,18 +245,22 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                           : undefined
                       }
                       onClick={e => handleLinkClick(e, link.href)}
-                      className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
+                      className={`flex items-center gap-1.5 transition-colors hover:opacity-80 ${
                         disableClicks
                           ? "cursor-default opacity-60"
                           : "cursor-pointer"
                       }`}
+                      style={{ color: theme.colors.primaryForeground }}
                     >
                       {link.text}
                     </Link>
                   )}
 
                   {index < Math.min(3, links.length) - 1 && (
-                    <span className="h-4 w-px bg-white/30"></span>
+                    <span 
+                      className="h-4 w-px opacity-30"
+                      style={{ backgroundColor: theme.colors.primaryForeground }}
+                    ></span>
                   )}
                 </React.Fragment>
               ))}
@@ -251,7 +270,8 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   onClick={onAddLink}
                   variant="ghost"
                   size="sm"
-                  className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
+                  className="pointer-events-auto h-7 px-2 hover:bg-white/10"
+                  style={{ color: theme.colors.primaryForeground }}
                 >
                   Link
                 </Button>
@@ -269,14 +289,16 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                           handleTopBarItemTextChange(item.id, newText)
                         }
                         isEditable={isEditable}
-                        className="text-center text-white hover:text-white/90"
+                        className="text-center transition-colors hover:opacity-90"
+                        style={{ color: theme.colors.primaryForeground }}
                         placeholder="Enter text..."
                       />
                       <Button
                         onClick={() => handleDeleteTopBarItem(item.id)}
                         variant="ghost"
                         size="sm"
-                        className="pointer-events-auto ml-1 flex h-6 w-6 items-center justify-center p-0 text-white transition-opacity group-hover:opacity-100 hover:bg-white/20 hover:text-white"
+                        className="pointer-events-auto ml-1 flex h-6 w-6 items-center justify-center p-0 transition-opacity group-hover:opacity-100 hover:bg-white/10"
+                        style={{ color: theme.colors.primaryForeground }}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -312,11 +334,12 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                       onClick={e =>
                         disableClicks ? e.preventDefault() : undefined
                       }
-                      className={`flex items-center gap-1.5 text-white hover:text-white/80 ${
+                      className={`flex items-center gap-1.5 transition-colors hover:opacity-80 ${
                         disableClicks
                           ? "cursor-default opacity-60"
                           : "cursor-pointer"
                       }`}
+                      style={{ color: theme.colors.primaryForeground }}
                     >
                       <span
                         className="mx-auto max-w-3xl text-sm"
@@ -326,7 +349,10 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   )}
 
                   {index < topBarItems.length - 1 && (
-                    <span className="h-4 w-px bg-white/30"></span>
+                    <span 
+                      className="h-4 w-px opacity-30"
+                      style={{ backgroundColor: theme.colors.primaryForeground }}
+                    ></span>
                   )}
                 </React.Fragment>
               ))}
@@ -336,7 +362,8 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   onClick={handleAddTopBarItem}
                   variant="ghost"
                   size="sm"
-                  className="pointer-events-auto h-7 px-2 text-white hover:bg-white/20 hover:text-white"
+                  className="pointer-events-auto h-7 px-2 hover:bg-white/10"
+                  style={{ color: theme.colors.primaryForeground }}
                 >
                   Add Item
                 </Button>
@@ -351,6 +378,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
             className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${
               disableClicks ? "pointer-events-none" : ""
             }`}
+            style={{ color: navbarData.textColor || "inherit" }}
           >
             <div className="flex h-20 items-center justify-between">
               <div
@@ -399,7 +427,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                     className={`relative flex items-center gap-1 ${
                       disableClicks
                         ? "pointer-events-auto cursor-default opacity-60"
-                        : ""
+                        : "cursor-pointer"
                     }`}
                   >
                     <Heart className="h-5 w-5" />
@@ -443,7 +471,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                         className={`flex items-center gap-2 ${
                           disableClicks
                             ? "pointer-events-auto cursor-default opacity-60"
-                            : ""
+                            : "cursor-pointer"
                         }`}
                         onClick={
                           disableClicks ? e => e.preventDefault() : undefined
@@ -461,7 +489,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                       </Button>
                     </DropdownMenuTrigger>
                     {!disableClicks && !isEditable && (
-                      <DropdownMenuContent className="w-48" align="end">
+                      <DropdownMenuContent 
+                        className="w-48" 
+                        align="end"
+                        style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                      >
                         {isAuthenticated ? (
                           <>
                             <DropdownMenuItem
