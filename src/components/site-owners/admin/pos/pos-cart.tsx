@@ -5,19 +5,18 @@ import {
   Trash2,
   Plus,
   Minus,
-  CreditCard,
-  Banknote,
   ShoppingBag,
+  ReceiptText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePOS } from "@/contexts/POSContext";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { useCreateAdminOrder } from "@/hooks/owner-site/admin/use-orders";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 import { POSOrderSummaryDialog } from "./pos-order-summary-dialog";
+import { cn } from "@/lib/utils";
 
 export default function POSCart() {
   const {
@@ -62,7 +61,7 @@ export default function POSCart() {
       delivery_charge: "0",
       payment_type: "cash",
       is_paid: true,
-      status: "delivered", // POS orders are usually completed immediately
+      status: "delivered",
       discount_amount: discountAmount.toFixed(2),
       customer: selectedCustomer?.id || null,
       pos_order: true,
@@ -91,7 +90,6 @@ export default function POSCart() {
       });
       setShowSummary(true);
 
-      // Clear cart and reset state immediately after success
       clearCart();
       setAmountPaid(0);
     } catch (error: any) {
@@ -111,116 +109,139 @@ export default function POSCart() {
     });
   };
 
+  const itemCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className="mb-3 flex shrink-0 items-center gap-2 text-gray-700">
-        <ShoppingBag className="h-5 w-5" />
-        <span className="font-medium">Current Order</span>
+      {/* Header */}
+      <div className="mb-4 flex shrink-0 items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <ShoppingBag className="h-4 w-4 text-primary" />
+          </div>
+          <span className="text-sm font-semibold text-foreground">Current Order</span>
+        </div>
+        {itemCount > 0 && (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-semibold text-primary-foreground">
+            {itemCount}
+          </span>
+        )}
       </div>
 
+      {/* Cart Lines */}
       <div className="min-h-0 flex-1">
         {cartItems.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-100 py-10 text-gray-400">
-            <ShoppingBag className="mb-2 h-12 w-12 opacity-10" />
-            <p className="text-sm">Your cart is empty</p>
-            <p className="mt-1 px-4 text-center text-xs opacity-60">
-              Add items to get started
-            </p>
+          <div className="flex h-full flex-col items-center justify-center rounded-xl border border-dashed border-border py-10 text-muted-foreground">
+            <ShoppingBag className="mb-3 h-10 w-10 opacity-20" />
+            <p className="text-sm font-medium">Cart is empty</p>
+            <p className="mt-0.5 text-xs opacity-70">Select products to get started</p>
           </div>
         ) : (
-          <ScrollArea className="-mr-4 h-full pr-4">
-            <div className="space-y-3 pb-4">
-              {cartItems.map(item => (
-                <div key={item.id} className="group flex gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-1 text-sm font-medium text-gray-900">
-                      {item.product.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Rs.{" "}
-                      {parseFloat(
-                        item.selectedVariant
-                          ? item.selectedVariant.price
-                          : item.product.price
-                      ).toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-8 items-center rounded-lg border border-gray-100 bg-gray-50 px-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-gray-400 hover:text-gray-900"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
-                        }
+          <ScrollArea className="-mr-3 h-full pr-3">
+            <div className="space-y-1 pb-4">
+              {cartItems.map(item => {
+                const price = parseFloat(
+                  item.selectedVariant
+                    ? item.selectedVariant.price
+                    : item.product.price
+                );
+                return (
+                  <div
+                    key={item.id}
+                    className="group flex items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-accent/60"
+                  >
+                    {/* Name + price */}
+                    <div className="min-w-0 flex-1">
+                      <p className="line-clamp-1 text-sm font-medium text-foreground">
+                        {item.product.name}
+                      </p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        Rs. {price.toLocaleString()} each
+                      </p>
+                    </div>
+
+                    {/* Qty controls */}
+                    <div className="flex h-7 items-center rounded-md border border-border bg-background">
+                      <button
+                        className="flex h-7 w-7 cursor-pointer items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
                       >
                         <Minus className="h-3 w-3" />
-                      </Button>
-                      <span className="w-8 text-center text-xs font-semibold">
+                      </button>
+                      <span className="w-7 select-none text-center text-xs font-semibold text-foreground">
                         {item.quantity}
                       </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-gray-400 hover:text-gray-900"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
+                      <button
+                        className="flex h-7 w-7 cursor-pointer items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       >
                         <Plus className="h-3 w-3" />
-                      </Button>
+                      </button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-gray-300 transition-colors hover:text-red-500"
+
+                    {/* Line total */}
+                    <span className="w-16 text-right text-sm font-semibold text-foreground">
+                      Rs.{" "}
+                      {(price * item.quantity).toLocaleString()}
+                    </span>
+
+                    {/* Remove */}
+                    <button
+                      className="ml-1 flex h-6 w-6 cursor-pointer shrink-0 items-center justify-center rounded text-muted-foreground/40 opacity-0 transition-all group-hover:opacity-100 hover:text-destructive focus:outline-none"
                       onClick={() => removeFromCart(item.id)}
                     >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </ScrollArea>
         )}
       </div>
 
-      <div className="mt-auto shrink-0 space-y-3 border-t border-gray-100 bg-white pt-4">
-        <div className="flex justify-between text-sm text-gray-600">
-          <span>Sub-total</span>
-          <span className="font-medium">Rs. {subTotal.toLocaleString()}</span>
+      {/* Totals & Actions */}
+      <div className="mt-auto shrink-0 space-y-3 border-t border-border pt-4">
+        {/* Subtotal */}
+        <div className="flex justify-between text-sm">
+          <span className="text-muted-foreground">Subtotal</span>
+          <span className="font-medium text-foreground">
+            Rs. {subTotal.toLocaleString()}
+          </span>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
+        {/* Discount row */}
+        <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Discount</span>
-            <div className="ml-1 flex items-center gap-1.5">
+            <span className="text-sm text-muted-foreground">Discount</span>
+            <div className="flex items-center gap-1.5">
               <span
-                className={`text-[10px] font-medium ${discount.type === "flat" ? "text-gray-400" : "text-primary"}`}
+                className={cn(
+                  "text-[10px] font-medium transition-colors",
+                  discount.type === "percentage" ? "text-primary" : "text-muted-foreground"
+                )}
               >
                 %
               </span>
               <Switch
                 checked={discount.type === "flat"}
                 onCheckedChange={toggleDiscountType}
-                className="scale-90"
+                className="scale-75"
               />
               <span
-                className={`text-[10px] font-medium ${discount.type === "percentage" ? "text-gray-400" : "text-primary"}`}
+                className={cn(
+                  "text-[10px] font-medium transition-colors",
+                  discount.type === "flat" ? "text-primary" : "text-muted-foreground"
+                )}
               >
                 Flat
               </span>
             </div>
           </div>
-          <div className="relative w-32">
-            <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-xs text-gray-400">
-              {discount.type === "flat" ? "amount" : "%"}
-            </span>
+          <div className="relative w-28">
             <Input
               type="text"
-              className="h-9 border-gray-100 bg-gray-50 placeholder:text-gray-400"
+              className="h-8 border-border bg-muted/40 pr-8 text-right text-sm placeholder:text-muted-foreground focus:bg-background"
               value={discount.value === 0 ? "" : discount.value}
               onChange={e =>
                 setDiscount({
@@ -230,44 +251,56 @@ export default function POSCart() {
               }
               placeholder="0"
             />
+            <span className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-[10px] text-muted-foreground">
+              {discount.type === "flat" ? "Rs" : "%"}
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-600">
-              Amount Paid
+        {discountAmount > 0 && (
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Discount applied</span>
+            <span className="font-medium text-destructive">
+              - Rs. {discountAmount.toLocaleString()}
             </span>
           </div>
-          <div className="relative w-32">
-            <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-xs text-gray-400">
-              Rs.
-            </span>
+        )}
+
+        {/* Amount Paid */}
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-sm text-muted-foreground">Amount received</span>
+          <div className="relative w-28">
             <Input
               type="text"
-              className="h-9 border-gray-100 bg-gray-50 placeholder:text-gray-400"
+              className="h-8 border-border bg-muted/40 pr-8 text-right text-sm placeholder:text-muted-foreground focus:bg-background"
               value={amountPaid === 0 ? "" : amountPaid}
               onChange={e => setAmountPaid(parseFloat(e.target.value) || 0)}
               placeholder={total.toString()}
             />
+            <span className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-[10px] text-muted-foreground">
+              Rs
+            </span>
           </div>
         </div>
 
-        <Separator />
-
-        <div className="flex items-center justify-between py-1">
-          <span className="text-lg font-bold text-gray-800">Total</span>
-          <span className="text-primary text-xl font-semibold">
+        {/* Divider + Total */}
+        <div className="flex items-center justify-between rounded-lg bg-primary/5 px-4 py-3">
+          <span className="text-base font-semibold text-foreground">Total</span>
+          <span className="text-xl font-bold text-primary">
             Rs. {total.toLocaleString()}
           </span>
         </div>
 
+        {/* Checkout */}
         <Button
-          className="bg-primary hover:bg-primary/80 h-14 w-full rounded-xl text-lg font-bold text-white shadow-lg shadow-green-100 transition-all active:scale-[0.98]"
+          className="group relative h-12 w-full overflow-hidden rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98] disabled:opacity-50"
           disabled={cartItems.length === 0 || createOrderMutation.isPending}
           onClick={handleCheckout}
         >
-          {createOrderMutation.isPending ? "Processing..." : "Complete Payment"}
+          <span className="flex items-center justify-center gap-2">
+            <ReceiptText className="h-4 w-4" />
+            {createOrderMutation.isPending ? "Processing…" : "Complete Payment"}
+          </span>
         </Button>
       </div>
 

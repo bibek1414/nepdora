@@ -5,12 +5,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { CheckCircle2, Receipt, Undo2 } from "lucide-react";
+import { CheckCircle2, RotateCcw } from "lucide-react";
 
 interface POSOrderSummaryDialogProps {
   open: boolean;
@@ -31,52 +28,53 @@ export function POSOrderSummaryDialog({
 }: POSOrderSummaryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="flex flex-col items-center justify-center space-y-2">
-          <div className="rounded-full bg-green-100 p-3">
-            <CheckCircle2 className="h-8 w-8 text-green-600" />
+      <DialogContent className="sm:max-w-sm">
+        {/* Success header */}
+        <DialogHeader className="flex flex-col items-center justify-center gap-3 py-2">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+            <CheckCircle2 className="h-7 w-7 text-primary" />
           </div>
-          <DialogTitle className="text-2xl font-bold">
-            Order Successful!
-          </DialogTitle>
-          <DialogDescription>
-            The order has been processed correctly.
-          </DialogDescription>
+          <div className="space-y-0.5 text-center">
+            <DialogTitle className="text-xl font-semibold text-foreground">
+              Payment received
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              Order has been processed successfully
+            </p>
+          </div>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          <div className="space-y-2 rounded-xl bg-gray-50 p-4">
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>Total Bill</span>
-              <span className="font-semibold text-gray-900">
-                Rs. {total.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>Amount Paid</span>
-              <span className="font-semibold text-gray-900">
-                Rs. {amountPaid.toLocaleString()}
-              </span>
-            </div>
-            <Separator className="my-2" />
-            <div className="flex justify-between text-lg font-bold">
-              <span className="text-gray-900">Change to Return</span>
-              <span className="text-primary">
-                Rs. {change.toLocaleString()}
-              </span>
-            </div>
+        {/* Receipt rows */}
+        <div className="space-y-1 rounded-xl border border-border bg-muted/30 px-4 py-3">
+          <div className="flex items-center justify-between py-1.5">
+            <span className="text-sm text-muted-foreground">Total bill</span>
+            <span className="text-sm font-semibold text-foreground">
+              Rs. {total.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex items-center justify-between py-1.5">
+            <span className="text-sm text-muted-foreground">Amount paid</span>
+            <span className="text-sm font-semibold text-foreground">
+              Rs. {amountPaid.toLocaleString()}
+            </span>
+          </div>
+          <div className="my-1 border-t border-border" />
+          <div className="flex items-center justify-between py-1.5">
+            <span className="text-sm font-medium text-foreground">Change to return</span>
+            <span className="text-lg font-bold text-primary">
+              Rs. {change.toLocaleString()}
+            </span>
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col gap-2 sm:flex-row">
-          <Button
-            className="bg-primary hover:bg-primary flex-1 gap-2 rounded-xl"
-            onClick={onClose}
-          >
-            <Undo2 className="h-4 w-4" />
-            New Order
-          </Button>
-        </DialogFooter>
+        {/* Action */}
+        <Button
+          className="h-11 w-full rounded-xl bg-primary font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.98]"
+          onClick={onClose}
+        >
+          <RotateCcw className="mr-2 h-4 w-4" />
+          Start new order
+        </Button>
       </DialogContent>
     </Dialog>
   );

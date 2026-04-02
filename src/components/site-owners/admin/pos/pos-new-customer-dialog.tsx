@@ -6,13 +6,13 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRegisterCustomer } from "@/hooks/owner-site/admin/use-customers";
 import { toast } from "sonner";
+import { UserPlus } from "lucide-react";
 
 interface POSNewCustomerDialogProps {
   open: boolean;
@@ -61,9 +61,7 @@ export default function POSNewCustomerDialog({
     }
 
     try {
-      const result = await registerMutation.mutateAsync({
-        ...formData,
-      });
+      const result = await registerMutation.mutateAsync({ ...formData });
       onSuccess(result);
       onOpenChange(false);
       setFormData({ first_name: "", last_name: "", email: "", phone: "" });
@@ -74,14 +72,23 @@ export default function POSNewCustomerDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Register New Customer</DialogTitle>
+      <DialogContent className="sm:max-w-[420px]">
+        <DialogHeader className="flex flex-row items-center gap-3 space-y-0 pb-1">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <UserPlus className="h-4 w-4 text-primary" />
+          </div>
+          <DialogTitle className="text-base font-semibold text-foreground">
+            Register new customer
+          </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="first_name">First Name</Label>
+
+        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+          {/* Name row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="first_name" className="text-xs font-medium text-foreground">
+                First name
+              </Label>
               <Input
                 id="first_name"
                 value={formData.first_name}
@@ -89,10 +96,13 @@ export default function POSNewCustomerDialog({
                   setFormData({ ...formData, first_name: e.target.value })
                 }
                 placeholder="John"
+                className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="last_name">Last Name</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="last_name" className="text-xs font-medium text-foreground">
+                Last name
+              </Label>
               <Input
                 id="last_name"
                 value={formData.last_name}
@@ -100,11 +110,16 @@ export default function POSNewCustomerDialog({
                   setFormData({ ...formData, last_name: e.target.value })
                 }
                 placeholder="Doe"
+                className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
               />
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+
+          {/* Phone */}
+          <div className="space-y-1.5">
+            <Label htmlFor="phone" className="text-xs font-medium text-foreground">
+              Phone number
+            </Label>
             <Input
               id="phone"
               value={formData.phone}
@@ -112,10 +127,15 @@ export default function POSNewCustomerDialog({
                 setFormData({ ...formData, phone: e.target.value })
               }
               placeholder="98XXXXXXXX"
+              className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+
+          {/* Email */}
+          <div className="space-y-1.5">
+            <Label htmlFor="email" className="text-xs font-medium text-foreground">
+              Email address
+            </Label>
             <Input
               id="email"
               type="email"
@@ -124,19 +144,28 @@ export default function POSNewCustomerDialog({
                 setFormData({ ...formData, email: e.target.value })
               }
               placeholder="john@example.com"
+              className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
             />
           </div>
-          <DialogFooter>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-1">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 h-10 border-border text-sm"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
             <Button
               type="submit"
               disabled={registerMutation.isPending}
-              className="w-full"
+              className="flex-1 h-10 bg-primary text-sm text-primary-foreground hover:bg-primary/90 active:scale-[0.98]"
             >
-              {registerMutation.isPending
-                ? "Registering..."
-                : "Register Customer"}
+              {registerMutation.isPending ? "Registering…" : "Register customer"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

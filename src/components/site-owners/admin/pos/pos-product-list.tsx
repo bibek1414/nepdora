@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Search, ShoppingCart, Plus, Filter } from "lucide-react";
+import { Search, ShoppingCart, Plus, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
@@ -20,63 +19,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function POSProductList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("all");
-  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<string>(
-    "all"
-  );
+  const [selectedCategorySlug, setSelectedCategorySlug] = useState<string>("all");
+  const [selectedSubCategorySlug, setSelectedSubCategorySlug] = useState<string>("all");
 
   const { addToCart } = usePOS();
+  const PAGE_SIZE = 24;
 
-  const PAGE_SIZE = 24; // Increased page size for better view
-
-  // Fetch categories
   const { data: categoriesData } = useCategories({ page_size: 100 });
 
-  // Fetch subcategories based on selected category
+  // Find the selected category's ID for sub-category filtering
+  const selectedCategory = categoriesData?.results?.find(
+    (c: any) => c.slug === selectedCategorySlug
+  );
+
   const { data: subCategoriesData } = useSubCategories({
-    category:
-      selectedCategoryId !== "all" ? parseInt(selectedCategoryId) : undefined,
+    category: selectedCategory?.id,
     page_size: 100,
   });
-
   const { data: productsData, isLoading } = useProducts({
     search: searchTerm,
     page: currentPage,
     page_size: PAGE_SIZE,
-    category_id:
-      selectedCategoryId !== "all" ? parseInt(selectedCategoryId) : undefined,
-    sub_category_id:
-      selectedSubCategoryId !== "all"
-        ? parseInt(selectedSubCategoryId)
-        : undefined,
+    category: selectedCategorySlug !== "all" ? selectedCategorySlug : undefined,
+    sub_category:
+      selectedSubCategorySlug !== "all" ? selectedSubCategorySlug : undefined,
   });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1);
   };
 
   const handleCategoryChange = (value: string) => {
-    setSelectedCategoryId(value);
-    setSelectedSubCategoryId("all"); // Reset subcategory when category changes
+    setSelectedCategorySlug(value);
+    setSelectedSubCategorySlug("all");
     setCurrentPage(1);
   };
 
   const handleSubCategoryChange = (value: string) => {
-    setSelectedSubCategoryId(value);
+    setSelectedSubCategorySlug(value);
     setCurrentPage(1);
   };
 
   const clearFilters = () => {
     setSearchTerm("");
-    setSelectedCategoryId("all");
-    setSelectedSubCategoryId("all");
+    setSelectedCategorySlug("all");
+    setSelectedSubCategorySlug("all");
     setCurrentPage(1);
   };
 
@@ -84,161 +77,186 @@ export default function POSProductList() {
     ? Math.ceil(productsData.count / PAGE_SIZE)
     : 0;
 
+  const hasActiveFilters =
+    searchTerm || selectedCategorySlug !== "all" || selectedSubCategorySlug !== "all";
+
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       {/* Search & Filter Header */}
-      <div className="flex flex-col border-b border-gray-100 bg-white p-4">
-        <div className="flex flex-col gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Search products by name..."
-              className="h-12 border-none bg-gray-50 pl-10 text-base placeholder:text-gray-400 focus:bg-white"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </div>
+      <div className="shrink-0 space-y-3 border-b border-border bg-card px-4 py-3">
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search products…"
+            className="h-10 border-border bg-muted/40 pl-9 text-sm placeholder:text-muted-foreground focus:bg-background"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          {searchTerm && (
+            <button
+              onClick={() => { setSearchTerm(""); setCurrentPage(1); }}
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex flex-1 items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
-              <Button
-                variant={selectedCategoryId === "all" ? "default" : "outline"}
-                size="sm"
-                className={cn(
-                  "h-9 shrink-0 rounded-full px-4 text-xs font-medium",
-                  selectedCategoryId === "all" && "bg-primary text-white"
-                )}
-                onClick={() => handleCategoryChange("all")}
-              >
-                All Categories
-              </Button>
-              {categoriesData?.results?.map((category: any) => (
-                <Button
-                  key={category.id}
-                  variant={
-                    selectedCategoryId === category.id.toString()
-                      ? "default"
-                      : "outline"
-                  }
-                  size="sm"
-                  className={cn(
-                    "h-9 shrink-0 rounded-full px-4 text-xs font-medium transition-all",
-                    selectedCategoryId === category.id.toString()
-                      ? "bg-primary text-white shadow-sm"
-                      : "hover:bg-gray-100"
-                  )}
-                  onClick={() => handleCategoryChange(category.id.toString())}
-                >
-                  {category.name}
-                </Button>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="w-[180px]">
-                <Select
-                  value={selectedSubCategoryId}
-                  onValueChange={handleSubCategoryChange}
-                  disabled={selectedCategoryId === "all"}
-                >
-                  <SelectTrigger className="h-9 rounded-lg border-gray-200 bg-white px-3 text-xs focus:ring-1">
-                    <SelectValue placeholder="Sub Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Sub-categories</SelectItem>
-                    {subCategoriesData?.results?.map((sub: any) => (
-                      <SelectItem key={sub.id} value={sub.id.toString()}>
-                        {sub.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {(searchTerm ||
-                selectedCategoryId !== "all" ||
-                selectedSubCategoryId !== "all") && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="h-9 px-2 text-gray-500 hover:text-red-500"
-                >
-                  <X className="mr-1 h-4 w-4" />
-                  Clear
-                </Button>
+        {/* Category Pills + Sub-category Select */}
+        <div className="flex items-center gap-2">
+          {/* Scrollable pill row */}
+          <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-hide">
+            <button
+              onClick={() => handleCategoryChange("all")}
+              className={cn(
+                "inline-flex h-7 shrink-0 items-center rounded-full px-3 text-xs font-medium transition-all cursor-pointer focus:outline-none",
+                selectedCategorySlug === "all"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               )}
-            </div>
+            >
+              All
+            </button>
+            {categoriesData?.results?.map((category: any) => (
+              <button
+                key={category.id}
+                onClick={() => handleCategoryChange(category.slug)}
+                className={cn(
+                  "inline-flex h-7 shrink-0 items-center rounded-full px-3 text-xs font-medium transition-all cursor-pointer focus:outline-none",
+                  selectedCategorySlug === category.slug
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                )}
+              >
+                {category.name}
+              </button>
+            ))}
           </div>
+
+          {/* Sub-category */}
+          <div className="shrink-0">
+            <Select
+              value={selectedSubCategorySlug}
+              onValueChange={handleSubCategoryChange}
+              disabled={selectedCategorySlug === "all"}
+            >
+              <SelectTrigger className="h-7 w-[160px] rounded-full border-border bg-muted/40 px-3 text-xs focus:ring-1">
+                <SelectValue placeholder="Sub-category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All sub-categories</SelectItem>
+                {subCategoriesData?.results?.map((sub: any) => (
+                  <SelectItem key={sub.id} value={sub.slug}>
+                    {sub.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Clear filters */}
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:text-destructive focus:outline-none"
+            >
+              <X className="h-3 w-3" />
+              Clear
+            </button>
+          )}
         </div>
       </div>
 
       {/* Product Grid */}
-      <ScrollArea className="flex-1 overflow-y-auto p-4">
-        {isLoading ? (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {[...Array(10)].map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square animate-pulse rounded-xl bg-gray-100"
-              />
-            ))}
-          </div>
-        ) : productsData?.results && productsData.results.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 pb-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-            {productsData.results.map((product: any) => (
-              <Card
-                key={product.id}
-                className="group hover:border-primary cursor-pointer overflow-hidden border-gray-100 p-0 transition-all hover:shadow-md"
-                onClick={() => addToCart(product, 1)}
-              >
-                <div className="relative aspect-square overflow-hidden bg-gray-50">
-                  <Image
-                    src={
-                      product.thumbnail_image || "/fallback/image-not-found.png"
-                    }
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-colors group-hover:bg-black/5 group-hover:opacity-100">
-                    <div className="bg-primary flex h-10 w-10 translate-y-2 transform items-center justify-center rounded-full text-white shadow-lg transition-transform group-hover:translate-y-0">
-                      <Plus className="h-6 w-6" />
-                    </div>
+      <ScrollArea className="flex-1 overflow-y-auto">
+        <div className="p-4">
+          {isLoading ? (
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden rounded-xl border border-border bg-muted"
+                >
+                  <div className="aspect-square animate-pulse bg-muted" />
+                  <div className="space-y-2 p-3">
+                    <div className="h-3 w-3/4 animate-pulse rounded bg-muted-foreground/20" />
+                    <div className="h-3 w-1/2 animate-pulse rounded bg-muted-foreground/10" />
                   </div>
                 </div>
-                <div className="p-3">
-                  <p className="line-clamp-2 h-10 text-sm leading-tight font-medium text-gray-800">
-                    {product.name}
-                  </p>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-primary text-base font-bold">
-                      Rs. {parseFloat(product.price).toLocaleString()}
-                    </span>
+              ))}
+            </div>
+          ) : productsData?.results && productsData.results.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 pb-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              {productsData.results.map((product: any) => (
+                <button
+                  key={product.id}
+                  className="group cursor-pointer overflow-hidden rounded-xl border border-border bg-card text-left transition-all hover:border-primary/60 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  onClick={() => addToCart(product, 1)}
+                >
+                  {/* Image */}
+                  <div className="relative aspect-square overflow-hidden bg-muted">
+                    <Image
+                      src={product.thumbnail_image || "/fallback/image-not-found.png"}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    {/* Add overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 transition-all duration-200 group-hover:bg-foreground/10">
+                      <div className="flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-all duration-200 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
+                        <Plus className="h-4 w-4" />
+                      </div>
+                    </div>
+                    {/* Low stock badge */}
                     {product.stock <= 5 && (
-                      <Badge
-                        variant="destructive"
-                        className="h-4 px-1.5 py-0 text-[10px]"
-                      >
-                        {product.stock === 0 ? "Out" : `Low: ${product.stock}`}
-                      </Badge>
+                      <div className="absolute top-2 right-2">
+                        <Badge
+                          variant={product.stock === 0 ? "destructive" : "outline"}
+                          className={cn(
+                            "h-5 px-1.5 text-[9px] font-semibold",
+                            product.stock > 0 &&
+                              "border-amber-200 bg-amber-50 text-amber-700"
+                          )}
+                        >
+                          {product.stock === 0 ? "Out of stock" : `${product.stock} left`}
+                        </Badge>
+                      </div>
                     )}
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="flex h-full flex-col items-center justify-center py-20 text-gray-400">
-            <ShoppingCart className="mb-4 h-16 w-16 opacity-20" />
-            <p className="text-lg">No products found</p>
-          </div>
-        )}
+
+                  {/* Info */}
+                  <div className="p-2.5">
+                    <p className="line-clamp-2 min-h-10 text-xs font-medium leading-relaxed text-foreground">
+                      {product.name}
+                    </p>
+                    <p className="mt-1 text-sm font-bold text-primary">
+                      Rs. {parseFloat(product.price).toLocaleString()}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex h-64 flex-col items-center justify-center text-muted-foreground">
+              <ShoppingCart className="mb-3 h-12 w-12 opacity-20" />
+              <p className="text-sm font-medium">No products found</p>
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="mt-2 cursor-pointer text-xs text-primary underline underline-offset-2 hover:no-underline"
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </ScrollArea>
 
       {/* Pagination */}
-      {productsData?.results && productsData.results.length > 0 && (
-        <div className="border-t border-gray-100 bg-gray-50/50">
+      {productsData?.results && productsData.results.length > 0 && totalPages > 1 && (
+        <div className="shrink-0 border-t border-border bg-muted/30">
           <SimplePagination
             currentPage={currentPage}
             totalPages={totalPages}
