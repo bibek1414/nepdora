@@ -14,7 +14,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
-export type Timeframe = "monthly" | "yearly";
+export type Timeframe = "all" | "monthly" | "yearly";
 
 interface AnalyticsFiltersProps {
   timeframe: Timeframe;
@@ -31,7 +31,7 @@ export default function AnalyticsFilters({
   setDateRange,
   isLoading,
 }: AnalyticsFiltersProps) {
-  const isFiltered = dateRange !== undefined || timeframe !== "monthly";
+  const isFiltered = dateRange !== undefined || timeframe !== "all";
 
   return (
     <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
@@ -42,6 +42,7 @@ export default function AnalyticsFilters({
         className="w-full sm:w-auto"
       >
         <TabsList className="w-full border bg-slate-50/50 shadow-none sm:w-auto">
+          <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="monthly">Monthly</TabsTrigger>
           <TabsTrigger value="yearly">Yearly</TabsTrigger>
         </TabsList>
@@ -91,7 +92,7 @@ export default function AnalyticsFilters({
           className="h-9 border bg-white px-3 text-xs text-gray-800 shadow-none hover:bg-slate-50"
           onClick={() => {
             setDateRange(undefined);
-            setTimeframe("monthly");
+            setTimeframe("all");
           }}
         >
           <X className="mr-1 h-3 w-3" />

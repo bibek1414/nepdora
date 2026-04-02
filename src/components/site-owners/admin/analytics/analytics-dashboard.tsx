@@ -17,7 +17,7 @@ import { useAnalyticsStats } from "@/hooks/owner-site/admin/use-analytics-stats"
 import { DateRange } from "react-day-picker";
 
 export default function AnalyticsDashboard() {
-  const [timeframe, setTimeframe] = useState<Timeframe>("monthly");
+  const [timeframe, setTimeframe] = useState<Timeframe>("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const apiParams = useMemo(() => {
@@ -36,8 +36,7 @@ export default function AnalyticsDashboard() {
     }
 
     // Map timeframe to month/year if needed by backend
-    // If backend only uses start/end date, timeframe might just be for UI grouping
-    // But user snippet suggested month/year params too
+    // If timeframe is "all", no month or year params will be sent
     if (timeframe === "monthly") {
       params.month = (new Date().getMonth() + 1).toString();
     }

@@ -14,8 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 import { FolderOpen, RefreshCw } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-
+import Image from "next/image";
 interface PortfoliosTableProps {
   portfolios: Portfolio[];
   onEdit: (portfolio: Portfolio) => void;
@@ -66,6 +65,9 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
         <TableHeader>
           <TableRow className="border-b border-black/5">
             <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Image
+            </TableHead>
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
               Project Info
             </TableHead>
             <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
@@ -79,6 +81,7 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
             </TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {portfolios.map(portfolio => (
             <TableRow
@@ -86,6 +89,15 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
               className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
               onClick={() => onEdit(portfolio)}
             >
+              <TableCell className="px-6 py-4">
+                <Image
+                src={portfolio.thumbnail_image || "/fallback/image-not-found.png"}
+                alt={portfolio.title}
+                width={50}
+                height={50}
+                className="rounded-md"
+                />
+                </TableCell>
               <TableCell className="px-6 py-4">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm font-normal text-black">

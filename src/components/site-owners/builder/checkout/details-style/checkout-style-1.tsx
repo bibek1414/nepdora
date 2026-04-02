@@ -292,7 +292,7 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
           : "";
 
       const orderConfirmUrl = prefix
-        ? `${prefix}/order-confirmation-draft`
+        ? `${prefix}/order-confirmation-draft/${order.id}`
         : `/order-confirmation/${order.id}`;
 
       const esewaUrl = prefix
