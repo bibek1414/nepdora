@@ -6,28 +6,78 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
+import { useCategories } from "@/hooks/owner-site/admin/use-category";
+import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import { usePOS } from "@/contexts/POSContext";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { SimplePagination } from "@/components/ui/simple-pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function POSProductList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("all");
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<string>(
+    "all"
+  );
+
   const { addToCart } = usePOS();
 
-  const PAGE_SIZE = 20;
+  const PAGE_SIZE = 24; // Increased page size for better view
+
+  // Fetch categories
+  const { data: categoriesData } = useCategories({ page_size: 100 });
+
+  // Fetch subcategories based on selected category
+  const { data: subCategoriesData } = useSubCategories({
+    category:
+      selectedCategoryId !== "all" ? parseInt(selectedCategoryId) : undefined,
+    page_size: 100,
+  });
 
   const { data: productsData, isLoading } = useProducts({
     search: searchTerm,
     page: currentPage,
     page_size: PAGE_SIZE,
+    category_id:
+      selectedCategoryId !== "all" ? parseInt(selectedCategoryId) : undefined,
+    sub_category_id:
+      selectedSubCategoryId !== "all"
+        ? parseInt(selectedSubCategoryId)
+        : undefined,
   });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on search
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategoryId(value);
+    setSelectedSubCategoryId("all"); // Reset subcategory when category changes
+    setCurrentPage(1);
+  };
+
+  const handleSubCategoryChange = (value: string) => {
+    setSelectedSubCategoryId(value);
+    setCurrentPage(1);
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedCategoryId("all");
+    setSelectedSubCategoryId("all");
+    setCurrentPage(1);
   };
 
   const totalPages = productsData?.count
@@ -36,16 +86,90 @@ export default function POSProductList() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
-      {/* Search Header */}
-      <div className="flex items-center gap-4 border-b border-gray-100 bg-white p-4">
-        <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Search products by name..."
-            className="h-12 border-none bg-gray-50 pl-10 text-base placeholder:text-gray-400 focus:bg-white"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+      {/* Search & Filter Header */}
+      <div className="flex flex-col border-b border-gray-100 bg-white p-4">
+        <div className="flex flex-col gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder="Search products by name..."
+              className="h-12 border-none bg-gray-50 pl-10 text-base placeholder:text-gray-400 focus:bg-white"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-1 items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
+              <Button
+                variant={selectedCategoryId === "all" ? "default" : "outline"}
+                size="sm"
+                className={cn(
+                  "h-9 shrink-0 rounded-full px-4 text-xs font-medium",
+                  selectedCategoryId === "all" && "bg-primary text-white"
+                )}
+                onClick={() => handleCategoryChange("all")}
+              >
+                All Categories
+              </Button>
+              {categoriesData?.results?.map((category: any) => (
+                <Button
+                  key={category.id}
+                  variant={
+                    selectedCategoryId === category.id.toString()
+                      ? "default"
+                      : "outline"
+                  }
+                  size="sm"
+                  className={cn(
+                    "h-9 shrink-0 rounded-full px-4 text-xs font-medium transition-all",
+                    selectedCategoryId === category.id.toString()
+                      ? "bg-primary text-white shadow-sm"
+                      : "hover:bg-gray-100"
+                  )}
+                  onClick={() => handleCategoryChange(category.id.toString())}
+                >
+                  {category.name}
+                </Button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="w-[180px]">
+                <Select
+                  value={selectedSubCategoryId}
+                  onValueChange={handleSubCategoryChange}
+                  disabled={selectedCategoryId === "all"}
+                >
+                  <SelectTrigger className="h-9 rounded-lg border-gray-200 bg-white px-3 text-xs focus:ring-1">
+                    <SelectValue placeholder="Sub Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Sub-categories</SelectItem>
+                    {subCategoriesData?.results?.map((sub: any) => (
+                      <SelectItem key={sub.id} value={sub.id.toString()}>
+                        {sub.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {(searchTerm ||
+                selectedCategoryId !== "all" ||
+                selectedSubCategoryId !== "all") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="h-9 px-2 text-gray-500 hover:text-red-500"
+                >
+                  <X className="mr-1 h-4 w-4" />
+                  Clear
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 

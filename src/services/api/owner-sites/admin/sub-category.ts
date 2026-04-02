@@ -37,6 +37,10 @@ export const useSubCategoryApi = {
       queryParams.append("search", search);
     }
 
+    if (params.category) {
+      queryParams.append("category", params.category.toString());
+    }
+
     if (sortBy) {
       queryParams.append("sort_by", sortBy);
       queryParams.append("sort_order", sortOrder);
