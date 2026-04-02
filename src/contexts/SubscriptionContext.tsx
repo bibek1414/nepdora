@@ -9,6 +9,7 @@ interface SubscriptionContextType {
   isActive: boolean;
   isLoading: boolean;
   isError: boolean;
+  isUnauthorized: boolean;
   refetch: () => void;
 }
 
@@ -17,13 +18,19 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
 );
 
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
-  const { data, isPending, isError, refetch } = useSubscriptionStatus();
+  const { data, isPending, error, refetch } = useSubscriptionStatus();
+
+  const isUnauthorized =
+    (error as any)?.status === 401 ||
+    (error as any)?.data?.status === 401 ||
+    (error as any)?.data?.error?.code === 401;
 
   const value: SubscriptionContextType = {
     subscription: data,
     isActive: data?.active ?? false,
     isLoading: isPending && !data,
-    isError,
+    isError: !!error && !isUnauthorized,
+    isUnauthorized,
     refetch,
   };
 

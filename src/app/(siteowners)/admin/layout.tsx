@@ -14,7 +14,7 @@ export default async function AdminLayout({
   const user = await getServerUser();
 
   if (!user) {
-    redirect("/admin/login");
+    redirect("/permission-denied");
   }
 
   return (

@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 
+import { headers } from "next/headers";
+
 export const metadata: Metadata = {
   title: "Permission Denied | Nepdora",
   description:
     "You don’t have permission to view this page. Please log in to the correct tenant.",
 };
 
-export default function PermissionDeniedPage() {
+export default async function PermissionDeniedPage() {
+  const headersList = await headers();
+  const host = headersList.get("host") || "";
   const protocol = siteConfig.isDev ? "http" : siteConfig.protocol;
-  const homeUrl = `${protocol}://${siteConfig.baseDomain}/`;
-  const loginUrl = `${protocol}://${siteConfig.baseDomain}/admin/login`;
+
+  const homeUrl = `${protocol}://${siteConfig.isDev ? `localhost:${siteConfig.frontendDevPort}` : siteConfig.baseDomain}/`;
+  const loginUrl = `${protocol}://${host}/admin/login`;
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 p-6 text-gray-900">

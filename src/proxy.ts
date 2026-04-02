@@ -408,6 +408,17 @@ export async function proxy(request: NextRequest) {
         const hasAuthCookies =
           !!request.cookies.get("authToken")?.value ||
           !!request.cookies.get("authUser")?.value;
+
+        // 1. Check builder-specific path mismatch (e.g. sazal.host/builder/bibek/...)
+        if (pathname.startsWith("/builder")) {
+          const pathSegments = pathname.split("/");
+          const pathTenant = pathSegments[2]; // /builder/[siteUser]/...
+          if (pathTenant && pathTenant !== subdomain) {
+            return redirectToPermissionDenied(request);
+          }
+        }
+
+        // 2. Check auth cookie mismatch (if logged in as bibek but on sazal.host)
         // If we can't even determine which tenant the cookie belongs to,
         // fail closed and deny access when user appears authenticated.
         if (hasAuthCookies && (!authSubdomain || authSubdomain !== subdomain)) {

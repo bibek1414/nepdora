@@ -92,9 +92,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
             fontFamily: theme?.fonts?.body,
           }}
         >
-          {service.description.length > 200
-            ? service.description.substring(0, 200) + "..."
-            : service.description}
+          <div dangerouslySetInnerHTML={{ __html: service.description }} />
         </p>
 
         {/* Arrow — hidden on hover */}

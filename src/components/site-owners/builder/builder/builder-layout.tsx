@@ -78,8 +78,39 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       setHost(window.location.host);
+
+      // Client-side tenant validation
+      const currentHost = window.location.hostname;
+      let hostSubdomain = "";
+      if (currentHost.endsWith(".localhost")) {
+        hostSubdomain = currentHost.replace(".localhost", "");
+      } else {
+        const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com";
+        if (currentHost.endsWith(`.${baseDomain}`)) {
+          hostSubdomain = currentHost.replace(`.${baseDomain}`, "");
+        }
+      }
+
+      // If we have a subdomain in the host AND it doesn't match siteUser from path, redirect.
+      // (Except for 'www' or root domain)
+      if (
+        hostSubdomain &&
+        hostSubdomain !== "www" &&
+        hostSubdomain !== "localhost" &&
+        hostSubdomain !== siteUser
+      ) {
+        console.warn(`[Builder] Tenant mismatch: host=${hostSubdomain}, path=${siteUser}`);
+        router.push("/permission-denied");
+        return;
+      }
+
+      // Also check if logged in user's subdomain matches
+      if (user && user.sub_domain && user.sub_domain !== siteUser) {
+        console.warn(`[Builder] User mismatch: user=${user.sub_domain}, path=${siteUser}`);
+        router.push("/permission-denied");
+      }
     }
-  }, []);
+  }, [siteUser, user, router]);
 
   const liveSiteUrl = React.useMemo(() => {
     if (customDomain) return `https://${customDomain}`;

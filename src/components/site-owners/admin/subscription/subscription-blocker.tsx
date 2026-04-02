@@ -51,6 +51,7 @@ export function SubscriptionBlocker() {
     isActive,
     subscription,
     isLoading: statusLoading,
+    isUnauthorized,
   } = useSubscription();
   const { data: plans, isLoading: plansLoading } = usePricingPlans();
   const { logout } = useAuth(); // Get logout function
@@ -63,13 +64,18 @@ export function SubscriptionBlocker() {
   >(null);
 
   useEffect(() => {
+    if (isUnauthorized) {
+      router.push("/permission-denied");
+      return;
+    }
+
     // Show dialog if subscription is not active
     if (!statusLoading && !isActive) {
       setOpen(true);
     } else {
       setOpen(false);
     }
-  }, [isActive, statusLoading]);
+  }, [isActive, statusLoading, isUnauthorized, router]);
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChoosePlan = (plan: any) => {
@@ -126,7 +132,7 @@ export function SubscriptionBlocker() {
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="h-[115vh] !max-w-5xl scale-85 overflow-y-auto"
+        className="h-[115vh] max-w-5xl! scale-85 overflow-y-auto"
         onInteractOutside={e => e.preventDefault()}
         onKeyDown={e => e.preventDefault()}
         onEscapeKeyDown={e => e.preventDefault()}
@@ -251,7 +257,7 @@ export function SubscriptionBlocker() {
                                   className={`flex items-start gap-2 ${!feature.is_available ? "opacity-50" : ""}`}
                                 >
                                   <Check
-                                    className={`mt-0.5 h-4 w-4 flex-shrink-0 md:h-5 md:w-5 ${feature.is_available ? "text-green-500" : "text-gray-400"}`}
+                                    className={`mt-0.5 h-4 w-4 shrink-0 md:h-5 md:w-5 ${feature.is_available ? "text-green-500" : "text-gray-400"}`}
                                   />
                                   <div className="flex-1">
                                     <span className="text-xs">
@@ -371,7 +377,7 @@ export function SubscriptionBlocker() {
                             onClick={() => setSelectedPaymentMethod(method.id)}
                           >
                             <div className="relative z-10 flex items-center gap-3 md:gap-4">
-                              <div className="relative h-8 w-8 flex-shrink-0 md:h-12 md:w-12">
+                              <div className="relative h-8 w-8 shrink-0 md:h-12 md:w-12">
                                 <Image
                                   src={method.image}
                                   alt={method.name}
