@@ -35,19 +35,16 @@ export default async function PermissionDeniedPage({
   }
 
   const homeUrl = `${protocol}://${siteConfig.isDev ? `localhost:${siteConfig.frontendDevPort}` : siteConfig.baseDomain}/`;
-  const dashboardUrl = tenant
-    ? `${protocol}://${tenant}.${siteConfig.baseDomain}/admin`
-    : homeUrl;
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-zinc-50 p-6 text-zinc-900">
       <div className="w-full max-w-xl">
-        <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm">
+        <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-8">
           {/* Decorative background element */}
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-red-50/50" />
+          <div className="absolute top-0 right-0 -mt-16 -mr-16 h-64 w-64 rounded-full bg-red-50/50" />
 
           <div className="relative flex flex-col items-center text-center">
-            <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl bg-red-50 text-red-600 shadow-sm transition-transform hover:scale-105">
+            <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl bg-red-50 text-red-600 transition-transform hover:scale-105">
               <svg
                 width="40"
                 height="40"
@@ -80,12 +77,11 @@ export default async function PermissionDeniedPage({
             <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
               Access Restricted
             </h1>
-            <p className="mt-4 max-w-sm text-base text-zinc-600 leading-relaxed">
+            <p className="mt-4 max-w-sm text-base leading-relaxed text-zinc-600">
               {tenant ? (
                 <>
                   You’re currently logged in, but you don’t have permission to
-                  access the <b>{tenant}</b> account. Please switch accounts or
-                  return home.
+                  access the <b>{tenant}</b> account.
                 </>
               ) : (
                 "You don’t have permission to view this page. You may need to log in to a different account."
@@ -93,14 +89,6 @@ export default async function PermissionDeniedPage({
             </p>
 
             <div className="mt-10 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
-              {tenant && (
-                <a
-                  href={dashboardUrl}
-                  className="inline-flex items-center justify-center rounded-xl bg-zinc-900 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:bg-zinc-800 hover:shadow-lg active:scale-[0.98]"
-                >
-                  Log in as {tenant}
-                </a>
-              )}
               <a
                 href={homeUrl}
                 className="inline-flex items-center justify-center rounded-xl border border-zinc-200 bg-white px-6 py-3.5 text-sm font-semibold text-zinc-600 transition-all hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.98]"
@@ -109,7 +97,7 @@ export default async function PermissionDeniedPage({
               </a>
             </div>
 
-            <div className="mt-12 border-t border-zinc-100 pt-8 w-full">
+            <div className="mt-12 w-full border-t border-zinc-100 pt-8">
               <p className="text-xs text-zinc-400">
                 If you think this is a mistake, please contact support or try
                 logging out.
