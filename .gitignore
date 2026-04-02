@@ -48,3 +48,6 @@ tsx_generator.py
 .agent/
 .agents/
 .gemini/
+scripts/
+.gsd/
+adapters/
