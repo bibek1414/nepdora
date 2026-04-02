@@ -46,7 +46,7 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
   } = useBuilderLogic(aboutUsData, onUpdate);
 
   return (
-    <section className="relative w-full pt-20">
+    <section className="relative w-full py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-20 text-center">
@@ -86,7 +86,7 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
               style={{
                 top: `${120}px`, // stacking offset
                 zIndex: 2, // proper layering
-                height: `${80}vh`,
+                height: `${60}vh`,
               }}
             >
               <div className="cursor-default rounded-[40px] bg-gray-100 transition-all duration-300">
