@@ -2,15 +2,23 @@
 
 import React from "react";
 import { Chart } from "chart.js/auto";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnalyticsStats, DailyStat } from "@/types/owner-site/admin/stats";
-import { Badge } from "@/components/ui/badge";
 
 interface AnalyticsChartsProps {
   data?: AnalyticsStats;
   isLoading?: boolean;
 }
+
+// Status badge color map
+const STATUS_COLORS: Record<string, string> = {
+  completed: "bg-emerald-500",
+  pending: "bg-amber-400",
+  processing: "bg-blue-500",
+  cancelled: "bg-red-400",
+  delivered: "bg-teal-500",
+  shipped: "bg-indigo-400",
+};
 
 export default function AnalyticsCharts({
   data,
@@ -18,89 +26,181 @@ export default function AnalyticsCharts({
 }: AnalyticsChartsProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Skeleton className="h-[300px] w-full rounded-xl" />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <Skeleton className="h-[300px] w-full rounded-xl" />
+        </div>
         <Skeleton className="h-[300px] w-full rounded-xl" />
       </div>
     );
   }
 
-  return (
-    <div className="space-y-6">
-      <Card className="border-none shadow-none">
-        <CardHeader className="px-0!">
-          <CardTitle className="text-lg font-semibold">Sales Trend</CardTitle>
-        </CardHeader>
-        <CardContent className="px-0!">
-          <TrendChart dailyStats={data?.daily_stats || []} />
-        </CardContent>
-      </Card>
+  const totalOrders = data?.orders || 1;
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className="border-none shadow-none">
-          <CardHeader className="flex flex-row items-center justify-start gap-4 px-0!">
-            <CardTitle className="px-0 text-lg font-semibold">
-              Order Channel Distribution
-            </CardTitle>
-            <div className="flex gap-2">
-              <Badge variant="outline">Count</Badge>
-              <Badge variant="outline">Amount</Badge>
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      {/* Sales Trend — full-width left column */}
+      <div className="overflow-hidden rounded-xl border border-black/7 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] lg:col-span-2">
+        <div className="flex items-center justify-between border-b border-black/6 px-6 py-4">
+          <div>
+            <p className="text-[15px] font-semibold text-gray-900">
+              Sales Trend
+            </p>
+            <p className="text-[13px] text-gray-500">
+              Revenue and orders over time
+            </p>
+          </div>
+          {/* Legend */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <div className="h-2.5 w-2.5 rounded-sm bg-blue-500" />
+              <span className="text-[12px] font-medium text-gray-500">
+                Revenue
+              </span>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {data?.channel_distribution.map((item, i) => (
-                <div key={i} className="space-y-1">
-                  <div className="flex justify-start gap-4 text-sm font-medium">
-                    <span>{item.pos_order ? "POS" : "Online"}</span>
-                    <span>
-                      {item.count} orders (
-                      {((item.count / data.orders) * 100).toFixed(1)}%)
+            <div className="flex items-center gap-1.5">
+              <div className="h-0 w-4 border-t-2 border-dashed border-violet-500" />
+              <span className="text-[12px] font-medium text-gray-500">
+                Orders
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="px-6 py-5">
+          <TrendChart dailyStats={data?.daily_stats || []} />
+        </div>
+      </div>
+
+      {/* Right column: Channel + Status */}
+      <div className="flex flex-col gap-6">
+        {/* Channel Distribution */}
+        <div className="rounded-xl border border-black/7 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+          <p className="mb-4 text-[15px] font-semibold text-gray-900">
+            Order Channels
+          </p>
+          <div className="flex flex-col gap-4">
+            {data?.channel_distribution.map((item, i) => {
+              const pct = Math.round((item.count / totalOrders) * 100);
+              const isPos = item.pos_order;
+              return (
+                <div key={i} className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-[13px]">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`h-2 w-2 rounded-full ${isPos ? "bg-orange-400" : "bg-blue-500"}`}
+                      />
+                      <span className="font-medium text-gray-700">
+                        {isPos ? "POS" : "Online"}
+                      </span>
+                    </div>
+                    <span className="font-semibold text-gray-900">
+                      {pct}%
+                      <span className="ml-1 font-normal text-gray-400">
+                        ({item.count})
+                      </span>
                     </span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
                     <div
-                      className={`h-full ${item.pos_order ? "bg-orange-500" : "bg-blue-500"} transition-all duration-1000`}
-                      style={{ width: `${(item.count / data.orders) * 100}%` }}
+                      className={`h-full rounded-full transition-all duration-700 ${isPos ? "bg-orange-400" : "bg-blue-500"}`}
+                      style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <div className="text-muted-foreground text-left text-xs">
+                  <span className="text-[11px] text-gray-400">
                     Rs. {item.amount.toLocaleString()}
-                  </div>
+                  </span>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              );
+            })}
+            {(!data?.channel_distribution ||
+              data.channel_distribution.length === 0) && (
+              <p className="text-[13px] text-gray-400">No data available</p>
+            )}
+          </div>
+        </div>
 
-        <Card className="border-none shadow-none">
-          <CardHeader className="px-0!">
-            <CardTitle className="text-lg font-semibold">
-              Order Status Distribution
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {data?.status_distribution.map((item, i) => (
-                <div key={i} className="space-y-1">
-                  <div className="flex justify-start gap-4 text-sm font-medium">
-                    <span className="capitalize">{item.status}</span>
-                    <span>{item.count}</span>
+        {/* Order Status Distribution */}
+        <div className="rounded-xl border border-black/7 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+          <p className="mb-4 text-[15px] font-semibold text-gray-900">
+            Order Status
+          </p>
+          <div className="flex flex-col gap-3">
+            {data?.status_distribution.map((item, i) => {
+              const pct = Math.round((item.count / totalOrders) * 100);
+              const barColor =
+                STATUS_COLORS[item.status.toLowerCase()] ?? "bg-slate-400";
+              return (
+                <div key={i} className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-[13px]">
+                    <span className="font-medium capitalize text-gray-700">
+                      {item.status}
+                    </span>
+                    <span className="font-semibold text-gray-900">
+                      {pct}%
+                      <span className="ml-1 font-normal text-gray-400">
+                        ({item.count})
+                      </span>
+                    </span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
                     <div
-                      className="h-full bg-green-500 transition-all duration-1000"
-                      style={{ width: `${(item.count / data.orders) * 100}%` }}
+                      className={`h-full rounded-full transition-all duration-700 ${barColor}`}
+                      style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <div className="text-muted-foreground text-left text-xs">
+                  <span className="text-[11px] text-gray-400">
                     Rs. {item.amount.toLocaleString()}
-                  </div>
+                  </span>
                 </div>
-              ))}
+              );
+            })}
+            {(!data?.status_distribution ||
+              data.status_distribution.length === 0) && (
+              <p className="text-[13px] text-gray-400">No data available</p>
+            )}
+          </div>
+        </div>
+
+        {/* Top Cities */}
+        {data?.top_cities && data.top_cities.length > 0 && (
+          <div className="rounded-xl border border-black/7 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <p className="mb-4 text-[15px] font-semibold text-gray-900">
+              Top Cities
+            </p>
+            <div className="flex flex-col gap-3">
+              {(() => {
+                const maxCount = data.top_cities[0]?.count || 1;
+                return data.top_cities.map((item, i) => {
+                  const barPct = Math.round((item.count / maxCount) * 100);
+                  return (
+                    <div key={i} className="flex flex-col gap-1.5">
+                      <div className="flex items-center justify-between text-[13px]">
+                        <span className="font-medium text-gray-700">
+                          {item.city}
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          {item.count}
+                          <span className="ml-1 font-normal text-gray-400">
+                            order{item.count !== 1 ? "s" : ""}
+                          </span>
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                        <div
+                          className="h-full rounded-full bg-indigo-400 transition-all duration-700"
+                          style={{ width: `${barPct}%` }}
+                        />
+                      </div>
+                      <span className="text-[11px] text-gray-400">
+                        Rs. {item.amount.toLocaleString()}
+                      </span>
+                    </div>
+                  );
+                });
+              })()}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -113,9 +213,8 @@ function TrendChart({ dailyStats }: { dailyStats: DailyStat[] }) {
   React.useEffect(() => {
     if (!canvasRef.current || !dailyStats.length) return;
 
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const gridColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
-    const labelColor = isDark ? "#888780" : "#64748b";
+    const gridColor = "rgba(0,0,0,0.05)";
+    const labelColor = "#94a3b8";
 
     chartRef.current?.destroy();
 
@@ -136,22 +235,22 @@ function TrendChart({ dailyStats }: { dailyStats: DailyStat[] }) {
             borderColor: "#3b82f6",
             backgroundColor: (ctx: any) => {
               const { ctx: c, chartArea } = ctx.chart;
-              if (!chartArea) return "rgba(59,130,246,0.1)";
+              if (!chartArea) return "rgba(59,130,246,0.08)";
               const grad = c.createLinearGradient(
                 0,
                 chartArea.top,
                 0,
                 chartArea.bottom
               );
-              grad.addColorStop(0, "rgba(59,130,246,0.22)");
+              grad.addColorStop(0, "rgba(59,130,246,0.18)");
               grad.addColorStop(1, "rgba(59,130,246,0)");
               return grad;
             },
-            borderWidth: 2.5,
+            borderWidth: 2,
             pointRadius: 3,
             pointHoverRadius: 5,
             pointBackgroundColor: "#3b82f6",
-            pointBorderColor: isDark ? "#1e1e1e" : "#fff",
+            pointBorderColor: "#fff",
             pointBorderWidth: 2,
             fill: "origin",
             tension: 0.4,
@@ -162,12 +261,12 @@ function TrendChart({ dailyStats }: { dailyStats: DailyStat[] }) {
             yAxisID: "yOrd",
             borderColor: "#8b5cf6",
             backgroundColor: "transparent",
-            borderWidth: 2,
+            borderWidth: 1.5,
             borderDash: [5, 4],
             pointRadius: 3,
             pointHoverRadius: 5,
             pointBackgroundColor: "#8b5cf6",
-            pointBorderColor: isDark ? "#1e1e1e" : "#fff",
+            pointBorderColor: "#fff",
             pointBorderWidth: 2,
             fill: false,
             tension: 0.4,
@@ -181,11 +280,11 @@ function TrendChart({ dailyStats }: { dailyStats: DailyStat[] }) {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: isDark ? "#2c2c2a" : "#ffffff",
-            borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)",
+            backgroundColor: "#ffffff",
+            borderColor: "rgba(0,0,0,0.08)",
             borderWidth: 1,
-            titleColor: isDark ? "#c2c0b6" : "#3d3d3a",
-            bodyColor: isDark ? "#888780" : "#64748b",
+            titleColor: "#1e293b",
+            bodyColor: "#64748b",
             padding: 10,
             callbacks: {
               label: (ctx: any) => {
@@ -209,13 +308,8 @@ function TrendChart({ dailyStats }: { dailyStats: DailyStat[] }) {
               color: labelColor,
               font: { size: 11 },
               callback: (v: string | number) => {
-                const numericValue = typeof v === "string" ? parseFloat(v) : v;
-                return (
-                  "Rs." +
-                  (numericValue >= 1000
-                    ? (numericValue / 1000).toFixed(0) + "k"
-                    : numericValue)
-                );
+                const n = typeof v === "string" ? parseFloat(v) : v;
+                return "Rs." + (n >= 1000 ? (n / 1000).toFixed(0) + "k" : n);
               },
             },
             border: { display: false },
@@ -235,24 +329,14 @@ function TrendChart({ dailyStats }: { dailyStats: DailyStat[] }) {
 
   if (!dailyStats.length)
     return (
-      <div className="text-muted-foreground flex h-full items-center justify-center">
-        No data available
+      <div className="flex h-[220px] items-center justify-center text-[13px] text-gray-400">
+        No data available for this period
       </div>
     );
 
   return (
-    <div className="relative w-full" style={{ height: 260 }}>
+    <div className="relative w-full" style={{ height: 220 }}>
       <canvas ref={canvasRef} />
-      <div className="text-muted-foreground absolute top-0 right-6 flex gap-4 text-xs font-medium">
-        <div className="flex items-center gap-1.5">
-          <div className="h-2.5 w-2.5 rounded-sm bg-blue-500" />
-          <span>Revenue</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-0 w-3 border-t-2 border-dashed border-purple-500" />
-          <span>Orders</span>
-        </div>
-      </div>
     </div>
   );
 }

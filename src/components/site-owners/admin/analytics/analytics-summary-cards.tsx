@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnalyticsStats } from "@/types/owner-site/admin/stats";
 import {
@@ -12,93 +11,101 @@ import {
   Truck,
   DollarSign,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface AnalyticsSummaryCardsProps {
   data?: AnalyticsStats;
   isLoading?: boolean;
 }
 
+const cards = (data?: AnalyticsStats) => [
+  {
+    title: "Revenue",
+    value: `Rs. ${data?.revenue?.toLocaleString() ?? "0"}`,
+    icon: DollarSign,
+    iconClass: "text-blue-600",
+    iconBg: "bg-blue-50",
+    accent: "border-blue-100",
+  },
+  {
+    title: "Orders",
+    value: String(data?.orders ?? 0),
+    icon: ShoppingBag,
+    iconClass: "text-violet-600",
+    iconBg: "bg-violet-50",
+    accent: "border-violet-100",
+  },
+  {
+    title: "Delivery Charge",
+    value: `Rs. ${data?.delivery_charge?.toLocaleString() ?? "0"}`,
+    icon: Truck,
+    iconClass: "text-orange-600",
+    iconBg: "bg-orange-50",
+    accent: "border-orange-100",
+  },
+  {
+    title: "Online Payments",
+    value: `Rs. ${data?.online_payments?.toLocaleString() ?? "0"}`,
+    icon: CreditCard,
+    iconClass: "text-emerald-600",
+    iconBg: "bg-emerald-50",
+    accent: "border-emerald-100",
+  },
+  {
+    title: "Unique Customers",
+    value: String(data?.unique_customers ?? 0),
+    icon: Users,
+    iconClass: "text-indigo-600",
+    iconBg: "bg-indigo-50",
+    accent: "border-indigo-100",
+  },
+  {
+    title: "Avg Order Value",
+    value: `Rs. ${data?.average_order_value?.toFixed(0) ?? "0"}`,
+    icon: TrendingUp,
+    iconClass: "text-rose-600",
+    iconBg: "bg-rose-50",
+    accent: "border-rose-100",
+  },
+];
+
 export default function AnalyticsSummaryCards({
   data,
   isLoading,
 }: AnalyticsSummaryCardsProps) {
-  const cards = [
-    {
-      title: "Revenue",
-      value: `Rs. ${data?.revenue?.toLocaleString() ?? 0}`,
-      icon: DollarSign,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-    },
-    {
-      title: "Orders",
-      value: data?.orders ?? 0,
-      icon: ShoppingBag,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-    },
-    {
-      title: "Delivery Charge",
-      value: `Rs. ${data?.delivery_charge?.toLocaleString() ?? 0}`,
-      icon: Truck,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
-    },
-    {
-      title: "Online Payments",
-      value: `Rs. ${data?.online_payments?.toLocaleString() ?? 0}`,
-      icon: CreditCard,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-    },
-    {
-      title: "Unique Customers",
-      value: data?.unique_customers ?? 0,
-      icon: Users,
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-50",
-    },
-    {
-      title: "Avg Order Value",
-      value: `Rs. ${data?.average_order_value?.toFixed(2) ?? 0}`,
-      icon: TrendingUp,
-      color: "text-pink-600",
-      bgColor: "bg-pink-50",
-    },
-  ];
-
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 w-full rounded-xl" />
+          <Skeleton key={i} className="h-[88px] w-full rounded-xl" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-      {cards.map((card, i) => (
-        <Card
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      {cards(data).map((card, i) => (
+        <div
           key={i}
-          className="border bg-white p-4 shadow-none transition-all hover:bg-slate-50/50"
+          className={`flex flex-col gap-3 rounded-xl border border-black/[0.07] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.07)]`}
         >
-          <div className="flex items-center gap-4">
-            <div className={cn("shrink-0 rounded-xl p-2.5", card.bgColor)}>
-              <card.icon className={cn("h-5 w-5", card.color)} />
-            </div>
-            <div className="flex min-w-0 flex-col">
-              <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-                {card.title}
-              </span>
-              <span className="truncate text-lg font-bold text-gray-900">
-                {card.value}
-              </span>
-            </div>
+          {/* Icon */}
+          <div
+            className={`flex h-8 w-8 items-center justify-center rounded-lg ${card.iconBg}`}
+          >
+            <card.icon className={`h-4 w-4 ${card.iconClass}`} />
           </div>
-        </Card>
+
+          {/* Value */}
+          <div className="flex flex-col gap-0.5">
+            <span className="truncate text-[17px] font-semibold leading-tight text-gray-900">
+              {card.value}
+            </span>
+            <span className="text-[13px] font-medium text-gray-500">
+              {card.title}
+            </span>
+          </div>
+        </div>
       ))}
     </div>
   );

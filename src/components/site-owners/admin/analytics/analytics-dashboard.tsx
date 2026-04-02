@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import {
-  format,
-  subDays,
-  startOfMonth,
-  startOfYear,
-  endOfMonth,
-  endOfYear,
-} from "date-fns";
+import { format } from "date-fns";
 import AnalyticsFilters, { Timeframe } from "./analytics-filters";
 import AnalyticsSummaryCards from "./analytics-summary-cards";
 import AnalyticsCharts from "./analytics-charts";
@@ -35,8 +28,6 @@ export default function AnalyticsDashboard() {
       params.end_date = format(dateRange.to, "yyyy-MM-dd");
     }
 
-    // Map timeframe to month/year if needed by backend
-    // If timeframe is "all", no month or year params will be sent
     if (timeframe === "monthly") {
       params.month = (new Date().getMonth() + 1).toString();
     }
@@ -47,17 +38,21 @@ export default function AnalyticsDashboard() {
     return params;
   }, [dateRange, timeframe]);
 
-  const { data, isLoading, isError } = useAnalyticsStats(apiParams);
+  const { data, isLoading } = useAnalyticsStats(apiParams);
 
   return (
-    <div className="flex flex-col gap-8 p-6">
-      <div className="flex flex-col gap-6 border-b px-5 pb-6 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Sales Overview
-          </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Monitor your business performance and sales trends.
+    <div className="flex flex-col gap-8 px-6 py-7">
+      {/* Header */}
+      <div className="flex flex-col gap-5 border-b border-black/6 pb-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-[22px] font-semibold tracking-[-0.01em] text-gray-900">
+              Sales Overview
+            </h1>
+          </div>
+          <p className="text-sm text-gray-500">
+            Monitor your business performance and sales trends across all
+            channels.
           </p>
         </div>
         <AnalyticsFilters
@@ -69,11 +64,14 @@ export default function AnalyticsDashboard() {
         />
       </div>
 
+      {/* Summary Metrics */}
       <AnalyticsSummaryCards data={data} isLoading={isLoading} />
 
+      {/* Charts */}
       <AnalyticsCharts data={data} isLoading={isLoading} />
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      {/* Product Tables — Top & Least */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <TopSellingProducts
           title="Top Selling Products"
           products={data?.top_selling_products || []}
@@ -86,15 +84,14 @@ export default function AnalyticsDashboard() {
         />
       </div>
 
-      <div className="mt-4">
-        <TopSellingProducts
-          title="Revenue Contribution By Product"
-          products={data?.revenue_contribution_by_product || []}
-          isLoading={isLoading}
-          showPercentage={true}
-          totalRevenue={data?.revenue}
-        />
-      </div>
+      {/* Revenue Contribution */}
+      <TopSellingProducts
+        title="Revenue Contribution by Product"
+        products={data?.revenue_contribution_by_product || []}
+        isLoading={isLoading}
+        showPercentage={true}
+        totalRevenue={data?.revenue}
+      />
     </div>
   );
 }

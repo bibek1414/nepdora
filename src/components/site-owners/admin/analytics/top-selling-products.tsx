@@ -9,9 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProductStat } from "@/types/owner-site/admin/stats";
+import { PackageSearch } from "lucide-react";
 import Image from "next/image";
 
 interface TopSellingProductsProps {
@@ -22,6 +22,17 @@ interface TopSellingProductsProps {
   totalRevenue?: number;
 }
 
+function RankBadge({ rank }: { rank: number }) {
+  const base =
+    "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold";
+  if (rank === 1) return <span className={`${base} bg-amber-50 text-amber-600`}>1</span>;
+  if (rank === 2) return <span className={`${base} bg-slate-100 text-slate-500`}>2</span>;
+  if (rank === 3) return <span className={`${base} bg-orange-50 text-orange-500`}>3</span>;
+  return (
+    <span className={`${base} bg-gray-50 text-gray-400`}>{rank}</span>
+  );
+}
+
 export default function TopSellingProducts({
   title,
   products,
@@ -29,61 +40,104 @@ export default function TopSellingProducts({
   showPercentage,
   totalRevenue,
 }: TopSellingProductsProps) {
+  const maxAmount = products.length > 0 ? products[0].amount : 1;
+
   if (isLoading) {
     return (
-      <Card className="border-none shadow-sm">
-        <CardHeader className="px-0!">
-          <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="rounded-xl border border-black/7 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        <div className="border-b border-black/6 px-6 py-4">
+          <Skeleton className="h-5 w-48" />
+        </div>
+        <div className="space-y-0">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-4 px-6 py-3.5 border-b border-black/4 last:border-0"
+            >
+              <Skeleton className="h-9 w-9 rounded-md shrink-0" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className="h-3.5 w-32" />
+                <Skeleton className="h-2 w-24" />
+              </div>
+              <Skeleton className="h-3.5 w-16" />
+            </div>
+          ))}
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="border-none shadow-sm">
-      <CardHeader className="px-0!">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {products.length === 0 ? (
-          <div className="text-muted-foreground flex h-32 flex-col items-center justify-center">
-            <div className="mb-2 rounded-full bg-slate-100 p-3">
-              <Image
-                src="/images/site-owners/dashboard/dashboard1.svg"
-                alt="No data"
-                width={24}
-                height={24}
-                className="opacity-20"
-              />
-            </div>
-            <p className="text-sm">No data available for this range</p>
+    <div className="rounded-xl border border-black/7 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      {/* Card Header */}
+      <div className="flex items-center justify-between border-b border-black/6 px-6 py-4">
+        <p className="text-[15px] font-semibold text-gray-900">{title}</p>
+        {products.length > 0 && (
+          <span className="text-[12px] font-medium text-gray-400">
+            {products.length} products
+          </span>
+        )}
+      </div>
+
+      {/* Empty state */}
+      {products.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-3 py-14 text-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50">
+            <PackageSearch className="h-5 w-5 text-gray-300" />
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[300px]">Product</TableHead>
-                  <TableHead className="text-left">Qty Sold</TableHead>
-                  <TableHead className="text-left">Amount</TableHead>
-                  {showPercentage && (
-                    <TableHead className="text-left">% Revenue</TableHead>
-                  )}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {products.map((product, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="font-medium">
+          <p className="text-[13px] text-gray-400">
+            No data available for this period
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-black/5 hover:bg-transparent">
+                <TableHead className="w-8 pl-6 text-[12px] font-medium text-gray-400">
+                  #
+                </TableHead>
+                <TableHead className="text-[12px] font-medium text-gray-400">
+                  Product
+                </TableHead>
+                <TableHead className="text-right text-[12px] font-medium text-gray-400">
+                  Qty
+                </TableHead>
+                <TableHead className="text-right text-[12px] font-medium text-gray-400">
+                  Amount
+                </TableHead>
+                {showPercentage && (
+                  <TableHead className="pr-6 text-right text-[12px] font-medium text-gray-400">
+                    Share
+                  </TableHead>
+                )}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {products.map((product, i) => {
+                const revPct =
+                  showPercentage && totalRevenue
+                    ? ((product.amount / totalRevenue) * 100).toFixed(1)
+                    : null;
+                const barPct = Math.min(
+                  (product.amount / maxAmount) * 100,
+                  100
+                );
+
+                return (
+                  <TableRow
+                    key={i}
+                    className="group border-black/4 transition-colors hover:bg-gray-50/60"
+                  >
+                    {/* Rank */}
+                    <TableCell className="pl-6 py-3">
+                      <RankBadge rank={i + 1} />
+                    </TableCell>
+
+                    {/* Product */}
+                    <TableCell className="py-3">
                       <div className="flex items-center gap-3">
-                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border bg-slate-50">
+                        <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md border border-black/6 bg-gray-50">
                           <Image
                             src={
                               product.product__thumbnail_image ||
@@ -94,29 +148,44 @@ export default function TopSellingProducts({
                             className="object-cover"
                           />
                         </div>
-                        <span className="line-clamp-1">
-                          {product.product__name || "Unknown Product"}
-                        </span>
+                        <div className="flex min-w-0 flex-col gap-1">
+                          <span className="line-clamp-1 text-[13px] font-medium text-gray-800">
+                            {product.product__name || "Unknown Product"}
+                          </span>
+                          {/* Relative bar */}
+                          <div className="h-1 w-20 overflow-hidden rounded-full bg-gray-100">
+                            <div
+                              className="h-full rounded-full bg-blue-400 transition-all duration-500"
+                              style={{ width: `${barPct}%` }}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-left">
+
+                    {/* Qty */}
+                    <TableCell className="py-3 text-right text-[13px] text-gray-500">
                       {product.qty_sold}
                     </TableCell>
-                    <TableCell className="text-left font-semibold">
+
+                    {/* Amount */}
+                    <TableCell className={`py-3 text-right text-[13px] font-semibold text-gray-800 ${!showPercentage ? "pr-6" : ""}`}>
                       Rs. {product.amount.toLocaleString()}
                     </TableCell>
-                    {showPercentage && totalRevenue && (
-                      <TableCell className="text-left font-medium text-blue-600">
-                        {((product.amount / totalRevenue) * 100).toFixed(1)}%
+
+                    {/* % Share */}
+                    {showPercentage && (
+                      <TableCell className="pr-6 py-3 text-right text-[13px] font-semibold text-blue-600">
+                        {revPct}%
                       </TableCell>
                     )}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </div>
   );
 }

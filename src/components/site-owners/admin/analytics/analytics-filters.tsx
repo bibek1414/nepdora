@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Popover,
   PopoverContent,
@@ -24,56 +23,68 @@ interface AnalyticsFiltersProps {
   isLoading?: boolean;
 }
 
+const TIMEFRAME_OPTIONS: { label: string; value: Timeframe }[] = [
+  { label: "All time", value: "all" },
+  { label: "This month", value: "monthly" },
+  { label: "This year", value: "yearly" },
+];
+
 export default function AnalyticsFilters({
   timeframe,
   setTimeframe,
   dateRange,
   setDateRange,
-  isLoading,
 }: AnalyticsFiltersProps) {
   const isFiltered = dateRange !== undefined || timeframe !== "all";
 
   return (
-    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-      {/* Timeframe Tabs */}
-      <Tabs
-        value={timeframe}
-        onValueChange={value => setTimeframe(value as Timeframe)}
-        className="w-full sm:w-auto"
-      >
-        <TabsList className="w-full border bg-slate-50/50 shadow-none sm:w-auto">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="monthly">Monthly</TabsTrigger>
-          <TabsTrigger value="yearly">Yearly</TabsTrigger>
-        </TabsList>
-      </Tabs>
+    <div className="flex flex-wrap items-center gap-2">
+      {/* Timeframe pill group */}
+      <div className="flex items-center gap-1 rounded-lg border border-black/8 bg-gray-50 p-1">
+        {TIMEFRAME_OPTIONS.map(opt => (
+          <button
+            key={opt.value}
+            onClick={() => setTimeframe(opt.value)}
+            className={cn(
+              "rounded-md px-3 py-1.5 text-[13px] font-medium transition-all duration-150",
+              timeframe === opt.value
+                ? "bg-white text-gray-900 shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
+                : "text-gray-500 hover:text-gray-700"
+            )}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
 
       {/* Date Range Picker */}
       <Popover>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
+          <button
             className={cn(
-              "w-full justify-start bg-white text-left font-normal shadow-none sm:w-[300px]",
-              !dateRange && "text-muted-foreground"
+              "flex h-[38px] items-center gap-2 rounded-lg border border-black/8 bg-white px-3 text-[13px] font-medium transition-colors hover:bg-gray-50",
+              dateRange ? "text-gray-900" : "text-gray-400"
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="h-3.5 w-3.5 shrink-0 text-gray-400" />
             {dateRange?.from ? (
               dateRange.to ? (
-                <>
-                  {format(dateRange.from, "LLL dd, y")} -{" "}
-                  {format(dateRange.to, "LLL dd, y")}
-                </>
+                <span>
+                  {format(dateRange.from, "MMM d")} —{" "}
+                  {format(dateRange.to, "MMM d, yyyy")}
+                </span>
               ) : (
-                format(dateRange.from, "LLL dd, y")
+                <span>{format(dateRange.from, "MMM d, yyyy")}</span>
               )
             ) : (
-              <span>Pick a date range</span>
+              <span>Custom range</span>
             )}
-          </Button>
+          </button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto border bg-white p-0" align="start">
+        <PopoverContent
+          className="w-auto border border-black/8 bg-white p-0 shadow-[0_8px_24px_rgba(0,0,0,0.1)]"
+          align="end"
+        >
           <Calendar
             mode="range"
             selected={dateRange}
@@ -84,20 +95,18 @@ export default function AnalyticsFilters({
         </PopoverContent>
       </Popover>
 
-      {/* Clear Filters Button */}
+      {/* Clear */}
       {isFiltered && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-9 border bg-white px-3 text-xs text-gray-800 shadow-none hover:bg-slate-50"
+        <button
           onClick={() => {
             setDateRange(undefined);
             setTimeframe("all");
           }}
+          className="flex h-[38px] items-center gap-1.5 rounded-lg border border-black/8 bg-white px-3 text-[13px] font-medium text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
         >
-          <X className="mr-1 h-3 w-3" />
+          <X className="h-3.5 w-3.5" />
           Clear
-        </Button>
+        </button>
       )}
     </div>
   );
