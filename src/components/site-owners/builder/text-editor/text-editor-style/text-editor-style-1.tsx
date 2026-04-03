@@ -17,13 +17,6 @@ export const TextEditorStyle1: React.FC<TextEditorStyleProps> = ({
   onContentChange,
   onImageUpload,
 }) => {
-  const sanitizedContent = useMemo(() => {
-    if (isEditable || !data.content) {
-      return data.content;
-    }
-    return sanitizeContent(data.content);
-  }, [data.content, isEditable]);
-
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="rounded-lg bg-white">
@@ -44,10 +37,13 @@ export const TextEditorStyle1: React.FC<TextEditorStyleProps> = ({
               />
             </div>
           ) : (
-            <div
-              className="prose prose-lg prose-headings:font-semibold prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-2xl prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-xl prose-p:mb-4 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6 prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6 prose-li:mb-2 prose-strong:font-semibold prose-table:my-6 prose-table:w-full prose-table:border-collapse prose-thead:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2 max-w-none"
-              dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-            />
+            <div className="prose prose-xl prose-gray rich-text mx-auto mb-32 max-w-7xl space-y-8 leading-8">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeContent(data.content),
+                }}
+              />
+            </div>
           )}
         </div>
       </div>

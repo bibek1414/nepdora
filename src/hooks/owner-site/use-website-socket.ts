@@ -216,13 +216,15 @@ export const useWebsiteSocket = ({
             [
               mainSlug,
               `${mainSlug}-draft`,
-              mainSlug.replace("-draft", ""),
-            ].forEach(s => {
-              queryClient.setQueryData(
-                ["pageComponents", s, statusKey],
-                updater
-              );
-            });
+              mainSlug?.replace("-draft", ""),
+            ]
+              .filter(Boolean)
+              .forEach(s => {
+                queryClient.setQueryData(
+                  ["pageComponents", s, statusKey],
+                  updater
+                );
+              });
           }
           break;
         case "component_deleted":
@@ -254,7 +256,8 @@ export const useWebsiteSocket = ({
             });
           }
           break;
-          if (data && Array.isArray(data) && data.length > 0) {
+        case "components_list":
+          if (data && Array.isArray(data)) {
             const firstComp = data[0];
             const statusKey =
               firstComp.status === "draft" ? "preview" : "published";
@@ -266,14 +269,17 @@ export const useWebsiteSocket = ({
             [
               mainSlug,
               `${mainSlug}-draft`,
-              mainSlug.replace("-draft", ""),
-            ].forEach(s => {
-              queryClient.setQueryData(
-                ["pageComponents", s, statusKey],
-                newData
-              );
-            });
+              mainSlug?.replace("-draft", ""),
+            ]
+              .filter(Boolean)
+              .forEach(s => {
+                queryClient.setQueryData(
+                  ["pageComponents", s, statusKey],
+                  newData
+                );
+              });
           } else {
+            console.log("Empty data in components_list, invalidating...");
             queryClient.invalidateQueries({ queryKey: ["pageComponents"] });
           }
           break;

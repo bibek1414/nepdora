@@ -249,7 +249,7 @@ export const PolicyComponent: React.FC<PolicyComponentProps> = ({
       )}
 
       <PolicyStyle1
-        data={data}
+        data={isEditable ? data : component.data}
         isEditable={isEditable}
         onTitleChange={handleTitleChange}
         onContentChange={handleContentChange}

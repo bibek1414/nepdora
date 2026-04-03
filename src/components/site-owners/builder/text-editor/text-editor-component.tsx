@@ -220,7 +220,7 @@ export const TextEditorComponent: React.FC<TextEditorComponentProps> = ({
       )}
 
       <TextEditorStyle1
-        data={data}
+        data={isEditable ? data : component.data}
         isEditable={isEditable}
         onContentChange={handleContentChange}
         onImageUpload={handleImageUpload}

@@ -65,10 +65,9 @@ export const usePageComponentsQuery = <
       });
     },
     enabled: !!pageSlug,
-    // Since we are using sockets, maybe we don't need to refetch on window focus as much
-    // if we have real-time updates.
+    // Since we are using sockets, we don't need to refetch often if we have real-time updates.
     refetchOnWindowFocus: false,
-    staleTime: 0,
+    staleTime: socket.enabled ? 5 * 60 * 1000 : 0, // 5 mins if socket enabled
     gcTime: 1 * 60 * 1000,
   });
 };
