@@ -95,7 +95,10 @@ export const useWebsiteSocket = ({
             }
           }
         }
-        toast.error(errorMessage);
+        const ignoredErrors = ["Not connected", "WebSocket connection failed"];
+        if (!ignoredErrors.includes(errorMessage)) {
+          toast.error(errorMessage);
+        }
 
         // If there's no action but an error, notify 'socket_error' listeners
         if (!action && listenersRef.current["socket_error"]) {
@@ -507,7 +510,10 @@ export const useWebsiteSocket = ({
           console.error("Error parsing message:", err);
         }
       } else if (type === "ERROR") {
-        toast.error(error || "WebSocket error");
+        const ignoredErrors = ["Not connected", "WebSocket connection failed"];
+        if (!ignoredErrors.includes(error)) {
+          toast.error(error || "WebSocket error");
+        }
       }
     };
 
