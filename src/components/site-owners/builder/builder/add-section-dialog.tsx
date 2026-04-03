@@ -203,7 +203,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "hero-19",
         name: "Hero Style 19 (Impact Slider)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/hero/hero19.png",
       },
     ],
     tours: [
@@ -517,7 +517,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "about-20",
         name: "About Style 20 (Mission Scroll)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/about/about20.png",
       },
     ],
     products: [
@@ -1146,7 +1146,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/footers/footer9.png",
         description: "Footer with social media links",
       },
-
     ],
     login_form: [
       {

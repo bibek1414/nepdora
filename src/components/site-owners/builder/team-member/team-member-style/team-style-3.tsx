@@ -57,10 +57,6 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
     onUpdate?.({ title: newTitle });
   };
 
-  const handleSubtitleChange = (newSubtitle: string) => {
-    onUpdate?.({ subtitle: newSubtitle });
-  };
-
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-12">
       {/* Background decoration lines */}
@@ -87,20 +83,6 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
 
       <div className="container mx-auto grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
         <div>
-          <div
-            className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest uppercase"
-            style={{ color: theme.colors.primary }}
-          >
-            <Map size={14} />
-            <EditableText
-              value={subtitle}
-              onChange={handleSubtitleChange}
-              as="span"
-              isEditable={isEditable}
-              placeholder="OUR TEAM"
-              style={{ fontFamily: theme.fonts.body }}
-            />
-          </div>
           <EditableText
             value={title}
             onChange={handleTitleChange}
