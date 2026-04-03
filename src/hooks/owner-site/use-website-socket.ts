@@ -439,7 +439,7 @@ export const useWebsiteSocket = ({
           break;
         case "site_config":
         case "site_config_updated":
-          queryClient.setQueryData(["siteConfig"], data);
+          queryClient.setQueryData(["site-config"], data);
           break;
         case "ui_reset":
         case "all_published":

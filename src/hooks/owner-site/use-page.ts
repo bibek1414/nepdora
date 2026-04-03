@@ -51,9 +51,33 @@ export const usePages = () => {
 
 // Get single page by slug
 export const usePage = (slug: string) => {
+  const socket = useContext(WebsiteSocketContext);
+
   return useQuery({
     queryKey: PAGE_QUERY_KEY(slug),
-    queryFn: () => pageApi.getPage(slug),
+    queryFn: () => {
+      if (!socket || !socket.enabled) {
+        return pageApi.getPage(slug);
+      }
+      return new Promise<Page>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("page_updated", (message: any) => {
+          if (message.slug === slug || message.data?.slug === slug) {
+            unsubscribe();
+            resolve(message.data as Page);
+          }
+        });
+
+        const timeout = setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for page details via WebSocket"));
+        }, 10000);
+
+        socket.sendMessage({
+          action: "get_page",
+          slug: slug,
+        });
+      });
+    },
     enabled: !!slug,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });

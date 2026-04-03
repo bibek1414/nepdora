@@ -1,11 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { siteConfigAPI } from "@/services/api/owner-sites/admin/site-config";
 import { SiteConfig } from "@/types/owner-site/admin/site-config";
+import { useContext } from "react";
+import { WebsiteSocketContext } from "@/providers/website-socket-provider";
 
 export const useSiteConfig = () => {
+  const socket = useContext(WebsiteSocketContext);
+
   return useQuery<SiteConfig | null, Error>({
     queryKey: ["site-config"],
-    queryFn: () => siteConfigAPI.getSiteConfig(),
+    queryFn: () => {
+      if (!socket || !socket.enabled) {
+        return siteConfigAPI.getSiteConfig();
+      }
+      return new Promise<SiteConfig | null>((resolve, reject) => {
+        const unsubscribe = socket.subscribe("site_config", (message: any) => {
+          unsubscribe();
+          resolve(message.data as SiteConfig);
+        });
+
+        const timeout = setTimeout(() => {
+          unsubscribe();
+          reject(new Error("Timeout waiting for site config via WebSocket"));
+        }, 10000);
+
+        socket.sendMessage({
+          action: "get_site_config",
+        });
+      });
+    },
     staleTime: Infinity, // Never consider stale - data rarely changes
     gcTime: Infinity, // Never remove from cache
     refetchOnWindowFocus: false,
