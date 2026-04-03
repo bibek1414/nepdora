@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const AboutHero: React.FC = () => {
   return (
@@ -45,9 +46,12 @@ const AboutHero: React.FC = () => {
           className="relative mx-auto max-w-5xl rounded-[2.5rem] border border-neutral-100 bg-white p-3 shadow-2xl sm:p-5"
         >
           <div className="overflow-hidden rounded-[1.8rem] sm:rounded-[2.2rem]">
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop"
               alt="Himalayan Presence"
+              width={2000}
+              height={1125}
+              priority
               className="aspect-video w-full object-cover transition-transform duration-1000 hover:scale-105"
             />
           </div>

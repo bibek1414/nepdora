@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AlternativeHero } from "@/components/marketing/alternative/alternative-hero";
-import { AlternativeContext } from "@/components/marketing/alternative/alternative-context";
 import { AlternativeTable } from "@/components/marketing/alternative/alternative-table";
 import { AlternativeValueProps } from "@/components/marketing/alternative/alternative-value-props";
 import { AlternativePricing } from "@/components/marketing/alternative/alternative-pricing";
@@ -154,16 +153,10 @@ export default function WordPressAlternativePage() {
   return (
     <main>
       <JsonLd id="wordpress-alt-software-schema" data={softwareAppSchema} />
-      
+
       <AlternativeHero
         platformName={PLATFORM_NAME}
         description="WordPress is powerful, but for most Nepali businesses, it is slow and complex to maintain. Use Nepdora's AI for a faster, simpler, and more secure presence."
-      />
-
-      <AlternativeContext
-        platformName={PLATFORM_NAME}
-        context="WordPress powers over 40% of the web. It's the standard for massive blogs and complex custom portals. For most local companies, it requires juggling separate hosting, domain providers, developers, and security plugins — often becoming a technical headache."
-        recommendation="If your business needs a simple, clean, commercial website with eSewa integration, Nepdora offers a smoother experience without the 'plugin fatigue' that comes with WordPress."
       />
 
       <Comparison platformName={PLATFORM_NAME} />
@@ -198,10 +191,7 @@ export default function WordPressAlternativePage() {
 
       <AlternativeTestimonials testimonials={testimonials} />
 
-      <AlternativeFitCheck
-        platformName={PLATFORM_NAME}
-        fitChecks={fitChecks}
-      />
+      <AlternativeFitCheck platformName={PLATFORM_NAME} fitChecks={fitChecks} />
 
       <AlternativeLinkCluster links={clusterLinks} />
 

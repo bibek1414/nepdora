@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AlternativeHero } from "@/components/marketing/alternative/alternative-hero";
-import { AlternativeContext } from "@/components/marketing/alternative/alternative-context";
 import { AlternativeTable } from "@/components/marketing/alternative/alternative-table";
 import { AlternativeValueProps } from "@/components/marketing/alternative/alternative-value-props";
 import { AlternativePricing } from "@/components/marketing/alternative/alternative-pricing";
@@ -152,16 +151,10 @@ export default function WixAlternativePage() {
   return (
     <main>
       <JsonLd id="wix-alt-software-schema" data={softwareAppSchema} />
-      
+
       <AlternativeHero
         platformName={PLATFORM_NAME}
         description="Wix features a powerful drag-and-drop builder, but it can be slow and lacks the native payment support required by businesses in Nepal. See the difference with Nepdora."
-      />
-
-      <AlternativeContext
-        platformName={PLATFORM_NAME}
-        context="Wix is an incredible platform for creating highly visual websites with its drag-and-drop builder. It's a favorite for artists and small international stores. However, for Nepali businesses, the inability to accept local payments natively and the high subscription costs in USD can be significant downsides."
-        recommendation="If you're building a highly custom visual portfolio for a global audience, Wix remains a strong contender. For a commercial website in Nepal, Nepdora is the faster, more integrated choice."
       />
 
       <Comparison platformName={PLATFORM_NAME} />
@@ -194,10 +187,7 @@ export default function WixAlternativePage() {
 
       <AlternativeTestimonials testimonials={testimonials} />
 
-      <AlternativeFitCheck
-        platformName={PLATFORM_NAME}
-        fitChecks={fitChecks}
-      />
+      <AlternativeFitCheck platformName={PLATFORM_NAME} fitChecks={fitChecks} />
 
       <AlternativeLinkCluster links={clusterLinks} />
 

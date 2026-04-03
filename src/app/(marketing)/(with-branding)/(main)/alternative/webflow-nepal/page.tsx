@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AlternativeHero } from "@/components/marketing/alternative/alternative-hero";
-import { AlternativeContext } from "@/components/marketing/alternative/alternative-context";
 import { AlternativeTable } from "@/components/marketing/alternative/alternative-table";
 import { AlternativeValueProps } from "@/components/marketing/alternative/alternative-value-props";
 import { AlternativePricing } from "@/components/marketing/alternative/alternative-pricing";
@@ -16,7 +15,8 @@ import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 // ─── Page-level constants ────────────────────────────────────────────────────
 const PLATFORM_NAME = "Webflow";
 const pageUrl = absoluteUrl("/alternative/webflow-nepal");
-const pageTitle = "Webflow vs Nepdora (2026): Best Design-First Platform for Nepal?";
+const pageTitle =
+  "Webflow vs Nepdora (2026): Best Design-First Platform for Nepal?";
 const pageDescription =
   "Comparing Webflow and Nepdora in Nepal? See why businesses are switching to Nepdora for its native eSewa/Khalti payments and faster local build times.";
 
@@ -152,16 +152,10 @@ export default function WebflowAlternativePage() {
   return (
     <main>
       <JsonLd id="webflow-alt-software-schema" data={softwareAppSchema} />
-      
+
       <AlternativeHero
         platformName={PLATFORM_NAME}
         description="Webflow is a designer's dream, but it can be technically demanding and lacks the local payment support essential for the Nepal market. See the difference with Nepdora."
-      />
-
-      <AlternativeContext
-        platformName={PLATFORM_NAME}
-        context="Webflow is a professional design tool used by top-tier studios globally to create pixel-perfect, custom websites. It essentially bridges design and code. However, for a business in Nepal, it presents a steep learning curve and high costs when you include CMS and ecommerce hosting features."
-        recommendation="If you're building a highly custom visual experience for a US-based client, Webflow is excellent. For a growing local business in Nepal that needs to go live fast, Nepdora is the more commerce-ready choice."
       />
 
       <Comparison platformName={PLATFORM_NAME} />
@@ -194,10 +188,7 @@ export default function WebflowAlternativePage() {
 
       <AlternativeTestimonials testimonials={testimonials} />
 
-      <AlternativeFitCheck
-        platformName={PLATFORM_NAME}
-        fitChecks={fitChecks}
-      />
+      <AlternativeFitCheck platformName={PLATFORM_NAME} fitChecks={fitChecks} />
 
       <AlternativeLinkCluster links={clusterLinks} />
 

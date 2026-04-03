@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/CartContext";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalyticsStatic } from "@/components/site-owners/admin/google-analytics/google-analytics-static";
+import { SchemaOrg } from "@/components/shared/schema-org";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
@@ -63,6 +64,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <GoogleAnalyticsStatic />
+        <SchemaOrg />
       </head>
       <body className={inter.className}>
         <Suspense fallback={null}>

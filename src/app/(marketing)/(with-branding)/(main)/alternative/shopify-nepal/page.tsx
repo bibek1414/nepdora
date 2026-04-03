@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AlternativeHero } from "@/components/marketing/alternative/alternative-hero";
-import { AlternativeContext } from "@/components/marketing/alternative/alternative-context";
 import { AlternativeTable } from "@/components/marketing/alternative/alternative-table";
 import { AlternativeValueProps } from "@/components/marketing/alternative/alternative-value-props";
 import { AlternativePricing } from "@/components/marketing/alternative/alternative-pricing";
@@ -153,16 +152,10 @@ export default function ShopifyAlternativePage() {
   return (
     <main>
       <JsonLd id="shopify-alt-software-schema" data={softwareAppSchema} />
-      
+
       <AlternativeHero
         platformName={PLATFORM_NAME}
         description="Shopify is the world's leading ecommerce tool, but for Nepal, international payments and local integrations can be a barrier. See how Nepdora compares."
-      />
-
-      <AlternativeContext
-        platformName={PLATFORM_NAME}
-        context="Shopify is a global ecommerce powerhouse. It offers thousands of apps and themes, making it the choice for massive global brands. However, for merchants in Nepal, it often requires a Dollar Card for payments and third-party 'clunky' apps for local payment gateways."
-        recommendation="If you are selling globally to a US/EU audience, Shopify is the clear winner. But if your customers are primarily in Nepal, Nepdora's native integrations and NPR pricing offer a significantly lower friction path."
       />
 
       <Comparison platformName={PLATFORM_NAME} />
@@ -195,10 +188,7 @@ export default function ShopifyAlternativePage() {
 
       <AlternativeTestimonials testimonials={testimonials} />
 
-      <AlternativeFitCheck
-        platformName={PLATFORM_NAME}
-        fitChecks={fitChecks}
-      />
+      <AlternativeFitCheck platformName={PLATFORM_NAME} fitChecks={fitChecks} />
 
       <AlternativeLinkCluster links={clusterLinks} />
 

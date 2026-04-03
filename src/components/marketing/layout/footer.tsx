@@ -27,10 +27,9 @@ export const Footer = () => {
               height={100}
             />
             <p className="max-w-sm text-xs leading-relaxed text-gray-600 sm:text-sm">
-              We&apos;re committed to delivering exceptional care with
-              compassion, trust, and integrity. From your first visit to
-              long-term support, your health and comfort are always our
-              priority.
+              Nepdora is the all-in-one platform for Nepali entrepreneurs to
+              build, manage, and grow their online presence with local payment
+              integrations and logistics support.
             </p>
 
             <hr className="w-full border-gray-200" />
