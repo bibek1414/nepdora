@@ -6,6 +6,7 @@ import { usePageData } from "@/hooks/owner-site/use-page-data";
 import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
 import { PageSkeleton } from "@/components/site-owners/shared/page-skeleton";
 import { usePages } from "@/hooks/owner-site/use-page";
+import { SiteNotFound } from "@/components/site-owners/shared/site-not-found";
 
 interface DynamicPageClientProps {
   siteUser: string;
@@ -77,26 +78,12 @@ export default function DynamicPageClient({
         portfolioSlug={currentPageData.contentSlug}
       />
 
-      <div className="p-8">
-        {!hasContent ? (
-          <div className="py-20 text-center">
-            {/* Heading */}
-            <h1 className="text-6xl font-bold text-gray-800">404</h1>
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Oops! The &apos;{currentPageData.pageSlug}&apos; page you’re
-              looking for doesn’t exist.
-            </h3>
-
-            <Button
-              onClick={handleBacktoHome}
-              className="mt-4"
-              variant="default"
-            >
-              Go back home
-            </Button>
-          </div>
-        ) : null}
-      </div>
+      {!hasContent && (
+        <SiteNotFound 
+          pageName={currentPageData.pageSlug} 
+          onBackHome={handleBacktoHome} 
+        />
+      )}
     </>
   );
 }

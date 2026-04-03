@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/site-owners/button";
 import { PageComponentRenderer } from "@/components/site-owners/shared/page-component-renderer";
 import { ComponentResponse } from "@/types/owner-site/components/components";
+import { SiteNotFound } from "@/components/site-owners/shared/site-not-found";
 
 interface PublishPageClientProps {
   siteUser: string;
@@ -82,24 +83,9 @@ export default function PublishPageClient({
         />
       ) : null}
 
-      <div className="p-8">
-        {!hasContent ? (
-          <div className="py-20 text-center">
-            <h1 className="text-6xl font-bold text-gray-800">404</h1>
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              Oops! The &apos; Home&apos; page you’re looking for doesn’t exist.
-            </h3>
-
-            <Button
-              onClick={handleBacktoHome}
-              className="mt-4"
-              variant="default"
-            >
-              Go back home
-            </Button>
-          </div>
-        ) : null}
-      </div>
+      {!hasContent && (
+        <SiteNotFound pageName="Home" onBackHome={handleBacktoHome} />
+      )}
     </>
   );
 }

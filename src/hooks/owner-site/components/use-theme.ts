@@ -24,16 +24,38 @@ export const useThemeQuery = (enabled: boolean = true) => {
         return useThemeApi.getThemes();
       }
       return new Promise<GetThemeResponse>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("themes_list", (message: any) => {
-          unsubscribe();
+        let isFinished = false;
+
+        const cleanup = () => {
+          isFinished = true;
+          unsubscribeSuccess();
+          unsubscribeError();
+          clearTimeout(timeoutId);
+        };
+
+        const unsubscribeSuccess = socket.subscribe("themes_list", (message: any) => {
+          if (isFinished) return;
+          cleanup();
           resolve({
             data: message.data || [],
             message: "Themes retrieved successfully",
           });
         });
 
-        setTimeout(() => {
-          unsubscribe();
+        const unsubscribeError = socket.subscribe("socket_error", (message: any) => {
+          if (isFinished) return;
+          if (message.error === "Page not found") {
+            cleanup();
+            resolve({
+              data: [],
+              message: "Themes not found",
+            });
+          }
+        });
+
+        const timeoutId = setTimeout(() => {
+          if (isFinished) return;
+          cleanup();
           reject(new Error("Timeout waiting for themes list"));
         }, 10000);
 

@@ -97,11 +97,13 @@ export const useWebsiteSocket = ({
         }
         const ignoredErrors = ["Not connected", "WebSocket connection failed"];
         if (!ignoredErrors.includes(errorMessage)) {
+          // Check if this error is "Page not found" - if it is, we might want to avoid many toasts if retried
+          // But our goal is to eliminate retries by resolving the promise early in the hook.
           toast.error(errorMessage);
         }
 
-        // If there's no action but an error, notify 'socket_error' listeners
-        if (!action && listenersRef.current["socket_error"]) {
+        // Always notify 'socket_error' listeners if there's an error
+        if (listenersRef.current["socket_error"]) {
           listenersRef.current["socket_error"].forEach(cb => cb(message));
         }
       }

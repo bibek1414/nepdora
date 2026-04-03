@@ -29,13 +29,31 @@ export const usePages = () => {
         return pageApi.getPages("preview");
       }
       return new Promise<Page[]>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("pages_list", (message: any) => {
-          unsubscribe();
+        let isFinished = false;
+
+        const cleanup = () => {
+          isFinished = true;
+          unsubscribeSuccess();
+          unsubscribeError();
+          clearTimeout(timeoutId);
+        };
+
+        const unsubscribeSuccess = socket.subscribe("pages_list", (message: any) => {
+          if (isFinished) return;
+          cleanup();
           resolve(message.data as Page[]);
         });
 
-        const timeout = setTimeout(() => {
-          unsubscribe();
+        const unsubscribeError = socket.subscribe("socket_error", (message: any) => {
+          if (isFinished) return;
+          // For page list, if there's an error, we just resolve with empty list or reject fast
+          cleanup();
+          resolve([]); 
+        });
+
+        const timeoutId = setTimeout(() => {
+          if (isFinished) return;
+          cleanup();
           reject(new Error("Timeout waiting for pages list"));
         }, 10000);
 
@@ -60,15 +78,36 @@ export const usePage = (slug: string) => {
         return pageApi.getPage(slug);
       }
       return new Promise<Page>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("page_updated", (message: any) => {
+        let isFinished = false;
+
+        const cleanup = () => {
+          isFinished = true;
+          unsubscribeSuccess();
+          unsubscribeError();
+          clearTimeout(timeoutId);
+        };
+
+        const unsubscribeSuccess = socket.subscribe("page_updated", (message: any) => {
+          if (isFinished) return;
           if (message.slug === slug || message.data?.slug === slug) {
-            unsubscribe();
+            cleanup();
             resolve(message.data as Page);
           }
         });
 
-        const timeout = setTimeout(() => {
-          unsubscribe();
+        const unsubscribeError = socket.subscribe("socket_error", (message: any) => {
+          if (isFinished) return;
+          // If we receive any socket error while waiting for a specific page, 
+          // we should probably stop waiting if it's a 404.
+          if (message.error === "Page not found") {
+            cleanup();
+            reject(new Error("Page not found"));
+          }
+        });
+
+        const timeoutId = setTimeout(() => {
+          if (isFinished) return;
+          cleanup();
           reject(new Error("Timeout waiting for page details via WebSocket"));
         }, 10000);
 

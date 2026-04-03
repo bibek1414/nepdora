@@ -37,10 +37,20 @@ export const usePageComponentsQuery = <
         return componentsApi.getPageComponents(pageSlug);
       }
       return new Promise<ComponentResponse<T>[]>((resolve, reject) => {
-        const unsubscribe = socket.subscribe(
+        let isFinished = false;
+
+        const cleanup = () => {
+          isFinished = true;
+          unsubscribeSuccess();
+          unsubscribeError();
+          clearTimeout(timeoutId);
+        };
+
+        const unsubscribeSuccess = socket.subscribe(
           "components_list",
           (message: any) => {
-            unsubscribe();
+            if (isFinished) return;
+            cleanup();
             if (message.data) {
               resolve(message.data as ComponentResponse<T>[]);
             } else {
@@ -49,11 +59,22 @@ export const usePageComponentsQuery = <
           }
         );
 
-        // Timeout
-        setTimeout(() => {
-          unsubscribe();
-          // If timeout, maybe return empty or throw?
-          // Let's throw to trigger retry or error state
+        const unsubscribeError = socket.subscribe(
+          "socket_error",
+          (message: any) => {
+            if (isFinished) return;
+            // Only resolve if this error is likely for THIS request.
+            // Since we don't have request IDs, we check if it's a 404.
+            if (message.error === "Page not found") {
+              cleanup();
+              resolve([]); // Resolve with empty array to trigger 404 UI
+            }
+          }
+        );
+
+        const timeoutId = setTimeout(() => {
+          if (isFinished) return;
+          cleanup();
           reject(new Error("Timeout waiting for components list"));
         }, 10000);
 

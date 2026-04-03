@@ -18,16 +18,38 @@ export const useNavbarQuery = (enabled: boolean = true) => {
         return useNavbarApi.getNavbar();
       }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("navbar", message => {
-          unsubscribe();
+        let isFinished = false;
+
+        const cleanup = () => {
+          isFinished = true;
+          unsubscribeSuccess();
+          unsubscribeError();
+          clearTimeout(timeoutId);
+        };
+
+        const unsubscribeSuccess = socket.subscribe("navbar", message => {
+          if (isFinished) return;
+          cleanup();
           resolve({
             data: message.data || null,
             message: message.data ? "Navbar retrieved" : "No navbar found",
           });
         });
 
-        setTimeout(() => {
-          unsubscribe();
+        const unsubscribeError = socket.subscribe("socket_error", message => {
+          if (isFinished) return;
+          if (message.error === "Page not found") {
+            cleanup();
+            resolve({
+              data: null,
+              message: "Page not found",
+            });
+          }
+        });
+
+        const timeoutId = setTimeout(() => {
+          if (isFinished) return;
+          cleanup();
           reject(new Error("Timeout waiting for navbar"));
         }, 10000);
 

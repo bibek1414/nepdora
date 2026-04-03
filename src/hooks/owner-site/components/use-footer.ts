@@ -18,16 +18,38 @@ export const useFooterQuery = (enabled: boolean = true) => {
         return useFooterApi.getFooter();
       }
       return new Promise<any>((resolve, reject) => {
-        const unsubscribe = socket.subscribe("footer", message => {
-          unsubscribe();
+        let isFinished = false;
+
+        const cleanup = () => {
+          isFinished = true;
+          unsubscribeSuccess();
+          unsubscribeError();
+          clearTimeout(timeoutId);
+        };
+
+        const unsubscribeSuccess = socket.subscribe("footer", message => {
+          if (isFinished) return;
+          cleanup();
           resolve({
             data: message.data || null,
             message: message.data ? "Footer retrieved" : "No footer found",
           });
         });
 
-        setTimeout(() => {
-          unsubscribe();
+        const unsubscribeError = socket.subscribe("socket_error", message => {
+          if (isFinished) return;
+          if (message.error === "Page not found") {
+            cleanup();
+            resolve({
+              data: null,
+              message: "Page not found",
+            });
+          }
+        });
+
+        const timeoutId = setTimeout(() => {
+          if (isFinished) return;
+          cleanup();
           reject(new Error("Timeout waiting for footer"));
         }, 10000);
 
