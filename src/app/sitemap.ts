@@ -104,6 +104,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
+  const dedicatedAlternativePages = [
+    {
+      url: `${baseUrl}/alternative/blanxer-nepal`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+  ];
+
   // Learn pages
   const learnPages = [
     "how-to-start-online-business-in-nepal",
@@ -179,6 +188,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...features,
     ...comparePages,
     ...alternativePages,
+    ...dedicatedAlternativePages,
     ...learnPages,
     ...templateCategories,
     ...dynamicIndustryCities,
