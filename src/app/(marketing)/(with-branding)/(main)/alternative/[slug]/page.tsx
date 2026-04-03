@@ -7,6 +7,8 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { notFound } from "next/navigation";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -22,7 +24,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const competitorSlug = slug.replace("-nepal", "");
   const competitor = ALL_COMPETITORS.find(c => c.slug === competitorSlug);
+  if (!competitor || !slug.endsWith("-nepal")) {
+    notFound();
+  }
   const name = competitor ? competitor.name : capitalizeWords(competitorSlug);
+  const url = absoluteUrl(`/alternative/${slug}`);
 
   const title = `Best ${name} Alternative in Nepal | Save 80% on Costs`;
   const description = `Looking for ${name} in Nepal? Discover why Nepdora is the best ${name} alternative for Nepali businesses. Local payments, better support, and affordable pricing.`;
@@ -30,11 +36,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: {
+      canonical: url,
+    },
     keywords: [
       `${name} alternative nepal`,
       `best website builder nepal`,
       `cheap ${name} nepal`,
     ],
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: "en_NP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [DEFAULT_OG_IMAGE],
+    },
   };
 }
 
@@ -42,7 +73,11 @@ export default async function AlternativePage({ params }: Props) {
   const { slug } = await params;
   const competitorSlug = slug.replace("-nepal", "");
   const competitor = ALL_COMPETITORS.find(c => c.slug === competitorSlug);
-  const name = competitor ? competitor.name : capitalizeWords(competitorSlug);
+  if (!competitor || !slug.endsWith("-nepal")) {
+    notFound();
+  }
+  const name = competitor.name;
+  const url = absoluteUrl(`/alternative/${slug}`);
 
   const schema = {
     "@context": "https://schema.org",
@@ -60,9 +95,35 @@ export default async function AlternativePage({ params }: Props) {
     },
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Alternatives",
+        item: absoluteUrl("/pricing"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: `${name} Alternative`,
+        item: url,
+      },
+    ],
+  };
+
   return (
     <main>
       <JsonLd id="alt-schema" data={schema} />
+      <JsonLd id="alt-breadcrumb-schema" data={breadcrumbSchema} />
       <div className="bg-slate-50 py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="mb-6 text-4xl font-extrabold md:text-6xl">

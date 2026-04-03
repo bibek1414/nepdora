@@ -10,7 +10,7 @@ export const LeadCaptureCRM: React.FC<LeadCaptureCRMProps> = ({ data }) => {
 
   return (
     <section className="bg-slate-50 py-32 overflow-hidden">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-center gap-16 lg:flex-row lg:justify-between lg:items-center">
           <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl shadow-2xl transition-transform hover:scale-105 lg:w-1/2">
             <img

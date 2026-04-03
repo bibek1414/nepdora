@@ -1,33 +1,33 @@
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Build a Clinic Website in Nepal (Fast Setup) | Nepdora",
-  description:
-    "Launch your professional clinic website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
+  title: `Build a Clinic Website in Nepal (Fast Setup) | ${SITE_NAME}`,
+  description: `Launch your professional clinic website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from ${SITE_NAME}.`,
   keywords: [
     "clinic website Nepal",
     "hospital website Nepal",
-    "Nepdora clinic",
+    `${SITE_NAME} clinic`,
     "healthcare digital Nepal",
     "doctor website Nepal",
   ],
+  metadataBase: new URL(absoluteUrl()),
   alternates: {
-    canonical: "https://www.nepdora.com/clinic-website",
+    canonical: absoluteUrl("/clinic-website"),
   },
   openGraph: {
-    title: "Build a Clinic Website in Nepal (Fast Setup) | Nepdora",
-    description:
-      "Launch your professional clinic website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
-    url: "https://www.nepdora.com/clinic-website",
-    siteName: "Nepdora",
+    title: `Build a Clinic Website in Nepal (Fast Setup) | ${SITE_NAME}`,
+    description: `Launch your professional clinic website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from ${SITE_NAME}.`,
+    url: absoluteUrl("/clinic-website"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Nepdora - Clinic Website Builder",
+        alt: `${SITE_NAME} - Clinic Website Builder`,
       },
     ],
     locale: "en_NP",
@@ -35,23 +35,22 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Build a Clinic Website in Nepal (Fast Setup) | Nepdora",
-    description:
-      "Launch your professional clinic website in Nepal in under 10 minutes. Build with Nepdora.",
-    images: ["/nepdora-image.jpg"],
+    title: `Build a Clinic Website in Nepal (Fast Setup) | ${SITE_NAME}`,
+    description: `Launch your professional clinic website in Nepal in under 10 minutes. Build with ${SITE_NAME}.`,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
 const clinicSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "Nepdora Clinic Website Builder",
+  name: `${SITE_NAME} Clinic Website Builder`,
   description:
     "Specially designed website solutions for medical clinics and healthcare providers in Nepal with appointment features.",
   provider: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
   },
   areaServed: "NP",
 };

@@ -1,4 +1,5 @@
 import { Metadata, Viewport } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 type MarketingLayoutProps = {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
   title: "Nepdora — Build, Grow & Showcase Your Digital Presence",
   description:
     "Nepdora helps creators, businesses, and professionals build modern websites, portfolios, and digital brands effortlessly in Nepal and beyond.",
+  metadataBase: new URL(SITE_URL),
   keywords: [
     "Nepdora",
     "Website Builder Nepal",
@@ -20,11 +22,11 @@ export const metadata: Metadata = {
     title: "Nepdora — Innovative Digital Solutions for Everyone",
     description:
       "Create your website, grow your brand, and go digital with Nepdora. Build your online presence with powerful tools and AI-driven design.",
-    url: "https://nepdora.com",
-    siteName: "Nepdora",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://nepdora.com/nepdora-logooo.svg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora — Digital Solutions",
@@ -38,13 +40,13 @@ export const metadata: Metadata = {
     title: "Nepdora — Build Your Online Presence",
     description:
       "Nepdora empowers you to build websites, grow your digital business, and go live fast.",
-    images: ["https://nepdora.com/nepdora-logooo.svg"],
+    images: [DEFAULT_OG_IMAGE],
     creator: "@nepdora",
   },
   icons: {
-    icon: "https://nepdora.com/favicon.ico",
-    shortcut: "https://nepdora.com/favicon-16x16.png",
-    apple: "https://nepdora.com/apple-touch-icon.png",
+    icon: "/favicon-32x32.png",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
   },
   authors: [{ name: "Nepdora Team" }],
   creator: "Nepdora Pvt. Ltd.",
@@ -55,10 +57,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   initialScale: 1.0,
   width: "device-width",
-  height: "device-height",
-  minimumScale: 1.0,
-  maximumScale: 1.0,
-  userScalable: false,
   themeColor: "#ffffff",
 };
 

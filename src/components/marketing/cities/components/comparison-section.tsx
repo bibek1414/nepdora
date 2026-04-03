@@ -10,7 +10,7 @@ export const ComparisonSection: React.FC<ComparisonProps> = ({ data }) => {
 
   return (
     <section className="bg-slate-900 py-32 text-white overflow-hidden">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mb-20 text-center">
           <h2 className="mb-6 text-4xl font-extrabold tracking-tight md:text-5xl">
             Why Choose Nepdora?

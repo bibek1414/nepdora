@@ -2,11 +2,43 @@ import { Metadata } from "next";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Nepali Domain Name Checker | .com.np & .com Availability",
   description:
     "Check if your desired business name is available as a .com.np or .com domain in Nepal. Free and instant search tool.",
+  alternates: {
+    canonical: absoluteUrl("/tools/domain-name-checker-nepal"),
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Nepali Domain Name Checker | .com.np & .com Availability",
+    description:
+      "Check if your desired business name is available as a .com.np or .com domain in Nepal. Free and instant search tool.",
+    url: absoluteUrl("/tools/domain-name-checker-nepal"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Nepdora Domain Name Checker",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nepali Domain Name Checker | .com.np & .com Availability",
+    description:
+      "Check if your desired business name is available as a .com.np or .com domain in Nepal. Free and instant search tool.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function DomainChecker() {
@@ -48,7 +80,7 @@ export default function DomainChecker() {
             </h2>
             <p>
               Registration of .com.np domains is free for any person or business
-              in Nepal. You'll need a scanned copy of your citizenship or
+              in Nepal. You&apos;ll need a scanned copy of your citizenship or
               company registration document. Nepdora makes it easy to connect
               your free .com.np domain to your website.
             </p>

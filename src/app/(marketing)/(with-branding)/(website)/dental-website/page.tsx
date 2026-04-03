@@ -1,6 +1,7 @@
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Build a Dental Practice Website in Nepal (Fast Setup) | Nepdora",
@@ -13,17 +14,17 @@ export const metadata: Metadata = {
     "dental clinic digital Nepal",
   ],
   alternates: {
-    canonical: "https://www.nepdora.com/dental-website",
+    canonical: absoluteUrl("/dental-website"),
   },
   openGraph: {
     title: "Build a Dental Practice Website in Nepal (Fast Setup) | Nepdora",
     description:
       "Launch your professional dental website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
-    url: "https://www.nepdora.com/dental-website",
-    siteName: "Nepdora",
+    url: absoluteUrl("/dental-website"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora - Dental Practice Website Builder",
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     title: "Build a Dental Practice Website in Nepal (Fast Setup) | Nepdora",
     description:
       "Launch your professional dental website in Nepal in under 10 minutes. Build with Nepdora.",
-    images: ["/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -49,8 +50,8 @@ const dentalSchema = {
     "Dental clinic website builder with specialized features like appointment scheduling and patient education for Nepali dental practices.",
   provider: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
   },
   areaServed: "NP",
 };

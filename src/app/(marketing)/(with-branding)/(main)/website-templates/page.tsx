@@ -2,36 +2,45 @@ import { Metadata } from "next";
 import Script from "next/script";
 import { TemplatesHero } from "@/components/marketing/templates/templates-hero";
 import TemplatesPage from "@/components/marketing/templates/templates-page";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Website Templates — Customizable HTML Templates | Nepdora",
-  description:
-    "Explore our curated collection of professional HTML website templates. Fully customizable, responsive, and designed to help you launch your website in minutes with Nepdora.",
+  title: `Website Templates — Customizable HTML Templates | ${SITE_NAME}`,
+  description: `Explore our curated collection of professional HTML website templates. Fully customizable, responsive, and designed to help you launch your website in minutes with ${SITE_NAME}.`,
   keywords: [
     "website templates",
     "HTML templates",
     "responsive website design",
     "customizable templates",
-    "Nepdora templates",
+    `${SITE_NAME} templates`,
     "portfolio templates",
     "business templates",
   ],
+  metadataBase: new URL(absoluteUrl()),
   alternates: {
-    canonical: "https://www.nepdora.com/website-templates",
+    canonical: absoluteUrl("/website-templates"),
   },
   openGraph: {
-    title: "Website Templates — Customizable HTML Templates | Nepdora",
-    description:
-      "Modern, responsive, and fully customizable website templates for every industry. Start building with Nepdora today.",
-    url: "https://www.nepdora.com/website-templates",
+    title: `Website Templates — Customizable HTML Templates | ${SITE_NAME}`,
+    description: `Modern, responsive, and fully customizable website templates for every industry. Start building with ${SITE_NAME} today.`,
+    url: absoluteUrl("/website-templates"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-templates-og.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Nepdora Website Templates",
+        alt: `${SITE_NAME} Website Templates`,
       },
     ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Website Templates — Customizable HTML Templates | ${SITE_NAME}`,
+    description: `Modern, responsive, and fully customizable website templates for every industry. Build with ${SITE_NAME}.`,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -41,9 +50,9 @@ export default function WebsiteTemplatesPage() {
   const templateSchema = {
     "@context": "https://schema.org/",
     "@type": "ItemList",
-    name: "Nepdora Website Templates",
+    name: `${SITE_NAME} Website Templates`,
     description:
-      "A collection of high-quality, customizable website templates for every industry.",
+      `A collection of high-quality, customizable website templates for every industry powered by ${SITE_NAME}.`,
     numberOfItems: 50,
     itemListElement: [
       {

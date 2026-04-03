@@ -2,11 +2,43 @@ import { Metadata } from "next";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Free Payment QR Code Generator for Nepal | eSewa, Khalti, FonePay",
   description:
     "Create a professional QR code for your business payments in Nepal. Support for eSewa, Khalti, and FonePay with custom branding.",
+  alternates: {
+    canonical: absoluteUrl("/tools/qr-code-generator-for-payments"),
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Free Payment QR Code Generator for Nepal | eSewa, Khalti, FonePay",
+    description:
+      "Create a professional QR code for your business payments in Nepal. Support for eSewa, Khalti, and FonePay with custom branding.",
+    url: absoluteUrl("/tools/qr-code-generator-for-payments"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Nepdora Payment QR Code Generator",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Payment QR Code Generator for Nepal | eSewa, Khalti, FonePay",
+    description:
+      "Create a professional QR code for your business payments in Nepal. Support for eSewa, Khalti, and FonePay with custom branding.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function QRGenerator() {

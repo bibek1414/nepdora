@@ -1,8 +1,11 @@
 import { MetadataRoute } from "next";
 import { SERVICE_CATEGORIES } from "@/constants/nepal-cities";
+import { ALL_COMPETITORS } from "@/constants/competitors";
+import { SITE_URL } from "@/lib/seo";
+import { industries } from "@/lib/seo-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.nepdora.com";
+  const baseUrl = SITE_URL;
 
   const TOP_CITIES = [
     "kathmandu",
@@ -37,7 +40,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/khalti-payment-gateway-nepal", priority: 0.9 },
     { path: "/esewa-integration-guide-nepal", priority: 0.9 },
     { path: "/website-registration-nepal", priority: 0.8 },
-    { path: "/best-hosting-in-nepal", priority: 0.8 },
     { path: "/partners", priority: 0.8 },
   ];
 
@@ -51,22 +53,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Solution Pages (Problem-Solution traffic)
   const solutionPages = [
     "accept-esewa-payments-online",
-    "inventory-management-nepal",
-    "nepali-language-website-support",
     "local-delivery-integration-pathao",
   ].map(slug => ({
     url: `${baseUrl}/solutions/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.8,
-  }));
-
-  // Auth Pages (Low priority for crawl, good for structure)
-  const authPages = ["/login", "/register"].map(route => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.3,
   }));
 
   // Category pages (Hubs)
@@ -93,36 +85,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Compare pages (Direct Comparisons & Pricing)
-  const comparePages = [
-    "shopify-and-nepdora",
-    "webflow-and-nepdora",
-    "wordpress-and-nepdora",
-    "wix-and-nepdora",
-    "nepdora-vs-shopify",
-    "nepdora-vs-wordpress",
-    "nepdora-vs-wix",
-    "shopify-price-in-nepal",
-    "wix-cost-in-nepal",
-  ].map(slug => ({
-    url: `${baseUrl}/compare/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const comparePages = ALL_COMPETITORS.map(({ slug }) => `${slug}-and-nepdora`).map(
+    slug => ({
+      url: `${baseUrl}/compare/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })
+  );
 
   // Alternative pages (New pSEO)
-  const alternativePages = [
-    "shopify-nepal",
-    "wix-nepal",
-    "wordpress-nepal",
-    "squarespace-nepal",
-    "webflow-nepal",
-  ].map(slug => ({
-    url: `${baseUrl}/alternative/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const alternativePages = ALL_COMPETITORS.map(({ slug }) => `${slug}-nepal`).map(
+    slug => ({
+      url: `${baseUrl}/alternative/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })
+  );
 
   // Learn pages
   const learnPages = [
@@ -158,18 +138,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Programmatic Industry & City pages (Lower priority to save crawl budget)
   const dynamicIndustryCities: MetadataRoute.Sitemap = [];
-  const industries = [
-    "restaurant",
-    "clothing-store",
-    "gym",
-    "school",
-    "clinic",
-    "travel-agency",
-    "real-estate",
-    "salon",
-    "educational-consultancy",
-    "grocery",
-  ];
 
   industries.forEach(industry => {
     TOP_CITIES.forEach(city => {
@@ -206,7 +174,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...basePages,
-    ...authPages,
     ...solutionPages,
     ...categoryPages,
     ...features,

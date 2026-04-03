@@ -3,6 +3,7 @@ import Blogs, { BlogCardSkeleton } from "@/components/marketing/blog/blogs";
 import { Metadata } from "next";
 import ContactUs from "@/components/marketing/contact-us/contact-us";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Blog | Nepdora — Digital Growth & Website Insights",
@@ -15,17 +16,17 @@ export const metadata: Metadata = {
     "digital marketing Nepal",
   ],
   alternates: {
-    canonical: "https://www.nepdora.com/blog",
+    canonical: absoluteUrl("/blog"),
   },
   openGraph: {
     title: "Blog | Nepdora — Digital Growth & Website Insights",
     description:
       "Stay updated with the latest trends in web development, e-commerce, and digital marketing in Nepal. Tutorials, tips, and stories from the Nepdora team.",
-    url: "https://www.nepdora.com/blog",
-    siteName: "Nepdora",
+    url: absoluteUrl("/blog"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora Blog - Insights for digital growth",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     title: "Blog | Nepdora — Digital Growth & Website Insights",
     description:
       "Stay updated with the latest trends in web development, e-commerce, and digital marketing in Nepal.",
-    images: ["/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -51,13 +52,13 @@ const blogSchema = {
     "The official blog of Nepdora, providing insights on web development and digital marketing in Nepal.",
   publisher: {
     "@type": "Organization",
-    name: "Nepdora",
+    name: SITE_NAME,
     logo: {
       "@type": "ImageObject",
-      url: "https://www.nepdora.com/nepdora-logooo.svg",
+      url: DEFAULT_OG_IMAGE,
     },
   },
-  url: "https://www.nepdora.com/blog",
+  url: absoluteUrl("/blog"),
 };
 
 import { marketingBlogApi } from "@/services/api/marketing/blog";
@@ -72,7 +73,7 @@ const BlogPage = async () => {
       "@type": "BlogPosting",
       headline: blog.title,
       description: blog.meta_description || "",
-      url: `https://www.nepdora.com/blog/${blog.slug}`,
+      url: absoluteUrl(`/blog/${blog.slug}`),
       datePublished: blog.created_at,
       author: {
         "@type": "Person",
@@ -91,13 +92,13 @@ const BlogPage = async () => {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://www.nepdora.com",
+        item: absoluteUrl(),
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Blog",
-        item: "https://www.nepdora.com/blog",
+        item: absoluteUrl("/blog"),
       },
     ],
   };

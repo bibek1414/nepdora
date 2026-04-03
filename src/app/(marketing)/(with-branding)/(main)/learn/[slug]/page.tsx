@@ -4,6 +4,8 @@ import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -23,37 +25,98 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  if (!LEARN_GUIDES.includes(slug)) {
+    notFound();
+  }
   const title = `${capitalizeWords(slug.replace(/-/g, " "))} | Ultimate Guide for Nepal`;
   const description = `Read our comprehensive guide on ${slug.replace(/-/g, " ")}. Essential knowledge for business owners and entrepreneurs in Nepal.`;
+  const url = absoluteUrl(`/learn/${slug}`);
 
   return {
     title,
     description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: "en_NP",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [DEFAULT_OG_IMAGE],
+    },
   };
 }
 
 export default async function LearnPage({ params }: Props) {
   const { slug } = await params;
+  if (!LEARN_GUIDES.includes(slug)) {
+    notFound();
+  }
   const title = capitalizeWords(slug.replace(/-/g, " "));
+  const url = absoluteUrl(`/learn/${slug}`);
 
   const schema = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
+    mainEntityOfPage: url,
     author: {
       "@type": "Organization",
-      name: "Nepdora",
+      name: SITE_NAME,
+      url: absoluteUrl(),
     },
     publisher: {
       "@type": "Organization",
-      name: "Nepdora",
-      url: "https://www.nepdora.com",
+      name: SITE_NAME,
+      url: absoluteUrl(),
     },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Learn",
+        item: absoluteUrl("/blog"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: title,
+        item: url,
+      },
+    ],
   };
 
   return (
     <main className="bg-white py-16 md:py-24">
       <JsonLd id="learn-article-schema" data={schema} />
+      <JsonLd id="learn-breadcrumb-schema" data={breadcrumbSchema} />
       <div className="container mx-auto max-w-4xl px-4">
         <nav className="mb-8 text-sm text-slate-500">
           <Link href="/" className="hover:text-primary transition-colors">
@@ -80,7 +143,7 @@ export default async function LearnPage({ params }: Props) {
           </p>
 
           <div className="mb-12 rounded-3xl border border-slate-200 bg-slate-50 p-8">
-            <h2 className="mb-4 text-2xl font-bold">What You'll Learn</h2>
+            <h2 className="mb-4 text-2xl font-bold">What You&apos;ll Learn</h2>
             <ul className="mb-0">
               <li>Comprehensive overview of the Nepali market environment.</li>
               <li>Step-by-step practical implementation advice.</li>

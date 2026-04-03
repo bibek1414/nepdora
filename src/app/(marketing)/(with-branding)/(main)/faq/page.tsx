@@ -1,6 +1,7 @@
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | Nepdora — Website Builder Nepal",
@@ -13,17 +14,17 @@ export const metadata: Metadata = {
     "ecommerce Nepal support",
   ],
   alternates: {
-    canonical: "https://www.nepdora.com/faq",
+    canonical: absoluteUrl("/faq"),
   },
   openGraph: {
     title: "Frequently Asked Questions | Nepdora",
     description:
       "Have questions about building your website in Nepal? Find answers about pricing, e-commerce, hosting, and how to get started with Nepdora.",
-    url: "https://www.nepdora.com/faq",
-    siteName: "Nepdora",
+    url: absoluteUrl("/faq"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora FAQ - Your questions answered",
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     title: "Frequently Asked Questions | Nepdora",
     description:
       "Have questions about building your website in Nepal? Find answers about pricing, e-commerce, hosting, and how to get started with Nepdora.",
-    images: ["/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

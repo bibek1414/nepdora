@@ -1,6 +1,7 @@
 import TemplatesPage from "@/components/marketing/templates/templates-page";
 import ContactSection from "@/components/marketing/contact-us/contact-us";
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Browse hundreds of professionally designed website templates for E-commerce, Restaurants, Agencies, and more. Customize any design with our easy builder.",
   alternates: {
-    canonical: "https://www.nepdora.com/templates",
+    canonical: absoluteUrl("/templates"),
   },
   keywords: [
     "website templates Nepal",
@@ -18,16 +19,16 @@ export const metadata: Metadata = {
     "customizable website designs",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Nepdora : Professional Website Templates for Any Business in Nepal",
     description:
       "Browse hundreds of professionally designed website templates for E-commerce, Restaurants, Agencies, and more. Customize any design with our easy builder.",
-    url: "https://www.nepdora.com/templates",
-    siteName: "Nepdora",
+    url: absoluteUrl("/templates"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Professionally designed website templates from Nepdora",
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     title: "Nepdora : Professional Website Templates for Any Business in Nepal",
     description:
       "Browse free templates for E-commerce, Restaurants, Agencies, and more. Customize any design with our easy builder.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

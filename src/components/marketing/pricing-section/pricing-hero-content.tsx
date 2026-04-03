@@ -6,11 +6,11 @@ import Link from "next/link";
 import { Check, Headphones, Clock, Zap, Star, Crown } from "lucide-react";
 import { usePricingPlans } from "@/hooks/use-subscription";
 import { Plan } from "@/types/subscription";
+import { PricingCard } from "./pricing-card";
 import {
   PricingHeaderAnimation,
   PricingToggleAnimation,
   SavingsBadgeAnimation,
-  PricingCardAnimation,
 } from "./pricing-hero-animations";
 
 interface PricingHeroContentProps {
@@ -28,12 +28,6 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({
     { icon: Clock, text: "Cancel anytime" },
   ];
 
-  const getPlanColors = (planType: string) => {
-    return {
-      background: "bg-white border border-gray-200 ",
-      buttonBg: "bg-primary hover:bg-primary/80 text-white",
-    };
-  };
 
   const calculatePrice = (monthlyPrice: string) => {
     const price = parseFloat(monthlyPrice);
@@ -119,99 +113,19 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({
 
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-8 lg:grid-cols-3">
           {sortedPlans.map((plan, index) => {
-            const colors = getPlanColors(plan.plan_type);
-            const availableFeatures = [...plan.features].sort(
-              (a, b) => a.order - b.order
-            );
-            const isCenterCard = plan.plan_type.toLowerCase() === "premium";
             const displayPrice = calculatePrice(plan.price);
             const savings = calculateSavings(plan.price);
 
             return (
-              <PricingCardAnimation
+              <PricingCard
                 key={plan.id}
+                plan={plan}
                 index={index}
-                isCenter={isCenterCard}
-              >
-                <div
-                  className={`relative flex h-full flex-col ${colors.background}`}
-                >
-                  {plan.is_popular && (
-                    <div className="absolute top-0 left-0 z-10 w-full -translate-y-1/2">
-                      <div className="bg-primary mt-10 w-full px-6 py-2 text-center text-sm font-bold text-white shadow-lg">
-                        RECOMMENDED
-                      </div>
-                    </div>
-                  )}
-
-                  <div
-                    className={`mt-6 p-6 text-center ${isCenterCard ? "pb-8" : "pb-6"}`}
-                  >
-                    <h3
-                      className={`font-bold ${isCenterCard ? "text-2xl" : "text-xl"}`}
-                    >
-                      {plan.name}
-                    </h3>
-                    <p className="mt-2 text-sm text-black/90">
-                      {plan.plan_type.toLowerCase() === "free"
-                        ? "Get organized and set up simple sales processes"
-                        : plan.plan_type.toLowerCase() === "premium"
-                          ? "Everything you need to boost performance and revenue"
-                          : "Customize without limits and access unrivaled support"}
-                    </p>
-                  </div>
-
-                  <div
-                    className={`border-b border-gray-200 p-2 text-center ${isCenterCard ? "pb-8" : "pb-6"}`}
-                  >
-                    <div className="mb-4 flex items-baseline justify-center gap-1">
-                      <span className="font-medium text-gray-600">Rs.</span>
-                      <span
-                        className={`text-primary font-mono font-bold ${isCenterCard ? "text-4xl" : "text-4xl"}`}
-                      >
-                        {formatPrice(displayPrice)}
-                      </span>
-                      <span className="font-medium text-gray-600">
-                        {isYearly ? "/year" : "/month"}
-                      </span>
-                    </div>
-
-                    {isYearly && parseFloat(savings) > 0 && (
-                      <p className="mb-3 text-xs font-medium text-green-600">
-                        Save Rs. {formatPrice(savings)} per year!
-                      </p>
-                    )}
-
-                    <Link href="/admin/signup">
-                      <button
-                        className={`rounded-full px-10 font-semibold transition-all duration-200 ${colors.buttonBg} py-3`}
-                      >
-                        {plan.plan_type.toLowerCase() === "free"
-                          ? "Get Started Free"
-                          : "Try for Free"}
-                      </button>
-                    </Link>
-                  </div>
-
-                  <div
-                    className={`flex-1 p-6 ${isCenterCard ? "pb-8" : "pb-6"}`}
-                  >
-                    <div className="space-y-4">
-                      {availableFeatures.map(feature => (
-                        <div
-                          key={feature.id}
-                          className="flex items-start gap-3"
-                        >
-                          <Check className="text-primary h-5 w-5 shrink-0" />
-                          <span className="text-sm text-gray-700">
-                            {feature.feature}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </PricingCardAnimation>
+                isYearly={isYearly}
+                displayPrice={displayPrice}
+                savings={savings}
+                formatPrice={formatPrice}
+              />
             );
           })}
         </div>

@@ -5,6 +5,8 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -23,17 +25,51 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  if (!USE_CASES.includes(slug)) {
+    notFound();
+  }
   const title = capitalizeWords(slug.replace(/-/g, " "));
+  const description = `Discover how Nepdora helps with ${slug.replace(/-/g, " ")}. The best website builder for Nepali entrepreneurs and businesses.`;
+  const url = absoluteUrl(`/use-cases/${slug}`);
 
   return {
     title: `${title} | Professional Solutions for Nepal`,
-    description: `Discover how Nepdora helps with ${slug.replace(/-/g, " ")}. The best website builder for Nepali entrepreneurs and businesses.`,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: `${title} | Professional Solutions for Nepal`,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: "en_NP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | Professional Solutions for Nepal`,
+      description,
+      images: [DEFAULT_OG_IMAGE],
+    },
   };
 }
 
 export default async function UseCasePage({ params }: Props) {
   const { slug } = await params;
+  if (!USE_CASES.includes(slug)) {
+    notFound();
+  }
   const title = capitalizeWords(slug.replace(/-/g, " "));
+  const url = absoluteUrl(`/use-cases/${slug}`);
 
   const schema = {
     "@context": "https://schema.org",
@@ -41,7 +77,8 @@ export default async function UseCasePage({ params }: Props) {
     name: title,
     provider: {
       "@type": "Organization",
-      name: "Nepdora",
+      name: SITE_NAME,
+      url: absoluteUrl(),
     },
     areaServed: {
       "@type": "Country",
@@ -49,9 +86,35 @@ export default async function UseCasePage({ params }: Props) {
     },
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Use Cases",
+        item: absoluteUrl("/features"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: title,
+        item: url,
+      },
+    ],
+  };
+
   return (
     <main>
       <JsonLd id="use-case-schema" data={schema} />
+      <JsonLd id="use-case-breadcrumb-schema" data={breadcrumbSchema} />
       <div className="bg-white py-16 md:py-24">
         <div className="container mx-auto max-w-5xl px-4 text-center">
           <h1 className="mb-8 text-4xl leading-tight font-extrabold tracking-tight text-slate-900 md:text-6xl">

@@ -6,6 +6,7 @@ import { industries, INDUSTRY_LABELS, cities } from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import Link from "next/link";
 import { TemplateSection } from "@/components/marketing/templates/template-section";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ industry: string; city: string }>;
@@ -23,10 +24,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
   const cityName = capitalizeWords(city);
+  const title = `Best ${industryLabel} Website in ${cityName} | #1 Choice in Nepal`;
+  const description = `Need a website for your ${industryLabel.toLowerCase()} in ${cityName}? Nepdora provides localized templates, eSewa/Khalti integration, and local SEO to help you rank #1.`;
+  const url = absoluteUrl(`/${industry}/${city}`);
 
   return {
-    title: `Best ${industryLabel} Website in ${cityName} | #1 Choice in Nepal`,
-    description: `Need a website for your ${industryLabel.toLowerCase()} in ${cityName}? Nepdora provides localized templates, eSewa/Khalti integration, and local SEO to help you rank #1.`,
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${industryLabel} website builder in ${cityName}`,
+        },
+      ],
+      locale: "en_NP",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [DEFAULT_OG_IMAGE],
+    },
   };
 }
 
@@ -37,6 +66,7 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
   const cityName = capitalizeWords(city);
+  const pageUrl = absoluteUrl(`/${industry}/${city}`);
 
   // LOCAL CONTENT MAPPING (In real app, this would be a CMS query)
   const cityFeatures: Record<string, string[]> = {
@@ -95,6 +125,31 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
   const currentIndustryFeatures =
     industryFeatures[industry] || industryFeatures.default;
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: industryLabel,
+        item: absoluteUrl(`/${industry}`),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: cityName,
+        item: pageUrl,
+      },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-white">
       <JsonLd
@@ -105,6 +160,7 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
           name: `${industryLabel} in ${cityName}`,
         }}
       />
+      <JsonLd id="pseo-industry-city-breadcrumb" data={breadcrumbSchema} />
 
       {/* Dynamic Hero with Specific industry + city markers */}
       <section className="relative overflow-hidden bg-slate-950 py-20 text-white">
@@ -187,7 +243,7 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
                   <div className="aspect-3/4 rounded-3xl bg-slate-900 p-8 text-white">
                     <div className="mb-4 text-4xl font-black">SEO</div>
                     <p className="text-slate-400">
-                      Optimized for "{industryLabel} in {cityName}" searches.
+                      Optimized for &quot;{industryLabel} in {cityName}&quot; searches.
                     </p>
                   </div>
                 </div>
@@ -217,7 +273,7 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
       <section className="bg-slate-50 py-24">
         <div className="container mx-auto mb-16 px-4 text-center">
           <h2 className="mb-4 text-4xl font-bold text-slate-900">
-            Empowering {cityName}'s Small Businesses
+            Empowering {cityName}&apos;s Small Businesses
           </h2>
           <p className="text-xl text-slate-600">
             Join thousands of entrepreneurs in {cityName} who chose Nepdora.
@@ -237,13 +293,13 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
                   ))}
                 </div>
                 <p className="mb-8 text-lg leading-relaxed text-slate-600 italic">
-                  "{" "}
+                  &quot;{" "}
                   {i === 1
                     ? `Best decision for our ${industryLabel.toLowerCase()} in ${cityName}.`
                     : i === 2
                       ? `Everything from eSewa to Pathao works perfectly in ${cityName}.`
                       : `Support was amazing and they know the ${cityName} market.`}{" "}
-                  "
+                  &quot;
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="text-primary flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 font-bold">

@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import Link from "next/link";
 export const metadata: Metadata = {
   title: "Terms of Service | Nepdora",
   description:
     "Read the Terms of Service for using Nepdora's website builder, e-commerce, and social media management platform. Understand your rights and responsibilities.",
   alternates: {
-    canonical: "https://www.nepdora.com/terms-of-service",
+    canonical: absoluteUrl("/terms"),
   },
   keywords: [
     "Nepdora terms",
@@ -14,16 +16,16 @@ export const metadata: Metadata = {
     "website builder policy",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Terms of Service | Nepdora",
     description:
       "Understand your rights and responsibilities when using the Nepdora platform. Read our official Terms of Service.",
-    url: "https://www.nepdora.com/terms-of-service",
-    siteName: "Nepdora",
+    url: absoluteUrl("/terms"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora's Terms of Service",
@@ -37,7 +39,7 @@ export const metadata: Metadata = {
     title: "Terms of Service | Nepdora",
     description:
       "Read the Terms of Service for using Nepdora's website builder, e-commerce, and social media management platform.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -50,8 +52,8 @@ const termsSchema = {
   description: "Rules and regulations for using the Nepdora platform.",
   publisher: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
   },
 };
 
@@ -506,12 +508,12 @@ export default function TermsOfServicePage() {
               Policy is incorporated into these Terms by reference. By using the
               Service, you consent to our collection and use of personal data as
               outlined therein. You can view our Privacy Policy at{" "}
-              <a
+              <Link
                 href="/privacy-policy"
                 className="text-primary font-semibold hover:underline"
               >
                 https://nepdora.com/privacy-policy
-              </a>
+              </Link>
               .
             </p>
           </section>
@@ -594,18 +596,18 @@ export default function TermsOfServicePage() {
             understood, and agree to be bound by these Terms of Service.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <a
+            <Link
               href="/privacy-policy"
               className="border-border bg-background text-foreground hover:bg-muted inline-block rounded-lg border px-8 py-3 font-semibold transition-colors"
             >
               Privacy Policy
-            </a>
-            <a
+            </Link>
+            <Link
               href="/data-delete"
               className="border-border bg-background text-foreground hover:bg-muted inline-block rounded-lg border px-8 py-3 font-semibold transition-colors"
             >
               Data Deletion
-            </a>
+            </Link>
           </div>
         </div>
       </div>

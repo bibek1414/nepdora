@@ -1,13 +1,14 @@
 import { InvoiceBuilder } from "@/components/marketing/tools/invoice-builder";
 import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const title =
     "Professional Invoice Builder for Nepal | Free & Instant | Nepdora";
   const description =
     "Create and download professional invoices for your business in Nepal instantly. Free invoice templates for freelancers, agencies, and small businesses.";
-  const url = "https://www.nepdora.com/invoice-builder";
-  const imageUrl = "https://www.nepdora.com/nepdora-invoice-og.jpg";
+  const url = absoluteUrl("/invoice-builder");
+  const imageUrl = DEFAULT_OG_IMAGE;
 
   return {
     title,
@@ -16,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: "Nepdora",
+      siteName: SITE_NAME,
       images: [
         {
           url: imageUrl,
@@ -37,6 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: url,
     },
+    metadataBase: new URL(absoluteUrl()),
   };
 }
 

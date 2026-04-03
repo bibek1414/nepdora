@@ -3,7 +3,7 @@ import React from "react";
 export const PaymentIntegration: React.FC = () => {
   return (
     <section className="bg-white py-16 md:py-32">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
           <div className="max-w-2xl text-center lg:text-left">
             <h2 className="mb-6 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:mb-8 md:text-5xl">

@@ -1,13 +1,7 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
 import Script from "next/script";
-import Hero from "@/components/marketing/website-developer-nepal/Hero";
-import EmpathySection from "@/components/marketing/website-developer-nepal/EmpathySection";
-import ComparisonTable from "@/components/marketing/website-developer-nepal/ComparisonTable";
-import HowItWorks from "@/components/marketing/website-developer-nepal/HowItWorks";
-import WhoItsBuiltFor from "@/components/marketing/website-developer-nepal/WhoItsBuiltFor";
-import FAQSection from "@/components/marketing/website-developer-nepal/FAQSection";
-import CTASection from "@/components/marketing/website-developer-nepal/CTASection";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title:
@@ -23,17 +17,17 @@ export const metadata: Metadata = {
     "e-commerce Nepal",
   ],
   alternates: {
-    canonical: "https://www.nepdora.com/website-developer-nepal",
+    canonical: absoluteUrl("/website-developer-nepal"),
   },
   openGraph: {
     title: "Website Developer in Nepal? Build It Yourself with Nepdora",
     description:
       "Looking for a website developer in Nepal? Skip the wait and high cost. Build a professional website in minutes with Nepdora. Try free.",
-    url: "https://www.nepdora.com/website-developer-nepal",
-    siteName: "Nepdora",
+    url: absoluteUrl("/website-developer-nepal"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Build your website in Nepal with Nepdora",
@@ -47,9 +41,17 @@ export const metadata: Metadata = {
     title: "Website Developer in Nepal? Build It Yourself with Nepdora",
     description:
       "Skip the wait and high cost. Build a professional website in minutes with Nepdora. Try free.",
-    images: ["/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
+
+import Hero from "@/components/marketing/website-developer-nepal/Hero";
+import EmpathySection from "@/components/marketing/website-developer-nepal/EmpathySection";
+import ComparisonTable from "@/components/marketing/website-developer-nepal/ComparisonTable";
+import HowItWorks from "@/components/marketing/website-developer-nepal/HowItWorks";
+import WhoItsBuiltFor from "@/components/marketing/website-developer-nepal/WhoItsBuiltFor";
+import FAQSection from "@/components/marketing/website-developer-nepal/FAQSection";
+import CTASection from "@/components/marketing/website-developer-nepal/CTASection";
 
 export default function WebsiteDeveloperNepalPage() {
   const faqSchema = {

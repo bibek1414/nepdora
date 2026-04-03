@@ -10,6 +10,7 @@ import QuickBuilder from "@/components/marketing/quick-builder/quick-builder";
 import CTA from "@/components/marketing/cta-section/cta-section";
 import Comparison from "@/components/marketing/comparison/comparison";
 import Migration from "@/components/marketing/migration/migration";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 // Lazy load non-critical components to reduce initial load
 const TestimonialsSection = dynamic(
   () => import("@/components/marketing/testimonials/testimonials"),
@@ -36,19 +37,19 @@ export const metadata: Metadata = {
     "AI website builder",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: "https://www.nepdora.com",
+    canonical: SITE_URL,
   },
   openGraph: {
     title: "Nepdora — Your Complete Website Builder in Nepal",
     description:
       "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, and 24/7 support. Start building today!",
-    url: "https://www.nepdora.com",
-    siteName: "Nepdora",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora - Your Complete Website Builder in Nepal",
@@ -62,7 +63,7 @@ export const metadata: Metadata = {
     title: "Nepdora — Your Complete Website Builder in Nepal",
     description:
       "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, and 24/7 support. Start building today!",
-    images: ["/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -79,11 +80,6 @@ export default function Marketing() {
       "https://www.facebook.com/NepdoraWebBuilder",
       "https://www.instagram.com/nep_dora",
     ],
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://nepdora.com/search?q={search_term_string}",
-      "query-input": "required name=search_term_string",
-    },
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "+977 986-6316114",

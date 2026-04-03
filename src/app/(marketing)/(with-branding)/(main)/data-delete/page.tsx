@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Data Deletion Instructions | Nepdora",
   description:
     "Find out how to permanently delete your account and personal data from Nepdora, including information collected via Facebook Login. Follow our step-by-step instructions.",
   alternates: {
-    canonical: "https://www.nepdora.com/data-deletion",
+    canonical: absoluteUrl("/data-delete"),
   },
   keywords: [
     "data deletion",
@@ -15,16 +17,16 @@ export const metadata: Metadata = {
     "right to be forgotten",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Data Deletion Instructions | Nepdora",
     description:
       "Find out how to permanently delete your account and personal data from Nepdora, including information collected via Facebook Login.",
-    url: "https://www.nepdora.com/data-deletion",
-    siteName: "Nepdora",
+    url: absoluteUrl("/data-delete"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Instructions for deleting your Nepdora data",
@@ -38,7 +40,7 @@ export const metadata: Metadata = {
     title: "Data Deletion Instructions | Nepdora",
     description:
       "Step-by-step instructions on how to permanently delete your account and personal data from the Nepdora platform.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 export default function DataDeletionPage() {
@@ -199,7 +201,7 @@ export default function DataDeletionPage() {
             </h2>
             <div className="space-y-4">
               <div className="flex gap-4">
-                <div className="bg-primary text-primary-foreground flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                <div className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                   1
                 </div>
                 <div>
@@ -214,7 +216,7 @@ export default function DataDeletionPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="bg-primary text-primary-foreground flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                <div className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                   2
                 </div>
                 <div>
@@ -229,7 +231,7 @@ export default function DataDeletionPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="bg-primary text-primary-foreground flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                <div className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                   3
                 </div>
                 <div>
@@ -244,7 +246,7 @@ export default function DataDeletionPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="bg-primary text-primary-foreground flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                <div className="bg-primary text-primary-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                   4
                 </div>
                 <div>
@@ -361,12 +363,12 @@ export default function DataDeletionPage() {
             <p className="text-muted-foreground leading-relaxed">
               For more information about your privacy rights, please refer to
               our{" "}
-              <a
+              <Link
                 href="/privacy-policy"
                 className="text-primary font-semibold hover:underline"
               >
                 Privacy Policy
-              </a>
+              </Link>
               .
             </p>
           </section>
@@ -387,12 +389,12 @@ export default function DataDeletionPage() {
             >
               Email Us
             </a>
-            <a
+            <Link
               href="/contact"
               className="border-border bg-background text-foreground hover:bg-muted inline-block rounded-lg border px-8 py-3 font-semibold transition-colors"
             >
               Contact Form
-            </a>
+            </Link>
           </div>
         </div>
       </div>

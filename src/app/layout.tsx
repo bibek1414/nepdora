@@ -11,6 +11,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalyticsStatic } from "@/components/site-owners/admin/google-analytics/google-analytics-static";
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,15 +19,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_BASE_URL ||
-      `https://${process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com"}`
-  ),
+  metadataBase: new URL(SITE_URL),
   title: "Nepdora : Website Builder - Create a Free Website In Minutes",
   icons: {
-    icon: "https://nepdora.com/favicon.ico",
-    shortcut: "https://nepdora.com/favicon-16x16.png",
-    apple: "https://nepdora.com/apple-touch-icon.png",
+    icon: "/favicon-32x32.png",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
   },
   description:
     "Launch your business online quickly with our free website builder, free hosting, and a comprehensive suite of essential business tools. Start now!",
@@ -34,11 +32,11 @@ export const metadata: Metadata = {
     title: "Nepdora : Website Builder - Create a Free Website In Minutes",
     description:
       "Launch your business online quickly with our free website builder, free hosting, and a comprehensive suite of essential business tools. Start now!",
-    url: "https://nepdora.com",
-    siteName: "Nepdora",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://nepdora.com/og-image.png",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora - Free Website Builder",
@@ -52,7 +50,7 @@ export const metadata: Metadata = {
     title: "Nepdora : Website Builder - Create a Free Website In Minutes",
     description:
       "Launch your business online quickly with our free website builder, free hosting, and a comprehensive suite of essential business tools. Start now!",
-    images: ["https://nepdora.com/twitter-image.png"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

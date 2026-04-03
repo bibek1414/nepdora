@@ -1,12 +1,12 @@
-import FeaturesGrid from "@/components/marketing/features-section/FeaturesGrid";
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
   description:
     "See the comprehensive features that power your digital presence: web hosting, online store setup, analytics, and centralized social media management.",
   alternates: {
-    canonical: "https://www.nepdora.com/features",
+    canonical: absoluteUrl("/features"),
   },
   keywords: [
     "Nepdora features",
@@ -16,16 +16,16 @@ export const metadata: Metadata = {
     "web hosting Nepal",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
     description:
       "See the comprehensive features that power your digital presence: web hosting, online store setup, analytics, and centralized social media management.",
-    url: "https://www.nepdora.com/features",
-    siteName: "Nepdora",
+    url: absoluteUrl("/features"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora's powerful website and e-commerce features",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
     description:
       "Explore features like web hosting, online store setup, analytics, and centralized social media management.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -53,8 +53,8 @@ const featuresSchema = {
     "Comprehensive suite of digital tools including a drag-and-drop website builder, e-commerce solutions, and centralized social media management.",
   provider: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
   },
   hasOfferCatalog: {
     "@type": "OfferCatalog",
@@ -84,6 +84,8 @@ const featuresSchema = {
     ],
   },
 };
+
+import FeaturesGrid from "@/components/marketing/features-section/FeaturesGrid";
 
 export default function FeaturesPage() {
   return (

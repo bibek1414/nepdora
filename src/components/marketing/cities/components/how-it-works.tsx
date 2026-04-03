@@ -15,7 +15,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ steps, category }) => {
 
   return (
     <section className="bg-slate-50 py-32">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mb-20 text-center">
           <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
             How to Create a {category.replace("-", " ")} Website in 3 Easy Steps

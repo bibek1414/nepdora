@@ -2,11 +2,43 @@ import { Metadata } from "next";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Free SEO Checker for Nepali Websites | Rank Higher on Google",
   description:
     "Analyze your website's SEO performance and get actionable tips to rank #1 in Nepal. specialized for the Nepalese search landscape.",
+  alternates: {
+    canonical: absoluteUrl("/tools/seo-checker"),
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Free SEO Checker for Nepali Websites | Rank Higher on Google",
+    description:
+      "Analyze your website's SEO performance and get actionable tips to rank #1 in Nepal. specialized for the Nepalese search landscape.",
+    url: absoluteUrl("/tools/seo-checker"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Nepdora SEO Checker",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free SEO Checker for Nepali Websites | Rank Higher on Google",
+    description:
+      "Analyze your website's SEO performance and get actionable tips to rank #1 in Nepal. specialized for the Nepalese search landscape.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function SEOChecker() {
@@ -44,8 +76,8 @@ export default function SEOChecker() {
             </h2>
             <p>
               Ranking in Nepal requires a mix of local and global SEO
-              strategies. From targeting city-specific keywords like "Best
-              restaurant in Kathmandu" to ensuring your site loads fast on
+              strategies. From targeting city-specific keywords like &quot;Best
+              restaurant in Kathmandu&quot; to ensuring your site loads fast on
               NTC/Ncell networks, we help you master the local landscape.
             </p>
           </div>

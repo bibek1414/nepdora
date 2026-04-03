@@ -1,6 +1,7 @@
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Build an E-commerce Website in Nepal (Start Selling Today) | Nepdora",
@@ -15,17 +16,17 @@ export const metadata: Metadata = {
     "ecommerce tools",
   ],
   alternates: {
-    canonical: "https://www.nepdora.com/ecommerce",
+    canonical: absoluteUrl("/ecommerce"),
   },
   openGraph: {
     title: "Build an E-commerce Website in Nepal (Start Selling Today) | Nepdora",
     description:
       "Build your E-Commerce website in Nepal for free with Nepdora. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.",
-    url: "https://www.nepdora.com/ecommerce",
-    siteName: "Nepdora",
+    url: absoluteUrl("/ecommerce"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora - Build Free E-Commerce Website in Nepal",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     title: "Build an E-commerce Website in Nepal (Start Selling Today) | Nepdora",
     description:
       "Build your E-Commerce website in Nepal for free with Nepdora. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.",
-    images: ["/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -51,8 +52,8 @@ const ecommerceSchema = {
     "A comprehensive e-commerce platform for businesses in Nepal to start selling online with integrated payments and inventory management.",
   provider: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
   },
   areaServed: "NP",
   hasOfferCatalog: {

@@ -1,13 +1,14 @@
 import SupportHeader from "@/components/site-owners/admin/support/support-header";
 import SupportFAQ from "@/components/site-owners/admin/support/support-faq";
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Nepdora Support | Help Center & FAQs",
   description:
     "Get help with Nepdora. Visit our Support Center to find answers to common questions, explore FAQs, and contact our team for personalized assistance.",
   alternates: {
-    canonical: "https://www.nepdora.com/support",
+    canonical: absoluteUrl("/support"),
   },
   keywords: [
     "Nepdora support",
@@ -17,16 +18,16 @@ export const metadata: Metadata = {
     "customer support Nepal",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Nepdora Support | Help Center & FAQs",
     description:
       "Find answers to common questions and get personalized assistance from the Nepdora team.",
-    url: "https://www.nepdora.com/support",
-    siteName: "Nepdora",
+    url: absoluteUrl("/support"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora Help Center and FAQ",
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     title: "Nepdora Support | Help Center & FAQs",
     description:
       "Get help with Nepdora. Visit our Support Center to find answers to common questions, explore FAQs, and contact our team for personalized assistance.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

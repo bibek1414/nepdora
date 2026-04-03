@@ -4,6 +4,7 @@ import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ industry: string }>;
@@ -33,16 +34,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: {
-      canonical: `https://www.nepdora.com/${industry}`,
+      canonical: absoluteUrl(`/${industry}`),
     },
     openGraph: {
       title,
       description,
-      url: `https://www.nepdora.com/${industry}`,
-      siteName: "Nepdora",
+      url: absoluteUrl(`/${industry}`),
+      siteName: SITE_NAME,
       images: [
         {
-          url: "/nepdora-image.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: `Nepdora - ${niche} Website Builder`,
@@ -68,8 +69,8 @@ export default async function IndustryPage({ params }: Props) {
     description: `Professional website building solutions for ${industryLabel.toLowerCase()}s in Nepal.`,
     provider: {
       "@type": "Organization",
-      name: "Nepdora",
-      url: "https://www.nepdora.com",
+      name: SITE_NAME,
+      url: absoluteUrl(),
     },
   };
 

@@ -1,33 +1,33 @@
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Create a Booking Website in Nepal (Fast Setup) | Nepdora",
-  description:
-    "Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
+  title: `Create a Booking Website in Nepal (Fast Setup) | ${SITE_NAME}`,
+  description: `Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from ${SITE_NAME}.`,
   keywords: [
     "booking website Nepal",
     "appointment system Nepal",
-    "Nepdora booking",
+    `${SITE_NAME} booking`,
     "scheduling software Nepal",
     "online appointments Nepal",
   ],
+  metadataBase: new URL(absoluteUrl()),
   alternates: {
-    canonical: "https://www.nepdora.com/booking-website",
+    canonical: absoluteUrl("/booking-website"),
   },
   openGraph: {
-    title: "Create a Booking Website in Nepal (Fast Setup) | Nepdora",
-    description:
-      "Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
-    url: "https://www.nepdora.com/booking-website",
-    siteName: "Nepdora",
+    title: `Create a Booking Website in Nepal (Fast Setup) | ${SITE_NAME}`,
+    description: `Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from ${SITE_NAME}.`,
+    url: absoluteUrl("/booking-website"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Nepdora - Booking and Appointment System",
+        alt: `${SITE_NAME} - Booking and Appointment System`,
       },
     ],
     locale: "en_NP",
@@ -35,23 +35,22 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Create a Booking Website in Nepal (Fast Setup) | Nepdora",
-    description:
-      "Launch your professional booking website in Nepal in under 10 minutes. Build with Nepdora.",
-    images: ["/nepdora-image.jpg"],
+    title: `Create a Booking Website in Nepal (Fast Setup) | ${SITE_NAME}`,
+    description: `Launch your professional booking website in Nepal in under 10 minutes. Build with ${SITE_NAME}.`,
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
 const bookingSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "Nepdora Booking Website Builder",
+  name: `${SITE_NAME} Booking Website Builder`,
   description:
     "Online booking and appointment scheduling software integrated into professional websites for Nepali businesses.",
   provider: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
   },
   areaServed: "NP",
 };

@@ -4,7 +4,6 @@ import { INDUSTRY_LABELS } from "@/lib/seo-data";
 import { CityHero } from "./components/city-hero";
 import { CityBenefits } from "./components/city-benefits";
 import { CityFeatures } from "./components/city-features";
-import { CityIndustryLists } from "./components/city-industry-lists";
 import { CityResources } from "./components/city-resources";
 import { CityFAQ } from "./components/city-faq";
 import { CityCTA } from "./components/city-cta";
@@ -21,59 +20,6 @@ interface CitiesLandingPageProps {
   city: string;
 }
 
-const CITY_NEIGHBORHOODS: Record<string, string[]> = {
-  kathmandu: [
-    "Koteshwor",
-    "Thamel",
-    "Baneshwor",
-    "Lainchaur",
-    "Balaju",
-    "Boudha",
-    "Patan",
-    "Maharajgunj",
-  ],
-  pokhara: [
-    "Lakeside",
-    "New Road",
-    "Mahendra Pul",
-    "Bagar",
-    "Prithvi Chowk",
-    "Pardi",
-  ],
-  lalitpur: [
-    "Jhamsikhel",
-    "Jawalakhel",
-    "Kupondole",
-    "Patan",
-    "Sanepa",
-    "Gwarko",
-  ],
-  default: [
-    "Downtown",
-    "Central Market",
-    "Business District",
-    "Residential Area",
-  ],
-};
-
-const CITY_INDUSTRIES: Record<string, string[]> = {
-  kathmandu: [
-    "Tourism",
-    "Retail",
-    "Education",
-    "Healthcare",
-    "E-commerce",
-    "Agencies",
-  ],
-  pokhara: [
-    "Adventure Sports",
-    "Hotels",
-    "Cafes",
-    "Handicrafts",
-    "Travel Guides",
-  ],
-  default: ["Retail", "Services", "Education", "Consultancy", "Manufacturing"],
-};
 
 export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
   category,
@@ -94,9 +40,6 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
     ],
   };
 
-  const neighborhoods =
-    CITY_NEIGHBORHOODS[cityLower] || CITY_NEIGHBORHOODS.default;
-  const industries = CITY_INDUSTRIES[cityLower] || CITY_INDUSTRIES.default;
 
   // Handle Dynamic SEO overrides for City Landing Pages
   if (cityLower !== "nepal") {
@@ -149,11 +92,6 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
         <IndustryPricing category={category} />
       </div>
 
-      <CityIndustryLists
-        cityName={cityName}
-        industries={industries}
-        neighborhoods={neighborhoods}
-      />
 
       <div className="bg-white py-24">
         <CityResources />
@@ -164,7 +102,7 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
       </div>
 
       <div className="py-24">
-        <CityCTA cityName={cityName} />
+        <CityCTA cityName={cityName} category={category} />
       </div>
     </div>
   );

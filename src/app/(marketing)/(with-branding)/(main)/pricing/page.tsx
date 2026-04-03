@@ -1,15 +1,12 @@
-export const dynamic = "force-dynamic";
-
-import PricingSectionHero from "@/components/marketing/pricing-section/pricing-section-hero";
-import { subscriptionApi } from "@/services/api/subscription";
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Nepdora Pricing: Start Free, Upgrade for More Features",
   description:
     "Start for FREE! Compare Nepdora's transparent pricing plans for website development, e-commerce, and social media tools. Only pay as you grow.",
   alternates: {
-    canonical: "https://www.nepdora.com/pricing",
+    canonical: absoluteUrl("/pricing"),
   },
   keywords: [
     "Nepdora pricing",
@@ -19,16 +16,16 @@ export const metadata: Metadata = {
     "affordable web design",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Nepdora Pricing: Start Free, Upgrade for More Features",
     description:
       "Start for FREE! Compare Nepdora's transparent pricing plans for website development, e-commerce, and social media tools. Only pay as you grow.",
-    url: "https://www.nepdora.com/pricing",
-    siteName: "Nepdora",
+    url: absoluteUrl("/pricing"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora's transparent and flexible pricing plans",
@@ -42,7 +39,7 @@ export const metadata: Metadata = {
     title: "Nepdora Pricing: Start Free, Upgrade for More Features",
     description:
       "Start for FREE! Compare Nepdora's transparent pricing plans and only pay as you grow.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -59,11 +56,15 @@ const pricingSchema = {
     priceCurrency: "NPR",
     offeredBy: {
       "@type": "Organization",
-      name: "Nepdora",
-      url: "https://www.nepdora.com",
+      name: SITE_NAME,
+      url: absoluteUrl(),
     },
   },
 };
+
+export const dynamic = "force-dynamic";
+import PricingSectionHero from "@/components/marketing/pricing-section/pricing-section-hero";
+import { subscriptionApi } from "@/services/api/subscription";
 
 export default async function PricingPage() {
   const plans = await subscriptionApi.getPlans().catch(() => []);

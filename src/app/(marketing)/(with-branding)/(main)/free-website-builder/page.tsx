@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import Hero from "@/components/marketing/hero-section/hero-section";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import PricingSection from "@/components/marketing/pricing-section/pricing-section";
@@ -16,15 +17,43 @@ export const metadata: Metadata = {
     "zero cost website builder",
     "create free website nepal",
   ],
+  metadataBase: new URL(absoluteUrl()),
+  alternates: {
+    canonical: absoluteUrl("/free-website-builder"),
+  },
+  openGraph: {
+    title: "Free Website Builder Nepal | Build Your Site at Zero Cost",
+    description:
+      "Start your online presence for free with Nepdora. The best free website builder in Nepal with professional templates and easy-to-use tools. No credit card required.",
+    url: absoluteUrl("/free-website-builder"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Free Website Builder Nepal",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Website Builder Nepal | Nepdora",
+    description:
+      "Start your online presence for free with Nepdora. The best free website builder in Nepal.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function FreeWebsiteBuilder() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Nepdora Free Website Builder",
+    name: `${SITE_NAME} Free Website Builder`,
     description: "Start building your online presence for free with Nepdora.",
-    url: "https://www.nepdora.com/free-website-builder",
+    url: absoluteUrl("/free-website-builder"),
     applicationCategory: "DesignApplication",
     operatingSystem: "Web",
     offers: {

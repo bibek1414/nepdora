@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import {
@@ -13,11 +15,70 @@ export const metadata: Metadata = {
   title: "eSewa Integration Guide for Websites in Nepal | Step-by-Step",
   description:
     "Complete guide on how to integrate eSewa into your business website. Start accepting payments from millions of eSewa users in Nepal today with Nepdora.",
+  metadataBase: new URL(absoluteUrl()),
+  alternates: {
+    canonical: absoluteUrl("/esewa-integration-guide-nepal"),
+  },
+  openGraph: {
+    title: "eSewa Integration Guide for Websites in Nepal | Step-by-Step",
+    description:
+      "Complete guide on how to integrate eSewa into your business website. Start accepting payments from millions of eSewa users in Nepal today with Nepdora.",
+    url: absoluteUrl("/esewa-integration-guide-nepal"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "eSewa Integration Guide for Nepal",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "eSewa Integration Guide for Nepal | Nepdora",
+    description:
+      "Step-by-step guide to integrate eSewa into your website in Nepal. Accept digital wallet payments easily.",
+    images: [DEFAULT_OG_IMAGE],
+  },
+};
+
+const guideSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Integrate eSewa into Your Website in Nepal",
+  description:
+    "A comprehensive guide for merchants in Nepal to integrate eSewa payment gateway.",
+  publisher: {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: absoluteUrl(),
+  },
+  step: [
+    {
+      "@type": "HowToStep",
+      name: "Register as a Merchant",
+      text: "Apply for an eSewa merchant account and complete KYC verification.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "API Configuration",
+      text: "Set up the eSewa API with your merchant credentials.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "Start Accepting Payments",
+      text: "Go live and start receiving payments from eSewa users.",
+    },
+  ],
 };
 
 export default function EsewaPage() {
   return (
     <main className="min-h-screen bg-slate-50">
+      <JsonLd id="esewa-guide-schema" data={guideSchema} />
       {/* Hero Section */}
       <section className="border-b border-slate-100 bg-white py-20">
         <div className="container mx-auto max-w-4xl px-4 text-center">

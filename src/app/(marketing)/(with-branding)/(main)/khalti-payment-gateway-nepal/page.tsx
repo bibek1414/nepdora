@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
@@ -14,19 +15,70 @@ export const metadata: Metadata = {
   title: "Integrated Khalti Payment Gateway for Your Website in Nepal",
   description:
     "Learn how to integrate Khalti payment gateway into your website. Nepdora provides native, one-click Khalti integration for all businesses in Nepal.",
+  metadataBase: new URL(absoluteUrl()),
+  alternates: {
+    canonical: absoluteUrl("/khalti-payment-gateway-nepal"),
+  },
+  openGraph: {
+    title: "Integrated Khalti Payment Gateway for Your Website in Nepal",
+    description:
+      "Learn how to integrate Khalti payment gateway into your website. Nepdora provides native, one-click Khalti integration for all businesses in Nepal.",
+    url: absoluteUrl("/khalti-payment-gateway-nepal"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Khalti Integration for Nepal Websites",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Khalti Integration for Nepal | Nepdora",
+    description:
+      "Step-by-step guide to integrate Khalti into your website in Nepal. Accept digital wallet payments easily.",
+    images: [DEFAULT_OG_IMAGE],
+  },
+};
+
+const khaltiSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Integrate Khalti into Your Website in Nepal",
+  description:
+    "A comprehensive guide for merchants in Nepal to integrate Khalti payment gateway.",
+  publisher: {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: absoluteUrl(),
+  },
+  step: [
+    {
+      "@type": "HowToStep",
+      name: "Register as a Merchant",
+      text: "Apply for a Khalti merchant account and complete KYC verification.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "API Configuration",
+      text: "Set up the Khalti API with your secret keys.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "Start Accepting Payments",
+      text: "Go live and start receiving payments from Khalti users.",
+    },
+  ],
 };
 
 export default function KhaltiPage() {
   return (
     <main className="min-h-screen bg-slate-50">
-      <JsonLd
-        id="khalti-schema"
-        data={{
-          "@context": "https://schema.org",
-          "@type": "Service",
-          name: "Khalti Integration Nepal",
-        }}
-      />
+      <JsonLd id="khalti-guide-schema" data={khaltiSchema} />
 
       {/* Hero Section */}
       <section className="border-b border-slate-100 bg-white py-20">

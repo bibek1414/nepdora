@@ -4,25 +4,52 @@ import FeaturesSection from "@/components/marketing/features-section/features-se
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
+import { SITE_NAME, absoluteUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Create a Website in Nepal in 5 Minutes | Step-by-Step Guide",
-  description:
-    "Want to create a website in Nepal? Nepdora makes it easy. From choosing a template to connecting eSewa, learn how to build your site in minutes.",
+  title: `Create a Website in Nepal in 5 Minutes | Step-by-Step Guide | ${SITE_NAME}`,
+  description: `Want to create a website in Nepal? ${SITE_NAME} makes it easy. From choosing a template to connecting eSewa, learn how to build your site in minutes.`,
   keywords: [
     "create website nepal",
     "how to build website in nepal",
     "website creation nepal",
     "nepal website maker",
+    SITE_NAME,
   ],
+  metadataBase: new URL(absoluteUrl()),
+  alternates: {
+    canonical: absoluteUrl("/create-website"),
+  },
+  openGraph: {
+    title: `Create a Website in Nepal in 5 Minutes | Step-by-Step Guide | ${SITE_NAME}`,
+    description: `Want to create a website in Nepal? ${SITE_NAME} makes it easy. From choosing a template to connecting eSewa, learn how to build your site in minutes.`,
+    url: absoluteUrl("/create-website"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} - Create a Website in Nepal`,
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Create a Website in Nepal in 5 Minutes | Step-by-Step Guide | ${SITE_NAME}`,
+    description: `Build your website in Nepal in minutes with ${SITE_NAME}.`,
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function CreateWebsite() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to Create a Website in Nepal with Nepdora",
-    description: "A step-by-step guide to launching your website in Nepal.",
+    name: `How to Create a Website in Nepal with ${SITE_NAME}`,
+    description: `A step-by-step guide to launching your website in Nepal using ${SITE_NAME}.`,
     step: [
       {
         "@type": "HowToStep",

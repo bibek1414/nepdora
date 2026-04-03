@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Comparison from "@/components/marketing/comparison/comparison";
 import { capitalizeWords } from "@/lib/string-utils";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${platform1} vs ${platform2} | Which is better for Nepal?`;
   const description = `Compare ${platform1} and ${platform2}. Discover why Nepdora is the best choice for businesses in Nepal with local payments and support.`;
-  const url = `https://www.nepdora.com/compare/${slug}`;
+  const url = absoluteUrl(`/compare/${slug}`);
 
   return {
     title,
@@ -31,10 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: "Nepdora",
+      siteName: SITE_NAME,
       images: [
         {
-          url: "/nepdora-image.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: `Compare ${platform1} and ${platform2}`,
@@ -47,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/nepdora-image.jpg"],
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
@@ -73,13 +74,13 @@ export default async function ComparePage({ params }: Props) {
   const comparisonSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: `${platform1} vs Nepdora Comparison`,
-    description: `A detailed comparison between ${platform1} and Nepdora for businesses in Nepal.`,
-    provider: {
-      "@type": "Organization",
-      name: "Nepdora",
-      url: "https://www.nepdora.com",
-    },
+      name: `${platform1} vs ${SITE_NAME} Comparison`,
+      description: `A detailed comparison between ${platform1} and ${SITE_NAME} for businesses in Nepal.`,
+      provider: {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: absoluteUrl(),
+      },
   };
 
   return (

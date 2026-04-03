@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import AboutHero from "@/components/marketing/about-us/about-hero";
 import AboutStory from "@/components/marketing/about-us/about-story";
 import AboutSecurity from "@/components/marketing/about-us/about-security";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   description:
     "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management. Build your complete digital presence here.",
   alternates: {
-    canonical: "https://www.nepdora.com/about",
+    canonical: absoluteUrl("/about"),
   },
   keywords: [
     "Nepdora about",
@@ -22,16 +23,16 @@ export const metadata: Metadata = {
     "Made in Nepal",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "About Nepdora : Made in Nepal Website Builder",
     description:
       "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management. Build your complete digital presence here.",
-    url: "https://www.nepdora.com/about",
-    siteName: "Nepdora",
+    url: absoluteUrl("/about"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "About Nepdora - Made in Nepal Website Builder",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     title: "About Nepdora : Made in Nepal Website Builder",
     description:
       "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -59,9 +60,9 @@ const aboutSchema = {
     "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management in Nepal.",
   mainEntity: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
-    logo: "https://www.nepdora.com/nepdora-logooo.svg",
+    name: SITE_NAME,
+    url: absoluteUrl(),
+    logo: DEFAULT_OG_IMAGE,
   },
 };
 

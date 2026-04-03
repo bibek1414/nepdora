@@ -38,7 +38,7 @@ export const CityHero: React.FC<CityHeroProps> = ({
         <div className="absolute inset-0 bg-linear-to-b from-[#1047A1]/95 to-[#1047A1]" />
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 text-center sm:px-6">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 text-center sm:px-6">
         <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-7xl">
           {customH1 ? (
             <span className="block">{customH1}</span>

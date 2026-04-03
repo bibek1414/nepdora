@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import Hero from "@/components/marketing/hero-section/hero-section";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import PricingSection from "@/components/marketing/pricing-section/pricing-section";
@@ -18,7 +19,32 @@ export const metadata: Metadata = {
     "ecommerce website nepal",
   ],
   alternates: {
-    canonical: "https://www.nepdora.com/website-builder-nepal",
+    canonical: absoluteUrl("/website-builder-nepal"),
+  },
+  metadataBase: new URL(absoluteUrl()),
+  openGraph: {
+    title: "Best Website Builder in Nepal | Create Your Site in 5 Minutes",
+    description:
+      "Nepdora is the #1 website builder in Nepal. Build professional websites for e-commerce, restaurants, and agencies with eSewa & Khalti integration. Start free today!",
+    url: absoluteUrl("/website-builder-nepal"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Best Website Builder in Nepal - Nepdora",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Best Website Builder in Nepal | Nepdora",
+    description:
+      "Build professional websites in Nepal with eSewa & Khalti integration. Start free today!",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -26,10 +52,10 @@ export default function WebsiteBuilderNepal() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Nepdora Website Builder",
+    name: `${SITE_NAME} Website Builder`,
     description:
       "All-in-one website builder for Nepali businesses with local payment and delivery integration.",
-    url: "https://www.nepdora.com",
+    url: absoluteUrl(),
     applicationCategory: "DesignApplication",
     operatingSystem: "Web",
     offers: {
@@ -39,8 +65,8 @@ export default function WebsiteBuilderNepal() {
     },
     provider: {
       "@type": "Organization",
-      name: "Nepdora",
-      url: "https://www.nepdora.com",
+      name: SITE_NAME,
+      url: absoluteUrl(),
     },
   };
 

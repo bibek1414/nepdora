@@ -2,6 +2,7 @@ import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-
 import { NEPAL_CITIES } from "@/constants/nepal-cities";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ city: string }>;
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Clinic Website in ${cityName} | Nepdora`;
   const description = `Launch a professional clinic website in ${cityName} with Nepdora. Manage patient appointments, display services, and grow your practice online.`;
 
-  const url = `https://www.nepdora.com/clinic-website/` + city.toLowerCase();
+  const url = absoluteUrl(`/clinic-website/` + city.toLowerCase());
 
   return {
     title,
@@ -34,10 +35,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: "Nepdora",
+      siteName: SITE_NAME,
       images: [
         {
-          url: "/nepdora-image.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: `Best Clinic Website in ${cityName}`,
@@ -50,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/nepdora-image.jpg"],
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
@@ -78,8 +79,8 @@ export default async function Page({ params }: Props) {
     description: `Professional healthcare website solutions in ${cityName} powered by Nepdora.`,
     provider: {
       "@type": "Organization",
-      name: "Nepdora",
-      url: "https://www.nepdora.com",
+      name: SITE_NAME,
+      url: absoluteUrl(),
     },
     areaServed: {
       "@type": "City",

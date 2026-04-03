@@ -1,12 +1,13 @@
 import ContactSection from "@/components/marketing/contact-us/contact-us";
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Contact Nepdora: Get Web Development & E-commerce Support",
   description:
     "Need help? Contact the Nepdora team via phone, email, or live chat. Get quick answers about website, e-commerce, and social media solutions.",
   alternates: {
-    canonical: "https://www.nepdora.com/contact",
+    canonical: absoluteUrl("/contact"),
   },
   keywords: [
     "Nepdora contact",
@@ -16,16 +17,16 @@ export const metadata: Metadata = {
     "digital marketing Nepal",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Contact Nepdora: Get Web Development & E-commerce Support",
     description:
       "Need help? Contact the Nepdora team via phone, email, or live chat. Get quick answers about website, e-commerce, and social media solutions.",
-    url: "https://www.nepdora.com/contact",
-    siteName: "Nepdora",
+    url: absoluteUrl("/contact"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Contact the Nepdora support team",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     title: "Contact Nepdora: Get Web Development & E-commerce Support",
     description:
       "Need help? Contact the Nepdora team via phone, email, or live chat for quick support.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -53,7 +54,7 @@ const contactSchema = {
     "Get in touch with the Nepdora team for web development and e-commerce support in Nepal.",
   mainEntity: {
     "@type": "Organization",
-    name: "Nepdora",
+    name: SITE_NAME,
     telephone: "+977 986-6316114",
     email: "support@nepdora.com",
     address: {

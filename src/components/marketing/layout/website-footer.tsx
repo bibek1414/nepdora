@@ -110,7 +110,7 @@ export const WebsiteFooter = () => {
             <h4 className="mb-6 text-sm font-bold tracking-wider text-gray-900">
               Explore Website Solutions by Region
             </h4>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {NEPAL_CITIES.slice(0, 500).map(city => (
                 <Link
                   key={city}

@@ -2,11 +2,43 @@ import { Metadata } from "next";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Website Speed Test Nepal | Optimize for Local Networks",
   description:
     "Check how fast your website loads in Nepal. Specialized speed test for NTC, Ncell, and local ISP connections.",
+  alternates: {
+    canonical: absoluteUrl("/tools/website-speed-test"),
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Website Speed Test Nepal | Optimize for Local Networks",
+    description:
+      "Check how fast your website loads in Nepal. Specialized speed test for NTC, Ncell, and local ISP connections.",
+    url: absoluteUrl("/tools/website-speed-test"),
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Nepdora Website Speed Test",
+      },
+    ],
+    locale: "en_NP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Website Speed Test Nepal | Optimize for Local Networks",
+    description:
+      "Check how fast your website loads in Nepal. Specialized speed test for NTC, Ncell, and local ISP connections.",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function SpeedTest() {
@@ -27,7 +59,7 @@ export default function SpeedTest() {
               Website <span className="text-primary">Speed Test</span> Nepal
             </h1>
             <p className="mx-auto max-w-2xl text-xl text-slate-600">
-              Test your website's performance on Nepalese networks. Ensure your
+              Test your website&apos;s performance on Nepalese networks. Ensure your
               site is fast for all your local visitors.
             </p>
           </div>

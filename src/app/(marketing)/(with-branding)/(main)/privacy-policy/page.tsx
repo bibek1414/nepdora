@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Nepdora",
   description:
     "Learn how Nepdora collects, uses, and protects your personal data. Our privacy policy covers account information, Facebook Login, and your data rights.",
   alternates: {
-    canonical: "https://www.nepdora.com/privacy-policy",
+    canonical: absoluteUrl("/privacy-policy"),
   },
   keywords: [
     "Nepdora privacy policy",
@@ -15,16 +16,16 @@ export const metadata: Metadata = {
     "personal data",
   ],
   authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL("https://www.nepdora.com"),
+  metadataBase: new URL(absoluteUrl()),
   openGraph: {
     title: "Privacy Policy | Nepdora",
     description:
       "Learn how Nepdora collects, uses, and protects your personal data. Our policy covers account information, Facebook Login, and your data rights.",
-    url: "https://www.nepdora.com/privacy-policy",
-    siteName: "Nepdora",
+    url: absoluteUrl("/privacy-policy"),
+    siteName: SITE_NAME,
     images: [
       {
-        url: "https://www.nepdora.com/nepdora-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Nepdora's Privacy Policy",
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy | Nepdora",
     description:
       "Learn how Nepdora collects, uses, and protects your personal data, including information from Facebook Login.",
-    images: ["https://www.nepdora.com/nepdora-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 
@@ -51,8 +52,8 @@ const privacySchema = {
   description: "Information about how Nepdora handles user data and privacy.",
   publisher: {
     "@type": "Organization",
-    name: "Nepdora",
-    url: "https://www.nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
   },
 };
 
