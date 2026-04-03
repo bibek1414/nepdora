@@ -1,4 +1,3 @@
-import Header from "@/components/marketing/layout/header";
 import { Metadata, Viewport } from "next";
 
 type MarketingLayoutProps = {
@@ -66,7 +65,6 @@ export const viewport: Viewport = {
 export default function MarketingLayout({ children }: MarketingLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
-      <Header />
       <main className="flex-1">{children}</main>
     </div>
   );
