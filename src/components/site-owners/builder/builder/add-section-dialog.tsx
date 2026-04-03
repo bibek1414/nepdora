@@ -1140,6 +1140,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/footers/footer8.png",
         description: "Footer with social media links",
       },
+      {
+        id: "footer-9",
+        name: "Footer Style 9",
+        image: "/images/site-owners/footers/footer9.png",
+        description: "Footer with social media links",
+      },
+
     ],
     login_form: [
       {

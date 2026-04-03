@@ -13,6 +13,7 @@ import {
 interface SocialIconProps {
   platform: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 // Map platform names to Lucide icons
@@ -33,6 +34,7 @@ const iconMap: Record<string, LucideIcon> = {
 export const SocialIcon: React.FC<SocialIconProps> = ({
   platform,
   className,
+  style,
 }) => {
   // normalize platform name to title case or match keys
   // For now, simple lookup. We can make it case-insensitive if needed.
@@ -54,8 +56,8 @@ export const SocialIcon: React.FC<SocialIconProps> = ({
   // Default to Globe or just render nothing/null if strictly required,
   // but Globe is a safe generic web icon.
   if (!Icon) {
-    return <Globe className={className} />;
+    return <Globe className={className} style={style} />;
   }
 
-  return <Icon className={className} />;
+  return <Icon className={className} style={style} />;
 };
