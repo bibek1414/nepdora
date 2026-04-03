@@ -30,58 +30,72 @@ export const OurClients3: React.FC<OurClients3Props> = ({ data }) => {
     );
   }
 
-  // Duplicate the list to create the seamless infinite loop effect
-  // Ensure we have enough items to fill the screen width for a smooth marquee
-  const marqueeItems = [...clients, ...clients, ...clients, ...clients];
+  // Duplicate the list once to create two identical sets for a perfect loop
+  const marqueeItems = [...clients, ...clients];
 
   return (
-    <div className="flex w-full flex-col items-center">
-      {/* Header Label similar to the screenshot */}
+    <div className="relative mx-auto w-full max-w-7xl overflow-hidden select-none">
+      {/* Left Gradient Overlay - Faded Edge */}
+      <div className="from-background pointer-events-none absolute top-0 left-0 z-10 h-full w-20 bg-linear-to-r to-transparent"></div>
 
-      {/* Constrained width container */}
-      <div className="group relative w-full max-w-4xl overflow-hidden">
-        {/* The Scrolling Container */}
-        <div
-          className="group/marquee relative w-full"
-          style={{
-            maskImage:
-              "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
-          }}
-        >
-          {/* The Moving Strip */}
-          <div className="animate-scroll flex w-max items-center gap-16 pr-16 md:gap-24 md:pr-24">
-            {marqueeItems.map((client, index) => (
-              <div
-                key={`${client.id}-${index}`}
-                className="logo-item flex-shrink-0 cursor-pointer opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
-              >
-                {client.url ? (
-                  <a
-                    href={client.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block"
-                  >
-                    <img
-                      src={client.logo}
-                      alt={client.name}
-                      className="h-20 w-auto object-contain"
-                    />
-                  </a>
-                ) : (
+      {/* Marquee Container */}
+      <div className="marquee-inner flex min-w-[200%] will-change-transform">
+        <div className="flex items-center">
+          {marqueeItems.map((client, index) => (
+            <div
+              key={`${client.id}-${index}`}
+              className="mx-6 h-12 w-32 flex-shrink-0 cursor-pointer overflow-hidden opacity-60 transition-all duration-300 hover:opacity-100 md:mx-10 md:h-16 md:w-40"
+            >
+              {client.url ? (
+                <a
+                  href={client.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-full w-full items-center justify-center"
+                >
                   <img
                     src={client.logo}
                     alt={client.name}
-                    className="h-20 w-auto object-contain"
+                    className="h-full w-auto object-contain"
+                    draggable="false"
                   />
-                )}
-              </div>
-            ))}
-          </div>
+                </a>
+              ) : (
+                <div className="flex h-full w-full items-center justify-center">
+                  <img
+                    src={client.logo}
+                    alt={client.name}
+                    className="h-full w-auto object-contain"
+                    draggable="false"
+                  />
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Right Gradient Overlay - Faded Edge */}
+      <div className="from-background pointer-events-none absolute top-0 right-0 z-10 h-full w-20 bg-linear-to-l to-transparent md:w-40"></div>
+
+      {/* Animation Styles */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          @keyframes marqueeScroll {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .marquee-inner {
+            animation: marqueeScroll 30s linear infinite;
+          }
+        `,
+        }}
+      />
     </div>
   );
 };

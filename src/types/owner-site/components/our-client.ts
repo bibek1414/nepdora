@@ -8,7 +8,7 @@ export interface OurClientsData {
     | "our-clients-4"
     | "our-clients-5"
     | "our-clients-6";
-  title: string;
+  title?: string;
   subtitle?: string;
   description?: string;
   client_ids?: number[];
@@ -49,9 +49,6 @@ export const defaultOurClientsData2: OurClientsData = {
 export const defaultOurClientsData3: OurClientsData = {
   component_type: "our_clients",
   style: "our-clients-3",
-  title: "As Seen In",
-  subtitle: "Featured in top publications",
-  description: "",
   show_all: true,
   limit: 6,
 };

@@ -28,29 +28,6 @@ export const OurClientsStyle3: React.FC<OurClientsStyleProps> = ({
   return (
     <section className="bg-background py-3 md:py-20">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="mb-12 text-center">
-          <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="text-foreground mb-4 text-4xl font-bold tracking-tight"
-            isEditable={isEditable}
-            placeholder="Enter title..."
-          />
-          {subtitle && (
-            <div className="mb-10 flex items-center justify-center gap-3 opacity-80">
-              <EditableText
-                value={subtitle}
-                onChange={handleSubtitleChange}
-                as="p"
-                className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase"
-                isEditable={isEditable}
-                placeholder="Enter subtitle..."
-              />
-            </div>
-          )}
-        </div>
-
         <OurClients3 data={data} />
       </div>
     </section>
