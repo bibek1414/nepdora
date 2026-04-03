@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
-  title: "Build Free E-Commerce Website in Nepal With Nepdora",
+  title: "Build an E-commerce Website in Nepal (Start Selling Today) | Nepdora",
   description:
-    "Start your online store in Nepal today. E-Commerce system with order management, inventory and payment gateway integration with Nepdora. Start Free!",
+    "Build your E-Commerce website in Nepal for free with Nepdora. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.",
   keywords: [
     "ecommerce website Nepal",
     "online store Nepal",
@@ -15,13 +15,13 @@ export const metadata: Metadata = {
     "ecommerce tools",
   ],
   alternates: {
-    canonical: "https://www.nepdora.com/ecommerce-website",
+    canonical: "https://www.nepdora.com/ecommerce",
   },
   openGraph: {
-    title: "Build Free E-Commerce Website in Nepal With Nepdora",
+    title: "Build an E-commerce Website in Nepal (Start Selling Today) | Nepdora",
     description:
-      "Start your online store in Nepal today. E-Commerce system with order management, inventory and payment gateway integration with Nepdora. Start Free!",
-    url: "https://www.nepdora.com/ecommerce-website",
+      "Build your E-Commerce website in Nepal for free with Nepdora. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.",
+    url: "https://www.nepdora.com/ecommerce",
     siteName: "Nepdora",
     images: [
       {
@@ -36,9 +36,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Build Free E-Commerce Website in Nepal With Nepdora",
+    title: "Build an E-commerce Website in Nepal (Start Selling Today) | Nepdora",
     description:
-      "Start your online store in Nepal today. E-Commerce system with order management, inventory and payment gateway integration with Nepdora.",
+      "Build your E-Commerce website in Nepal for free with Nepdora. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.",
     images: ["/nepdora-image.jpg"],
   },
 };

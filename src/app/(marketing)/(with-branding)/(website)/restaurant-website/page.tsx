@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
-  title: "Best Restaurant Website & Ordering System in Nepal | Nepdora",
+  title: "Build a Restaurant Website in Nepal (Fast & Affordable) | Nepdora",
   description:
-    "Grow your restaurant business in Nepal. Online ordering, menu management, and table reservations with your own branded website from Nepdora.",
+    "Get your cafe, bakery, or restaurant online in minutes. Nepdora is the easiest and most affordable way to build a professional restaurant website in Nepal, complete with digital menus and table reservations.",
   keywords: [
     "restaurant website Nepal",
     "food ordering system Nepal",
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     canonical: "https://www.nepdora.com/restaurant-website",
   },
   openGraph: {
-    title: "Best Restaurant Website & Ordering System in Nepal | Nepdora",
+    title: "Build a Restaurant Website in Nepal (Fast & Affordable) | Nepdora",
     description:
-      "Grow your restaurant business in Nepal. Online ordering, menu management, and table reservations.",
+      "Get your cafe, bakery, or restaurant online in minutes. Nepdora is the easiest and most affordable way to build a professional restaurant website in Nepal, complete with digital menus and table reservations.",
     url: "https://www.nepdora.com/restaurant-website",
     siteName: "Nepdora",
     images: [
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Restaurant Website & Ordering System in Nepal | Nepdora",
+    title: "Build a Restaurant Website in Nepal (Fast & Affordable) | Nepdora",
     description:
-      "Online ordering, menu management, and table reservations. Build your restaurant website with Nepdora.",
+      "Get your cafe, bakery, or restaurant online in minutes. Nepdora is the easiest and most affordable way to build a professional restaurant website in Nepal, complete with digital menus and table reservations.",
     images: ["/nepdora-image.jpg"],
   },
 };

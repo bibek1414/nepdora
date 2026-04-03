@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
-  title: "Best Online Booking & Appointment Website in Nepal | Nepdora",
+  title: "Create a Booking Website in Nepal (Fast Setup) | Nepdora",
   description:
-    "Streamline your appointments with a built-in booking system. Perfect for consultants, salons, and service providers. Build your booking website in Nepal today.",
+    "Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
   keywords: [
     "booking website Nepal",
     "appointment system Nepal",
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     canonical: "https://www.nepdora.com/booking-website",
   },
   openGraph: {
-    title: "Best Online Booking & Appointment Website in Nepal | Nepdora",
+    title: "Create a Booking Website in Nepal (Fast Setup) | Nepdora",
     description:
-      "Streamline your appointments with a built-in booking system. Perfect for consultants, salons, and service providers.",
+      "Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
     url: "https://www.nepdora.com/booking-website",
     siteName: "Nepdora",
     images: [
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Online Booking & Appointment Website in Nepal | Nepdora",
+    title: "Create a Booking Website in Nepal (Fast Setup) | Nepdora",
     description:
-      "Streamline your appointments with a built-in booking system. Build with Nepdora.",
+      "Launch your professional booking website in Nepal in under 10 minutes. Build with Nepdora.",
     images: ["/nepdora-image.jpg"],
   },
 };

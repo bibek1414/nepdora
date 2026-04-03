@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
-  title: "Medical & Clinic Website Builder in Nepal | Nepdora",
+  title: "Build a Clinic Website in Nepal (Fast Setup) | Nepdora",
   description:
-    "Build a professional presence for your clinic. Patient appointments, service listings, and health blog features. The best website builder for doctors in Nepal.",
+    "Launch your professional clinic website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
   keywords: [
     "clinic website Nepal",
     "hospital website Nepal",
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     canonical: "https://www.nepdora.com/clinic-website",
   },
   openGraph: {
-    title: "Medical & Clinic Website Builder in Nepal | Nepdora",
+    title: "Build a Clinic Website in Nepal (Fast Setup) | Nepdora",
     description:
-      "Build a professional presence for your clinic. Patient appointments, service listings, and health blog features.",
+      "Launch your professional clinic website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
     url: "https://www.nepdora.com/clinic-website",
     siteName: "Nepdora",
     images: [
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Medical & Clinic Website Builder in Nepal | Nepdora",
+    title: "Build a Clinic Website in Nepal (Fast Setup) | Nepdora",
     description:
-      "Patient appointments, service listings, and health blog features. Build your clinic website with Nepdora.",
+      "Launch your professional clinic website in Nepal in under 10 minutes. Build with Nepdora.",
     images: ["/nepdora-image.jpg"],
   },
 };

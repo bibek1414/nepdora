@@ -357,7 +357,7 @@ export const NEPAL_CITIES = [
 ];
 
 export const SERVICE_CATEGORIES = [
-  { slug: "ecommerce-website", name: "Ecommerce Website" },
+  { slug: "ecommerce", name: "Ecommerce Website" },
   { slug: "agency-website", name: "Agency Website" },
   { slug: "booking-website", name: "Booking Website" },
   { slug: "restaurant-website", name: "Restaurant Website" },

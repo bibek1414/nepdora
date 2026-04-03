@@ -11,6 +11,10 @@ export const industries = [
   "salon",
   "educational-consultancy",
   "grocery",
+  "ecommerce",
+  "agency-website",
+  "booking-website",
+  "medical-clinic",
 ];
 
 // Top 15 major cities for pre-rendering to optimize build size
@@ -40,9 +44,13 @@ export const INDUSTRY_LABELS: Record<string, string> = {
   gym: "Gym & Fitness",
   school: "School & Education",
   clinic: "Medical Clinic",
-  "travel-agency": "Travel Agency",
+  "travel-agency": "Travel & Tours",
   "real-estate": "Real Estate",
   salon: "Beauty Salon",
   "educational-consultancy": "Educational Consultancy",
   grocery: "Grocery Store",
+  ecommerce: "E-commerce Store",
+  "agency-website": "Digital Agency",
+  "booking-website": "Booking & Appointments",
+  "medical-clinic": "Medical Clinic",
 };

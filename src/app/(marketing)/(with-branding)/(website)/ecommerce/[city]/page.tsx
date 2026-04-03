@@ -12,10 +12,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cities.includes(city.toLowerCase())) {
     notFound();
   }
+  const isKathmandu = city.toLowerCase() === "kathmandu";
   const cityName = city.charAt(0).toUpperCase() + city.slice(1);
-  const title = `Best Ecommerce Website in ${cityName} | Nepdora`;
-  const description = `Create your professional ecommerce website in ${cityName} with Nepdora. AI-powered, mobile-responsive, and integrated with local payments like eSewa.`;
-  const url = `https://www.nepdora.com/ecommerce-website/` + city.toLowerCase();
+  const title = isKathmandu
+    ? `Create Free E-Commerce Website in Kathmandu (2026)`
+    : `Best Ecommerce Website in ${cityName} | Nepdora`;
+  const description = isKathmandu
+    ? `Build your E-Commerce website in Kathmandu for free with Nepdora. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.`
+    : `Create your professional ecommerce website in ${cityName} with Nepdora. AI-powered, mobile-responsive, and integrated with local payments like eSewa.`;
+  const url = `https://www.nepdora.com/ecommerce/` + city.toLowerCase();
 
   return {
     title,
@@ -90,7 +95,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <JsonLd id="ecommerce-city-schema" data={serviceSchema} />
-      <CitiesLandingPage category="ecommerce-website" city={city} />
+      <CitiesLandingPage category="ecommerce" city={city} />
     </>
   );
 }

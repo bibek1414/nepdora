@@ -19,14 +19,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     notFound();
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
-  const title = `Best ${industryLabel} Website Builder in Nepal | Nepdora`;
-  const description = `Build a professional ${industryLabel.toLowerCase()} website in Nepal. Integrated payments, local support, and easy-to-use tools from Nepdora.`;
+  
+  // SEO Blueprint Logic
+  const isBooking = ["booking", "travel", "tours", "medical", "clinic", "dental", "education"].some(s => industry.toLowerCase().includes(s));
+  const action = isBooking ? "Create" : "Build";
+  const niche = industryLabel;
+  const valueProp = isBooking ? "(Fast Setup)" : "(Start Selling Today)";
+  
+  const title = `${action} a ${niche} Website in Nepal ${valueProp} | Nepdora`;
+  const description = `Launch your professional ${niche.toLowerCase()} website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.`;
 
   return {
     title,
     description,
     alternates: {
       canonical: `https://www.nepdora.com/${industry}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://www.nepdora.com/${industry}`,
+      siteName: "Nepdora",
+      images: [
+        {
+          url: "/nepdora-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: `Nepdora - ${niche} Website Builder`,
+        },
+      ],
+      locale: "en_NP",
+      type: "website",
     },
   };
 }

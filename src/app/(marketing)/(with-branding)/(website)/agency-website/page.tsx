@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
-  title: "Professional Agency Website Builder in Nepal | Nepdora",
+  title: "Build a Professional Agency Website in Nepal (Fast & Cheap) | Nepdora",
   description:
-    "Build a stunning agency website that converts. Features for portfolios, services, and client management. Create your professional presence in Nepal with Nepdora.",
+    "Launch your digital agency, consultancy, or creative portfolio in Nepal in under 10 minutes. Build a fast, professional agency website with built-in lead generation and CRM.",
   keywords: [
     "agency website Nepal",
     "web agency Nepal",
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     canonical: "https://www.nepdora.com/agency-website",
   },
   openGraph: {
-    title: "Professional Agency Website Builder in Nepal | Nepdora",
+    title: "Build a Professional Agency Website in Nepal (Fast & Cheap) | Nepdora",
     description:
-      "Build a stunning agency website that converts. Features for portfolios, services, and client management.",
+      "Launch your digital agency, consultancy, or creative portfolio in Nepal in under 10 minutes. Build a fast, professional agency website with built-in lead generation and CRM.",
     url: "https://www.nepdora.com/agency-website",
     siteName: "Nepdora",
     images: [
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Professional Agency Website Builder in Nepal | Nepdora",
+    title: "Build a Professional Agency Website in Nepal (Fast & Cheap) | Nepdora",
     description:
-      "Features for portfolios, services, and client management. Build your agency website with Nepdora.",
+      "Launch your digital agency, consultancy, or creative portfolio in Nepal in under 10 minutes. Build your agency website with Nepdora.",
     images: ["/nepdora-image.jpg"],
   },
 };

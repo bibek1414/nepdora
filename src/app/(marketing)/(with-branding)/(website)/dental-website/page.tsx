@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = {
-  title: "Dental Practice Website Builder in Nepal | Nepdora",
+  title: "Build a Dental Practice Website in Nepal (Fast Setup) | Nepdora",
   description:
-    "Grow your dental clinic with a specialized website. Appointment scheduling and patient education tools. Professional designs for dentists in Nepal.",
+    "Launch your professional dental website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
   keywords: [
     "dental website Nepal",
     "dentist website Nepal",
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     canonical: "https://www.nepdora.com/dental-website",
   },
   openGraph: {
-    title: "Dental Practice Website Builder in Nepal | Nepdora",
+    title: "Build a Dental Practice Website in Nepal (Fast Setup) | Nepdora",
     description:
-      "Grow your dental clinic with a specialized website. Appointment scheduling and patient education tools.",
+      "Launch your professional dental website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.",
     url: "https://www.nepdora.com/dental-website",
     siteName: "Nepdora",
     images: [
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dental Practice Website Builder in Nepal | Nepdora",
+    title: "Build a Dental Practice Website in Nepal (Fast Setup) | Nepdora",
     description:
-      "Appointment scheduling and patient education tools for dentists. Build your dental clinic website with Nepdora.",
+      "Launch your professional dental website in Nepal in under 10 minutes. Build with Nepdora.",
     images: ["/nepdora-image.jpg"],
   },
 };
