@@ -117,7 +117,7 @@ export const Footer = () => {
                 Categories
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/ecommerce">
+                <FooterLink href="/ecommerce-website">
                   E-commerce Hub
                 </FooterLink>
                 <FooterLink href="/restaurant-website">
@@ -225,9 +225,7 @@ export const Footer = () => {
                 Top Cities
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/ecommerce/kathmandu">
-                  Kathmandu
-                </FooterLink>
+                <FooterLink href="/ecommerce/kathmandu">Kathmandu</FooterLink>
                 <FooterLink href="/restaurant-website/pokhara">
                   Pokhara
                 </FooterLink>
