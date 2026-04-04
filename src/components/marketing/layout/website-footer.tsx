@@ -22,10 +22,13 @@ import { NEPAL_CITIES, SERVICE_CATEGORIES } from "@/constants/nepal-cities";
 
 export const WebsiteFooter = () => {
   const pathname = usePathname();
-  // Find which category we are currently in, default to agency-website
+  // Find which category we are currently in
+  const isEcommerceRoute =
+    pathname.includes("ecommerce") || pathname.includes("ecommerce-website");
+
   const activeCategory =
     SERVICE_CATEGORIES.find(cat => pathname.includes(cat.slug)) ||
-    SERVICE_CATEGORIES[1];
+    (isEcommerceRoute ? SERVICE_CATEGORIES[0] : SERVICE_CATEGORIES[2]);
 
   // Take first 12 cities for more density, or all
   const displayedCities = NEPAL_CITIES.slice(0, 18);
@@ -72,31 +75,92 @@ export const WebsiteFooter = () => {
 
             {/* Dynamic Service Links */}
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-3">
-              {SERVICE_CATEGORIES.slice(0, 3).map((category, idx) => (
+              {/* Specialized E-commerce Ecosystem for Ecommerce pages */}
+              {isEcommerceRoute && (
                 <motion.div
-                  key={category.slug}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
                 >
-                  <h4 className="mb-4 -ml-1 flex items-center font-bold text-gray-900">
-                    {category.name} in Cities
+                  <h4 className="mb-4 flex items-center font-bold text-gray-900">
+                    E-commerce Ecosystem
                   </h4>
                   <ul className="space-y-2">
-                    {displayedCities.slice(0, 8).map(city => (
-                      <li key={`${category.slug}-${city}`}>
-                        <Link
-                          href={`/${category.slug}/${city.toLowerCase()}`}
-                          className="group flex items-center text-xs text-gray-500 hover:underline"
-                        >
-                          {category.name} in {city}
-                        </Link>
-                      </li>
-                    ))}
+                    <li>
+                      <Link
+                        href="/khalti-payment-gateway-nepal"
+                        className="group flex items-center text-xs text-blue-600 hover:underline"
+                      >
+                        Khalti Integration Guide <ExternalLink size={12} className="ml-1" />
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/esewa-integration-guide-nepal"
+                        className="group flex items-center text-xs text-green-600 hover:underline"
+                      >
+                        eSewa Implementation <ExternalLink size={12} className="ml-1" />
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/solutions/local-delivery-integration-pathao"
+                        className="group flex items-center text-xs text-orange-600 hover:underline"
+                      >
+                        Pathao Parcel Delivery <ExternalLink size={12} className="ml-1" />
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/pricing"
+                        className="group flex items-center text-xs text-gray-500 hover:underline"
+                      >
+                        Pricing & Plans
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/templates/ecommerce"
+                        className="group flex items-center text-xs text-gray-500 hover:underline"
+                      >
+                        E-commerce Templates
+                      </Link>
+                    </li>
                   </ul>
                 </motion.div>
-              ))}
+              )}
+
+              {SERVICE_CATEGORIES.filter(
+                (c, i, a) =>
+                  a.findIndex(t => t.name === c.name) === i && // Unique names
+                  !(isEcommerceRoute && c.slug.includes("ecommerce")) // Avoid duplication if we already show the ecosystem
+              )
+                .slice(0, isEcommerceRoute ? 2 : 3)
+                .map((category, idx) => (
+                  <motion.div
+                    key={category.slug}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                  >
+                    <h4 className="mb-4 -ml-1 flex items-center font-bold text-gray-900">
+                      {category.name} in Cities
+                    </h4>
+                    <ul className="space-y-2">
+                      {displayedCities.slice(0, 8).map(city => (
+                        <li key={`${category.slug}-${city}`}>
+                          <Link
+                            href={`/${category.slug}/${city.toLowerCase()}`}
+                            className="group flex items-center text-xs text-gray-500 hover:underline"
+                          >
+                            {category.name} in {city}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                ))}
             </div>
           </div>
 

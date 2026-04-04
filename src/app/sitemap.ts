@@ -41,6 +41,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/esewa-integration-guide-nepal", priority: 0.9 },
     { path: "/website-registration-nepal", priority: 0.8 },
     { path: "/partners", priority: 0.8 },
+    { path: "/ecommerce", priority: 1.0 },
+    { path: "/ecommerce-website", priority: 1.0 },
   ];
 
   const basePages = baseRoutes.map(route => ({
