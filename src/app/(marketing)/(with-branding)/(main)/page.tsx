@@ -10,7 +10,8 @@ import QuickBuilder from "@/components/marketing/quick-builder/quick-builder";
 import CTA from "@/components/marketing/cta-section/cta-section";
 import Comparison from "@/components/marketing/comparison/comparison";
 import Migration from "@/components/marketing/migration/migration";
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
+
 // Lazy load non-critical components to reduce initial load
 const TestimonialsSection = dynamic(
   () => import("@/components/marketing/testimonials/testimonials"),
@@ -22,60 +23,22 @@ const TemplatesPage = dynamic(
   { loading: () => <div className="py-20" /> }
 );
 
-export const metadata: Metadata = {
-  title: "Nepdora — Your Complete Website Builder in Minutes",
+export const metadata = buildMarketingMetadata({
+  title: "Website Builder Nepal | Free AI Website Builder for Nepali Businesses",
   description:
-    "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, CRM system, and 24/7 customer support. Perfect for businesses, portfolios, and online stores in Nepal. Start building your dream website today with zero coding required!",
-  keywords: [
-    "website builder Nepal",
-    "create website Nepal",
-    "ecommerce Nepal",
-    "portfolio website Nepal",
-    "Nepdora",
-    "Made in Nepal",
-    "free website builder",
-    "AI website builder",
-  ],
-  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL(SITE_URL),
-  alternates: {
-    canonical: SITE_URL,
-  },
-  openGraph: {
-    title: "Nepdora — Your Complete Website Builder in Nepal",
-    description:
-      "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, and 24/7 support. Start building today!",
-    url: SITE_URL,
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora - Your Complete Website Builder in Nepal",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Nepdora — Your Complete Website Builder in Nepal",
-    description:
-      "Launch your business online in just 5 minutes with Nepdora's free website builder. Get free hosting, AI-powered templates, e-commerce tools, and 24/7 support. Start building today!",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+    "Build a website in Nepal in minutes with Nepdora. Launch ecommerce, service, and portfolio sites with eSewa, Khalti, hosting, and local support.",
+  path: "/",
+});
 
 export default function Marketing() {
   const websiteSchema = {
     "@context": "https://schema.org/",
     "@type": "WebSite",
-    name: "Nepdora",
-    url: "https://nepdora.com",
+    name: SITE_NAME,
+    url: absoluteUrl(),
     description:
       "Nepdora — Your complete platform for creating modern websites, businesses, and portfolios in Nepal.",
-    image: "https://nepdora.com/nepdora-image.jpg",
+    image: absoluteUrl("/nepdora-image.jpg"),
     sameAs: [
       "https://www.facebook.com/NepdoraWebBuilder",
       "https://www.instagram.com/nep_dora",
@@ -102,9 +65,9 @@ export default function Marketing() {
     "@context": "https://schema.org",
     "@type": "Corporation",
     name: "Nepdora Pvt. Ltd.",
-    alternateName: "Nepdora",
-    url: "https://nepdora.com",
-    logo: "https://nepdora.com/nepdora-logooo.svg",
+    alternateName: SITE_NAME,
+    url: absoluteUrl(),
+    logo: absoluteUrl("/nepdora-logooo.svg"),
     founder: {
       "@type": "Person",
       name: "Vishal Dhakal",

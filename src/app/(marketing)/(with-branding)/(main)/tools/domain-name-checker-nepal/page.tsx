@@ -4,42 +4,21 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Nepali Domain Name Checker | .com.np & .com Availability",
   description:
     "Check if your desired business name is available as a .com.np or .com domain in Nepal. Free and instant search tool.",
-  alternates: {
-    canonical: absoluteUrl("/tools/domain-name-checker-nepal"),
-  },
-  robots: {
-    index: false,
-    follow: true,
-  },
-  openGraph: {
-    title: "Nepali Domain Name Checker | .com.np & .com Availability",
-    description:
-      "Check if your desired business name is available as a .com.np or .com domain in Nepal. Free and instant search tool.",
-    url: absoluteUrl("/tools/domain-name-checker-nepal"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora Domain Name Checker",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Nepali Domain Name Checker | .com.np & .com Availability",
-    description:
-      "Check if your desired business name is available as a .com.np or .com domain in Nepal. Free and instant search tool.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/tools/domain-name-checker-nepal",
+  noIndex: true,
+  keywords: [
+    "nepali domain checker",
+    "com np domain availability",
+    "register domain nepal",
+    "free domain nepal",
+  ],
+});
 
 export default function DomainChecker() {
   return (

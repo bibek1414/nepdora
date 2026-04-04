@@ -8,6 +8,8 @@ interface Props {
   params: Promise<{ city: string }>;
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { city } = await params;
   if (!cities.includes(city.toLowerCase())) {
@@ -17,43 +19,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Booking Website in ${cityName} | Nepdora`;
   const description = `Set up your professional booking system in ${cityName} with Nepdora. Manage appointments, reservations, and schedules easily with our AI-powered platform.`;
 
-  const url = absoluteUrl(`/booking-website/` + city.toLowerCase());
-
-  return {
+  return buildMarketingMetadata({
     title,
     description,
+    path: `/booking-website/${city.toLowerCase()}`,
     keywords: [
       `booking website in ${city}`,
       `reservation system ${city}`,
       `Nepdora booking`,
       "appointment software Nepal",
     ],
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Best Booking Website in ${cityName}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+  });
 }
 
 import { MAJOR_CITIES, cities } from "@/lib/seo-data";

@@ -20,12 +20,13 @@ const pageTitle =
 const pageDescription =
   "Comparing WordPress (WooCommerce) and Nepdora in Nepal? See why businesses switch from custom development to Nepdora for speed, security, and local payments.";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: pageTitle,
   description: pageDescription,
-  alternates: {
-    canonical: pageUrl,
-  },
+  path: "/alternative/wordpress-nepal",
+  image: "/wordpress-vs-nepdora.png",
   keywords: [
     "wordpress alternative nepal",
     "wordpress vs nepdora",
@@ -33,25 +34,8 @@ export const metadata: Metadata = {
     "woocommerce nepal plugins",
     "esewa wordpress nepal",
     "khalti wordpress nepal",
-    "best business website nepal",
   ],
-  openGraph: {
-    title: pageTitle,
-    description: pageDescription,
-    url: pageUrl,
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: "/wordpress-vs-nepdora.png", // Replace with actual asset if available
-        width: 1200,
-        height: 630,
-        alt: "WordPress vs Nepdora — Best website platform in Nepal 2026",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-};
+});
 
 export default function WordPressAlternativePage() {
   const softwareAppSchema = {

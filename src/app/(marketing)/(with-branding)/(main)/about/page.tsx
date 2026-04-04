@@ -8,13 +8,13 @@ import AboutTeam from "@/components/marketing/about-us/about-team";
 import CTA from "@/components/marketing/cta-section/cta-section";
 import Testimonials from "@/components/marketing/testimonials/testimonials";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "About Nepdora : Made in Nepal Website Builder",
   description:
     "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management. Build your complete digital presence here.",
-  alternates: {
-    canonical: absoluteUrl("/about"),
-  },
+  path: "/about",
   keywords: [
     "Nepdora about",
     "Nepal website builder",
@@ -22,33 +22,7 @@ export const metadata: Metadata = {
     "digital presence solution",
     "Made in Nepal",
   ],
-  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL(absoluteUrl()),
-  openGraph: {
-    title: "About Nepdora : Made in Nepal Website Builder",
-    description:
-      "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management. Build your complete digital presence here.",
-    url: absoluteUrl("/about"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "About Nepdora - Made in Nepal Website Builder",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "About Nepdora : Made in Nepal Website Builder",
-    description:
-      "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 import { JsonLd } from "@/components/shared/json-ld";
 

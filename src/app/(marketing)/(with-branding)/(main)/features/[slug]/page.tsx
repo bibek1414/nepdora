@@ -240,6 +240,8 @@ FEATURE_DATA["esewa-integartion"] = FEATURE_DATA["esewa-integration"];
 FEATURE_DATA["pathao"] = FEATURE_DATA["pathao-parcel"];
 FEATURE_DATA["pathao-parcel"] = FEATURE_DATA["pathao-parcel"];
 
+import { absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const data = FEATURE_DATA[slug];
@@ -252,13 +254,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     data?.description ||
     `Learn how to easily integrate ${featureName} into your Nepdora website. Boost your business with automated processes and seamless connections.`;
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    alternates: {
-      canonical: `https://www.nepdora.com/features/${slug}`,
-    },
-  };
+    path: `/features/${slug}`,
+  });
 }
 
 export default async function FeatureProcessPage({ params }: Props) {

@@ -20,6 +20,8 @@ export async function generateStaticParams() {
   }));
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const competitorSlug = slug.replace("-nepal", "");
@@ -28,45 +30,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     notFound();
   }
   const name = competitor ? competitor.name : capitalizeWords(competitorSlug);
-  const url = absoluteUrl(`/alternative/${slug}`);
 
   const title = `Best ${name} Alternative in Nepal | Save 80% on Costs`;
   const description = `Looking for ${name} in Nepal? Discover why Nepdora is the best ${name} alternative for Nepali businesses. Local payments, better support, and affordable pricing.`;
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    alternates: {
-      canonical: url,
-    },
+    path: `/alternative/${slug}`,
     keywords: [
       `${name} alternative nepal`,
       `best website builder nepal`,
       `cheap ${name} nepal`,
     ],
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+  });
 }
 
 export default async function AlternativePage({ params }: Props) {

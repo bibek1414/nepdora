@@ -3,47 +3,14 @@ import Script from "next/script";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title:
-    "Website Developer in Nepal? Build It Yourself with Nepdora — No Coding Needed",
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
+  title: "Need a Website Developer in Nepal? Build It Faster with Nepdora",
   description:
-    "Looking for a website developer in Nepal? Skip the wait and high cost. Nepdora lets any Nepali business build a professional website in minutes — drag, drop, done. Try free.",
-  keywords: [
-    "website developer Nepal",
-    "web development company Nepal",
-    "website builder Nepal",
-    "Nepdora",
-    "create website Nepal",
-    "e-commerce Nepal",
-  ],
-  alternates: {
-    canonical: absoluteUrl("/website-developer-nepal"),
-  },
-  openGraph: {
-    title: "Website Developer in Nepal? Build It Yourself with Nepdora",
-    description:
-      "Looking for a website developer in Nepal? Skip the wait and high cost. Build a professional website in minutes with Nepdora. Try free.",
-    url: absoluteUrl("/website-developer-nepal"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Build your website in Nepal with Nepdora",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Website Developer in Nepal? Build It Yourself with Nepdora",
-    description:
-      "Skip the wait and high cost. Build a professional website in minutes with Nepdora. Try free.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+    "Skip agency delays and build your own business website in Nepal with Nepdora. Launch faster with templates, local payments, and no coding.",
+  path: "/website-developer-nepal",
+});
 
 import Hero from "@/components/marketing/website-developer-nepal/Hero";
 import EmpathySection from "@/components/marketing/website-developer-nepal/EmpathySection";

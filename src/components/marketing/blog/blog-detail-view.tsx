@@ -4,12 +4,14 @@ import { sanitizeContent } from "@/utils/html-sanitizer";
 import { BlogPost } from "@/types/super-admin/blog";
 import { BlogShareButtons } from "./blog-share-buttons";
 
+import { absoluteUrl } from "@/lib/seo";
+
 interface BlogDetailViewProps {
   blog: BlogPost;
 }
 
 export const BlogDetailView = ({ blog }: BlogDetailViewProps) => {
-  const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://www.nepdora.com"}/blog/${blog.slug}`;
+  const shareUrl = absoluteUrl(`/blog/${blog.slug}`);
 
   return (
     <div className="bg-white pt-20 pb-0">
@@ -51,7 +53,7 @@ export const BlogDetailView = ({ blog }: BlogDetailViewProps) => {
         </div>
 
         {blog.thumbnail_image && (
-          <div className="mx-auto mb-10 aspect-[16/9] h-[300px] overflow-hidden rounded-xl md:h-[450px]">
+          <div className="mx-auto mb-10 aspect-video h-[300px] overflow-hidden rounded-xl md:h-[450px]">
             <Image
               src={blog.thumbnail_image}
               alt={blog.thumbnail_image_alt_description ?? blog.title}

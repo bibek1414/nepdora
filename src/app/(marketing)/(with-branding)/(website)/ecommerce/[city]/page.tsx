@@ -9,6 +9,8 @@ interface Props {
   params: Promise<{ city: string }>;
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { city } = await params;
   if (!cities.includes(city.toLowerCase())) {
@@ -22,44 +24,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = isKathmandu
     ? `Build your E-Commerce website in Kathmandu for free with ${SITE_NAME}. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.`
     : `Create your professional ecommerce website in ${cityName} with ${SITE_NAME}. AI-powered, mobile-responsive, and integrated with local payments like eSewa.`;
-  const url = absoluteUrl("/ecommerce/" + city.toLowerCase());
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    metadataBase: new URL(absoluteUrl()),
+    path: `/ecommerce/${city.toLowerCase()}`,
     keywords: [
       `ecommerce website in ${city}`,
       `web design ${city}`,
       `${SITE_NAME} ${city}`,
       "online store Nepal",
     ],
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Best Ecommerce Website in ${cityName}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+  });
 }
 
 export async function generateStaticParams() {

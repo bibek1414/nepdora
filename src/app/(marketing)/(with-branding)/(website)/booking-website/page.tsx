@@ -3,9 +3,12 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: `Create a Booking Website in Nepal (Fast Setup) | ${SITE_NAME}`,
   description: `Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from ${SITE_NAME}.`,
+  path: "/booking-website",
   keywords: [
     "booking website Nepal",
     "appointment system Nepal",
@@ -13,33 +16,7 @@ export const metadata: Metadata = {
     "scheduling software Nepal",
     "online appointments Nepal",
   ],
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/booking-website"),
-  },
-  openGraph: {
-    title: `Create a Booking Website in Nepal (Fast Setup) | ${SITE_NAME}`,
-    description: `Launch your professional booking website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from ${SITE_NAME}.`,
-    url: absoluteUrl("/booking-website"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: `${SITE_NAME} - Booking and Appointment System`,
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `Create a Booking Website in Nepal (Fast Setup) | ${SITE_NAME}`,
-    description: `Launch your professional booking website in Nepal in under 10 minutes. Build with ${SITE_NAME}.`,
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 const bookingSchema = {
   "@context": "https://schema.org",

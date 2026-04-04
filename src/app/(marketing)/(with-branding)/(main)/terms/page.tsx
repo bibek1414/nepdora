@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import Link from "next/link";
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Terms of Service | Nepdora",
   description:
     "Read the Terms of Service for using Nepdora's website builder, e-commerce, and social media management platform. Understand your rights and responsibilities.",
-  alternates: {
-    canonical: absoluteUrl("/terms"),
-  },
+  path: "/terms",
   keywords: [
     "Nepdora terms",
     "terms of service",
@@ -15,33 +15,7 @@ export const metadata: Metadata = {
     "legal terms Nepal",
     "website builder policy",
   ],
-  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL(absoluteUrl()),
-  openGraph: {
-    title: "Terms of Service | Nepdora",
-    description:
-      "Understand your rights and responsibilities when using the Nepdora platform. Read our official Terms of Service.",
-    url: absoluteUrl("/terms"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora's Terms of Service",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Terms of Service | Nepdora",
-    description:
-      "Read the Terms of Service for using Nepdora's website builder, e-commerce, and social media management platform.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 import { JsonLd } from "@/components/shared/json-ld";
 

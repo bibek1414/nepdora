@@ -8,45 +8,14 @@ import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 
-export const metadata: Metadata = {
-  title: "Best Website Builder in Nepal | Create Your Site in 5 Minutes",
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
+  title: "Best Website Builder in Nepal for Ecommerce, Services, and Brands",
   description:
-    "Nepdora is the #1 website builder in Nepal. Build professional websites for e-commerce, restaurants, and agencies with eSewa & Khalti integration. Start free today!",
-  keywords: [
-    "website builder nepal",
-    "create website nepal",
-    "best website builder nepal",
-    "ecommerce website nepal",
-  ],
-  alternates: {
-    canonical: absoluteUrl("/website-builder-nepal"),
-  },
-  metadataBase: new URL(absoluteUrl()),
-  openGraph: {
-    title: "Best Website Builder in Nepal | Create Your Site in 5 Minutes",
-    description:
-      "Nepdora is the #1 website builder in Nepal. Build professional websites for e-commerce, restaurants, and agencies with eSewa & Khalti integration. Start free today!",
-    url: absoluteUrl("/website-builder-nepal"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Best Website Builder in Nepal - Nepdora",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Best Website Builder in Nepal | Nepdora",
-    description:
-      "Build professional websites in Nepal with eSewa & Khalti integration. Start free today!",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+    "Create a professional website in Nepal with Nepdora. Includes local payments, mobile-ready templates, hosting, and tools for Nepali businesses.",
+  path: "/website-builder-nepal",
+});
 
 export default function WebsiteBuilderNepal() {
   const schema = {

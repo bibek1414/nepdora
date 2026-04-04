@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
   description:
     "See the comprehensive features that power your digital presence: web hosting, online store setup, analytics, and centralized social media management.",
-  alternates: {
-    canonical: absoluteUrl("/features"),
-  },
+  path: "/features",
   keywords: [
     "Nepdora features",
     "website builder features",
@@ -15,33 +15,7 @@ export const metadata: Metadata = {
     "social media management",
     "web hosting Nepal",
   ],
-  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL(absoluteUrl()),
-  openGraph: {
-    title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
-    description:
-      "See the comprehensive features that power your digital presence: web hosting, online store setup, analytics, and centralized social media management.",
-    url: absoluteUrl("/features"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora's powerful website and e-commerce features",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
-    description:
-      "Explore features like web hosting, online store setup, analytics, and centralized social media management.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 import { JsonLd } from "@/components/shared/json-ld";
 

@@ -4,42 +4,20 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Privacy Policy Generator for Nepali Websites | Free Tool",
   description:
     "Generate a legally compliant Privacy Policy for your Nepali business in seconds. Tailored for Nepal's IT and privacy laws.",
-  alternates: {
-    canonical: absoluteUrl("/tools/privacy-policy-generator-nepal"),
-  },
-  robots: {
-    index: false,
-    follow: true,
-  },
-  openGraph: {
-    title: "Privacy Policy Generator for Nepali Websites | Free Tool",
-    description:
-      "Generate a legally compliant Privacy Policy for your Nepali business in seconds. Tailored for Nepal's IT and privacy laws.",
-    url: absoluteUrl("/tools/privacy-policy-generator-nepal"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora Privacy Policy Generator",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Privacy Policy Generator for Nepali Websites | Free Tool",
-    description:
-      "Generate a legally compliant Privacy Policy for your Nepali business in seconds. Tailored for Nepal's IT and privacy laws.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/tools/privacy-policy-generator-nepal",
+  noIndex: true,
+  keywords: [
+    "privacy policy generator nepal",
+    "legal policy nepal",
+    "nepal it laws compliance",
+  ],
+});
 
 export default function PrivacyPolicyGenerator() {
   return (

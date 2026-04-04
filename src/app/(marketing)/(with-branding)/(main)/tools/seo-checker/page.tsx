@@ -4,42 +4,21 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Free SEO Checker for Nepali Websites | Rank Higher on Google",
   description:
     "Analyze your website's SEO performance and get actionable tips to rank #1 in Nepal. specialized for the Nepalese search landscape.",
-  alternates: {
-    canonical: absoluteUrl("/tools/seo-checker"),
-  },
-  robots: {
-    index: false,
-    follow: true,
-  },
-  openGraph: {
-    title: "Free SEO Checker for Nepali Websites | Rank Higher on Google",
-    description:
-      "Analyze your website's SEO performance and get actionable tips to rank #1 in Nepal. specialized for the Nepalese search landscape.",
-    url: absoluteUrl("/tools/seo-checker"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora SEO Checker",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Free SEO Checker for Nepali Websites | Rank Higher on Google",
-    description:
-      "Analyze your website's SEO performance and get actionable tips to rank #1 in Nepal. specialized for the Nepalese search landscape.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/tools/seo-checker",
+  noIndex: true,
+  keywords: [
+    "seo checker nepal",
+    "free seo tool nepal",
+    "website audit nepal",
+    "rank higher nepal",
+  ],
+});
 
 export default function SEOChecker() {
   return (

@@ -19,37 +19,21 @@ const pageTitle = "Wix vs Nepdora (2026): Best Website Builder in Nepal?";
 const pageDescription =
   "Comparing Wix and Nepdora in Nepal? See why businesses are switching to Nepdora for its native eSewa/Khalti payments and faster local performance.";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: pageTitle,
   description: pageDescription,
-  alternates: {
-    canonical: pageUrl,
-  },
+  path: "/alternative/wix-nepal",
+  image: "/wix-vs-nepdora.png",
   keywords: [
     "wix alternative nepal",
     "wix vs nepdora",
     "website builder nepal",
     "esewa wix nepal",
     "khalti wix nepal",
-    "best business website nepal",
   ],
-  openGraph: {
-    title: pageTitle,
-    description: pageDescription,
-    url: pageUrl,
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: "/wix-vs-nepdora.png", // Replace with actual asset if available
-        width: 1200,
-        height: 630,
-        alt: "Wix vs Nepdora — Best website platform in Nepal 2026",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-};
+});
 
 export default function WixAlternativePage() {
   const softwareAppSchema = {

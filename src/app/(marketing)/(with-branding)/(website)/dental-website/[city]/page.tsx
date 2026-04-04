@@ -9,6 +9,8 @@ interface Props {
   params: Promise<{ city: string }>;
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { city } = await params;
   if (!cities.includes(city.toLowerCase())) {
@@ -18,44 +20,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Dental Website in ${cityName} | ${SITE_NAME}`;
   const description = `Professional dental website in ${cityName} with ${SITE_NAME}. Appointment scheduling, service showcases, and patient management for your dental clinic.`;
 
-  const url = absoluteUrl("/dental-website/" + city.toLowerCase());
-
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    metadataBase: new URL(absoluteUrl()),
+    path: `/dental-website/${city.toLowerCase()}`,
     keywords: [
       `dental website in ${city}`,
       `dentist web design ${city}`,
       `${SITE_NAME} dental`,
       "dental clinic Nepal",
     ],
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Best Dental Website in ${cityName}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+  });
 }
 
 export async function generateStaticParams() {

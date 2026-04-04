@@ -11,39 +11,20 @@ import {
   Rocket,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "eSewa Integration Guide for Websites in Nepal | Step-by-Step",
   description:
     "Complete guide on how to integrate eSewa into your business website. Start accepting payments from millions of eSewa users in Nepal today with Nepdora.",
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/esewa-integration-guide-nepal"),
-  },
-  openGraph: {
-    title: "eSewa Integration Guide for Websites in Nepal | Step-by-Step",
-    description:
-      "Complete guide on how to integrate eSewa into your business website. Start accepting payments from millions of eSewa users in Nepal today with Nepdora.",
-    url: absoluteUrl("/esewa-integration-guide-nepal"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "eSewa Integration Guide for Nepal",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "eSewa Integration Guide for Nepal | Nepdora",
-    description:
-      "Step-by-step guide to integrate eSewa into your website in Nepal. Accept digital wallet payments easily.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/esewa-integration-guide-nepal",
+  keywords: [
+    "esewa integration nepal",
+    "accept esewa payments",
+    "nepal payment gateway guide",
+    "digital wallet integration nepal",
+  ],
+});
 
 const guideSchema = {
   "@context": "https://schema.org",

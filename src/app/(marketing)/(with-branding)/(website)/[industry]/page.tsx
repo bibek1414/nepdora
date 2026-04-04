@@ -14,6 +14,8 @@ export async function generateStaticParams() {
   return industries.map(industry => ({ industry }));
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { industry } = await params;
   if (!industries.includes(industry)) {
@@ -30,29 +32,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `${action} a ${niche} Website in Nepal ${valueProp} | Nepdora`;
   const description = `Launch your professional ${niche.toLowerCase()} website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.`;
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    alternates: {
-      canonical: absoluteUrl(`/${industry}`),
-    },
-    openGraph: {
-      title,
-      description,
-      url: absoluteUrl(`/${industry}`),
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Nepdora - ${niche} Website Builder`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-  };
+    path: `/${industry}`,
+    keywords: [
+      `${industry} website Nepal`,
+      `${industry} online store Nepal`,
+      `Nepdora ${industry}`,
+    ],
+  });
 }
 
 export default async function IndustryPage({ params }: Props) {

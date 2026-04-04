@@ -5,12 +5,20 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const metadata: Metadata = {
-  title:
-    "Nepali Business Name Generator | Find the Perfect Name for Your Startup",
+import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
+  title: "Nepali Business Name Generator | Find the Perfect Name for Your Startup",
   description:
     "Struggling to find a name for your Nepali business? Use our AI-powered name generator to find unique, catchy, and culturally relevant names in seconds.",
-};
+  path: "/tools/business-name-generator-nepal",
+  keywords: [
+    "business name generator nepal",
+    "nepali startup names",
+    "creative business names nepal",
+    "brand name ideas nepal",
+  ],
+});
 
 export default function BusinessNameGenerator() {
   const schema = {
@@ -18,7 +26,7 @@ export default function BusinessNameGenerator() {
     "@type": "WebApplication",
     name: "Nepali Business Name Generator",
     description: "Found uniquely Nepali business names for your next venture.",
-    url: "https://www.nepdora.com/tools/business-name-generator-nepal",
+    url: absoluteUrl("/tools/business-name-generator-nepal"),
   };
 
   return (

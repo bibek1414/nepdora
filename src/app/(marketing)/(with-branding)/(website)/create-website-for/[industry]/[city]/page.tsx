@@ -22,6 +22,8 @@ export async function generateStaticParams() {
   );
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { industry, city } = await params;
   if (!industries.includes(industry) || !cities.includes(city.toLowerCase())) {
@@ -32,38 +34,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `Create ${industryLabel} Website in ${cityName} | Nepdora`;
   const description = `Build your ${industryLabel.toLowerCase()} website in ${cityName} today. Integrated eSewa, Khalti, and local delivery. Launch your business in minutes!`;
-  const url = absoluteUrl(`/create-website-for/${industry}/${city}`);
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    metadataBase: new URL(absoluteUrl()),
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Create ${industryLabel} Website in ${cityName}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+    path: `/create-website-for/${industry}/${city}`,
+  });
 }
 
 export default async function CreateWebsiteForPage({ params }: Props) {

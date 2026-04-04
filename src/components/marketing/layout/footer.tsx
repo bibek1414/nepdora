@@ -117,7 +117,7 @@ export const Footer = () => {
                 Categories
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/ecommerce-website">
+                <FooterLink href="/ecommerce">
                   E-commerce Hub
                 </FooterLink>
                 <FooterLink href="/restaurant-website">

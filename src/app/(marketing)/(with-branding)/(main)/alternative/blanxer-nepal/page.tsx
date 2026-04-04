@@ -21,12 +21,13 @@ const pageTitle =
 const pageDescription =
   "Comparing Blanxer and Nepdora for your Nepal business? See a full feature, pricing, and support comparison — eSewa, Khalti, logistics, POS, and AI builder included.";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: pageTitle,
   description: pageDescription,
-  alternates: {
-    canonical: pageUrl,
-  },
+  path: "/alternative/blanxer-nepal",
+  image: "/blanxer_vs_nepdora_comparison_1775212183481.png",
   keywords: [
     "blanxer alternative nepal",
     "blanxer vs nepdora",
@@ -39,29 +40,7 @@ export const metadata: Metadata = {
     "website builder with pos nepal",
     "local website platform nepal",
   ],
-  openGraph: {
-    title: pageTitle,
-    description: pageDescription,
-    url: pageUrl,
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: "/blanxer_vs_nepdora_comparison_1775212183481.png",
-        width: 1200,
-        height: 630,
-        alt: "Blanxer vs Nepdora — Nepal website builder comparison 2026",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: pageTitle,
-    description: pageDescription,
-    images: ["/blanxer_vs_nepdora_comparison_1775212183481.png"],
-  },
-};
+});
 
 export default function BlanxerAlternativePage() {
   // Schema definitions

@@ -4,13 +4,13 @@ import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { Suspense } from "react";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Nepdora : Professional Website Templates for Any Business in Nepal",
   description:
     "Browse hundreds of professionally designed website templates for E-commerce, Restaurants, Agencies, and more. Customize any design with our easy builder.",
-  alternates: {
-    canonical: absoluteUrl("/templates"),
-  },
+  path: "/templates",
   keywords: [
     "website templates Nepal",
     "ecommerce templates",
@@ -18,33 +18,7 @@ export const metadata: Metadata = {
     "agency website templates",
     "customizable website designs",
   ],
-  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL(absoluteUrl()),
-  openGraph: {
-    title: "Nepdora : Professional Website Templates for Any Business in Nepal",
-    description:
-      "Browse hundreds of professionally designed website templates for E-commerce, Restaurants, Agencies, and more. Customize any design with our easy builder.",
-    url: absoluteUrl("/templates"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Professionally designed website templates from Nepdora",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Nepdora : Professional Website Templates for Any Business in Nepal",
-    description:
-      "Browse free templates for E-commerce, Restaurants, Agencies, and more. Customize any design with our easy builder.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 import { JsonLd } from "@/components/shared/json-ld";
 
@@ -81,7 +55,7 @@ export default function Templates() {
     <>
       <JsonLd id="templates-schema" data={templatesSchema} />
       <Suspense fallback={<div className="min-h-screen py-20" />}>
-        <TemplatesPage />
+        <TemplatesPage asH1={true} />
       </Suspense>
       <div className="mb-40 py-20">
         <ContactSection />

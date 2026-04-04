@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Data Deletion Instructions | Nepdora",
   description:
     "Find out how to permanently delete your account and personal data from Nepdora, including information collected via Facebook Login. Follow our step-by-step instructions.",
-  alternates: {
-    canonical: absoluteUrl("/data-delete"),
-  },
+  path: "/data-delete",
   keywords: [
     "data deletion",
     "delete Nepdora account",
@@ -16,33 +16,7 @@ export const metadata: Metadata = {
     "Facebook data removal",
     "right to be forgotten",
   ],
-  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL(absoluteUrl()),
-  openGraph: {
-    title: "Data Deletion Instructions | Nepdora",
-    description:
-      "Find out how to permanently delete your account and personal data from Nepdora, including information collected via Facebook Login.",
-    url: absoluteUrl("/data-delete"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Instructions for deleting your Nepdora data",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Data Deletion Instructions | Nepdora",
-    description:
-      "Step-by-step instructions on how to permanently delete your account and personal data from the Nepdora platform.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 export default function DataDeletionPage() {
   const lastUpdated = "October 29, 2025";
 

@@ -3,44 +3,20 @@ import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Frequently Asked Questions | Nepdora — Website Builder Nepal",
   description:
     "Have questions about building your website in Nepal? Find answers about pricing, e-commerce, hosting, and how to get started with Nepdora.",
+  path: "/faq",
   keywords: [
     "FAQ",
     "Nepdora questions",
     "website builder Nepal help",
     "ecommerce Nepal support",
   ],
-  alternates: {
-    canonical: absoluteUrl("/faq"),
-  },
-  openGraph: {
-    title: "Frequently Asked Questions | Nepdora",
-    description:
-      "Have questions about building your website in Nepal? Find answers about pricing, e-commerce, hosting, and how to get started with Nepdora.",
-    url: absoluteUrl("/faq"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora FAQ - Your questions answered",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Frequently Asked Questions | Nepdora",
-    description:
-      "Have questions about building your website in Nepal? Find answers about pricing, e-commerce, hosting, and how to get started with Nepdora.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 const faqSchema = {
   "@context": "https://schema.org",

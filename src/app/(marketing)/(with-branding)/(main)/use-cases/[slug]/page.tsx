@@ -23,6 +23,8 @@ export async function generateStaticParams() {
   return USE_CASES.map(slug => ({ slug }));
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   if (!USE_CASES.includes(slug)) {
@@ -30,37 +32,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const title = capitalizeWords(slug.replace(/-/g, " "));
   const description = `Discover how Nepdora helps with ${slug.replace(/-/g, " ")}. The best website builder for Nepali entrepreneurs and businesses.`;
-  const url = absoluteUrl(`/use-cases/${slug}`);
 
-  return {
+  return buildMarketingMetadata({
     title: `${title} | Professional Solutions for Nepal`,
     description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title: `${title} | Professional Solutions for Nepal`,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${title} | Professional Solutions for Nepal`,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+    path: `/use-cases/${slug}`,
+  });
 }
 
 export default async function UseCasePage({ params }: Props) {

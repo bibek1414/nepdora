@@ -20,37 +20,21 @@ const pageTitle =
 const pageDescription =
   "Choosing between Shopify and Nepdora in Nepal? Compare local payment gateways (eSewa, Khalti), NPR pricing, logistics sync, and ease of use for Nepali merchants.";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: pageTitle,
   description: pageDescription,
-  alternates: {
-    canonical: pageUrl,
-  },
+  path: "/alternative/shopify-nepal",
+  image: "/shopify-vs-nepdora.png",
   keywords: [
     "shopify alternative nepal",
     "shopify vs nepdora",
     "ecommerce platform nepal",
     "esewa shopify nepal",
     "khalti shopify nepal",
-    "best online store builder nepal",
   ],
-  openGraph: {
-    title: pageTitle,
-    description: pageDescription,
-    url: pageUrl,
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: "/shopify-vs-nepdora.png", // Replace with actual asset if available
-        width: 1200,
-        height: 630,
-        alt: "Shopify vs Nepdora — Best ecommerce platform in Nepal 2026",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-};
+});
 
 export default function ShopifyAlternativePage() {
   const softwareAppSchema = {

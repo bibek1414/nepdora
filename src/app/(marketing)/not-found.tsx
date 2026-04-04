@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
+import { buildMarketingMetadata } from "@/lib/seo";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata = buildMarketingMetadata({
   title: "404 - Page Not Found | Nepdora",
   description:
     "The page you are trying to access does not exist or has been moved.",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+  path: "/404",
+  noIndex: true,
+});
 
 export default function NotFound() {
   return (

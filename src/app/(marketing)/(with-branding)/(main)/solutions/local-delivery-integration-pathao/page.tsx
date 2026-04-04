@@ -3,39 +3,14 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Delivery & Pathao Integration for E-commerce in Nepal",
   description:
     "Automate your shipping with Pathao and other local delivery partners in Nepal. Integrated logistics tracking for your online store.",
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/solutions/local-delivery-integration-pathao"),
-  },
-  openGraph: {
-    title: "Delivery & Pathao Integration for E-commerce in Nepal",
-    description:
-      "Automate your shipping with Pathao and other local delivery partners in Nepal. Integrated logistics tracking for your online store.",
-    url: absoluteUrl("/solutions/local-delivery-integration-pathao"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Delivery & Pathao Integration for Nepal",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Delivery & Pathao Integration for Nepal | Nepdora",
-    description:
-      "Automate your shipping with Pathao and other local delivery partners in Nepal.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/solutions/local-delivery-integration-pathao",
+});
 
 const solutionSchema = {
   "@context": "https://schema.org",

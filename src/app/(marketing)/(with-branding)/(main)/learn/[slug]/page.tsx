@@ -23,6 +23,8 @@ export async function generateStaticParams() {
   return LEARN_GUIDES.map(slug => ({ slug }));
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   if (!LEARN_GUIDES.includes(slug)) {
@@ -30,37 +32,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const title = `${capitalizeWords(slug.replace(/-/g, " "))} | Ultimate Guide for Nepal`;
   const description = `Read our comprehensive guide on ${slug.replace(/-/g, " ")}. Essential knowledge for business owners and entrepreneurs in Nepal.`;
-  const url = absoluteUrl(`/learn/${slug}`);
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-      locale: "en_NP",
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+    path: `/learn/${slug}`,
+  });
 }
 
 export default async function LearnPage({ params }: Props) {

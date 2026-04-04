@@ -5,44 +5,20 @@ import ContactUs from "@/components/marketing/contact-us/contact-us";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Blog | Nepdora — Digital Growth & Website Insights",
   description:
     "Stay updated with the latest trends in web development, e-commerce, and digital marketing in Nepal. Tutorials, tips, and stories from the Nepdora team.",
+  path: "/blog",
   keywords: [
     "Nepdora blog",
     "web development insights Nepal",
     "ecommerce tips Nepal",
     "digital marketing Nepal",
   ],
-  alternates: {
-    canonical: absoluteUrl("/blog"),
-  },
-  openGraph: {
-    title: "Blog | Nepdora — Digital Growth & Website Insights",
-    description:
-      "Stay updated with the latest trends in web development, e-commerce, and digital marketing in Nepal. Tutorials, tips, and stories from the Nepdora team.",
-    url: absoluteUrl("/blog"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora Blog - Insights for digital growth",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Blog | Nepdora — Digital Growth & Website Insights",
-    description:
-      "Stay updated with the latest trends in web development, e-commerce, and digital marketing in Nepal.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 const blogSchema = {
   "@context": "https://schema.org",

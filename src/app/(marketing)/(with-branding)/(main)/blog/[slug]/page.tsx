@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ContactSection from "@/components/marketing/contact-us/contact-us";
 import { JsonLd } from "@/components/shared/json-ld";
+import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -11,6 +12,8 @@ interface BlogDetailPageProps {
 
 // Revalidate every hour (3600 seconds)
 export const revalidate = 3600;
+
+import { buildMarketingMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -20,48 +23,20 @@ export async function generateMetadata({
   try {
     const blog = await marketingBlogApi.getBlogBySlug(slug);
 
-    const title = blog.meta_title || blog.title;
-    const description = blog.meta_description || blog.title;
-    const url = `${process.env.NEXT_PUBLIC_APP_URL || "https://www.nepdora.com"}/blog/${blog.slug}`;
-    const imageUrl = blog.thumbnail_image || "";
-
-    return {
-      title,
-      description,
-      openGraph: {
-        title,
-        description,
-        url,
-        siteName: "Nepdora",
-        images: imageUrl
-          ? [
-              {
-                url: imageUrl,
-                width: 1200,
-                height: 600,
-                alt: blog.thumbnail_image_alt_description || blog.title,
-              },
-            ]
-          : [],
-        locale: "en_US",
-        type: "article",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: imageUrl ? [imageUrl] : [],
-      },
-      alternates: {
-        canonical: url,
-      },
-    };
+    return buildMarketingMetadata({
+      title: blog.meta_title || blog.title,
+      description: blog.meta_description || blog.title,
+      path: `/blog/${blog.slug}`,
+      image: blog.thumbnail_image || undefined,
+      keywords: blog.tags?.map(t => t.name) || [],
+    });
   } catch (error) {
     // Fallback metadata if blog fetch fails
-    return {
+    return buildMarketingMetadata({
       title: "Blog Post | Nepdora",
       description: "Read our latest blog post on Nepdora",
-    };
+      path: `/blog/${slug}`,
+    });
   }
 }
 
@@ -84,22 +59,22 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       image: blog.thumbnail_image,
       author: {
         "@type": "Organization",
-        name: "Nepdora",
-        url: "https://www.nepdora.com",
+        name: SITE_NAME,
+        url: absoluteUrl(),
       },
       publisher: {
         "@type": "Organization",
-        name: "Nepdora",
+        name: SITE_NAME,
         logo: {
           "@type": "ImageObject",
-          url: "https://www.nepdora.com/nepdora-logooo.svg",
+          url: absoluteUrl("/nepdora-logooo.svg"),
         },
       },
       datePublished: blog.created_at,
       dateModified: blog.updated_at,
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": `https://www.nepdora.com/blog/${blog.slug}`,
+        "@id": absoluteUrl(`/blog/${blog.slug}`),
       },
     };
 
@@ -111,19 +86,19 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://www.nepdora.com",
+          item: absoluteUrl(),
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Blog",
-          item: "https://www.nepdora.com/blog",
+          item: absoluteUrl("/blog"),
         },
         {
           "@type": "ListItem",
           position: 3,
           name: blog.title,
-          item: `https://www.nepdora.com/blog/${blog.slug}`,
+          item: absoluteUrl(`/blog/${blog.slug}`),
         },
       ],
     };

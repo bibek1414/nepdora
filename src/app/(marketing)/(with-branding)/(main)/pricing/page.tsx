@@ -1,47 +1,20 @@
 import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Nepdora Pricing: Start Free, Upgrade for More Features",
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
+  title: "Website Builder Pricing Nepal | Free Plan + Paid Upgrades | Nepdora",
   description:
-    "Start for FREE! Compare Nepdora's transparent pricing plans for website development, e-commerce, and social media tools. Only pay as you grow.",
-  alternates: {
-    canonical: absoluteUrl("/pricing"),
-  },
+    "Compare Nepdora pricing for websites, ecommerce, and business tools in Nepal. Start free, upgrade only when you need more features.",
+  path: "/pricing",
   keywords: [
     "Nepdora pricing",
     "website cost Nepal",
     "ecommerce pricing",
     "free website builder",
-    "affordable web design",
   ],
-  authors: [{ name: "Nepdora Team", url: "https://www.nepdora.com" }],
-  metadataBase: new URL(absoluteUrl()),
-  openGraph: {
-    title: "Nepdora Pricing: Start Free, Upgrade for More Features",
-    description:
-      "Start for FREE! Compare Nepdora's transparent pricing plans for website development, e-commerce, and social media tools. Only pay as you grow.",
-    url: absoluteUrl("/pricing"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora's transparent and flexible pricing plans",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Nepdora Pricing: Start Free, Upgrade for More Features",
-    description:
-      "Start for FREE! Compare Nepdora's transparent pricing plans and only pay as you grow.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 import { JsonLd } from "@/components/shared/json-ld";
 

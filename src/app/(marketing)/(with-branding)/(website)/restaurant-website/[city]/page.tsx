@@ -9,6 +9,8 @@ interface Props {
   params: Promise<{ city: string }>;
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { city } = await params;
   if (!cities.includes(city.toLowerCase())) {
@@ -18,44 +20,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Restaurant Website in ${cityName} | ${SITE_NAME}`;
   const description = `Create a stunning restaurant website in ${cityName} with ${SITE_NAME}. Showcase your menu, accept online orders, and manage table bookings with ease.`;
 
-  const url = absoluteUrl("/restaurant-website/" + city.toLowerCase());
-
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    metadataBase: new URL(absoluteUrl()),
+    path: `/restaurant-website/${city.toLowerCase()}`,
     keywords: [
       `restaurant website in ${city}`,
       `food ordering ${city}`,
       `${SITE_NAME} restaurant`,
       "menu template Nepal",
     ],
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Best Restaurant Website in ${cityName}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+  });
 }
 
 export async function generateStaticParams() {

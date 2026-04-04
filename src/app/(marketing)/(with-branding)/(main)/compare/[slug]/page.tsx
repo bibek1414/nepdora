@@ -8,6 +8,8 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const competitorSlugs = ALL_COMPETITORS.map(c => `${c.slug}-and-nepdora`);
@@ -20,37 +22,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${platform1} vs ${platform2} | Which is better for Nepal?`;
   const description = `Compare ${platform1} and ${platform2}. Discover why Nepdora is the best choice for businesses in Nepal with local payments and support.`;
-  const url = absoluteUrl(`/compare/${slug}`);
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Compare ${platform1} and ${platform2}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+    path: `/compare/${slug}`,
+    keywords: [
+      `${platform1} vs ${platform2}`,
+      `${platform1} nepal price`,
+      `${platform2} vs ${platform1} features`,
+    ],
+  });
 }
 
 import { JsonLd } from "@/components/shared/json-ld";

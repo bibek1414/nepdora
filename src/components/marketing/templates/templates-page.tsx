@@ -14,7 +14,11 @@ interface UICategory {
   label: string;
 }
 
-const TemplatesPage = () => {
+interface TemplatesPageProps {
+  asH1?: boolean;
+}
+
+const TemplatesPage = ({ asH1 = false }: TemplatesPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
@@ -65,9 +69,15 @@ const TemplatesPage = () => {
       <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
         <div className="mb-8 flex flex-col items-center justify-between gap-4 text-center sm:mb-10 sm:gap-6 md:mb-12">
           <div>
-            <h2 className="mb-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-6xl">
-              Featured Website Templates
-            </h2>
+            {asH1 ? (
+              <h1 className="mb-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-6xl">
+                Featured Website Templates
+              </h1>
+            ) : (
+              <h2 className="mb-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-6xl">
+                Featured Website Templates
+              </h2>
+            )}
           </div>
 
           {categoriesLoading ? (

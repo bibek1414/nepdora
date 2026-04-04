@@ -8,6 +8,8 @@ interface Props {
   params: Promise<{ city: string }>;
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { city } = await params;
   if (!cities.includes(city.toLowerCase())) {
@@ -17,43 +19,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best Clinic Website in ${cityName} | Nepdora`;
   const description = `Launch a professional clinic website in ${cityName} with Nepdora. Manage patient appointments, display services, and grow your practice online.`;
 
-  const url = absoluteUrl(`/clinic-website/` + city.toLowerCase());
-
-  return {
+  return buildMarketingMetadata({
     title,
     description,
+    path: `/clinic-website/${city.toLowerCase()}`,
     keywords: [
       `clinic website in ${city}`,
       `healthcare web design ${city}`,
       `Nepdora clinic`,
       "medical website Nepal",
     ],
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `Best Clinic Website in ${cityName}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+  });
 }
 
 import { MAJOR_CITIES, cities } from "@/lib/seo-data";

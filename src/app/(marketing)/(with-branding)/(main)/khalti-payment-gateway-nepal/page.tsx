@@ -11,39 +11,20 @@ import {
   Rocket,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Integrated Khalti Payment Gateway for Your Website in Nepal",
   description:
     "Learn how to integrate Khalti payment gateway into your website. Nepdora provides native, one-click Khalti integration for all businesses in Nepal.",
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/khalti-payment-gateway-nepal"),
-  },
-  openGraph: {
-    title: "Integrated Khalti Payment Gateway for Your Website in Nepal",
-    description:
-      "Learn how to integrate Khalti payment gateway into your website. Nepdora provides native, one-click Khalti integration for all businesses in Nepal.",
-    url: absoluteUrl("/khalti-payment-gateway-nepal"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Khalti Integration for Nepal Websites",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Khalti Integration for Nepal | Nepdora",
-    description:
-      "Step-by-step guide to integrate Khalti into your website in Nepal. Accept digital wallet payments easily.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/khalti-payment-gateway-nepal",
+  keywords: [
+    "khalti integration nepal",
+    "payment gateway nepal",
+    "accept khalti payments",
+    "nepal digital wallet integration",
+  ],
+});
 
 const khaltiSchema = {
   "@context": "https://schema.org",

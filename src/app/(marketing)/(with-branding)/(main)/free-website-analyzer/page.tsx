@@ -2,44 +2,21 @@ import { WebsiteAnalyzer } from "@/components/marketing/tools/website-analyzer";
 import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const title = "Free Website Analyzer | Audit Your Site in Nepal | Nepdora";
-  const description =
-    "Audit your website's SEO, speed, and mobile responsiveness for the Nepalese market. Get actionable insights to beat your local competitors.";
-  const url = absoluteUrl("/free-website-analyzer");
-  const imageUrl = DEFAULT_OG_IMAGE;
+import { buildMarketingMetadata } from "@/lib/seo";
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: "Nepdora Free Website Analyzer Tool",
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [imageUrl],
-    },
-    alternates: {
-      canonical: url,
-    },
-    metadataBase: new URL(absoluteUrl()),
-  };
-}
+export const metadata = buildMarketingMetadata({
+  title: "Free Website Analyzer | Audit Your Site in Nepal | Nepdora",
+  description:
+    "Audit your website's SEO, speed, and mobile responsiveness for the Nepalese market. Get actionable insights to beat your local competitors.",
+  path: "/free-website-analyzer",
+  image: DEFAULT_OG_IMAGE,
+  keywords: [
+    "website analyzer nepal",
+    "free seo audit nepal",
+    "website speed test nepal",
+    "mobile friendly check nepal",
+  ],
+});
 
 import { JsonLd } from "@/components/shared/json-ld";
 

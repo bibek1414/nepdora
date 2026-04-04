@@ -2,39 +2,20 @@ import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Become a Nepdora Partner | Join Our Agency Program in Nepal",
   description:
     "Partner with Nepal's #1 website builder. Agencies, freelancers, and consultants can earn commissions and grow their business with Nepdora.",
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/partners"),
-  },
-  openGraph: {
-    title: "Become a Nepdora Partner | Join Our Agency Program in Nepal",
-    description:
-      "Partner with Nepal's #1 website builder. Agencies, freelancers, and consultants can earn commissions and grow their business with Nepdora.",
-    url: absoluteUrl("/partners"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Become a Nepdora Partner",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Become a Nepdora Partner | Nepdora",
-    description:
-      "Partner with Nepal's #1 website builder. Agencies, freelancers, and consultants can earn commissions and grow their business.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/partners",
+  keywords: [
+    "Nepdora partner",
+    "agency program Nepal",
+    "freelancer commissions",
+    "website builder affiliate",
+  ],
+});
 
 export default function PartnersPage() {
   return (

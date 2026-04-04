@@ -2,39 +2,20 @@ import { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Website Registration & Legal Compliance in Nepal | Business Guide",
   description:
     "How to legally register your website and online business in Nepal. Guide on PAN/VAT, company registration, and Department of Commerce requirements.",
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/website-registration-nepal"),
-  },
-  openGraph: {
-    title: "Website Registration & Legal Compliance in Nepal | Business Guide",
-    description:
-      "How to legally register your website and online business in Nepal. Guide on PAN/VAT, company registration, and Department of Commerce requirements.",
-    url: absoluteUrl("/website-registration-nepal"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Website Registration & Legal Compliance in Nepal",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Website Registration & Legal Compliance in Nepal | Nepdora",
-    description:
-      "How to legally register your website and online business in Nepal. Guide on PAN/VAT, company registration, and Department of Commerce requirements.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/website-registration-nepal",
+  keywords: [
+    "website registration nepal",
+    "online business legal nepal",
+    "pan vat registration nepal",
+    "ecommerce law nepal",
+  ],
+});
 
 export default function RegistrationPage() {
   return (

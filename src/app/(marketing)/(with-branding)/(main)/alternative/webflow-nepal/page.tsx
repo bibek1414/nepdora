@@ -20,37 +20,21 @@ const pageTitle =
 const pageDescription =
   "Comparing Webflow and Nepdora in Nepal? See why businesses are switching to Nepdora for its native eSewa/Khalti payments and faster local build times.";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: pageTitle,
   description: pageDescription,
-  alternates: {
-    canonical: pageUrl,
-  },
+  path: "/alternative/webflow-nepal",
+  image: "/webflow-vs-nepdora.png",
   keywords: [
     "webflow alternative nepal",
     "webflow vs nepdora",
     "website builder nepal",
     "esewa webflow nepal",
     "khalti webflow nepal",
-    "best development website nepal",
   ],
-  openGraph: {
-    title: pageTitle,
-    description: pageDescription,
-    url: pageUrl,
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: "/webflow-vs-nepdora.png", // Replace with actual asset if available
-        width: 1200,
-        height: 630,
-        alt: "Webflow vs Nepdora — Best website platform in Nepal 2026",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-};
+});
 
 export default function WebflowAlternativePage() {
   const softwareAppSchema = {

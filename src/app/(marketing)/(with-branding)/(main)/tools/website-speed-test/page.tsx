@@ -4,42 +4,21 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Website Speed Test Nepal | Optimize for Local Networks",
   description:
     "Check how fast your website loads in Nepal. Specialized speed test for NTC, Ncell, and local ISP connections.",
-  alternates: {
-    canonical: absoluteUrl("/tools/website-speed-test"),
-  },
-  robots: {
-    index: false,
-    follow: true,
-  },
-  openGraph: {
-    title: "Website Speed Test Nepal | Optimize for Local Networks",
-    description:
-      "Check how fast your website loads in Nepal. Specialized speed test for NTC, Ncell, and local ISP connections.",
-    url: absoluteUrl("/tools/website-speed-test"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Nepdora Website Speed Test",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Website Speed Test Nepal | Optimize for Local Networks",
-    description:
-      "Check how fast your website loads in Nepal. Specialized speed test for NTC, Ncell, and local ISP connections.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/tools/website-speed-test",
+  noIndex: true,
+  keywords: [
+    "website speed test nepal",
+    "ntc ncell speed test",
+    "isp speed check nepal",
+    "optimize website nepal",
+  ],
+});
 
 export default function SpeedTest() {
   return (

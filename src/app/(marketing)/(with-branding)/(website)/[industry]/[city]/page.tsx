@@ -17,6 +17,8 @@ export async function generateStaticParams() {
   return [];
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { industry, city } = await params;
   if (!industries.includes(industry) || !cities.includes(city.toLowerCase())) {
@@ -26,37 +28,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cityName = capitalizeWords(city);
   const title = `Best ${industryLabel} Website in ${cityName} | #1 Choice in Nepal`;
   const description = `Need a website for your ${industryLabel.toLowerCase()} in ${cityName}? Nepdora provides localized templates, eSewa/Khalti integration, and local SEO to help you rank #1.`;
-  const url = absoluteUrl(`/${industry}/${city}`);
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: SITE_NAME,
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `${industryLabel} website builder in ${cityName}`,
-        },
-      ],
-      locale: "en_NP",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [DEFAULT_OG_IMAGE],
-    },
-  };
+    path: `/${industry}/${city}`,
+    keywords: [
+      `${industry} website ${city}`,
+      `${industryLabel} ${cityName}`,
+      `website builder ${cityName}`,
+    ],
+  });
 }
 
 export default async function ProgrammaticIndustryCityPage({ params }: Props) {

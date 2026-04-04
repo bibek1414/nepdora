@@ -307,7 +307,7 @@ export async function generateAdminPageMetadata({
     },
     ...(subDomain && {
       alternates: {
-        canonical: `https://${subDomain}${pageRoute}`,
+        canonical: `https://${subDomain}.${siteConfig.baseDomain}${pageRoute}`,
       },
     }),
   };
@@ -335,6 +335,7 @@ export async function generatePreviewPageMetadata({
     title,
     description,
     icons: buildIconsMetadata(siteMetadata?.favicon),
+    robots: { index: false, follow: false },
     openGraph: {
       title,
       description,
@@ -348,7 +349,7 @@ export async function generatePreviewPageMetadata({
     },
     ...(subDomain && {
       alternates: {
-        canonical: `https://${subDomain}${pageRoute}`,
+        canonical: `https://${subDomain}.${siteConfig.baseDomain}${pageRoute}`,
       },
     }),
   };
@@ -413,10 +414,10 @@ export async function generatePublishPageMetadata({
       description,
       ...(pageImage ? { images: [pageImage] } : {}),
     },
-    ...(subDomain && {
-      alternates: {
-        canonical: `${protocol}://${subDomain}.${siteConfig.baseDomain}${pageRoute}`,
-      },
-    }),
+    alternates: {
+      canonical: subDomain
+        ? `${protocol}://${subDomain}.${siteConfig.baseDomain}${pageRoute}`
+        : `${protocol}://${host}${pageRoute}`,
+    },
   };
 }

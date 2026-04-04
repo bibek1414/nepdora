@@ -3,39 +3,14 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 
-export const metadata: Metadata = {
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
   title: "Accept eSewa & Khalti Payments Online in Nepal | One-Click Setup",
   description:
     "Integrate eSewa, Khalti, IME Pay, and ConnectIPS into your website instantly. No coding required with Nepdora's payment solution.",
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/solutions/accept-esewa-payments-online"),
-  },
-  openGraph: {
-    title: "Accept eSewa & Khalti Payments Online in Nepal | One-Click Setup",
-    description:
-      "Integrate eSewa, Khalti, IME Pay, and ConnectIPS into your website instantly. No coding required with Nepdora's payment solution.",
-    url: absoluteUrl("/solutions/accept-esewa-payments-online"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Accept eSewa & Khalti Payments Online in Nepal",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Accept eSewa & Khalti Payments Online in Nepal | Nepdora",
-    description:
-      "Integrate eSewa, Khalti, and more into your website instantly with Nepdora.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+  path: "/solutions/accept-esewa-payments-online",
+});
 
 const solutionSchema = {
   "@context": "https://schema.org",

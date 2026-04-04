@@ -5,45 +5,19 @@ import FeaturesSection from "@/components/marketing/features-section/features-se
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 
-export const metadata: Metadata = {
-  title:
-    "AI Website Builder Nepal | Build Your Site with Artificial Intelligence",
+import { buildMarketingMetadata } from "@/lib/seo";
+
+export const metadata = buildMarketingMetadata({
+  title: "AI Website Builder Nepal | Build Your Site with Artificial Intelligence",
   description:
     "Experience the power of AI to build your website in minutes. The first AI-powered website builder for Nepal that understands your local business needs.",
+  path: "/ai-website-builder",
   keywords: [
     "ai website builder nepal",
     "artificial intelligence website builder",
     "auto build website nepal",
   ],
-  metadataBase: new URL(absoluteUrl()),
-  alternates: {
-    canonical: absoluteUrl("/ai-website-builder"),
-  },
-  openGraph: {
-    title: "AI Website Builder Nepal | Build Your Site with Artificial Intelligence",
-    description:
-      "Experience the power of AI to build your website in minutes. The first AI-powered website builder for Nepal that understands your local business needs.",
-    url: absoluteUrl("/ai-website-builder"),
-    siteName: SITE_NAME,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "AI Website Builder Nepal",
-      },
-    ],
-    locale: "en_NP",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "AI Website Builder Nepal | Nepdora",
-    description:
-      "Experience the power of AI to build your website in minutes. The first AI-powered website builder for Nepal.",
-    images: [DEFAULT_OG_IMAGE],
-  },
-};
+});
 
 export default function AIWebsiteBuilder() {
   const schema = {
