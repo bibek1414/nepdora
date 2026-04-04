@@ -27,6 +27,8 @@ export async function generateStaticParams() {
   return TEMPLATE_CATEGORIES.map(category => ({ category }));
 }
 
+import { buildMarketingMetadata } from "@/lib/seo";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
   if (!TEMPLATE_CATEGORIES.includes(category)) {
@@ -36,14 +38,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `Best ${name} Website Templates for Nepal | Ready to Use`;
   const description = `Browse free and premium ${name} templates designed for the Nepali market. Mobile-friendly, fast, and integrated with eSewa & Khalti.`;
 
-  return {
+  return buildMarketingMetadata({
     title,
     description,
+    path: `/templates/${category}`,
     keywords: [
       `${category} website templates nepal`,
       `${category} website design nepal`,
     ],
-  };
+  });
 }
 
 export default async function TemplateCategoryPage({ params }: Props) {

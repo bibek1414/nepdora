@@ -18,9 +18,9 @@ const Hero: React.FC = () => {
               </span>
             </div>
 
-            <h1 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
+            <h2 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
               Build your Website in 5 minutes.
-            </h1>
+            </h2>
 
             <p className="mb-8 max-w-md text-sm leading-relaxed font-normal text-slate-600 sm:text-base md:text-lg">
               Tell us about your business and your website will be live within 5

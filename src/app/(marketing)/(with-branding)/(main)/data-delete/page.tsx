@@ -115,12 +115,12 @@ export default function DataDeletionPage() {
               <p className="text-muted-foreground mb-3">
                 Fill out our data deletion request form:
               </p>
-              <a
-                href="https://nepdora.com/contact"
+              <Link
+                href="/contact"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-lg px-6 py-3 font-semibold transition-colors"
               >
                 Submit Deletion Request
-              </a>
+              </Link>
             </div>
           </section>
 

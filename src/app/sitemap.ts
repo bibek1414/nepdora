@@ -23,8 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Base pages (High Priority)
   const baseRoutes = [
     { path: "", priority: 1.0 },
-    { path: "/pricing", priority: 1.0 },
-    { path: "/blog", priority: 1.0 },
+    { path: "/pricing", priority: 0.9 },
+    { path: "/blog", priority: 0.9 },
     { path: "/templates", priority: 0.9 },
     { path: "/about", priority: 0.8 },
     { path: "/contact", priority: 0.8 },
@@ -41,7 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/esewa-integration-guide-nepal", priority: 0.9 },
     { path: "/website-registration-nepal", priority: 0.8 },
     { path: "/partners", priority: 0.8 },
-    { path: "/ecommerce", priority: 1.0 },
+    { path: "/ecommerce", priority: 0.9 },
   ];
 
   const basePages = baseRoutes.map(route => ({
@@ -49,6 +49,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: route.priority,
+  }));
+
+  // Industry root pages
+  const industryRootPages = industries.map(industry => ({
+    url: `${baseUrl}/${industry}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
   }));
 
   // Solution Pages (Problem-Solution traffic)
@@ -192,6 +200,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...dedicatedAlternativePages,
     ...learnPages,
     ...templateCategories,
+    ...industryRootPages,
     ...dynamicIndustryCities,
     ...cityPages,
   ];

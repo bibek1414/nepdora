@@ -1,4 +1,3 @@
-import Script from "next/script";
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/marketing/hero-section/hero-section";
 import CapabilitiesSection from "@/components/marketing/features/capabilities-section";
@@ -10,7 +9,13 @@ import QuickBuilder from "@/components/marketing/quick-builder/quick-builder";
 import CTA from "@/components/marketing/cta-section/cta-section";
 import Comparison from "@/components/marketing/comparison/comparison";
 import Migration from "@/components/marketing/migration/migration";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
+import {
+  DEFAULT_OG_IMAGE,
+  SITE_NAME,
+  absoluteUrl,
+  buildMarketingMetadata,
+} from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 // Lazy load non-critical components to reduce initial load
 const TestimonialsSection = dynamic(
@@ -24,7 +29,8 @@ const TemplatesPage = dynamic(
 );
 
 export const metadata = buildMarketingMetadata({
-  title: "Website Builder Nepal | Free AI Website Builder for Nepali Businesses",
+  title:
+    "Website Builder Nepal | Free AI Website Builder for Nepali Businesses",
   description:
     "Build a website in Nepal in minutes with Nepdora. Launch ecommerce, service, and portfolio sites with eSewa, Khalti, hosting, and local support.",
   path: "/",
@@ -79,7 +85,6 @@ export default function Marketing() {
     },
   };
 
-  // Add FAQ Schema
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -113,25 +118,13 @@ export default function Marketing() {
 
   return (
     <>
-      {/* SEO JSON-LD Structured Data - Load after interactive for better performance */}
-      <Script
-        id="schema-website"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
-      <Script
-        id="schema-corporation"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(corporationSchema) }}
-      />
-      <Script
-        id="schema-faq"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      <h1 className="sr-only">
+        Nepdora: The Best AI Website Builder in Nepal
+      </h1>
+      {/* SEO JSON-LD Structured Data */}
+      <JsonLd id="schema-website" data={websiteSchema} />
+      <JsonLd id="schema-corporation" data={corporationSchema} />
+      <JsonLd id="schema-faq" data={faqSchema} />
 
       {/* Marketing Page Sections */}
       <div className="mx-auto max-w-6xl px-2 md:px-0">

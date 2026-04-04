@@ -184,7 +184,11 @@ export const RecentPosts = ({ initialData }: { initialData?: BlogPost[] }) => {
             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
               <Image
                 src={post.thumbnail_image || "/fallback/image-not-found.png"}
-                alt={post.title}
+                alt={
+                  post.thumbnail_image
+                    ? post.title
+                    : `Thumbnail for recent post: ${post.title}`
+                }
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-110"
               />
