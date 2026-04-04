@@ -14,11 +14,26 @@ export function absoluteUrl(path = "") {
   return `${SITE_URL}${normalizedPath}`;
 }
 
+export function getDynamicOgUrl({
+  title,
+  subtitle,
+}: {
+  title: string;
+  subtitle?: string;
+}) {
+  const params = new URLSearchParams();
+  params.set("title", title);
+  if (subtitle) params.set("subtitle", subtitle);
+  return `${SITE_URL}/api/og?${params.toString()}`;
+}
+
 export function buildMarketingMetadata({
   title,
   description,
   path,
-  image = DEFAULT_OG_IMAGE,
+  image,
+  ogTitle,
+  ogSubtitle,
   keywords = [],
   noIndex = false,
 }: {
@@ -26,10 +41,17 @@ export function buildMarketingMetadata({
   description: string;
   path: string;
   image?: string;
+  ogTitle?: string;
+  ogSubtitle?: string;
   keywords?: string[];
   noIndex?: boolean;
 }): Metadata {
   const url = absoluteUrl(path);
+  const finalImage =
+    image ||
+    (ogTitle
+      ? getDynamicOgUrl({ title: ogTitle, subtitle: ogSubtitle })
+      : DEFAULT_OG_IMAGE);
 
   return {
     title,
@@ -57,7 +79,7 @@ export function buildMarketingMetadata({
       siteName: SITE_NAME,
       images: [
         {
-          url: image,
+          url: finalImage,
           width: 1200,
           height: 630,
           alt: title,
@@ -70,7 +92,7 @@ export function buildMarketingMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [image],
+      images: [finalImage],
     },
   };
 }

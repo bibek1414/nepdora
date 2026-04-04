@@ -13,6 +13,7 @@ export const IndustryTemplates: React.FC<IndustryTemplatesProps> = ({
 }) => {
   const { data: templatesData, isLoading } = useGetTemplates({
     page_size: 12,
+    search: category === "nepal" ? "" : category,
   });
 
   const templates = templatesData?.results || [];

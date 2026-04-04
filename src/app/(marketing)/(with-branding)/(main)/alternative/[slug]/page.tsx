@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import RelatedAlternatives from "@/components/marketing/alternative/related-alternatives";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -190,6 +191,7 @@ export default async function AlternativePage({ params }: Props) {
       </section>
 
       <FAQSection />
+      <RelatedAlternatives currentSlug={slug} />
       <CTASection />
     </main>
   );

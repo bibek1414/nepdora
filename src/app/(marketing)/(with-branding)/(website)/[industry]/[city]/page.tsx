@@ -7,6 +7,7 @@ import { capitalizeWords } from "@/lib/string-utils";
 import Link from "next/link";
 import { TemplateSection } from "@/components/marketing/templates/template-section";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import RelatedIndustries from "@/components/marketing/cities/related-industries";
 
 interface Props {
   params: Promise<{ industry: string; city: string }>;
@@ -310,6 +311,7 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
         />
       </div>
 
+      <RelatedIndustries currentCity={city} currentIndustry={industry} />
       <CTASection />
     </main>
   );

@@ -130,6 +130,52 @@ export const WebsiteFooter = () => {
                 </motion.div>
               )}
 
+              {/* Growth Resources Column */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                <h4 className="mb-4 flex items-center font-bold text-gray-900">
+                  Growth Resources
+                </h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link
+                      href="/pricing/nepdora-vs-shopify-cost-comparison"
+                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                    >
+                      Nepdora vs Shopify Cost
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/payment-gateways-nepal"
+                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                    >
+                      Payment Gateways Guide
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/how-to-register-business-nepal"
+                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                    >
+                      Business Registration Path
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/blog"
+                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                    >
+                      Marketing Blog
+                    </Link>
+                  </li>
+                </ul>
+              </motion.div>
+
               {SERVICE_CATEGORIES.filter(
                 (c, i, a) =>
                   a.findIndex(t => t.name === c.name) === i && // Unique names
