@@ -173,8 +173,13 @@ export const WebsiteFooter = () => {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/best/ecommerce-platforms-in-nepal-2026" className="group flex items-center text-xs text-primary font-bold hover:underline">
+                      Best E-commerce (2026) <Zap className="w-3 h-3 ml-1 fill-primary" />
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/best/website-builders-for-restaurants-kathmandu" className="group flex items-center text-xs text-primary font-bold hover:underline">
-                      Best of 2026 <Zap className="w-3 h-3 ml-1 fill-primary" />
+                      Best for Restaurants <Zap className="w-3 h-3 ml-1 fill-primary" />
                     </Link>
                   </li>
                 </ul>

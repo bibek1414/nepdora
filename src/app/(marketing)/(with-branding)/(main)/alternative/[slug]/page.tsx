@@ -10,6 +10,7 @@ import { ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import RelatedAlternatives from "@/components/marketing/alternative/related-alternatives";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -103,7 +104,14 @@ export default async function AlternativePage({ params }: Props) {
       <JsonLd id="alt-schema" data={schema} />
       <JsonLd id="alt-breadcrumb-schema" data={breadcrumbSchema} />
       <div className="bg-slate-50 py-16 md:py-24">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4">
+          <Breadcrumbs 
+            items={[
+              { label: "Alternatives", href: "/pricing" },
+              { label: `${name} Alternative`, href: `/alternative/${slug}` }
+            ]} 
+          />
+          <div className="text-center mt-12">
           <h1 className="mb-6 text-4xl font-extrabold md:text-6xl">
             The Best <span className="text-primary">{name}</span> Alternative in
             Nepal
@@ -123,6 +131,7 @@ export default async function AlternativePage({ params }: Props) {
           </div>
         </div>
       </div>
+    </div>
 
       <Comparison platformName={name} />
 

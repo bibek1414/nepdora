@@ -56,8 +56,8 @@ export function buildMarketingMetadata({
   const finalImage =
     image ||
     getDynamicOgUrl({
-      title: ogTitle || title.split(" | ")[0],
-      subtitle: ogSubtitle || description.slice(0, 100) + "...",
+      title: ogTitle || title.split(/ [|:-] /)[0].trim(),
+      subtitle: ogSubtitle || (description.length > 150 ? description.slice(0, 147) + "..." : description),
       label: ogLabel,
     });
 

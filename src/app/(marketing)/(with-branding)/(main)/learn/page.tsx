@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
-import { GraduationCap, PlayCircle, BookOpen, Clock, ChevronRight, Zap } from "lucide-react";
+import { GraduationCap, PlayCircle, BookOpen, Clock, ChevronRight, Zap, Star } from "lucide-react";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Nepdora Academy | Learn How to Build and Grow your Business",
@@ -92,6 +92,34 @@ export default function LearnHubPage() {
                         </div>
                     </Link>
                 ))}
+            </div>
+
+            <div className="mt-24 border-t border-slate-100 pt-24">
+                <div className="flex items-center justify-between mb-12">
+                    <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter italic">Expert Rankings</h2>
+                    <div className="px-4 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-600 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+                        <Star className="w-3.5 h-3.5 fill-amber-500" />
+                        Editor's Choice 2026
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <Link href="/best/ecommerce-platforms-in-nepal-2026" className="group p-8 rounded-[40px] bg-slate-50 border border-slate-100 hover:border-primary/50 transition-all hover:bg-white hover:shadow-2xl">
+                        <div className="mb-4 text-xs font-bold text-primary uppercase tracking-widest">E-commerce</div>
+                        <h3 className="text-2xl font-black mb-4 group-hover:text-primary transition-colors italic uppercase tracking-tighter">Best E-commerce Platforms in Nepal</h3>
+                        <p className="text-slate-600 text-sm mb-6">We compared Nepdora, Shopify, WordPress, and more based on local payment success and logistics automation.</p>
+                        <div className="flex items-center gap-2 text-xs font-bold">
+                            View Rankings <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </Link>
+                    <Link href="/best/website-builders-for-restaurants-kathmandu" className="group p-8 rounded-[40px] bg-slate-50 border border-slate-100 hover:border-primary/50 transition-all hover:bg-white hover:shadow-2xl">
+                        <div className="mb-4 text-xs font-bold text-primary uppercase tracking-widest">Restaurant Tech</div>
+                        <h3 className="text-2xl font-black mb-4 group-hover:text-primary transition-colors italic uppercase tracking-tighter">Best Restaurant Website Builders</h3>
+                        <p className="text-slate-600 text-sm mb-6">Expert analysis for Kathmandu-based cafes and restaurants looking for online ordering and menu management.</p>
+                        <div className="flex items-center gap-2 text-xs font-bold">
+                            View Rankings <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </Link>
+                </div>
             </div>
 
             <div className="mt-20 p-12 rounded-[56px] bg-slate-900 text-white relative overflow-hidden">
