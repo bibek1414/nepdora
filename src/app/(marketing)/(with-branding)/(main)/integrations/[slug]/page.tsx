@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { INTEGRATIONS } from "@/constants/integrations";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { MoveRight, CheckCircle2, ShieldCheck, Globe, Zap } from "lucide-react";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -38,15 +39,16 @@ export default async function IntegrationPage({ params }: Props) {
   return (
     <div className="bg-white min-h-screen">
       {/* Dynamic Header */}
-      <section className="pt-32 pb-20 border-b border-slate-100 bg-slate-50/50">
+      <section className="pt-24 pb-20 border-b border-slate-100 bg-slate-50/50">
         <div className="container mx-auto max-w-7xl px-4">
-          <nav className="flex items-center gap-2 text-sm font-medium text-slate-500 mb-10">
-            <Link href="/integrations" className="hover:text-primary transition-colors">Integrations</Link>
-            <span className="text-slate-300">/</span>
-            <span className="text-slate-900 capitalize">{integration.category}</span>
-          </nav>
+          <Breadcrumbs 
+            items={[
+              { label: "Integrations", href: "/integrations" },
+              { label: integration.name, href: `/integrations/${slug}` }
+            ]} 
+          />
 
-          <div className="flex flex-col md:flex-row items-start gap-12">
+          <div className="flex flex-col md:flex-row items-start gap-12 mt-12">
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center p-6 shrink-0">
               <div className="w-full h-full bg-slate-100 rounded-xl animate-pulse" />
             </div>

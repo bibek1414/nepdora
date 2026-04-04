@@ -79,6 +79,26 @@ export const InvoiceBuilder = () => {
           </p>
         </div>
 
+        {/* Growth Banner */}
+        <div className="mb-8 p-6 rounded-3xl bg-primary text-white shadow-2xl shadow-primary/20 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700" />
+          <div className="flex items-center gap-6 relative z-10">
+            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20 shadow-inner">
+              <Zap className="w-7 h-7 text-white fill-white animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter">Love this tool?</h3>
+              <p className="text-white/80 font-bold">Build a professional website with integrated payments in 2 minutes.</p>
+            </div>
+          </div>
+          <Link 
+            href="/create-website"
+            className="px-8 py-4 rounded-full bg-slate-900 text-white font-black uppercase tracking-widest text-sm hover:scale-110 active:scale-95 transition-all relative z-10 shadow-xl"
+          >
+            Build My Website
+          </Link>
+        </div>
+
         <div className="mb-20 grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
             <div

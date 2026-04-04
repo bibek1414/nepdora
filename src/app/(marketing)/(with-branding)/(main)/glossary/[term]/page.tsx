@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { GLOSSARY_TERMS } from "@/constants/glossary";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { BookOpen, MoveRight, HelpCircle, Info, ArrowLeft } from "lucide-react";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 interface Props {
   params: Promise<{ term: string }>;
@@ -39,12 +40,14 @@ export default async function GlossaryTermPage({ params }: Props) {
     <div className="bg-white min-h-screen">
       <section className="py-24 border-b border-slate-100 bg-slate-50">
         <div className="container mx-auto max-w-4xl px-4">
-          <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 mb-10 hover:text-primary transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Resources
-          </Link>
+          <Breadcrumbs 
+            items={[
+              { label: "Glossary", href: "/glossary" },
+              { label: item.term, href: `/glossary/${term}` }
+            ]} 
+          />
           
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+          <div className="mt-12 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
             <BookOpen className="w-4 h-4" />
             <span>Glossary of Terms</span>
           </div>

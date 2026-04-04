@@ -5,7 +5,7 @@ import { ChevronRight, FileText, Landmark, ClipboardCheck, Sparkles } from "luci
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata = buildMarketingMetadata({
-  title: "How to Register a Business in Nepal (2024 Guide) | Step-by-Step",
+  title: "How to Register a Business in Nepal (2026 Guide) | Step-by-Step",
   description:
     "A comprehensive step-by-step guide on how to register a company in Nepal. Company registration process, documents required, and tax (PAN/VAT) registration.",
   path: "/how-to-register-business-nepal",

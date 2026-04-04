@@ -6,6 +6,7 @@ import {
   Globe,
   MapPin,
   ExternalLink,
+  Zap,
 } from "lucide-react";
 import SocialIcons from "./social-icons";
 import { useState } from "react";
@@ -130,14 +131,63 @@ export const WebsiteFooter = () => {
                 </motion.div>
               )}
 
-              {/* Growth Resources Column */}
+              {/* Authority Hubs Column */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
               >
-                <h4 className="mb-4 flex items-center font-bold text-gray-900">
+                <h4 className="mb-4 flex items-center font-bold text-gray-900 italic uppercase tracking-tighter">
+                  Authority Hubs
+                </h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/integrations" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                      Integrations Marketplace
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/industries" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                      Industry Solutions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/switch" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                      Migration Center
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/showcase" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                      Customer Showcase
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/experts" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                      Verified Experts
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/learn" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                      Growth Academy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/best/website-builders-for-restaurants-kathmandu" className="group flex items-center text-xs text-primary font-bold hover:underline">
+                      Best of 2026 <Zap className="w-3 h-3 ml-1 fill-primary" />
+                    </Link>
+                  </li>
+                </ul>
+              </motion.div>
+
+              {/* Growth Resources Column */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                <h4 className="mb-4 flex items-center font-bold text-gray-900 italic uppercase tracking-tighter">
                   Growth Resources
                 </h4>
                 <ul className="space-y-2">
@@ -146,7 +196,15 @@ export const WebsiteFooter = () => {
                       href="/pricing/nepdora-vs-shopify-cost-comparison"
                       className="group flex items-center text-xs text-gray-500 hover:underline"
                     >
-                      Nepdora vs Shopify Cost
+                      Nepdora vs Global Builders (Shopify/Wix)
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/alternative/blanxer-nepal"
+                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                    >
+                      Compare with Blanxer
                     </Link>
                   </li>
                   <li>

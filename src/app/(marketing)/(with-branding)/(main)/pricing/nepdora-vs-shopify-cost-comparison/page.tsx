@@ -6,11 +6,11 @@ import { Check, X, ArrowRight, Wallet, Globe, ShieldCheck, Zap } from "lucide-re
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora vs Shopify Cost Comparison | Save 80% with NPR Pricing",
+  title: "Nepdora vs Global Builders (Shopify, Wix, Webflow) | Save 80%",
   description:
-    "Detailed comparison of Nepdora vs Shopify for businesses in Nepal. See how much you save with local payments (eSewa/Khalti) and NPR pricing. Stop paying in USD.",
+    "Detailed comparison of Nepdora vs Shopify, Wix, and Webflow for businesses in Nepal. See how much you save with local payments (eSewa/Khalti) and NPR pricing. Stop paying in USD.",
   path: "/pricing/nepdora-vs-shopify-cost-comparison",
-  ogTitle: "Nepdora vs Shopify: The Real Cost for Nepali Businesses",
+  ogTitle: "Nepdora vs Global Builders: The Real Cost for Nepali Businesses",
   ogSubtitle: "Save up to 80% annually. Zero transaction fees with local payments.",
 });
 
@@ -65,7 +65,7 @@ export default async function ShopifyComparisonPage() {
     "breadcrumb": "Home > Pricing > Comparison",
     "mainEntity": {
       "@type": "Table",
-      "about": "Cost comparison between Nepdora and Shopify for Nepali market"
+      "about": "Cost comparison between Nepdora and Global Builders (Shopify/Wix) for Nepali market"
     }
   };
 
@@ -82,13 +82,13 @@ export default async function ShopifyComparisonPage() {
         
         <div className="container relative mx-auto px-4 text-center">
           <div className="mb-4 inline-flex items-center rounded-full bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-400 ring-1 ring-inset ring-blue-500/20">
-            Nepdora vs Shopify
+            Nepdora vs Global Builders
           </div>
           <h1 className="mb-6 text-4xl font-extrabold tracking-tight md:text-6xl">
-            Why Nepali Businesses are Switching to <span className="text-blue-400">Nepdora</span>
+            Why Nepali Businesses are Switching from <span className="text-blue-400">Shopify & Wix</span>
           </h1>
           <p className="mx-auto max-w-2xl text-xl text-slate-400">
-            Stop paying $500+ annually for global builders. Get a better, localized experience for a fraction of the cost.
+            Stop paying $500+ annually for global platforms. Get a better, localized experience for a fraction of the cost.
           </p>
         </div>
       </section>
@@ -105,7 +105,7 @@ export default async function ShopifyComparisonPage() {
             <div className="grid grid-cols-3 bg-slate-50 py-6 font-bold text-slate-900">
               <div className="px-6">Feature</div>
               <div className="px-6 text-center text-blue-600">Nepdora</div>
-              <div className="px-6 text-center text-slate-500">Shopify</div>
+              <div className="px-6 text-center text-slate-500">Global (Shopify/Wix)</div>
             </div>
             {comparisonData.map((row, index) => (
               <div 
@@ -138,7 +138,7 @@ export default async function ShopifyComparisonPage() {
               </div>
               <h3 className="mb-3 text-xl font-bold">No Credit Card? No Problem.</h3>
               <p className="text-slate-600">
-                Shopify requires an international credit card for subscriptions and themes. Nepdora accepts eSewa, Khalti, and local bank transfers.
+                Global platforms require an international credit card for subscriptions and themes. Nepdora accepts eSewa, Khalti, and local bank transfers.
               </p>
             </div>
             
@@ -148,7 +148,7 @@ export default async function ShopifyComparisonPage() {
               </div>
               <h3 className="mb-3 text-xl font-bold">Native Payment Integration</h3>
               <p className="text-slate-600">
-                Integrating eSewa or Khalti on Shopify is complex and requires third-party scripts. On Nepdora, it's built-in with one click.
+                Integrating eSewa or Khalti on global builders is complex and requires third-party scripts. On Nepdora, it's built-in with one click.
               </p>
             </div>
 
@@ -172,7 +172,7 @@ export default async function ShopifyComparisonPage() {
             <Zap className="mx-auto mb-6 h-12 w-12 text-blue-400" />
             <h2 className="mb-8 text-3xl font-bold md:text-5xl">Save Over NPR 50,000 Annually</h2>
             <p className="mb-10 text-xl text-slate-400">
-              By switching from Shopify to Nepdora, the average boutique store in Nepal saves enough to cover their hosting and marketing for a full year.
+              By switching from global builders to Nepdora, the average boutique store in Nepal saves enough to cover their hosting and marketing for a full year.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link 

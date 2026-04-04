@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { MoveRight, CheckCircle2, Zap, Layout, Laptop, Palette, Globe, Target } from "lucide-react";
+import { MoveRight, CheckCircle2, Zap, Layout, Laptop, Palette, Globe, Target, Star } from "lucide-react";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -42,6 +43,10 @@ export default async function IndustryDeepDivePage({ params }: Props) {
           header: "Take your restaurant online with seamless ordering.",
           features: ["Digital Menu Management", "Online Ordering System", "Table Booking", "Customer CRM"],
           title: "Restaurant Management Unleashed",
+          integrations: [
+            { name: "eSewa Payments", slug: "esewa-payment", color: "text-green-600" },
+            { name: "Pathao Logistics", slug: "pathao-logistics", color: "text-orange-600" }
+          ]
         };
       case "ecommerce":
       case "clothing-store":
@@ -49,12 +54,20 @@ export default async function IndustryDeepDivePage({ params }: Props) {
           header: "Sell across Nepal with a powerful online store.",
           features: ["Inventory Management", "eSewa & Khalti Payments", "Pathao Delivery Sync", "Promotions & Coupons"],
           title: "The Ultimate E-commerce Engine",
+          integrations: [
+            { name: "eSewa Payments", slug: "esewa-payment", color: "text-green-600" },
+            { name: "Khalti Wallet", slug: "khalti-payment", color: "text-purple-600" },
+            { name: "Pathao Delivery", slug: "pathao-logistics", color: "text-orange-600" }
+          ]
         };
       default:
         return {
           header: `A professional digital home for your ${label.toLowerCase()} business.`,
           features: ["Mobile-Responsive Design", "Local SEO Optimization", "Fast Loading Speeds", "Integrated Analytics"],
           title: "Made for Professional Excellence",
+          integrations: [
+            { name: "eSewa Checkout", slug: "esewa-payment", color: "text-green-600" }
+          ]
         };
     }
   };
@@ -64,32 +77,41 @@ export default async function IndustryDeepDivePage({ params }: Props) {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 overflow-hidden bg-slate-950 text-white">
+      <section className="relative pt-24 pb-24 overflow-hidden bg-slate-950 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#1e293b,transparent)] opacity-40" />
-        <div className="container mx-auto max-w-7xl px-4 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-8">
-            <Target className="w-4 h-4" />
-            <span>Built for {label}s</span>
-          </div>
-          <h1 className="text-4xl md:text-7xl font-black tracking-tight mb-8">
-            {details.title}
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
-            {details.header}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link 
-              href="/create-website"
-              className="px-10 py-5 rounded-full bg-primary text-white font-black hover:scale-105 transition-all w-full sm:w-auto"
-            >
-              Build Your {label} Site
-            </Link>
-            <Link 
-              href="/templates"
-              className="px-10 py-5 rounded-full bg-white/10 text-white font-bold hover:bg-white/20 transition-all w-full sm:w-auto border border-white/20 backdrop-blur-sm"
-            >
-              Browse Industry Templates
-            </Link>
+        <div className="container mx-auto max-w-7xl px-4 relative z-10">
+          <Breadcrumbs 
+            items={[
+              { label: "Industries", href: "/industries" },
+              { label: label, href: `/industries/${slug}` }
+            ]} 
+          />
+          
+          <div className="text-center mt-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-8">
+              <Target className="w-4 h-4" />
+              <span>Built for {label}s</span>
+            </div>
+            <h1 className="text-4xl md:text-7xl font-black tracking-tight mb-8">
+              {details.title}
+            </h1>
+            <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
+              {details.header}
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link 
+                href="/create-website"
+                className="px-10 py-5 rounded-full bg-primary text-white font-black hover:scale-105 transition-all w-full sm:w-auto"
+              >
+                Build Your {label} Site
+              </Link>
+              <Link 
+                href="/templates"
+                className="px-10 py-5 rounded-full bg-white/10 text-white font-bold hover:bg-white/20 transition-all w-full sm:w-auto border border-white/20 backdrop-blur-sm"
+              >
+                Browse Industry Templates
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -133,8 +155,62 @@ export default async function IndustryDeepDivePage({ params }: Props) {
         </div>
       </section>
 
+      {/* Integration Cross-Linking */}
+      <section className="py-24 bg-slate-50 border-y border-slate-100 overflow-hidden relative">
+        <div className="container mx-auto max-w-7xl px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="max-w-xl text-center md:text-left relative z-10">
+              <h3 className="text-3xl font-black text-slate-900 mb-6 uppercase tracking-tight italic">
+                Native <span className="text-primary italic">Integrations </span> 
+                Included.
+              </h3>
+              <p className="text-lg text-slate-600 mb-8 border-l-4 border-slate-200 pl-6">
+                Don't waste time on coding. Unlike global platforms like Wix, Shopify, or WordPress which require complex 3rd-party scripts for Nepal, your {label} site comes pre-connected with local partners.
+              </p>
+              
+              {/* Best-of Recommendation Link */}
+              {slug === "restaurant" && (
+                <Link 
+                    href="/best/website-builders-for-restaurants-kathmandu"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold shadow-sm hover:shadow-md transition-all text-slate-600 hover:text-primary group"
+                >
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400 group-hover:scale-125 transition-transform" />
+                    Read: Best Website Builders for Restaurants in Kathmandu
+                </Link>
+              )}
+              {slug === "ecommerce" && (
+                <Link 
+                    href="/best/ecommerce-platforms-in-nepal-2026"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold shadow-sm hover:shadow-md transition-all text-slate-600 hover:text-primary group"
+                >
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400 group-hover:scale-125 transition-transform" />
+                    Read: Top Ecommerce Platforms in Nepal (2026 Comparison)
+                </Link>
+              )}
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+              {details.integrations.map((integration) => (
+                <Link 
+                  key={integration.slug}
+                  href={`/integrations/${integration.slug}`}
+                  className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:scale-105 transition-all text-center group"
+                >
+                  <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-50 flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
+                    <Globe className="w-6 h-6 text-slate-400 group-hover:text-primary" />
+                  </div>
+                  <div className={`font-black uppercase tracking-tighter italic text-xs ${integration.color}`}>
+                    {integration.name}
+                  </div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Active Support</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Trust Blocks */}
-      <section className="py-24 border-y border-slate-100">
+      <section className="py-24">
         <div className="container mx-auto max-w-7xl px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div className="space-y-4">

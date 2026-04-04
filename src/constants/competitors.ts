@@ -12,6 +12,7 @@ export const COMPETITOR_CATEGORIES: CompetitorCategory[] = [
   {
     title: "General Website Builders",
     competitors: [
+      { name: "Wix", slug: "wix" },
       { name: "Webflow", slug: "webflow" },
       { name: "Squarespace", slug: "squarespace" },
       { name: "WordPress", slug: "wordpress" },
@@ -33,6 +34,7 @@ export const COMPETITOR_CATEGORIES: CompetitorCategory[] = [
     title: "E-commerce Builders",
     competitors: [
       { name: "Shopify", slug: "shopify" },
+      { name: "Blanxer", slug: "blanxer" },
       { name: "BigCommerce", slug: "bigcommerce" },
       { name: "WooCommerce", slug: "woocommerce" },
       { name: "Ecwid", slug: "ecwid" },

@@ -5,17 +5,17 @@ import { Calculator, TrendingDown, Zap, ArrowRight } from "lucide-react";
 
 export default function PricingCalculator() {
   const [exchangeRate, setExchangeRate] = useState(134); // Approx NPR per USD
-  const [shopifyPlan, setShopifyPlan] = useState(39); // Basic Shopify is $39
+  const [globalPlan, setGlobalPlan] = useState(39); // Average global plan is $39
 
-  const shopifyMonthlyNPR = shopifyPlan * exchangeRate;
-  const shopifyYearlyNPR = shopifyMonthlyNPR * 12;
+  const globalMonthlyNPR = globalPlan * exchangeRate;
+  const globalYearlyNPR = globalMonthlyNPR * 12;
   
   // Approximate Nepdora Premium Plan
   const nepdoraMonthlyNPR = 999; 
   const nepdoraYearlyNPR = nepdoraMonthlyNPR * 12;
   
-  const annualSavings = shopifyYearlyNPR - nepdoraYearlyNPR;
-  const savingsPercentage = Math.round((annualSavings / shopifyYearlyNPR) * 100);
+  const annualSavings = globalYearlyNPR - nepdoraYearlyNPR;
+  const savingsPercentage = Math.round((annualSavings / globalYearlyNPR) * 100);
 
   return (
     <section className="py-20 bg-white">
@@ -33,7 +33,7 @@ export default function PricingCalculator() {
                 See How Much You <span className="text-blue-400">Save</span>
               </h2>
               <p className="mb-8 text-lg text-slate-400">
-                Stop paying for currency conversion and high USD subscription fees. Calculate your potential savings when you switch from global platforms to Nepdora.
+                Stop paying for currency conversion and high USD subscription fees. Calculate your potential savings when you switch from global platforms like Shopify, Wix, or Webflow to Nepdora.
               </p>
               
               <div className="space-y-6">
@@ -47,11 +47,11 @@ export default function PricingCalculator() {
                       min="25"
                       max="299"
                       step="1"
-                      value={shopifyPlan}
-                      onChange={(e) => setShopifyPlan(parseInt(e.target.value))}
+                      value={globalPlan}
+                      onChange={(e) => setGlobalPlan(parseInt(e.target.value))}
                       className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-700 accent-blue-500"
                     />
-                    <span className="w-16 text-right font-bold text-xl text-blue-400">${shopifyPlan}</span>
+                    <span className="w-16 text-right font-bold text-xl text-blue-400">${globalPlan}</span>
                   </div>
                 </div>
                 
@@ -81,8 +81,8 @@ export default function PricingCalculator() {
               
               <div className="space-y-4 border-t border-blue-500 pt-8">
                 <div className="flex justify-between text-sm">
-                  <span className="text-blue-100">Shopify/Wix Yearly</span>
-                  <span className="font-bold">NPR {shopifyYearlyNPR.toLocaleString()}</span>
+                  <span className="text-blue-100">Global Builders (Wix/Shopify)</span>
+                  <span className="font-bold">NPR {globalYearlyNPR.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-blue-100">Nepdora Yearly</span>

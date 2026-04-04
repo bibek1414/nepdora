@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/seo";
 import { industries } from "@/lib/seo-data";
 import { INTEGRATIONS } from "@/constants/integrations";
 import { GLOSSARY_TERMS } from "@/constants/glossary";
+import { BEST_OF_DATA } from "@/constants/best-of";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
@@ -87,6 +88,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.6,
+  }));
+
+  // Best-of pages
+  const bestOfPages = BEST_OF_DATA.map(item => ({
+    url: `${baseUrl}/best/${item.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
   }));
 
   // Industry root pages (Old style, keeping for SEO)
@@ -242,8 +251,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...dynamicIndustryCities,
     ...cityPages,
     ...integrationPages,
+    {
+      url: `${baseUrl}/experts`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/learn`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
     ...industryPages,
     ...switchPages,
     ...glossaryPages,
+    ...bestOfPages,
   ];
 }
