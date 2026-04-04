@@ -249,6 +249,15 @@ export const WebsiteFooter = () => {
                 </Link>
               </div>
             </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Built with</span>
+              <Link 
+                href="/" 
+                className="flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 text-[10px] font-black text-white transition-all hover:scale-105 hover:bg-primary uppercase tracking-tighter"
+              >
+                Nepdora
+              </Link>
+            </div>
             <SocialIcons />
           </div>
         </div>

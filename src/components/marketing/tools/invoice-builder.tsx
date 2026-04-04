@@ -3,7 +3,8 @@ import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Download, Plus, Trash2, FileText, Loader2 } from "lucide-react";
+import { Download, Plus, Trash2, FileText, Loader2, Zap } from "lucide-react";
+import Link from "next/link";
 import CTA from "@/components/marketing/cta-section/cta-section";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -265,6 +266,29 @@ export const InvoiceBuilder = () => {
               <p className="mt-4 text-center text-[10px] text-slate-400">
                 By downloading, you agree to receive helpful business tips from
                 Nepdora.
+              </p>
+            </div>
+
+            {/* Growth Loop CTA */}
+            <div className="rounded-2xl bg-slate-900 p-8 text-white shadow-xl shadow-slate-200">
+              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 ring-1 ring-primary/30">
+                <Zap className="text-primary h-6 w-6" />
+              </div>
+              <h3 className="mb-4 text-xl font-bold">Never lose an invoice again.</h3>
+              <p className="mb-8 text-sm text-slate-400 leading-relaxed">
+                Save this invoice and automate your entire billing process by creating a <span className="text-white font-semibold">free website</span> on Nepdora. 
+              </p>
+              <Button 
+                asChild
+                className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white font-bold text-slate-950 hover:bg-slate-100"
+              >
+                <Link href="/create-website">
+                  Save this Invoice
+                  <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
+                </Link>
+              </Button>
+              <p className="mt-4 text-center text-[10px] font-medium text-slate-500 uppercase tracking-widest">
+                No Credit Card Required
               </p>
             </div>
           </div>

@@ -3,6 +3,8 @@ import { SERVICE_CATEGORIES } from "@/constants/nepal-cities";
 import { ALL_COMPETITORS } from "@/constants/competitors";
 import { SITE_URL } from "@/lib/seo";
 import { industries } from "@/lib/seo-data";
+import { INTEGRATIONS } from "@/constants/integrations";
+import { GLOSSARY_TERMS } from "@/constants/glossary";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
@@ -42,6 +44,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/website-registration-nepal", priority: 0.8 },
     { path: "/partners", priority: 0.8 },
     { path: "/ecommerce", priority: 0.9 },
+    { path: "/showcase", priority: 0.9 },
+    { path: "/integrations", priority: 0.9 },
+    { path: "/industries", priority: 0.9 },
+    { path: "/switch", priority: 0.8 },
   ];
 
   const basePages = baseRoutes.map(route => ({
@@ -51,12 +57,44 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route.priority,
   }));
 
-  // Industry root pages
+  // Integration pages
+  const integrationPages = INTEGRATIONS.map(i => ({
+    url: `${baseUrl}/integrations/${i.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  // Industry deep-dive pages
+  const industryPages = industries.map(slug => ({
+    url: `${baseUrl}/industries/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  // Switch pages
+  const switchPages = ALL_COMPETITORS.map(c => ({
+    url: `${baseUrl}/switch/from-${c.slug}-to-nepdora`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  // Glossary pages
+  const glossaryPages = GLOSSARY_TERMS.map(t => ({
+    url: `${baseUrl}/glossary/${t.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  // Industry root pages (Old style, keeping for SEO)
   const industryRootPages = industries.map(industry => ({
     url: `${baseUrl}/${industry}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: 0.9,
+    priority: 0.8,
   }));
 
   // Solution Pages (Problem-Solution traffic)
@@ -203,5 +241,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...industryRootPages,
     ...dynamicIndustryCities,
     ...cityPages,
+    ...integrationPages,
+    ...industryPages,
+    ...switchPages,
+    ...glossaryPages,
   ];
 }

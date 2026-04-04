@@ -17,13 +17,16 @@ export function absoluteUrl(path = "") {
 export function getDynamicOgUrl({
   title,
   subtitle,
+  label,
 }: {
   title: string;
   subtitle?: string;
+  label?: string;
 }) {
   const params = new URLSearchParams();
   params.set("title", title);
   if (subtitle) params.set("subtitle", subtitle);
+  if (label) params.set("label", label);
   return `${SITE_URL}/api/og?${params.toString()}`;
 }
 
@@ -34,6 +37,7 @@ export function buildMarketingMetadata({
   image,
   ogTitle,
   ogSubtitle,
+  ogLabel,
   keywords = [],
   noIndex = false,
 }: {
@@ -43,15 +47,19 @@ export function buildMarketingMetadata({
   image?: string;
   ogTitle?: string;
   ogSubtitle?: string;
+  ogLabel?: string;
   keywords?: string[];
   noIndex?: boolean;
 }): Metadata {
   const url = absoluteUrl(path);
+
   const finalImage =
     image ||
-    (ogTitle
-      ? getDynamicOgUrl({ title: ogTitle, subtitle: ogSubtitle })
-      : DEFAULT_OG_IMAGE);
+    getDynamicOgUrl({
+      title: ogTitle || title.split(" | ")[0],
+      subtitle: ogSubtitle || description.slice(0, 100) + "...",
+      label: ogLabel,
+    });
 
   return {
     title,

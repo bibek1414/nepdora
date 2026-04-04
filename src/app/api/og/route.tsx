@@ -7,10 +7,10 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
 
-    // Parameters: ?title=<title>&subtitle=<subtitle>
+    // Parameters: ?title=<title>&subtitle=<subtitle>&label=<label>
     const title = searchParams.get("title") || "Nepdora";
-    const subtitle =
-      searchParams.get("subtitle") || "The Best AI Website Builder in Nepal";
+    const subtitle = searchParams.get("subtitle") || "The Best AI Website Builder in Nepal";
+    const label = searchParams.get("label") || "Industry Leading Excellence";
 
     return new ImageResponse(
       (
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#0f172a", // slate-900
+            backgroundColor: "#020617", // slate-950
             padding: "40px",
             position: "relative",
           }}
@@ -33,26 +33,26 @@ export async function GET(req: NextRequest) {
               position: "absolute",
               top: "-100px",
               left: "-100px",
-              width: "400px",
-              height: "400px",
-              borderRadius: "200px",
-              backgroundColor: "#1e3a8a",
-              filter: "blur(100px)",
-              opacity: 0.3,
+              width: "600px",
+              height: "600px",
+              borderRadius: "300px",
+              backgroundColor: "#1e1b4b", // indigo-950
+              filter: "blur(120px)",
+              opacity: 0.5,
               display: "flex",
             }}
           />
           <div
             style={{
               position: "absolute",
-              bottom: "-100px",
-              right: "-100px",
-              width: "400px",
-              height: "400px",
-              borderRadius: "200px",
-              backgroundColor: "#115e59",
-              filter: "blur(100px)",
-              opacity: 0.3,
+              bottom: "-150px",
+              right: "-150px",
+              width: "600px",
+              height: "600px",
+              borderRadius: "300px",
+              backgroundColor: "#134e4a", // teal-950
+              filter: "blur(120px)",
+              opacity: 0.5,
               display: "flex",
             }}
           />
@@ -64,40 +64,42 @@ export async function GET(req: NextRequest) {
               alignItems: "center",
               justifyContent: "center",
               border: "1px solid rgba(255, 255, 255, 0.1)",
-              borderRadius: "24px",
-              padding: "60px",
-              backgroundColor: "rgba(15, 23, 42, 0.6)",
-              width: "1000px",
-              height: "500px",
+              borderRadius: "32px",
+              padding: "80px",
+              backgroundColor: "rgba(15, 23, 42, 0.4)",
+              width: "1100px",
+              height: "550px",
               boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+              backdropFilter: "blur(20px)",
             }}
           >
             {/* Branded Label */}
             <div
               style={{
                 display: "flex",
-                color: "#0ea5e9",
-                fontSize: "18px",
+                color: "#38bdf8", // sky-400
+                fontSize: "22px",
                 fontWeight: "bold",
-                letterSpacing: "0.1em",
+                letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                marginBottom: "20px",
+                marginBottom: "32px",
               }}
             >
-              Industry Leading Excellence
+              {label}
             </div>
 
             {/* Title */}
             <div
               style={{
-                fontSize: title.length > 30 ? "54px" : "72px",
+                fontSize: title.length > 40 ? "54px" : "76px",
                 fontWeight: 900,
                 color: "white",
-                marginBottom: "20px",
+                marginBottom: "24px",
                 textAlign: "center",
                 lineHeight: 1.1,
                 display: "flex",
-                fontFamily: "sans-serif",
+                fontFamily: "Inter, sans-serif",
+                maxWidth: "900px",
               }}
             >
               {title}
@@ -106,11 +108,12 @@ export async function GET(req: NextRequest) {
             {/* Subtitle */}
             <div
               style={{
-                fontSize: "32px",
+                fontSize: "30px",
                 color: "#94a3b8", // slate-400
                 textAlign: "center",
-                maxWidth: "800px",
+                maxWidth: "850px",
                 display: "flex",
+                lineHeight: 1.4,
               }}
             >
               {subtitle}
@@ -120,33 +123,34 @@ export async function GET(req: NextRequest) {
             <div
               style={{
                 display: "flex",
-                marginTop: "40px",
+                marginTop: "48px",
                 alignItems: "center",
-                gap: "12px",
+                gap: "16px",
               }}
             >
               <div
                 style={{
-                  height: "2px",
-                  width: "100px",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  height: "1px",
+                  width: "120px",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
                 }}
               />
               <div
                 style={{
                   color: "white",
-                  fontSize: "24px",
+                  fontSize: "28px",
                   fontWeight: "bold",
                   display: "flex",
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Nepdora
               </div>
               <div
                 style={{
-                  height: "2px",
-                  width: "100px",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  height: "1px",
+                  width: "120px",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
                 }}
               />
             </div>
@@ -159,23 +163,25 @@ export async function GET(req: NextRequest) {
               bottom: "40px",
               display: "flex",
               alignItems: "center",
-              gap: "20px",
+              gap: "24px",
             }}
           >
             <div
-              style={{ color: "#0ea5e9", fontWeight: "bold", fontSize: "24px" }}
+              style={{ color: "#38bdf8", fontWeight: "bold", fontSize: "26px" }}
             >
-              Nepal's Own Site Builder
+              Nepal's AI Site Builder
             </div>
             <div
               style={{
-                width: "4px",
-                height: "4px",
-                borderRadius: "2px",
+                width: "6px",
+                height: "6px",
+                borderRadius: "3px",
                 backgroundColor: "#334155",
               }}
             />
-            <div style={{ color: "white", fontSize: "24px" }}>nepdora.com</div>
+            <div style={{ color: "white", fontSize: "26px", opacity: 0.8 }}>
+              nepdora.com
+            </div>
           </div>
         </div>
       ),
