@@ -5,6 +5,15 @@ export interface SubCategoryData {
   subtitle?: string;
   parentCategoryId?: number;
   order?: number;
+  featuredContent?: {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    buttonText?: string;
+    buttonHref?: string;
+    backgroundImages?: string[];
+    currentImageIndex?: number;
+  };
 }
 
 export interface SubCategoryComponentData {

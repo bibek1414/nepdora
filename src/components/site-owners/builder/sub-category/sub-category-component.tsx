@@ -21,6 +21,7 @@ import Link from "next/link";
 import { SubCategoryStyle1 } from "./sub-category-style/subcategory-style-1";
 import { SubCategoryStyle2 } from "./sub-category-style/subcategory-style-2";
 import { SubCategoryStyle3 } from "./sub-category-style/subcategory-style-3";
+import { SubCategoryStyle4 } from "./sub-category-style/subcategory-style-4";
 
 interface SubCategoryComponentProps {
   component: SubCategoryComponentData;
@@ -83,7 +84,7 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
   };
 
   const renderSubCategoryStyle = () => {
-    const style = component.data?.style || "grid-1";
+    const style = component.data?.style || "subcategory-1";
     const commonProps = {
       data: component.data,
       isEditable,
@@ -101,6 +102,8 @@ export const SubCategoryComponent: React.FC<SubCategoryComponentProps> = ({
         return <SubCategoryStyle2 {...commonProps} />;
       case "subcategory-3":
         return <SubCategoryStyle3 {...commonProps} />;
+      case "subcategory-4":
+        return <SubCategoryStyle4 {...commonProps} />;
       case "subcategory-1":
       default:
         return <SubCategoryStyle1 {...commonProps} />;

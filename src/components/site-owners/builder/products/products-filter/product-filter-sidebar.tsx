@@ -198,10 +198,13 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
     setHoveredCategory(null);
 
     if (categorySlug === "all") {
-      navigateToProducts({ page: 1 });
+      const { category, sub_category, page, ...otherFilters } = currentFilters;
+      navigateToProducts({ ...otherFilters, page: 1 });
     } else {
       navigateToProducts({
+        ...currentFilters,
         category: categorySlug,
+        sub_category: "",
         page: 1,
       });
     }
@@ -219,6 +222,7 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
     setHoveredSubcategory(null);
 
     navigateToProducts({
+      ...currentFilters,
       category: categorySlug,
       sub_category: subcategorySlug,
       page: 1,
@@ -256,12 +260,19 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
     setPriceRange(newRange);
 
     if (!isEditable) {
-      navigateToProducts({
-        ...currentFilters,
-        min_price: newRange.min,
-        max_price: newRange.max,
-        page: 1,
-      });
+      // Create a copy of current filters and remove price params
+      const { min_price, max_price, page, ...otherFilters } = currentFilters;
+      const filtersToUpdate: Record<string, any> = { ...otherFilters, page: 1 };
+
+      // Only add price params if they are not at default values
+      if (newRange.min !== minPrice) {
+        filtersToUpdate.min_price = newRange.min;
+      }
+      if (newRange.max !== maxPrice) {
+        filtersToUpdate.max_price = newRange.max;
+      }
+
+      navigateToProducts(filtersToUpdate);
     }
   };
 
@@ -304,15 +315,15 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
       {/* Applied Filters */}
       <AppliedFilters
         selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
+        setSelectedCategory={handleSelectCategory}
         categories={categories}
         selectedSubcategory={selectedSubcategory}
-        setSelectedSubcategory={setSelectedSubcategory}
+        setSelectedSubcategory={() => handleSelectCategory(selectedCategory)}
         subcategories={subCategories}
         selectedSubsubcategory="all"
         subsubcategories={[]}
         priceRange={priceRange}
-        setPriceRange={setPriceRange}
+        setPriceRange={handlePriceRangeChange}
         handleClearAll={handleClearAll}
         minPrice={minPrice}
         maxPrice={maxPrice}

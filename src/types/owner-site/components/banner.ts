@@ -93,9 +93,34 @@ export const DEFAULT_BANNER_MAP: Record<BannerData["template"], BannerData> = {
       {
         id: 1,
         image:
-          "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg",
-        image_alt_description: "New full screen banner image",
+          "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=2000&auto=format&fit=crop",
+        image_alt_description: "Summit Sneakers",
         link: "#",
+        badge: "Weekend Offer",
+        title: "20% OFF!",
+        subtitle: "Summit Sneakers! Hottest\nDeals Of The Month",
+        is_active: true,
+      },
+      {
+        id: 2,
+        image:
+          "https://images.unsplash.com/photo-1520256862855-398228c41684?q=80&w=2000&auto=format&fit=crop",
+        image_alt_description: "Colorful Classics",
+        link: "#",
+        badge: "Summer Offer",
+        title: "30% OFF!",
+        subtitle: "Colorful Classics!\nDirect From USA",
+        is_active: true,
+      },
+      {
+        id: 3,
+        image:
+          "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=2000&auto=format&fit=crop",
+        image_alt_description: "Urban Runners",
+        link: "#",
+        badge: "Flash Sale",
+        title: "15% OFF!",
+        subtitle: "Urban Runners! Grab The\nBest Styles",
         is_active: true,
       },
     ],

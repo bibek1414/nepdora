@@ -205,6 +205,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 19 (Impact Slider)",
         image: "/images/site-owners/hero/hero19.png",
       },
+      {
+        id: "hero-20",
+        name: "Hero Style 20 (Premium Shoes)",
+        image:
+          "https://images.unsplash.com/photo-1449505278894-297fce3ce49d?q=80&w=2070&auto=format&fit=crop",
+      },
     ],
     tours: [
       {
@@ -556,6 +562,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Product Style 7",
         image: "/images/site-owners/products/product7.png",
       },
+      {
+        id: "product-8",
+        name: "Product Style 8 (Premium Grid)",
+        image: "/images/site-owners/products/product1.png", // Using product1 as placeholder image
+      },
     ],
     product_details: [
       {
@@ -691,18 +702,23 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
     subcategory: [
       {
         id: "subcategory-1",
-        name: "SubCategory Grid 1",
+        name: "SubCategory Style 1",
         image: "/images/site-owners/subcategories/subcategory1.png",
       },
       {
         id: "subcategory-2",
-        name: "SubCategory Grid 2",
+        name: "SubCategory Style 2",
         image: "/images/site-owners/subcategories/subcategory2.png",
       },
       {
         id: "subcategory-3",
-        name: "SubCategory List",
+        name: "SubCategory Style 3",
         image: "/images/site-owners/subcategories/subcategory3.png",
+      },
+      {
+        id: "subcategory-4",
+        name: "SubCategory Style 4",
+        image: "/images/site-owners/subcategories/subcategory4.png",
       },
     ],
     services: [

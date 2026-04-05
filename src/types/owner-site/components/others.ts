@@ -357,9 +357,9 @@ export const defaultOthersTemplate2Data: OthersTemplate2Data = {
   items: [
     {
       id: "trust-1",
-      title: "Free Eye Test",
-      description: "Available at partner clinics",
-      icon: "Eye",
+      title: "Premium Comfort",
+      description: "Designed for all-day wear",
+      icon: "Footprints",
     },
     {
       id: "trust-2",
@@ -369,14 +369,14 @@ export const defaultOthersTemplate2Data: OthersTemplate2Data = {
     },
     {
       id: "trust-3",
-      title: "7-Day Returns",
-      description: "Hassle-free",
+      title: "Easy Returns",
+      description: "7-day hassle-free returns",
       icon: "RotateCcw",
     },
     {
       id: "trust-4",
-      title: "Warranty",
-      description: "On frames & lenses",
+      title: "Durable Quality",
+      description: "Built with long-lasting materials",
       icon: "ShieldCheck",
     },
   ],
@@ -1252,7 +1252,8 @@ export const defaultOthersTemplate21Data: OthersTemplate21Data = {
     {
       id: "skills-workshop",
       title: "Skills workshop",
-      description: "Developing vocational skills guiding adults toward independence.",
+      description:
+        "Developing vocational skills guiding adults toward independence.",
       icon: "Puzzle",
       bgColor: "#E6F9F1",
       iconColor: "#2D6A4F",
@@ -1264,7 +1265,8 @@ export const defaultOthersTemplate21Data: OthersTemplate21Data = {
     {
       id: "academic-tutoring",
       title: "Academic tutoring",
-      description: "Bridging educational gaps via tech personalized rural learning.",
+      description:
+        "Bridging educational gaps via tech personalized rural learning.",
       icon: "BookOpen",
       bgColor: "#FDFBD8",
       iconColor: "#5A5A40",

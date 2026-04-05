@@ -1,9 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ChevronRight, Tag } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { SubCategory } from "@/types/owner-site/admin/product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
@@ -36,48 +34,25 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
 
   const subcategoryImage = subcategory.image || "/fallback/image-not-found.png";
 
-  // Dynamic gradient from primary → secondary
-  const gradientStyle = {
-    backgroundImage: `linear-gradient(to top, ${theme.colors.primary}, ${theme.colors.secondary})`,
-  };
-
-  const getSubCategoryUrl = (): string => {
-    if (siteUser) {
-      return `/preview/${siteUser}/collections?sub_category=${subcategory.slug}`;
-    } else {
-      return `/preview/collections?sub_category=${subcategory.slug}`;
-    }
+  const getSubCategoryUrl = (sub: SubCategory): string => {
+    return generateLinkHref(
+      `/collections?sub_category=${sub.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleClick = () => {
     if (onClick) {
       onClick();
     } else {
-      const subcategoryUrl = getSubCategoryUrl();
-      window.location.href = subcategoryUrl;
+      window.location.href = getSubCategoryUrl(subcategory);
     }
   };
 
   const handleViewSubCategory = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const subcategoryUrl = getSubCategoryUrl();
-    window.location.href = subcategoryUrl;
-  };
-
-  const subcategoryUrl = getSubCategoryUrl();
-
-  // Handle category display
-  const categoryName =
-    typeof subcategory.category === "object" && subcategory.category
-      ? subcategory.category.name
-      : "Category";
-
-  const CardWrapper = siteUser
-    ? ({ children }: { children: React.ReactNode }) => (
-        <Link href={subcategoryUrl} className="block">
-          {children}
-        </Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
         <div onClick={handleClick} className="cursor-pointer">
@@ -88,7 +63,7 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
   return (
     <CardWrapper>
       <div
-        className="group relative transform overflow-hidden rounded-2xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+        className="relative transform overflow-hidden rounded-2xl shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
         style={{
           fontFamily: theme.fonts.body,
         }}
@@ -100,28 +75,9 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
             alt={subcategory.name}
             width={400}
             height={280}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="h-full w-full object-cover transition-transform duration-700"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
-
-          {/* Gradient Overlay */}
-          <div
-            className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-80"
-            style={gradientStyle}
-          />
-
-          {/* Hover Content */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-            <div className="translate-y-4 transform text-center text-white transition-transform duration-500 group-hover:translate-y-0">
-              <ChevronRight className="mx-auto mb-2 h-10 w-10" />
-              <p
-                className="text-base font-semibold"
-                style={{ fontFamily: theme.fonts.heading }}
-              >
-                Explore Now
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Content */}
@@ -136,7 +92,7 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
               {subcategory.name}
             </h3>
             <ChevronRight
-              className="h-5 w-5 flex-shrink-0 transition-all duration-300 group-hover:translate-x-1"
+              className="h-5 w-5 flex-shrink-0 transition-all duration-300"
               style={{ color: theme.colors.primary }}
             />
           </div>
@@ -146,17 +102,6 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
               {subcategory.description}
             </p>
           )}
-
-          <Button
-            onClick={handleViewSubCategory}
-            className="w-full transform rounded-lg px-4 py-2.5 text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg sm:py-3 sm:text-base"
-            style={{
-              background: theme.colors.primary,
-              fontFamily: theme.fonts.heading,
-            }}
-          >
-            Browse SubCategory
-          </Button>
         </div>
       </div>
     </CardWrapper>

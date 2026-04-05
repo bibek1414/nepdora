@@ -59,14 +59,12 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
         </div>
 
         {isLoading && (
-          <div className="flex gap-6 overflow-x-auto pb-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex min-w-[280px] flex-col space-y-3">
-                <Skeleton className="h-[280px] w-full rounded-lg" />
-                <div className="space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
+              <div key={i} className="flex flex-col space-y-3">
+                <Skeleton className="h-[250px] w-full rounded-xl" />
+                <Skeleton className="h-5 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
               </div>
             ))}
           </div>
@@ -85,20 +83,15 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
         )}
 
         {!isLoading && !error && subcategories.length > 0 && (
-          <div className="flex gap-8 overflow-x-auto pb-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {subcategories.map(subcategory => (
               <div
                 key={subcategory.id}
-                className="relative flex-shrink-0 transform cursor-pointer transition-transform duration-200 hover:scale-105"
-                onClick={() =>
-                  !isEditable && onSubCategoryClick?.(subcategory.id)
-                }
+                className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
+                onClick={() => !isEditable && onSubCategoryClick?.(subcategory.id)}
               >
                 {isEditable && <div className="absolute inset-0 z-10" />}
-                <SubCategoryCard1
-                  subcategory={subcategory}
-                  siteUser={siteUser}
-                />
+                <SubCategoryCard1 subcategory={subcategory} siteUser={siteUser} />
               </div>
             ))}
           </div>
@@ -107,12 +100,11 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
         {!isLoading && !error && subcategories.length === 0 && (
           <div className="bg-muted/50 rounded-lg py-12 text-center">
             <FolderOpen className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No SubCategories Available
+            <h3 className="text-foreground mb-2 text-lg font-semibold">
+              No SubCategories Found
             </h3>
             <p className="text-muted-foreground">
-              We&apos;re currently updating our subcategory structure. Please
-              check back soon.
+              Add some subcategories to display them here.
             </p>
           </div>
         )}

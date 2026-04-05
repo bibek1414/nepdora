@@ -686,6 +686,33 @@ export const defaultHeroTemplate18Data: HeroTemplate18Data = {
   polaroid2Alt: "Lake",
 };
 
+export interface HeroTemplate20Data {
+  template: "hero-20";
+  title: string;
+  primaryButtonText: string;
+  primaryButtonHref: string;
+  secondaryButtonText: string;
+  secondaryButtonHref: string;
+  backgroundImageUrl: string;
+  backgroundImageAlt: string;
+  cardButtonText: string;
+  cardButtonHref: string;
+}
+
+export const defaultHeroTemplate20Data: HeroTemplate20Data = {
+  template: "hero-20",
+  title: "Explore\nPremium\nShoes",
+  primaryButtonText: "Shop Now",
+  primaryButtonHref: "#",
+  secondaryButtonText: "Categories",
+  secondaryButtonHref: "#",
+  backgroundImageUrl:
+    "https://images.pexels.com/photos/28375818/pexels-photo-28375818.jpeg",
+  backgroundImageAlt: "Premium shoes background",
+  cardButtonText: "Explore New Arrivals",
+  cardButtonHref: "#",
+};
+
 export interface HeroTemplate19Slide {
   id: string;
   badge: string;
@@ -778,7 +805,8 @@ export type HeroData =
   | HeroTemplate16Data
   | HeroTemplate17Data
   | HeroTemplate18Data
-  | HeroTemplate19Data;
+  | HeroTemplate19Data
+  | HeroTemplate20Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -859,6 +887,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-17": defaultHeroTemplate17Data,
   "hero-18": defaultHeroTemplate18Data,
   "hero-19": defaultHeroTemplate19Data,
+  "hero-20": defaultHeroTemplate20Data,
 };
 
 // Type guards for each template
@@ -918,3 +947,6 @@ export const isHeroTemplate18 = (data: HeroData): data is HeroTemplate18Data =>
 
 export const isHeroTemplate19 = (data: HeroData): data is HeroTemplate19Data =>
   data.template === "hero-19";
+
+export const isHeroTemplate20 = (data: HeroData): data is HeroTemplate20Data =>
+  data.template === "hero-20";

@@ -7,7 +7,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { HeroTemplate10Data } from "@/types/owner-site/components/hero";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 
 interface HeroTemplate10Props {
@@ -130,9 +130,9 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
         {collections.map((collection, index) => {
           // Different backgrounds based on index to match the design (darker left, lighter right)
           const cardBgClass = index % 2 === 0 ? "bg-[#8A95A5]" : "bg-[#E6E6E6]";
-          const textColorClass = index % 2 === 0 ? "text-white" : "text-black";
+          const textColorClass = index % 2 === 0 ? "text-white" : "text-white";
           const btnBorderClass =
-            index % 2 === 0 ? "border-white" : "border-black";
+            index % 2 === 0 ? "border-white" : "border-white";
 
           return (
             <div
@@ -192,7 +192,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
 
               {/* Content on the Left */}
               <div
-                className={`relative z-20 flex h-full w-full max-w-[60%] flex-col justify-center p-8 sm:p-12 lg:p-16 ${textColorClass}`}
+                className={`relative z-20 flex h-full w-full flex-col justify-center p-8 sm:p-12 lg:p-16 ${textColorClass}`}
               >
                 {/* Main Title */}
                 <EditableText
@@ -200,8 +200,8 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                   onChange={value =>
                     handleCollectionUpdate(collection.id, "title", value)
                   }
-                  as="h2"
-                  className="z-10 mb-8 text-3xl leading-tight font-medium tracking-tight whitespace-pre-line sm:text-4xl lg:text-5xl"
+                  as="h1"
+                  className="z-10 mb-8 "
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}
@@ -220,7 +220,10 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                     className={`rounded-full border border-solid px-8 py-3 text-sm font-medium transition-all hover:bg-black/5 ${btnBorderClass} ${textColorClass}`}
                     textPlaceholder="Button text..."
                     hrefPlaceholder="Enter URL..."
-                  />
+                  >
+                    <span className="mr-2">{collection.buttonText}</span>
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </EditableLink>
                 </div>
               </div>
             </div>

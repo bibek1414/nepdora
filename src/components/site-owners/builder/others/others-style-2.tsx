@@ -39,37 +39,29 @@ export const OthersTemplate2: React.FC<OthersTemplate2Props> = ({
 
   return (
     <section className="border-y border-gray-100 bg-white py-16">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 text-center md:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 text-center md:grid-cols-4">
         {(othersData.items || []).map((item, index) => (
           <div
             key={item.id || index}
-            className="flex cursor-default flex-col items-center gap-2 rounded-xl p-4 transition-all hover:bg-gray-50"
+            className="flex flex-col items-center gap-2 rounded-xl p-4 transition-all hover:bg-gray-50"
           >
-            <p
-              className="text-sm font-semibold"
+            <EditableText
+              value={item.title}
+              onChange={val => handleItemUpdate(index, "title", val as string)}
               style={{ color: theme.colors.primary }}
-            >
-              <EditableText
-                value={item.title}
-                onChange={val =>
-                  handleItemUpdate(index, "title", val as string)
-                }
-                as="span"
-                isEditable={isEditable}
-                multiline
-              />
-            </p>
-            <p className="text-xs text-gray-500">
-              <EditableText
-                value={item.description}
-                onChange={val =>
-                  handleItemUpdate(index, "description", val as string)
-                }
-                as="span"
-                isEditable={isEditable}
-                multiline
-              />
-            </p>
+              as="h5"
+              isEditable={isEditable}
+              multiline
+            />
+            <EditableText
+              value={item.description}
+              onChange={val =>
+                handleItemUpdate(index, "description", val as string)
+              }
+              as="p"
+              isEditable={isEditable}
+              multiline
+            />
           </div>
         ))}
       </div>

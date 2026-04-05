@@ -3,6 +3,9 @@ export interface BannerImage {
   image: string | File;
   image_alt_description: string;
   link: string;
+  badge?: string;
+  title?: string;
+  subtitle?: string;
   is_active: boolean;
 }
 
