@@ -270,7 +270,7 @@ export const Footer = () => {
           className="flex flex-col items-center justify-between space-y-3 border-t border-gray-200 pt-5 sm:space-y-0 sm:pt-6 md:flex-row"
           direction="y"
         >
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-600">
             © Nepdora {new Date().getFullYear()} All rights reserved.
           </p>
           <SocialIcons />
@@ -286,7 +286,7 @@ const FooterLink: React.FC<{ href: string; children: React.ReactNode }> = ({
 }) => (
   <Link
     href={href}
-    className="w-fit text-sm text-gray-500 transition-colors hover:text-black"
+    className="w-fit text-sm text-gray-600 transition-colors hover:text-black"
   >
     {children}
   </Link>

@@ -55,7 +55,7 @@ export const WebsiteFooter = () => {
                   className="h-auto"
                 />
               </Link>
-              <p className="mb-8 max-w-sm text-sm leading-relaxed text-gray-500">
+              <p className="mb-8 max-w-sm text-sm leading-relaxed text-gray-600">
                 Empowering local businesses across Nepal to build their dream
                 digital presence. Our specialized website solutions are tailored
                 for distinct local markets, ensuring your business stands out
@@ -114,7 +114,7 @@ export const WebsiteFooter = () => {
                     <li>
                       <Link
                         href="/pricing"
-                        className="group flex items-center text-xs text-gray-500 hover:underline"
+                        className="group flex items-center text-xs text-gray-600 hover:underline"
                       >
                         Pricing & Plans
                       </Link>
@@ -122,7 +122,7 @@ export const WebsiteFooter = () => {
                     <li>
                       <Link
                         href="/templates/ecommerce"
-                        className="group flex items-center text-xs text-gray-500 hover:underline"
+                        className="group flex items-center text-xs text-gray-600 hover:underline"
                       >
                         E-commerce Templates
                       </Link>
@@ -143,32 +143,32 @@ export const WebsiteFooter = () => {
                 </h4>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/integrations" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                    <Link href="/integrations" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
                       Integrations Marketplace
                     </Link>
                   </li>
                   <li>
-                    <Link href="/industries" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                    <Link href="/industries" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
                       Industry Solutions
                     </Link>
                   </li>
                   <li>
-                    <Link href="/switch" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                    <Link href="/switch" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
                       Migration Center
                     </Link>
                   </li>
                   <li>
-                    <Link href="/showcase" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                    <Link href="/showcase" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
                       Customer Showcase
                     </Link>
                   </li>
                   <li>
-                    <Link href="/experts" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                    <Link href="/experts" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
                       Verified Experts
                     </Link>
                   </li>
                   <li>
-                    <Link href="/learn" className="group flex items-center text-xs text-gray-500 hover:text-primary transition-colors">
+                    <Link href="/learn" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
                       Growth Academy
                     </Link>
                   </li>
@@ -199,7 +199,7 @@ export const WebsiteFooter = () => {
                   <li>
                     <Link
                       href="/pricing/nepdora-vs-shopify-cost-comparison"
-                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                      className="group flex items-center text-xs text-gray-600 hover:underline"
                     >
                       Nepdora vs Global Builders (Shopify/Wix)
                     </Link>
@@ -207,7 +207,7 @@ export const WebsiteFooter = () => {
                   <li>
                     <Link
                       href="/alternative/blanxer-nepal"
-                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                      className="group flex items-center text-xs text-gray-600 hover:underline"
                     >
                       Compare with Blanxer
                     </Link>
@@ -215,7 +215,7 @@ export const WebsiteFooter = () => {
                   <li>
                     <Link
                       href="/payment-gateways-nepal"
-                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                      className="group flex items-center text-xs text-gray-600 hover:underline"
                     >
                       Payment Gateways Guide
                     </Link>
@@ -223,7 +223,7 @@ export const WebsiteFooter = () => {
                   <li>
                     <Link
                       href="/how-to-register-business-nepal"
-                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                      className="group flex items-center text-xs text-gray-600 hover:underline"
                     >
                       Business Registration Path
                     </Link>
@@ -231,7 +231,7 @@ export const WebsiteFooter = () => {
                   <li>
                     <Link
                       href="/blog"
-                      className="group flex items-center text-xs text-gray-500 hover:underline"
+                      className="group flex items-center text-xs text-gray-600 hover:underline"
                     >
                       Marketing Blog
                     </Link>
@@ -261,7 +261,7 @@ export const WebsiteFooter = () => {
                         <li key={`${category.slug}-${city}`}>
                           <Link
                             href={`/${category.slug}/${city.toLowerCase()}`}
-                            className="group flex items-center text-xs text-gray-500 hover:underline"
+                            className="group flex items-center text-xs text-gray-600 hover:underline"
                           >
                             {category.name} in {city}
                           </Link>
@@ -288,7 +288,7 @@ export const WebsiteFooter = () => {
                 <Link
                   key={city}
                   href={`/${activeCategory.slug}/${city.toLowerCase()}`}
-                  className="text-[11px] font-medium text-gray-400 hover:underline"
+                  className="text-[11px] font-medium text-gray-600 hover:underline"
                 >
                   {activeCategory.name} in {city}
                 </Link>
@@ -298,7 +298,7 @@ export const WebsiteFooter = () => {
 
           {/* Footer Bottom */}
           <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-gray-200 pt-8 md:flex-row">
-            <div className="flex flex-col items-center gap-6 text-xs text-gray-500 md:flex-row">
+            <div className="flex flex-col items-center gap-6 text-xs text-gray-600 md:flex-row">
               <p>
                 © {new Date().getFullYear()} Nepdora Pvt. Ltd. All rights
                 reserved.
@@ -313,7 +313,7 @@ export const WebsiteFooter = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Built with</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Built with</span>
               <Link 
                 href="/" 
                 className="flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 text-[10px] font-black text-white transition-all hover:scale-105 hover:bg-primary uppercase tracking-tighter"

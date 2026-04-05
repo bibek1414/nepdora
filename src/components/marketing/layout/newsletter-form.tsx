@@ -44,7 +44,11 @@ export const NewsletterForm = () => {
         value={websiteUrl}
         onChange={e => setWebsiteUrl(e.target.value)}
       />
+      <label htmlFor="newsletter-email" className="sr-only">
+        Email Address
+      </label>
       <input
+        id="newsletter-email"
         type="email"
         placeholder="Enter your email address"
         className="focus:ring-primary-500 w-full rounded-full border border-gray-200 bg-white px-4 py-2.5 text-xs text-gray-900 transition-all outline-none placeholder:text-gray-500 focus:ring-2 sm:px-6 sm:py-3 sm:text-sm"

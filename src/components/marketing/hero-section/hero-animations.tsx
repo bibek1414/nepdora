@@ -10,6 +10,7 @@ import {
   User,
   Heart,
 } from "lucide-react";
+import Image from "next/image";
 
 export const HeroAnimations = () => {
   const [step, setStep] = useState(0);
@@ -258,10 +259,13 @@ export const HeroAnimations = () => {
                     }}
                     className="relative overflow-hidden rounded-lg bg-slate-100"
                   >
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1576053139778-7e32f2ae3cfd?auto=format&fit=crop&q=80&w=1200"
                       className="h-full w-full object-cover"
                       alt="Pashmina"
+                      width={1200}
+                      height={140}
+                      priority
                     />
                     <div className="absolute inset-0 flex flex-col justify-center bg-linear-to-r from-black/50 via-black/20 to-transparent px-6">
                       <motion.h2

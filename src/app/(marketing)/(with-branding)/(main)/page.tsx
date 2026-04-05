@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import HeroSection from "@/components/marketing/hero-section/hero-section";
 import CapabilitiesSection from "@/components/marketing/features/capabilities-section";
 import type { Metadata } from "next";
+import ContactSection from "@/components/marketing/contact-us/contact-us";
 import CaseStudies from "@/components/marketing/case-studies/case-studies";
 import Concierge from "@/components/marketing/concierge/concierge";
 import UseCases from "@/components/marketing/use-cases/use-cases";
@@ -16,6 +17,7 @@ import {
   buildMarketingMetadata,
 } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
+import Blogs from "@/components/marketing/blog/blogs";
 
 // Lazy load non-critical components to reduce initial load
 const TestimonialsSection = dynamic(
@@ -27,6 +29,9 @@ const TemplatesPage = dynamic(
   () => import("@/components/marketing/templates/templates-page"),
   { loading: () => <div className="py-20" /> }
 );
+import { marketingBlogApi } from "@/services/api/marketing/blog";
+
+const blogData = await marketingBlogApi.getBlogs({ page_size: 12 });
 
 export const metadata = buildMarketingMetadata({
   title:
@@ -118,29 +123,28 @@ export default function Marketing() {
 
   return (
     <>
-      <h1 className="sr-only">
-        Nepdora: The Best AI Website Builder in Nepal
-      </h1>
+      <h1 className="sr-only">Nepdora: The Best AI Website Builder in Nepal</h1>
       {/* SEO JSON-LD Structured Data */}
       <JsonLd id="schema-website" data={websiteSchema} />
       <JsonLd id="schema-corporation" data={corporationSchema} />
       <JsonLd id="schema-faq" data={faqSchema} />
 
       {/* Marketing Page Sections */}
-      <div className="mx-auto max-w-6xl px-2 md:px-0">
-        <HeroSection />
-        <TemplatesPage />
-        <CapabilitiesSection />
-        <CaseStudies />
-        <UseCases />
-        <QuickBuilder />
-        <Comparison />
-        <Migration />
-        <Concierge />
-        <TestimonialsSection />
-        {/* <ContactSection /> */}
-        <CTA />
+      <HeroSection />
+      <TemplatesPage />
+      <CapabilitiesSection />
+      <CaseStudies />
+      <UseCases />
+      <QuickBuilder />
+      <Comparison />
+      <Migration />
+      <Concierge />
+      <TestimonialsSection />
+      <div className="mx-auto max-w-6xl">
+        <Blogs initialData={blogData} />
       </div>
+      <ContactSection />
+      <CTA />
     </>
   );
 }

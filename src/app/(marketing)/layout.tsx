@@ -1,5 +1,4 @@
 import { Metadata, Viewport } from "next";
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 type MarketingLayoutProps = {
   children: React.ReactNode;

@@ -7,6 +7,7 @@ const SocialIcons = () => {
         href="https://www.facebook.com/NepdoraWebBuilder"
         className="text-gray-500 transition-colors hover:text-gray-900"
         target="_blank"
+        aria-label="Follow Nepdora on Facebook"
       >
         <Facebook size={20} />
       </a>
@@ -14,6 +15,7 @@ const SocialIcons = () => {
         href="https://www.instagram.com/nep_dora"
         className="text-gray-500 transition-colors hover:text-gray-900"
         target="_blank"
+        aria-label="Follow Nepdora on Instagram"
       >
         <Instagram size={20} />
       </a>

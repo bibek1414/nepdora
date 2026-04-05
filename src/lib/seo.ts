@@ -42,7 +42,7 @@ export function buildMarketingMetadata({
   noIndex = false,
 }: {
   title: string;
-  description: string;
+  description?: string;
   path: string;
   image?: string;
   ogTitle?: string;
@@ -52,18 +52,21 @@ export function buildMarketingMetadata({
   noIndex?: boolean;
 }): Metadata {
   const url = absoluteUrl(path);
+  const finalDescription =
+    description ||
+    "Launch your business online quickly with our free website builder, free hosting, and a comprehensive suite of essential business tools. Start now!";
 
   const finalImage =
     image ||
     getDynamicOgUrl({
       title: ogTitle || title.split(/ [|:-] /)[0].trim(),
-      subtitle: ogSubtitle || (description.length > 150 ? description.slice(0, 147) + "..." : description),
+      subtitle: ogSubtitle || (finalDescription.length > 150 ? finalDescription.slice(0, 147) + "..." : finalDescription),
       label: ogLabel,
     });
 
   return {
     title,
-    description,
+    description: finalDescription,
     keywords: [
       ...keywords,
       "website builder Nepal",
@@ -82,7 +85,7 @@ export function buildMarketingMetadata({
     },
     openGraph: {
       title,
-      description,
+      description: finalDescription,
       url,
       siteName: SITE_NAME,
       images: [
@@ -99,7 +102,7 @@ export function buildMarketingMetadata({
     twitter: {
       card: "summary_large_image",
       title,
-      description,
+      description: finalDescription,
       images: [finalImage],
     },
   };
