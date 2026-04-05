@@ -65,7 +65,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[560px] gap-0 overflow-hidden border-0 p-0 rounded-xl">
+      <DialogContent className="max-w-[560px] gap-0 overflow-hidden rounded-xl border-0 p-0">
         <div className="bg-white p-5 pb-0">
           <div className="flex items-start justify-between">
             <div>
@@ -73,7 +73,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
                 Page SEO & Metadata
               </DialogTitle>
               <p className="mt-1 text-xs text-slate-600">
-                Editing: {pageTitle} — affects search engine visibility
+                Editing: {pageTitle} - affects search engine visibility
               </p>
             </div>
           </div>

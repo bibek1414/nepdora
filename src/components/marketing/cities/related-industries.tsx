@@ -1,6 +1,6 @@
 import { SERVICE_CATEGORIES } from "@/constants/nepal-cities";
 import Link from "next/link";
-import { ArrowRight, Layout } from "lucide-react";
+import { ChevronRight, Layout } from "lucide-react";
 import { capitalizeWords } from "@/lib/string-utils";
 
 interface RelatedIndustriesProps {
@@ -14,7 +14,7 @@ export default function RelatedIndustries({
 }: RelatedIndustriesProps) {
   // Filter out the current industry and handle duplicates
   const seen = new Set();
-  const otherIndustries = SERVICE_CATEGORIES.filter((industry) => {
+  const otherIndustries = SERVICE_CATEGORIES.filter(industry => {
     if (industry.slug === currentIndustry) return false;
     if (seen.has(industry.name)) return false;
     seen.add(industry.name);
@@ -24,7 +24,7 @@ export default function RelatedIndustries({
   if (otherIndustries.length === 0) return null;
 
   return (
-    <section className="bg-white py-20 border-t border-slate-100">
+    <section className="border-t border-slate-100 bg-white py-20">
       <div className="container mx-auto px-4">
         <div className="mb-12">
           <h2 className="text-3xl font-bold text-slate-900">
@@ -36,7 +36,7 @@ export default function RelatedIndustries({
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {otherIndustries.map((industry) => (
+          {otherIndustries.map(industry => (
             <Link
               key={industry.slug}
               href={`/${industry.slug}/${currentCity.toLowerCase()}`}
@@ -52,7 +52,8 @@ export default function RelatedIndustries({
                 Built-in localized features and 100+ industry templates.
               </p>
               <div className="mt-6 flex items-center gap-2 text-sm font-bold text-blue-600">
-                Learn more <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                Learn more{" "}
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
             </Link>
           ))}

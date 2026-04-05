@@ -84,7 +84,7 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
 
   return (
     <section className="relative h-[600px] w-full overflow-hidden bg-black text-white select-none md:h-[780px]">
-      {/* Background — crossfade */}
+      {/* Background - crossfade */}
       <AnimatePresence initial={false} mode="wait">
         <motion.img
           key={current}
@@ -131,7 +131,7 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
       {/* Main Content */}
       <div className="relative z-10 mx-auto flex h-[calc(100%-130px)] max-w-7xl items-center px-6 sm:px-12 md:px-24">
         <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-16">
-          {/* Left — badge + title */}
+          {/* Left - badge + title */}
           <div className="space-y-4 md:space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-sm font-medium text-white">
               <EditableText
@@ -162,7 +162,7 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
             </div>
           </div>
 
-          {/* Right — description + button */}
+          {/* Right - description + button */}
           <div className="flex flex-col items-start gap-6 md:gap-8 md:pl-8">
             <div className="text-base leading-relaxed text-white/80 md:text-lg">
               <EditableText
@@ -222,13 +222,16 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
                     <EditableText
                       value={slide.label}
                       onChange={val =>
-                        handleArrayItemUpdate("slides", slide.id)({
+                        handleArrayItemUpdate(
+                          "slides",
+                          slide.id
+                        )({
                           label: val,
                         })
                       }
                       isEditable={isEditable}
                       as="span"
-                      className="text-sm font-semibold md:text-base cursor-pointer"
+                      className="cursor-pointer text-sm font-semibold md:text-base"
                     />
                   </div>
 

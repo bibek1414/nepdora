@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronRight } from "lucide-react";
 import { OthersTemplate20Data } from "@/types/owner-site/components/others";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
@@ -49,7 +49,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
               value={data.heading}
               onChange={handleTextUpdate("heading")}
               isEditable={isEditable}
-              className="text-[2.1rem] leading-[1.18] font-bold tracking-tight text-gray-900 md:text-[2.6rem]"
+              className="text-[2.1rem] font-bold leading-[1.18] tracking-tight text-gray-900 md:text-[2.6rem]"
               style={{ fontFamily: theme.fonts.heading }}
               multiline
             />
@@ -81,7 +81,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
                         animate={{ rotate: isActive ? -45 : 0 }}
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                       >
-                        <ArrowRight
+                        <ChevronRight
                           size={18}
                           className={`transition-colors duration-200 ${
                             isActive ? "text-gray-900" : "text-gray-400"
@@ -144,7 +144,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
             </div>
           </div>
 
-          {/* ── Right Column — Auto-height Bento grid ── */}
+          {/* ── Right Column - Auto-height Bento grid ── */}
           <div>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -158,7 +158,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
                 gridAutoRows: "auto",
               }}
             >
-              {/* Top-left — TALL (cols 1-2) */}
+              {/* Top-left - TALL (cols 1-2) */}
               <div
                 className="overflow-hidden rounded-2xl"
                 style={{ gridColumn: "span 2", gridRow: "span 2" }}
@@ -177,7 +177,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
                 />
               </div>
 
-              {/* Top-right — SHORT (cols 3-4) */}
+              {/* Top-right - SHORT (cols 3-4) */}
               <div
                 className="overflow-hidden rounded-2xl"
                 style={{ gridColumn: "span 2", gridRow: "span 1" }}
@@ -195,7 +195,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
                   style={{ aspectRatio: "2/1" }}
                 />
               </div>
-              {/* Bottom-right — TALL (cols 3-4) */}
+              {/* Bottom-right - TALL (cols 3-4) */}
               <div
                 className="overflow-hidden rounded-2xl"
                 style={{ gridColumn: "span 2", gridRow: "span 2" }}
@@ -213,7 +213,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
                   style={{ aspectRatio: "4/5" }}
                 />
               </div>
-              {/* Bottom-left — SHORT (cols 1-2) */}
+              {/* Bottom-left - SHORT (cols 1-2) */}
               <div
                 className="rounded-2xl"
                 style={{ gridColumn: "span 2", gridRow: "span 1" }}

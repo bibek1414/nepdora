@@ -31,7 +31,7 @@ export const AlternativeValueProps: React.FC<AlternativeValuePropsProps> = ({
           </h2>
           <p className="text-lg text-slate-600">
             For most small and medium businesses in Nepal, the decision comes
-            down to four practical factors — not a feature checklist.
+            down to four practical factors - not a feature checklist.
           </p>
         </div>
 
@@ -50,14 +50,14 @@ export const AlternativeValueProps: React.FC<AlternativeValuePropsProps> = ({
         </div>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <span className="text-sm font-semibold text-slate-500 self-center mr-2">
+          <span className="mr-2 self-center text-sm font-semibold text-slate-500">
             Explore features:
           </span>
           {featureLinks.map(link => (
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:border-slate-300"
+              className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-100"
             >
               {link.label}
             </Link>

@@ -11,7 +11,7 @@ const ProcessSection = () => {
       id: 1,
       title: "Choose how to build",
       description:
-        "Describe what you need in a few sentences and let AI build a unique website for you — or pick from 150+ designer-made templates.",
+        "Describe what you need in a few sentences and let AI build a unique website for you - or pick from 150+ designer-made templates.",
       image: "/images/image1.avif",
     },
     {

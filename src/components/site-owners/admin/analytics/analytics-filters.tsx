@@ -70,7 +70,7 @@ export default function AnalyticsFilters({
             {dateRange?.from ? (
               dateRange.to ? (
                 <span>
-                  {format(dateRange.from, "MMM d")} —{" "}
+                  {format(dateRange.from, "MMM d")} -{" "}
                   {format(dateRange.to, "MMM d, yyyy")}
                 </span>
               ) : (

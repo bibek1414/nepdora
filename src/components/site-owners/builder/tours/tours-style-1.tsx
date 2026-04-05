@@ -178,7 +178,7 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
                   referrerPolicy="no-referrer"
                 />
 
-                {/* White content card — right side */}
+                {/* White content card - right side */}
                 <motion.div
                   key={`card-${currentIndex}`}
                   initial={{ opacity: 0, y: 20 }}
@@ -213,7 +213,7 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
                     </p>
                   )}
 
-                  {/* Duration & Price — stacked */}
+                  {/* Duration & Price - stacked */}
                   <div className="mb-8 flex flex-col gap-3.5">
                     {currentTour.data.Duration && (
                       <div className="flex items-center gap-3 text-lg">
@@ -273,7 +273,7 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
                   </div>
                 </motion.div>
 
-                {/* Nav buttons — bottom left of carousel */}
+                {/* Nav buttons - bottom left of carousel */}
                 <div className="absolute bottom-10 left-6 z-20 flex gap-4 md:left-10">
                   <button
                     onClick={prev}

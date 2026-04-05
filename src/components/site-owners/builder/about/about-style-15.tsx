@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion, Variants } from "framer-motion";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EditableText } from "@/components/ui/editable-text";

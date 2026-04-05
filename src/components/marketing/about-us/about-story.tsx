@@ -27,7 +27,7 @@ const AboutStory: React.FC = () => {
             <p>
               That was the question that started it all. In 2023, we watched
               brilliant local entrepreneurs struggle. They had amazing
-              products—pashminas, organic coffee, handcrafted silver—but their
+              products-pashminas, organic coffee, handcrafted silver-but their
               digital presence was broken.
             </p>
             <p>
@@ -41,7 +41,7 @@ const AboutStory: React.FC = () => {
             </p>
             <p>
               We built Nepdora to be the bridge. We wrote code that speaks
-              Nepali commerce—integrating eSewa, understanding local logistics,
+              Nepali commerce-integrating eSewa, understanding local logistics,
               and optimizing for local Google rankings. We didn't just build a
               tool; we built a partner that handles the boring stuff so you can
               build your empire.

@@ -236,7 +236,7 @@ export const SubCategoryList: React.FC = () => {
                                   {categoryName}
                                 </span>
                               ) : (
-                                <span className="text-xs text-black/20">—</span>
+                                <span className="text-xs text-black/20">-</span>
                               )}
                             </TableCell>
                             <TableCell className="px-6 py-4">
@@ -250,7 +250,7 @@ export const SubCategoryList: React.FC = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     handleEdit(subCategory);
                                   }}
@@ -260,7 +260,7 @@ export const SubCategoryList: React.FC = () => {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     handleDelete(subCategory);
                                   }}

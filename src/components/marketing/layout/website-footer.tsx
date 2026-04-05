@@ -92,7 +92,8 @@ export const WebsiteFooter = () => {
                         href="/khalti-payment-gateway-nepal"
                         className="group flex items-center text-xs text-blue-600 hover:underline"
                       >
-                        Khalti Integration Guide <ExternalLink size={12} className="ml-1" />
+                        Khalti Integration Guide{" "}
+                        <ExternalLink size={12} className="ml-1" />
                       </Link>
                     </li>
                     <li>
@@ -100,7 +101,8 @@ export const WebsiteFooter = () => {
                         href="/esewa-integration-guide-nepal"
                         className="group flex items-center text-xs text-green-600 hover:underline"
                       >
-                        eSewa Implementation <ExternalLink size={12} className="ml-1" />
+                        eSewa Implementation{" "}
+                        <ExternalLink size={12} className="ml-1" />
                       </Link>
                     </li>
                     <li>
@@ -108,7 +110,8 @@ export const WebsiteFooter = () => {
                         href="/solutions/local-delivery-integration-pathao"
                         className="group flex items-center text-xs text-orange-600 hover:underline"
                       >
-                        Pathao Parcel Delivery <ExternalLink size={12} className="ml-1" />
+                        Pathao Parcel Delivery{" "}
+                        <ExternalLink size={12} className="ml-1" />
                       </Link>
                     </li>
                     <li>
@@ -138,48 +141,74 @@ export const WebsiteFooter = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
               >
-                <h4 className="mb-4 flex items-center font-bold text-gray-900 italic uppercase tracking-tighter">
+                <h4 className="mb-4 flex items-center font-bold">
                   Authority Hubs
                 </h4>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/integrations" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
+                    <Link
+                      href="/integrations"
+                      className="group hover:text-primary flex items-center text-xs text-gray-600 transition-colors"
+                    >
                       Integrations Marketplace
                     </Link>
                   </li>
                   <li>
-                    <Link href="/industries" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
+                    <Link
+                      href="/industries"
+                      className="group hover:text-primary flex items-center text-xs text-gray-600 transition-colors"
+                    >
                       Industry Solutions
                     </Link>
                   </li>
                   <li>
-                    <Link href="/switch" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
+                    <Link
+                      href="/switch"
+                      className="group hover:text-primary flex items-center text-xs text-gray-600 transition-colors"
+                    >
                       Migration Center
                     </Link>
                   </li>
                   <li>
-                    <Link href="/showcase" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
+                    <Link
+                      href="/showcase"
+                      className="group hover:text-primary flex items-center text-xs text-gray-600 transition-colors"
+                    >
                       Customer Showcase
                     </Link>
                   </li>
                   <li>
-                    <Link href="/experts" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
+                    <Link
+                      href="/experts"
+                      className="group hover:text-primary flex items-center text-xs text-gray-600 transition-colors"
+                    >
                       Verified Experts
                     </Link>
                   </li>
                   <li>
-                    <Link href="/learn" className="group flex items-center text-xs text-gray-600 hover:text-primary transition-colors">
+                    <Link
+                      href="/learn"
+                      className="group hover:text-primary flex items-center text-xs text-gray-600 transition-colors"
+                    >
                       Growth Academy
                     </Link>
                   </li>
                   <li>
-                    <Link href="/best/ecommerce-platforms-in-nepal-2026" className="group flex items-center text-xs text-primary font-bold hover:underline">
-                      Best E-commerce (2026) <Zap className="w-3 h-3 ml-1 fill-primary" />
+                    <Link
+                      href="/best/ecommerce-platforms-in-nepal-2026"
+                      className="group text-primary flex items-center text-xs font-bold hover:underline"
+                    >
+                      Best E-commerce (2026){" "}
+                      <Zap className="fill-primary ml-1 h-3 w-3" />
                     </Link>
                   </li>
                   <li>
-                    <Link href="/best/website-builders-for-restaurants-kathmandu" className="group flex items-center text-xs text-primary font-bold hover:underline">
-                      Best for Restaurants <Zap className="w-3 h-3 ml-1 fill-primary" />
+                    <Link
+                      href="/best/website-builders-for-restaurants-kathmandu"
+                      className="group text-primary flex items-center text-xs font-bold hover:underline"
+                    >
+                      Best for Restaurants{" "}
+                      <Zap className="fill-primary ml-1 h-3 w-3" />
                     </Link>
                   </li>
                 </ul>
@@ -192,7 +221,7 @@ export const WebsiteFooter = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                <h4 className="mb-4 flex items-center font-bold text-gray-900 italic uppercase tracking-tighter">
+                <h4 className="mb-4 flex items-center font-bold">
                   Growth Resources
                 </h4>
                 <ul className="space-y-2">
@@ -253,7 +282,7 @@ export const WebsiteFooter = () => {
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
                   >
-                    <h4 className="mb-4 -ml-1 flex items-center font-bold text-gray-900">
+                    <h4 className="mb-4 -ml-1 flex items-center font-bold">
                       {category.name} in Cities
                     </h4>
                     <ul className="space-y-2">
@@ -313,10 +342,12 @@ export const WebsiteFooter = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">Built with</span>
-              <Link 
-                href="/" 
-                className="flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 text-[10px] font-black text-white transition-all hover:scale-105 hover:bg-primary uppercase tracking-tighter"
+              <span className="text-[10px] font-bold tracking-widest text-slate-600 uppercase">
+                Built with
+              </span>
+              <Link
+                href="/"
+                className="hover:bg-primary flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 text-[10px] font-black tracking-tighter text-white uppercase transition-all hover:scale-105"
               >
                 Nepdora
               </Link>

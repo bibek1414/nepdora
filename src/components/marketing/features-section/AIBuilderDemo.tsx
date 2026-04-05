@@ -10,7 +10,7 @@ import {
   Zap,
   Palette,
   Shield,
-  ArrowRight,
+  ChevronRight,
   Bot,
   User,
   Globe,
@@ -160,7 +160,7 @@ const AIBuilderDemo: React.FC = () => {
     <div className="flex h-full min-h-[600px] w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white font-sans text-slate-900 shadow-2xl lg:flex-row">
       {/* --- LEFT PANEL: Chat / Prompt Interface --- */}
       {/* Responsive: Full width on mobile, fixed width on desktop */}
-      <div className="flex h-[45%] w-full shrink-0 flex-col border-b border-slate-100 bg-white lg:h-auto lg:w-[350px] lg:border-r lg:border-b-0">
+      <div className="flex h-[45%] w-full shrink-0 flex-col border-b border-slate-100 bg-white lg:h-auto lg:w-[350px] lg:border-b-0 lg:border-r">
         {/* Header */}
         <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
           <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
@@ -210,7 +210,7 @@ const AIBuilderDemo: React.FC = () => {
                       : "border-primary/20 bg-primary/5 text-primary rounded-tl-none border"
                   }`}
                 >
-                  <p className="leading-relaxed whitespace-pre-wrap">
+                  <p className="whitespace-pre-wrap leading-relaxed">
                     {msg.text}
                   </p>
                 </div>
@@ -263,7 +263,7 @@ const AIBuilderDemo: React.FC = () => {
             {["Landing Page", "Portfolio", "Dashboard"].map(tag => (
               <span
                 key={tag}
-                className="rounded-full border border-slate-100 bg-slate-50 px-2.5 py-1 text-[10px] whitespace-nowrap text-slate-500"
+                className="whitespace-nowrap rounded-full border border-slate-100 bg-slate-50 px-2.5 py-1 text-[10px] text-slate-500"
               >
                 {tag}
               </span>
@@ -353,7 +353,7 @@ const AIBuilderDemo: React.FC = () => {
                     className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4"
                   >
                     <button className="bg-primary text-primary-foreground shadow-primary/20 hover:bg-primary/90 flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold shadow-lg sm:w-auto">
-                      Start Free Trial <ArrowRight className="h-4 w-4" />
+                      Start Free Trial <ChevronRight className="h-4 w-4" />
                     </button>
                     <button className="w-full rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 sm:w-auto">
                       View Demo
@@ -410,7 +410,7 @@ const AIBuilderDemo: React.FC = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.2 + i * 0.1 }}
-                          className="group hover:border-primary/20 hover:shadow-primary/5 relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:shadow-lg sm:p-8"
+                          className="hover:border-primary/20 hover:shadow-primary/5 group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:shadow-lg sm:p-8"
                         >
                           <div
                             className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${feature.bg} ${feature.color} transition-transform duration-300 group-hover:scale-110`}
@@ -424,7 +424,7 @@ const AIBuilderDemo: React.FC = () => {
                             {feature.desc}
                           </p>
                           {/* Decorative gradient blob */}
-                          <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-linear-to-br from-slate-50 to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+                          <div className="bg-linear-to-br absolute -right-4 -top-4 h-24 w-24 rounded-full from-slate-50 to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
                         </motion.div>
                       ))}
                     </div>

@@ -8,7 +8,7 @@ import { buildMarketingMetadata } from "@/lib/seo";
 
 // ✅ Metadata for SEO
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora — Build, Grow & Showcase Your Digital Presence",
+  title: "Nepdora - Build, Grow & Showcase Your Digital Presence",
   description:
     "Nepdora helps creators, businesses, and professionals build modern websites, portfolios, and digital brands effortlessly in Nepal and beyond.",
   path: "/",

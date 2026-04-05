@@ -39,7 +39,7 @@ export default function AnalyticsCharts({
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      {/* Sales Trend — full-width left column */}
+      {/* Sales Trend - full-width left column */}
       <div className="overflow-hidden rounded-xl border border-black/7 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] lg:col-span-2">
         <div className="flex items-center justify-between border-b border-black/6 px-6 py-4">
           <div>
@@ -132,7 +132,7 @@ export default function AnalyticsCharts({
               return (
                 <div key={i} className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between text-[13px]">
-                    <span className="font-medium capitalize text-gray-700">
+                    <span className="font-medium text-gray-700 capitalize">
                       {item.status}
                     </span>
                     <span className="font-semibold text-gray-900">

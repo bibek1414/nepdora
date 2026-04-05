@@ -2,8 +2,6 @@ import { capitalizeWords } from "@/lib/string-utils";
 import { INDUSTRY_CONTENT } from "@/constants/marketing-content";
 import { INDUSTRY_LABELS } from "@/lib/seo-data";
 import { CityHero } from "./components/city-hero";
-import { CityBenefits } from "./components/city-benefits";
-import { CityFeatures } from "./components/city-features";
 import { CityResources } from "./components/city-resources";
 import { CityFAQ } from "./components/city-faq";
 import { CityCTA } from "./components/city-cta";
@@ -20,40 +18,37 @@ interface CitiesLandingPageProps {
   city: string;
 }
 
-
 export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
   category,
   city,
 }) => {
   const cityName = capitalizeWords(city);
   const cityLower = city.toLowerCase();
-  const industryLabel = INDUSTRY_LABELS[category] || capitalizeWords(category.replace("-", " "));
+  const industryLabel =
+    INDUSTRY_LABELS[category] || capitalizeWords(category.replace("-", " "));
 
   const content = INDUSTRY_CONTENT[category] || {
     title: `Best ${industryLabel} in ${cityName}`,
     description: `Launch your professional ${category.toLowerCase()} in ${cityName} with Nepdora. The fastest, AI-powered way to grow your business online in Nepal.`,
     benefits: [
-      `Localized SEO for ${cityName} searches`,
+      `Localised SEO for ${cityName} searches`,
       "Mobile-first design for high performance",
       "Integrated Nepalese payment systems",
-      "24/7 Local support and onboarding",
+      "24/7 local support and onboarding",
     ],
   };
 
-
-  // Handle Dynamic SEO overrides for City Landing Pages
   if (cityLower !== "nepal") {
     const hasWebsiteWord = industryLabel.toLowerCase().includes("website");
-    content.customH1 = `Create Your ${industryLabel}${hasWebsiteWord ? "" : " Website"} in ${cityName} Today`;
-    
-    // Special case for Kathmandu
+    content.customH1 = `Create your ${industryLabel}${hasWebsiteWord ? "" : " website"} in ${cityName} today`;
+
     if (category === "ecommerce" && cityLower === "kathmandu") {
-      content.customH1 = `Create Free E-Commerce Website in Kathmandu (2026)`;
+      content.customH1 = `Create a free e-commerce website in Kathmandu (2026)`;
     }
   }
 
   return (
-    <div className="flex flex-col gap-0 overflow-hidden bg-white">
+    <main className="bg-white">
       <CityHero
         cityName={cityName}
         category={category}
@@ -65,45 +60,29 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
         ctaText={content.ctaText}
       />
 
-      {/* Blueprint Step 1: How it Works (3-Step Guide) */}
       <HowItWorks steps={content.howToSteps || []} category={category} />
 
-      {/* Blueprint Step 2: Niche-Specific Features */}
       <IndustryFeaturesGrid
         features={content.detailedFeatures || []}
         category={category}
         customH2={content.customH2}
       />
 
-      {/* Blueprint Step 3: Lead Capture & CRM (Specific to Agency/B2B) */}
       <LeadCaptureCRM data={content.leadCaptureCRM!} />
 
-      {/* Blueprint Step 4: Local Payment Visibility */}
       <PaymentIntegration />
 
-      {/* Blueprint Step 5: Time & Cost Comparison */}
       <ComparisonSection data={content.comparison!} />
 
-      {/* Blueprint Step 6: Templates */}
       <IndustryTemplates category={category} />
 
-      {/* Blueprint Step 7: Pricing */}
-      <div className="py-24 bg-slate-50">
-        <IndustryPricing category={category} />
-      </div>
+      <IndustryPricing category={category} />
 
+      <CityResources />
 
-      <div className="bg-white py-24">
-        <CityResources />
-      </div>
+      <CityFAQ />
 
-      <div className="bg-slate-50 py-24">
-        <CityFAQ />
-      </div>
-
-      <div className="py-24">
-        <CityCTA cityName={cityName} category={category} />
-      </div>
-    </div>
+      <CityCTA cityName={cityName} category={category} />
+    </main>
   );
 };

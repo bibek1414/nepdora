@@ -8,7 +8,7 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Blog | Nepdora — Digital Growth & Website Insights",
+  title: "Blog | Nepdora - Digital Growth & Website Insights",
   description:
     "Stay updated with the latest trends in web development, e-commerce, and digital marketing in Nepal. Tutorials, tips, and stories from the Nepdora team.",
   path: "/blog",

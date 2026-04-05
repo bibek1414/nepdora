@@ -22,7 +22,7 @@ const HowItWorks: React.FC = () => {
               icon: Layout,
             },
             {
-              title: "Drag, drop, customize — no code",
+              title: "Drag, drop, customize - no code",
               description:
                 "Use our intuitive visual builder to add your text, images, and brand colors.",
               icon: MousePointer2,

@@ -53,7 +53,7 @@ export const BlogStyle5: React.FC<BlogStyle5Props> = ({
   return (
     <section className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        {/* Header — centered */}
+        {/* Header - centered */}
         <div className="mb-16 flex flex-col items-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -40,18 +40,18 @@ export const IndustryPricing: React.FC<IndustryPricingProps> = ({
   const sortedPlans = pricing ? sortPlans(pricing) : [];
 
   return (
-    <section className="bg-slate-50 py-24 pb-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mb-20 text-center">
-          <h2 className="mb-6 text-3xl font-bold text-slate-900 md:text-5xl">
-            Transparent Pricing for {category.replace("-", " ")}s
+    <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-14">
+          <h2 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Simple, transparent pricing
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-slate-600">
-            No hidden costs. Choose a plan that fits your current business needs.
+          <p className="text-base leading-relaxed text-slate-500">
+            No hidden costs. Pick a plan that fits where your business is today.
           </p>
         </div>
 
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {sortedPlans.map((item, index) => (
             <PricingCard
               key={item.id}

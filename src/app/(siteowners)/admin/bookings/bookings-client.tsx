@@ -108,7 +108,7 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
           day: "2-digit",
           year: "numeric",
         })
-      : "—";
+      : "-";
 
   // Get current data and counts
   const currentData = useMemo(() => {
@@ -226,7 +226,7 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
                         <TableCell className="px-6 py-4">
                           <div className="flex flex-col gap-0.5">
                             <span className="text-sm font-normal text-black capitalize">
-                              {bookingData.name || "—"}
+                              {bookingData.name || "-"}
                             </span>
                             {email && (
                               <span className="text-xs text-black/50">
@@ -280,7 +280,7 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
                         </TableCell>
                         <TableCell className="px-6 py-4">
                           <span className="text-xs text-black/50">
-                            {numberOfPersons || "—"}
+                            {numberOfPersons || "-"}
                           </span>
                         </TableCell>
                         <TableCell className="px-6 py-4">
@@ -297,7 +297,7 @@ export default function BookingsClient({ subDomain }: BookingsClientProps) {
                               View
                             </Button>
                           ) : (
-                            <span className="text-xs text-black/40">—</span>
+                            <span className="text-xs text-black/40">-</span>
                           )}
                         </TableCell>
                       </TableRow>

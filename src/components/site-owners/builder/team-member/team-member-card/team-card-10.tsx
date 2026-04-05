@@ -44,7 +44,7 @@ export const TeamCard10: React.FC<TeamCard10Props> = ({
           referrerPolicy="no-referrer"
         />
 
-        {/* Details Overlay — visible on hover */}
+        {/* Details Overlay - visible on hover */}
         <div
           className="absolute inset-0 flex flex-col items-center justify-center bg-[#F5F0EB]/90 p-6 text-center transition-opacity duration-500 ease-in-out"
           style={{

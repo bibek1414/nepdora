@@ -6,7 +6,7 @@ import FAQSection from "@/components/marketing/faq-section/faq-section";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import RelatedAlternatives from "@/components/marketing/alternative/related-alternatives";
@@ -105,33 +105,33 @@ export default async function AlternativePage({ params }: Props) {
       <JsonLd id="alt-breadcrumb-schema" data={breadcrumbSchema} />
       <div className="bg-slate-50 py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <Breadcrumbs 
+          <Breadcrumbs
             items={[
               { label: "Alternatives", href: "/pricing" },
-              { label: `${name} Alternative`, href: `/alternative/${slug}` }
-            ]} 
+              { label: `${name} Alternative`, href: `/alternative/${slug}` },
+            ]}
           />
-          <div className="text-center mt-12">
-          <h1 className="mb-6 text-4xl font-extrabold md:text-6xl">
-            The Best <span className="text-primary">{name}</span> Alternative in
-            Nepal
-          </h1>
-          <p className="mx-auto max-w-3xl text-xl text-slate-600">
-            Stop paying in USD with international credit cards. Switch to
-            Nepdora and enjoy local support, eSewa/Khalti integration, and
-            prices that make sense for the Nepalese market.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/pricing"
-              className="bg-primary hover:bg-primary/90 rounded-full px-8 py-4 font-bold text-white transition-all"
-            >
-              See How You Save
-            </Link>
+          <div className="mt-12 text-center">
+            <h1 className="mb-6 text-4xl font-extrabold md:text-6xl">
+              The Best <span className="text-primary">{name}</span> Alternative
+              in Nepal
+            </h1>
+            <p className="mx-auto max-w-3xl text-xl text-slate-600">
+              Stop paying in USD with international credit cards. Switch to
+              Nepdora and enjoy local support, eSewa/Khalti integration, and
+              prices that make sense for the Nepalese market.
+            </p>
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/pricing"
+                className="bg-primary hover:bg-primary/90 rounded-full px-8 py-4 font-bold text-white transition-all"
+              >
+                See How You Save
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       <Comparison platformName={name} />
 
@@ -189,10 +189,10 @@ export default async function AlternativePage({ params }: Props) {
               </p>
               <Link
                 href="/contact"
-                className="group text-primary flex items-center gap-2 font-bold"
+                className="text-primary group flex items-center gap-2 font-bold"
               >
                 Contact migration team{" "}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           </div>

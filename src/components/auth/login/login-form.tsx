@@ -312,7 +312,7 @@ export function LoginForm({
             Hey there, good to see you again!
           </h2>
           <p className="text-sm text-gray-600">
-            Pick up right where you left off — your work is waiting.
+            Pick up right where you left off - your work is waiting.
           </p>
           <div className="relative w-full max-w-md">
             <img

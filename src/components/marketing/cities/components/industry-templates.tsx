@@ -29,19 +29,18 @@ export const IndustryTemplates: React.FC<IndustryTemplatesProps> = ({
   if (templates.length === 0) return null;
 
   return (
-    <section className="bg-slate-50 py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-5xl">
-            Templates for Nepali {category.replace("-", " ")}s
+    <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-14">
+          <h2 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Templates for {category.replace(/-/g, " ")} businesses
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-slate-600">
-            Professional, high-converting designs tailored for your business.
-            Launch your site in minutes with our ready-to-use templates.
+          <p className="text-base leading-relaxed text-slate-500">
+            Professional, ready-to-use designs. Go live in minutes.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           {templates.map(template => (
             <TemplateCard key={template.id} template={template as any} />
           ))}

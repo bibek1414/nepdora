@@ -82,7 +82,7 @@ export const NewsletterForm2: React.FC<NewsletterForm2Props> = ({
             You&apos;re subscribed
           </h3>
           <p className="text-sm leading-relaxed text-neutral-600 sm:text-base">
-            Thanks for joining. We&apos;ll send occasional, thoughtful updates —
+            Thanks for joining. We&apos;ll send occasional, thoughtful updates -
             no spam, ever.
           </p>
         </div>

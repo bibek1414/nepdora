@@ -44,7 +44,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
 
   return (
     <main className="relative mx-auto w-full max-w-7xl overflow-hidden bg-white font-sans text-[#1A1A1A] selection:bg-black/10">
-      {/* Decorative SVG: Map (Bottom Left) — hidden on small screens */}
+      {/* Decorative SVG: Map (Bottom Left) - hidden on small screens */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 0.4, x: 0 }}
@@ -63,7 +63,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
         />
       </motion.div>
 
-      {/* Decorative SVG: Plane/Stamp (Top Right) — hidden on small screens */}
+      {/* Decorative SVG: Plane/Stamp (Top Right) - hidden on small screens */}
       <motion.div
         initial={{ opacity: 0, y: -50, rotate: 15 }}
         animate={{ opacity: 0.4, y: 0, rotate: 15 }}
@@ -85,7 +85,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
         />
       </motion.div>
 
-      {/* Left Polaroid — visible on lg+ only */}
+      {/* Left Polaroid - visible on lg+ only */}
       <motion.div
         initial={{ opacity: 0, x: -100, rotate: -10 }}
         animate={{ opacity: 1, x: 0, rotate: -5 }}
@@ -110,7 +110,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
         </div>
       </motion.div>
 
-      {/* Right Polaroid — visible on lg+ only */}
+      {/* Right Polaroid - visible on lg+ only */}
       <motion.div
         initial={{ opacity: 0, x: 100, rotate: 10 }}
         animate={{ opacity: 1, x: 0, rotate: 3 }}
@@ -227,7 +227,7 @@ export const HeroTemplate18: React.FC<HeroTemplate18Props> = ({
         </motion.div>
       </div>
 
-      {/* Mobile / Tablet Polaroids — visible on screens smaller than lg */}
+      {/* Mobile / Tablet Polaroids - visible on screens smaller than lg */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}

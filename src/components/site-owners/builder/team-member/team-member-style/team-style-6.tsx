@@ -46,7 +46,7 @@ export const TeamStyle6: React.FC<TeamStyleProps> = ({
   return (
     <section className="overflow-hidden px-6 py-32 md:px-16">
       <div className="mx-auto max-w-6xl">
-        {/* Header — "Our Team" left, heading+description right */}
+        {/* Header - "Our Team" left, heading+description right */}
         <div className="mb-24 grid grid-cols-1 gap-8 md:grid-cols-12">
           <div className="md:col-span-2">
             <EditableText

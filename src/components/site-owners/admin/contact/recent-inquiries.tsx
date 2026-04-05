@@ -39,7 +39,7 @@ export default function RecentInquiries() {
           day: "2-digit",
           year: "numeric",
         })
-      : "—";
+      : "-";
 
   return (
     <>
@@ -103,7 +103,7 @@ export default function RecentInquiries() {
                       </span>
                     )}
                     {!c.email && !c.phone_number && (
-                      <span className="text-xs text-black/40">—</span>
+                      <span className="text-xs text-black/40">-</span>
                     )}
                   </div>
                 </TableCell>

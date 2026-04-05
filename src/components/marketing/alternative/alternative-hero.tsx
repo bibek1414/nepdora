@@ -16,8 +16,8 @@ export const AlternativeHero: React.FC<AlternativeHeroProps> = ({
   return (
     <section className="bg-slate-50 py-16 md:py-24">
       <div className="container mx-auto max-w-5xl px-4 text-center">
-        <p className="text-primary mb-4 text-sm font-semibold uppercase tracking-wide">
-          {platformName} Alternative — Nepal 2026
+        <p className="text-primary mb-4 text-sm font-semibold tracking-wide uppercase">
+          {platformName} Alternative - Nepal 2026
         </p>
         <h1 className="mb-6 text-4xl leading-tight font-extrabold text-slate-900 md:text-6xl">
           {title || (

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Calendar, ArrowRight } from "lucide-react";
+import { Calendar, ChevronRight } from "lucide-react";
 import { formatDate } from "@/utils/date";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -86,8 +86,8 @@ export const BlogCard9: React.FC<BlogCard9Props> = ({
       className="h-full"
     >
       <ContentLink>
-        {/* Image — flush to top, no padding */}
-        <div className="relative aspect-16/10 overflow-hidden bg-gray-100">
+        {/* Image - flush to top, no padding */}
+        <div className="aspect-16/10 relative overflow-hidden bg-gray-100">
           <Image
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
@@ -106,7 +106,7 @@ export const BlogCard9: React.FC<BlogCard9Props> = ({
           </div>
 
           {/* Title */}
-          <h3 className="mb-6 line-clamp-2 min-h-14 text-xl leading-snug font-bold text-gray-900">
+          <h3 className="mb-6 line-clamp-2 min-h-14 text-xl font-bold leading-snug text-gray-900">
             {blog.title}
           </h3>
         </div>

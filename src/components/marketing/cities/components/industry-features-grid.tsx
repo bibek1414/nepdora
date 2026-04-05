@@ -1,4 +1,4 @@
-import React from "react";
+import { Check } from "lucide-react";
 
 interface Feature {
   title: string;
@@ -19,29 +19,33 @@ export const IndustryFeaturesGrid: React.FC<IndustryFeaturesGridProps> = ({
 }) => {
   if (!features || features.length === 0) return null;
 
+  const industryLabel = category.replace(/-/g, " ");
+
   return (
-    <section className="bg-white py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mb-20 text-center">
-          <h2 className="mb-6 text-3xl font-bold text-slate-900 md:text-5xl">
-            {customH2 || `Features Built for ${category.replace("-", " ")}`}
+    <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-14">
+          <h2 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            {customH2 || `Features built for ${industryLabel} businesses`}
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-slate-600">
-            Powerful tools designed to help you grow, manage, and scale your{" "}
-            {category.replace("-", " ")} effortlessly.
+          <p className="text-base leading-relaxed text-slate-500">
+            Every tool you need to run, manage, and grow — all in one place.
           </p>
         </div>
 
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col items-center rounded-lg border border-gray-200 p-4 text-center"
+              className="rounded-2xl border border-slate-200 bg-white p-6"
             >
-              <h3 className="mb-4 text-xl font-semibold text-slate-900">
+              {feature.icon && (
+                <div className="mb-4 text-2xl">{feature.icon}</div>
+              )}
+              <h3 className="mb-2 text-base font-semibold text-slate-900">
                 {feature.title}
               </h3>
-              <p className="text-sm leading-relaxed text-slate-600">
+              <p className="text-sm leading-relaxed text-slate-500">
                 {feature.desc}
               </p>
             </div>

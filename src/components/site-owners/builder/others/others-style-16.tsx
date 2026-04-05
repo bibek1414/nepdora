@@ -95,7 +95,7 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
           </motion.div>
         </div>
 
-        {/* 3-column grid — vertical dividers on desktop */}
+        {/* 3-column grid - vertical dividers on desktop */}
         <div className="grid grid-cols-1 divide-y divide-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0 md:divide-gray-300/70">
           {data.programs?.map((program: OthersProgramItem, index: number) => (
             <motion.div
@@ -106,7 +106,7 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className={cn("flex flex-col py-10 md:px-8 md:py-0")}
             >
-              {/* Title — fixed height so all columns align */}
+              {/* Title - fixed height so all columns align */}
               <div className="flex min-h-20 items-start">
                 <EditableText
                   value={program.title}
@@ -119,7 +119,7 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
                 />
               </div>
 
-              {/* Description — fixed min-height so image top aligns */}
+              {/* Description - fixed min-height so image top aligns */}
               <div className="flex min-h-24 items-start">
                 <EditableText
                   value={program.description}
@@ -133,7 +133,7 @@ export const OthersTemplate16: React.FC<OthersTemplate16Props> = ({
                 />
               </div>
 
-              {/* Image — identical fixed height and full width */}
+              {/* Image - identical fixed height and full width */}
               <div className="aspect-3/2 w-full overflow-hidden rounded-2xl bg-gray-100 shadow-sm transition-transform duration-500 hover:scale-[1.02]">
                 <EditableImage
                   src={program.image?.url}

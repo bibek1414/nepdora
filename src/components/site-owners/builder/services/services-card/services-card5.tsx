@@ -36,7 +36,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
       onClick={() => !isEditable && onServiceClick?.(service.slug)}
       className="cursor-pointer"
     >
-      {/* Background Highlight — bleeds using viewport-wide negative positioning */}
+      {/* Background Highlight - bleeds using viewport-wide negative positioning */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
@@ -95,7 +95,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
           <div dangerouslySetInnerHTML={{ __html: service.description }} />
         </p>
 
-        {/* Arrow — hidden on hover */}
+        {/* Arrow - hidden on hover */}
         <div
           style={{ width: 44, height: 44, position: "relative", flexShrink: 0 }}
         >
@@ -125,7 +125,7 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
         </div>
       </div>
 
-      {/* Floating image — just outside the right edge of the card, near the arrow */}
+      {/* Floating image - just outside the right edge of the card, near the arrow */}
       <AnimatePresence>
         {isHovered && service.thumbnail_image && (
           <motion.div

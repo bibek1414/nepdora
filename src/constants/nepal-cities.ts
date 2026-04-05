@@ -266,7 +266,7 @@ export const NEPAL_CITIES = [
   "Chapakot",
   "Bhirkot",
   "Khandachakra",
-  "Mahalaxmi",
+  "Mahalaxmi-Kaski",
   "Madhya-Nepal",
   "Jaya-Prithvi",
   "Shailyashikhar",

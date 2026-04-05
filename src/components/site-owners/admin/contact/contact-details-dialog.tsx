@@ -75,7 +75,7 @@ const ContactDetailsDialog = ({
           event.preventDefault();
           handlePrevious();
           break;
-        case "ArrowRight":
+        case "ChevronRight":
           event.preventDefault();
           handleNext();
           break;
@@ -141,7 +141,7 @@ const ContactDetailsDialog = ({
               size="lg"
               onClick={handlePrevious}
               disabled={currentIndex === 0}
-              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute -left-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronLeft className="h-6 w-6 text-black" />
             </Button>
@@ -152,7 +152,7 @@ const ContactDetailsDialog = ({
               size="lg"
               onClick={handleNext}
               disabled={currentIndex === contacts.length - 1}
-              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute -right-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronRight className="h-6 w-6 text-black" />
             </Button>
@@ -198,11 +198,11 @@ const ContactDetailsDialog = ({
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {/* Name */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                  <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
                     Full Name
                   </label>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900 capitalize">
+                    <p className="text-sm font-medium capitalize text-gray-900">
                       {currentContact.name}
                     </p>
                   </div>
@@ -211,7 +211,7 @@ const ContactDetailsDialog = ({
                 {/* Email */}
                 {currentContact.email && (
                   <div className="space-y-1">
-                    <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
                       Email Address
                     </label>
                     <div className="flex items-center justify-between">
@@ -227,7 +227,7 @@ const ContactDetailsDialog = ({
                 {/* Phone */}
                 {currentContact.phone_number && (
                   <div className="space-y-1">
-                    <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
+                    <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
                       Phone Number
                     </label>
                     <div className="flex items-center justify-between">
@@ -241,7 +241,7 @@ const ContactDetailsDialog = ({
                 )}
 
                 {!currentContact.email && !currentContact.phone_number && (
-                  <div className="flex items-center gap-2 text-sm text-gray-500 italic md:col-span-2">
+                  <div className="flex items-center gap-2 text-sm italic text-gray-500 md:col-span-2">
                     <MessageSquare className="h-4 w-4" />
                     <span>No contact information provided</span>
                   </div>
@@ -260,13 +260,13 @@ const ContactDetailsDialog = ({
               {currentContact.message ? (
                 <div className="space-y-3">
                   <div className="rounded-lg border bg-gray-50 p-4">
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-900">
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-900">
                       {currentContact.message}
                     </p>
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 text-sm text-gray-500 italic">
+                <div className="flex items-center gap-2 text-sm italic text-gray-500">
                   <MessageSquare className="h-4 w-4" />
                   <span>No message provided</span>
                 </div>

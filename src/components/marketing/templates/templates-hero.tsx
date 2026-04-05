@@ -23,7 +23,7 @@ export const TemplatesHero = () => {
           className="mb-10 text-lg text-slate-600 md:text-xl"
         >
           Build a professional website tailored for the Nepalese market with our
-          AI-powered templates — fully customizable, responsive, and ready for
+          AI-powered templates - fully customizable, responsive, and ready for
           your business with zero coding required.
         </motion.p>
         <motion.div

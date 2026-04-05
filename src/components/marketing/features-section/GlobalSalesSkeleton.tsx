@@ -159,28 +159,21 @@ const GlobalSalesSkeleton = () => {
 
         {/* Connection Line */}
         <svg className="absolute inset-0 h-full w-full">
-          <motion.path
+          <path
             d="M 40 160 Q 90 160 90 100 T 140 40"
             fill="none"
             stroke={status === "success" ? "#10b981" : "#cbd5e1"}
             strokeWidth="2"
-            strokeDasharray="4 4"
-            animate={
-              status === "success"
-                ? { strokeDasharray: "0 0" }
-                : { strokeDasharray: "4 4" }
-            }
+            strokeDasharray={status === "success" ? "0 0" : "4 4"}
+            style={{ transition: "stroke 0.5s, stroke-dasharray 0.5s" }}
           />
           {status === "success" && (
-            <motion.circle
+            <circle
               r="3"
               fill="#10b981"
-              initial={{ offsetDistance: "0%" }}
-              animate={{ offsetDistance: "100%" }}
-              transition={{ duration: 1.5, ease: "linear", repeat: Infinity }}
-              style={{
-                offsetPath: "path('M 40 160 Q 90 160 90 100 T 140 40')",
-              }}
+              cx="90"
+              cy="100"
+              style={{ transition: "opacity 0.3s" }}
             />
           )}
         </svg>

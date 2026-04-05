@@ -48,7 +48,7 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
   return (
     <section className="w-full">
       <div className="mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-20 lg:py-24">
-        {/* Outer grid — left content | right image */}
+        {/* Outer grid - left content | right image */}
         <div className="grid lg:grid-cols-[1fr_490px] lg:items-stretch">
           {/* ── Left Column ── */}
           <div className="flex flex-col gap-0 py-0 lg:py-10 lg:pr-10">
@@ -175,7 +175,7 @@ export const OthersTemplate18: React.FC<OthersTemplate18Props> = ({
             </motion.div>
           </div>
 
-          {/* ── Right Column — Image stretches full column height ── */}
+          {/* ── Right Column - Image stretches full column height ── */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}

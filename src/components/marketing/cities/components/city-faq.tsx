@@ -1,50 +1,48 @@
-import React from "react";
-import { ChevronDown } from "lucide-react";
-
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-const faqItems: FAQItem[] = [
+const faqItems = [
   {
-    question: "What is Nepdora Website Intelligence?",
-    answer: "It's the suite of data and insights provided by Nepdora about your online visibility, customer behavior, and competitor performance in your specific city.",
+    question: "What is Nepdora?",
+    answer:
+      "Nepdora is Nepal's all-in-one business platform. It lets you build a professional website, accept eSewa and Khalti payments, manage orders, and track analytics — all from one dashboard, with no coding required.",
   },
   {
-    question: "How does Nepdora optimize for Nepal's local market?",
-    answer: "We integrate with local payment gateways like eSewa and Khalti, optimize for Nepali search queries, and provide local support to ensure your success.",
+    question: "How does Nepdora optimise for Nepal's local market?",
+    answer:
+      "We integrate directly with eSewa and Khalti, generate SEO meta tags and schema markup automatically for Nepali search queries, and offer support in both Nepali and English so your business grows locally from day one.",
   },
   {
-    question: "How can I launch my website in 10 minutes with Nepdora?",
-    answer: "Our AI site wizard guides you through the process, setting up templates, content, and metadata optimized for your specific location and industry.",
+    question: "How quickly can I launch my website?",
+    answer:
+      "Most businesses go live in under 10 minutes. Choose a template, add your content, connect your payment gateway, and publish. Our AI wizard guides you through every step.",
   },
 ];
 
 export const CityFAQ: React.FC = () => {
   return (
-    <section className="bg-slate-50 py-20">
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-        <h3 className="mb-16 text-center text-3xl font-normal text-slate-900">
-           FAQ
-        </h3>
+    <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-14">
+          <h2 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Frequently asked questions
+          </h2>
+          <p className="text-base leading-relaxed text-slate-500">
+            Everything you need to know before getting started.
+          </p>
+        </div>
 
-        <div className="mx-auto max-w-4xl space-y-4">
-            {faqItems.map((item, i) => (
-                <div key={i} className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-                    <div className="flex items-center gap-6">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white font-semibold">
-                            {i + 1}
-                        </div>
-                        <div className="flex-1">
-                            <h4 className="text-lg font-normal text-slate-900">{item.question}</h4>
-                            <p className="mt-4 text-sm font-light leading-relaxed text-slate-500">
-                                {item.answer}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            ))}
+        <div className="space-y-4">
+          {faqItems.map((item, i) => (
+            <div
+              key={i}
+              className="rounded-2xl border border-slate-200 bg-white px-7 py-6"
+            >
+              <h3 className="mb-2.5 text-base font-semibold text-slate-900">
+                {item.question}
+              </h3>
+              <p className="text-sm leading-relaxed text-slate-500">
+                {item.answer}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

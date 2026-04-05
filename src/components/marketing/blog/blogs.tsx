@@ -90,26 +90,34 @@ const Blogs = ({ initialData }: BlogsProps) => {
 
   return (
     <div>
-      <div className="mb-10 flex flex-col gap-1">
-        <h2 className="text-4xl font-bold text-gray-900">
+      <div className="mb-10 text-center sm:mb-12 md:mb-16">
+        <h2 className="mb-4 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
           Read Latest Blogs from Nepdora
         </h2>
-        <p className="text-gray-600">
+        <p className="text-sm text-slate-600 sm:text-base md:text-lg">
           Stay updated with the latest news, tips, and insights from our team.
         </p>
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-wrap justify-center gap-6">
           {[1, 2, 3, 4].map(n => (
-            <BlogCardSkeleton key={n} />
+            <div
+              key={n}
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+            >
+              <BlogCardSkeleton />
+            </div>
           ))}
         </div>
       ) : blogs.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-wrap justify-center gap-6">
             {blogs.map(blog => (
-              <div key={blog.id} className="h-full">
+              <div
+                key={blog.id}
+                className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+              >
                 <BlogCard post={blog} />
               </div>
             ))}
@@ -124,10 +132,7 @@ const Blogs = ({ initialData }: BlogsProps) => {
           </div>
         </>
       ) : (
-        <div className="py-20 text-center">
-          <h3 className="text-xl font-bold text-slate-900">No stories found</h3>
-          <p className="text-slate-600">Try adjusting your search criteria.</p>
-        </div>
+        <></>
       )}
     </div>
   );

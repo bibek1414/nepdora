@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FAQ } from "@/types/owner-site/admin/faq";
 
@@ -59,7 +59,7 @@ export const FaqCard6: React.FC<FAQCard6Props> = ({
                   }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <ArrowRight size={16} strokeWidth={1.2} />
+                  <ChevronRight size={16} strokeWidth={1.2} />
                 </motion.div>
               </div>
             </button>

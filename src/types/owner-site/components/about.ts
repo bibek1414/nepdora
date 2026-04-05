@@ -328,7 +328,7 @@ export const defaultAboutUs8Data: AboutUs8Data = {
       icon: "Search",
       title: "Discover & Diagnose",
       description:
-        "We start by understanding your needs and evaluating your outdoor space through a free consultation — in-person or virtual.",
+        "We start by understanding your needs and evaluating your outdoor space through a free consultation - in-person or virtual.",
     },
     {
       id: "2",
@@ -366,7 +366,7 @@ export const defaultAboutUs9Data: AboutUs9Data = {
   description1:
     "My journey into software development began with a simple curiosity about how things work on the web. What started as tweaking HTML pages quickly evolved into a deep passion for creating full-scale applications.",
   description2:
-    "Over the years, I've honed my skills across the entire stack — from crafting pixel-perfect interfaces to designing robust backend architectures. I believe great software is invisible: it just works, beautifully.",
+    "Over the years, I've honed my skills across the entire stack - from crafting pixel-perfect interfaces to designing robust backend architectures. I believe great software is invisible: it just works, beautifully.",
   description3:
     "When I'm not coding, you'll find me exploring new technologies, contributing to open source, or sharing knowledge with the developer community.",
   stats: [

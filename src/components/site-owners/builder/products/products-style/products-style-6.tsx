@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ProductCard6 } from "../products-card/product-card6";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader2, ShoppingBag, AlertCircle } from "lucide-react";
+import { ChevronRight, Loader2, ShoppingBag, AlertCircle } from "lucide-react";
 import { EditableLink } from "@/components/ui/editable-link";
 import { EditableText } from "@/components/ui/editable-text";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -92,7 +92,7 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
             siteUser={siteUser}
           >
             {buttonText}
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </EditableLink>
         </motion.div>
 

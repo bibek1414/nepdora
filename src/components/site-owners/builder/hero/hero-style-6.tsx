@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useId } from "react";
-import { ArrowRight, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight, ChevronRight, Loader2 } from "lucide-react";
 import {
   HeroTemplate6Data,
   HeroButton,
@@ -109,7 +109,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
     >
       {/* Background Image with Zoom Effect */}
       <div
-        className="group absolute inset-0 transition-transform duration-2000 ease-out"
+        className="duration-2000 group absolute inset-0 transition-transform ease-out"
         style={{ transform: isVisible ? "scale(1.05)" : "scale(1)" }}
       >
         <EditableImage
@@ -139,7 +139,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
           isEditable={isEditable}
           label="Change Background"
           folder="hero-banners"
-          className="absolute top-10 right-10 z-20 flex items-center justify-center"
+          className="absolute right-10 top-10 z-20 flex items-center justify-center"
         />
         {/* Dark Overlay for text contrast */}
         <div className="absolute inset-0 bg-black/40" />
@@ -154,7 +154,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
             isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
           }`}
         >
-          <p className="mb-3 text-xs font-bold tracking-[0.2em] text-gray-300 uppercase sm:mb-4 sm:text-sm sm:tracking-[0.3em]">
+          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-gray-300 sm:mb-4 sm:text-sm sm:tracking-[0.3em]">
             <EditableText
               value={data.subtitle || "Exclusive Drop"}
               onChange={handleTextUpdate("subtitle")}

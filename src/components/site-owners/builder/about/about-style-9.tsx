@@ -32,7 +32,7 @@ export const AboutUsTemplate9: React.FC<AboutUsTemplate9Props> = ({
         fontFamily: "'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif",
       }}
     >
-      {/* Scoped styles — no external deps, all colors from existing Tailwind theme tokens */}
+      {/* Scoped styles - no external deps, all colors from existing Tailwind theme tokens */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 

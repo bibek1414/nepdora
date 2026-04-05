@@ -96,7 +96,7 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
             </h3>
           </div>
         ) : (
-          /* White card — overflow visible so image escapes */
+          /* White card - overflow visible so image escapes */
           <div
             style={{
               position: "relative",

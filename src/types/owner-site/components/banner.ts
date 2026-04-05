@@ -157,7 +157,7 @@ export const DEFAULT_BANNER_MAP: Record<BannerData["template"], BannerData> = {
       description:
         "Join our loyalty program and earn 1 point for every $1 spent. Redeem for exclusive rewards.",
       label: "Glow Rewards",
-      buttonText: "Join Now — It's Free",
+      buttonText: "Join Now - It's Free",
       link: "/auth",
       image: "", // Card 2 uses stickers/emojis in the UI instead of a main image
     },

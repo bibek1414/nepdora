@@ -1,9 +1,5 @@
-"use client";
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import Link from "next/link"; // Assuming Next.js, or use 'a' for React
+import Link from "next/link";
+import { ChevronRight, Check } from "lucide-react";
 
 interface CityHeroProps {
   cityName: string;
@@ -19,88 +15,81 @@ interface CityHeroProps {
 export const CityHero: React.FC<CityHeroProps> = ({
   cityName,
   category,
-  title,
   description,
   customH1,
   customIntro,
   subHeadline,
   ctaText,
 }) => {
+  const industryLabel = category.replace(/-/g, " ");
+
+  const heading =
+    customH1 || `Grow your ${industryLabel} business in ${cityName}`;
+
+  const intro =
+    subHeadline ||
+    customIntro ||
+    description ||
+    `Join local ${industryLabel} businesses in ${cityName} who build and grow online with Nepdora — Nepal's all-in-one website and e-commerce platform.`;
+
   return (
-    <section className="relative overflow-hidden bg-[#1047A1] py-24 text-white md:py-36">
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1920&q=40"
-          alt={`${category} services in ${cityName} - Nepdora`}
-          className="h-full w-full object-cover opacity-10"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-linear-to-b from-[#1047A1]/95 to-[#1047A1]" />
-      </div>
+    <section className="border-b border-slate-100 bg-white py-20 sm:py-28">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          {/* Left — text */}
+          <div>
+            <p className="mb-4 text-sm text-slate-400">{cityName}, Nepal</p>
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 text-center sm:px-6">
-        <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-7xl">
-          {customH1 ? (
-            <span className="block">{customH1}</span>
-          ) : (
-            <>
-              <span className="mb-4 block text-3xl font-semibold text-blue-200 md:text-4xl">
-                Top Rated {category.replace("-", " ")}
-              </span>
-              Grow with <span className="font-bold text-white">Nepdora</span> in{" "}
-              {cityName}
-            </>
-          )}
-        </h1>
+            <h1 className="mb-5 text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl">
+              {heading}
+            </h1>
 
-        <div className="mx-auto mb-12 max-w-3xl">
-          {subHeadline ? (
-            <p className="text-xl font-medium text-blue-50 md:text-2xl">
-              {subHeadline}
-            </p>
-          ) : (
-            <p className="text-lg font-light text-blue-50/90 md:text-xl">
-              {customIntro || (
-                <>
-                  Looking for the best{" "}
-                  <strong>
-                    {category} in {cityName}
-                  </strong>
-                  ? Join thousands of local businesses that trust Nepdora for
-                  digital growth and analytics.
-                </>
-              )}
-            </p>
-          )}
-        </div>
+            <p className="mb-8 text-lg leading-relaxed text-slate-500">{intro}</p>
 
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-          <Button
-            size="lg"
-            className="h-16 rounded-full bg-white px-10 text-lg font-bold text-blue-900 shadow-2xl transition-all hover:scale-105 hover:bg-blue-50"
-            asChild
-          >
-            <Link href="/admin/signup">
-              {ctaText || "Start Building for Free"}
+            <Link
+              href="/admin/signup"
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3.5 text-base font-medium text-white transition hover:bg-slate-800"
+            >
+              {ctaText || "Start Building Free"}
+              <ChevronRight className="h-4 w-4" />
             </Link>
-          </Button>
-          <p className="text-sm font-medium text-blue-200/80">
-            No credit card required. Launch in minutes.
-          </p>
-        </div>
 
-        <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm text-blue-100/60">
-          <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
-            <span>100+ Premium Templates</span>
+            <p className="mt-3 text-sm text-slate-400">No credit card required</p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
-            <span>Local Payment Integrated</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
-            <span>24/7 Local Support</span>
+
+          {/* Right — checklist card */}
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
+            <p className="mb-5 text-xs font-medium uppercase tracking-wider text-slate-400">
+              What you get
+            </p>
+            <ul className="space-y-3.5">
+              {[
+                `Professional ${industryLabel} website`,
+                "eSewa & Khalti payments built in",
+                "Google-ready SEO from day one",
+                "Mobile-first, fast on every device",
+                "Real-time dashboard & analytics",
+                "24/7 support in Nepali & English",
+              ].map(item => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" strokeWidth={2} />
+                  <span className="text-sm leading-relaxed text-slate-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-7 flex flex-wrap gap-6 border-t border-slate-200 pt-6">
+              {[
+                { label: "100+", sub: "Templates" },
+                { label: "5 min", sub: "Setup" },
+                { label: "Free", sub: "SSL & domain" },
+              ].map(s => (
+                <div key={s.label}>
+                  <p className="text-lg font-bold text-slate-900">{s.label}</p>
+                  <p className="text-xs text-slate-400">{s.sub}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

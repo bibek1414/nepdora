@@ -7,7 +7,7 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: `Website Templates — Customizable HTML Templates | ${SITE_NAME}`,
+  title: `Website Templates - Customizable HTML Templates | ${SITE_NAME}`,
   description: `Explore our curated collection of professional HTML website templates. Fully customizable, responsive, and designed to help you launch your website in minutes with ${SITE_NAME}.`,
   path: "/website-templates",
   keywords: [
@@ -28,8 +28,7 @@ export default function WebsiteTemplatesPage() {
     "@context": "https://schema.org/",
     "@type": "ItemList",
     name: `${SITE_NAME} Website Templates`,
-    description:
-      `A collection of high-quality, customizable website templates for every industry powered by ${SITE_NAME}.`,
+    description: `A collection of high-quality, customizable website templates for every industry powered by ${SITE_NAME}.`,
     numberOfItems: 50,
     itemListElement: [
       {

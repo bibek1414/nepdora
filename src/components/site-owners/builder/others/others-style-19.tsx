@@ -48,7 +48,7 @@ export const OthersTemplate19: React.FC<OthersTemplate19Props> = ({
         />
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-12 lg:items-start">
-          {/* ── Left Column — desktop only ── */}
+          {/* ── Left Column - desktop only ── */}
           <div className="hidden lg:col-span-3 lg:mt-36 lg:flex lg:flex-col lg:gap-4">
             <motion.div
               initial={{ opacity: 0, x: -16 }}
@@ -151,7 +151,7 @@ export const OthersTemplate19: React.FC<OthersTemplate19Props> = ({
             </motion.div>
           </div>
 
-          {/* ── Center Column — tall portrait ── */}
+          {/* ── Center Column - tall portrait ── */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -174,7 +174,7 @@ export const OthersTemplate19: React.FC<OthersTemplate19Props> = ({
 
           {/* ── Right Column ── */}
           <div className="flex flex-col gap-6 md:col-span-1 lg:col-span-4">
-            {/* Badge + green card — mobile/tablet only (left col hidden on those) */}
+            {/* Badge + green card - mobile/tablet only (left col hidden on those) */}
             <div className="flex flex-col gap-4 lg:hidden">
               <motion.div
                 initial={{ opacity: 0, y: 12 }}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  ArrowRight,
+  ChevronRight,
   Phone,
   Send,
   MapPin,

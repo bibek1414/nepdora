@@ -1,4 +1,3 @@
-import React from "react";
 import { Check, X } from "lucide-react";
 
 interface ComparisonProps {
@@ -9,51 +8,52 @@ export const ComparisonSection: React.FC<ComparisonProps> = ({ data }) => {
   if (!data) return null;
 
   return (
-    <section className="bg-slate-900 py-32 text-white overflow-hidden">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mb-20 text-center">
-          <h2 className="mb-6 text-4xl font-extrabold tracking-tight md:text-5xl">
-            Why Choose Nepdora?
+    <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="mb-14">
+          <h2 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Why businesses choose Nepdora
           </h2>
-          <p className="mx-auto max-w-2xl text-xl text-slate-300">
-            A simple, clear comparison of how Nepdora stacks up against hiring a traditional web development agency.
+          <p className="text-base leading-relaxed text-slate-500">
+            See how we compare to hiring a traditional web development agency.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:gap-16">
-          <div className="flex flex-col gap-8 rounded-3xl bg-blue-600/10 p-10 ring-1 ring-blue-500/50">
-            <h3 className="text-3xl font-bold text-blue-400">Nepdora Builder</h3>
-            <ul className="space-y-6">
+        <div className="grid gap-6 sm:grid-cols-2">
+          {/* Nepdora */}
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
+            <p className="mb-5 text-xs font-medium uppercase tracking-wider text-slate-500">
+              Nepdora
+            </p>
+            <ul className="space-y-3.5">
               {data.nepdora.map((item, i) => (
-                <li key={i} className="flex items-center gap-4 text-xl">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/50">
-                    <Check className="h-5 w-5" />
-                  </div>
-                  {item}
+                <li key={i} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-slate-600" strokeWidth={2} />
+                  <span className="text-sm leading-relaxed text-slate-800">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="flex flex-col gap-8 rounded-3xl bg-slate-800/20 p-10 ring-1 ring-slate-700">
-            <h3 className="text-3xl font-bold text-slate-400">Traditional Agency</h3>
-            <ul className="space-y-6">
+          {/* Traditional */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-8">
+            <p className="mb-5 text-xs font-medium uppercase tracking-wider text-slate-400">
+              Traditional Agency
+            </p>
+            <ul className="space-y-3.5">
               {data.traditional.map((item, i) => (
-                <li key={i} className="flex items-center gap-4 text-xl text-slate-400">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-700 text-slate-500">
-                    <X className="h-5 w-5" />
-                  </div>
-                  {item}
+                <li key={i} className="flex items-start gap-3">
+                  <X className="mt-0.5 h-4 w-4 shrink-0 text-slate-300" strokeWidth={2} />
+                  <span className="text-sm leading-relaxed text-slate-400">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        <div className="mt-20 flex flex-col items-center justify-center gap-6 rounded-3xl bg-blue-600/5 p-12 text-center ring-1 ring-blue-500/20">
-          <h4 className="text-2xl font-bold">The Verdict: Nepdora is 10x Faster & More Affordable</h4>
-          <p className="text-lg text-slate-400">Join thousands of local businesses that trust Nepdora for their digital presence.</p>
-        </div>
+        <p className="mt-6 text-sm text-slate-400">
+          Nepdora is 10× faster and significantly more affordable than a traditional agency.
+        </p>
       </div>
     </section>
   );

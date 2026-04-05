@@ -19,7 +19,7 @@ const pageUrl = absoluteUrl("/alternative/blanxer-nepal");
 const pageTitle =
   "Blanxer vs Nepdora (2026): Which Website Builder Wins for Nepal?";
 const pageDescription =
-  "Comparing Blanxer and Nepdora for your Nepal business? See a full feature, pricing, and support comparison — eSewa, Khalti, logistics, POS, and AI builder included.";
+  "Comparing Blanxer and Nepdora for your Nepal business? See a full feature, pricing, and support comparison - eSewa, Khalti, logistics, POS, and AI builder included.";
 
 import { buildMarketingMetadata } from "@/lib/seo";
 
@@ -51,7 +51,7 @@ export default function BlanxerAlternativePage() {
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     description:
-      "Nepdora is a Nepal-focused website builder with built-in eSewa/Khalti payments, AI builder, POS system, logistics integration (Pathao, YDM, Dash), and flat NPR 10,000/year pricing — a direct alternative to Blanxer.",
+      "Nepdora is a Nepal-focused website builder with built-in eSewa/Khalti payments, AI builder, POS system, logistics integration (Pathao, YDM, Dash), and flat NPR 10,000/year pricing - a direct alternative to Blanxer.",
     url: absoluteUrl("/"),
     offers: {
       "@type": "Offer",
@@ -107,7 +107,7 @@ export default function BlanxerAlternativePage() {
         name: "What is Blanxer and how is it different from Nepdora?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Blanxer is a Nepal-based commerce OS focused on omnichannel selling — online store, POS, inventory, and logistics from one system. Nepdora is a website builder for Nepali businesses that offers a faster path to launch, flat-rate pricing of NPR 10,000/year, built-in eSewa/Khalti/Fonepay payments, AI site builder, and hands-on local support.",
+          text: "Blanxer is a Nepal-based commerce OS focused on omnichannel selling - online store, POS, inventory, and logistics from one system. Nepdora is a website builder for Nepali businesses that offers a faster path to launch, flat-rate pricing of NPR 10,000/year, built-in eSewa/Khalti/Fonepay payments, AI site builder, and hands-on local support.",
         },
       },
       {
@@ -123,7 +123,7 @@ export default function BlanxerAlternativePage() {
         name: "Does Nepdora support eSewa, Khalti, and Fonepay payments?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. Nepdora has built-in integrations for eSewa, Khalti, and Fonepay — Nepal's major digital payment gateways — so you can start accepting payments without a separate technical setup.",
+          text: "Yes. Nepdora has built-in integrations for eSewa, Khalti, and Fonepay - Nepal's major digital payment gateways - so you can start accepting payments without a separate technical setup.",
         },
       },
       {
@@ -139,7 +139,7 @@ export default function BlanxerAlternativePage() {
         name: "How much does Nepdora cost compared to Blanxer?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Nepdora charges a flat NPR 10,000 per year — hosting, SSL, daily backups, and maintenance all included with no hidden fees. This compares favorably to platforms that charge separately for domain, hosting, and maintenance.",
+          text: "Nepdora charges a flat NPR 10,000 per year - hosting, SSL, daily backups, and maintenance all included with no hidden fees. This compares favorably to platforms that charge separately for domain, hosting, and maintenance.",
         },
       },
       {
@@ -147,7 +147,7 @@ export default function BlanxerAlternativePage() {
         name: "Is migration support from Blanxer to Nepdora available?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. Nepdora's team can help move content, restructure pages, reconnect payment gateways, and simplify the transition for businesses changing platforms — at no extra cost.",
+          text: "Yes. Nepdora's team can help move content, restructure pages, reconnect payment gateways, and simplify the transition for businesses changing platforms - at no extra cost.",
         },
       },
       {
@@ -247,14 +247,14 @@ export default function BlanxerAlternativePage() {
 
   const reasons = [
     {
-      title: "Faster launch — live in 5 minutes",
+      title: "Faster launch - live in 5 minutes",
       description:
         "Nepdora's AI builder creates a fully customized, SEO-ready website from a single sentence about your business. No design skills or developer needed.",
     },
     {
       title: "Local payments out of the box",
       description:
-        "eSewa, Khalti, and Fonepay are built in. No separate developer setup, no API keys to manage — just connect your merchant account and start accepting payments.",
+        "eSewa, Khalti, and Fonepay are built in. No separate developer setup, no API keys to manage - just connect your merchant account and start accepting payments.",
     },
     {
       title: "Flat, predictable pricing",
@@ -264,7 +264,7 @@ export default function BlanxerAlternativePage() {
     {
       title: "Direct hands-on support",
       description:
-        "Nepdora's team handles setup, payment integration, and onboarding with you — not via a help-desk ticket queue. One-on-one support from Kathmandu.",
+        "Nepdora's team handles setup, payment integration, and onboarding with you - not via a help-desk ticket queue. One-on-one support from Kathmandu.",
     },
   ];
 
@@ -280,7 +280,7 @@ export default function BlanxerAlternativePage() {
   const testimonials = [
     {
       quote:
-        "We switched from another platform and Nepdora had our site live the same day. The eSewa integration was already set up — we just connected our merchant account.",
+        "We switched from another platform and Nepdora had our site live the same day. The eSewa integration was already set up - we just connected our merchant account.",
       name: "Infin Consultants",
       role: "Accounting & Business Setup, Kathmandu",
       href: "https://infinconsultants.com/",
@@ -299,7 +299,7 @@ export default function BlanxerAlternativePage() {
     "You need to go from idea to live site in under a day.",
     "You need eSewa, Khalti, or Fonepay without a custom integration.",
     "You want a flat annual price with no hidden hosting or maintenance fees.",
-    "You run a service, restaurant, clinic, or single-location store — not a large multi-location retail chain.",
+    "You run a service, restaurant, clinic, or single-location store - not a large multi-location retail chain.",
     "You want a platform your team can manage without a developer on retainer.",
   ];
 

@@ -21,16 +21,16 @@ export const AlternativeTable: React.FC<AlternativeTableProps> = ({
         <h2 className="mb-3 text-3xl font-bold text-slate-900 md:text-4xl">
           {platformName} vs Nepdora: Full feature comparison
         </h2>
-        <p className="mb-10 text-lg text-slate-600 max-w-2xl">
+        <p className="mb-10 max-w-2xl text-lg text-slate-600">
           A side-by-side look at the features that matter most for Nepal-based
-          businesses — payments, pricing, launch speed, and support.
+          businesses - payments, pricing, launch speed, and support.
         </p>
         <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-900 text-white">
                 <th className="px-6 py-4 text-left font-semibold">Feature</th>
-                <th className="px-6 py-4 text-left font-semibold text-primary">
+                <th className="text-primary px-6 py-4 text-left font-semibold">
                   Nepdora
                 </th>
                 <th className="px-6 py-4 text-left font-semibold text-slate-300">
@@ -42,9 +42,7 @@ export const AlternativeTable: React.FC<AlternativeTableProps> = ({
               {rows.map((row, i) => (
                 <tr
                   key={row.feature}
-                  className={
-                    i % 2 === 0 ? "bg-white" : "bg-slate-50"
-                  }
+                  className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}
                 >
                   <td className="px-6 py-4 font-medium text-slate-800">
                     {row.feature}

@@ -1,32 +1,36 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+
 interface CityCTAProps {
   cityName: string;
   category: string;
 }
 
 export const CityCTA: React.FC<CityCTAProps> = ({ cityName, category }) => {
-  const industryName = category.replace("-", " ");
+  const industryLabel = category.replace(/-/g, " ");
+
   return (
-    <section className="bg-white py-20 text-gray-900 md:py-32">
-      <div className="container mx-auto max-w-6xl px-4 text-center sm:px-6">
-        <h3 className="mb-6 text-3xl leading-tight font-bold md:text-5xl lg:text-5xl tracking-tight">
-          Ready to launch your <br />
-          <span className="text-primary">{industryName}</span> business in {cityName}?
-        </h3>
-        <p className="mx-auto mb-10 max-w-2xl text-lg font-light text-gray-600 md:text-xl">
-          Join hundreds of successful businesses in {cityName} who trust Nepdora 
-           to build and grow their digital presence. Start for free today.
+    <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-5xl px-6 text-center">
+        <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          Ready to launch your {industryLabel} business in {cityName}?
+        </h2>
+        <p className="mx-auto mb-8 max-w-lg text-base leading-relaxed text-slate-500">
+          Join hundreds of {cityName} businesses who trust Nepdora to build and
+          grow their presence online. Start free today.
         </p>
 
-        <Link href="/admin/signup">
-          <Button
-            className="h-14 rounded-full px-12 text-lg font-semibold bg-primary hover:bg-primary/90 text-white shadow-lg"
-          >
-            Get Started for Free
-          </Button>
+        <Link
+          href="/admin/signup"
+          className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-7 py-3.5 text-base font-medium text-white transition hover:bg-slate-800"
+        >
+          Get Started for Free
+          <ChevronRight className="h-4 w-4" />
         </Link>
+
+        <p className="mt-3 text-sm text-slate-400">
+          No credit card required · Launch in minutes
+        </p>
       </div>
     </section>
   );

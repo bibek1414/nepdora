@@ -1192,7 +1192,7 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
                               : "Click to upload"}
                           </p>
                           <p className="mt-1 text-xs text-[#A09080]">
-                            Max {maxImageSize}MB —{" "}
+                            Max {maxImageSize}MB -{" "}
                             {acceptedImageTypes
                               .map(type => type.split("/")[1].toUpperCase())
                               .join(", ")}

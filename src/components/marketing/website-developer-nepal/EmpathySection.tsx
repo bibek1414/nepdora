@@ -35,7 +35,7 @@ export default function EmpathySection() {
           <div className="rounded-3xl border border-slate-200 bg-white p-8 sm:p-12">
             <div className="relative">
               <p className="text-2xl leading-relaxed text-slate-900">
-                &quot;That&apos;s why we built Nepdora — so any Nepali business
+                &quot;That&apos;s why we built Nepdora - so any Nepali business
                 owner can have a professional website without depending on
                 anyone.&quot;
               </p>

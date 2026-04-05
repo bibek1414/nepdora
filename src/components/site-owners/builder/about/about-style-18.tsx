@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ChevronRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { AboutUs18Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
@@ -22,7 +22,7 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
   isEditable = false,
   onUpdate,
 }) => {
-  const { data: themeResponse } = useThemeQuery(); 
+  const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
@@ -62,15 +62,15 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
           {/* Top: badge + heading + description + CTA */}
           <div className="space-y-5">
             <div className="flex">
-              <span 
+              <span
                 className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium"
                 style={{
                   backgroundColor: `${theme.colors.secondary}15`, // 15% opacity for subtle background
                   color: theme.colors.secondaryForeground,
                 }}
               >
-                <span 
-                  className="h-2 w-2 rounded-full" 
+                <span
+                  className="h-2 w-2 rounded-full"
                   style={{ backgroundColor: theme.colors.secondary }}
                 />
                 <EditableText
@@ -102,18 +102,18 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
               onChange={(text, href) =>
                 handleMultipleUpdate({ ctaText: text, ctaLink: href })
               }
-              className="flex w-fit items-center gap-2 rounded-full bg-gray-100 px-6 py-3 text-sm font-semibold transition-colors hover:bg-gray-200 text-gray-900"
+              className="flex w-fit items-center gap-2 rounded-full bg-gray-100 px-6 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-200"
             >
               {data.ctaText} <ArrowUpRight size={16} />
             </EditableLink>
           </div>
 
-          {/* Spacer to push list to bottom — matching image's large gap */}
+          {/* Spacer to push list to bottom - matching image's large gap */}
           <div className="mt-20" />
 
           {/* List with floating image */}
           <div className="relative">
-            {/* Floating thumbnail — positioned at the border between hovered and next item */}
+            {/* Floating thumbnail - positioned at the border between hovered and next item */}
             <div
               className="pointer-events-none absolute right-12 z-10 hidden transition-all duration-300 md:block"
               style={{
@@ -133,7 +133,7 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
                     alt={data.items[hoveredIndex]?.title}
                     width={64}
                     height={64}
-                    className="h-16 w-16 rounded-xl object-cover shadow-md border border-white"
+                    className="h-16 w-16 rounded-xl border border-white object-cover shadow-md"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -143,7 +143,7 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
               <div
                 key={item.id}
                 onMouseEnter={() => setHoveredIndex(index)}
-                className="group flex cursor-pointer items-center justify-between border-b border-gray-100 py-5 first:border-t transition-colors"
+                className="group flex cursor-pointer items-center justify-between border-b border-gray-100 py-5 transition-colors first:border-t"
               >
                 <div className="flex items-center gap-4">
                   {/* Mobile Preview / Desktop Editor for item image */}
@@ -151,7 +151,7 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
                     <EditableImage
                       src={item.image}
                       alt={item.title}
-                      onImageChange={(url) =>
+                      onImageChange={url =>
                         handleArrayItemUpdate("items", item.id)({ image: url })
                       }
                       isEditable={isEditable}
@@ -162,7 +162,7 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
                   </div>
                   <EditableText
                     value={item.title}
-                    onChange={(val) =>
+                    onChange={val =>
                       handleArrayItemUpdate("items", item.id)({ title: val })
                     }
                     isEditable={isEditable}
@@ -171,8 +171,8 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
                     }`}
                   />
                 </div>
-                
-                <ArrowRight
+
+                <ChevronRight
                   size={16}
                   className={`transition-colors ${
                     hoveredIndex === index ? "text-gray-900" : "text-gray-300"

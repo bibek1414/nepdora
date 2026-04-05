@@ -188,8 +188,8 @@ export default async function LearnPage({ params }: Props) {
             Accelerate Your Business with Nepdora
           </h2>
           <p className="mx-auto mb-10 max-w-2xl text-xl text-slate-600">
-            Nepdora handles all the technical heavy lifting—from design to
-            payments—so you can spend your time applying the lessons from this
+            Nepdora handles all the technical heavy lifting-from design to
+            payments-so you can spend your time applying the lessons from this
             guide to grow your business.
           </p>
           <Link

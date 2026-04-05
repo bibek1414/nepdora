@@ -114,7 +114,7 @@ export default function PaymentsClient() {
           day: "numeric",
           year: "numeric",
         })
-      : "—";
+      : "-";
 
   const renderTableContent = () => {
     if (isLoading) {

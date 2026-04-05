@@ -172,7 +172,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
         onOrderChange(newOrder.id);
       }
 
-      if (event.key === "ArrowRight") {
+      if (event.key === "ChevronRight") {
         event.preventDefault();
         if (currentIndex >= orders.length - 1) {
           return;
@@ -265,7 +265,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
       <DialogContent
         showCloseButton={false}
-        className="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right fixed top-0 right-0 left-auto h-dvh w-full max-w-[480px] translate-x-0 translate-y-0 gap-0 overflow-hidden rounded-none border-0 border-l border-gray-200 bg-white p-0 shadow-2xl sm:max-w-[480px]"
+        className="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right fixed left-auto right-0 top-0 h-dvh w-full max-w-[480px] translate-x-0 translate-y-0 gap-0 overflow-hidden rounded-none border-0 border-l border-gray-200 bg-white p-0 shadow-2xl sm:max-w-[480px]"
       >
         <DialogTitle className="sr-only">
           Order details for {currentOrder.order_number}
@@ -274,7 +274,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
         {/* Main container with flex column and full height */}
         <div className="flex h-full flex-col overflow-hidden">
           {/* Header - Fixed at top */}
-          <div className="flex flex-shrink-0 items-start justify-between border-b border-gray-100 px-8 pt-8 pb-5">
+          <div className="flex flex-shrink-0 items-start justify-between border-b border-gray-100 px-8 pb-5 pt-8">
             <div>
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-bold tracking-tight text-gray-900">
@@ -327,8 +327,8 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
           {/* Scrollable Content - Takes remaining space */}
           <div className="flex-1 overflow-y-auto">
             <div className="px-8">
-              <div className="relative mt-8 mb-10 px-2">
-                <div className="absolute top-[5px] right-[10%] left-[10%] h-[2px] bg-gray-100">
+              <div className="relative mb-10 mt-8 px-2">
+                <div className="absolute left-[10%] right-[10%] top-[5px] h-[2px] bg-gray-100">
                   <div
                     className="h-full bg-blue-600 transition-all duration-500"
                     style={{ width: `${stepProgress}%` }}
@@ -371,7 +371,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                   <h3 className="mb-1.5 text-[13px] font-semibold text-gray-900">
                     Customer
                   </h3>
-                  <p className="text-[14px] font-medium text-gray-900 capitalize">
+                  <p className="text-[14px] font-medium capitalize text-gray-900">
                     {currentOrder.customer_name || "Walk-in Customer"}
                   </p>
                   <p className="mt-1 text-[13px] text-gray-500">

@@ -1,71 +1,94 @@
 import { Metadata } from "next";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
+import FeaturesHero from "@/components/marketing/features/features-hero";
+import FeatureShowcase from "@/components/marketing/features/feature-showcase";
+import CTA from "@/components/marketing/cta-section/cta-section";
 
-import { buildMarketingMetadata } from "@/lib/seo";
-
-export const metadata = buildMarketingMetadata({
-  title: "Nepdora Features: Website Builder, E-commerce & Social Tools",
+export const metadata: Metadata = buildMarketingMetadata({
+  title:
+    "Nepdora Features: Website Builder, E-commerce & Payment Tools for Nepal",
   description:
-    "See the comprehensive features that power your digital presence: web hosting, online store setup, analytics, and centralized social media management.",
+    "Explore every Nepdora feature — AI website builder, eSewa & Khalti payments, built-in SEO, e-commerce, CRM, SMS, logistics, and real-time analytics. Built for Nepali businesses.",
   path: "/features",
   keywords: [
     "Nepdora features",
+    "website builder Nepal",
+    "eSewa Khalti payment integration",
+    "ecommerce features Nepal",
+    "SEO tools Nepal",
+    "online store Nepal",
     "website builder features",
-    "ecommerce tools",
-    "social media management",
-    "web hosting Nepal",
+    "Nepal business software",
   ],
 });
 
-import { JsonLd } from "@/components/shared/json-ld";
-
 const featuresSchema = {
   "@context": "https://schema.org",
-  "@type": "Service",
-  name: "Nepdora Platform Features",
+  "@type": "SoftwareApplication",
+  name: "Nepdora Website Builder",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  url: absoluteUrl("/features"),
   description:
-    "Comprehensive suite of digital tools including a drag-and-drop website builder, e-commerce solutions, and centralized social media management.",
+    "Nepdora is a complete website building and e-commerce platform for Nepali businesses. Includes AI website builder, eSewa & Khalti payments, built-in SEO tools, real-time analytics, CRM, SMS logistics, and 100+ professional templates.",
   provider: {
     "@type": "Organization",
     name: SITE_NAME,
     url: absoluteUrl(),
   },
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Digital Solutions",
-    itemListElement: [
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Website Builder",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "E-commerce System",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Social Media Management",
-        },
-      },
-    ],
+  featureList: [
+    "AI Website Builder with 100+ templates",
+    "eSewa and Khalti payment gateway integration",
+    "Khalti and Fonepay support",
+    "Stripe and PayPal for international payments",
+    "Mobile-first responsive design",
+    "Built-in SEO with auto meta tags and schema markup",
+    "Real-time analytics dashboard",
+    "E-commerce with inventory management",
+    "POS system for physical stores",
+    "Mini CRM for customer management",
+    "SMS notifications and logistics integration",
+    "Custom domain with free SSL",
+    "Appointment and booking system",
+    "Blog and content management",
+  ],
+  offers: {
+    "@type": "Offer",
+    price: "10000",
+    priceCurrency: "NPR",
+    description: "Annual business plan with all features included",
   },
 };
 
-import FeaturesGrid from "@/components/marketing/features-section/FeaturesGrid";
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Features",
+      item: absoluteUrl("/features"),
+    },
+  ],
+};
 
 export default function FeaturesPage() {
   return (
     <>
-      <JsonLd id="features-schema" data={featuresSchema} />
-      <FeaturesGrid />
+      <JsonLd id="features-app-schema" data={featuresSchema} />
+      <JsonLd id="features-breadcrumb" data={breadcrumbSchema} />
+
+      <FeaturesHero />
+      <FeatureShowcase />
+      <CTA />
     </>
   );
 }

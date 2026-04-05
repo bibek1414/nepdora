@@ -404,14 +404,21 @@ export async function proxy(request: NextRequest) {
     if (allowedPaths.some(p => pathname.startsWith(p))) {
       // Tenant isolation: prevent a logged-in user for one tenant
       // from loading admin/builder UI on a different tenant host.
-      if (pathname.startsWith("/admin") || pathname.startsWith("/builder") || pathname.startsWith("/preview")) {
+      if (
+        pathname.startsWith("/admin") ||
+        pathname.startsWith("/builder") ||
+        pathname.startsWith("/preview")
+      ) {
         const authSubdomain = getSubdomainFromAuth(request);
         const hasAuthCookies =
           !!request.cookies.get("authToken")?.value ||
           !!request.cookies.get("authUser")?.value;
 
         // 1. Check builder-specific path mismatch (e.g. sazal.host/builder/bibek/...)
-        if (pathname.startsWith("/builder") || pathname.startsWith("/preview")) {
+        if (
+          pathname.startsWith("/builder") ||
+          pathname.startsWith("/preview")
+        ) {
           const pathSegments = pathname.split("/");
           const pathTenant = pathSegments[2]; // /builder/[siteUser]/...
           if (pathTenant && pathTenant !== subdomain) {
@@ -487,13 +494,13 @@ export async function proxy(request: NextRequest) {
     }
 
     if (cacheEntry.subdomain) {
-      // Rewrite to /publish/[subdomain]/[...path] — content served from Next.js
+      // Rewrite to /publish/[subdomain]/[...path] - content served from Next.js
       const newPath = `/publish/${cacheEntry.subdomain}${pathname}`;
 
       return NextResponse.rewrite(new URL(newPath, request.url));
     }
 
-    // No tenant found for this custom domain — let Next.js handle it (404 etc.)
+    // No tenant found for this custom domain - let Next.js handle it (404 etc.)
     console.warn(`[Custom Domain] No tenant found for "${hostname}"`);
     return NextResponse.next();
   }
@@ -504,7 +511,9 @@ export async function proxy(request: NextRequest) {
       const userSubdomain = getSubdomainFromAuth(request);
       if (
         userSubdomain &&
-        (pathname.startsWith("/admin") || pathname.startsWith("/builder") || pathname.startsWith("/preview"))
+        (pathname.startsWith("/admin") ||
+          pathname.startsWith("/builder") ||
+          pathname.startsWith("/preview"))
       ) {
         const host = request.headers.get("host") || "";
         const protocol = request.url.includes("localhost") ? "http" : "https";

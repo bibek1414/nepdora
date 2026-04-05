@@ -119,7 +119,7 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
                       className="text-primary font-mono text-xs"
                       style={{ color: theme.colors.primary }}
                     >
-                      {exp.data.startYear} — {exp.data.endYear || "Present"}
+                      {exp.data.startYear} - {exp.data.endYear || "Present"}
                     </span>
                     <h3
                       className="mt-1 text-lg font-semibold"

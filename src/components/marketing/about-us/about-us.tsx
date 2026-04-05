@@ -72,14 +72,14 @@ export default function AboutUs() {
                   <div className="space-y-6 text-lg text-white/90">
                     <p>
                       Nepdora is on a mission to make online presence accessible
-                      to everyone — from creators and entrepreneurs to growing
+                      to everyone - from creators and entrepreneurs to growing
                       businesses. With reliable hosting, an AI-powered Website
                       Builder, and powerful tools, we help millions bring their
                       ideas to life.
                     </p>
                     <p>
                       Trusted globally, we continue to innovate and expand,
-                      ensuring that anyone can succeed online — faster, easier,
+                      ensuring that anyone can succeed online - faster, easier,
                       and with full creative freedom.
                     </p>
                   </div>

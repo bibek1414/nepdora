@@ -1,43 +1,43 @@
 ---
 name: pro-frontend-design-skill
-description: 'Design and build premium, production-grade frontend interfaces in the style of Stripe, Apple, Linear, or Vercel — clean, user-focused, generous whitespace, restrained color use. Use this skill whenever the user asks to build a website, SaaS UI, landing page, dashboard, component, or any web interface where design quality matters. ALWAYS use this skill even if the user just says "build me a landing page", "make a dashboard", "create a SaaS UI", or any similar request. Before designing, ask the user a short set of clarifying questions defined in this skill.'
+description: 'Design and build premium, production-grade frontend interfaces in the style of Stripe, Apple, Linear, or Vercel - clean, user-focused, generous whitespace, restrained color use. Use this skill whenever the user asks to build a website, SaaS UI, landing page, dashboard, component, or any web interface where design quality matters. ALWAYS use this skill even if the user just says "build me a landing page", "make a dashboard", "create a SaaS UI", or any similar request. Before designing, ask the user a short set of clarifying questions defined in this skill.'
 ---
 
 # Pro Frontend Design Skill
 
-Build premium web interfaces that feel like Stripe, Apple, Linear, or Vercel — clean, intentional, user-focused, and production-grade.
+Build premium web interfaces that feel like Stripe, Apple, Linear, or Vercel - clean, intentional, user-focused, and production-grade.
 
 ---
 
 ## Step 1: Ask Clarifying Questions First
 
-**Before writing any code**, ask the user these questions. Keep it friendly and conversational — you can group them in one message. Do not skip this step.
+**Before writing any code**, ask the user these questions. Keep it friendly and conversational - you can group them in one message. Do not skip this step.
 
 ```
-1. **Brand / Accent Color** — What's your primary brand color? (hex, name, or vibe like "deep blue" or "forest green") If unsure, I'll suggest one.
+1. **Brand / Accent Color** - What's your primary brand color? (hex, name, or vibe like "deep blue" or "forest green") If unsure, I'll suggest one.
 
-2. **Neutral Tone** — Should the UI lean warm (creamy whites, warm greys), cool (pure white, cool greys), or pure neutral?
+2. **Neutral Tone** - Should the UI lean warm (creamy whites, warm greys), cool (pure white, cool greys), or pure neutral?
 
-3. **Corner Roundness** — Pick a feel:
-   - Sharp (0–2px) — very boxy, almost no rounding
-   - Subtle (4–6px) — slightly softened corners (Stripe-style)
-   - Moderate (8–12px) — rounded but structured (Linear-style)
-   - Soft (16px+) — friendly and rounded
+3. **Corner Roundness** - Pick a feel:
+   - Sharp (0–2px) - very boxy, almost no rounding
+   - Subtle (4–6px) - slightly softened corners (Stripe-style)
+   - Moderate (8–12px) - rounded but structured (Linear-style)
+   - Soft (16px+) - friendly and rounded
 
-4. **Borders** — Should borders be used to define sections/cards, or should separation come from spacing and shadow instead? Or a mix?
+4. **Borders** - Should borders be used to define sections/cards, or should separation come from spacing and shadow instead? Or a mix?
 
-5. **Dark or Light mode** — Or both?
+5. **Dark or Light mode** - Or both?
 
-6. **Any reference sites or vibes** — Stripe, Apple, Notion, Vercel, Linear, etc.?
+6. **Any reference sites or vibes** - Stripe, Apple, Notion, Vercel, Linear, etc.?
 
-7. **Typography feel** — Clean sans-serif (default), editorial/serif accents, or mono/technical?
+7. **Typography feel** - Clean sans-serif (default), editorial/serif accents, or mono/technical?
 ```
 
 Wait for the user's answers before proceeding.
 
 ---
 
-## Step 2: Design System Setup — shadcn/ui Color Token System
+## Step 2: Design System Setup - shadcn/ui Color Token System
 
 Based on answers, establish a design system using a **shadcn-style semantic color token system**. Colors are defined as HSL values in CSS variables, then surfaced as **Tailwind-style utility classes** (`bg-primary`, `text-primary`, `text-muted-foreground`, etc.) so they read naturally in HTML and JSX.
 
@@ -53,7 +53,7 @@ Every semantic token follows a **background + foreground pair** pattern:
 | `--foreground`             | `text-foreground`                       | Default body text                               |
 | `--card`                   | `bg-card`                               | Card / panel background                         |
 | `--card-foreground`        | `text-card-foreground`                  | Text inside cards                               |
-| `--primary`                | `bg-primary`                            | Brand color — buttons, active states, key links |
+| `--primary`                | `bg-primary`                            | Brand color - buttons, active states, key links |
 | `--primary-foreground`     | `text-primary-foreground`               | Text/icons ON a primary background              |
 | `--secondary`              | `bg-secondary`                          | Secondary buttons, chips, tags                  |
 | `--secondary-foreground`   | `text-secondary-foreground`             | Text on secondary bg                            |
@@ -63,9 +63,9 @@ Every semantic token follows a **background + foreground pair** pattern:
 | `--accent-foreground`      | `text-accent-foreground`                | Text on accent bg                               |
 | `--destructive`            | `bg-destructive`                        | Error, delete, danger                           |
 | `--destructive-foreground` | `text-destructive-foreground`           | Text on destructive bg                          |
-| `--border`                 | `border-border`                         | All borders — cards, inputs, dividers           |
+| `--border`                 | `border-border`                         | All borders - cards, inputs, dividers           |
 | `--input`                  | `border-input`                          | Input field borders specifically                |
-| `--ring`                   | `ring-ring`                             | Focus ring — always matches primary             |
+| `--ring`                   | `ring-ring`                             | Focus ring - always matches primary             |
 | `--radius`                 | `rounded` / `rounded-md` / `rounded-lg` | Base radius unit                                |
 
 > **Rule:** Always pair tokens correctly. `bg-primary` → use `text-primary-foreground` on top. Never mix unpaired tokens.
@@ -134,11 +134,11 @@ Every semantic token follows a **background + foreground pair** pattern:
 
 ### CSS Variable Definitions
 
-Define these in `:root` — the Tailwind classes above map directly to them:
+Define these in `:root` - the Tailwind classes above map directly to them:
 
 ```css
 :root {
-  /* ── Color Tokens (HSL — no hsl() wrapper here) ── */
+  /* ── Color Tokens (HSL - no hsl() wrapper here) ── */
   --background: 0 0% 100%;
   --foreground: 222 84% 5%;
 
@@ -279,7 +279,7 @@ Define these in `:root` — the Tailwind classes above map directly to them:
 
 ### Dark Mode
 
-Add `.dark` overrides — every component inherits automatically because all classes read from the same variables:
+Add `.dark` overrides - every component inherits automatically because all classes read from the same variables:
 
 ```css
 .dark {
@@ -309,7 +309,7 @@ Toggle with: `document.documentElement.classList.toggle('dark')`
 
 ### Opacity Variants
 
-For subtle tints, use `/opacity` — no new tokens needed:
+For subtle tints, use `/opacity` - no new tokens needed:
 
 ```html
 <div class="bg-primary/10 text-primary">← 10% primary tint badge</div>
@@ -343,9 +343,9 @@ For subtle tints, use `/opacity` — no new tokens needed:
 
 ### Visual Hierarchy Over Decoration
 
-- **White space and typography are your strongest tools** — not graphics, icons, or fills.
-- Use **bold, high-contrast labels** (near-black on white) instead of muted grey text. The user's eye must immediately find where data starts — no hunting through visual noise.
-- Apply the concept of **Information Scent**: every element should signal its purpose through weight, size, and position — not color or decoration.
+- **White space and typography are your strongest tools** - not graphics, icons, or fills.
+- Use **bold, high-contrast labels** (near-black on white) instead of muted grey text. The user's eye must immediately find where data starts - no hunting through visual noise.
+- Apply the concept of **Information Scent**: every element should signal its purpose through weight, size, and position - not color or decoration.
 - Ask yourself: "Could I remove this decorative element and lose nothing?" If yes, remove it.
 - Avoid background fills on informational components (timelines, lists, data rows) unless the fill carries semantic meaning (e.g., active state, status).
 
@@ -353,39 +353,39 @@ For subtle tints, use `/opacity` — no new tokens needed:
 
 - **Be generous with whitespace.** More space than you think. Sections should breathe.
 - Use a **boxy, grid-aligned layout**. Cards, panels, and sections should feel solid and structured.
-- Prefer **large padding inside containers** — minimum 24px, often 32–48px for sections.
-- Use **consistent horizontal rhythm** — align everything to a grid, never arbitrary positioning.
+- Prefer **large padding inside containers** - minimum 24px, often 32–48px for sections.
+- Use **consistent horizontal rhythm** - align everything to a grid, never arbitrary positioning.
 - Section vertical gaps should be large: `80px–120px` between major sections.
 - Max content width: typically `1100–1280px`, centered.
 
 ### Typography
 
-- **NEVER use uppercase text** for anything — headings, labels, buttons, nav items. None.
+- **NEVER use uppercase text** for anything - headings, labels, buttons, nav items. None.
 - **NEVER use wide letter-spacing** (`letter-spacing > 0.02em`). Keep tracking natural.
 - Font weights: use `400` (body), `500` (UI labels), `600` (emphasis), `700` (headings). Avoid `800+` unless for a single hero number.
 - Line heights: `1.2–1.3` for headings, `1.6–1.7` for body text.
-- Keep font sizes purposeful — don't use more than 5–6 distinct sizes.
+- Keep font sizes purposeful - don't use more than 5–6 distinct sizes.
 - Body text should be comfortable: `15–16px` minimum.
 
-### Color Usage — shadcn Utility Classes
+### Color Usage - shadcn Utility Classes
 
-- **Restrained color** — color is used to highlight, not decorate.
+- **Restrained color** - color is used to highlight, not decorate.
 - Use `bg-primary text-primary-foreground` for: primary CTA buttons, active states, key highlights.
 - Use `text-primary` (no background) for: links, icon accents, active nav items.
-- Use `bg-secondary text-secondary-foreground` for: secondary buttons, chips, subtle tags — never decoration.
+- Use `bg-secondary text-secondary-foreground` for: secondary buttons, chips, subtle tags - never decoration.
 - Use `text-muted-foreground` for: helper text, timestamps, placeholders, disabled labels.
 - Use `bg-muted` for: subtle surface fills, code blocks, disabled inputs.
 - Use `bg-accent text-accent-foreground` for: hover row tints, subtle highlight fills.
 - Use `bg-destructive text-destructive-foreground` only for: delete, error, danger actions.
-- **No rainbow UI** — don't assign different bg tokens to every card as decoration.
+- **No rainbow UI** - don't assign different bg tokens to every card as decoration.
 - Page bg: `bg-background text-foreground`. Panels/cards: `bg-card text-card-foreground`.
 - For a subtle tint without a new token: `bg-primary/10 text-primary` (opacity variant).
-- **Never hardcode hex/rgb** — always use a utility class backed by a CSS variable.
+- **Never hardcode hex/rgb** - always use a utility class backed by a CSS variable.
 
 ### Borders & Dividers
 
 - Based on user preference (from Step 1):
-  - **Border-based**: use `border border-border` on cards and sections. Keep subtle — one pixel only.
+  - **Border-based**: use `border border-border` on cards and sections. Keep subtle - one pixel only.
   - **Shadow-based**: use `shadow-sm` / `shadow-md` to define elevation, omit borders.
   - **Mixed**: `border border-border` on flat surfaces, shadow on interactive/floating elements.
 - For inputs specifically: `border border-input`.
@@ -397,7 +397,7 @@ For subtle tints, use `/opacity` — no new tokens needed:
 **Timelines & Activity Feeds (Minimalist Brutalism):**
 
 - Prefer **plain text with dot + vertical line** over boxed timeline cards.
-- No background fills on timeline rows — let the line and dot carry the structure.
+- No background fills on timeline rows - let the line and dot carry the structure.
 - This creates a "Global Thread" feel: a continuous story, not disconnected boxes.
 - The timeline feels like narrative, not a series of tasks.
 - Only add a card/box treatment if the item requires heavy interaction (expand, edit, link).
@@ -405,7 +405,7 @@ For subtle tints, use `/opacity` — no new tokens needed:
 **Repeatable Sections (Structural Scalability):**
 
 - Stack repeatable items (work history, tasks, entries) as **individual cards**, not collapsed into one block.
-- Design for **worst-case data volume** (10 jobs, 20 tasks) — not best-case (1–2 items).
+- Design for **worst-case data volume** (10 jobs, 20 tasks) - not best-case (1–2 items).
 - Each card should be independently scannable: label, date, detail visible without expanding.
 - This is the hallmark of senior product design: **easy scanning of long-form data**.
 
@@ -436,13 +436,13 @@ For subtle tints, use `/opacity` — no new tokens needed:
 
 - Input: `border border-input bg-background text-foreground rounded-md px-3 py-2`
 - Focus: `focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2`
-- Label: `text-foreground text-sm font-medium` — above the input, never uppercase.
-- Placeholder: `placeholder:text-muted-foreground` — never a substitute for labels.
+- Label: `text-foreground text-sm font-medium` - above the input, never uppercase.
+- Placeholder: `placeholder:text-muted-foreground` - never a substitute for labels.
 - Error state: `border-destructive text-destructive` on the input + helper text.
 
 **Navigation:**
 
-- Nav bar: `bg-background border-b border-border` — flat, no gradients.
+- Nav bar: `bg-background border-b border-border` - flat, no gradients.
 - Nav item: `text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2`
 - Active nav item: `text-primary font-medium` or add a subtle underline indicator.
 - Mobile: hamburger or drawer pattern, no overflow.
@@ -455,7 +455,7 @@ For subtle tints, use `/opacity` — no new tokens needed:
 
 **Icons:**
 
-- Use line icons consistently — Lucide, Phosphor, or Heroicons.
+- Use line icons consistently - Lucide, Phosphor, or Heroicons.
 - Size to text: `16px` inline, `20px` UI, `24px` feature icons.
 - Never use emoji as UI icons.
 
@@ -477,31 +477,31 @@ Before finalizing, verify:
 
 - [ ] No uppercase text anywhere
 - [ ] No wide letter-spacing
-- [ ] Whitespace is generous — sections breathe
-- [ ] Color is restrained — accent used purposefully, not decoratively
-- [ ] All text is readable — minimum 15px body, sufficient contrast
-- [ ] Primary data labels are high-contrast (not muted grey) — Information Scent is clear
+- [ ] Whitespace is generous - sections breathe
+- [ ] Color is restrained - accent used purposefully, not decoratively
+- [ ] All text is readable - minimum 15px body, sufficient contrast
+- [ ] Primary data labels are high-contrast (not muted grey) - Information Scent is clear
 - [ ] Timeline / activity components use dot+line, not filled background boxes
-- [ ] Repeatable data sections (work history, tasks) are individual cards — designed for scale
+- [ ] Repeatable data sections (work history, tasks) are individual cards - designed for scale
 - [ ] Todo/task items use checkboxes, not event cards
 - [ ] Border-radius is consistent via CSS variables
 - [ ] Borders follow user preference
-- [ ] Typography scale is purposeful — no arbitrary sizes
-- [ ] Mobile is considered — layout responds correctly
+- [ ] Typography scale is purposeful - no arbitrary sizes
+- [ ] Mobile is considered - layout responds correctly
 - [ ] Interactive states exist (hover, focus, active)
-- [ ] No grey soup — neutrals are limited to 4–5 intentional stops
+- [ ] No grey soup - neutrals are limited to 4–5 intentional stops
 - [ ] Padding inside components is generous
 - [ ] Hover States: All buttons, links, and table rows have subtle feedback.
-- [ ] CSS variables defined in `:root` — no hardcoded hex/rgb values anywhere
+- [ ] CSS variables defined in `:root` - no hardcoded hex/rgb values anywhere
 - [ ] All colors applied via utility classes (`bg-primary`, `text-muted-foreground`, `border-border`, etc.)
-- [ ] Every surface uses the correct bg+foreground pair — `bg-primary` always paired with `text-primary-foreground`
+- [ ] Every surface uses the correct bg+foreground pair - `bg-primary` always paired with `text-primary-foreground`
 - [ ] Focus states use `focus:ring-2 focus:ring-ring` consistently on all interactive elements
 - [ ] Dark mode: if requested, `.dark` class token overrides defined and all utility classes inherit automatically
 - [ ] Opacity variants used for subtle tints instead of inventing new tokens (`bg-primary/10`, `border-border/50`)
 
 ---
 
-## Anti-Patterns — Never Do These
+## Anti-Patterns - Never Do These
 
 - ❌ `text-transform: uppercase` on any element
 - ❌ `letter-spacing: 0.1em` or wider tracking
@@ -517,15 +517,15 @@ Before finalizing, verify:
 - ❌ More than one "hero" CTA button competing for attention
 - ❌ Emoji used as navigation icons or feature bullets
 - ❌ Background fills on timeline rows used purely for decoration (no semantic value)
-- ❌ Collapsing repeatable data (job history, tasks) into a single block — design for scale
-- ❌ Using event cards for simple todo/task items — use checkboxes instead
-- ❌ Muted grey for primary data labels — use high-contrast text so the eye lands immediately
+- ❌ Collapsing repeatable data (job history, tasks) into a single block - design for scale
+- ❌ Using event cards for simple todo/task items - use checkboxes instead
+- ❌ Muted grey for primary data labels - use high-contrast text so the eye lands immediately
 - ❌ Boxed timeline items when a dot+line treatment would create a cleaner narrative flow
-- ❌ Hardcoded hex/rgb colors — always use a utility class backed by a CSS variable
-- ❌ Inventing new color tokens — use opacity variants instead (`bg-primary/10`, `bg-destructive/20`)
-- ❌ Mismatched token pairs — `bg-primary` must always be paired with `text-primary-foreground`, not `text-foreground`
-- ❌ Skipping focus rings — every interactive element needs `focus:ring-2 focus:ring-ring`
-- ❌ Writing `color: hsl(var(--primary))` inline — use `text-primary` class instead; keeps markup consistent
+- ❌ Hardcoded hex/rgb colors - always use a utility class backed by a CSS variable
+- ❌ Inventing new color tokens - use opacity variants instead (`bg-primary/10`, `bg-destructive/20`)
+- ❌ Mismatched token pairs - `bg-primary` must always be paired with `text-primary-foreground`, not `text-foreground`
+- ❌ Skipping focus rings - every interactive element needs `focus:ring-2 focus:ring-ring`
+- ❌ Writing `color: hsl(var(--primary))` inline - use `text-primary` class instead; keeps markup consistent
 
 ---
 

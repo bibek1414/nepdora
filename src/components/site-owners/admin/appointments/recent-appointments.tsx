@@ -45,7 +45,7 @@ export default function RecentAppointments() {
           day: "2-digit",
           year: "numeric",
         })
-      : "—";
+      : "-";
 
   return (
     <>

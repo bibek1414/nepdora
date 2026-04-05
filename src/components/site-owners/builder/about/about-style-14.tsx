@@ -47,7 +47,7 @@ export const AboutUsTemplate14: React.FC<AboutUsTemplate14Props> = ({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* ── Top Section ── */}
 
-        {/* Row 1: "Who We Are?" left — Heading right */}
+        {/* Row 1: "Who We Are?" left - Heading right */}
         <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="md:col-span-5">
             <motion.div
@@ -89,7 +89,7 @@ export const AboutUsTemplate14: React.FC<AboutUsTemplate14Props> = ({
           </div>
         </div>
 
-        {/* Row 2: Images left — Body text right */}
+        {/* Row 2: Images left - Body text right */}
         <div className="mb-16 grid grid-cols-1 gap-10 md:mb-28 md:grid-cols-12">
           {/* Left: stacked overlapping images */}
           <div className="relative h-[300px] md:col-span-5 md:h-[340px]">
@@ -119,7 +119,7 @@ export const AboutUsTemplate14: React.FC<AboutUsTemplate14Props> = ({
               />
             </motion.div>
 
-            {/* Overlapping smaller image — bottom-right */}
+            {/* Overlapping smaller image - bottom-right */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}

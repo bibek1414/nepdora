@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeroFadeIn from "@/components/marketing/hero-section/hero-fade-in";
 import Link from "next/link";
@@ -19,7 +19,7 @@ const Hero: React.FC = () => {
               <span className="mt-4 block font-medium text-slate-900">
                 The average website developer in Nepal takes 4–12 weeks and
                 charges Rs. 30,000 to Rs. 2,00,000+. Nepdora gets you online in
-                30 minutes — for a fraction of the cost.
+                30 minutes - for a fraction of the cost.
               </span>
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">

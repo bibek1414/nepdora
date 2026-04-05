@@ -1,4 +1,4 @@
-import { X, Check, Calculator, ArrowRight } from "lucide-react";
+import { Check, Calculator, ChevronRight } from "lucide-react";
 import { CountUpAnimation, FadeInAnimation } from "./comparison-animations";
 import Link from "next/link";
 
@@ -66,10 +66,10 @@ const Comparison: React.FC<ComparisonProps> = ({
               <div className="mt-8">
                 <Link
                   href="/website-developer-nepal"
-                  className="group hover:text-primary inline-flex items-center gap-2 text-sm font-semibold text-slate-900 transition-colors"
+                  className="group hover:text-primary inline-flex items-center gap-2 text-sm text-slate-900 transition-colors"
                 >
                   Detailed Comparison: Nepdora vs Hiring a Developer
-                  <ArrowRight
+                  <ChevronRight
                     size={16}
                     className="transition-transform group-hover:translate-x-1"
                   />

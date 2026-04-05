@@ -19,8 +19,8 @@ export const AlternativeFitCheck: React.FC<AlternativeFitCheckProps> = ({
             Nepdora is likely the better fit if…
           </h2>
           <p className="mb-8 max-w-2xl text-lg text-slate-300">
-            If you are choosing based on business execution — not just
-            feature checklists — these are the clearest signals.
+            If you are choosing based on business execution - not just feature
+            checklists - these are the clearest signals.
           </p>
           <div className="grid gap-4">
             {fitChecks.map(item => (
@@ -44,8 +44,8 @@ export const AlternativeFitCheck: React.FC<AlternativeFitCheckProps> = ({
           </h3>
           <p className="mb-6 text-slate-300">
             If your current setup is slowing growth, Nepdora can help you
-            restructure pages, reconnect payment gateways, and launch a
-            cleaner commercial website with less ongoing overhead.
+            restructure pages, reconnect payment gateways, and launch a cleaner
+            commercial website with less ongoing overhead.
           </p>
           <div className="space-y-3 text-sm text-slate-300">
             <p>1. Review current pages and business goals.</p>

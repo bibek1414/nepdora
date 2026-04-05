@@ -1,6 +1,11 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { industries, MAJOR_CITIES, INDUSTRY_LABELS, cities } from "@/lib/seo-data";
+import {
+  industries,
+  MAJOR_CITIES,
+  INDUSTRY_LABELS,
+  cities,
+} from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import FAQSection from "@/components/marketing/faq-section/faq-section";
@@ -97,7 +102,7 @@ export default async function CreateWebsiteForPage({ params }: Props) {
         </h2>
         <p className="mx-auto max-w-3xl text-lg text-slate-600">
           Nepdora provides the most localized website builder platform in Nepal.
-          We handle everything—from design to payments—tailored specifically for
+          We handle everything-from design to payments-tailored specifically for
           businesses in {cityName}.
         </p>
         <div className="mt-16 grid gap-8 text-left md:grid-cols-3">

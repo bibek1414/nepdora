@@ -148,8 +148,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
   const { mutate: deleteNewsletter, isPending: deletingNewsletter } =
     useDeleteNewsletter();
 
-  const isDeleting =
-    deletingContact || deletingPopup || deletingNewsletter;
+  const isDeleting = deletingContact || deletingPopup || deletingNewsletter;
 
   const isLoading =
     (selectedView === "contact" && loadingContacts) ||
@@ -184,7 +183,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
           day: "2-digit",
           year: "numeric",
         })
-      : "—";
+      : "-";
 
   const openDialog = (id: number) => {
     setSelectedId(id);
@@ -317,13 +316,13 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                       </span>
                     )}
                     {!item.email && !item.phone_number && (
-                      <span className="text-xs text-black/40">—</span>
+                      <span className="text-xs text-black/40">-</span>
                     )}
                   </div>
                 </TableCell>
                 <TableCell className="px-6 py-4">
                   <p className="max-w-xs truncate text-xs text-black/50">
-                    {item.message || "—"}
+                    {item.message || "-"}
                   </p>
                 </TableCell>
                 <TableCell className="px-6 py-4 text-right">
@@ -469,7 +468,7 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                     </span>
                   )}
                   {!item.email && !item.phone_number && (
-                    <span className="text-xs text-black/40">—</span>
+                    <span className="text-xs text-black/40">-</span>
                   )}
                 </div>
               </TableCell>
@@ -482,7 +481,9 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={e => item.id !== undefined && openDeleteDialog(e, item.id)}
+                  onClick={e =>
+                    item.id !== undefined && openDeleteDialog(e, item.id)
+                  }
                   className="h-8 w-8 rounded-full p-0 text-black/40 hover:bg-red-50 hover:text-red-500"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -612,8 +613,8 @@ export default function InquiriesClient({ subDomain }: InquiriesClientProps) {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete
-                this inquiry from your records.
+                This action cannot be undone. This will permanently delete this
+                inquiry from your records.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

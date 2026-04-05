@@ -70,7 +70,7 @@ export default function AnalyticsDashboard() {
       {/* Charts */}
       <AnalyticsCharts data={data} isLoading={isLoading} />
 
-      {/* Product Tables — Top & Least */}
+      {/* Product Tables - Top & Least */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <TopSellingProducts
           title="Top Selling Products"
