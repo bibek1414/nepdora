@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { buildPreviewApi } from "@/config/site";
-
+import { buildPreviewApi, getTenantDomain } from "@/config/site";
 interface PaymentGatewayBackend {
   id: number;
   payment_type: "esewa" | "khalti";
@@ -31,6 +30,7 @@ async function fetchPaymentGatewaysFromBackend(
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Tenant-Domain": (await getTenantDomain()) || "",
       },
     });
 

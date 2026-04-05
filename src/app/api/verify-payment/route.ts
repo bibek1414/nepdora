@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { khaltiAPI } from "@/lib/khalti-api";
 import { esewaAPI } from "@/lib/esewa-api";
-import { buildPreviewApi } from "@/config/site";
+import { buildPreviewApi, getTenantDomain } from "@/config/site";
 
 interface PaymentGatewayBackend {
   id: number;
@@ -53,6 +53,7 @@ async function fetchNepdoraCentralCredentials(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "X-Tenant-Domain": (await getTenantDomain()) || "",
         },
       }
     );
@@ -105,6 +106,7 @@ async function reportToCentralPaymentHistory(data: {
       headers: {
         "Content-Type": "application/json",
         "X-Tenant": data.subdomain,
+        "X-Tenant-Domain": (await getTenantDomain()) || "",
       },
       body: JSON.stringify({
         tenant: data.subdomain, // Required field on backend
@@ -176,6 +178,7 @@ async function reportToTenantPaymentHistory(data: {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Tenant-Domain": (await getTenantDomain()) || "",
       },
       body: JSON.stringify({
         payment_type: data.payment_type,
@@ -235,6 +238,7 @@ async function getPaymentGateway(
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "X-Tenant-Domain": (await getTenantDomain()) || "",
     },
   });
 

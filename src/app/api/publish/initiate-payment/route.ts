@@ -8,7 +8,7 @@ import {
   KhaltiInitiateRequest,
   EsewaInitiateRequest,
 } from "@/types/payment";
-import { buildPreviewApi } from "@/config/site";
+import { buildPreviewApi, getTenantDomain } from "@/config/site";
 
 interface PaymentGatewayBackend {
   id: number;
@@ -95,6 +95,7 @@ async function fetchPaymentGatewaysFromBackend(
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "X-Tenant-Domain": (await getTenantDomain()) || "",
       },
     });
 
@@ -140,6 +141,7 @@ async function fetchNepdoraCentralCredentials(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "X-Tenant-Domain": (await getTenantDomain()) || "",
         },
       }
     );

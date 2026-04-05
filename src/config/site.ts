@@ -21,7 +21,7 @@ export const rootDomain = siteConfig.isDev
  * Build API URL for a subdomain
  */
 export const buildPreviewApi = (subdomain: string) =>
-  `https://${subdomain}.nepdora.baliyoventures.com/`;
+  `https://${subdomain}.nepdora.baliyoventures.com`;
 
 /**
  * Extract subdomain from URL or query params
