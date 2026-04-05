@@ -72,7 +72,7 @@ export const SubCategoryStyle4: React.FC<SubCategoryStyleProps> = ({
           <EditableText
             value={title}
             onChange={handleTitleChange}
-            as="span"
+            as="h1"
             isEditable={isEditable}
           />
         </h2>

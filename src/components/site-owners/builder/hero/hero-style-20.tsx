@@ -109,6 +109,10 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
                   handleTextUpdate("primaryButtonHref")(href);
                 }}
                 className="flex cursor-pointer items-center gap-2 rounded-full bg-white px-8 py-4 font-bold text-black transition-colors hover:bg-gray-100"
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  color: theme.colors.primaryForeground,
+                }}
                 textPlaceholder="Shop Now"
               >
                 {data.primaryButtonText}

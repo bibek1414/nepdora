@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, ShoppingBag, Check, Plus } from "lucide-react";
 import { Product } from "@/types/owner-site/admin/product";
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -19,6 +19,8 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
   siteUser,
   onClick,
 }) => {
+  const [isAdded, setIsAdded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const pathname = usePathname();
   const { addToCart } = useCart();
   const { data: themeResponse } = useThemeQuery();
@@ -37,15 +39,30 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
     },
   };
 
-  const productImage = product.thumbnail_image || "/fallback/image-not-found.png";
+  const productImage =
+    product.thumbnail_image || "/fallback/image-not-found.png";
   const price = parseFloat(product.price);
-  const marketPrice = product.market_price ? parseFloat(product.market_price) : null;
+  const marketPrice = product.market_price
+    ? parseFloat(product.market_price)
+    : null;
   const rating = product.average_rating || 0;
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");
-    const basePath = isPreviewMode ? "/product-details-draft" : "/product-details";
+    const basePath = isPreviewMode
+      ? "/product-details-draft"
+      : "/product-details";
     return generateLinkHref(`${basePath}/${product.slug}`, siteUser, pathname);
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    addToCart(product, 1);
+    setIsAdded(true);
+    toast.success(`${product.name} added to cart`);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   const handleClick = () => {
@@ -58,41 +75,70 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
   };
 
   return (
-    <div 
-      className="flex flex-col group cursor-pointer"
-      onClick={handleClick}
-    >
+    <div className="group flex cursor-pointer flex-col" onClick={handleClick}>
       {/* Image Container */}
-      <div className="w-full aspect-[4/3] bg-[#F4F5F7] rounded-[1.25rem] overflow-hidden mb-5 p-8 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.02]">
-        <div className="relative w-full h-full">
+      <div className="relative mb-5 aspect-[4/3] w-full overflow-hidden rounded-[1.25rem]">
+        <div className="relative h-full w-full">
           <Image
             src={productImage}
             alt={product.thumbnail_alt_description || product.name}
             fill
-            className="object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
+        </div>
+
+        {/* Add to Cart Floating Button */}
+        <div className="absolute right-3 bottom-11 z-20 translate-y-0 cursor-pointer opacity-100 sm:translate-y-2 sm:opacity-0 sm:transition-all sm:duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
+          <button
+            onClick={handleAddToCart}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className={`flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition-all duration-300 cursor-pointer`}
+            style={
+              {
+                backgroundColor: isAdded || isHovered
+                  ? theme.colors.primary
+                  : "white",
+                color: isAdded || isHovered
+                  ? "white"
+                  : "black",
+              } as React.CSSProperties
+            }
+            title="Add to cart"
+            disabled={product.stock === 0}
+          >
+            {isAdded ? (
+              <Check className="h-5 w-5" />
+            ) : product.stock === 0 ? (
+              <span className="text-[10px] font-bold text-black">SO</span>
+            ) : (
+              <Plus className="h-5 w-5" />
+            )}
+          </button>
         </div>
       </div>
 
       {/* Details */}
       <div className="flex flex-col gap-2 px-1">
-        <div className="flex justify-between items-start">
-          <h3 
-            className="text-[22px] font-bold text-gray-900 leading-tight line-clamp-1"
+        <div className="flex items-start justify-between">
+          <h3
+            className="line-clamp-1 text-[22px] leading-tight font-bold text-black"
             style={{ fontFamily: theme.fonts.heading }}
           >
             {product.name}
           </h3>
-          <div className="flex items-center gap-1.5 mt-1 shrink-0">
-            <Star className="w-4 h-4 text-[#FF9800] fill-[#FF9800]" />
-            <span className="text-sm font-medium text-gray-700">({rating.toFixed(1)})</span>
+          <div className="mt-1 flex shrink-0 items-center gap-1.5 font-medium">
+            <Star className="h-4 w-4 fill-[#FF9800] text-[#FF9800]" />
+            <span className="text-sm font-medium text-black">
+              ({rating.toFixed(1)})
+            </span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-3">
-          <span 
-            className="text-[17px] font-bold text-gray-900"
+          <span
+            className="text-[17px] font-bold text-black"
             style={{ fontFamily: theme.fonts.body }}
           >
             Rs.{Number(price).toLocaleString("en-IN")}

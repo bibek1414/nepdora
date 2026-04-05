@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { SubCategory } from "@/types/owner-site/admin/product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface SubCategoryCard2Props {
   subcategory: SubCategory;
@@ -15,6 +17,7 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
   siteUser,
   onClick,
 }) => {
+  const pathname = usePathname();
   // Theme
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -50,9 +53,19 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
     }
   };
 
+  const subcategoryUrl = getSubCategoryUrl(subcategory);
+
   const handleViewSubCategory = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    window.location.href = subcategoryUrl;
+  };
+
+  const CardWrapper = siteUser
+    ? ({ children }: { children: React.ReactNode }) => (
+        <Link href={subcategoryUrl} className="block">
+          {children}
+        </Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
         <div onClick={handleClick} className="cursor-pointer">

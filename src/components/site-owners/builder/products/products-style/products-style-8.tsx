@@ -44,6 +44,7 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
   } = useProducts({
     category_id: categoryId,
     sub_category_id: subCategoryId,
+    page_size: 6,
   });
   const products = productsData?.results || [];
 
