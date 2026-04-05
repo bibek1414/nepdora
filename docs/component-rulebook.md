@@ -204,6 +204,7 @@ These rules apply to every component, without exception.
 
 ### Buttons
 
+- **Shadcn UI**: Always use the `Button` component from `@/components/ui/button` instead of the raw `<button>` tag.
 - **Primary**: solid accent background via `style={{ background: theme.colors.primary, color: theme.colors.primaryForeground }}`, `rounded-lg px-5 py-2.5 font-medium text-sm`.
 - **Secondary**: `bg-white border border-gray-200 text-gray-700 rounded-lg px-5 py-2.5 font-medium text-sm`.
 - **Ghost**: `bg-transparent text-gray-600 hover:text-gray-900 px-5 py-2.5 font-medium text-sm`.
@@ -211,6 +212,7 @@ These rules apply to every component, without exception.
 
 ### Forms & Inputs
 
+- **Shadcn UI**: Always use the `Input`, `Textarea`, and `Select` components from `@/components/ui/` instead of raw HTML elements. This ensures consistent focusing, styling, and accessibility.
 - Border: `border border-gray-200 rounded-lg`.
 - Focus: `focus:ring-2 focus:ring-offset-1` with accent ring via `style` — never just a fill.
 - Labels: above the input, `text-sm font-medium text-gray-700`, NOT uppercase.
@@ -228,7 +230,8 @@ These rules apply to every component, without exception.
 
 ### Icons
 
-- Use line icons consistently (Lucide, Phosphor, or Heroicons).
+- **Standardization**: Use **Lucide React** icons exclusively.
+- **No Custom SVGs**: Never use inline `<svg>` blocks for standard UI elements (arrows, mail icons, close buttons, badges, etc.). This ensures uniform stroke weights and styles.
 - Sizes: `16px` inline, `20px` UI, `24px` feature icons.
 - Never use emoji as UI icons.
 
@@ -270,6 +273,8 @@ Before shipping, verify every item:
 - [ ] Content stays within `max-w-7xl` wrapper
 - [ ] Component registered in `add-section-dialog` and dispatcher
 - [ ] All clickable/interactive elements (buttons, links, cards) have `cursor-pointer` utility
+- [ ] Standard elements use Shadcn UI components (`Button`, `Input`, etc.)
+- [ ] All icons are imported from `lucide-react`, no inline SVGs
 
 
 ---

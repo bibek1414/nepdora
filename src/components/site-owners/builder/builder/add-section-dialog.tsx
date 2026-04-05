@@ -205,12 +205,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 19 (Impact Slider)",
         image: "/images/site-owners/hero/hero19.png",
       },
-      {
-        id: "hero-20",
-        name: "Hero Style 20 (Premium Shoes)",
-        image:
-          "https://images.unsplash.com/photo-1449505278894-297fce3ce49d?q=80&w=2070&auto=format&fit=crop",
-      },
     ],
     tours: [
       {
@@ -565,7 +559,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "product-8",
         name: "Product Style 8 (Premium Grid)",
-        image: "/images/site-owners/products/product1.png", // Using product1 as placeholder image
+        image: "/images/site-owners/products/product8.png", // Using product1 as placeholder image
       },
     ],
     product_details: [
@@ -801,6 +795,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Testimonials Style 6 (Success Stories)",
         image: "/images/site-owners/testimonials/testimonial6.png",
       },
+      {
+        id: "testimonial-7",
+        name: "Testimonials Style 7",
+        image: "/images/site-owners/testimonials/testimonial7.png",
+      },
     ],
     team: [
       {
@@ -975,6 +974,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Newsletter Style 2",
         image: "/images/site-owners/newsletter/newsletter2.png",
       },
+      {
+        id: "newsletter-3",
+        name: "Newsletter Style 3",
+        image: "/images/site-owners/newsletter/newsletter3.png",
+      },
     ],
     skills: [
       {
@@ -1080,14 +1084,14 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       },
       {
         id: "navbar-8",
-        name: "Navbar with Language Switcher",
+        name: "Navbar with Top Bar",
         image: "/images/site-owners/navbars/navbar8.png",
-        description: "Includes language switcher",
+        description: "Includes top bar",
         showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-9",
-        name: "Navbar with Language Switcher",
+        name: "Navbar with site cart and search",
         image: "/images/site-owners/navbars/navbar9.png",
         description: "Includes language switcher",
         showForWebsiteTypes: ["ecommerce"],
@@ -1101,9 +1105,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       },
       {
         id: "navbar-11",
-        name: "Navbar with Language Switcher",
+        name: "Navbar with Book Appointment",
         image: "/images/site-owners/navbars/navbar11.png",
-        description: "Includes language switcher",
+        description: "Includes book appointment button",
+      },
+      {
+        id: "navbar-12",
+        name: "Navbar with top bar and categories",
+        image: "/images/site-owners/navbars/navbar12.png",
+        description: "Includes top bar and categories",
       },
     ],
     // FOOTER TEMPLATES

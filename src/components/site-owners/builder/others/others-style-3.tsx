@@ -2,7 +2,7 @@ import React from "react";
 import { OthersTemplate3Data } from "@/types/owner-site/components/others";
 import { EditableText } from "@/components/ui/editable-text";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { Eye, Shield, MapPin, Sparkles } from "lucide-react";
+import { Eye, Shield, MapPin, Sparkles, Footprints } from "lucide-react";
 
 interface OthersTemplate3Props {
   othersData: OthersTemplate3Data;
@@ -18,6 +18,8 @@ const getIconComponent = (iconName: string | undefined, className: string) => {
       return <Eye className={className} />;
     case "MapPin":
       return <MapPin className={className} />;
+    case "Footprints":
+      return <Footprints className={className} />;
     case "Shield":
       return <Shield className={className} />;
     default:
@@ -67,7 +69,6 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
             onChange={handleUpdate("heading")}
             as="h4"
             className="mb-2"
-            style={{ color: theme.colors.primary }}
             isEditable={isEditable}
             multiline
           />
@@ -87,10 +88,7 @@ export const OthersTemplate3: React.FC<OthersTemplate3Props> = ({
               key={item.id || index}
               className="group rounded-2xl border border-gray-100 p-6 transition-all hover:border-gray-300"
             >
-              <div
-                className="mb-4 inline-flex rounded-xl bg-gray-50 p-3 transition group-hover:bg-gray-100"
-                style={{ color: theme.colors.secondary }}
-              >
+              <div className="mb-4 inline-flex rounded-xl bg-gray-50 p-3 transition group-hover:bg-gray-100">
                 {getIconComponent(item.icon, "w-7 h-7")}
               </div>
 

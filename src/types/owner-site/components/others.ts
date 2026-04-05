@@ -384,35 +384,35 @@ export const defaultOthersTemplate2Data: OthersTemplate2Data = {
 
 export const defaultOthersTemplate3Data: OthersTemplate3Data = {
   template: "others-3",
-  heading: "Why Choose NepGlass",
-  description: "Thoughtfully designed eyewear.",
+  heading: "Why Choose Snikey",
+  description: "Step into comfort, style, and confidence.",
   items: [
     {
       id: "why-1",
-      title: "Timeless Style",
+      title: "Modern Style",
       description:
-        "A curated range of frames and sunglasses designed to suit every look.",
+        "A wide collection of trendy sneakers and footwear designed to match every outfit.",
       icon: "Sparkles",
     },
     {
       id: "why-2",
-      title: "Clear Vision",
+      title: "All-Day Comfort",
       description:
-        "Precision-crafted lenses focused on comfort, clarity, and protection.",
-      icon: "Eye",
+        "Cushioned soles and ergonomic designs for maximum comfort in every step.",
+      icon: "Footprints",
     },
     {
       id: "why-3",
-      title: "Built for Nepal",
+      title: "Built for Every Terrain",
       description:
-        "Designed with local lifestyle, climate, and preferences in mind.",
+        "Shoes designed to handle city streets, rough paths, and everyday wear with ease.",
       icon: "MapPin",
     },
     {
       id: "why-4",
-      title: "Trusted Care",
+      title: "Trusted Quality",
       description:
-        "Personal guidance to help you find eyewear that truly fits you.",
+        "Durable materials and expert craftsmanship to ensure long-lasting performance.",
       icon: "Shield",
     },
   ],

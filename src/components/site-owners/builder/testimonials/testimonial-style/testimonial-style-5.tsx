@@ -32,7 +32,8 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
   onUpdate,
   onTestimonialClick,
 }) => {
-  const { title = "What People Are Saying" } = data || {};
+  const { title = "What People Are Saying", subtitle = "Testimonials" } =
+    data || {};
   const { data: testimonials = [], isLoading, error } = useTestimonials();
 
   const { data: themeResponse } = useThemeQuery();
@@ -59,6 +60,10 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
     onUpdate?.({ title: newTitle });
   };
 
+  const handleSubtitleChange = (newSubtitle: string) => {
+    onUpdate?.({ subtitle: newSubtitle });
+  };
+
   return (
     <section className="bg-background-light dark:bg-background-dark py-12 md:py-20">
       <div className="container mx-auto max-w-6xl px-4 md:px-8">
@@ -69,7 +74,14 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
               backgroundColor: colors.primary,
             }}
           >
-            Testimonials
+            <EditableText
+              value={subtitle}
+              onChange={handleSubtitleChange}
+              as="span"
+              isEditable={isEditable}
+              className="text-black"
+              placeholder="Testimonials"
+            />
           </Badge>
           <EditableText
             value={title}

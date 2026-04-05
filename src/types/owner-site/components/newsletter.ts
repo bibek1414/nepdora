@@ -1,9 +1,10 @@
 export interface NewsletterData {
   component_id?: string;
   component_type: "newsletter";
-  style: "newsletter-1" | "newsletter-2";
+  style: "newsletter-1" | "newsletter-2" | "newsletter-3";
   title: string;
   subtitle?: string;
+  badge?: string;
   description?: string;
   placeholder_text?: string;
   button_text: string;
@@ -53,16 +54,19 @@ export const defaultNewsletter1Data: NewsletterData = {
 
 export const defaultNewsletter2Data: NewsletterData = {
   ...defaultNewsletterData,
-  style: "newsletter-2",
-  title: "Join the Elite Tech Community.",
-  subtitle: "Newsletter Signup",
-  description:
-    "Get priority access to limited edition drops, specialized hardware insights, and exclusive member pricing.",
-  placeholder_text: "Enter your executive email",
-  button_text: "Join",
-  show_privacy_note: true,
   privacy_note:
     "By subscribing, you agree to our Privacy Policy and Terms of Service.",
+};
+
+export const defaultNewsletter3Data: NewsletterData = {
+  ...defaultNewsletterData,
+  style: "newsletter-3",
+  badge: "Simple Process",
+  title: "Get started for free today",
+  description:
+    "Join thousands of users who are already creating amazing things, completely free to start.",
+  placeholder_text: "Enter your email",
+  button_text: "Subscribe now",
 };
 
 export const DEFAULT_NEWSLETTER_MAP: Record<
@@ -71,4 +75,5 @@ export const DEFAULT_NEWSLETTER_MAP: Record<
 > = {
   "newsletter-1": defaultNewsletter1Data,
   "newsletter-2": defaultNewsletter2Data,
+  "newsletter-3": defaultNewsletter3Data,
 };

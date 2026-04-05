@@ -185,7 +185,7 @@ export const TestimonialCard6: React.FC<TestimonialCard6Props> = ({
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-gray-50 dark:bg-gray-900"
+      className="relative w-full overflow-hidden dark:bg-gray-900"
       style={{ height: 600 }}
     >
       {testimonialsList.map((testimonial, index) => {
@@ -211,7 +211,7 @@ export const TestimonialCard6: React.FC<TestimonialCard6Props> = ({
           onClick={() => handleMove(-1)}
           className={cn(
             "flex h-12 w-12 items-center justify-center text-xl transition-colors sm:h-14 sm:w-14 sm:text-2xl",
-            "border-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            "cursor-pointer border-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           )}
           aria-label="Previous testimonial"
         >
@@ -221,7 +221,7 @@ export const TestimonialCard6: React.FC<TestimonialCard6Props> = ({
           onClick={() => handleMove(1)}
           className={cn(
             "flex h-12 w-12 items-center justify-center text-xl transition-colors sm:h-14 sm:w-14 sm:text-2xl",
-            "border-2 bg-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            "cursor-pointer border-2 bg-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           )}
           aria-label="Next testimonial"
         >

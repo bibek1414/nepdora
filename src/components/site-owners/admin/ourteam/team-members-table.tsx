@@ -109,7 +109,7 @@ export const TeamMembersTable: React.FC<TeamMembersTableProps> = ({
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 overflow-hidden rounded-full border border-black/5">
                       <img
-                        src={member.photo || ""}
+                        src={member.photo || "/fallback/image-not-found.png"}
                         alt={member.name}
                         className="h-full w-full object-cover"
                       />
