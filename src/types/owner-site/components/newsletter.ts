@@ -61,7 +61,6 @@ export const defaultNewsletter2Data: NewsletterData = {
 export const defaultNewsletter3Data: NewsletterData = {
   ...defaultNewsletterData,
   style: "newsletter-3",
-  badge: "Simple Process",
   title: "Get started for free today",
   description:
     "Join thousands of users who are already creating amazing things, completely free to start.",

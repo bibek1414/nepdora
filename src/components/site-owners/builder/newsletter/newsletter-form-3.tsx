@@ -83,22 +83,6 @@ export const NewsletterForm3: React.FC<NewsletterForm3Props> = ({
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div
-        className="flex items-center gap-2 rounded-full px-3 py-1 text-sm transition-colors"
-        style={{
-          background: theme?.colors.primary,
-          color: theme?.colors.primaryForeground,
-        }}
-      >
-        <EditableText
-          value={data.badge || "Simple Process"}
-          onChange={val => updateData("badge", val)}
-          isEditable={isEditable}
-          as="span"
-          placeholder="Badge text..."
-        />
-      </div>
-
       <EditableText
         value={data.title}
         onChange={val => updateData("title", val)}
