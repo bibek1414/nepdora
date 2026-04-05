@@ -1115,6 +1115,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/navbars/navbar12.png",
         description: "Includes top bar and categories",
       },
+      {
+        id: "navbar-13",
+        name: "Premium Simple Combo",
+        image: "/images/site-owners/navbars/navbar13.png",
+        description: "Two-row premium header with integrated search and categories",
+      },
     ],
     // FOOTER TEMPLATES
     footer: [

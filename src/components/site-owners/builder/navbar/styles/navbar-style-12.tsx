@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import {
   NavbarData,
@@ -81,6 +81,8 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
     navbarData.bannerText || "Get free delivery on orders over Rs. 5000"
   );
   
+  const [isScrolled, setIsScrolled] = useState(false);
+  
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -142,6 +144,19 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
     if (onUpdateBanner) onUpdateBanner(newText);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Appearance Settings
   const navBg = navbarData.backgroundColor || "#ffffff";
   const navText = navbarData.textColor || "#111827";
@@ -149,7 +164,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
 
   return (
     <div 
-      className="w-full transition-all shadow-sm" 
+      className="w-full transition-all -sm sticky top-0 z-50" 
       style={{ 
         backgroundColor: navBg,
         color: navText
@@ -157,7 +172,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
     >
       {/* Row 0: Top Bar Banner */}
       <div 
-        className="flex h-10 items-center justify-center px-4 text-xs sm:text-sm font-semibold tracking-wide "
+        className={`flex items-center justify-center px-4 text-xs sm:text-sm font-semibold tracking-wide overflow-hidden transition-all duration-300 ease-in-out ${isScrolled ? 'h-0 opacity-0 pointer-events-none' : 'h-10 opacity-100'}`}
         style={{ backgroundColor: theme.colors.primary, color: theme.colors.primaryForeground }}
       >
         {isEditable ? (
@@ -301,7 +316,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                   <ChevronDown className="h-4 w-4 opacity-50" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-64 mt-0 shadow-lg border-gray-100" style={{ backgroundColor: navBg, color: navText }}>
+              <DropdownMenuContent align="start" className="w-64 mt-0 -lg border-gray-100" style={{ backgroundColor: navBg, color: navText }}>
                 {categories.length > 0 ? (
                   categories.map(category => {
                     const categorySubCategories = getSubCategoriesForCategory(category.id);
@@ -372,7 +387,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                 <Button
                   variant={getButtonVariant(button.variant)}
                   size="sm"
-                  className="h-9 px-5 rounded-full font-bold text-xs  tracking-wider shadow-sm transition-all active:scale-95"
+                  className="h-9 px-5 rounded-full font-bold text-xs  tracking-wider -sm transition-all active:scale-95"
                   style={{ backgroundColor: theme.colors.primary, color: theme.colors.primaryForeground }}
                   asChild={!isEditable}
                 >
@@ -404,7 +419,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
           <div className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-hide">
             {/* Search Bar */}
             <div className="bg-gray-100/50 rounded-2xl p-1">
-              <SearchBar siteUser={siteUser} isEditable={isEditable} className="w-full shadow-none border-none bg-transparent" />
+              <SearchBar siteUser={siteUser} isEditable={isEditable} className="w-full -none border-none bg-transparent" />
             </div>
 
             {/* Quick Access Links */}
