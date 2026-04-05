@@ -250,14 +250,20 @@ export const SubCategoryList: React.FC = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                                  onClick={() => handleEdit(subCategory)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEdit(subCategory);
+                                  }}
                                 >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handleDelete(subCategory)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(subCategory);
+                                  }}
                                   className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
                                 >
                                   <Trash2 className="h-4 w-4" />

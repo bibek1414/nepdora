@@ -292,14 +292,20 @@ export const PromoCodeList: React.FC = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                                  onClick={() => handleEdit(promoCode)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEdit(promoCode);
+                                  }}
                                 >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handleDelete(promoCode)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(promoCode);
+                                  }}
                                   className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
                                 >
                                   <Trash2 className="h-4 w-4" />

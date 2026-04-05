@@ -370,7 +370,6 @@ export default function AppointmentList() {
 
                         <TableCell className="px-6 py-4">
                           <div
-                            ref={dropdownRef}
                             onClick={e => e.stopPropagation()}
                           >
                             <Select

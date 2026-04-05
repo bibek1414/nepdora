@@ -229,14 +229,20 @@ export const CategoryList: React.FC = () => {
                                 variant="ghost"
                                 size="icon"
                                 className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                                onClick={() => handleEdit(category)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEdit(category);
+                                }}
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => handleDelete(category)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(category);
+                                }}
                                 className="h-8 w-8 rounded-full text-black/40 hover:text-red-600"
                               >
                                 <Trash2 className="h-4 w-4" />

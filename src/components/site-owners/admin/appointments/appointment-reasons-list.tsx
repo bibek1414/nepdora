@@ -289,7 +289,10 @@ const AppointmentReasonsList = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleEditClick(reason)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditClick(reason);
+                            }}
                             className="h-8 w-8 p-0"
                           >
                             <Edit className="h-4 w-4" />
@@ -298,7 +301,10 @@ const AppointmentReasonsList = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteClick(reason)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(reason);
+                            }}
                             className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
                           >
                             <Trash2 className="h-4 w-4" />

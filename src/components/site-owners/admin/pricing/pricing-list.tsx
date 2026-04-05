@@ -260,7 +260,10 @@ export const PricingList: React.FC = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleEdit(pricing)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(pricing);
+                          }}
                           className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
                         >
                           <Edit className="h-4 w-4" />
@@ -268,7 +271,10 @@ export const PricingList: React.FC = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleDelete(pricing)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(pricing);
+                          }}
                           className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
                         >
                           <Trash2 className="h-4 w-4" />

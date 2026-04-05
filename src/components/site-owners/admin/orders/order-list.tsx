@@ -420,9 +420,8 @@ export default function OrdersPage({ isPOS = false }: { isPOS?: boolean }) {
                       <TableCell className="px-5 py-4 text-[14px] font-medium text-gray-900">
                         Rs. {formatMoney(order.total_amount)}
                       </TableCell>
-                      <TableCell className="px-5 py-4 text-right">
+                      <TableCell className="px-6 py-4 text-right">
                         <div
-                          ref={dropdownRef}
                           onClick={event => event.stopPropagation()}
                           className="inline-flex items-center justify-end gap-2"
                         >

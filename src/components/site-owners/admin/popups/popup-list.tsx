@@ -324,7 +324,7 @@ const PopupListPage: React.FC = () => {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell className="px-6 py-4">
+                        <TableCell className="px-6 py-4" onClick={e => e.stopPropagation()}>
                           <Switch
                             checked={popup.is_active}
                             onCheckedChange={checked =>
