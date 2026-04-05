@@ -71,7 +71,7 @@ export const useBuilderLogic = <T extends Record<string, any>>(
       },
     [handleArrayItemUpdate]
   );
-  
+
   const handleArrayUpdate = useCallback(
     (field: keyof T) => (value: any[]) => {
       const updatedData = { ...data, [field]: value };

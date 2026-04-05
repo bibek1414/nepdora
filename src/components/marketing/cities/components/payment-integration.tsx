@@ -1,6 +1,5 @@
 import { Check } from "lucide-react";
 
-
 const paymentFeatures = [
   "Direct checkout — no redirect, no friction",
   "Instant payment alerts to your dashboard",
@@ -26,14 +25,20 @@ export const PaymentIntegration: React.FC = () => {
               Accept Nepal&apos;s favourite payments, instantly
             </h2>
             <p className="mb-7 text-base leading-relaxed text-slate-500">
-              Your customers pay with eSewa, Khalti, Fonepay, or ConnectIPS — the
-              wallets they already use. No manual transfers, no payment screenshots.
+              Your customers pay with eSewa, Khalti, Fonepay, or ConnectIPS —
+              the wallets they already use. No manual transfers, no payment
+              screenshots.
             </p>
             <ul className="space-y-3">
               {paymentFeatures.map(f => (
                 <li key={f} className="flex items-start gap-3">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" strokeWidth={2} />
-                  <span className="text-sm leading-relaxed text-slate-700">{f}</span>
+                  <Check
+                    className="mt-0.5 h-4 w-4 shrink-0 text-slate-400"
+                    strokeWidth={2}
+                  />
+                  <span className="text-sm leading-relaxed text-slate-700">
+                    {f}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -51,7 +56,9 @@ export const PaymentIntegration: React.FC = () => {
                   alt={`${gw.name} payment gateway`}
                   className="h-10 w-auto object-contain"
                 />
-                <span className="text-xs font-semibold text-slate-600">{gw.name}</span>
+                <span className="text-xs font-semibold text-slate-600">
+                  {gw.name}
+                </span>
               </div>
             ))}
           </div>

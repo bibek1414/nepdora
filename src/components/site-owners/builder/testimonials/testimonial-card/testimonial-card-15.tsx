@@ -13,15 +13,15 @@ export const TestimonialCard15: React.FC<TestimonialCard15Props> = ({
   testimonial,
   onClick,
 }) => (
-  <div 
+  <div
     onClick={onClick}
-    className="bg-card border border-border p-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 h-auto break-inside-avoid group cursor-pointer"
+    className="bg-card border-border hover:shadow-primary/5 hover:border-primary/20 group h-auto cursor-pointer break-inside-avoid rounded-2xl border p-6 transition-all duration-300 hover:shadow-xl"
   >
     {/* Image at top */}
-    <div className="flex justify-center mb-5">
-      <div className="relative w-24 h-24 shrink-0">
-        <div className="absolute inset-0 rounded-full bg-linear-to-br from-primary/40 via-primary/20 to-transparent blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        <div className="relative w-24 h-24 overflow-hidden rounded-full bg-secondary ring-2 ring-background">
+    <div className="mb-5 flex justify-center">
+      <div className="relative h-24 w-24 shrink-0">
+        <div className="from-primary/40 via-primary/20 absolute inset-0 rounded-full bg-linear-to-br to-transparent opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="bg-secondary ring-background relative h-24 w-24 overflow-hidden rounded-full ring-2">
           {testimonial.image ? (
             <Image
               src={testimonial.image}
@@ -30,23 +30,23 @@ export const TestimonialCard15: React.FC<TestimonialCard15Props> = ({
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-secondary-foreground font-bold text-2xl">
+            <div className="text-secondary-foreground flex h-full w-full items-center justify-center text-2xl font-bold">
               {testimonial.name.charAt(0)}
             </div>
           )}
         </div>
       </div>
     </div>
-    
+
     {/* Testimonial text */}
-    <p className="text-foreground/90 mb-6 leading-relaxed italic text-sm text-center">
+    <p className="text-foreground/90 mb-6 text-center text-sm leading-relaxed italic">
       &quot;{testimonial.comment}&quot;
     </p>
-    
+
     {/* Name and designation */}
     <div className="text-center">
-      <p className="font-bold text-foreground text-base">{testimonial.name}</p>
-      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+      <p className="text-foreground text-base font-bold">{testimonial.name}</p>
+      <p className="text-muted-foreground mt-1 line-clamp-2 text-xs">
         {testimonial.designation}
       </p>
     </div>

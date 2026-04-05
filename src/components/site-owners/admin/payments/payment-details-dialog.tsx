@@ -152,7 +152,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
               size="lg"
               onClick={handlePrevious}
               disabled={currentIndex === 0}
-              className="absolute -left-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronLeft className="h-6 w-6 text-black" />
             </Button>
@@ -162,7 +162,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
               size="lg"
               onClick={handleNext}
               disabled={currentIndex === payments.length - 1}
-              className="absolute -right-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronRight className="h-6 w-6 text-black" />
             </Button>
@@ -173,7 +173,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
           {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white p-4">
             <div className="flex items-center gap-4">
-              <h2 className="text-sm font-semibold capitalize text-[#003d79]">
+              <h2 className="text-sm font-semibold text-[#003d79] capitalize">
                 {currentPayment.payment_type} Transaction
               </h2>
               {payments.length > 1 && (
@@ -211,7 +211,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
             <div className="mb-8 grid grid-cols-1 gap-6 text-sm md:grid-cols-2">
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                     Order ID
                   </label>
                   <p className="mt-1 font-mono font-bold text-[#003d79]">
@@ -219,7 +219,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                   </p>
                 </div>
                 <div>
-                  <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                     Transaction ID
                   </label>
                   <p className="mt-1 font-mono text-gray-900">
@@ -227,15 +227,15 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                   </p>
                 </div>
                 <div>
-                  <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                     Payment Gateway
                   </label>
-                  <p className="mt-1 font-medium capitalize text-gray-900">
+                  <p className="mt-1 font-medium text-gray-900 capitalize">
                     {currentPayment.payment_type || "-"}
                   </p>
                 </div>
                 <div>
-                  <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                     Date & Time
                   </label>
                   <p className="mt-1 font-medium text-gray-900">
@@ -247,7 +247,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
               <div className="space-y-4">
                 {currentPayment.additional_info?.customer_info?.name && (
                   <div>
-                    <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                       Customer Name
                     </label>
                     <p className="mt-1 font-medium text-gray-900">
@@ -257,7 +257,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                 )}
                 {currentPayment.additional_info?.mobile && (
                   <div>
-                    <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                       Customer Mobile
                     </label>
                     <p className="mt-1 font-medium text-gray-900">
@@ -267,7 +267,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                 )}
                 {currentPayment.additional_info?.pidx && (
                   <div>
-                    <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                       PIDX
                     </label>
                     <p className="mt-1 font-mono text-gray-900">
@@ -276,7 +276,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                   </div>
                 )}
                 <div>
-                  <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                     Status
                   </label>
                   <div className="mt-1">
@@ -295,7 +295,7 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                 </div>
                 {currentPayment.additional_info?.is_fallback !== undefined && (
                   <div>
-                    <label className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
                       Gateway Type
                     </label>
                     <p className="mt-1 text-gray-900">

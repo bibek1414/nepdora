@@ -121,9 +121,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
           {/* Column 2: Collection */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold">
-              Collection
-            </h3>
+            <h3 className="mb-6 text-base font-semibold">Collection</h3>
             <ul className="flex flex-col space-y-4">
               {categories.slice(0, 6).map((category: any) => (
                 <li key={category.id || category.slug}>
@@ -196,9 +194,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
           {/* Column 5: Exclusive Services */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold">
-              Exclusive Services
-            </h3>
+            <h3 className="mb-6 text-base font-semibold">Exclusive Services</h3>
             <ul className="flex flex-col space-y-5">
               <li className="flex items-start gap-3">
                 <Phone className="mt-0.5 h-[18px] w-[18px] shrink-0" />
@@ -262,7 +258,7 @@ const FooterLink: React.FC<{
     return (
       <button
         type="button"
-      className="w-fit text-sm opacity-80 transition-colors hover:opacity-100"
+        className="w-fit text-sm opacity-80 transition-colors hover:opacity-100"
         onClick={e => e.preventDefault()}
       >
         {children}
@@ -283,7 +279,7 @@ const FooterLink: React.FC<{
           ? "noopener noreferrer"
           : undefined
       }
-      className="w-fit text-sm transition-colors opacity-70 hover:opacity-100"
+      className="w-fit text-sm opacity-70 transition-colors hover:opacity-100"
     >
       {children}
     </Link>

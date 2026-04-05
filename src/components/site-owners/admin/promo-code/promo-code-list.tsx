@@ -292,7 +292,7 @@ export const PromoCodeList: React.FC = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     handleEdit(promoCode);
                                   }}
@@ -302,7 +302,7 @@ export const PromoCodeList: React.FC = () => {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     handleDelete(promoCode);
                                   }}

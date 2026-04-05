@@ -11,14 +11,14 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return INTEGRATIONS.map((integration) => ({
+  return INTEGRATIONS.map(integration => ({
     slug: integration.slug,
   }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const integration = INTEGRATIONS.find((i) => i.slug === slug);
+  const integration = INTEGRATIONS.find(i => i.slug === slug);
 
   if (!integration) return notFound();
 
@@ -32,31 +32,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function IntegrationPage({ params }: Props) {
   const { slug } = await params;
-  const integration = INTEGRATIONS.find((i) => i.slug === slug);
+  const integration = INTEGRATIONS.find(i => i.slug === slug);
 
   if (!integration) return notFound();
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Dynamic Header */}
-      <section className="pt-24 pb-20 border-b border-slate-100 bg-slate-50/50">
+      <section className="border-b border-slate-100 bg-slate-50/50 pt-24 pb-20">
         <div className="container mx-auto max-w-7xl px-4">
-          <Breadcrumbs 
+          <Breadcrumbs
             items={[
               { label: "Integrations", href: "/integrations" },
-              { label: integration.name, href: `/integrations/${slug}` }
-            ]} 
+              { label: integration.name, href: `/integrations/${slug}` },
+            ]}
           />
 
-          <div className="flex flex-col md:flex-row items-start gap-12 mt-12">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center p-6 shrink-0">
-              <div className="w-full h-full bg-slate-100 rounded-xl animate-pulse" />
+          <div className="mt-12 flex flex-col items-start gap-12 md:flex-row">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/50 md:h-32 md:w-32">
+              <div className="h-full w-full animate-pulse rounded-xl bg-slate-100" />
             </div>
             <div className="max-w-3xl">
-              <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6">
-                {integration.name} <span className="text-slate-400">&</span> Nepdora
+              <h1 className="mb-6 text-4xl font-black tracking-tight text-slate-900 md:text-6xl">
+                {integration.name} <span className="text-slate-400">&</span>{" "}
+                Nepdora
               </h1>
-              <p className="text-xl md:text-2xl text-slate-600 leading-relaxed mb-0">
+              <p className="mb-0 text-xl leading-relaxed text-slate-600 md:text-2xl">
                 {integration.longDescription}
               </p>
             </div>
@@ -67,20 +68,23 @@ export default async function IntegrationPage({ params }: Props) {
       {/* Main Content */}
       <section className="py-24">
         <div className="container mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-20">
-            <div className="lg:col-span-2 space-y-16">
+          <div className="grid grid-cols-1 gap-20 lg:grid-cols-3">
+            <div className="space-y-16 lg:col-span-2">
               {/* Features Grid */}
               <div>
-                <h2 className="text-3xl font-bold text-slate-900 mb-10 border-l-4 border-sky-500 pl-6">
+                <h2 className="mb-10 border-l-4 border-sky-500 pl-6 text-3xl font-bold text-slate-900">
                   Powerful Features
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {integration.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-4 p-6 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-sky-200 hover:bg-sky-50/30 transition-all">
-                      <div className="p-2 rounded-lg bg-white border border-slate-200">
-                        <Zap className="w-5 h-5 text-sky-500" />
+                    <div
+                      key={idx}
+                      className="group flex items-start gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-6 transition-all hover:border-sky-200 hover:bg-sky-50/30"
+                    >
+                      <div className="rounded-lg border border-slate-200 bg-white p-2">
+                        <Zap className="h-5 w-5 text-sky-500" />
                       </div>
-                      <p className="text-slate-800 font-semibold">{feature}</p>
+                      <p className="font-semibold text-slate-800">{feature}</p>
                     </div>
                   ))}
                 </div>
@@ -88,25 +92,32 @@ export default async function IntegrationPage({ params }: Props) {
 
               {/* Benefits */}
               <div>
-                <h2 className="text-3xl font-bold text-slate-900 mb-10 border-l-4 border-amber-500 pl-6">
+                <h2 className="mb-10 border-l-4 border-amber-500 pl-6 text-3xl font-bold text-slate-900">
                   Why you need this
                 </h2>
                 <div className="space-y-6">
                   {integration.benefits.map((benefit, idx) => (
-                    <div key={idx} className="flex items-center gap-4 p-5 rounded-xl border border-dashed border-slate-200">
-                      <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
-                      <p className="text-slate-700 text-lg">{benefit}</p>
+                    <div
+                      key={idx}
+                      className="flex items-center gap-4 rounded-xl border border-dashed border-slate-200 p-5"
+                    >
+                      <CheckCircle2 className="h-6 w-6 shrink-0 text-green-500" />
+                      <p className="text-lg text-slate-700">{benefit}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Security Note */}
-              <div className="p-8 rounded-[32px] bg-sky-950 text-white relative overflow-hidden">
-                <ShieldCheck className="absolute -right-8 -bottom-8 w-48 h-48 text-sky-900/50" />
-                <h3 className="text-2xl font-bold mb-4 relative z-10">Safe & Secure</h3>
-                <p className="text-sky-200/80 max-w-lg relative z-10">
-                  Our integration with {integration.name} follows the highest security standards. All sensitive data is encrypted and handled according to local and international regulations.
+              <div className="relative overflow-hidden rounded-[32px] bg-sky-950 p-8 text-white">
+                <ShieldCheck className="absolute -right-8 -bottom-8 h-48 w-48 text-sky-900/50" />
+                <h3 className="relative z-10 mb-4 text-2xl font-bold">
+                  Safe & Secure
+                </h3>
+                <p className="relative z-10 max-w-lg text-sky-200/80">
+                  Our integration with {integration.name} follows the highest
+                  security standards. All sensitive data is encrypted and
+                  handled according to local and international regulations.
                 </p>
               </div>
             </div>
@@ -114,36 +125,50 @@ export default async function IntegrationPage({ params }: Props) {
             {/* Sidebar Sticky */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-8">
-                <div className="p-8 rounded-3xl border-2 border-slate-900 bg-white shadow-2xl shadow-slate-200">
-                  <h3 className="text-2xl font-bold mb-6">Start using {integration.name}</h3>
-                  <p className="text-slate-600 mb-8">
-                    Connect your {integration.name} account to your Nepdora site in just a few clicks. No developer needed.
+                <div className="rounded-3xl border-2 border-slate-900 bg-white p-8 shadow-2xl shadow-slate-200">
+                  <h3 className="mb-6 text-2xl font-bold">
+                    Start using {integration.name}
+                  </h3>
+                  <p className="mb-8 text-slate-600">
+                    Connect your {integration.name} account to your Nepdora site
+                    in just a few clicks. No developer needed.
                   </p>
-                  <Link 
+                  <Link
                     href="/create-website"
-                    className="flex items-center justify-center gap-3 w-full py-5 rounded-2xl bg-slate-900 text-white font-bold hover:bg-slate-800 transition-all mb-4"
+                    className="mb-4 flex w-full items-center justify-center gap-3 rounded-2xl bg-slate-900 py-5 font-bold text-white transition-all hover:bg-slate-800"
                   >
                     Build your site for free
-                    <MoveRight className="w-5 h-5" />
+                    <MoveRight className="h-5 w-5" />
                   </Link>
-                  <p className="text-center text-xs text-slate-400 font-medium uppercase tracking-widest">
+                  <p className="text-center text-xs font-medium tracking-widest text-slate-400 uppercase">
                     Available on all plans
                   </p>
                 </div>
 
-                <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <Globe className="w-4 h-4" />
+                <div className="rounded-3xl border border-slate-100 bg-slate-50 p-8">
+                  <h4 className="mb-4 flex items-center gap-2 font-bold text-slate-900">
+                    <Globe className="h-4 w-4" />
                     Integration Links
                   </h4>
                   <div className="space-y-3">
-                    <a href={integration.website} target="_blank" rel="noopener noreferrer" className="block text-slate-600 hover:text-primary underline decoration-slate-200 transition-colors">
+                    <a
+                      href={integration.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary block text-slate-600 underline decoration-slate-200 transition-colors"
+                    >
                       Official {integration.name} Website
                     </a>
-                    <Link href="/support" className="block text-slate-600 hover:text-primary underline decoration-slate-200 transition-colors">
+                    <Link
+                      href="/support"
+                      className="hover:text-primary block text-slate-600 underline decoration-slate-200 transition-colors"
+                    >
                       Setup Tutorial
                     </Link>
-                    <Link href="/pricing" className="block text-slate-600 hover:text-primary underline decoration-slate-200 transition-colors">
+                    <Link
+                      href="/pricing"
+                      className="hover:text-primary block text-slate-600 underline decoration-slate-200 transition-colors"
+                    >
                       Pricing and Fees
                     </Link>
                   </div>

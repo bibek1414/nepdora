@@ -103,14 +103,14 @@ const ColorPicker = ({
   return (
     <div className="space-y-2">
       <Label className="text-xs">{label}</Label>
-      <div className="flex flex-wrap gap-1 mb-2">
+      <div className="mb-2 flex flex-wrap gap-1">
         {predefinedColors.map(color => (
           <button
             key={color}
             type="button"
             className={cn(
               "h-6 w-6 cursor-pointer rounded-full border border-gray-200 transition-transform hover:scale-110",
-              value === color && "ring-2 ring-primary ring-offset-1"
+              value === color && "ring-primary ring-2 ring-offset-1"
             )}
             style={{ backgroundColor: color }}
             onClick={() => onChange(color)}
@@ -534,26 +534,41 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
 
         <Tabs defaultValue="logo" className="w-full">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="logo" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="logo"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Type className="h-4 w-4" />
               Logo
               {siteConfig?.logo && (
                 <span className="ml-1 h-2 w-2 rounded-full bg-green-500" />
               )}
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="appearance"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Palette className="h-4 w-4" />
               Appearance
             </TabsTrigger>
-            <TabsTrigger value="links" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="links"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <LinkIcon className="h-4 w-4" />
               Links
             </TabsTrigger>
-            <TabsTrigger value="buttons" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="buttons"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <SquareMousePointer className="h-4 w-4" />
               Buttons
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="settings"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Settings className="h-4 w-4" />
               Settings
             </TabsTrigger>
@@ -564,7 +579,10 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
               <Card className="border-none shadow-none">
                 <CardContent className="space-y-6 px-0">
                   <div className="space-y-2">
-                    <Label className="text-xs cursor-pointer" htmlFor="logo-text">
+                    <Label
+                      className="cursor-pointer text-xs"
+                      htmlFor="logo-text"
+                    >
                       Logo Text
                     </Label>
                     <Input
@@ -668,7 +686,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="text" id="text-only" />
                         <Label
-                          className="text-sm font-normal cursor-pointer"
+                          className="cursor-pointer text-sm font-normal"
                           htmlFor="text-only"
                         >
                           Text Only
@@ -683,7 +701,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         <Label
                           htmlFor="image-only"
                           className={cn(
-                            "text-sm font-normal cursor-pointer",
+                            "cursor-pointer text-sm font-normal",
                             !navbarData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -699,7 +717,7 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         <Label
                           htmlFor="both"
                           className={cn(
-                            "text-sm font-normal cursor-pointer",
+                            "cursor-pointer text-sm font-normal",
                             !navbarData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -717,14 +735,14 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                 <CardContent className="space-y-6 px-0">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium flex items-center gap-2">
+                      <Label className="flex items-center gap-2 text-sm font-medium">
                         <Palette className="h-4 w-4" />
                         Navbar Colors
                       </Label>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 text-xs gap-1"
+                        className="h-8 gap-1 text-xs"
                         onClick={() => {
                           handleInputChange("backgroundColor", "white");
                           handleInputChange("textColor", "black");
@@ -969,7 +987,6 @@ export const NavbarEditorDialog: React.FC<NavbarEditorDialogProps> = ({
                         }
                       />
                     </div>
-
                   </div>
                 </CardContent>
               </Card>

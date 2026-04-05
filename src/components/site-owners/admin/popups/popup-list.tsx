@@ -324,7 +324,10 @@ const PopupListPage: React.FC = () => {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell className="px-6 py-4" onClick={e => e.stopPropagation()}>
+                        <TableCell
+                          className="px-6 py-4"
+                          onClick={e => e.stopPropagation()}
+                        >
                           <Switch
                             checked={popup.is_active}
                             onCheckedChange={checked =>
@@ -371,7 +374,7 @@ const PopupListPage: React.FC = () => {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleConfirmDelete}
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-red-600 text-white hover:bg-red-700"
               >
                 {deletePopupMutation.isPending ? "Deleting..." : "Delete"}
               </AlertDialogAction>

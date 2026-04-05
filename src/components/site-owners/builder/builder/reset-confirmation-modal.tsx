@@ -25,7 +25,7 @@ export const ResetConfirmationModal: React.FC<ResetConfirmationModalProps> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[400px] gap-0 overflow-hidden border-0 p-0 rounded-xl shadow-2xl">
+      <DialogContent className="max-w-[400px] gap-0 overflow-hidden rounded-xl border-0 p-0 shadow-2xl">
         {/* Header with Icon */}
         <div className="bg-white p-6 pb-4">
           <div className="flex items-start justify-between">
@@ -58,7 +58,7 @@ export const ResetConfirmationModal: React.FC<ResetConfirmationModalProps> = ({
         <DialogFooter className="flex flex-row items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4">
           <Button
             variant="ghost"
-            className="h-10 px-4 text-xs border"
+            className="h-10 border px-4 text-xs"
             onClick={() => onOpenChange(false)}
             disabled={isReseting}
           >

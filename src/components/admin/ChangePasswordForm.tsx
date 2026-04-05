@@ -81,7 +81,7 @@ export function ChangePasswordForm() {
             name="old_password"
             render={({ field }) => (
               <FormItem className="space-y-1.5">
-                <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                   Current Password
                 </FormLabel>
                 <FormControl>
@@ -92,31 +92,36 @@ export function ChangePasswordForm() {
                       disabled={isPending}
                       className={cn(
                         "h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 pr-10 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none",
-                        form.formState.errors.old_password && "border-red-300 focus:border-red-500 focus:ring-red-500"
+                        form.formState.errors.old_password &&
+                          "border-red-300 focus:border-red-500 focus:ring-red-500"
                       )}
                       {...field}
                     />
                     <button
                       type="button"
                       onClick={() => setShowOldPassword(!showOldPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6c7a91] hover:text-[#0d1117] transition-colors"
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-[#6c7a91] transition-colors hover:text-[#0d1117]"
                     >
-                      {showOldPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showOldPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
                     </button>
                   </div>
                 </FormControl>
-                <FormMessage className="text-xs text-red-500 mt-1" />
+                <FormMessage className="mt-1 text-xs text-red-500" />
               </FormItem>
             )}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="new_password"
               render={({ field }) => (
                 <FormItem className="space-y-1.5">
-                  <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                  <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                     New Password
                   </FormLabel>
                   <FormControl>
@@ -127,36 +132,62 @@ export function ChangePasswordForm() {
                         disabled={isPending}
                         className={cn(
                           "h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 pr-10 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none",
-                          form.formState.errors.new_password && "border-red-300 focus:border-red-500 focus:ring-red-500"
+                          form.formState.errors.new_password &&
+                            "border-red-300 focus:border-red-500 focus:ring-red-500"
                         )}
                         {...field}
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6c7a91] hover:text-[#0d1117] transition-colors"
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-[#6c7a91] transition-colors hover:text-[#0d1117]"
                       >
-                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showNewPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </button>
                     </div>
                   </FormControl>
                   {newPassword && newPassword.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                      <div className={cn("flex items-center text-[10px] font-semibold uppercase tracking-wider", newPassword.length >= 8 ? "text-green-600" : "text-gray-400")}>
+                      <div
+                        className={cn(
+                          "flex items-center text-[10px] font-semibold tracking-wider uppercase",
+                          newPassword.length >= 8
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        )}
+                      >
                         <CheckCircle className="mr-1.5 h-3 w-3" />
                         8+ Chars
                       </div>
-                      <div className={cn("flex items-center text-[10px] font-semibold uppercase tracking-wider", /[A-Z]/.test(newPassword) ? "text-green-600" : "text-gray-400")}>
+                      <div
+                        className={cn(
+                          "flex items-center text-[10px] font-semibold tracking-wider uppercase",
+                          /[A-Z]/.test(newPassword)
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        )}
+                      >
                         <CheckCircle className="mr-1.5 h-3 w-3" />
                         Uppercase
                       </div>
-                      <div className={cn("flex items-center text-[10px] font-semibold uppercase tracking-wider", /[0-9]/.test(newPassword) ? "text-green-600" : "text-gray-400")}>
+                      <div
+                        className={cn(
+                          "flex items-center text-[10px] font-semibold tracking-wider uppercase",
+                          /[0-9]/.test(newPassword)
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        )}
+                      >
                         <CheckCircle className="mr-1.5 h-3 w-3" />
                         Number
                       </div>
                     </div>
                   )}
-                  <FormMessage className="text-xs text-red-500 mt-1" />
+                  <FormMessage className="mt-1 text-xs text-red-500" />
                 </FormItem>
               )}
             />
@@ -166,7 +197,7 @@ export function ChangePasswordForm() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem className="space-y-1.5">
-                  <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                  <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                     Confirm Password
                   </FormLabel>
                   <FormControl>
@@ -177,20 +208,27 @@ export function ChangePasswordForm() {
                         disabled={isPending}
                         className={cn(
                           "h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 pr-10 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none",
-                          form.formState.errors.confirmPassword && "border-red-300 focus:border-red-500 focus:ring-red-500"
+                          form.formState.errors.confirmPassword &&
+                            "border-red-300 focus:border-red-500 focus:ring-red-500"
                         )}
                         {...field}
                       />
                       <button
                         type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6c7a91] hover:text-[#0d1117] transition-colors"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-[#6c7a91] transition-colors hover:text-[#0d1117]"
                       >
-                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </button>
                     </div>
                   </FormControl>
-                  <FormMessage className="text-xs text-red-500 mt-1" />
+                  <FormMessage className="mt-1 text-xs text-red-500" />
                 </FormItem>
               )}
             />
@@ -200,7 +238,7 @@ export function ChangePasswordForm() {
             <Button
               type="submit"
               disabled={isPending}
-              className="h-10 rounded-full bg-blue-600 px-8 text-[13px] font-semibold text-white shadow-sm hover:bg-blue-700 transition-all min-w-[160px]"
+              className="h-10 min-w-[160px] rounded-full bg-blue-600 px-8 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-blue-700"
             >
               {isPending ? (
                 <>

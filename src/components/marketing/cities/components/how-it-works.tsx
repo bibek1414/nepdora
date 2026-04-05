@@ -38,7 +38,9 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ steps, category }) => {
                 <h3 className="mb-2 text-base font-semibold text-slate-900">
                   {step.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-slate-500">{step.desc}</p>
+                <p className="text-sm leading-relaxed text-slate-500">
+                  {step.desc}
+                </p>
               </div>
             </div>
           ))}

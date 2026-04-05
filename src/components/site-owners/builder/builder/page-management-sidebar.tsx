@@ -148,7 +148,7 @@ export const PageManagementSidebar: React.FC<PageManagementSidebarProps> = ({
             placeholder="Search pages..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-transparent text-[11px] text-slate-900 outline-none placeholder-slate-400"
+            className="w-full bg-transparent text-[11px] text-slate-900 placeholder-slate-400 outline-none"
           />
         </div>
       </div>

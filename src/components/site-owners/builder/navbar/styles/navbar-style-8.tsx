@@ -294,10 +294,10 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
           className="border-b border-gray-100 bg-white py-5 sm:py-6"
           style={{ backgroundColor: data.backgroundColor || "white" }}
         >
-            <div
-              className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8 lg:px-8"
-              style={{ color: data.textColor || "inherit" }}
-            >
+          <div
+            className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8 lg:px-8"
+            style={{ color: data.textColor || "inherit" }}
+          >
             {/* Logo */}
             <div
               className={
@@ -341,9 +341,12 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
 
                 {/* Search Results Dropdown */}
                 {isSearchFocused && searchQuery.length > 0 && (
-                  <div 
+                  <div
                     className="-lg absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-xl border border-gray-100"
-                    style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                    style={{
+                      backgroundColor: data.backgroundColor || "white",
+                      color: data.textColor || "inherit",
+                    }}
                   >
                     {isSearchLoading ? (
                       <div className="p-4 text-center text-sm opacity-50">
@@ -544,10 +547,13 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                       </Button>
                     </DropdownMenuTrigger>
                     {!disableClicks && !isEditable && (
-                      <DropdownMenuContent 
-                        className="w-48" 
+                      <DropdownMenuContent
+                        className="w-48"
                         align="end"
-                        style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                        style={{
+                          backgroundColor: data.backgroundColor || "white",
+                          color: data.textColor || "inherit",
+                        }}
                       >
                         {isAuthenticated ? (
                           <>

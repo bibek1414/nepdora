@@ -24,8 +24,10 @@ import { cn } from "@/lib/utils";
 export default function POSProductList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategorySlug, setSelectedCategorySlug] = useState<string>("all");
-  const [selectedSubCategorySlug, setSelectedSubCategorySlug] = useState<string>("all");
+  const [selectedCategorySlug, setSelectedCategorySlug] =
+    useState<string>("all");
+  const [selectedSubCategorySlug, setSelectedSubCategorySlug] =
+    useState<string>("all");
 
   const { addToCart } = usePOS();
   const PAGE_SIZE = 24;
@@ -78,25 +80,30 @@ export default function POSProductList() {
     : 0;
 
   const hasActiveFilters =
-    searchTerm || selectedCategorySlug !== "all" || selectedSubCategorySlug !== "all";
+    searchTerm ||
+    selectedCategorySlug !== "all" ||
+    selectedSubCategorySlug !== "all";
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+    <div className="border-border bg-card flex h-full flex-col overflow-hidden rounded-xl border shadow-sm">
       {/* Search & Filter Header */}
-      <div className="shrink-0 space-y-3 border-b border-border bg-card px-4 py-3">
+      <div className="border-border bg-card shrink-0 space-y-3 border-b px-4 py-3">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2" />
           <Input
             placeholder="Search products…"
-            className="h-10 border-border bg-muted/40 pl-9 text-sm placeholder:text-muted-foreground focus:bg-background"
+            className="border-border bg-muted/40 placeholder:text-muted-foreground focus:bg-background h-10 pl-9 text-sm"
             value={searchTerm}
             onChange={handleSearchChange}
           />
           {searchTerm && (
             <button
-              onClick={() => { setSearchTerm(""); setCurrentPage(1); }}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+              onClick={() => {
+                setSearchTerm("");
+                setCurrentPage(1);
+              }}
+              className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -106,11 +113,11 @@ export default function POSProductList() {
         {/* Category Pills + Sub-category Select */}
         <div className="flex items-center gap-2">
           {/* Scrollable pill row */}
-          <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto pb-0.5 scrollbar-hide">
+          <div className="scrollbar-hide flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto pb-0.5">
             <button
               onClick={() => handleCategoryChange("all")}
               className={cn(
-                "inline-flex h-7 shrink-0 items-center rounded-full px-3 text-xs font-medium transition-all cursor-pointer focus:outline-none",
+                "inline-flex h-7 shrink-0 cursor-pointer items-center rounded-full px-3 text-xs font-medium transition-all focus:outline-none",
                 selectedCategorySlug === "all"
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
@@ -123,7 +130,7 @@ export default function POSProductList() {
                 key={category.id}
                 onClick={() => handleCategoryChange(category.slug)}
                 className={cn(
-                  "inline-flex h-7 shrink-0 items-center rounded-full px-3 text-xs font-medium transition-all cursor-pointer focus:outline-none",
+                  "inline-flex h-7 shrink-0 cursor-pointer items-center rounded-full px-3 text-xs font-medium transition-all focus:outline-none",
                   selectedCategorySlug === category.slug
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
@@ -141,7 +148,7 @@ export default function POSProductList() {
               onValueChange={handleSubCategoryChange}
               disabled={selectedCategorySlug === "all"}
             >
-              <SelectTrigger className="h-7 w-[160px] rounded-full border-border bg-muted/40 px-3 text-xs focus:ring-1">
+              <SelectTrigger className="border-border bg-muted/40 h-7 w-[160px] rounded-full px-3 text-xs focus:ring-1">
                 <SelectValue placeholder="Sub-category" />
               </SelectTrigger>
               <SelectContent>
@@ -159,7 +166,7 @@ export default function POSProductList() {
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 text-xs text-muted-foreground transition-colors hover:text-destructive focus:outline-none"
+              className="text-muted-foreground hover:text-destructive flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-full px-2.5 text-xs transition-colors focus:outline-none"
             >
               <X className="h-3 w-3" />
               Clear
@@ -176,12 +183,12 @@ export default function POSProductList() {
               {[...Array(12)].map((_, i) => (
                 <div
                   key={i}
-                  className="overflow-hidden rounded-xl border border-border bg-muted"
+                  className="border-border bg-muted overflow-hidden rounded-xl border"
                 >
-                  <div className="aspect-square animate-pulse bg-muted" />
+                  <div className="bg-muted aspect-square animate-pulse" />
                   <div className="space-y-2 p-3">
-                    <div className="h-3 w-3/4 animate-pulse rounded bg-muted-foreground/20" />
-                    <div className="h-3 w-1/2 animate-pulse rounded bg-muted-foreground/10" />
+                    <div className="bg-muted-foreground/20 h-3 w-3/4 animate-pulse rounded" />
+                    <div className="bg-muted-foreground/10 h-3 w-1/2 animate-pulse rounded" />
                   </div>
                 </div>
               ))}
@@ -191,20 +198,23 @@ export default function POSProductList() {
               {productsData.results.map((product: any) => (
                 <button
                   key={product.id}
-                  className="group cursor-pointer overflow-hidden rounded-xl border border-border bg-card text-left transition-all hover:border-primary/60 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  className="group border-border bg-card hover:border-primary/60 focus:ring-ring cursor-pointer overflow-hidden rounded-xl border text-left transition-all hover:shadow-md focus:ring-2 focus:ring-offset-2 focus:outline-none"
                   onClick={() => addToCart(product, 1)}
                 >
                   {/* Image */}
-                  <div className="relative aspect-square overflow-hidden bg-muted">
+                  <div className="bg-muted relative aspect-square overflow-hidden">
                     <Image
-                      src={product.thumbnail_image || "/fallback/image-not-found.png"}
+                      src={
+                        product.thumbnail_image ||
+                        "/fallback/image-not-found.png"
+                      }
                       alt={product.name}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     {/* Add overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 transition-all duration-200 group-hover:bg-foreground/10">
-                      <div className="flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-all duration-200 group-hover:translate-y-0 opacity-0 group-hover:opacity-100">
+                    <div className="bg-foreground/0 group-hover:bg-foreground/10 absolute inset-0 flex items-center justify-center transition-all duration-200">
+                      <div className="bg-primary text-primary-foreground flex h-9 w-9 translate-y-2 items-center justify-center rounded-full opacity-0 shadow-md transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                         <Plus className="h-4 w-4" />
                       </div>
                     </div>
@@ -212,14 +222,18 @@ export default function POSProductList() {
                     {product.stock <= 5 && (
                       <div className="absolute top-2 right-2">
                         <Badge
-                          variant={product.stock === 0 ? "destructive" : "outline"}
+                          variant={
+                            product.stock === 0 ? "destructive" : "outline"
+                          }
                           className={cn(
                             "h-5 px-1.5 text-[9px] font-semibold",
                             product.stock > 0 &&
                               "border-amber-200 bg-amber-50 text-amber-700"
                           )}
                         >
-                          {product.stock === 0 ? "Out of stock" : `${product.stock} left`}
+                          {product.stock === 0
+                            ? "Out of stock"
+                            : `${product.stock} left`}
                         </Badge>
                       </div>
                     )}
@@ -227,10 +241,10 @@ export default function POSProductList() {
 
                   {/* Info */}
                   <div className="p-2.5">
-                    <p className="line-clamp-2 min-h-10 text-xs font-medium leading-relaxed text-foreground">
+                    <p className="text-foreground line-clamp-2 min-h-10 text-xs leading-relaxed font-medium">
                       {product.name}
                     </p>
-                    <p className="mt-1 text-sm font-bold text-primary">
+                    <p className="text-primary mt-1 text-sm font-bold">
                       Rs. {parseFloat(product.price).toLocaleString()}
                     </p>
                   </div>
@@ -238,13 +252,13 @@ export default function POSProductList() {
               ))}
             </div>
           ) : (
-            <div className="flex h-64 flex-col items-center justify-center text-muted-foreground">
+            <div className="text-muted-foreground flex h-64 flex-col items-center justify-center">
               <ShoppingCart className="mb-3 h-12 w-12 opacity-20" />
               <p className="text-sm font-medium">No products found</p>
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
-                  className="mt-2 cursor-pointer text-xs text-primary underline underline-offset-2 hover:no-underline"
+                  className="text-primary mt-2 cursor-pointer text-xs underline underline-offset-2 hover:no-underline"
                 >
                   Clear filters
                 </button>
@@ -255,15 +269,17 @@ export default function POSProductList() {
       </ScrollArea>
 
       {/* Pagination */}
-      {productsData?.results && productsData.results.length > 0 && totalPages > 1 && (
-        <div className="shrink-0 border-t border-border bg-muted/30">
-          <SimplePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      )}
+      {productsData?.results &&
+        productsData.results.length > 0 &&
+        totalPages > 1 && (
+          <div className="border-border bg-muted/30 shrink-0 border-t">
+            <SimplePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        )}
     </div>
   );
 }

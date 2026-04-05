@@ -119,7 +119,7 @@ export default function DomainsPage() {
           <h1 className="text-2xl font-bold text-gray-900">Domains</h1>
         </div>
         <div className="relative w-full max-w-sm sm:w-80">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
             placeholder="Search domains..."
             value={searchTerm}

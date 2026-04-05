@@ -229,7 +229,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             )}
           </div>
 
-          <div 
+          <div
             className="hidden items-center gap-6 md:flex"
             style={{ backgroundColor: navbarData.backgroundColor || "white" }}
           >
@@ -305,10 +305,13 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 </Button>
               </DropdownMenuTrigger>
               {!disableClicks && (
-                <DropdownMenuContent 
-                  className="w-56" 
+                <DropdownMenuContent
+                  className="w-56"
                   align="start"
-                  style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                  style={{
+                    backgroundColor: navbarData.backgroundColor || "white",
+                    color: navbarData.textColor || "inherit",
+                  }}
                 >
                   {categories.map(category => {
                     const categorySubCategories = getSubCategoriesForCategory(
@@ -321,9 +324,13 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                           <DropdownMenuSubTrigger className="cursor-pointer">
                             <span>{category.name}</span>
                           </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent 
+                          <DropdownMenuSubContent
                             className="w-48"
-                            style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                            style={{
+                              backgroundColor:
+                                navbarData.backgroundColor || "white",
+                              color: navbarData.textColor || "inherit",
+                            }}
                           >
                             <DropdownMenuItem
                               className="cursor-pointer font-medium"
@@ -489,10 +496,13 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                     </Button>
                   </DropdownMenuTrigger>
                   {!disableClicks && !isEditable && (
-                    <DropdownMenuContent 
-                      className="w-48" 
+                    <DropdownMenuContent
+                      className="w-48"
                       align="end"
-                      style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                      style={{
+                        backgroundColor: navbarData.backgroundColor || "white",
+                        color: navbarData.textColor || "inherit",
+                      }}
                     >
                       <DropdownMenuItem
                         className="cursor-pointer"

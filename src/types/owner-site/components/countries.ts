@@ -14,7 +14,8 @@ export const DEFAULT_COUNTRIES_MAP: Record<string, CountriesData> = {
   "countries-style-1": {
     style: "style-1",
     title: "Choose Your Dream Destination",
-    subtitle: "We partner with top universities across five major study destinations.",
+    subtitle:
+      "We partner with top universities across five major study destinations.",
     itemsToShow: 12,
   },
 };

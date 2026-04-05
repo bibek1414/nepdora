@@ -1,7 +1,14 @@
 export interface TeamData {
   component_id?: string;
   component_type: "team";
-  style: "team-1" | "team-2" | "team-3" | "team-4" | "team-5" | "team-6" | "team-7";
+  style:
+    | "team-1"
+    | "team-2"
+    | "team-3"
+    | "team-4"
+    | "team-5"
+    | "team-6"
+    | "team-7";
 
   title: string;
   subtitle?: string;

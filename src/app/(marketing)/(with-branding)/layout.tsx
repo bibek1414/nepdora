@@ -5,7 +5,9 @@ type WithBrandingLayoutProps = {
   children: React.ReactNode;
 };
 
-export default function WithBrandingLayout({ children }: WithBrandingLayoutProps) {
+export default function WithBrandingLayout({
+  children,
+}: WithBrandingLayoutProps) {
   return (
     <>
       <Header />

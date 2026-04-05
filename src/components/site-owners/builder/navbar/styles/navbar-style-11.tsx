@@ -125,7 +125,8 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
     <header
       className={`w-full border-b backdrop-blur-md ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
       style={{
-        backgroundColor: navbarData.backgroundColor || "rgba(255, 255, 255, 0.8)",
+        backgroundColor:
+          navbarData.backgroundColor || "rgba(255, 255, 255, 0.8)",
         color: navbarData.textColor || "inherit",
       }}
     >
@@ -152,7 +153,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
         </div>
 
         {/* Desktop Navigation - Right Aligned */}
-        <div className="hidden flex-1 items-center justify-end gap-x-8 lg:flex pr-8">
+        <div className="hidden flex-1 items-center justify-end gap-x-8 pr-8 lg:flex">
           {links.map(link => (
             <div key={link.id}>
               {isEditable && onEditLink && onDeleteLink ? (

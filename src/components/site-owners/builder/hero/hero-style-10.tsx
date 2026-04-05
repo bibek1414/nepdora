@@ -201,7 +201,7 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                     handleCollectionUpdate(collection.id, "title", value)
                   }
                   as="h1"
-                  className="z-10 mb-8 "
+                  className="z-10 mb-8"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}

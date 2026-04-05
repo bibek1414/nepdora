@@ -91,13 +91,15 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
             >
               <TableCell className="px-6 py-4">
                 <Image
-                src={portfolio.thumbnail_image || "/fallback/image-not-found.png"}
-                alt={portfolio.title}
-                width={50}
-                height={50}
-                className="rounded-md"
+                  src={
+                    portfolio.thumbnail_image || "/fallback/image-not-found.png"
+                  }
+                  alt={portfolio.title}
+                  width={50}
+                  height={50}
+                  className="rounded-md"
                 />
-                </TableCell>
+              </TableCell>
               <TableCell className="px-6 py-4">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm font-normal text-black">

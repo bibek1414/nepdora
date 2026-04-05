@@ -94,15 +94,12 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
             onClick={handleAddToCart}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className={`flex h-11 w-11 items-center justify-center rounded-full shadow-lg transition-all duration-300 cursor-pointer`}
+            className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full shadow-lg transition-all duration-300`}
             style={
               {
-                backgroundColor: isAdded || isHovered
-                  ? theme.colors.primary
-                  : "white",
-                color: isAdded || isHovered
-                  ? "white"
-                  : "black",
+                backgroundColor:
+                  isAdded || isHovered ? theme.colors.primary : "white",
+                color: isAdded || isHovered ? "white" : "black",
               } as React.CSSProperties
             }
             title="Add to cart"

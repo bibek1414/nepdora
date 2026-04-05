@@ -56,13 +56,13 @@ export default async function ComparePage({ params }: Props) {
   const comparisonSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-      name: `${platform1} vs ${SITE_NAME} Comparison`,
-      description: `A detailed comparison between ${platform1} and ${SITE_NAME} for businesses in Nepal.`,
-      provider: {
-        "@type": "Organization",
-        name: SITE_NAME,
-        url: absoluteUrl(),
-      },
+    name: `${platform1} vs ${SITE_NAME} Comparison`,
+    description: `A detailed comparison between ${platform1} and ${SITE_NAME} for businesses in Nepal.`,
+    provider: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: absoluteUrl(),
+    },
   };
 
   return (

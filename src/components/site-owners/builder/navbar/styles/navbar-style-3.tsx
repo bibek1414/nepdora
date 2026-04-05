@@ -137,9 +137,12 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
         className="bg-white"
         style={{ backgroundColor: navbarData.backgroundColor || "white" }}
       >
-        <div 
+        <div
           className="flex h-10 items-center justify-center px-4 text-sm font-medium sm:px-6 lg:px-8"
-          style={{ backgroundColor: theme.colors.primary, color: theme.colors.primaryForeground }}
+          style={{
+            backgroundColor: theme.colors.primary,
+            color: theme.colors.primaryForeground,
+          }}
         >
           {isEditable ? (
             <EditableText
@@ -219,8 +222,8 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
                             <Link
                               href={link.href}
                               onClick={e => e.preventDefault()}
-                            className="mt-6 flex items-center text-sm font-medium transition-colors hover:opacity-80"
-                          >
+                              className="mt-6 flex items-center text-sm font-medium transition-colors hover:opacity-80"
+                            >
                               {link.text}
                             </Link>
                           </EditableItem>
@@ -457,13 +460,18 @@ export const NavbarStyle3: React.FC<NavbarStyleProps> = ({
 
       {/* Mobile Menu */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent 
-          side="left" 
+        <SheetContent
+          side="left"
           className="w-full max-w-xs overflow-y-auto"
-          style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+          style={{
+            backgroundColor: navbarData.backgroundColor || "white",
+            color: navbarData.textColor || "inherit",
+          }}
         >
           <SheetHeader>
-            <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+            <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>
+              Menu
+            </SheetTitle>
           </SheetHeader>
 
           <div className="mt-2">

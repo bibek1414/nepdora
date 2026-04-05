@@ -22,7 +22,7 @@ export default function PricingCalculator() {
       <div className="container mx-auto px-4">
         <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-slate-900 p-8 text-white shadow-2xl md:p-12">
           {/* Background decoration */}
-          <div className="absolute right-0 top-0 -mr-32 -mt-32 h-64 w-64 rounded-full bg-blue-600/10 blur-3xl" />
+          <div className="absolute top-0 right-0 -mt-32 -mr-32 h-64 w-64 rounded-full bg-blue-600/10 blur-3xl" />
 
           <div className="relative z-10 grid gap-12 lg:grid-cols-2">
             <div>
@@ -70,7 +70,7 @@ export default function PricingCalculator() {
 
             <div className="flex flex-col justify-center rounded-2xl bg-blue-600 p-8 shadow-inner md:p-10">
               <div className="mb-8 flex items-center justify-between">
-                <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-100">
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/30 px-3 py-1 text-xs font-bold tracking-wider text-blue-100 uppercase">
                   <TrendingDown className="h-3 w-3" /> Potential Annual Savings
                 </div>
                 <Zap className="h-6 w-6 animate-pulse text-yellow-300" />

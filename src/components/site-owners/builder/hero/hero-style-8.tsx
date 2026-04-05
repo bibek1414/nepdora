@@ -102,7 +102,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 <EditableText
                   value={data.badge1Text || "Approved by Ministry of Education"}
                   onChange={handleTextUpdate("badge1Text")}
-                  className="whitespace-nowrap text-xs font-medium text-gray-700"
+                  className="text-xs font-medium whitespace-nowrap text-gray-700"
                   isEditable={isEditable}
                   as="span"
                 />
@@ -121,7 +121,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                 <EditableText
                   value={data.badge2Text || "TITI Certified Counselors"}
                   onChange={handleTextUpdate("badge2Text")}
-                  className="whitespace-nowrap text-xs font-medium text-gray-700"
+                  className="text-xs font-medium whitespace-nowrap text-gray-700"
                   isEditable={isEditable}
                   as="span"
                 />
@@ -134,7 +134,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
               isEditable={isEditable}
               multiline
               as="h1"
-              className="mb-6 text-4xl font-bold leading-tight text-gray-900 md:text-4xl lg:text-5xl"
+              className="mb-6 text-4xl leading-tight font-bold text-gray-900 md:text-4xl lg:text-5xl"
             />
 
             <EditableText
@@ -149,7 +149,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
               multiline
             />
 
-            <div className="mb-10 mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-10 mb-10 flex flex-col gap-4 sm:flex-row">
               {buttons.map((button, index) => {
                 if (index === 0) {
                   return (
@@ -162,7 +162,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                       }
                       isEditable={isEditable}
                       siteUser={siteUser}
-                      className="text-primary-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md px-8 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                      className="text-primary-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md px-8 text-base font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
                       style={{ backgroundColor: primaryColor, color: "#fff" }}
                     >
                       <span>{button.text}</span>
@@ -181,7 +181,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                     }
                     isEditable={isEditable}
                     siteUser={siteUser}
-                    className="border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md border px-8 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50"
+                    className="border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-11 items-center justify-center gap-2 rounded-md border px-8 text-base font-medium transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
                   >
                     <span>{button.text}</span>
                   </EditableLink>

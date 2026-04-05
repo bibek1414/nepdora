@@ -26,13 +26,16 @@ export const LeadCaptureCRM: React.FC<LeadCaptureCRMProps> = ({ data }) => {
               {data.title}
             </h2>
             <p className="mb-7 text-base leading-relaxed text-slate-500">
-              Every enquiry, lead, and booking captured automatically — visible in
-              your dashboard from day one.
+              Every enquiry, lead, and booking captured automatically — visible
+              in your dashboard from day one.
             </p>
             <ul className="space-y-3">
               {data.features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" strokeWidth={2} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 shrink-0 text-slate-400"
+                    strokeWidth={2}
+                  />
                   <span className="text-sm leading-relaxed text-slate-700">
                     {feature}
                   </span>

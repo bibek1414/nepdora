@@ -134,13 +134,13 @@ export const ProfileForm = () => {
       <div className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="first_name"
                 render={({ field }) => (
                   <FormItem className="space-y-1.5">
-                    <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                    <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                       First Name
                     </FormLabel>
                     <FormControl>
@@ -150,7 +150,7 @@ export const ProfileForm = () => {
                         className="h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-red-500 mt-1" />
+                    <FormMessage className="mt-1 text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -159,7 +159,7 @@ export const ProfileForm = () => {
                 name="last_name"
                 render={({ field }) => (
                   <FormItem className="space-y-1.5">
-                    <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                    <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                       Last Name
                     </FormLabel>
                     <FormControl>
@@ -169,19 +169,19 @@ export const ProfileForm = () => {
                         className="h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-red-500 mt-1" />
+                    <FormMessage className="mt-1 text-xs text-red-500" />
                   </FormItem>
                 )}
               />
 
               <div className="space-y-1.5">
-                <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                   Email Address
                 </FormLabel>
                 <Input
                   value={profile?.email || ""}
                   disabled
-                  className="h-11 rounded-[12px] border-[#e2e8f0] bg-[#f8fafc] px-4 text-[13px] text-[#5b6e8c] cursor-not-allowed border-dashed focus-visible:ring-0"
+                  className="h-11 cursor-not-allowed rounded-[12px] border-dashed border-[#e2e8f0] bg-[#f8fafc] px-4 text-[13px] text-[#5b6e8c] focus-visible:ring-0"
                 />
               </div>
 
@@ -190,7 +190,7 @@ export const ProfileForm = () => {
                 name="phone_number"
                 render={({ field }) => (
                   <FormItem className="space-y-1.5">
-                    <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                    <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                       Phone Number
                     </FormLabel>
                     <FormControl>
@@ -200,7 +200,7 @@ export const ProfileForm = () => {
                         className="h-11 rounded-[12px] border-[#e2e8f0] bg-white px-4 text-[13px] transition-all focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 focus:outline-none"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-red-500 mt-1" />
+                    <FormMessage className="mt-1 text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -211,23 +211,26 @@ export const ProfileForm = () => {
                   name="website_type"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel className="text-[12px] font-bold text-[#2c3e50] uppercase tracking-tight">
+                      <FormLabel className="text-[12px] font-bold tracking-tight text-[#2c3e50] uppercase">
                         Website Type
                       </FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
                           value={field.value}
-                          className="flex flex-row gap-6 mt-1"
+                          className="mt-1 flex flex-row gap-6"
                         >
                           <FormItem className="flex items-center space-y-0 space-x-2">
                             <FormControl>
-                              <RadioGroupItem value="ecommerce" className="border-blue-600 text-blue-600" />
+                              <RadioGroupItem
+                                value="ecommerce"
+                                className="border-blue-600 text-blue-600"
+                              />
                             </FormControl>
-                            <FormLabel className="font-semibold text-sm text-[#0d1117] cursor-pointer">
+                            <FormLabel className="cursor-pointer text-sm font-semibold text-[#0d1117]">
                               E-commerce
                               {profile?.website_type === "ecommerce" && (
-                                <span className="ml-2 bg-[#e8f5e9] text-[#2e7d32] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                <span className="ml-2 rounded-full bg-[#e8f5e9] px-2 py-0.5 text-[10px] font-bold tracking-wider text-[#2e7d32] uppercase">
                                   Default
                                 </span>
                               )}
@@ -235,12 +238,15 @@ export const ProfileForm = () => {
                           </FormItem>
                           <FormItem className="flex items-center space-y-0 space-x-2">
                             <FormControl>
-                              <RadioGroupItem value="service" className="border-blue-600 text-blue-600" />
+                              <RadioGroupItem
+                                value="service"
+                                className="border-blue-600 text-blue-600"
+                              />
                             </FormControl>
-                            <FormLabel className="font-semibold text-sm text-[#0d1117] cursor-pointer">
+                            <FormLabel className="cursor-pointer text-sm font-semibold text-[#0d1117]">
                               Service
                               {profile?.website_type === "service" && (
-                                <span className="ml-2 bg-[#e8f5e9] text-[#2e7d32] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                <span className="ml-2 rounded-full bg-[#e8f5e9] px-2 py-0.5 text-[10px] font-bold tracking-wider text-[#2e7d32] uppercase">
                                   Default
                                 </span>
                               )}
@@ -255,20 +261,20 @@ export const ProfileForm = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#f0f2f5]">
+            <div className="flex items-center justify-end gap-3 border-t border-[#f0f2f5] pt-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => form.reset()}
                 disabled={!form.formState.isDirty || updateProfile.isPending}
-                className="h-10 rounded-full border-[#e2e8f0] px-6 text-[13px] font-semibold text-[#1f2a48] hover:bg-[#f8fafc] hover:border-[#cbd5e1] shadow-none"
+                className="h-10 rounded-full border-[#e2e8f0] px-6 text-[13px] font-semibold text-[#1f2a48] shadow-none hover:border-[#cbd5e1] hover:bg-[#f8fafc]"
               >
                 Discard
               </Button>
               <Button
                 type="submit"
                 disabled={!form.formState.isDirty || updateProfile.isPending}
-                className="h-10 rounded-full bg-blue-600 px-8 text-[13px] font-semibold text-white shadow-sm hover:bg-blue-700 transition-all"
+                className="h-10 rounded-full bg-blue-600 px-8 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-blue-700"
               >
                 {updateProfile.isPending ? (
                   <>

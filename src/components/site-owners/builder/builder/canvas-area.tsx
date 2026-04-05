@@ -172,7 +172,7 @@ export const CanvasArea: React.FC<CanvasAreaProps> = ({
       siteUser: "", // siteUser not needed in builder cards for most components
       pageSlug: currentPageSlug,
       onReplace: onReplaceSection,
-      onUpdate: () => onOrderChange?.(), 
+      onUpdate: () => onOrderChange?.(),
     };
 
     // Specific props (empty handlers for builder mode)

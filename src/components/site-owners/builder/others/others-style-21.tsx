@@ -112,10 +112,8 @@ export const OthersTemplate21: React.FC<OthersTemplate21Props> = ({
     fonts: { heading: "sans-serif", body: "sans-serif" },
   };
 
-  const { data, handleTextUpdate, handleMultipleUpdate } = useBuilderLogic<OthersTemplate21Data>(
-    othersData,
-    onUpdate
-  );
+  const { data, handleTextUpdate, handleMultipleUpdate } =
+    useBuilderLogic<OthersTemplate21Data>(othersData, onUpdate);
 
   const handleCardUpdate = (
     side: "leftCards" | "rightCards",

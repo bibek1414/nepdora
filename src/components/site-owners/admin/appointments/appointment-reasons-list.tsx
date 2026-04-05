@@ -289,7 +289,7 @@ const AppointmentReasonsList = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={(e) => {
+                            onClick={e => {
                               e.stopPropagation();
                               handleEditClick(reason);
                             }}
@@ -301,7 +301,7 @@ const AppointmentReasonsList = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={(e) => {
+                            onClick={e => {
                               e.stopPropagation();
                               handleDeleteClick(reason);
                             }}

@@ -25,12 +25,13 @@ interface TopSellingProductsProps {
 function RankBadge({ rank }: { rank: number }) {
   const base =
     "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold";
-  if (rank === 1) return <span className={`${base} bg-amber-50 text-amber-600`}>1</span>;
-  if (rank === 2) return <span className={`${base} bg-slate-100 text-slate-500`}>2</span>;
-  if (rank === 3) return <span className={`${base} bg-orange-50 text-orange-500`}>3</span>;
-  return (
-    <span className={`${base} bg-gray-50 text-gray-400`}>{rank}</span>
-  );
+  if (rank === 1)
+    return <span className={`${base} bg-amber-50 text-amber-600`}>1</span>;
+  if (rank === 2)
+    return <span className={`${base} bg-slate-100 text-slate-500`}>2</span>;
+  if (rank === 3)
+    return <span className={`${base} bg-orange-50 text-orange-500`}>3</span>;
+  return <span className={`${base} bg-gray-50 text-gray-400`}>{rank}</span>;
 }
 
 export default function TopSellingProducts({
@@ -52,9 +53,9 @@ export default function TopSellingProducts({
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="flex items-center gap-4 px-6 py-3.5 border-b border-black/4 last:border-0"
+              className="flex items-center gap-4 border-b border-black/4 px-6 py-3.5 last:border-0"
             >
-              <Skeleton className="h-9 w-9 rounded-md shrink-0" />
+              <Skeleton className="h-9 w-9 shrink-0 rounded-md" />
               <div className="flex-1 space-y-1.5">
                 <Skeleton className="h-3.5 w-32" />
                 <Skeleton className="h-2 w-24" />
@@ -130,7 +131,7 @@ export default function TopSellingProducts({
                     className="group border-black/4 transition-colors hover:bg-gray-50/60"
                   >
                     {/* Rank */}
-                    <TableCell className="pl-6 py-3">
+                    <TableCell className="py-3 pl-6">
                       <RankBadge rank={i + 1} />
                     </TableCell>
 
@@ -169,13 +170,15 @@ export default function TopSellingProducts({
                     </TableCell>
 
                     {/* Amount */}
-                    <TableCell className={`py-3 text-right text-[13px] font-semibold text-gray-800 ${!showPercentage ? "pr-6" : ""}`}>
+                    <TableCell
+                      className={`py-3 text-right text-[13px] font-semibold text-gray-800 ${!showPercentage ? "pr-6" : ""}`}
+                    >
                       Rs. {product.amount.toLocaleString()}
                     </TableCell>
 
                     {/* % Share */}
                     {showPercentage && (
-                      <TableCell className="pr-6 py-3 text-right text-[13px] font-semibold text-blue-600">
+                      <TableCell className="py-3 pr-6 text-right text-[13px] font-semibold text-blue-600">
                         {revPct}%
                       </TableCell>
                     )}

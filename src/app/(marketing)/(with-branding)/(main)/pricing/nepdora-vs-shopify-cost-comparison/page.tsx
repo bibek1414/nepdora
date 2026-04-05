@@ -86,12 +86,12 @@ export default async function ShopifyComparisonPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-slate-900 py-20 text-white">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-blue-600 blur-[100px]" />
-          <div className="absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-teal-600 blur-[100px]" />
+          <div className="absolute -top-20 -left-20 h-96 w-96 rounded-full bg-blue-600 blur-[100px]" />
+          <div className="absolute -right-20 -bottom-20 h-96 w-96 rounded-full bg-teal-600 blur-[100px]" />
         </div>
 
-        <div className="container relative mx-auto px-4 text-center">
-          <div className="mb-4 inline-flex items-center rounded-full bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-400 ring-1 ring-inset ring-blue-500/20">
+        <div className="relative container mx-auto px-4 text-center">
+          <div className="mb-4 inline-flex items-center rounded-full bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-400 ring-1 ring-blue-500/20 ring-inset">
             Nepdora vs Global Builders
           </div>
           <h1 className="mb-6 text-4xl font-extrabold tracking-tight md:text-6xl">
@@ -137,7 +137,7 @@ export default async function ShopifyComparisonPage() {
                   <div className="flex flex-col items-center gap-1">
                     {row.nepdora}
                     {row.advantage === "nepdora" && (
-                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] uppercase text-green-700">
+                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] text-green-700 uppercase">
                         Winner
                       </span>
                     )}

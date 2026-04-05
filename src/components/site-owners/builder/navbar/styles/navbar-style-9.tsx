@@ -153,7 +153,10 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
         }}
       >
         {/* Main Header */}
-        <div className="py-4 md:py-6" style={{ backgroundColor: "transparent" }}>
+        <div
+          className="py-4 md:py-6"
+          style={{ backgroundColor: "transparent" }}
+        >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-4 md:gap-8">
               {/* Mobile Menu Button */}
@@ -226,7 +229,10 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                     {isAuthenticated && !disableClicks && !isEditable && (
                       <div
                         className={`absolute top-full right-0 z-50 mt-2 w-56 rounded-2xl border border-gray-100 py-2 transition-all duration-200 ${isAccountOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"}`}
-                        style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                        style={{
+                          backgroundColor: data.backgroundColor || "white",
+                          color: data.textColor || "inherit",
+                        }}
                       >
                         <div
                           onClick={() => handleProfileAction("profile")}
@@ -357,9 +363,12 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   />
                 </div>
                 {/* Dropdown Menu */}
-                <div 
+                <div
                   className="invisible absolute top-full left-0 z-40 w-64 translate-y-2 transform rounded-b-lg border border-gray-100 opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
-                  style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                  style={{
+                    backgroundColor: data.backgroundColor || "white",
+                    color: data.textColor || "inherit",
+                  }}
                 >
                   <div className="px-5 py-2">
                     {categories.map(category => (
@@ -434,11 +443,14 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && !disableClicks && !isEditable && (
-          <div 
+          <div
             className="pointer-events-auto fixed inset-0 z-40 overflow-y-auto md:hidden"
-            style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+            style={{
+              backgroundColor: data.backgroundColor || "white",
+              color: data.textColor || "inherit",
+            }}
           >
-            <div 
+            <div
               className="flex items-center justify-between border-b border-gray-100 p-4"
               style={{ backgroundColor: data.backgroundColor || "white" }}
             >
@@ -453,7 +465,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
             </div>
 
             <div className="space-y-4 p-4">
-              <div className="mb-2 text-xs font-bold tracking-wider opacity-40 uppercase">
+              <div className="mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
                 Builder Links
               </div>
               {links.map(link => (
@@ -488,7 +500,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                 </Link>
               ))}
 
-              <div className="mt-4 mb-2 text-xs font-bold tracking-wider opacity-40 uppercase">
+              <div className="mt-4 mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
                 Categories
               </div>
               {categories.map(category => (

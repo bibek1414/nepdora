@@ -35,7 +35,10 @@ import { DEFAULT_EXPERIENCE_MAP } from "./experience";
 import { DEFAULT_COLLECTIONS_MAP } from "./collections";
 import { DEFAULT_SOCIALS_MAP } from "./socials";
 import { DEFAULT_TOURS_MAP } from "./tours";
-import { DEFAULT_COUNTRIES_MAP, DEFAULT_COUNTRY_DETAILS_MAP } from "./countries";
+import {
+  DEFAULT_COUNTRIES_MAP,
+  DEFAULT_COUNTRY_DETAILS_MAP,
+} from "./countries";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";

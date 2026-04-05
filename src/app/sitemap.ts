@@ -141,24 +141,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Compare pages (Direct Comparisons & Pricing)
-  const comparePages = ALL_COMPETITORS.map(({ slug }) => `${slug}-and-nepdora`).map(
-    slug => ({
-      url: `${baseUrl}/compare/${slug}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })
-  );
+  const comparePages = ALL_COMPETITORS.map(
+    ({ slug }) => `${slug}-and-nepdora`
+  ).map(slug => ({
+    url: `${baseUrl}/compare/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
 
   // Alternative pages (New pSEO)
-  const alternativePages = ALL_COMPETITORS.map(({ slug }) => `${slug}-nepal`).map(
-    slug => ({
-      url: `${baseUrl}/alternative/${slug}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })
-  );
+  const alternativePages = ALL_COMPETITORS.map(
+    ({ slug }) => `${slug}-nepal`
+  ).map(slug => ({
+    url: `${baseUrl}/alternative/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
 
   const dedicatedAlternativePages = [
     {

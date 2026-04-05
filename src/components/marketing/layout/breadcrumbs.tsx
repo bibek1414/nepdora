@@ -14,10 +14,7 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   // Always add Home to the beginning
-  const allItems: BreadcrumbItem[] = [
-    { label: "Home", href: "/" },
-    ...items,
-  ];
+  const allItems: BreadcrumbItem[] = [{ label: "Home", href: "/" }, ...items];
 
   // Schema.org BreadcrumbList
   const schema = {
@@ -32,31 +29,31 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
   };
 
   return (
-    <nav className="flex items-center gap-2 overflow-x-auto whitespace-nowrap py-4 text-sm font-medium text-slate-500 scrollbar-hide">
+    <nav className="scrollbar-hide flex items-center gap-2 overflow-x-auto py-4 text-sm font-medium whitespace-nowrap text-slate-500">
       <JsonLd id="breadcrumb-schema" data={schema} />
-      
+
       {allItems.map((item, index) => (
         <div key={item.href} className="flex items-center gap-2">
           {index === 0 ? (
-            <Link 
-              href={item.href} 
-              className="flex items-center gap-1 hover:text-primary transition-colors hover:scale-105 active:scale-95"
+            <Link
+              href={item.href}
+              className="hover:text-primary flex items-center gap-1 transition-colors hover:scale-105 active:scale-95"
             >
-              <Home className="w-3.5 h-3.5" />
+              <Home className="h-3.5 w-3.5" />
             </Link>
           ) : (
-            <Link 
-              href={item.href} 
+            <Link
+              href={item.href}
               className={`hover:text-primary transition-colors hover:scale-105 active:scale-95 ${
-                index === allItems.length - 1 ? "text-slate-900 font-bold" : ""
+                index === allItems.length - 1 ? "font-bold text-slate-900" : ""
               }`}
             >
               {item.label}
             </Link>
           )}
-          
+
           {index < allItems.length - 1 && (
-            <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-300" />
           )}
         </div>
       ))}

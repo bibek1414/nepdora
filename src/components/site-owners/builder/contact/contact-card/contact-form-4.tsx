@@ -46,14 +46,26 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
     if (isEditable) return;
 
     if (formData.website_url) {
-      setFormData({ name: "", phone_number: "", message: "", email: "", website_url: "" });
+      setFormData({
+        name: "",
+        phone_number: "",
+        message: "",
+        email: "",
+        website_url: "",
+      });
       toast.success("Message sent successfully");
       return;
     }
 
     submitContactMutation.mutate(formData, {
       onSuccess: () => {
-        setFormData({ name: "", phone_number: "", message: "", email: "", website_url: "" });
+        setFormData({
+          name: "",
+          phone_number: "",
+          message: "",
+          email: "",
+          website_url: "",
+        });
       },
     });
   };
@@ -82,7 +94,9 @@ export const ContactForm4: React.FC<ContactForm4Props> = ({
             tabIndex={-1}
             autoComplete="off"
             value={formData.website_url}
-            onChange={e => setFormData({ ...formData, website_url: e.target.value })}
+            onChange={e =>
+              setFormData({ ...formData, website_url: e.target.value })
+            }
           />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {/* Floating Input Name */}

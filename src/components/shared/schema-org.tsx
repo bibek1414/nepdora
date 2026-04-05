@@ -70,7 +70,6 @@ export const LocalBusinessSchema = () => {
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: [
-        
         "Monday",
         "Tuesday",
         "Wednesday",

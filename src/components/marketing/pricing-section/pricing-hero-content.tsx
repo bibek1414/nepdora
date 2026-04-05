@@ -28,7 +28,6 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({
     { icon: Clock, text: "Cancel anytime" },
   ];
 
-
   const calculatePrice = (monthlyPrice: string) => {
     const price = parseFloat(monthlyPrice);
     if (isYearly) {

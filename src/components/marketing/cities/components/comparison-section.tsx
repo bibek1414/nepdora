@@ -22,14 +22,19 @@ export const ComparisonSection: React.FC<ComparisonProps> = ({ data }) => {
         <div className="grid gap-6 sm:grid-cols-2">
           {/* Nepdora */}
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
-            <p className="mb-5 text-xs font-medium uppercase tracking-wider text-slate-500">
+            <p className="mb-5 text-xs font-medium tracking-wider text-slate-500 uppercase">
               Nepdora
             </p>
             <ul className="space-y-3.5">
               {data.nepdora.map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-slate-600" strokeWidth={2} />
-                  <span className="text-sm leading-relaxed text-slate-800">{item}</span>
+                  <Check
+                    className="mt-0.5 h-4 w-4 shrink-0 text-slate-600"
+                    strokeWidth={2}
+                  />
+                  <span className="text-sm leading-relaxed text-slate-800">
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -37,14 +42,19 @@ export const ComparisonSection: React.FC<ComparisonProps> = ({ data }) => {
 
           {/* Traditional */}
           <div className="rounded-2xl border border-slate-200 bg-white p-8">
-            <p className="mb-5 text-xs font-medium uppercase tracking-wider text-slate-400">
+            <p className="mb-5 text-xs font-medium tracking-wider text-slate-400 uppercase">
               Traditional Agency
             </p>
             <ul className="space-y-3.5">
               {data.traditional.map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <X className="mt-0.5 h-4 w-4 shrink-0 text-slate-300" strokeWidth={2} />
-                  <span className="text-sm leading-relaxed text-slate-400">{item}</span>
+                  <X
+                    className="mt-0.5 h-4 w-4 shrink-0 text-slate-300"
+                    strokeWidth={2}
+                  />
+                  <span className="text-sm leading-relaxed text-slate-400">
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -52,7 +62,8 @@ export const ComparisonSection: React.FC<ComparisonProps> = ({ data }) => {
         </div>
 
         <p className="mt-6 text-sm text-slate-400">
-          Nepdora is 10× faster and significantly more affordable than a traditional agency.
+          Nepdora is 10× faster and significantly more affordable than a
+          traditional agency.
         </p>
       </div>
     </section>

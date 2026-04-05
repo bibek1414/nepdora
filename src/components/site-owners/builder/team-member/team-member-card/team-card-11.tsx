@@ -31,7 +31,7 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
       transition={{ duration: 0.5, delay: index * 0.1 }}
       onMouseEnter={() => handleMouseOver(index)}
       onMouseLeave={() => handleMouseOver(null)}
-      className="relative h-[400px] cursor-pointer overflow-hidden rounded-xl group"
+      className="group relative h-[400px] cursor-pointer overflow-hidden rounded-xl"
       onClick={onClick}
     >
       {/* Photo */}
@@ -40,7 +40,9 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
         alt={member.name}
         fill
         className="object-cover transition-transform duration-500 ease-out"
-        style={{ transform: hoveredIndex === index ? "scale(1.04)" : "scale(1)" }}
+        style={{
+          transform: hoveredIndex === index ? "scale(1.04)" : "scale(1)",
+        }}
       />
 
       {/* Hover overlay */}
@@ -53,7 +55,7 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-3">
-          <div className="text-center px-4">
+          <div className="px-4 text-center">
             <p className="text-base font-semibold text-white">{member.name}</p>
             <p className="text-sm font-medium text-white/80">{member.role}</p>
           </div>
@@ -66,7 +68,7 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               >
                 <Facebook size={14} />
               </a>
@@ -77,7 +79,7 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               >
                 <Linkedin size={14} />
               </a>
@@ -88,7 +90,7 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               >
                 <Instagram size={14} />
               </a>
@@ -99,7 +101,7 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               >
                 <X size={14} />
               </a>

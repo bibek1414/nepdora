@@ -74,10 +74,10 @@ export default function POSNewCustomerDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[420px]">
         <DialogHeader className="flex flex-row items-center gap-3 space-y-0 pb-1">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <UserPlus className="h-4 w-4 text-primary" />
+          <div className="bg-primary/10 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
+            <UserPlus className="text-primary h-4 w-4" />
           </div>
-          <DialogTitle className="text-base font-semibold text-foreground">
+          <DialogTitle className="text-foreground text-base font-semibold">
             Register new customer
           </DialogTitle>
         </DialogHeader>
@@ -86,7 +86,10 @@ export default function POSNewCustomerDialog({
           {/* Name row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="first_name" className="text-xs font-medium text-foreground">
+              <Label
+                htmlFor="first_name"
+                className="text-foreground text-xs font-medium"
+              >
                 First name
               </Label>
               <Input
@@ -96,11 +99,14 @@ export default function POSNewCustomerDialog({
                   setFormData({ ...formData, first_name: e.target.value })
                 }
                 placeholder="John"
-                className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
+                className="border-border bg-muted/40 placeholder:text-muted-foreground focus:bg-background h-9 text-sm"
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="last_name" className="text-xs font-medium text-foreground">
+              <Label
+                htmlFor="last_name"
+                className="text-foreground text-xs font-medium"
+              >
                 Last name
               </Label>
               <Input
@@ -110,14 +116,17 @@ export default function POSNewCustomerDialog({
                   setFormData({ ...formData, last_name: e.target.value })
                 }
                 placeholder="Doe"
-                className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
+                className="border-border bg-muted/40 placeholder:text-muted-foreground focus:bg-background h-9 text-sm"
               />
             </div>
           </div>
 
           {/* Phone */}
           <div className="space-y-1.5">
-            <Label htmlFor="phone" className="text-xs font-medium text-foreground">
+            <Label
+              htmlFor="phone"
+              className="text-foreground text-xs font-medium"
+            >
               Phone number
             </Label>
             <Input
@@ -127,13 +136,16 @@ export default function POSNewCustomerDialog({
                 setFormData({ ...formData, phone: e.target.value })
               }
               placeholder="98XXXXXXXX"
-              className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
+              className="border-border bg-muted/40 placeholder:text-muted-foreground focus:bg-background h-9 text-sm"
             />
           </div>
 
           {/* Email */}
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-xs font-medium text-foreground">
+            <Label
+              htmlFor="email"
+              className="text-foreground text-xs font-medium"
+            >
               Email address
             </Label>
             <Input
@@ -144,7 +156,7 @@ export default function POSNewCustomerDialog({
                 setFormData({ ...formData, email: e.target.value })
               }
               placeholder="john@example.com"
-              className="h-9 border-border bg-muted/40 text-sm placeholder:text-muted-foreground focus:bg-background"
+              className="border-border bg-muted/40 placeholder:text-muted-foreground focus:bg-background h-9 text-sm"
             />
           </div>
 
@@ -153,7 +165,7 @@ export default function POSNewCustomerDialog({
             <Button
               type="button"
               variant="outline"
-              className="flex-1 h-10 border-border text-sm"
+              className="border-border h-10 flex-1 text-sm"
               onClick={() => onOpenChange(false)}
             >
               Cancel
@@ -161,9 +173,11 @@ export default function POSNewCustomerDialog({
             <Button
               type="submit"
               disabled={registerMutation.isPending}
-              className="flex-1 h-10 bg-primary text-sm text-primary-foreground hover:bg-primary/90 active:scale-[0.98]"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 flex-1 text-sm active:scale-[0.98]"
             >
-              {registerMutation.isPending ? "Registering…" : "Register customer"}
+              {registerMutation.isPending
+                ? "Registering…"
+                : "Register customer"}
             </Button>
           </div>
         </form>

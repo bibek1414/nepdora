@@ -52,9 +52,9 @@ export default function DynamicPageClient({
       ) : null}
 
       {!hasContent && (
-        <SiteNotFound 
-          pageName={currentPageSlug} 
-          onBackHome={handleBacktoHome} 
+        <SiteNotFound
+          pageName={currentPageSlug}
+          onBackHome={handleBacktoHome}
         />
       )}
     </>

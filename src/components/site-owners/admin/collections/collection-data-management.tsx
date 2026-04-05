@@ -371,7 +371,7 @@ export function CollectionDataManagement({
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 rounded-full text-black/40 hover:text-black/60"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           handleEdit(data);
                         }}
@@ -381,7 +381,7 @@ export function CollectionDataManagement({
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           confirmDelete(data);
                         }}
@@ -432,7 +432,7 @@ export function CollectionDataManagement({
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault();
                 handleDelete();
               }}

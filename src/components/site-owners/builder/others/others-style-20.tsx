@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronRight } from "lucide-react";
+import { ChevronRight,  } from "lucide-react";
 import { OthersTemplate20Data } from "@/types/owner-site/components/others";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
@@ -49,7 +49,7 @@ export const OthersTemplate20: React.FC<OthersTemplate20Props> = ({
               value={data.heading}
               onChange={handleTextUpdate("heading")}
               isEditable={isEditable}
-              className="text-[2.1rem] font-bold leading-[1.18] tracking-tight text-gray-900 md:text-[2.6rem]"
+              className="text-[2.1rem] leading-[1.18] font-bold tracking-tight text-gray-900 md:text-[2.6rem]"
               style={{ fontFamily: theme.fonts.heading }}
               multiline
             />

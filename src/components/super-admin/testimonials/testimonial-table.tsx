@@ -79,87 +79,87 @@ export const TestimonialsTable = ({
 
   return (
     <div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Profile</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Designation</TableHead>
-              <TableHead>Comment</TableHead>
-              <TableHead>Date Added</TableHead>
-              <TableHead className="pr-6 text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {testimonials.map(testimonial => (
-              <TableRow
-                key={testimonial.id}
-                className="cursor-pointer transition-colors hover:bg-gray-50"
-                onClick={() => handleRowClick(testimonial)}
-              >
-                <TableCell>
-                  <div className="mb-2 flex-shrink-0">
-                    {testimonial.image ? (
-                      <Image
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        width={60}
-                        height={48}
-                        className="rounded-md object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 xl:h-12 xl:w-12">
-                        <span className="text-sm font-medium text-gray-700">
-                          {testimonial.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm font-medium text-gray-900">
-                    {testimonial.name}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {testimonial.designation && (
-                    <div className="text-sm font-medium text-gray-900">
-                      {testimonial.designation}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Profile</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Designation</TableHead>
+            <TableHead>Comment</TableHead>
+            <TableHead>Date Added</TableHead>
+            <TableHead className="pr-6 text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {testimonials.map(testimonial => (
+            <TableRow
+              key={testimonial.id}
+              className="cursor-pointer transition-colors hover:bg-gray-50"
+              onClick={() => handleRowClick(testimonial)}
+            >
+              <TableCell>
+                <div className="mb-2 flex-shrink-0">
+                  {testimonial.image ? (
+                    <Image
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      width={60}
+                      height={48}
+                      className="rounded-md object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 xl:h-12 xl:w-12">
+                      <span className="text-sm font-medium text-gray-700">
+                        {testimonial.name.charAt(0).toUpperCase()}
+                      </span>
                     </div>
                   )}
-                </TableCell>
-                <TableCell>
-                  <div className="max-w-xs text-sm leading-relaxed text-gray-900 xl:max-w-md">
-                    {truncateText(testimonial.comment, 80)}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm font-medium text-gray-900">
+                  {testimonial.name}
+                </div>
+              </TableCell>
+              <TableCell>
+                {testimonial.designation && (
+                  <div className="text-sm font-medium text-gray-900">
+                    {testimonial.designation}
                   </div>
-                </TableCell>
-                <TableCell className="text-sm text-gray-500">
-                  {formatDate(testimonial.created_at)}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={e => handleEditClick(testimonial, e)}
-                      className="hover:text-gray-90 text-gray-600"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={e => handleDeleteClick(testimonial, e)}
-                      className="text-red-600 hover:text-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                )}
+              </TableCell>
+              <TableCell>
+                <div className="max-w-xs text-sm leading-relaxed text-gray-900 xl:max-w-md">
+                  {truncateText(testimonial.comment, 80)}
+                </div>
+              </TableCell>
+              <TableCell className="text-sm text-gray-500">
+                {formatDate(testimonial.created_at)}
+              </TableCell>
+              <TableCell className="text-right">
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={e => handleEditClick(testimonial, e)}
+                    className="hover:text-gray-90 text-gray-600"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={e => handleDeleteClick(testimonial, e)}
+                    className="text-red-600 hover:text-red-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };

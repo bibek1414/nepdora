@@ -140,7 +140,6 @@ These rules apply to every component, without exception.
 - Avoid bouncy or springy animations unless the product is playful by design.
 - **Interactive Cursors**: Every clickable or interactive element (buttons, cards with click handlers, links) MUST have `cursor-pointer`. This is non-negotiable for UX.
 
-
 ---
 
 ## @beautifulMention Text Strategy
@@ -276,7 +275,6 @@ Before shipping, verify every item:
 - [ ] Standard elements use Shadcn UI components (`Button`, `Input`, etc.)
 - [ ] All icons are imported from `lucide-react`, no inline SVGs
 
-
 ---
 
 ## @beautifulMention Anti-Patterns — Never Do These
@@ -300,7 +298,6 @@ Before shipping, verify every item:
 - ❌ Hardcoded hex colors or font names in `className` — use Tailwind neutrals or `style` with theme tokens (e.g., `theme.colors.primary`).
 - ❌ Arbitrary "subtle" hex colors (e.g., `bg-[#f8faf9]`, `bg-[#EEF2FF]`) — use `hexToRgba(token, opacity)` instead.
 - ❌ Clickable elements (divs, spans, cards) without `cursor-pointer` utility.
-
 
 ---
 

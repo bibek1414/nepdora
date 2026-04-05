@@ -197,7 +197,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
         className="bg-white"
         style={{ backgroundColor: navbarData.backgroundColor || "white" }}
       >
-        <div 
+        <div
           className="transition-colors"
           style={{ backgroundColor: theme.colors.primary }}
         >
@@ -257,9 +257,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   )}
 
                   {index < Math.min(3, links.length) - 1 && (
-                    <span 
+                    <span
                       className="h-4 w-px opacity-30"
-                      style={{ backgroundColor: theme.colors.primaryForeground }}
+                      style={{
+                        backgroundColor: theme.colors.primaryForeground,
+                      }}
                     ></span>
                   )}
                 </React.Fragment>
@@ -349,9 +351,11 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                   )}
 
                   {index < topBarItems.length - 1 && (
-                    <span 
+                    <span
                       className="h-4 w-px opacity-30"
-                      style={{ backgroundColor: theme.colors.primaryForeground }}
+                      style={{
+                        backgroundColor: theme.colors.primaryForeground,
+                      }}
                     ></span>
                   )}
                 </React.Fragment>
@@ -489,10 +493,14 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
                       </Button>
                     </DropdownMenuTrigger>
                     {!disableClicks && !isEditable && (
-                      <DropdownMenuContent 
-                        className="w-48" 
+                      <DropdownMenuContent
+                        className="w-48"
                         align="end"
-                        style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                        style={{
+                          backgroundColor:
+                            navbarData.backgroundColor || "white",
+                          color: navbarData.textColor || "inherit",
+                        }}
                       >
                         {isAuthenticated ? (
                           <>

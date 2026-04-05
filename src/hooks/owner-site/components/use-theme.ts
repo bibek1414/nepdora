@@ -33,25 +33,31 @@ export const useThemeQuery = (enabled: boolean = true) => {
           clearTimeout(timeoutId);
         };
 
-        const unsubscribeSuccess = socket.subscribe("themes_list", (message: any) => {
-          if (isFinished) return;
-          cleanup();
-          resolve({
-            data: message.data || [],
-            message: "Themes retrieved successfully",
-          });
-        });
-
-        const unsubscribeError = socket.subscribe("socket_error", (message: any) => {
-          if (isFinished) return;
-          if (message.error === "Page not found") {
+        const unsubscribeSuccess = socket.subscribe(
+          "themes_list",
+          (message: any) => {
+            if (isFinished) return;
             cleanup();
             resolve({
-              data: [],
-              message: "Themes not found",
+              data: message.data || [],
+              message: "Themes retrieved successfully",
             });
           }
-        });
+        );
+
+        const unsubscribeError = socket.subscribe(
+          "socket_error",
+          (message: any) => {
+            if (isFinished) return;
+            if (message.error === "Page not found") {
+              cleanup();
+              resolve({
+                data: [],
+                message: "Themes not found",
+              });
+            }
+          }
+        );
 
         const timeoutId = setTimeout(() => {
           if (isFinished) return;

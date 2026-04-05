@@ -49,12 +49,13 @@ export default async function SettingsLayout({
   const user = await getServerUser();
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 mt-4">
+      <div className="mt-4 mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           Settings
         </h1>
         <p className="mt-2 text-sm text-gray-500">
-          Manage your store configuration, branding, delivery, domains, and account security.
+          Manage your store configuration, branding, delivery, domains, and
+          account security.
         </p>
       </div>
 

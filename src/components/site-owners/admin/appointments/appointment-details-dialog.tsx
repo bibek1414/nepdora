@@ -189,7 +189,7 @@ const AppointmentDetailsDialog: React.FC<AppointmentDetailsDialogProps> = ({
               size="lg"
               onClick={handlePrevious}
               disabled={currentIndex === 0}
-              className="absolute -left-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronLeft className="h-6 w-6 text-black" />
             </Button>
@@ -200,7 +200,7 @@ const AppointmentDetailsDialog: React.FC<AppointmentDetailsDialogProps> = ({
               size="lg"
               onClick={handleNext}
               disabled={currentIndex === appointments.length - 1}
-              className="absolute -right-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronRight className="h-6 w-6 text-black" />
             </Button>
@@ -265,7 +265,7 @@ const AppointmentDetailsDialog: React.FC<AppointmentDetailsDialogProps> = ({
                 <User className="mt-0.5 h-5 w-5 text-gray-400" />
                 <div>
                   <p className="text-xs text-gray-500">Full Name</p>
-                  <p className="font-medium capitalize text-gray-900">
+                  <p className="font-medium text-gray-900 capitalize">
                     {currentAppointment.full_name}
                   </p>
                 </div>
@@ -342,7 +342,7 @@ const AppointmentDetailsDialog: React.FC<AppointmentDetailsDialogProps> = ({
                     Additional Notes
                   </h3>
                 </div>
-                <p className="whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm text-gray-700">
+                <p className="rounded-lg bg-gray-50 p-4 text-sm whitespace-pre-wrap text-gray-700">
                   {currentAppointment.message}
                 </p>
               </div>

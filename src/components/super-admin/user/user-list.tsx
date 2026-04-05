@@ -91,7 +91,7 @@ export default function UsersPage() {
         </div>
         <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
           <div className="relative w-full max-w-sm sm:w-80">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
               placeholder="Search users..."
               value={searchTerm}
@@ -99,7 +99,7 @@ export default function UsersPage() {
               className="pl-9"
             />
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-500 whitespace-nowrap">
+          <div className="flex items-center gap-2 text-sm whitespace-nowrap text-gray-500">
             <Users size={16} />
             <span>Total: {data?.count || 0} users</span>
           </div>

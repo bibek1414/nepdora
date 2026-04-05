@@ -369,9 +369,7 @@ export default function AppointmentList() {
                         </TableCell>
 
                         <TableCell className="px-6 py-4">
-                          <div
-                            onClick={e => e.stopPropagation()}
-                          >
+                          <div onClick={e => e.stopPropagation()}>
                             <Select
                               value={item.status.toLowerCase()}
                               onValueChange={value =>

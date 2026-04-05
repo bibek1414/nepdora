@@ -117,10 +117,7 @@ export default function FeatureCategories() {
 
         <div className="grid gap-px border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map(category => (
-            <article
-              key={category.id}
-              className="flex flex-col bg-white p-8"
-            >
+            <article key={category.id} className="flex flex-col bg-white p-8">
               <div className="mb-5 flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200">
                 <category.Icon className="h-4 w-4 text-slate-700" />
               </div>

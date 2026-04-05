@@ -36,7 +36,10 @@ const formatTemplateName = (name: string): string => {
     .join(" ");
 };
 
-export const TemplateCard = ({ template, onImportSuccess }: TemplateCardProps) => {
+export const TemplateCard = ({
+  template,
+  onImportSuccess,
+}: TemplateCardProps) => {
   const router = useRouter();
   const { user } = useAuth();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);

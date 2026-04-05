@@ -32,7 +32,9 @@ interface CountryDetailsComponentProps {
   onReplace?: (componentId: string) => void;
 }
 
-export const CountryDetailsComponent: React.FC<CountryDetailsComponentProps> = ({
+export const CountryDetailsComponent: React.FC<
+  CountryDetailsComponentProps
+> = ({
   component,
   isEditable = false,
   siteUser,
@@ -125,10 +127,12 @@ export const CountryDetailsComponent: React.FC<CountryDetailsComponentProps> = (
             </Button>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete Country Details Component</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Delete Country Details Component
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete this country details component? This
-                  action cannot be undone.
+                  Are you sure you want to delete this country details
+                  component? This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

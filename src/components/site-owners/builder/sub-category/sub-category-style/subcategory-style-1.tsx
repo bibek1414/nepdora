@@ -88,10 +88,15 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
               <div
                 key={subcategory.id}
                 className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
-                onClick={() => !isEditable && onSubCategoryClick?.(subcategory.id)}
+                onClick={() =>
+                  !isEditable && onSubCategoryClick?.(subcategory.id)
+                }
               >
                 {isEditable && <div className="absolute inset-0 z-10" />}
-                <SubCategoryCard1 subcategory={subcategory} siteUser={siteUser} />
+                <SubCategoryCard1
+                  subcategory={subcategory}
+                  siteUser={siteUser}
+                />
               </div>
             ))}
           </div>

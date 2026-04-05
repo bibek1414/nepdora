@@ -100,7 +100,9 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading Products</AlertTitle>
             <AlertDescription>
-              {error instanceof Error ? error.message : "Failed to load products."}
+              {error instanceof Error
+                ? error.message
+                : "Failed to load products."}
             </AlertDescription>
           </Alert>
         )}
@@ -111,7 +113,9 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
               <div
                 key={product.id}
                 className="relative"
-                onClick={() => !isEditable && onProductClick?.(product.slug || "")}
+                onClick={() =>
+                  !isEditable && onProductClick?.(product.slug || "")
+                }
               >
                 {isEditable && (
                   <div className="absolute inset-0 z-10 bg-transparent" />
@@ -131,8 +135,9 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
             <h3 className="text-foreground mb-2 text-xl font-semibold">
               No Products Found
             </h3>
-            <p className="text-muted-foreground max-w-sm mx-auto">
-              We couldn't find any products in this collection. Check back later or explore other categories.
+            <p className="text-muted-foreground mx-auto max-w-sm">
+              We couldn't find any products in this collection. Check back later
+              or explore other categories.
             </p>
           </div>
         )}

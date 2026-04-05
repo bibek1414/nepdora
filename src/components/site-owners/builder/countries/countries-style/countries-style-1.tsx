@@ -63,7 +63,7 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                 <Link
                   key={country.id}
                   href={`${baseRoute}/${country.data.slug}`}
-                  onClick={(e) => isEditable && e.preventDefault()}
+                  onClick={e => isEditable && e.preventDefault()}
                   className={`block ${
                     index === 0 ? "lg:col-span-2 lg:row-span-2" : ""
                   }`}
@@ -108,7 +108,7 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                               {country.data.tagline || country.data.content}
                             </p>
                           </div>
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-primary/20 text-white shadow-lg backdrop-blur-md transition-all duration-500 hover:rotate-45 hover:bg-primary hover:border-primary">
+                          <div className="bg-primary/20 hover:bg-primary hover:border-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 text-white shadow-lg backdrop-blur-md transition-all duration-500 hover:rotate-45">
                             <ArrowUpRight className="h-5 w-5" />
                           </div>
                         </div>

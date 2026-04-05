@@ -22,13 +22,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     notFound();
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
-  
+
   // SEO Blueprint Logic
-  const isBooking = ["booking", "travel", "tours", "medical", "clinic", "dental", "education"].some(s => industry.toLowerCase().includes(s));
+  const isBooking = [
+    "booking",
+    "travel",
+    "tours",
+    "medical",
+    "clinic",
+    "dental",
+    "education",
+  ].some(s => industry.toLowerCase().includes(s));
   const action = isBooking ? "Create" : "Build";
   const niche = industryLabel;
   const valueProp = isBooking ? "(Fast Setup)" : "(Start Selling Today)";
-  
+
   const title = `${action} a ${niche} Website in Nepal ${valueProp} | Nepdora`;
   const description = `Launch your professional ${niche.toLowerCase()} website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.`;
 

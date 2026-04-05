@@ -216,7 +216,7 @@ export function FooterStyle5({
         {data.newsletter?.enabled && (
           <div className="mb-12 border-t border-gray-800 pt-12">
             <div className="mx-auto max-w-md text-center">
-              <h3 className="mb-4 text-xl font-bold tracking-wide  uppercase">
+              <h3 className="mb-4 text-xl font-bold tracking-wide uppercase">
                 {data.newsletter.title}
               </h3>
               <p className="mb-6 text-sm opacity-70">
@@ -228,9 +228,13 @@ export function FooterStyle5({
         )}
 
         {/* Separator */}
-        <div 
-          className="mb-8 h-px w-full" 
-          style={{ backgroundColor: footerData.textColor ? footerData.textColor + "20" : "rgba(255,255,255,0.1)" }}
+        <div
+          className="mb-8 h-px w-full"
+          style={{
+            backgroundColor: footerData.textColor
+              ? footerData.textColor + "20"
+              : "rgba(255,255,255,0.1)",
+          }}
         />
 
         {/* Bottom Bar */}

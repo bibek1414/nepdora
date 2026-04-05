@@ -329,10 +329,13 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                     </Button>
                   </DropdownMenuTrigger>
                   {!disableClicks && !isEditable && (
-                    <DropdownMenuContent 
-                      className="w-48" 
+                    <DropdownMenuContent
+                      className="w-48"
                       align="end"
-                      style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                      style={{
+                        backgroundColor: navbarData.backgroundColor || "white",
+                        color: navbarData.textColor || "inherit",
+                      }}
                     >
                       {isAuthenticated ? (
                         <>
@@ -411,13 +414,21 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
 
       {/* Mobile Menu Sheet */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent 
-          side="right" 
+        <SheetContent
+          side="right"
           className="w-1/2 sm:max-w-md"
-          style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+          style={{
+            backgroundColor: navbarData.backgroundColor || "white",
+            color: navbarData.textColor || "inherit",
+          }}
         >
           <SheetHeader className="flex flex-row items-center justify-between border-b pb-4">
-            <SheetTitle className="text-lg font-semibold" style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+            <SheetTitle
+              className="text-lg font-semibold"
+              style={{ color: navbarData.textColor || "inherit" }}
+            >
+              Menu
+            </SheetTitle>
           </SheetHeader>
 
           <div className="mt-6 flex h-[calc(100vh-100px)] flex-col">

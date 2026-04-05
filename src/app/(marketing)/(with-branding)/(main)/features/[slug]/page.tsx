@@ -324,9 +324,9 @@ export default async function FeatureProcessPage({ params }: Props) {
               {hardWay.map((step, idx) => (
                 <div key={idx} className="relative flex gap-4">
                   {idx !== hardWay.length - 1 && (
-                    <div className="absolute left-4 top-10 h-full w-px bg-slate-100" />
+                    <div className="absolute top-10 left-4 h-full w-px bg-slate-100" />
                   )}
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-slate-100 bg-slate-50 font-medium italic text-slate-400">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-slate-100 bg-slate-50 font-medium text-slate-400 italic">
                     {idx + 1}
                   </div>
                   <div>
@@ -339,7 +339,7 @@ export default async function FeatureProcessPage({ params }: Props) {
               ))}
             </div>
             <div className="mt-10 rounded-2xl border border-red-100 bg-red-50 p-4">
-              <p className="text-sm italic text-red-700">
+              <p className="text-sm text-red-700 italic">
                 Requires technical expertise, weeks of development, and ongoing
                 maintenance costs.
               </p>
@@ -348,7 +348,7 @@ export default async function FeatureProcessPage({ params }: Props) {
 
           {/* The Nepdora Way */}
           <div className="border-primary/20 shadow-primary/5 relative overflow-hidden rounded-3xl border-2 bg-white p-8 shadow-xl">
-            <div className="bg-primary absolute right-0 top-0 rounded-bl-3xl px-6 py-2 text-xs font-bold tracking-tighter text-white">
+            <div className="bg-primary absolute top-0 right-0 rounded-bl-3xl px-6 py-2 text-xs font-bold tracking-tighter text-white">
               Integrated by Default
             </div>
             <div className="text-primary mb-8 flex items-center gap-3">
@@ -394,7 +394,7 @@ export default async function FeatureProcessPage({ params }: Props) {
 
             <div className="mt-10">
               <div className="bg-primary shadow-primary/20 rounded-2xl p-6 text-white shadow-lg">
-                <p className="font-semibold italic leading-relaxed">
+                <p className="leading-relaxed font-semibold italic">
                   "With Nepdora, {featureName} is ready to use from day one.
                   Focus on your business, not the code."
                 </p>

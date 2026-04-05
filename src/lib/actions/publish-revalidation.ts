@@ -9,7 +9,7 @@ import { getPublishSiteTag } from "@/lib/publish-page-cache";
  */
 export async function revalidatePublishCache(siteUser: string) {
   if (!siteUser) return;
-  
+
   try {
     const siteTag = getPublishSiteTag(siteUser);
     // In Next.js 16, revalidateTag requires a second argument for the revalidation profile.
@@ -18,6 +18,9 @@ export async function revalidatePublishCache(siteUser: string) {
     revalidateTag(siteTag, "max");
     console.log(`[Revalidation] Successfully revalidated tag: ${siteTag}`);
   } catch (error) {
-    console.error(`[Revalidation] Failed to revalidate tag for ${siteUser}:`, error);
+    console.error(
+      `[Revalidation] Failed to revalidate tag for ${siteUser}:`,
+      error
+    );
   }
 }

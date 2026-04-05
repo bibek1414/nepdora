@@ -8,7 +8,8 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "AI Website Builder Nepal | Build Your Site with Artificial Intelligence",
+  title:
+    "AI Website Builder Nepal | Build Your Site with Artificial Intelligence",
   description:
     "Experience the power of AI to build your website in minutes. The first AI-powered website builder for Nepal that understands your local business needs.",
   path: "/ai-website-builder",

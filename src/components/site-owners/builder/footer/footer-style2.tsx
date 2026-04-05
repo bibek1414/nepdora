@@ -63,7 +63,9 @@ export function FooterStyle2({
         style={{
           backgroundColor: footerData.backgroundColor || undefined,
           color: footerData.textColor || "inherit",
-          borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)",
+          borderColor: footerData.textColor
+            ? footerData.textColor + "20"
+            : "rgba(0,0,0,0.1)",
         }}
       >
         <div className="mx-auto max-w-7xl">
@@ -75,9 +77,7 @@ export function FooterStyle2({
                 <FooterLogo footerData={data} getImageUrl={getImageUrl} />
               </div>
 
-              <p className="mb-6 max-w-md opacity-80">
-                {data.description}
-              </p>
+              <p className="mb-6 max-w-md opacity-80">{data.description}</p>
 
               {/* Contact Info */}
               <div className="mb-6 space-y-2">
@@ -103,9 +103,7 @@ export function FooterStyle2({
 
               {/* Social Links - Horizontal Layout */}
               <div>
-                <h4 className="mb-3 font-semibold">
-                  Follow Us
-                </h4>
+                <h4 className="mb-3 font-semibold">Follow Us</h4>
                 {data.socialLinks.length > 0 ? (
                   <div className="flex flex-wrap gap-3">
                     {data.socialLinks.map(social => (
@@ -151,7 +149,7 @@ export function FooterStyle2({
                       <li key={link.id}>
                         {isEditable ? (
                           <button
-                            className="text-left transition-colors opacity-80 hover:opacity-100"
+                            className="text-left opacity-80 transition-colors hover:opacity-100"
                             onClick={
                               isEditable ? e => e.preventDefault() : undefined
                             }
@@ -190,9 +188,13 @@ export function FooterStyle2({
               ))}
             {/* Newsletter Section */}
             {data.newsletter?.enabled && (
-              <div 
+              <div
                 className="mt-12 border-t pt-8"
-                style={{ borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)" }}
+                style={{
+                  borderColor: footerData.textColor
+                    ? footerData.textColor + "20"
+                    : "rgba(0,0,0,0.1)",
+                }}
               >
                 <div className="mx-auto max-w-md text-center">
                   <h4 className="text-heading-light dark:text-heading-dark mb-2 font-semibold">
@@ -208,9 +210,13 @@ export function FooterStyle2({
           </div>
 
           {/* Copyright */}
-          <div 
+          <div
             className="mx-auto mt-12 flex flex-col items-center gap-4 border-t pt-8 text-center"
-            style={{ borderColor: footerData.textColor ? footerData.textColor + "20" : "rgba(0,0,0,0.1)" }}
+            style={{
+              borderColor: footerData.textColor
+                ? footerData.textColor + "20"
+                : "rgba(0,0,0,0.1)",
+            }}
           >
             <p className="flex items-center justify-center gap-1 text-sm opacity-80">
               {getProcessedCopyright(data.copyright, data.companyName)}
@@ -227,7 +233,7 @@ export function FooterStyle2({
                       pathname,
                       isEditable
                     )}
-                            className="text-sm transition-colors opacity-80 hover:opacity-100"
+                    className="text-sm opacity-80 transition-colors hover:opacity-100"
                     target={
                       link.href?.startsWith("http") ||
                       link.href?.startsWith("mailto:")

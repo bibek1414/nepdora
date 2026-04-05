@@ -49,10 +49,12 @@ export const CityResources: React.FC = () => {
                 />
               </div>
               <div className="p-6">
-                <h3 className="mb-2 text-sm font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                <h3 className="mb-2 text-sm font-semibold text-slate-900 transition-colors group-hover:text-indigo-600">
                   {r.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-slate-500">{r.desc}</p>
+                <p className="text-sm leading-relaxed text-slate-500">
+                  {r.desc}
+                </p>
               </div>
             </article>
           ))}

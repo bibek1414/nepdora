@@ -99,14 +99,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         hostSubdomain !== "localhost" &&
         hostSubdomain !== siteUser
       ) {
-        console.warn(`[Builder] Tenant mismatch: host=${hostSubdomain}, path=${siteUser}`);
+        console.warn(
+          `[Builder] Tenant mismatch: host=${hostSubdomain}, path=${siteUser}`
+        );
         router.push("/permission-denied");
         return;
       }
 
       // Also check if logged in user's subdomain matches
       if (user && user.sub_domain && user.sub_domain !== siteUser) {
-        console.warn(`[Builder] User mismatch: user=${user.sub_domain}, path=${siteUser}`);
+        console.warn(
+          `[Builder] User mismatch: user=${user.sub_domain}, path=${siteUser}`
+        );
         router.push("/permission-denied");
       }
     }

@@ -65,15 +65,13 @@ export function FooterStyle1({
             {/* Info Section */}
             {mainSections.map((section, index) => (
               <div key={section.id} className="col-span-1">
-                <h3 className="mb-4 text-xl font-semibold">
-                  {section.title}
-                </h3>
+                <h3 className="mb-4 text-xl font-semibold">{section.title}</h3>
                 <ul className="space-y-2">
                   {section.links.map(link => (
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-left transition-colors opacity-80 hover:opacity-100"
+                          className="text-left opacity-80 transition-colors hover:opacity-100"
                           onClick={
                             isEditable ? e => e.preventDefault() : undefined
                           }
@@ -100,7 +98,7 @@ export function FooterStyle1({
                               ? "noopener noreferrer"
                               : undefined
                           }
-                          className="block text-sm transition-colors opacity-80 hover:opacity-100"
+                          className="block text-sm opacity-80 transition-colors hover:opacity-100"
                         >
                           {link.text}
                         </Link>

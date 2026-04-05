@@ -7,7 +7,10 @@ export async function verifyDomainDNS(domainName: string) {
     console.log(`[DNS] Verifying domain ${domainName} using dns-query...`);
 
     // Using well-known DoH endpoints for reliability
-    const endpoints = ["https://cloudflare-dns.com/dns-query", "https://dns.google/dns-query"];
+    const endpoints = [
+      "https://cloudflare-dns.com/dns-query",
+      "https://dns.google/dns-query",
+    ];
 
     // 1. Try to find NS records (best indicator of a valid registered domain)
     const nsResult = await query(
@@ -18,7 +21,9 @@ export async function verifyDomainDNS(domainName: string) {
     );
 
     if (nsResult.answers && nsResult.answers.length > 0) {
-      console.log(`[DNS] Found NS records for ${domainName}, verification successful.`);
+      console.log(
+        `[DNS] Found NS records for ${domainName}, verification successful.`
+      );
       return { success: true };
     }
 
@@ -31,13 +36,16 @@ export async function verifyDomainDNS(domainName: string) {
     );
 
     if (aResult.answers && aResult.answers.length > 0) {
-      console.log(`[DNS] Found A records for ${domainName}, verification successful.`);
+      console.log(
+        `[DNS] Found A records for ${domainName}, verification successful.`
+      );
       return { success: true };
     }
 
     return {
       success: false,
-      error: "Domain verification failed. No NS or A records found. Please ensure the domain is registered and has valid DNS records.",
+      error:
+        "Domain verification failed. No NS or A records found. Please ensure the domain is registered and has valid DNS records.",
     };
   } catch (error: any) {
     console.error("[DNS] Exception during domain verification:", error);

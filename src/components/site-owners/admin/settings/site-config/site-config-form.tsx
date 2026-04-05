@@ -3,7 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import {
   useSiteConfig,
   useCreateSiteConfig,
@@ -349,7 +355,7 @@ export const SiteConfigForm: React.FC = () => {
       </div>
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Branding Section */}
-        <Card className="border-none shadow-sm ring-1 ring-gray-200 overflow-hidden">
+        <Card className="overflow-hidden border-none shadow-sm ring-1 ring-gray-200">
           <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
             <CardTitle className="flex items-center gap-3 text-lg font-bold">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
@@ -357,7 +363,9 @@ export const SiteConfigForm: React.FC = () => {
               </div>
               Branding
             </CardTitle>
-            <CardDescription>Upload your site favicon and logo to establish your identity.</CardDescription>
+            <CardDescription>
+              Upload your site favicon and logo to establish your identity.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Favicon and Logo side by side */}
@@ -424,7 +432,7 @@ export const SiteConfigForm: React.FC = () => {
         </Card>
 
         {/* Business Information Section */}
-        <Card className="border-none shadow-sm ring-1 ring-gray-200 overflow-hidden">
+        <Card className="overflow-hidden border-none shadow-sm ring-1 ring-gray-200">
           <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
             <CardTitle className="flex items-center gap-3 text-lg font-bold">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
@@ -432,7 +440,9 @@ export const SiteConfigForm: React.FC = () => {
               </div>
               Business Information
             </CardTitle>
-            <CardDescription>Tell your customers about your business and brand story.</CardDescription>
+            <CardDescription>
+              Tell your customers about your business and brand story.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
@@ -492,7 +502,7 @@ export const SiteConfigForm: React.FC = () => {
         </Card>
 
         {/* Contact Information Section */}
-        <Card className="border-none shadow-sm ring-1 ring-gray-200 overflow-hidden">
+        <Card className="overflow-hidden border-none shadow-sm ring-1 ring-gray-200">
           <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
             <CardTitle className="flex items-center gap-3 text-lg font-bold">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-100 text-sky-600">
@@ -500,7 +510,9 @@ export const SiteConfigForm: React.FC = () => {
               </div>
               Contact Information
             </CardTitle>
-            <CardDescription>Provide your business contact details for customers to reach you.</CardDescription>
+            <CardDescription>
+              Provide your business contact details for customers to reach you.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -592,7 +604,7 @@ export const SiteConfigForm: React.FC = () => {
         </Card>
 
         {/* Social Media Section */}
-        <Card className="border-none shadow-sm ring-1 ring-gray-200 overflow-hidden">
+        <Card className="overflow-hidden border-none shadow-sm ring-1 ring-gray-200">
           <CardHeader className="border-b border-gray-100 bg-gray-50/50 pb-4">
             <CardTitle className="flex items-center gap-3 text-lg font-bold">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
@@ -600,7 +612,9 @@ export const SiteConfigForm: React.FC = () => {
               </div>
               Social Media Links
             </CardTitle>
-            <CardDescription>Connect your social profiles to increase your online presence.</CardDescription>
+            <CardDescription>
+              Connect your social profiles to increase your online presence.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

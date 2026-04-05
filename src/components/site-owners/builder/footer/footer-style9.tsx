@@ -179,7 +179,7 @@ export const FooterStyle9 = ({
       {/* Bottom Huge Text Animation */}
       <div
         ref={textRef}
-        className="mt-24 flex max-w-7xl items-end overflow-hidden justify-center pb-4"
+        className="mt-24 flex max-w-7xl items-end justify-center overflow-hidden pb-4"
       >
         <motion.div
           initial={{ y: "100%" }}

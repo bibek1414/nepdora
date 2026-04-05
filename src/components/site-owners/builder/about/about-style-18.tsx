@@ -86,7 +86,7 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
               onChange={handleTextUpdate("title")}
               isEditable={isEditable}
               style={{ fontFamily: theme.fonts.heading }}
-              className="text-4xl font-bold leading-tight text-gray-950 md:text-5xl"
+              className="text-4xl leading-tight font-bold text-gray-950 md:text-5xl"
             />
             <EditableText
               as="p"

@@ -87,7 +87,7 @@ export const BlogCard9: React.FC<BlogCard9Props> = ({
     >
       <ContentLink>
         {/* Image - flush to top, no padding */}
-        <div className="aspect-16/10 relative overflow-hidden bg-gray-100">
+        <div className="relative aspect-16/10 overflow-hidden bg-gray-100">
           <Image
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
@@ -106,7 +106,7 @@ export const BlogCard9: React.FC<BlogCard9Props> = ({
           </div>
 
           {/* Title */}
-          <h3 className="mb-6 line-clamp-2 min-h-14 text-xl font-bold leading-snug text-gray-900">
+          <h3 className="mb-6 line-clamp-2 min-h-14 text-xl leading-snug font-bold text-gray-900">
             {blog.title}
           </h3>
         </div>

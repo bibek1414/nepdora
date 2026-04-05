@@ -38,8 +38,8 @@ export default function SpeedTest() {
               Website <span className="text-primary">Speed Test</span> Nepal
             </h1>
             <p className="mx-auto max-w-2xl text-xl text-slate-600">
-              Test your website&apos;s performance on Nepalese networks. Ensure your
-              site is fast for all your local visitors.
+              Test your website&apos;s performance on Nepalese networks. Ensure
+              your site is fast for all your local visitors.
             </p>
           </div>
 

@@ -226,7 +226,8 @@ export default async function ProgrammaticIndustryCityPage({ params }: Props) {
                   <div className="aspect-3/4 rounded-3xl bg-slate-900 p-8 text-white">
                     <div className="mb-4 text-4xl font-black">SEO</div>
                     <p className="text-slate-400">
-                      Optimized for &quot;{industryLabel} in {cityName}&quot; searches.
+                      Optimized for &quot;{industryLabel} in {cityName}&quot;
+                      searches.
                     </p>
                   </div>
                 </div>

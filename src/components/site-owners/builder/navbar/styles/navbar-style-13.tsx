@@ -182,7 +182,7 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
 
   return (
     <div
-      className="sticky top-0 z-50 w-full -sm transition-all"
+      className="-sm sticky top-0 z-50 w-full transition-all"
       style={{
         backgroundColor: navBg,
         color: navText,

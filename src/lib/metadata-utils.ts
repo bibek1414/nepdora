@@ -285,8 +285,7 @@ export async function generateAdminPageMetadata({
   const storeName = capitalizeWords(rawStoreName);
   const subDomain = user?.sub_domain || "";
 
-  const title =
-    metaTitle || `${storeName} | ${pageName} | Admin Dashboard`;
+  const title = metaTitle || `${storeName} | ${pageName} | Admin Dashboard`;
   const description =
     metaDescription || pageDescription.replace(/\{storeName\}/g, storeName);
 

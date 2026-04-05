@@ -107,7 +107,8 @@ const FeaturesGrid: React.FC = () => {
             Explore every feature
           </h2>
           <p className="text-base leading-relaxed text-slate-500">
-            From payments to analytics — every tool your Nepali business needs, in one place.
+            From payments to analytics — every tool your Nepali business needs,
+            in one place.
           </p>
         </div>
 

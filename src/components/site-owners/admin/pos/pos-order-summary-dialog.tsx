@@ -31,37 +31,39 @@ export function POSOrderSummaryDialog({
       <DialogContent className="sm:max-w-sm">
         {/* Success header */}
         <DialogHeader className="flex flex-col items-center justify-center gap-3 py-2">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-            <CheckCircle2 className="h-7 w-7 text-primary" />
+          <div className="bg-primary/10 flex h-14 w-14 items-center justify-center rounded-full">
+            <CheckCircle2 className="text-primary h-7 w-7" />
           </div>
           <div className="space-y-0.5 text-center">
-            <DialogTitle className="text-xl font-semibold text-foreground">
+            <DialogTitle className="text-foreground text-xl font-semibold">
               Payment received
             </DialogTitle>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Order has been processed successfully
             </p>
           </div>
         </DialogHeader>
 
         {/* Receipt rows */}
-        <div className="space-y-1 rounded-xl border border-border bg-muted/30 px-4 py-3">
+        <div className="border-border bg-muted/30 space-y-1 rounded-xl border px-4 py-3">
           <div className="flex items-center justify-between py-1.5">
-            <span className="text-sm text-muted-foreground">Total bill</span>
-            <span className="text-sm font-semibold text-foreground">
+            <span className="text-muted-foreground text-sm">Total bill</span>
+            <span className="text-foreground text-sm font-semibold">
               Rs. {total.toLocaleString()}
             </span>
           </div>
           <div className="flex items-center justify-between py-1.5">
-            <span className="text-sm text-muted-foreground">Amount paid</span>
-            <span className="text-sm font-semibold text-foreground">
+            <span className="text-muted-foreground text-sm">Amount paid</span>
+            <span className="text-foreground text-sm font-semibold">
               Rs. {amountPaid.toLocaleString()}
             </span>
           </div>
-          <div className="my-1 border-t border-border" />
+          <div className="border-border my-1 border-t" />
           <div className="flex items-center justify-between py-1.5">
-            <span className="text-sm font-medium text-foreground">Change to return</span>
-            <span className="text-lg font-bold text-primary">
+            <span className="text-foreground text-sm font-medium">
+              Change to return
+            </span>
+            <span className="text-primary text-lg font-bold">
               Rs. {change.toLocaleString()}
             </span>
           </div>
@@ -69,7 +71,7 @@ export function POSOrderSummaryDialog({
 
         {/* Action */}
         <Button
-          className="h-11 w-full rounded-xl bg-primary font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.98]"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 h-11 w-full rounded-xl font-medium active:scale-[0.98]"
           onClick={onClose}
         >
           <RotateCcw className="mr-2 h-4 w-4" />

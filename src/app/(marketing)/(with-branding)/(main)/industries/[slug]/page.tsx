@@ -3,7 +3,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { MoveRight, CheckCircle2, Zap, Layout, Laptop, Palette, Globe, Target, Star } from "lucide-react";
+import {
+  MoveRight,
+  CheckCircle2,
+  Zap,
+  Layout,
+  Laptop,
+  Palette,
+  Globe,
+  Target,
+  Star,
+} from "lucide-react";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 interface Props {
@@ -11,7 +21,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return industries.map((slug) => ({
+  return industries.map(slug => ({
     slug,
   }));
 }
@@ -41,33 +51,72 @@ export default async function IndustryDeepDivePage({ params }: Props) {
       case "restaurant":
         return {
           header: "Take your restaurant online with seamless ordering.",
-          features: ["Digital Menu Management", "Online Ordering System", "Table Booking", "Customer CRM"],
+          features: [
+            "Digital Menu Management",
+            "Online Ordering System",
+            "Table Booking",
+            "Customer CRM",
+          ],
           title: "Restaurant Management Unleashed",
           integrations: [
-            { name: "eSewa Payments", slug: "esewa-payment", color: "text-green-600" },
-            { name: "Pathao Logistics", slug: "pathao-logistics", color: "text-orange-600" }
-          ]
+            {
+              name: "eSewa Payments",
+              slug: "esewa-payment",
+              color: "text-green-600",
+            },
+            {
+              name: "Pathao Logistics",
+              slug: "pathao-logistics",
+              color: "text-orange-600",
+            },
+          ],
         };
       case "ecommerce":
       case "clothing-store":
         return {
           header: "Sell across Nepal with a powerful online store.",
-          features: ["Inventory Management", "eSewa & Khalti Payments", "Pathao Delivery Sync", "Promotions & Coupons"],
+          features: [
+            "Inventory Management",
+            "eSewa & Khalti Payments",
+            "Pathao Delivery Sync",
+            "Promotions & Coupons",
+          ],
           title: "The Ultimate E-commerce Engine",
           integrations: [
-            { name: "eSewa Payments", slug: "esewa-payment", color: "text-green-600" },
-            { name: "Khalti Wallet", slug: "khalti-payment", color: "text-purple-600" },
-            { name: "Pathao Delivery", slug: "pathao-logistics", color: "text-orange-600" }
-          ]
+            {
+              name: "eSewa Payments",
+              slug: "esewa-payment",
+              color: "text-green-600",
+            },
+            {
+              name: "Khalti Wallet",
+              slug: "khalti-payment",
+              color: "text-purple-600",
+            },
+            {
+              name: "Pathao Delivery",
+              slug: "pathao-logistics",
+              color: "text-orange-600",
+            },
+          ],
         };
       default:
         return {
           header: `A professional digital home for your ${label.toLowerCase()} business.`,
-          features: ["Mobile-Responsive Design", "Local SEO Optimization", "Fast Loading Speeds", "Integrated Analytics"],
+          features: [
+            "Mobile-Responsive Design",
+            "Local SEO Optimization",
+            "Fast Loading Speeds",
+            "Integrated Analytics",
+          ],
           title: "Made for Professional Excellence",
           integrations: [
-            { name: "eSewa Checkout", slug: "esewa-payment", color: "text-green-600" }
-          ]
+            {
+              name: "eSewa Checkout",
+              slug: "esewa-payment",
+              color: "text-green-600",
+            },
+          ],
         };
     }
   };
@@ -75,39 +124,39 @@ export default async function IndustryDeepDivePage({ params }: Props) {
   const details = getIndustryDetails(slug);
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-24 overflow-hidden bg-slate-950 text-white">
+      <section className="relative overflow-hidden bg-slate-950 pt-24 pb-24 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#1e293b,transparent)] opacity-40" />
-        <div className="container mx-auto max-w-7xl px-4 relative z-10">
-          <Breadcrumbs 
+        <div className="relative z-10 container mx-auto max-w-7xl px-4">
+          <Breadcrumbs
             items={[
               { label: "Industries", href: "/industries" },
-              { label: label, href: `/industries/${slug}` }
-            ]} 
+              { label: label, href: `/industries/${slug}` },
+            ]}
           />
-          
-          <div className="text-center mt-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-8">
-              <Target className="w-4 h-4" />
+
+          <div className="mt-12 text-center">
+            <div className="bg-primary/20 border-primary/30 text-primary mb-8 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-bold tracking-widest uppercase">
+              <Target className="h-4 w-4" />
               <span>Built for {label}s</span>
             </div>
-            <h1 className="text-4xl md:text-7xl font-black tracking-tight mb-8">
+            <h1 className="mb-8 text-4xl font-black tracking-tight md:text-7xl">
               {details.title}
             </h1>
-            <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
+            <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-400 md:text-2xl">
               {details.header}
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link 
+            <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+              <Link
                 href="/create-website"
-                className="px-10 py-5 rounded-full bg-primary text-white font-black hover:scale-105 transition-all w-full sm:w-auto"
+                className="bg-primary w-full rounded-full px-10 py-5 font-black text-white transition-all hover:scale-105 sm:w-auto"
               >
                 Build Your {label} Site
               </Link>
-              <Link 
+              <Link
                 href="/templates"
-                className="px-10 py-5 rounded-full bg-white/10 text-white font-bold hover:bg-white/20 transition-all w-full sm:w-auto border border-white/20 backdrop-blur-sm"
+                className="w-full rounded-full border border-white/20 bg-white/10 px-10 py-5 font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 sm:w-auto"
               >
                 Browse Industry Templates
               </Link>
@@ -119,89 +168,111 @@ export default async function IndustryDeepDivePage({ params }: Props) {
       {/* Feature Section */}
       <section className="py-24">
         <div className="container mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 items-center gap-20 lg:grid-cols-2">
             <div>
-              <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-8 border-l-8 border-primary pl-8">
+              <h2 className="border-primary mb-8 border-l-8 pl-8 text-3xl font-extrabold text-slate-900 md:text-5xl">
                 Everything you need <br />
-                <span className="text-primary italic">to dominate locally.</span>
+                <span className="text-primary italic">
+                  to dominate locally.
+                </span>
               </h2>
               <div className="space-y-6">
                 {details.features.map((feature, idx) => (
-                  <div key={idx} className="flex items-start gap-5 p-6 rounded-3xl bg-slate-50 hover:bg-white hover:shadow-2xl hover:shadow-slate-200 transition-all border border-transparent hover:border-slate-100">
-                    <div className="p-3 rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-                      <Zap className="w-6 h-6 text-primary" />
+                  <div
+                    key={idx}
+                    className="flex items-start gap-5 rounded-3xl border border-transparent bg-slate-50 p-6 transition-all hover:border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-slate-200"
+                  >
+                    <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200">
+                      <Zap className="text-primary h-6 w-6" />
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold text-slate-900 mb-1">{feature}</h4>
-                      <p className="text-slate-600">Optimized specifically for the Nepali market and local consumers.</p>
+                      <h4 className="mb-1 text-xl font-bold text-slate-900">
+                        {feature}
+                      </h4>
+                      <p className="text-slate-600">
+                        Optimized specifically for the Nepali market and local
+                        consumers.
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-4/5 rounded-[48px] bg-slate-100 relative overflow-hidden border-8 border-slate-200 shadow-2xl">
-                 <div className="absolute inset-0 bg-linear-to-br from-slate-200 to-slate-300 animate-pulse" />
-                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
-                   <p className="text-slate-400 font-medium mb-4 italic uppercase tracking-widest text-sm">Previewing Industry Blueprint</p>
-                   <p className="text-2xl font-black text-slate-900 opacity-20 uppercase tracking-tighter leading-none italic">{label} Showcase</p>
-                 </div>
+              <div className="relative aspect-4/5 overflow-hidden rounded-[48px] border-8 border-slate-200 bg-slate-100 shadow-2xl">
+                <div className="absolute inset-0 animate-pulse bg-linear-to-br from-slate-200 to-slate-300" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center">
+                  <p className="mb-4 text-sm font-medium tracking-widest text-slate-400 uppercase italic">
+                    Previewing Industry Blueprint
+                  </p>
+                  <p className="text-2xl leading-none font-black tracking-tighter text-slate-900 uppercase italic opacity-20">
+                    {label} Showcase
+                  </p>
+                </div>
               </div>
               {/* Decorative Floating Elements */}
-              <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary/20 blur-[60px] rounded-full sm:block hidden" />
-              <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-sky-500/10 blur-[80px] rounded-full sm:block hidden" />
+              <div className="bg-primary/20 absolute -top-10 -right-10 hidden h-48 w-48 rounded-full blur-[60px] sm:block" />
+              <div className="absolute -bottom-10 -left-10 hidden h-64 w-64 rounded-full bg-sky-500/10 blur-[80px] sm:block" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Integration Cross-Linking */}
-      <section className="py-24 bg-slate-50 border-y border-slate-100 overflow-hidden relative">
+      <section className="relative overflow-hidden border-y border-slate-100 bg-slate-50 py-24">
         <div className="container mx-auto max-w-7xl px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl text-center md:text-left relative z-10">
-              <h3 className="text-3xl font-black text-slate-900 mb-6 uppercase tracking-tight italic">
-                Native <span className="text-primary italic">Integrations </span> 
+          <div className="flex flex-col items-center justify-between gap-12 md:flex-row">
+            <div className="relative z-10 max-w-xl text-center md:text-left">
+              <h3 className="mb-6 text-3xl font-black tracking-tight text-slate-900 uppercase italic">
+                Native{" "}
+                <span className="text-primary italic">Integrations </span>
                 Included.
               </h3>
-              <p className="text-lg text-slate-600 mb-8 border-l-4 border-slate-200 pl-6">
-                Don't waste time on coding. Unlike global platforms like Wix, Shopify, or WordPress which require complex 3rd-party scripts for Nepal, your {label} site comes pre-connected with local partners.
+              <p className="mb-8 border-l-4 border-slate-200 pl-6 text-lg text-slate-600">
+                Don't waste time on coding. Unlike global platforms like Wix,
+                Shopify, or WordPress which require complex 3rd-party scripts
+                for Nepal, your {label} site comes pre-connected with local
+                partners.
               </p>
-              
+
               {/* Best-of Recommendation Link */}
               {slug === "restaurant" && (
-                <Link 
-                    href="/best/website-builders-for-restaurants-kathmandu"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold shadow-sm hover:shadow-md transition-all text-slate-600 hover:text-primary group"
+                <Link
+                  href="/best/website-builders-for-restaurants-kathmandu"
+                  className="hover:text-primary group inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-600 shadow-sm transition-all hover:shadow-md"
                 >
-                    <Star className="w-4 h-4 text-amber-400 fill-amber-400 group-hover:scale-125 transition-transform" />
-                    Read: Best Website Builders for Restaurants in Kathmandu
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400 transition-transform group-hover:scale-125" />
+                  Read: Best Website Builders for Restaurants in Kathmandu
                 </Link>
               )}
               {slug === "ecommerce" && (
-                <Link 
-                    href="/best/ecommerce-platforms-in-nepal-2026"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-sm font-bold shadow-sm hover:shadow-md transition-all text-slate-600 hover:text-primary group"
+                <Link
+                  href="/best/ecommerce-platforms-in-nepal-2026"
+                  className="hover:text-primary group inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-600 shadow-sm transition-all hover:shadow-md"
                 >
-                    <Star className="w-4 h-4 text-amber-400 fill-amber-400 group-hover:scale-125 transition-transform" />
-                    Read: Top Ecommerce Platforms in Nepal (2026 Comparison)
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400 transition-transform group-hover:scale-125" />
+                  Read: Top Ecommerce Platforms in Nepal (2026 Comparison)
                 </Link>
               )}
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-              {details.integrations.map((integration) => (
-                <Link 
+            <div className="relative z-10 grid grid-cols-2 gap-6 lg:grid-cols-3">
+              {details.integrations.map(integration => (
+                <Link
                   key={integration.slug}
                   href={`/integrations/${integration.slug}`}
-                  className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:scale-105 transition-all text-center group"
+                  className="group rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:scale-105 hover:shadow-xl"
                 >
-                  <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-50 flex items-center justify-center mb-4 group-hover:bg-primary/10 transition-colors">
-                    <Globe className="w-6 h-6 text-slate-400 group-hover:text-primary" />
+                  <div className="group-hover:bg-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 transition-colors">
+                    <Globe className="group-hover:text-primary h-6 w-6 text-slate-400" />
                   </div>
-                  <div className={`font-black uppercase tracking-tighter italic text-xs ${integration.color}`}>
+                  <div
+                    className={`text-xs font-black tracking-tighter uppercase italic ${integration.color}`}
+                  >
                     {integration.name}
                   </div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Active Support</div>
+                  <div className="mt-2 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+                    Active Support
+                  </div>
                 </Link>
               ))}
             </div>
@@ -212,55 +283,65 @@ export default async function IndustryDeepDivePage({ params }: Props) {
       {/* Trust Blocks */}
       <section className="py-24">
         <div className="container mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+          <div className="grid grid-cols-1 gap-12 text-center md:grid-cols-3">
             <div className="space-y-4">
-                <div className="mx-auto w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
-                    <CheckCircle2 className="w-8 h-8 text-green-500" />
-                </div>
-                <h3 className="text-xl font-bold">100% Mobile Ready</h3>
-                <p className="text-slate-500">Over 85% of Nepali customers shop on mobile. We're ready for them.</p>
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
+                <CheckCircle2 className="h-8 w-8 text-green-500" />
+              </div>
+              <h3 className="text-xl font-bold">100% Mobile Ready</h3>
+              <p className="text-slate-500">
+                Over 85% of Nepali customers shop on mobile. We're ready for
+                them.
+              </p>
             </div>
             <div className="space-y-4">
-                <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
-                    <Globe className="w-8 h-8 text-blue-500" />
-                </div>
-                <h3 className="text-xl font-bold">Dot Com Dot NP</h3>
-                <p className="text-slate-500">Full support for your local domain registration and web presence.</p>
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50">
+                <Globe className="h-8 w-8 text-blue-500" />
+              </div>
+              <h3 className="text-xl font-bold">Dot Com Dot NP</h3>
+              <p className="text-slate-500">
+                Full support for your local domain registration and web
+                presence.
+              </p>
             </div>
             <div className="space-y-4">
-                <div className="mx-auto w-16 h-16 rounded-full bg-purple-50 flex items-center justify-center">
-                    <Palette className="w-8 h-8 text-purple-500" />
-                </div>
-                <h3 className="text-xl font-bold">Premium Designs</h3>
-                <p className="text-slate-500">Pixel-perfect templates that make you look like a market leader.</p>
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-purple-50">
+                <Palette className="h-8 w-8 text-purple-500" />
+              </div>
+              <h3 className="text-xl font-bold">Premium Designs</h3>
+              <p className="text-slate-500">
+                Pixel-perfect templates that make you look like a market leader.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 bg-slate-50">
+      <section className="bg-slate-50 py-32">
         <div className="container mx-auto max-w-5xl px-4">
-          <div className="bg-slate-900 rounded-[56px] p-12 md:p-24 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
+          <div className="relative overflow-hidden rounded-[56px] bg-slate-900 p-12 text-center md:p-24">
+            <div className="pointer-events-none absolute top-0 left-0 h-full w-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
             <div className="relative z-10">
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-none">
-                Start your <span className="text-primary">{label}</span> journey <br /> in Nepal today.
+              <h2 className="mb-8 text-4xl leading-none font-black tracking-tighter text-white md:text-6xl">
+                Start your <span className="text-primary">{label}</span> journey{" "}
+                <br /> in Nepal today.
               </h2>
-              <p className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto">
-                No credit card required. Free plan available forever. Experience the power of Nepdora for your business.
+              <p className="mx-auto mb-12 max-w-2xl text-xl text-slate-400">
+                No credit card required. Free plan available forever. Experience
+                the power of Nepdora for your business.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <Link 
+              <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+                <Link
                   href="/create-website"
-                  className="px-10 py-5 rounded-full bg-white text-slate-950 font-black hover:bg-slate-100 transition-all flex items-center gap-3"
+                  className="flex items-center gap-3 rounded-full bg-white px-10 py-5 font-black text-slate-950 transition-all hover:bg-slate-100"
                 >
                   Create Your Free Website
-                  <MoveRight className="w-5 h-5 text-sky-500" />
+                  <MoveRight className="h-5 w-5 text-sky-500" />
                 </Link>
-                <Link 
+                <Link
                   href="/ecommerce-website"
-                  className="px-10 py-5 rounded-full bg-slate-800 text-white font-bold hover:bg-slate-700 transition-all"
+                  className="rounded-full bg-slate-800 px-10 py-5 font-bold text-white transition-all hover:bg-slate-700"
                 >
                   Learn More
                 </Link>

@@ -98,7 +98,7 @@ export default function AnalyticsSummaryCards({
 
           {/* Value */}
           <div className="flex flex-col gap-0.5">
-            <span className="truncate text-[17px] font-semibold leading-tight text-gray-900">
+            <span className="truncate text-[17px] leading-tight font-semibold text-gray-900">
               {card.value}
             </span>
             <span className="text-[13px] font-medium text-gray-500">

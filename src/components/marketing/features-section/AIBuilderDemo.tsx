@@ -160,7 +160,7 @@ const AIBuilderDemo: React.FC = () => {
     <div className="flex h-full min-h-[600px] w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white font-sans text-slate-900 shadow-2xl lg:flex-row">
       {/* --- LEFT PANEL: Chat / Prompt Interface --- */}
       {/* Responsive: Full width on mobile, fixed width on desktop */}
-      <div className="flex h-[45%] w-full shrink-0 flex-col border-b border-slate-100 bg-white lg:h-auto lg:w-[350px] lg:border-b-0 lg:border-r">
+      <div className="flex h-[45%] w-full shrink-0 flex-col border-b border-slate-100 bg-white lg:h-auto lg:w-[350px] lg:border-r lg:border-b-0">
         {/* Header */}
         <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
           <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
@@ -210,7 +210,7 @@ const AIBuilderDemo: React.FC = () => {
                       : "border-primary/20 bg-primary/5 text-primary rounded-tl-none border"
                   }`}
                 >
-                  <p className="whitespace-pre-wrap leading-relaxed">
+                  <p className="leading-relaxed whitespace-pre-wrap">
                     {msg.text}
                   </p>
                 </div>
@@ -263,7 +263,7 @@ const AIBuilderDemo: React.FC = () => {
             {["Landing Page", "Portfolio", "Dashboard"].map(tag => (
               <span
                 key={tag}
-                className="whitespace-nowrap rounded-full border border-slate-100 bg-slate-50 px-2.5 py-1 text-[10px] text-slate-500"
+                className="rounded-full border border-slate-100 bg-slate-50 px-2.5 py-1 text-[10px] whitespace-nowrap text-slate-500"
               >
                 {tag}
               </span>
@@ -424,7 +424,7 @@ const AIBuilderDemo: React.FC = () => {
                             {feature.desc}
                           </p>
                           {/* Decorative gradient blob */}
-                          <div className="bg-linear-to-br absolute -right-4 -top-4 h-24 w-24 rounded-full from-slate-50 to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+                          <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-linear-to-br from-slate-50 to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
                         </motion.div>
                       ))}
                     </div>

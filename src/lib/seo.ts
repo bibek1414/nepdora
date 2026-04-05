@@ -60,7 +60,11 @@ export function buildMarketingMetadata({
     image ||
     getDynamicOgUrl({
       title: ogTitle || title.split(/ [|:-] /)[0].trim(),
-      subtitle: ogSubtitle || (finalDescription.length > 150 ? finalDescription.slice(0, 147) + "..." : finalDescription),
+      subtitle:
+        ogSubtitle ||
+        (finalDescription.length > 150
+          ? finalDescription.slice(0, 147) + "..."
+          : finalDescription),
       label: ogLabel,
     });
 

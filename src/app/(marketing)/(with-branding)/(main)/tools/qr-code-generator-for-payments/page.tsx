@@ -40,26 +40,31 @@ export default function QRGenerator() {
               Free Payment <span className="text-primary">QR Code</span>{" "}
               Generator
             </h1>
-            <p className="mx-auto max-w-2xl text-xl text-slate-600 mb-12">
+            <p className="mx-auto mb-12 max-w-2xl text-xl text-slate-600">
               Download custom branded QR codes for your eSewa, Khalti, or
               FonePay merchant accounts. Make it easy for your customers to pay.
             </p>
 
             {/* Growth Banner */}
-            <div className="mb-16 p-6 rounded-3xl bg-slate-900 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group border border-slate-800">
-              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.1),transparent)]" />
-              <div className="flex items-center gap-6 relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
-                  <Zap className="w-7 h-7 text-white fill-white" />
+            <div className="group relative mb-16 flex flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 p-6 text-white shadow-2xl md:flex-row">
+              <div className="absolute top-0 left-0 h-full w-full bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.1),transparent)]" />
+              <div className="relative z-10 flex items-center gap-6">
+                <div className="bg-primary shadow-primary/20 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-lg">
+                  <Zap className="h-7 w-7 fill-white text-white" />
                 </div>
                 <div className="text-left">
-                  <h3 className="text-xl font-black italic uppercase tracking-tighter">Automate Your Payments</h3>
-                  <p className="text-slate-400 font-bold">Build a website with integrated payment gateways in 2 minutes.</p>
+                  <h3 className="text-xl font-black tracking-tighter uppercase italic">
+                    Automate Your Payments
+                  </h3>
+                  <p className="font-bold text-slate-400">
+                    Build a website with integrated payment gateways in 2
+                    minutes.
+                  </p>
                 </div>
               </div>
-              <Link 
+              <Link
                 href="/create-website"
-                className="px-8 py-4 rounded-full bg-primary text-white font-black uppercase tracking-widest text-sm hover:scale-110 active:scale-95 transition-all relative z-10 shadow-xl"
+                className="bg-primary relative z-10 rounded-full px-8 py-4 text-sm font-black tracking-widest text-white uppercase shadow-xl transition-all hover:scale-110 active:scale-95"
               >
                 Start Free
               </Link>

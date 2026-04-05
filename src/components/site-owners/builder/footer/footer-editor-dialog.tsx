@@ -108,14 +108,14 @@ const ColorPicker = ({
   return (
     <div className="space-y-2">
       <Label className="text-xs">{label}</Label>
-      <div className="flex flex-wrap gap-1 mb-2">
+      <div className="mb-2 flex flex-wrap gap-1">
         {predefinedColors.map(color => (
           <button
             key={color}
             type="button"
             className={cn(
               "h-6 w-6 cursor-pointer rounded-full border border-gray-200 transition-transform hover:scale-110",
-              value === color && "ring-2 ring-primary ring-offset-1"
+              value === color && "ring-primary ring-2 ring-offset-1"
             )}
             style={{ backgroundColor: color }}
             onClick={() => onChange(color)}
@@ -800,40 +800,61 @@ export function FooterEditorDialog({
 
         <Tabs defaultValue="logo" className="w-full">
           <TabsList className={`grid w-full grid-cols-8`}>
-            <TabsTrigger value="logo" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="logo"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <ImageIcon className="h-4 w-4" />
               Logo
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="appearance"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Palette className="h-4 w-4" />
               Appearance
             </TabsTrigger>
-            <TabsTrigger value="company" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="company"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Building className="h-4 w-4" />
               Company
             </TabsTrigger>
-            <TabsTrigger value="contact" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="contact"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Phone className="h-4 w-4" />
               Contact
             </TabsTrigger>
             {showNewsletter && (
               <TabsTrigger
                 value="newsletter"
-                className="flex items-center gap-1 cursor-pointer"
+                className="flex cursor-pointer items-center gap-1"
               >
                 <Mail className="h-4 w-4" />
                 Newsletter
               </TabsTrigger>
             )}
-            <TabsTrigger value="sections" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="sections"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Link className="h-4 w-4" />
               Sections
             </TabsTrigger>
-            <TabsTrigger value="policies" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="policies"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Shield className="h-4 w-4" />
               Policies
             </TabsTrigger>
-            <TabsTrigger value="social" className="flex items-center gap-1 cursor-pointer">
+            <TabsTrigger
+              value="social"
+              className="flex cursor-pointer items-center gap-1"
+            >
               <Share2 className="h-4 w-4" />
               Social
             </TabsTrigger>
@@ -845,7 +866,10 @@ export function FooterEditorDialog({
               <Card className="border-none">
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label className="text-xs cursor-pointer" htmlFor="footer-logo-text">
+                    <Label
+                      className="cursor-pointer text-xs"
+                      htmlFor="footer-logo-text"
+                    >
                       Logo Text
                     </Label>
                     <Input
@@ -952,7 +976,7 @@ export function FooterEditorDialog({
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="text" id="footer-text-only" />
                         <Label
-                          className="text-sm font-normal cursor-pointer"
+                          className="cursor-pointer text-sm font-normal"
                           htmlFor="footer-text-only"
                         >
                           Text
@@ -967,7 +991,7 @@ export function FooterEditorDialog({
                         <Label
                           htmlFor="footer-image-only"
                           className={cn(
-                            "text-sm font-normal cursor-pointer",
+                            "cursor-pointer text-sm font-normal",
                             !editingData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -983,7 +1007,7 @@ export function FooterEditorDialog({
                         <Label
                           htmlFor="footer-both"
                           className={cn(
-                            "text-sm font-normal cursor-pointer",
+                            "cursor-pointer text-sm font-normal",
                             !editingData.logoImage ? "opacity-50" : ""
                           )}
                         >
@@ -1002,14 +1026,14 @@ export function FooterEditorDialog({
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium flex items-center gap-2">
+                      <Label className="flex items-center gap-2 text-sm font-medium">
                         <Palette className="h-4 w-4" />
                         Footer Colors
                       </Label>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 text-xs gap-1"
+                        className="h-8 gap-1 text-xs"
                         onClick={() => {
                           updateBasicInfo("backgroundColor", "white");
                           updateBasicInfo("textColor", "black");
@@ -1031,9 +1055,7 @@ export function FooterEditorDialog({
                       <ColorPicker
                         label="Text Color"
                         value={editingData.textColor || ""}
-                        onChange={value =>
-                          updateBasicInfo("textColor", value)
-                        }
+                        onChange={value => updateBasicInfo("textColor", value)}
                       />
                     </div>
                   </div>
@@ -1174,10 +1196,13 @@ export function FooterEditorDialog({
                         onChange={e =>
                           updateNewsletter("enabled", e.target.checked)
                         }
-                        className="border-border rounded cursor-pointer"
+                        className="border-border cursor-pointer rounded"
                         disabled={isLoading}
                       />
-                      <label className="text-sm cursor-pointer" htmlFor="newsletter-enabled">
+                      <label
+                        className="cursor-pointer text-sm"
+                        htmlFor="newsletter-enabled"
+                      >
                         Enable newsletter subscription
                       </label>
                     </div>

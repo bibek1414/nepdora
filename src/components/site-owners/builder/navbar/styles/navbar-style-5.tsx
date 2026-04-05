@@ -275,10 +275,14 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                         </Button>
                       </DropdownMenuTrigger>
                       {!disableClicks && !isEditable && (
-                        <DropdownMenuContent 
-                          className="w-48" 
+                        <DropdownMenuContent
+                          className="w-48"
                           align="end"
-                          style={{ backgroundColor: navbarData.backgroundColor || "white", color: navbarData.textColor || "inherit" }}
+                          style={{
+                            backgroundColor:
+                              navbarData.backgroundColor || "white",
+                            color: navbarData.textColor || "inherit",
+                          }}
                         >
                           {isAuthenticated ? (
                             <>

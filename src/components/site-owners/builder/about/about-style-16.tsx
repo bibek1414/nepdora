@@ -66,12 +66,12 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
         />
       </div>
 
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl pointer-events-none flex-col justify-center px-6 md:px-20 lg:px-8">
+      <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6 md:px-20 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-4 inline-block pointer-events-auto"
+          className="pointer-events-auto mb-4 inline-block"
         >
           <EditableText
             value={data.badgeText}

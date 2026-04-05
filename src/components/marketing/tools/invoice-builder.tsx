@@ -80,20 +80,25 @@ export const InvoiceBuilder = () => {
         </div>
 
         {/* Growth Banner */}
-        <div className="mb-8 p-6 rounded-3xl bg-primary text-white shadow-2xl shadow-primary/20 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700" />
-          <div className="flex items-center gap-6 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20 shadow-inner">
-              <Zap className="w-7 h-7 text-white fill-white animate-pulse" />
+        <div className="bg-primary shadow-primary/20 group relative mb-8 flex flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl p-6 text-white shadow-2xl md:flex-row">
+          <div className="absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10 blur-[80px] transition-transform duration-700 group-hover:scale-110" />
+          <div className="relative z-10 flex items-center gap-6">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/20 shadow-inner backdrop-blur-md">
+              <Zap className="h-7 w-7 animate-pulse fill-white text-white" />
             </div>
             <div>
-              <h3 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter">Love this tool?</h3>
-              <p className="text-white/80 font-bold">Build a professional website with integrated payments in 2 minutes.</p>
+              <h3 className="text-xl font-black tracking-tighter uppercase italic md:text-2xl">
+                Love this tool?
+              </h3>
+              <p className="font-bold text-white/80">
+                Build a professional website with integrated payments in 2
+                minutes.
+              </p>
             </div>
           </div>
-          <Link 
+          <Link
             href="/create-website"
-            className="px-8 py-4 rounded-full bg-slate-900 text-white font-black uppercase tracking-widest text-sm hover:scale-110 active:scale-95 transition-all relative z-10 shadow-xl"
+            className="relative z-10 rounded-full bg-slate-900 px-8 py-4 text-sm font-black tracking-widest text-white uppercase shadow-xl transition-all hover:scale-110 active:scale-95"
           >
             Build My Website
           </Link>
@@ -291,14 +296,19 @@ export const InvoiceBuilder = () => {
 
             {/* Growth Loop CTA */}
             <div className="rounded-2xl bg-slate-900 p-8 text-white shadow-xl shadow-slate-200">
-              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 ring-1 ring-primary/30">
+              <div className="bg-primary/20 ring-primary/30 mb-6 flex h-12 w-12 items-center justify-center rounded-xl ring-1">
                 <Zap className="text-primary h-6 w-6" />
               </div>
-              <h3 className="mb-4 text-xl font-bold">Never lose an invoice again.</h3>
-              <p className="mb-8 text-sm text-slate-400 leading-relaxed">
-                Save this invoice and automate your entire billing process by creating a <span className="text-white font-semibold">free website</span> on Nepdora. 
+              <h3 className="mb-4 text-xl font-bold">
+                Never lose an invoice again.
+              </h3>
+              <p className="mb-8 text-sm leading-relaxed text-slate-400">
+                Save this invoice and automate your entire billing process by
+                creating a{" "}
+                <span className="font-semibold text-white">free website</span>{" "}
+                on Nepdora.
               </p>
-              <Button 
+              <Button
                 asChild
                 className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white font-bold text-slate-950 hover:bg-slate-100"
               >
@@ -307,7 +317,7 @@ export const InvoiceBuilder = () => {
                   <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
                 </Link>
               </Button>
-              <p className="mt-4 text-center text-[10px] font-medium text-slate-500 uppercase tracking-widest">
+              <p className="mt-4 text-center text-[10px] font-medium tracking-widest text-slate-500 uppercase">
                 No Credit Card Required
               </p>
             </div>

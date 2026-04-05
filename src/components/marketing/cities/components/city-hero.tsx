@@ -40,11 +40,13 @@ export const CityHero: React.FC<CityHeroProps> = ({
           <div>
             <p className="mb-4 text-sm text-slate-400">{cityName}, Nepal</p>
 
-            <h1 className="mb-5 text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl">
+            <h1 className="mb-5 text-4xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-5xl">
               {heading}
             </h1>
 
-            <p className="mb-8 text-lg leading-relaxed text-slate-500">{intro}</p>
+            <p className="mb-8 text-lg leading-relaxed text-slate-500">
+              {intro}
+            </p>
 
             <Link
               href="/admin/signup"
@@ -54,12 +56,14 @@ export const CityHero: React.FC<CityHeroProps> = ({
               <ChevronRight className="h-4 w-4" />
             </Link>
 
-            <p className="mt-3 text-sm text-slate-400">No credit card required</p>
+            <p className="mt-3 text-sm text-slate-400">
+              No credit card required
+            </p>
           </div>
 
           {/* Right — checklist card */}
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
-            <p className="mb-5 text-xs font-medium uppercase tracking-wider text-slate-400">
+            <p className="mb-5 text-xs font-medium tracking-wider text-slate-400 uppercase">
               What you get
             </p>
             <ul className="space-y-3.5">
@@ -72,8 +76,13 @@ export const CityHero: React.FC<CityHeroProps> = ({
                 "24/7 support in Nepali & English",
               ].map(item => (
                 <li key={item} className="flex items-start gap-3">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" strokeWidth={2} />
-                  <span className="text-sm leading-relaxed text-slate-700">{item}</span>
+                  <Check
+                    className="mt-0.5 h-4 w-4 shrink-0 text-slate-400"
+                    strokeWidth={2}
+                  />
+                  <span className="text-sm leading-relaxed text-slate-700">
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>

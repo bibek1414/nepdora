@@ -6,7 +6,8 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Build a Professional Agency Website in Nepal (Fast & Cheap) | Nepdora",
+  title:
+    "Build a Professional Agency Website in Nepal (Fast & Cheap) | Nepdora",
   description:
     "Launch your digital agency, consultancy, or creative portfolio in Nepal in under 10 minutes. Build a fast, professional agency website with built-in lead generation and CRM.",
   path: "/agency-website",

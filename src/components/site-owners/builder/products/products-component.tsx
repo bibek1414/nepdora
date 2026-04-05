@@ -27,7 +27,6 @@ import { ProductsStyle6 } from "./products-style/products-style-6";
 import { ProductsStyle7 } from "./products-style/product-style-7";
 import { ProductsStyle8 } from "./products-style/products-style-8";
 
-
 interface ProductsComponentProps {
   component: ProductsComponentData;
   isEditable?: boolean;

@@ -140,7 +140,7 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
                 Study Destination
               </Badge>
               <h1
-                className="mb-6 text-4xl font-bold leading-tight text-white sm:text-6xl"
+                className="mb-6 text-4xl leading-tight font-bold text-white sm:text-6xl"
                 style={{ fontFamily: theme?.fonts?.heading }}
               >
                 Study in{" "}
@@ -342,7 +342,7 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
                     {uni.data.ranking || "Top Ranked"}
                   </Badge>
                   <h4
-                    className="mb-2 text-lg font-bold leading-tight tracking-tight text-slate-900"
+                    className="mb-2 text-lg leading-tight font-bold tracking-tight text-slate-900"
                     style={{
                       fontFamily: theme?.fonts?.heading,
                     }}

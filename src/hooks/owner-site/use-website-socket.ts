@@ -215,11 +215,7 @@ export const useWebsiteSocket = ({
             };
 
             const mainSlug = data.page_slug;
-            [
-              mainSlug,
-              `${mainSlug}-draft`,
-              mainSlug?.replace("-draft", ""),
-            ]
+            [mainSlug, `${mainSlug}-draft`, mainSlug?.replace("-draft", "")]
               .filter(Boolean)
               .forEach(s => {
                 queryClient.setQueryData(
@@ -268,11 +264,7 @@ export const useWebsiteSocket = ({
               (a, b) => (a.order ?? 0) - (b.order ?? 0)
             );
 
-            [
-              mainSlug,
-              `${mainSlug}-draft`,
-              mainSlug?.replace("-draft", ""),
-            ]
+            [mainSlug, `${mainSlug}-draft`, mainSlug?.replace("-draft", "")]
               .filter(Boolean)
               .forEach(s => {
                 queryClient.setQueryData(

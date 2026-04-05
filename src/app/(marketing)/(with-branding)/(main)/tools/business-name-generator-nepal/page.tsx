@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepali Business Name Generator | Find the Perfect Name for Your Startup",
+  title:
+    "Nepali Business Name Generator | Find the Perfect Name for Your Startup",
   description:
     "Struggling to find a name for your Nepali business? Use our AI-powered name generator to find unique, catchy, and culturally relevant names in seconds.",
   path: "/tools/business-name-generator-nepal",

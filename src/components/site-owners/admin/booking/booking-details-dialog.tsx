@@ -164,7 +164,7 @@ const BookingDetailsDialog = ({
               size="lg"
               onClick={handlePrevious}
               disabled={currentIndex === 0}
-              className="absolute -left-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronLeft className="h-6 w-6 text-black" />
             </Button>
@@ -175,7 +175,7 @@ const BookingDetailsDialog = ({
               size="lg"
               onClick={handleNext}
               disabled={currentIndex === bookings.length - 1}
-              className="absolute -right-16 top-1/2 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
+              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg hover:bg-white disabled:opacity-0"
             >
               <ChevronRight className="h-6 w-6 text-black" />
             </Button>
@@ -222,11 +222,11 @@ const BookingDetailsDialog = ({
                 {/* Service */}
                 {currentBooking.data["ride type"] && (
                   <div className="space-y-1">
-                    <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                    <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                       Service
                     </label>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium capitalize text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 capitalize">
                         {currentBooking.data["ride type"]}
                       </p>
                     </div>
@@ -236,11 +236,11 @@ const BookingDetailsDialog = ({
                 {/* Vehicle Name */}
                 {currentBooking.data["vehicle name"] && (
                   <div className="space-y-1">
-                    <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                    <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                       Vehicle Name
                     </label>
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium capitalize text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 capitalize">
                         {currentBooking.data["vehicle name"]}
                       </p>
                     </div>
@@ -249,7 +249,7 @@ const BookingDetailsDialog = ({
 
                 {/* Date */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                  <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                     Requested Date
                   </label>
                   <div className="flex items-center justify-between">
@@ -275,7 +275,7 @@ const BookingDetailsDialog = ({
 
                 {/* Status */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                  <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                     Status
                   </label>
                   <div className="flex items-center justify-between">
@@ -303,7 +303,7 @@ const BookingDetailsDialog = ({
                 {/* License Image */}
                 {currentBooking.data["license image"] && (
                   <div className="col-span-1 border-t pt-4 md:col-span-2">
-                    <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                    <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                       License Image
                     </label>
                     <div className="mt-2 overflow-hidden rounded-lg border bg-gray-50">
@@ -331,11 +331,11 @@ const BookingDetailsDialog = ({
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {/* Name */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                  <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                     Full Name
                   </label>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium capitalize text-gray-900">
+                    <p className="text-sm font-medium text-gray-900 capitalize">
                       {currentBooking.data.name}
                     </p>
                   </div>
@@ -344,7 +344,7 @@ const BookingDetailsDialog = ({
                 {/* Email */}
                 {currentBooking.data.email && (
                   <div className="space-y-1">
-                    <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                    <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                       Email Address
                     </label>
                     <div className="flex items-center justify-between">
@@ -360,7 +360,7 @@ const BookingDetailsDialog = ({
                 {/* Phone */}
                 {currentBooking.data["phone number"] && (
                   <div className="space-y-1">
-                    <label className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                    <label className="text-xs font-medium tracking-wide text-gray-500 uppercase">
                       Phone Number
                     </label>
                     <div className="flex items-center justify-between">
@@ -375,7 +375,7 @@ const BookingDetailsDialog = ({
 
                 {!currentBooking.data.email &&
                   !currentBooking.data["phone number"] && (
-                    <div className="flex items-center gap-2 text-sm italic text-gray-500 md:col-span-2">
+                    <div className="flex items-center gap-2 text-sm text-gray-500 italic md:col-span-2">
                       <MessageSquare className="h-4 w-4" />
                       <span>No contact information provided</span>
                     </div>
@@ -394,13 +394,13 @@ const BookingDetailsDialog = ({
               {currentBooking.data.content ? (
                 <div className="space-y-3">
                   <div className="rounded-lg border bg-gray-50 p-4">
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-900">
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-900">
                       {currentBooking.data.content}
                     </p>
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 text-sm italic text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-gray-500 italic">
                   <MessageSquare className="h-4 w-4" />
                   <span>No message provided</span>
                 </div>

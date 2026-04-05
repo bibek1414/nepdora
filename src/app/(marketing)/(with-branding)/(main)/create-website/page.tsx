@@ -49,7 +49,7 @@ export default function CreateWebsite() {
     <main>
       <JsonLd id="howto-schema" data={schema} />
       <Hero />
-      <div className="mx-auto max-w-6xl  px-4 py-16">
+      <div className="mx-auto max-w-6xl px-4 py-16">
         <h2 className="mb-12 text-center text-3xl font-bold md:text-5xl">
           How to Create Your Website in Nepal
         </h2>

@@ -165,7 +165,6 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
     onUpdate?.();
   };
 
-
   const handleDeleteLink = (linkId: string) => {
     if (!isEditable) return;
 
@@ -180,7 +179,6 @@ export const NavbarComponent: React.FC<NavbarComponentProps> = ({
     });
     onUpdate?.();
   };
-
 
   const handleAddLink = () => {
     if (!isEditable) return;

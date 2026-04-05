@@ -121,7 +121,8 @@ export const SubCategoryStyle3: React.FC<SubCategoryStyleProps> = ({
   };
 
   const renderSubCategoryCard = (subcategory: SubCategory) => {
-    const subcategoryImage = subcategory.image || "/fallback/image-not-found.png";
+    const subcategoryImage =
+      subcategory.image || "/fallback/image-not-found.png";
     const subcategoryUrl = getSubCategoryUrl(subcategory);
 
     const handleCardClick = () => {
@@ -226,7 +227,9 @@ export const SubCategoryStyle3: React.FC<SubCategoryStyleProps> = ({
                 <div
                   key={subcategory.id}
                   className="relative shrink-0 snap-start"
-                  onClick={() => !isEditable && onSubCategoryClick?.(subcategory.id)}
+                  onClick={() =>
+                    !isEditable && onSubCategoryClick?.(subcategory.id)
+                  }
                 >
                   {isEditable && <div className="absolute inset-0 z-10" />}
                   {renderSubCategoryCard(subcategory)}

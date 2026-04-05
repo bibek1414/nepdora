@@ -14,21 +14,21 @@ capabilities:
       - Better for complex planning
       - Improved debugging hypotheses
       - More thorough architecture analysis
-    
+
   long_context:
     description: "Context window > 100k tokens"
     benefits:
       - Can analyze multiple files at once
       - Better for large refactors
       - Full codebase reviews
-    
+
   tools:
     description: "Function/tool calling support"
     benefits:
       - Execute verification commands
       - Interact with external systems
       - Structured outputs
-    
+
   speed_tier:
     description: "Response latency tier"
     values:
@@ -53,7 +53,7 @@ profiles:
     examples:
       - "Flash/Turbo variants"
       - "Smaller parameter models"
-  
+
   # Standard balanced models
   standard:
     speed_tier: standard
@@ -67,7 +67,7 @@ profiles:
     examples:
       - "Pro/Standard variants"
       - "Mid-tier models"
-  
+
   # Deep reasoning models
   reasoning:
     speed_tier: reasoning
@@ -87,19 +87,19 @@ phase_recommendations:
   planning:
     preferred_profile: reasoning
     reason: "Complex decisions benefit from extended thinking"
-    
+
   implementation:
     preferred_profile: fast_coder
     reason: "Frequent iteration needs speed"
-    
+
   refactoring:
     preferred_profile: standard
     reason: "Balance of context and speed"
-    
+
   debugging:
     preferred_profile: reasoning
     reason: "Hypothesis generation needs depth"
-    
+
   review:
     preferred_profile: standard
     reason: "Large context for full diffs"

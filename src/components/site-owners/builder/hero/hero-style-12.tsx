@@ -145,7 +145,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
       data-component-id={componentId}
     >
       {isEditable && (
-        <div className="absolute right-4 top-6 z-30 flex gap-2">
+        <div className="absolute top-6 right-4 z-30 flex gap-2">
           <button
             onClick={addSlide}
             className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
@@ -206,7 +206,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
               isEditable={isEditable}
               label="Change Background"
               folder="hero-slides"
-              className="absolute left-4 top-4 z-40"
+              className="absolute top-4 left-4 z-40"
             />
           </div>
 
@@ -228,7 +228,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                       onChange={handleSlideUpdate(currentSlide.id, "subtitle")}
                       isEditable={isEditable}
                       as="span"
-                      className="text-xs font-bold uppercase tracking-wider text-white"
+                      className="text-xs font-bold tracking-wider text-white uppercase"
                       placeholder="Subtitle"
                     />
                   </div>
@@ -240,7 +240,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                   isEditable={isEditable}
                   multiline
                   as="h1"
-                  className="mb-6 text-4xl font-extrabold leading-none tracking-tight shadow-sm md:text-6xl lg:text-7xl"
+                  className="mb-6 text-4xl leading-none font-extrabold tracking-tight shadow-sm md:text-6xl lg:text-7xl"
                   placeholder="Hero Title"
                 />
 
@@ -250,7 +250,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                   isEditable={isEditable}
                   multiline
                   as="p"
-                  className="mb-8 max-w-md text-lg font-light leading-relaxed text-white/90 md:text-xl"
+                  className="mb-8 max-w-md text-lg leading-relaxed font-light text-white/90 md:text-xl"
                   placeholder="Hero Description"
                 />
 
@@ -277,7 +277,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute bottom-8 left-0 right-0 z-20 flex justify-center gap-3">
+      <div className="absolute right-0 bottom-8 left-0 z-20 flex justify-center gap-3">
         {heroSlides.map((_, i) => (
           <button
             key={i}

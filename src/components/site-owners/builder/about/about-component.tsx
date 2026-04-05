@@ -155,7 +155,9 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
       );
     }
     if (isAboutUsTemplate13(component.data)) {
-      return <AboutUsTemplate13 aboutUsData={component.data} {...commonProps} />;
+      return (
+        <AboutUsTemplate13 aboutUsData={component.data} {...commonProps} />
+      );
     }
     if (isAboutUsTemplate14(component.data)) {
       return (

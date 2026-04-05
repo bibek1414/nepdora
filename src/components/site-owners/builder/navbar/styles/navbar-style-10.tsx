@@ -290,7 +290,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   className="absolute top-full left-0 z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-gray-100 shadow-xl"
-                  style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+                  style={{
+                    backgroundColor: data.backgroundColor || "white",
+                    color: data.textColor || "inherit",
+                  }}
                 >
                   <div className="py-2">
                     {services.map((service, index) => (
@@ -447,7 +450,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
       {/* Mobile Menu Toggle */}
       <button
         className="ml-auto rounded-full border border-gray-100 p-1.5 shadow-md sm:p-2 lg:hidden"
-        style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+        style={{
+          backgroundColor: data.backgroundColor || "white",
+          color: data.textColor || "inherit",
+        }}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disableClicks}
       >
@@ -463,7 +469,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="fixed inset-0 z-40 flex flex-col gap-4 overflow-y-auto px-4 pt-16 pb-6 shadow-xl lg:hidden"
-            style={{ backgroundColor: data.backgroundColor || "white", color: data.textColor || "inherit" }}
+            style={{
+              backgroundColor: data.backgroundColor || "white",
+              color: data.textColor || "inherit",
+            }}
           >
             <button
               className="absolute top-4 right-4 rounded-full border border-gray-100 p-1.5 shadow-md sm:p-2"
@@ -587,8 +596,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                       onClick={handleLoginClick}
                       className="flex w-full items-center gap-3 py-2 text-base font-medium opacity-80 hover:opacity-100"
                     >
-                      <User size={20} className="opacity-60" /> Login /
-                      Register
+                      <User size={20} className="opacity-60" /> Login / Register
                     </button>
                   )}
                 </div>
