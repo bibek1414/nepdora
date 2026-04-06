@@ -205,6 +205,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 19 (Impact Slider)",
         image: "/images/site-owners/hero/hero19.png",
       },
+      {
+        id: "hero-20",
+        name: "Hero Style 20 (Editorial Gallery)",
+        image: "/images/site-owners/hero/hero20.png",
+      },
     ],
     tours: [
       {

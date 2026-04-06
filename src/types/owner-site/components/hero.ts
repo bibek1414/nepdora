@@ -757,6 +757,55 @@ export const defaultHeroTemplate19Data: HeroTemplate19Data = {
     },
   ],
 };
+export interface HeroTemplate20Pill {
+  id: string;
+  image: string;
+  imageAlt: string;
+}
+
+export interface HeroTemplate20Data {
+  template: "hero-20";
+  title: string;
+  description: string;
+  primaryButtonText: string;
+  primaryButtonHref: string;
+  pills: HeroTemplate20Pill[];
+}
+
+export const defaultHeroTemplate20Data: HeroTemplate20Data = {
+  template: "hero-20",
+  title: "Crafting spaces with purpose and personality",
+  description:
+    "Lorem ipsum dolor sit amet consectetur faucibus nunc habitasse aliquam vestibulum auctor fringilla risus.",
+  primaryButtonText: "Get in touch",
+  primaryButtonHref: "#",
+  pills: [
+    {
+      id: "1",
+      image:
+        "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a8f736ba3faadf02781f4_minimalist-bedroom-hero-archipro-webflow-template.png",
+      imageAlt: "Minimalist bedroom",
+    },
+    {
+      id: "2",
+      image:
+        "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a8f73c7632f2e0ff7b0b3_modern-living-room-hero-archipro-webflow-template.png",
+      imageAlt: "Modern living room",
+    },
+    {
+      id: "3",
+      image:
+        "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a8f734866d06a9c67bd1d_wooden-dining-table-hero-archipro-webflow-template.png",
+      imageAlt: "Wooden dining table",
+    },
+    {
+      id: "4",
+      image:
+        "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a8f7371c3c0dcf19aa5a7_minimalist-bathroom-hero-archipro-webflow-template.png",
+      imageAlt: "Minimalist bathroom",
+    },
+  ],
+};
 
 // Union type for all hero templates
 export type HeroData =
@@ -778,7 +827,8 @@ export type HeroData =
   | HeroTemplate16Data
   | HeroTemplate17Data
   | HeroTemplate18Data
-  | HeroTemplate19Data;
+  | HeroTemplate19Data
+  | HeroTemplate20Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -859,6 +909,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-17": defaultHeroTemplate17Data,
   "hero-18": defaultHeroTemplate18Data,
   "hero-19": defaultHeroTemplate19Data,
+  "hero-20": defaultHeroTemplate20Data,
 };
 
 // Type guards for each template
@@ -918,3 +969,6 @@ export const isHeroTemplate18 = (data: HeroData): data is HeroTemplate18Data =>
 
 export const isHeroTemplate19 = (data: HeroData): data is HeroTemplate19Data =>
   data.template === "hero-19";
+
+export const isHeroTemplate20 = (data: HeroData): data is HeroTemplate20Data =>
+  data.template === "hero-20";
