@@ -11,6 +11,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
+import { BannerItemControls } from "./banner-item-controls";
 
 interface BannerTemplateProps {
   bannerData: BannerTemplate3Data;
@@ -120,7 +121,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
 
   const handleBannerClick = (link: string) => {
     if (link) {
-      window.open(link, "_blank", "noopener,noreferrer");
+      window.location.href = link;
     }
   };
 
@@ -218,29 +219,14 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                         </div>
                       )}
 
-                      {/* Editable link overlay for edit mode */}
-                      {isEditable && (
-                        <div className="absolute bottom-2 left-2 z-10 flex gap-2">
-                          <EditableLink
-                            text="Edit Link"
-                            href={image.link || ""}
-                            onChange={(text, href) =>
-                              handleLinkUpdate(safeIndex, href)
-                            }
-                            isEditable={isEditable}
-                            siteUser={siteUser}
-                            className="rounded bg-black/50 px-2 py-1 text-xs text-white"
-                          />
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleRemoveImage(safeIndex)}
-                            className="h-6 w-6 p-0"
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
+                      {/* Shared Banner Item Controls */}
+                      <BannerItemControls
+                        link={image.link || ""}
+                        onLinkUpdate={(text, href) => handleLinkUpdate(safeIndex, href)}
+                        onRemove={() => handleRemoveImage(safeIndex)}
+                        isEditable={isEditable}
+                        siteUser={siteUser}
+                      />
                     </div>
                   );
                 })}

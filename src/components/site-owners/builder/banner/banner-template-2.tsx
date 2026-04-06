@@ -12,6 +12,7 @@ import { Plus, X } from "lucide-react";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BannerItemControls } from "./banner-item-controls";
 
 interface BannerTemplateProps {
   bannerData: BannerTemplate2Data;
@@ -231,6 +232,16 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
             </Button>
           </div>
         )}
+
+        {/* Global Controls Overlay for current picture in edit mode */}
+        <BannerItemControls
+          link={currentSlide?.link || ""}
+          onLinkUpdate={(text, href) => handleArrayItemUpdate("images", currentSlide.id!)({ link: href })}
+          onRemove={() => handleRemoveImage(currentIndex)}
+          isEditable={isEditable}
+          siteUser={siteUser}
+          className="top-4 left-4"
+        />
 
         {/* Global Edit Overlay for current picture */}
         {isEditable && currentSlide && (

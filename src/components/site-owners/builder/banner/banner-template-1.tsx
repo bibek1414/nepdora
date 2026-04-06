@@ -11,6 +11,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
+import { BannerItemControls } from "./banner-item-controls";
 
 interface BannerTemplateProps {
   bannerData: BannerTemplate1Data;
@@ -89,7 +90,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
 
   const handleBannerClick = () => {
     if (activeImage?.link) {
-      window.open(activeImage.link, "_blank", "noopener,noreferrer");
+      window.location.href = activeImage.link;
     }
   };
 
@@ -107,7 +108,48 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     <div className="w-full space-y-2 sm:space-y-4">
       <div className="mx-auto mt-4 max-w-7xl px-2 sm:mt-10 sm:px-4 md:px-6 lg:px-4">
         {activeImage ? (
-          <div className="group relative h-32 overflow-hidden rounded-lg sm:h-40 md:h-48 lg:h-80">
+          <div className="group relative h-32 rounded-lg sm:h-40 md:h-48 lg:h-100">
+            {/* Background Image Wrapper with overflow-hidden */}
+            <div className="h-full w-full overflow-hidden rounded-lg">
+              {activeImage.link && !isEditable ? (
+                <button
+                  onClick={handleBannerClick}
+                  className="block h-full w-full cursor-pointer transition-transform hover:scale-[1.02] focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-inset"
+                  aria-label={`Navigate to ${activeImage.image_alt_description}`}
+                >
+                  <EditableImage
+                    src={getImageUrl(activeImage.image)}
+                    alt={activeImage.image_alt_description || "Top banner"}
+                    onImageChange={(imageUrl, altText) =>
+                      handleImageUpdateLocal(0, imageUrl, altText)
+                    }
+                    className="h-full w-full object-cover"
+                    priority
+                    s3Options={{
+                      folder: "banner-images",
+                    }}
+                    showAltEditor={isEditable}
+                  />
+                </button>
+              ) : (
+                <div className="h-full w-full">
+                  <EditableImage
+                    src={getImageUrl(activeImage.image)}
+                    alt={activeImage.image_alt_description || "Top banner"}
+                    onImageChange={(imageUrl, altText) =>
+                      handleImageUpdateLocal(0, imageUrl, altText)
+                    }
+                    className="h-full w-full object-cover"
+                    priority
+                    s3Options={{
+                      folder: "banner-images",
+                    }}
+                    showAltEditor={isEditable}
+                  />
+                </div>
+              )}
+            </div>
+
             {/* Change Background Button - Only visible when editable */}
             <ImageEditOverlay
               onImageSelect={url => handleImageUpdateLocal(0, url)}
@@ -119,67 +161,14 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
               className="absolute top-2 right-2 z-20"
             />
 
-            {activeImage.link && !isEditable ? (
-              <button
-                onClick={handleBannerClick}
-                className="block h-full w-full cursor-pointer transition-transform hover:scale-[1.02] focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-inset"
-                aria-label={`Navigate to ${activeImage.image_alt_description}`}
-              >
-                <EditableImage
-                  src={getImageUrl(activeImage.image)}
-                  alt={activeImage.image_alt_description || "Top banner"}
-                  onImageChange={(imageUrl, altText) =>
-                    handleImageUpdateLocal(0, imageUrl, altText)
-                  }
-                  isEditable={isEditable}
-                  className="h-full w-full object-cover"
-                  priority
-                  s3Options={{
-                    folder: "banner-images",
-                  }}
-                  showAltEditor={isEditable}
-                />
-              </button>
-            ) : (
-              <div className="h-full w-full">
-                <EditableImage
-                  src={getImageUrl(activeImage.image)}
-                  alt={activeImage.image_alt_description || "Top banner"}
-                  onImageChange={(imageUrl, altText) =>
-                    handleImageUpdateLocal(0, imageUrl, altText)
-                  }
-                  isEditable={isEditable}
-                  className="h-full w-full object-cover"
-                  priority
-                  s3Options={{
-                    folder: "banner-images",
-                  }}
-                  showAltEditor={isEditable}
-                />
-              </div>
-            )}
-
-            {/* Editable link overlay for edit mode */}
-            {isEditable && (
-              <div className="absolute bottom-1 left-1 z-10 flex gap-1 sm:bottom-2 sm:left-2 sm:gap-2">
-                <EditableLink
-                  text="Edit Link"
-                  href={activeImage.link || ""}
-                  onChange={(text, href) => handleLinkUpdate(0, href)}
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className="rounded bg-black/50 px-1.5 py-0.5 text-[10px] text-white sm:px-2 sm:py-1 sm:text-xs"
-                />
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => handleRemoveImage(0)}
-                  className="h-5 w-5 p-0 sm:h-6 sm:w-6 sm:px-2"
-                >
-                  <X className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                </Button>
-              </div>
-            )}
+            {/* Shared Banner Item Controls */}
+            <BannerItemControls
+              link={activeImage.link || ""}
+              onLinkUpdate={(text, href) => handleLinkUpdate(0, href)}
+              onRemove={() => handleRemoveImage(0)}
+              isEditable={isEditable}
+              siteUser={siteUser}
+            />
           </div>
         ) : (
           <div className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 sm:h-40 md:h-48 lg:h-60">
