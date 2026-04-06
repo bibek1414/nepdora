@@ -245,10 +245,17 @@ export function FooterStyle5({
           {/* Left: Copyright */}
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
             <p className="text-sm opacity-60">
-              {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
+              {getProcessedCopyright(
+                data.copyright,
+                data.companyName,
+                siteConfig?.business_name
+              )}
             </p>
             <div className="mt-1">
-                <MadeWithLove textColor={footerData.textColor} className="justify-start! md:justify-end!" />
+              <MadeWithLove
+                textColor={footerData.textColor}
+                className="justify-start! md:justify-end!"
+              />
             </div>
           </div>
 

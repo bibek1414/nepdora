@@ -30,7 +30,7 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
 }) => {
   const { data, getImageUrl } = useBuilderLogic(footerData, onUpdate);
   const { data: siteConfig } = useSiteConfig();
-  
+
   const isPlaceholder = (text?: string) => {
     if (!text) return true;
     const placeholders = ["brand", "your brand"];
@@ -84,9 +84,13 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
                   backgroundImage: `linear-gradient(to bottom, ${footerData.textColor || "#000"}, transparent)`,
                 }}
               >
-                {!isPlaceholder(data.logoText) 
-                  ? data.logoText 
-                  : (!isPlaceholder(data.companyName) ? data.companyName : (siteConfig?.business_name || data.logoText || data.companyName))}
+                {!isPlaceholder(data.logoText)
+                  ? data.logoText
+                  : !isPlaceholder(data.companyName)
+                    ? data.companyName
+                    : siteConfig?.business_name ||
+                      data.logoText ||
+                      data.companyName}
               </h1>
             </div>
           )}
@@ -204,7 +208,11 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
         >
           <div className="flex flex-col items-center gap-2 md:items-start">
             <p className="text-xs opacity-60">
-              {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
+              {getProcessedCopyright(
+                data.copyright,
+                data.companyName,
+                siteConfig?.business_name
+              )}
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">

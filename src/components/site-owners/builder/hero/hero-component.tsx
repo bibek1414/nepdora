@@ -191,7 +191,6 @@ export const HeroComponent: React.FC<HeroComponentProps> = ({
       return <HeroTemplate20 heroData={component.data} {...commonProps} />;
     }
 
-
     // Fallback for unknown templates
     const fallbackData = component.data as HeroData;
     return (

@@ -67,7 +67,7 @@ export const CTATemplate4: React.FC<CTATemplate4Props> = ({
               onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
               onAltChange={handleAltUpdate("imageAlt")}
               isEditable={isEditable}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 rounded-2xl"
+              className="h-full w-full rounded-2xl object-cover transition-transform duration-700 group-hover:scale-105"
               width={1600}
               height={900}
             />

@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { AlertCircle, Info, ArrowLeft } from "lucide-react";
+import { AlertCircle, Info, ArrowLeft, Lock } from "lucide-react";
 import { ApiResponse, PaymentState } from "@/types/payment";
 
 interface KhaltiPaymentData {
@@ -188,101 +188,129 @@ export default function KhaltiPayment() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <Card className="mx-4 w-full max-w-md">
-        <CardHeader>
-          <div className="mb-2 flex items-center gap-2">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
+      {/* Brand Header */}
+      <div className="mb-4 flex w-full max-w-md items-center justify-start">
+        <img
+          src="/nepdora-logooo.svg"
+          alt="Nepdora"
+          className="h-8 w-auto opacity-90 md:h-10"
+        />
+      </div>
+
+      <Card className="w-full max-w-md overflow-hidden border-zinc-200/60 shadow-xl">
+        <div className="h-2 w-full bg-[#5d2e8e]" />
+        <CardHeader className="bg-zinc-50/50 pt-6 pb-8">
+          <div className="mb-6 flex items-center justify-between">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleBack}
               disabled={paymentState.isLoading}
+              className="text-muted-foreground hover:text-foreground -ml-2"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
+            <div className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+              Secure Checkout
+            </div>
           </div>
-          <CardTitle className="flex items-center gap-2">
-            <span className="h-4 w-4 rounded-full bg-purple-500"></span>
-            Khalti Payment
-          </CardTitle>
-          <CardDescription>
-            Complete your subscription payment via Khalti
-          </CardDescription>
+
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="relative h-16 w-32 overflow-hidden rounded-lg border border-zinc-100 bg-white p-2 shadow-sm">
+              <img
+                src="/images/payment-gateway/khalti.png"
+                alt="Khalti"
+                className="h-full w-full object-contain"
+              />
+            </div>
+            <div>
+              <CardTitle className="text-2xl">Khalti Payment</CardTitle>
+              <CardDescription className="mt-1.5">
+                Complete your subscription payment securely
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
 
         <form onSubmit={handlePayment}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6 pt-6">
             {paymentState.error && (
-              <Alert variant="destructive">
+              <Alert
+                variant="destructive"
+                className="border-red-200 bg-red-50 text-red-900"
+              >
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{paymentState.error}</AlertDescription>
               </Alert>
             )}
 
             {paymentState.success && (
-              <Alert>
-                <Info className="h-4 w-4" />
+              <Alert className="border-purple-200 bg-purple-50 text-purple-900">
+                <Info className="h-4 w-4 text-purple-600" />
                 <AlertDescription>
-                  Payment session created successfully! You will be redirected
-                  to Khalti.
+                  Payment session created! Redirecting to Khalti...
                 </AlertDescription>
               </Alert>
             )}
 
-            {/* Payment Details */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold">Payment Details</h3>
-
-              <div className="space-y-2">
-                <Label htmlFor="productName">Subscription Plan</Label>
+            <div className="space-y-4 rounded-xl border border-zinc-100 bg-zinc-50/50 p-4">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="productName"
+                  className="text-muted-foreground text-xs font-medium tracking-wider uppercase"
+                >
+                  Subscription Plan
+                </Label>
+                <div className="font-medium text-zinc-900">
+                  {productName || "Loading inline..."}
+                </div>
                 <Input
                   id="productName"
                   value={productName}
                   onChange={e => setProductName(e.target.value)}
-                  required
-                  placeholder="Enter product name"
-                  maxLength={100}
-                  disabled={paymentState.isLoading}
-                  readOnly
+                  className="hidden"
                 />
-                <div className="text-sm text-gray-500">
-                  Your selected subscription plan
-                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="amount">Amount (NPR)</Label>
+              <div className="space-y-1.5 border-t border-zinc-100 pt-3">
+                <Label
+                  htmlFor="amount"
+                  className="text-muted-foreground text-xs font-medium tracking-wider uppercase"
+                >
+                  Total Amount
+                </Label>
+                <div className="flex items-baseline gap-1 text-3xl font-bold text-zinc-900">
+                  <span className="text-xl">NPR</span>
+                  <span>
+                    {Number(amount || 0).toLocaleString("en-IN", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
                 <Input
                   id="amount"
                   type="number"
                   value={amount}
                   onChange={e => setAmount(e.target.value)}
-                  required
-                  min="10"
-                  step="0.01"
-                  placeholder="Enter amount (minimum Rs. 10)"
-                  disabled={paymentState.isLoading}
-                  readOnly
+                  className="hidden"
                 />
-                <div className="text-sm text-gray-500 mb-2">
-                  Total: Rs. {Number(amount || 0).toLocaleString("en-IN")}
-                </div>
               </div>
             </div>
           </CardContent>
 
-          <CardFooter>
+          <CardFooter className="pb-6">
             <Button
               type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700"
+              className="h-12 w-full bg-[#5d2e8e] text-base font-semibold text-white shadow-md transition-all hover:bg-[#4a2571] active:scale-[0.98]"
               disabled={paymentState.isLoading}
             >
               {paymentState.isLoading ? (
-                <>
-                  <span className="mr-2 animate-spin">⏳</span>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></span>
                   Processing...
-                </>
+                </div>
               ) : (
                 "Pay with Khalti"
               )}
@@ -290,6 +318,10 @@ export default function KhaltiPayment() {
           </CardFooter>
         </form>
       </Card>
+
+      <p className="mt-8 flex items-center gap-1.5 text-sm text-zinc-400">
+        <Lock className="h-3.5 w-3.5" /> Payments are secure and encrypted
+      </p>
     </div>
   );
 }

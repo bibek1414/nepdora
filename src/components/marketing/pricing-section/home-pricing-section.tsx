@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { useSubscriptionStatus, usePricingPlans } from "@/hooks/use-subscription";
+import {
+  useSubscriptionStatus,
+  usePricingPlans,
+} from "@/hooks/use-subscription";
 import { MarketingPricingCard, MarketingPlan } from "./marketing-pricing-card";
 
 const formatPrice = (price: string) => {
@@ -15,7 +18,12 @@ export function HomePricingSection() {
 
   // Sorting plans by typical order: Free, Premium/Business, Pro
   const sortPlans = (plans: any[]) => {
-    const order: Record<string, number> = { free: 1, premium: 2, business: 2, pro: 3 };
+    const order: Record<string, number> = {
+      free: 1,
+      premium: 2,
+      business: 2,
+      pro: 3,
+    };
     return [...plans].sort((a, b) => {
       const orderA = order[a.plan_type.toLowerCase()] || 999;
       const orderB = order[b.plan_type.toLowerCase()] || 999;
@@ -83,21 +91,24 @@ export function HomePricingSection() {
               price: `NPR ${formatPrice(plan.price)}`,
               period: `/${plan.unit}`,
               featured: plan.is_popular,
-              cta: plan.plan_type.toLowerCase() === "free" ? "Start for Free" : "Get Started",
+              cta:
+                plan.plan_type.toLowerCase() === "free"
+                  ? "Start for Free"
+                  : "Get Started",
               href: "/pricing",
               features: plan.features.map((f: any) => f.feature),
               aiFeatures: plan.plan_type.toLowerCase() === "pro",
             };
 
             return (
-              <MarketingPricingCard 
-                key={plan.id} 
-                plan={marketingPlan} 
-                isCurrentPlan={isCurrentPlan} 
+              <MarketingPricingCard
+                key={plan.id}
+                plan={marketingPlan}
+                isCurrentPlan={isCurrentPlan}
               />
             );
           })}
-          
+
           {/* Static Enterprise Plan */}
           <MarketingPricingCard plan={enterprisePlan} />
         </div>

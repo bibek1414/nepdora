@@ -42,22 +42,25 @@ export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
     },
   };
 
-  const { data, handleArrayItemUpdate } = useBuilderLogic(aboutUsData, onUpdate);
+  const { data, handleArrayItemUpdate } = useBuilderLogic(
+    aboutUsData,
+    onUpdate
+  );
 
   return (
     <div className="flex flex-col bg-white">
       {data.features.map((feature, index) => {
-        const IconComponent = 
-          iconMap[feature.badgeIcon] || 
-          (LucideIcons as any)[feature.badgeIcon] || 
+        const IconComponent =
+          iconMap[feature.badgeIcon] ||
+          (LucideIcons as any)[feature.badgeIcon] ||
           HelpCircle;
-        
+
         return (
-          <section 
+          <section
             key={feature.id}
             className="px-4 py-20 sm:px-6 md:py-32 lg:px-8"
           >
-            <div 
+            <div
               className={`mx-auto flex max-w-7xl flex-col items-center gap-12 md:flex-row md:gap-24 ${
                 feature.reverse ? "md:flex-row-reverse" : ""
               }`}
@@ -75,14 +78,17 @@ export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
                     src={feature.image}
                     alt={feature.imageAlt}
                     isEditable={isEditable}
-                    onImageChange={(url) => 
-                      handleArrayItemUpdate("features", feature.id)({ image: url })
+                    onImageChange={url =>
+                      handleArrayItemUpdate(
+                        "features",
+                        feature.id
+                      )({ image: url })
                     }
                     className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                     width={800}
                     height={800}
                   />
-                  
+
                   {/* Badge */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9, y: 10 }}
@@ -90,27 +96,30 @@ export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
                     viewport={{ once: true }}
                     transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
                     className={`absolute ${
-                      feature.badgePosition === "bottom-left" 
-                        ? "bottom-8 left-8" 
+                      feature.badgePosition === "bottom-left"
+                        ? "bottom-8 left-8"
                         : "top-8 right-8"
                     } flex items-center gap-3 rounded-2xl border border-white/20 bg-white/80 px-5 py-3 shadow-md backdrop-blur-md`}
                   >
-                    <div 
+                    <div
                       className="flex h-8 w-8 items-center justify-center rounded-lg"
-                      style={{ 
-                        backgroundColor: hexToRgba(theme.colors.primary, 0.1), 
-                        color: theme.colors.primary 
+                      style={{
+                        backgroundColor: hexToRgba(theme.colors.primary, 0.1),
+                        color: theme.colors.primary,
                       }}
                     >
                       <IconComponent className="h-4 w-4" />
                     </div>
                     <EditableText
                       value={feature.badgeText}
-                      onChange={(val) => 
-                        handleArrayItemUpdate("features", feature.id)({ badgeText: val })
+                      onChange={val =>
+                        handleArrayItemUpdate(
+                          "features",
+                          feature.id
+                        )({ badgeText: val })
                       }
                       isEditable={isEditable}
-                      className="whitespace-nowrap text-sm font-semibold text-gray-900"
+                      className="text-sm font-semibold whitespace-nowrap text-gray-900"
                     />
                   </motion.div>
                 </div>
@@ -127,19 +136,25 @@ export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
                 <EditableText
                   as="h2"
                   value={feature.title}
-                  onChange={(val) => 
-                    handleArrayItemUpdate("features", feature.id)({ title: val })
+                  onChange={val =>
+                    handleArrayItemUpdate(
+                      "features",
+                      feature.id
+                    )({ title: val })
                   }
                   isEditable={isEditable}
-                  className="mb-8 text-3xl font-bold leading-[1.15] tracking-tight text-gray-950 md:text-5xl lg:text-6xl"
+                  className="mb-8 text-3xl leading-[1.15] font-bold tracking-tight text-gray-950 md:text-5xl lg:text-6xl"
                   style={{ fontFamily: theme.fonts.heading }}
                 />
-                
+
                 <EditableText
                   as="p"
                   value={feature.description}
-                  onChange={(val) => 
-                    handleArrayItemUpdate("features", feature.id)({ description: val })
+                  onChange={val =>
+                    handleArrayItemUpdate(
+                      "features",
+                      feature.id
+                    )({ description: val })
                   }
                   isEditable={isEditable}
                   className="mb-10 max-w-lg text-lg leading-relaxed text-gray-600 md:text-xl"
@@ -150,10 +165,13 @@ export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
                   text={feature.buttonText}
                   href={feature.buttonLink}
                   isEditable={isEditable}
-                  onChange={(text, href) => 
-                    handleArrayItemUpdate("features", feature.id)({ 
-                      buttonText: text, 
-                      buttonLink: href 
+                  onChange={(text, href) =>
+                    handleArrayItemUpdate(
+                      "features",
+                      feature.id
+                    )({
+                      buttonText: text,
+                      buttonLink: href,
                     })
                   }
                   className="group"
@@ -161,9 +179,9 @@ export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
                   <Button
                     variant="default"
                     className="h-14 cursor-pointer rounded-full px-8 text-base font-semibold transition-all duration-300 hover:shadow-lg active:scale-95"
-                    style={{ 
-                      backgroundColor: theme.colors.primary, 
-                      color: theme.colors.primaryForeground 
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
                     }}
                   >
                     <span className="flex items-center gap-2">

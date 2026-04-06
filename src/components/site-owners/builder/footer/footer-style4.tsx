@@ -256,10 +256,17 @@ export function FooterStyle4({
           <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed md:items-end md:text-right md:text-base">
             <div>
               <p className="text-sm opacity-60">
-                {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
+                {getProcessedCopyright(
+                  data.copyright,
+                  data.companyName,
+                  siteConfig?.business_name
+                )}
               </p>
               <div className="mt-2 text-left md:text-right">
-                <MadeWithLove textColor={footerData.textColor} className="justify-start! md:justify-end!" />
+                <MadeWithLove
+                  textColor={footerData.textColor}
+                  className="justify-start! md:justify-end!"
+                />
               </div>
             </div>
             {data.policyLinks && data.policyLinks.length > 0 && (

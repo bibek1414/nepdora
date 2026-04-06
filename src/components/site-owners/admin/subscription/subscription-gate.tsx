@@ -26,7 +26,7 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // If not active and not a super admin, we return null. 
+  // If not active and not a super admin, we return null.
   // The SubscriptionBlocker (rendered in the parent) will show the modal.
   if (!isActive && !isSuperAdmin) {
     return null;
@@ -34,4 +34,3 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>;
 }
-

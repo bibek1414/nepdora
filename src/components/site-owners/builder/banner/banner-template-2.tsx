@@ -313,7 +313,9 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
         {/* Global Controls Overlay for current picture in edit mode */}
         <BannerItemControls
           link={currentSlide?.link || ""}
-          onLinkUpdate={(text, href) => handleArrayItemUpdate("images", currentSlide.id!)({ link: href })}
+          onLinkUpdate={(text, href) =>
+            handleArrayItemUpdate("images", currentSlide.id!)({ link: href })
+          }
           onRemove={() => handleRemoveImage(currentIndex)}
           isEditable={isEditable}
           siteUser={siteUser}

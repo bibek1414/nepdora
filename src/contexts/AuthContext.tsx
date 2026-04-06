@@ -228,7 +228,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     deleteCookie("refreshToken");
   };
 
-
   // Initialize auth on mount
   useEffect(() => {
     const initAuth = async () => {

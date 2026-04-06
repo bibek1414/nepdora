@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle, XCircle, Loader2, AlertCircle } from "lucide-react";
+import { CheckCircle, XCircle, Loader2, AlertCircle, Info } from "lucide-react";
 import { toast } from "sonner";
 import { createHeaders } from "@/utils/headers";
 
@@ -259,89 +259,109 @@ export default function SuccessPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <Card className="mx-4 w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
+      {/* Brand Header */}
+      <div className="mb-4 flex w-full max-w-md items-center justify-start">
+        <img
+          src="/nepdora-logooo.svg"
+          alt="Nepdora"
+          className="h-8 w-auto opacity-90 md:h-10"
+        />
+      </div>
+
+      <Card className="w-full max-w-md overflow-hidden border-zinc-200/60 shadow-xl">
+        <div className="h-2 w-full bg-blue-500" />
+        <CardHeader className="bg-zinc-50/50 pt-6 pb-6">
+          <CardTitle className="mb-2 flex items-center justify-center gap-2 p-4 pt-2 pb-0">
             {status === "loading" && (
-              <>
-                <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-                <span>Verifying Payment</span>
-              </>
+              <div className="mt-2 flex flex-col items-center justify-center space-y-4">
+                <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+                <span className="text-xl">Verifying Payment</span>
+              </div>
             )}
             {status === "upgrading" && (
-              <>
-                <Loader2 className="h-6 w-6 animate-spin text-purple-500" />
-                <span>Activating Subscription</span>
-              </>
+              <div className="mt-2 flex flex-col items-center justify-center space-y-4">
+                <Loader2 className="h-10 w-10 animate-spin text-purple-500" />
+                <span className="text-xl">Activating Subscription</span>
+              </div>
             )}
             {status === "success" && (
-              <>
-                <CheckCircle className="h-6 w-6 text-green-500" />
-                <span>Payment Successful</span>
-              </>
+              <div className="mt-2 flex flex-col items-center justify-center space-y-4">
+                <CheckCircle className="h-12 w-12 rounded-full bg-green-50 text-green-500" />
+                <span className="text-xl">Payment Successful</span>
+              </div>
             )}
             {status === "error" && (
-              <>
-                <XCircle className="h-6 w-6 text-red-500" />
-                <span>Payment Failed</span>
-              </>
+              <div className="mt-2 flex flex-col items-center justify-center space-y-4">
+                <XCircle className="h-12 w-12 rounded-full bg-red-50 text-red-500" />
+                <span className="text-xl text-red-600">Payment Failed</span>
+              </div>
             )}
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6 pt-6">
           {status === "loading" || status === "upgrading" ? (
-            <Alert>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <AlertDescription>{message}</AlertDescription>
+            <Alert className="border-blue-200 bg-blue-50">
+              <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+              <AlertDescription className="text-blue-800">
+                {message}
+              </AlertDescription>
             </Alert>
           ) : status === "success" ? (
             <>
-              <Alert className="border-green-500 bg-green-50">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <AlertDescription className="text-green-700">
+              <Alert className="border-green-200 bg-green-50">
+                <Info className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800">
                   {message}
                 </AlertDescription>
               </Alert>
 
               {verificationData && (
-                <div className="space-y-2 rounded-lg bg-gray-50 p-4 text-sm">
-                  <h4 className="font-semibold">Payment Details</h4>
+                <div className="space-y-3 rounded-xl border border-zinc-100 bg-zinc-50/50 p-5 text-sm">
+                  <h4 className="border-b border-zinc-200 pb-2 font-semibold text-zinc-900">
+                    Payment Details
+                  </h4>
                   {verificationData.transaction_uuid && (
-                    <p>
-                      <span className="text-gray-600">Transaction ID:</span>{" "}
-                      <span className="font-mono">
+                    <div className="flex items-center justify-between text-zinc-700">
+                      <span className="text-zinc-500">Transaction ID</span>
+                      <span className="font-mono text-xs">
                         {verificationData.transaction_uuid}
                       </span>
-                    </p>
+                    </div>
                   )}
                   {verificationData.pidx && (
-                    <p>
-                      <span className="text-gray-600">Payment ID:</span>{" "}
-                      <span className="font-mono">{verificationData.pidx}</span>
-                    </p>
+                    <div className="flex items-center justify-between text-zinc-700">
+                      <span className="text-zinc-500">Payment ID</span>
+                      <span className="font-mono text-xs">
+                        {verificationData.pidx}
+                      </span>
+                    </div>
                   )}
                   {verificationData.total_amount && (
-                    <p>
-                      <span className="text-gray-600">Amount:</span> Rs. Rs.{" "}
-                      {Number(verificationData.total_amount).toLocaleString(
-                        "en-IN"
-                      )}
-                    </p>
+                    <div className="flex items-center justify-between text-zinc-700">
+                      <span className="text-zinc-500">Amount</span>
+                      <span className="text-base font-semibold text-zinc-900">
+                        Rs.{" "}
+                        {Number(verificationData.total_amount).toLocaleString(
+                          "en-IN",
+                          { minimumFractionDigits: 2 }
+                        )}
+                      </span>
+                    </div>
                   )}
                   {verificationData.products_purchased &&
                     verificationData.products_purchased.length > 0 && (
-                      <div className="mt-2 border-t pt-2">
-                        <span className="mb-1 block text-gray-600">
-                          Products Purchased:
+                      <div className="mt-4 border-t border-zinc-200 pt-3">
+                        <span className="mb-2 block text-xs font-medium tracking-wider text-zinc-500 uppercase">
+                          Subscription Plan
                         </span>
                         <ul className="space-y-1">
                           {verificationData.products_purchased.map(
                             (item: any, idx: number) => (
                               <li
                                 key={idx}
-                                className="font-semibold text-gray-800"
+                                className="font-medium text-zinc-900"
                               >
                                 {item.name ||
                                   item.plan_name ||
@@ -355,39 +375,44 @@ export default function SuccessPage() {
                 </div>
               )}
 
-              <p className="text-center text-sm text-gray-600">
-                Redirecting to admin in 5 seconds...
+              <p className="mt-6 text-center text-sm text-zinc-500">
+                Redirecting to your dashboard in 5 seconds...
               </p>
 
               <Button
                 onClick={handleGoToAdmin}
-                className="w-full"
+                className="mt-4 h-11 w-full text-base shadow-sm"
                 variant="default"
               >
-                Go to Admin Now
+                Go to Dashboard Now
               </Button>
             </>
           ) : (
             <>
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{message}</AlertDescription>
+              <Alert
+                variant="destructive"
+                className="border-red-200 bg-red-50 text-red-900"
+              >
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertDescription className="text-red-800">
+                  {message}
+                </AlertDescription>
               </Alert>
 
-              <div className="space-y-2">
+              <div className="space-y-3 pt-2">
                 <Button
                   onClick={handleRetry}
-                  className="w-full"
+                  className="h-11 w-full shadow-sm"
                   variant="default"
                 >
                   Try Again
                 </Button>
                 <Button
                   onClick={handleGoToAdmin}
-                  className="w-full"
+                  className="h-11 w-full border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
                   variant="outline"
                 >
-                  Go to Admin
+                  Go to Dashboard
                 </Button>
               </div>
             </>

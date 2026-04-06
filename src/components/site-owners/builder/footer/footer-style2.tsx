@@ -222,7 +222,11 @@ export function FooterStyle2({
             }}
           >
             <p className="flex items-center justify-center gap-1 text-sm opacity-80">
-              {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
+              {getProcessedCopyright(
+                data.copyright,
+                data.companyName,
+                siteConfig?.business_name
+              )}
               <Heart className="inline h-3 w-3 text-red-500" />
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (

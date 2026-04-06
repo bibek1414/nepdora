@@ -210,7 +210,11 @@ export const FooterStyle8 = ({
           }}
         >
           <p className="text-center md:text-left">
-            {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
+            {getProcessedCopyright(
+              data.copyright,
+              data.companyName,
+              siteConfig?.business_name
+            )}
           </p>
           <div className="flex space-x-6">
             {(data.policyLinks || []).map(link => (

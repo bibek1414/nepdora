@@ -621,7 +621,9 @@ function PaymentSuccessContent() {
                   <span className="text-gray-600">Amount:</span>
                   <span className="font-semibold">
                     Rs.{" "}
-                    {verificationResult?.total_amount || totalAmount || amount}
+                    {Number(
+                      verificationResult?.total_amount || totalAmount || amount
+                    ).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               )}
@@ -701,7 +703,14 @@ function PaymentSuccessContent() {
                               </span>
                               <span className="text-gray-600">
                                 Rs.{" "}
-                                {item.total_price || item.amount || item.price}
+                                {Number(
+                                  item.total_price ||
+                                    item.amount ||
+                                    item.price ||
+                                    0
+                                ).toLocaleString("en-IN", {
+                                  minimumFractionDigits: 2,
+                                })}
                               </span>
                             </li>
                           );
@@ -730,7 +739,10 @@ function PaymentSuccessContent() {
                   <div className="flex items-center justify-between border-b py-2">
                     <span className="text-gray-600">Fee:</span>
                     <span className="text-sm">
-                      Rs. {verificationResult.fee}
+                      Rs.{" "}
+                      {Number(verificationResult.fee).toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                      })}
                     </span>
                   </div>
                 )}

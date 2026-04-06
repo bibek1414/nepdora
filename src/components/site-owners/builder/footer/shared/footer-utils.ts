@@ -20,9 +20,9 @@ export const getProcessedCopyright = (
     return placeholders.includes(text.toLowerCase().trim());
   };
 
-  const finalName = !isPlaceholder(companyName) 
-    ? companyName 
-    : (businessName || companyName || "Brand");
+  const finalName = !isPlaceholder(companyName)
+    ? companyName
+    : businessName || companyName || "Brand";
 
   let result = copyright;
 

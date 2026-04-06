@@ -124,7 +124,6 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
     return URL.createObjectURL(image);
   };
 
-
   // Get display images - show up to 3 images
   const displayImages = activeImages.slice(0, 3);
 
@@ -188,7 +187,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                                   safeIndex,
                                   imageUrl,
                                   altText
-                               )
+                                )
                               }
                               isEditable={isEditable}
                               className="w-full bg-white object-cover transition-opacity hover:opacity-75 max-sm:h-96 sm:h-[400px] lg:h-[500px]"
@@ -228,7 +227,9 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                       {/* Shared Banner Item Controls */}
                       <BannerItemControls
                         link={image.link || ""}
-                        onLinkUpdate={(text, href) => handleLinkUpdate(safeIndex, href)}
+                        onLinkUpdate={(text, href) =>
+                          handleLinkUpdate(safeIndex, href)
+                        }
                         onRemove={() => handleRemoveImage(safeIndex)}
                         isEditable={isEditable}
                         siteUser={siteUser}

@@ -25,14 +25,16 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
   const { data, getImageUrl } = useBuilderLogic(navbarData);
   const { data: siteConfig } = useSiteConfig();
   const { logoText, logoImage, logoType } = data;
-  
+
   const isPlaceholder = (text?: string) => {
     if (!text) return true;
     const placeholders = ["brand", "your brand"];
     return placeholders.includes(text.toLowerCase().trim());
   };
 
-  const displayText = !isPlaceholder(logoText) ? logoText : (siteConfig?.business_name || logoText);
+  const displayText = !isPlaceholder(logoText)
+    ? logoText
+    : siteConfig?.business_name || logoText;
 
   const renderLogo = () => {
     switch (logoType) {

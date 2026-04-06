@@ -22,19 +22,22 @@ interface MarketingPricingCardProps {
   isCurrentPlan?: boolean;
 }
 
-export function MarketingPricingCard({ plan, isCurrentPlan }: MarketingPricingCardProps) {
+export function MarketingPricingCard({
+  plan,
+  isCurrentPlan,
+}: MarketingPricingCardProps) {
   return (
     <article
       className={`relative flex flex-col rounded-2xl p-6 transition-all ${
         isCurrentPlan
-          ? "bg-slate-50 ring-2 ring-slate-900 shadow-xl"
+          ? "bg-slate-50 shadow-xl ring-2 ring-slate-900"
           : plan.featured
             ? "bg-secondary shadow-2xl"
             : "bg-white shadow-sm ring-1 ring-slate-100 hover:shadow-md"
       } ${plan.comingSoon ? "opacity-80" : ""}`}
     >
       {isCurrentPlan ? (
-        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-slate-900 px-3.5 py-1 text-[10px] font-bold text-white shadow uppercase tracking-wider">
+        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-slate-900 px-3.5 py-1 text-[10px] font-bold tracking-wider text-white uppercase shadow">
           Current Plan
         </span>
       ) : plan.featured ? (
@@ -51,18 +54,14 @@ export function MarketingPricingCard({ plan, isCurrentPlan }: MarketingPricingCa
 
       <div className="mb-5">
         <div className="mb-0.5 flex items-center gap-2">
-          <h3 className="text-base font-bold text-slate-900">
-            {plan.name}
-          </h3>
+          <h3 className="text-base font-bold text-slate-900">{plan.name}</h3>
           {plan.aiFeatures && (
             <span className="flex items-center gap-0.5 rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-semibold text-violet-700">
               AI
             </span>
           )}
         </div>
-        <p className="text-xs leading-snug text-slate-500">
-          {plan.tagline}
-        </p>
+        <p className="text-xs leading-snug text-slate-500">{plan.tagline}</p>
       </div>
 
       <div className="mb-5">
@@ -71,15 +70,11 @@ export function MarketingPricingCard({ plan, isCurrentPlan }: MarketingPricingCa
             {plan.price}
           </span>
           {plan.period && (
-            <span className="text-sm text-slate-500">
-              {plan.period}
-            </span>
+            <span className="text-sm text-slate-500">{plan.period}</span>
           )}
         </div>
         {plan.priceNote && (
-          <p className="mt-0.5 text-[11px] text-slate-400">
-            {plan.priceNote}
-          </p>
+          <p className="mt-0.5 text-[11px] text-slate-400">{plan.priceNote}</p>
         )}
       </div>
 
@@ -97,11 +92,7 @@ export function MarketingPricingCard({ plan, isCurrentPlan }: MarketingPricingCa
       <Link
         href={isCurrentPlan ? "/admin/settings/subscription" : plan.href}
         target={plan.href.startsWith("https") ? "_blank" : undefined}
-        rel={
-          plan.href.startsWith("https")
-            ? "noopener noreferrer"
-            : undefined
-        }
+        rel={plan.href.startsWith("https") ? "noopener noreferrer" : undefined}
         className={`block rounded-xl px-4 py-2.5 text-center text-sm font-semibold transition-all ${
           isCurrentPlan
             ? "bg-slate-900 text-white shadow-sm hover:bg-slate-800"

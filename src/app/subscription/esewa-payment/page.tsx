@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { AlertCircle, Info, ArrowLeft } from "lucide-react";
+import { AlertCircle, Info, ArrowLeft, Lock } from "lucide-react";
 import {
   ApiResponse,
   EsewaInitiateResponse,
@@ -210,91 +210,122 @@ export default function EsewaPayment() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <Card className="mx-4 w-full max-w-md">
-        <CardHeader>
-          <div className="mb-2 flex items-center gap-2">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
+      {/* Brand Header */}
+      <div className="mb-4 flex w-full max-w-md items-center justify-start">
+        <img
+          src="/nepdora-logooo.svg"
+          alt="Nepdora"
+          className="h-8 w-auto opacity-90 md:h-10"
+        />
+      </div>
+
+      <Card className="w-full max-w-md overflow-hidden border-zinc-200/60 shadow-xl">
+        <div className="h-2 w-full bg-[#60bb46]" />
+        <CardHeader className="bg-zinc-50/50 pt-6 pb-8">
+          <div className="mb-6 flex items-center justify-between">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleBack}
               disabled={paymentState.isLoading}
+              className="text-muted-foreground hover:text-foreground -ml-2"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
+            <div className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+              Secure Checkout
+            </div>
           </div>
-          <CardTitle className="flex items-center gap-2">
-            <span className="h-4 w-4 rounded-full bg-green-500"></span>
-            eSewa Payment
-          </CardTitle>
-          <CardDescription>
-            Complete your subscription payment via eSewa
-          </CardDescription>
+
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="relative h-16 w-32 overflow-hidden rounded-lg border border-zinc-100 bg-white p-2 shadow-sm">
+              <img
+                src="/images/payment-gateway/esewa.png"
+                alt="eSewa"
+                className="h-full w-full object-contain"
+              />
+            </div>
+            <div>
+              <CardTitle className="text-2xl">eSewa Payment</CardTitle>
+              <CardDescription className="mt-1.5">
+                Complete your subscription payment securely
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
 
         <form onSubmit={handlePayment}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6 pt-6">
             {paymentState.error && (
-              <Alert variant="destructive">
+              <Alert
+                variant="destructive"
+                className="border-red-200 bg-red-50 text-red-900"
+              >
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{paymentState.error}</AlertDescription>
               </Alert>
             )}
 
             {paymentState.success && (
-              <Alert>
-                <Info className="h-4 w-4" />
+              <Alert className="border-green-200 bg-green-50 text-green-900">
+                <Info className="h-4 w-4 text-green-600" />
                 <AlertDescription>
-                  eSewa payment session created successfully! You will be
-                  redirected to eSewa for secure payment processing.
+                  Payment session created! Redirecting to eSewa...
                 </AlertDescription>
               </Alert>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="productName">Subscription Plan</Label>
-              <Input
-                id="productName"
-                value={productName}
-                onChange={e => setProductName(e.target.value)}
-                required
-                placeholder="Enter product or service name"
-                maxLength={100}
-                disabled={paymentState.isLoading}
-                readOnly
-              />
-              <div className="text-sm text-gray-500">
-                Your selected subscription plan
+            <div className="space-y-4 rounded-xl border border-zinc-100 bg-zinc-50/50 p-4">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="productName"
+                  className="text-muted-foreground text-xs font-medium tracking-wider uppercase"
+                >
+                  Subscription Plan
+                </Label>
+                <div className="font-medium text-zinc-900">
+                  {productName || "Loading inline..."}
+                </div>
+                <Input
+                  id="productName"
+                  value={productName}
+                  onChange={e => setProductName(e.target.value)}
+                  className="hidden"
+                />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="amount">Amount (NPR)</Label>
-
-              <Input
-                id="amount"
-                type="number"
-                value={amount}
-                onChange={e => setAmount(e.target.value)}
-                required
-                min="10"
-                step="0.01"
-                placeholder="Enter amount (minimum Rs. 10)"
-                disabled={paymentState.isLoading}
-                readOnly
-              />
-
-              <div className="text-sm text-gray-500 mb-2">
-                Total: Rs. {Number(amount || 0).toLocaleString("en-IN")}
+              <div className="space-y-1.5 border-t border-zinc-100 pt-3">
+                <Label
+                  htmlFor="amount"
+                  className="text-muted-foreground text-xs font-medium tracking-wider uppercase"
+                >
+                  Total Amount
+                </Label>
+                <div className="flex items-baseline gap-1 text-3xl font-bold text-zinc-900">
+                  <span className="text-xl">NPR</span>
+                  <span>
+                    {Number(amount || 0).toLocaleString("en-IN", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+                <Input
+                  id="amount"
+                  type="number"
+                  value={amount}
+                  onChange={e => setAmount(e.target.value)}
+                  className="hidden"
+                />
               </div>
             </div>
           </CardContent>
 
-          <CardFooter>
+          <CardFooter className="pb-6">
             <Button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700"
+              className="h-12 w-full bg-[#60bb46] text-base font-semibold text-white shadow-md transition-all hover:bg-[#509c3a] active:scale-[0.98]"
               disabled={
                 paymentState.isLoading ||
                 !amount ||
@@ -303,10 +334,10 @@ export default function EsewaPayment() {
               }
             >
               {paymentState.isLoading ? (
-                <>
-                  <span className="mr-2 animate-spin">⏳</span>
-                  Creating Payment Session...
-                </>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></span>
+                  Processing...
+                </div>
               ) : (
                 "Pay with eSewa"
               )}
@@ -314,6 +345,10 @@ export default function EsewaPayment() {
           </CardFooter>
         </form>
       </Card>
+
+      <p className="mt-8 flex items-center gap-1.5 text-sm text-zinc-400">
+        <Lock className="h-3.5 w-3.5" /> Payments are secure and encrypted
+      </p>
     </div>
   );
 }

@@ -31,7 +31,7 @@ export const BannerItemControls: React.FC<BannerItemControlsProps> = ({
         onChange={onLinkUpdate}
         isEditable={isEditable}
         siteUser={siteUser}
-        className="rounded bg-white hover:bg-white! px-2 py-1.5 text-xs font-medium text-black shadow-md ring-1 ring-black/10 sm:px-3 sm:py-2"
+        className="rounded bg-white px-2 py-1.5 text-xs font-medium text-black shadow-md ring-1 ring-black/10 hover:bg-white! sm:px-3 sm:py-2"
         dropdownPosition="bottom"
       />
       <Button

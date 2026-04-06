@@ -346,7 +346,13 @@ export function FooterStyle3({
               : "rgba(255,255,255,0.1)",
           }}
         >
-          <p>{getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}</p>
+          <p>
+            {getProcessedCopyright(
+              data.copyright,
+              data.companyName,
+              siteConfig?.business_name
+            )}
+          </p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:justify-start md:gap-8">
             {(data.policyLinks && data.policyLinks.length > 0
               ? data.policyLinks

@@ -138,7 +138,13 @@ export function FooterStyle1({
 
             {/* Copyright */}
             <div className="mb-4 flex flex-col items-center gap-2 md:mb-0 md:items-start md:text-left">
-              <p>{getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}</p>
+              <p>
+                {getProcessedCopyright(
+                  data.copyright,
+                  data.companyName,
+                  siteConfig?.business_name
+                )}
+              </p>
               {data.policyLinks && data.policyLinks.length > 0 && (
                 <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
                   {data.policyLinks.map(link => (

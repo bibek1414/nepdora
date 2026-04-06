@@ -168,12 +168,17 @@ export function SubscriptionBlocker() {
               className="pt-8"
             >
               <DialogHeader>
-                <div className="mb-2 flex items-center justify-center gap-2">
-                  <DialogTitle className="text-2xl font-bold md:text-3xl">
+                <div className="mb-4 flex flex-col items-start justify-start gap-3">
+                  <img
+                    src="/nepdora-logooo.svg"
+                    alt="Nepdora"
+                    className="h-4"
+                  />
+                  <DialogTitle className="text-left text-2xl font-bold md:text-3xl">
                     Upgrade Your Plan
                   </DialogTitle>
                 </div>
-                <DialogDescription className="text-center text-sm md:text-base">
+                <DialogDescription className="text-left text-sm md:text-base">
                   {subscription?.status === "expired"
                     ? `Your subscription expired on ${new Date(subscription.expires_on).toLocaleDateString()}. Choose a plan to continue using all features.`
                     : "You need an active subscription to access admin features. Choose a plan to get started."}
@@ -236,7 +241,7 @@ export function SubscriptionBlocker() {
                         </CardHeader>
                         <CardFooter>
                           <Button
-                            className="mb-2 mt-3 w-full shadow-none"
+                            className="mt-3 mb-2 w-full shadow-none"
                             variant={plan.is_popular ? "default" : "outline"}
                             size={window.innerWidth < 768 ? "sm" : "lg"}
                             onClick={() => handleChoosePlan(plan)}
@@ -309,12 +314,17 @@ export function SubscriptionBlocker() {
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back
                 </Button>
-                <div className="mb-2 flex flex-col items-center justify-center gap-2 pt-8">
-                  <DialogTitle className="text-2xl font-bold md:text-3xl">
+                <div className="mb-4 flex flex-col items-start justify-start gap-3 pt-6">
+                  <img
+                    src="/nepdora-logooo.svg"
+                    alt="Nepdora"
+                    className="h-4 w-auto opacity-90"
+                  />
+                  <DialogTitle className="text-left text-2xl font-bold md:text-3xl">
                     Choose Payment Method
                   </DialogTitle>
                 </div>
-                <DialogDescription className="text-center text-sm md:text-base">
+                <DialogDescription className="text-left text-sm md:text-base">
                   Select how you&apos;d like to pay for your{" "}
                   {selectedPlan?.name} subscription
                 </DialogDescription>
@@ -335,7 +345,10 @@ export function SubscriptionBlocker() {
                       </div>
                       <div className="text-left md:text-right">
                         <div className="text-2xl font-bold md:text-3xl">
-                          Rs.{selectedPlan?.price}
+                          Rs.{" "}
+                          {Number(selectedPlan?.price || 0).toLocaleString(
+                            "en-IN"
+                          )}
                         </div>
                         <div className="text-muted-foreground text-xs md:text-sm">
                           per {selectedPlan?.unit}

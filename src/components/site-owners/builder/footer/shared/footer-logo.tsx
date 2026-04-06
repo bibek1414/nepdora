@@ -11,16 +11,18 @@ interface FooterLogoProps {
 export const FooterLogo = ({ footerData, getImageUrl }: FooterLogoProps) => {
   const { data: siteConfig } = useSiteConfig();
   const { logoType, logoImage, logoText, companyName } = footerData;
-  
+
   const isPlaceholder = (text?: string) => {
     if (!text) return true;
     const placeholders = ["brand", "your brand"];
     return placeholders.includes(text.toLowerCase().trim());
   };
 
-  const displayText = !isPlaceholder(logoText) 
-    ? logoText 
-    : (!isPlaceholder(companyName) ? companyName : (siteConfig?.business_name || logoText || companyName));
+  const displayText = !isPlaceholder(logoText)
+    ? logoText
+    : !isPlaceholder(companyName)
+      ? companyName
+      : siteConfig?.business_name || logoText || companyName;
 
   const currentLogoImage = siteConfig?.logo || logoImage;
 

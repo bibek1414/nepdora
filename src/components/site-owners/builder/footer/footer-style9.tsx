@@ -32,7 +32,7 @@ export const FooterStyle9 = ({
 }: FooterStyle13Props) => {
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
   const { data: siteConfig } = useSiteConfig();
-  
+
   const isPlaceholder = (text?: string) => {
     if (!text) return true;
     const placeholders = ["brand", "your brand"];
@@ -181,7 +181,11 @@ export const FooterStyle9 = ({
           </div>
 
           <div className="text-center lg:text-right">
-            {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
+            {getProcessedCopyright(
+              data.copyright,
+              data.companyName,
+              siteConfig?.business_name
+            )}
           </div>
         </div>
 
@@ -202,9 +206,14 @@ export const FooterStyle9 = ({
             color: data.textColor,
           }}
         >
-          {!isPlaceholder(data.logoText) 
-            ? data.logoText 
-            : (!isPlaceholder(data.companyName) ? data.companyName : (siteConfig?.business_name || data.logoText || data.companyName || "Nepdora"))}
+          {!isPlaceholder(data.logoText)
+            ? data.logoText
+            : !isPlaceholder(data.companyName)
+              ? data.companyName
+              : siteConfig?.business_name ||
+                data.logoText ||
+                data.companyName ||
+                "Nepdora"}
         </motion.div>
       </div>
       <div className="mt-8 pb-2">

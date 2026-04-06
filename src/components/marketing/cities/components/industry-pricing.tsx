@@ -2,8 +2,14 @@
 
 import React from "react";
 import { Loader2 } from "lucide-react";
-import { usePricingPlans, useSubscriptionStatus } from "@/hooks/use-subscription";
-import { MarketingPricingCard, MarketingPlan } from "../../pricing-section/marketing-pricing-card";
+import {
+  usePricingPlans,
+  useSubscriptionStatus,
+} from "@/hooks/use-subscription";
+import {
+  MarketingPricingCard,
+  MarketingPlan,
+} from "../../pricing-section/marketing-pricing-card";
 
 interface IndustryPricingProps {
   category: string;
@@ -61,15 +67,19 @@ export const IndustryPricing: React.FC<IndustryPricingProps> = ({
 
             const marketingPlan: MarketingPlan = {
               name: item.name,
-              tagline: item.plan_type.toLowerCase() === "free"
-                ? "Get started with no commitment"
-                : item.plan_type.toLowerCase() === "premium"
-                  ? "Everything your business needs to grow"
-                  : "AI-powered tools for ambitious businesses",
+              tagline:
+                item.plan_type.toLowerCase() === "free"
+                  ? "Get started with no commitment"
+                  : item.plan_type.toLowerCase() === "premium"
+                    ? "Everything your business needs to grow"
+                    : "AI-powered tools for ambitious businesses",
               price: `NPR ${formatPrice(item.price)}`,
               period: "/month",
               featured: item.is_popular,
-              cta: item.plan_type.toLowerCase() === "free" ? "Start for Free" : "Get Started",
+              cta:
+                item.plan_type.toLowerCase() === "free"
+                  ? "Start for Free"
+                  : "Get Started",
               href: "/pricing",
               features: item.features.map((f: any) => f.feature),
               aiFeatures: item.plan_type.toLowerCase() === "pro",

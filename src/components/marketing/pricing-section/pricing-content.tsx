@@ -1,11 +1,22 @@
 "use client";
 
-import { Check, Zap, Star, Crown, LucideIcon, Headphones, Clock, Loader2 } from "lucide-react";
+import {
+  Check,
+  Zap,
+  Star,
+  Crown,
+  LucideIcon,
+  Headphones,
+  Clock,
+  Loader2,
+} from "lucide-react";
 import ContactSection from "@/components/marketing/contact-us/contact-us";
 import { PricingToggle, BillingDisplay } from "./pricing-client";
-import { useSubscriptionStatus, usePricingPlans } from "@/hooks/use-subscription";
+import {
+  useSubscriptionStatus,
+  usePricingPlans,
+} from "@/hooks/use-subscription";
 import { MarketingPricingCard, MarketingPlan } from "./marketing-pricing-card";
-
 
 const PricingContent: React.FC = () => {
   const { data: plans, isLoading } = usePricingPlans();
@@ -77,7 +88,10 @@ const PricingContent: React.FC = () => {
                   price: `NPR ${formatPrice(plan.price)}`,
                   period: `/${plan.unit}`,
                   featured: plan.is_popular,
-                  cta: plan.plan_type.toLowerCase() === "free" ? "Get Started Free" : "Start Free Trial",
+                  cta:
+                    plan.plan_type.toLowerCase() === "free"
+                      ? "Get Started Free"
+                      : "Start Free Trial",
                   href: "/admin/signup",
                   features: plan.features.map((f: any) => f.feature),
                   aiFeatures: plan.plan_type.toLowerCase() === "pro",
