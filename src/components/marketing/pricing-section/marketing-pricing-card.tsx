@@ -90,7 +90,7 @@ export function MarketingPricingCard({
       </ul>
 
       <Link
-        href={isCurrentPlan ? "/admin/settings/subscription" : plan.href}
+        href={isCurrentPlan ? "/admin" : plan.href}
         target={plan.href.startsWith("https") ? "_blank" : undefined}
         rel={plan.href.startsWith("https") ? "noopener noreferrer" : undefined}
         className={`block rounded-xl px-4 py-2.5 text-center text-sm font-semibold transition-all ${
