@@ -20,6 +20,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { NEPAL_CITIES, SERVICE_CATEGORIES } from "@/constants/nepal-cities";
+import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 
 export const WebsiteFooter = () => {
   const pathname = usePathname();
@@ -75,7 +76,7 @@ export const WebsiteFooter = () => {
             </motion.div>
 
             {/* Dynamic Service Links */}
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-4">
               {/* Specialized E-commerce Ecosystem for Ecommerce pages */}
               {isEcommerceRoute && (
                 <motion.div
@@ -134,7 +135,29 @@ export const WebsiteFooter = () => {
                 </motion.div>
               )}
 
-              {/* Authority Hubs Column */}
+              {/* Industries Column */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.05 }}
+              >
+                <h4 className="mb-4 flex items-center font-bold text-gray-900">
+                  Solutions by Industry
+                </h4>
+                <ul className="grid grid-cols-1 gap-2">
+                  {industries.slice(0, 10).map(industry => (
+                    <li key={industry}>
+                      <Link
+                        href={`/${industry}`}
+                        className="group hover:text-primary flex items-center text-xs text-gray-600 transition-colors"
+                      >
+                        {INDUSTRY_LABELS[industry] || industry}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}

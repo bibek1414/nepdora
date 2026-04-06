@@ -30,7 +30,7 @@ export const IndustryTemplates: React.FC<IndustryTemplatesProps> = ({
 
   return (
     <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="mb-14">
           <h2 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Templates for {category.replace(/-/g, " ")} businesses

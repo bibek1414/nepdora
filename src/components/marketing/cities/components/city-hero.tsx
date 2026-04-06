@@ -34,7 +34,7 @@ export const CityHero: React.FC<CityHeroProps> = ({
 
   return (
     <section className="border-b border-slate-100 bg-white py-20 sm:py-28">
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           {/* Left — text */}
           <div>

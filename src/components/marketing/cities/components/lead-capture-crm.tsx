@@ -9,7 +9,7 @@ export const LeadCaptureCRM: React.FC<LeadCaptureCRMProps> = ({ data }) => {
 
   return (
     <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           {/* Image */}
           <div className="overflow-hidden rounded-2xl border border-slate-200">
