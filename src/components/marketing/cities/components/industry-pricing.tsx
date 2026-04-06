@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { PricingCard } from "../../pricing-section/pricing-card";
 import { Loader2 } from "lucide-react";
-import { usePricingPlans } from "@/hooks/use-subscription";
+import { usePricingPlans, useSubscriptionStatus } from "@/hooks/use-subscription";
+import { MarketingPricingCard, MarketingPlan } from "../../pricing-section/marketing-pricing-card";
 
 interface IndustryPricingProps {
   category: string;
@@ -13,6 +13,7 @@ export const IndustryPricing: React.FC<IndustryPricingProps> = ({
   category,
 }) => {
   const { data: pricing, isLoading } = usePricingPlans();
+  const { data: subscription } = useSubscriptionStatus();
 
   if (isLoading) {
     return (
@@ -51,18 +52,57 @@ export const IndustryPricing: React.FC<IndustryPricingProps> = ({
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {sortedPlans.map((item, index) => (
-            <PricingCard
-              key={item.id}
-              plan={item}
-              index={index}
-              isYearly={false}
-              displayPrice={item.price}
-              savings="0"
-              formatPrice={formatPrice}
-            />
-          ))}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {sortedPlans.map((item, index) => {
+            const isCurrentPlan = !!(
+              subscription?.active &&
+              subscription?.plan?.toLowerCase() === item.name.toLowerCase()
+            );
+
+            const marketingPlan: MarketingPlan = {
+              name: item.name,
+              tagline: item.plan_type.toLowerCase() === "free"
+                ? "Get started with no commitment"
+                : item.plan_type.toLowerCase() === "premium"
+                  ? "Everything your business needs to grow"
+                  : "AI-powered tools for ambitious businesses",
+              price: `NPR ${formatPrice(item.price)}`,
+              period: "/month",
+              featured: item.is_popular,
+              cta: item.plan_type.toLowerCase() === "free" ? "Start for Free" : "Get Started",
+              href: "/pricing",
+              features: item.features.map((f: any) => f.feature),
+              aiFeatures: item.plan_type.toLowerCase() === "pro",
+            };
+
+            return (
+              <MarketingPricingCard
+                key={item.id}
+                plan={marketingPlan}
+                isCurrentPlan={isCurrentPlan}
+              />
+            );
+          })}
+
+          <MarketingPricingCard
+            plan={{
+              name: "Enterprise",
+              tagline: "Custom solutions for large organisations",
+              price: "Custom",
+              period: "",
+              featured: false,
+              cta: "Contact Sales",
+              href: "https://wa.me/9779866316114",
+              features: [
+                "Everything in Pro",
+                "Unlimited Websites",
+                "SLA Guarantee",
+                "White-label Option",
+                "On-premise Hosting",
+                "Dedicated Account Manager",
+              ],
+            }}
+          />
         </div>
       </div>
     </section>
