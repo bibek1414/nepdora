@@ -12,6 +12,9 @@ import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { BannerItemControls } from "./banner-item-controls";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface BannerTemplateProps {
   bannerData: BannerTemplate1Data;
@@ -30,6 +33,8 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     bannerData,
     onUpdate
   );
+
+  const pathname = usePathname();
 
   const componentId = React.useId();
 
@@ -88,11 +93,13 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
     return URL.createObjectURL(image);
   };
 
-  const handleBannerClick = () => {
-    if (activeImage?.link) {
-      window.location.href = activeImage.link;
-    }
-  };
+  const bannerHref = generateLinkHref(
+    activeImage?.link || "",
+    siteUser,
+    pathname,
+    isEditable,
+    false
+  );
 
   if (!activeImage && !isEditable) {
     return (
@@ -112,8 +119,8 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
             {/* Background Image Wrapper with overflow-hidden */}
             <div className="h-full w-full overflow-hidden rounded-lg">
               {activeImage.link && !isEditable ? (
-                <button
-                  onClick={handleBannerClick}
+                <Link
+                  href={bannerHref}
                   className="block h-full w-full cursor-pointer transition-transform hover:scale-[1.02] focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-inset"
                   aria-label={`Navigate to ${activeImage.image_alt_description}`}
                 >
@@ -130,7 +137,7 @@ export const BannerTemplate1: React.FC<BannerTemplateProps> = ({
                     }}
                     showAltEditor={isEditable}
                   />
-                </button>
+                </Link>
               ) : (
                 <div className="h-full w-full">
                   <EditableImage

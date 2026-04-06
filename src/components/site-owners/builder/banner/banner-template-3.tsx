@@ -12,6 +12,9 @@ import { uploadToS3 } from "@/utils/s3";
 import { toast } from "sonner";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { BannerItemControls } from "./banner-item-controls";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface BannerTemplateProps {
   bannerData: BannerTemplate3Data;
@@ -30,6 +33,8 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
     bannerData,
     onUpdate
   );
+
+  const pathname = usePathname();
 
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -119,11 +124,6 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
     return URL.createObjectURL(image);
   };
 
-  const handleBannerClick = (link: string) => {
-    if (link) {
-      window.location.href = link;
-    }
-  };
 
   // Get display images - show up to 3 images
   const displayImages = activeImages.slice(0, 3);
@@ -166,8 +166,14 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                       />
 
                       {image.link && !isEditable ? (
-                        <button
-                          onClick={() => handleBannerClick(image.link)}
+                        <Link
+                          href={generateLinkHref(
+                            image.link,
+                            siteUser,
+                            pathname,
+                            isEditable,
+                            false
+                          )}
                           className="block w-full cursor-pointer focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-inset"
                           aria-label={`Navigate to ${image.image_alt_description}`}
                         >
@@ -182,7 +188,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                                   safeIndex,
                                   imageUrl,
                                   altText
-                                )
+                               )
                               }
                               isEditable={isEditable}
                               className="w-full bg-white object-cover transition-opacity hover:opacity-75 max-sm:h-96 sm:h-[400px] lg:h-[500px]"
@@ -194,7 +200,7 @@ export const BannerTemplate3: React.FC<BannerTemplateProps> = ({
                               disableImageChange={true}
                             />
                           </div>
-                        </button>
+                        </Link>
                       ) : (
                         <div className="w-full overflow-hidden rounded-lg">
                           <EditableImage

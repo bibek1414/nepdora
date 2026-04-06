@@ -13,6 +13,9 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { ImageEditOverlay } from "@/components/ui/image-edit-overlay";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BannerItemControls } from "./banner-item-controls";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 
 interface BannerTemplateProps {
   bannerData: BannerTemplate2Data;
@@ -31,6 +34,8 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
     bannerData,
     onUpdate
   );
+
+  const pathname = usePathname();
 
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
@@ -165,62 +170,134 @@ export const BannerTemplate2: React.FC<BannerTemplateProps> = ({
               className="absolute inset-0"
             >
               <div className="relative h-full w-full">
-                <EditableImage
-                  src={getImageUrl(currentSlide.image)}
-                  alt={currentSlide.image_alt_description || "Banner"}
-                  onImageChange={(url, alt) =>
-                    handleImageUpdateLocal(currentIndex, url, alt)
-                  }
-                  className="h-full w-full object-cover"
-                  priority
-                  s3Options={{ folder: "banner-images" }}
-                />
-
-                <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/20 to-transparent" />
-
-                <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 lg:px-24">
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.6 }}
-                    className="max-w-2xl"
+                {currentSlide.link && !isEditable ? (
+                  <Link
+                    href={generateLinkHref(
+                      currentSlide.link,
+                      siteUser,
+                      pathname,
+                      isEditable,
+                      false
+                    )}
+                    className="block h-full w-full cursor-pointer transition-transform hover:scale-[1.01]"
                   >
-                    <div className="mb-6">
-                      <EditableText
-                        value={currentSlide.badge || "Offer"}
-                        onChange={val =>
-                          handleTextUpdate(currentIndex, "badge", val)
-                        }
-                        isEditable={isEditable}
-                        as="p"
-                        className="inline-block rounded-lg bg-white px-4 py-1.5 text-sm font-bold text-black shadow-sm"
-                        style={{ color: "black", backgroundColor: "white" }}
-                      />
+                    <EditableImage
+                      src={getImageUrl(currentSlide.image)}
+                      alt={currentSlide.image_alt_description || "Banner"}
+                      onImageChange={(url, alt) =>
+                        handleImageUpdateLocal(currentIndex, url, alt)
+                      }
+                      className="h-full w-full object-cover"
+                      priority
+                      s3Options={{ folder: "banner-images" }}
+                    />
+
+                    <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/20 to-transparent" />
+
+                    <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 lg:px-24">
+                      <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3, duration: 0.6 }}
+                        className="max-w-2xl"
+                      >
+                        <div className="mb-6">
+                          <EditableText
+                            value={currentSlide.badge || "Offer"}
+                            onChange={val =>
+                              handleTextUpdate(currentIndex, "badge", val)
+                            }
+                            isEditable={isEditable}
+                            as="p"
+                            className="inline-block rounded-lg bg-white px-4 py-1.5 text-sm font-bold text-black shadow-sm"
+                            style={{ color: "black", backgroundColor: "white" }}
+                          />
+                        </div>
+
+                        <EditableText
+                          value={currentSlide.title || "Headline"}
+                          onChange={val =>
+                            handleTextUpdate(currentIndex, "title", val)
+                          }
+                          isEditable={isEditable}
+                          as="h1"
+                          className="mb-4 text-5xl leading-none font-bold tracking-tight text-white drop-shadow-md md:text-6xl lg:text-7xl"
+                          useHeadingFont
+                        />
+
+                        <EditableText
+                          value={currentSlide.subtitle || "Description"}
+                          onChange={val =>
+                            handleTextUpdate(currentIndex, "subtitle", val)
+                          }
+                          isEditable={isEditable}
+                          as="p"
+                          className="text-white"
+                          multiline
+                        />
+                      </motion.div>
                     </div>
-
-                    <EditableText
-                      value={currentSlide.title || "Headline"}
-                      onChange={val =>
-                        handleTextUpdate(currentIndex, "title", val)
+                  </Link>
+                ) : (
+                  <>
+                    <EditableImage
+                      src={getImageUrl(currentSlide.image)}
+                      alt={currentSlide.image_alt_description || "Banner"}
+                      onImageChange={(url, alt) =>
+                        handleImageUpdateLocal(currentIndex, url, alt)
                       }
-                      isEditable={isEditable}
-                      as="h1"
-                      className="mb-4 text-5xl leading-none font-bold tracking-tight text-white drop-shadow-md md:text-6xl lg:text-7xl"
-                      useHeadingFont
+                      className="h-full w-full object-cover"
+                      priority
+                      s3Options={{ folder: "banner-images" }}
                     />
 
-                    <EditableText
-                      value={currentSlide.subtitle || "Description"}
-                      onChange={val =>
-                        handleTextUpdate(currentIndex, "subtitle", val)
-                      }
-                      isEditable={isEditable}
-                      as="p"
-                      className="text-white"
-                      multiline
-                    />
-                  </motion.div>
-                </div>
+                    <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/20 to-transparent" />
+
+                    <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 lg:px-24">
+                      <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3, duration: 0.6 }}
+                        className="max-w-2xl"
+                      >
+                        <div className="mb-6">
+                          <EditableText
+                            value={currentSlide.badge || "Offer"}
+                            onChange={val =>
+                              handleTextUpdate(currentIndex, "badge", val)
+                            }
+                            isEditable={isEditable}
+                            as="p"
+                            className="inline-block rounded-lg bg-white px-4 py-1.5 text-sm font-bold text-black shadow-sm"
+                            style={{ color: "black", backgroundColor: "white" }}
+                          />
+                        </div>
+
+                        <EditableText
+                          value={currentSlide.title || "Headline"}
+                          onChange={val =>
+                            handleTextUpdate(currentIndex, "title", val)
+                          }
+                          isEditable={isEditable}
+                          as="h1"
+                          className="mb-4 text-5xl leading-none font-bold tracking-tight text-white drop-shadow-md md:text-6xl lg:text-7xl"
+                          useHeadingFont
+                        />
+
+                        <EditableText
+                          value={currentSlide.subtitle || "Description"}
+                          onChange={val =>
+                            handleTextUpdate(currentIndex, "subtitle", val)
+                          }
+                          isEditable={isEditable}
+                          as="p"
+                          className="text-white"
+                          multiline
+                        />
+                      </motion.div>
+                    </div>
+                  </>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
