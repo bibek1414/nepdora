@@ -271,6 +271,7 @@ export default function EsewaPayment() {
 
             <div className="space-y-2">
               <Label htmlFor="amount">Amount (NPR)</Label>
+
               <Input
                 id="amount"
                 type="number"
@@ -283,8 +284,9 @@ export default function EsewaPayment() {
                 disabled={paymentState.isLoading}
                 readOnly
               />
-              <div className="text-sm text-gray-500">
-                Total subscription amount
+
+              <div className="text-sm text-gray-500 mb-2">
+                Total: Rs. {Number(amount || 0).toLocaleString("en-IN")}
               </div>
             </div>
           </CardContent>

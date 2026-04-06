@@ -213,15 +213,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("authTokens");
     localStorage.removeItem("authUser");
     localStorage.removeItem("verificationEmail");
+    localStorage.removeItem("nepdora-subscription-status");
 
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("redirectAfterLogin");
+      sessionStorage.removeItem("verified_subscription_payment");
+      sessionStorage.removeItem("subscription_payment_data");
+      sessionStorage.removeItem("esewa_transaction");
+      sessionStorage.removeItem("khalti_transaction");
     }
 
     deleteCookie("authToken");
     deleteCookie("authUser");
     deleteCookie("refreshToken");
   };
+
 
   // Initialize auth on mount
   useEffect(() => {

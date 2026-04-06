@@ -97,7 +97,13 @@ export default function SuccessPage() {
         sessionStorage.removeItem("subscription_payment_data");
         sessionStorage.setItem("verified_subscription_payment", "true");
 
+        // Force clear subscription status cache to ensure fresh data on redirect
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("nepdora-subscription-status");
+        }
+
         // Redirect to admin after 5 seconds
+
         setTimeout(
           () => {
             router.push("/admin");
