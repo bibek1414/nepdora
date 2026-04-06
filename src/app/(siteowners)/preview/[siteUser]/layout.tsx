@@ -29,8 +29,6 @@ export async function generateMetadata({
   });
 }
 
-import { SubscriptionGate } from "@/components/site-owners/admin/subscription/subscription-gate";
-
 export default async function PreviewLayout({
   children,
   params,
@@ -44,13 +42,11 @@ export default async function PreviewLayout({
       <SubscriptionProvider>
         <WebsiteSocketProvider schema_name={siteUser} enabled={true}>
           <DynamicFontProvider>
-            <SubscriptionGate>
-              <SiteLayoutWrapper siteUser={siteUser}>
-                {children}
-              </SiteLayoutWrapper>
-              <WhatsApp />
-              <PopupManager />
-            </SubscriptionGate>
+            <SiteLayoutWrapper siteUser={siteUser}>
+              {children}
+            </SiteLayoutWrapper>
+            <WhatsApp />
+            <PopupManager />
           </DynamicFontProvider>
         </WebsiteSocketProvider>
         <SubscriptionBlocker />

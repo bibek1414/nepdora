@@ -343,10 +343,11 @@ export default function SuccessPage() {
                       <span className="text-zinc-500">Amount</span>
                       <span className="text-base font-semibold text-zinc-900">
                         Rs.{" "}
-                        {Number(verificationData.total_amount).toLocaleString(
-                          "en-IN",
-                          { minimumFractionDigits: 2 }
-                        )}
+                        {Number(
+                          verificationData.total_amount?.toString().replace(/,/g, "")
+                        ).toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                        })}
                       </span>
                     </div>
                   )}

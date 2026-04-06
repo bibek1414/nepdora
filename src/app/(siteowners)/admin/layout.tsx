@@ -6,8 +6,6 @@ import { DynamicFavicon } from "@/components/site-owners/admin/favicon/dynamic-f
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { SubscriptionBlocker } from "@/components/site-owners/admin/subscription/subscription-blocker";
 
-import { SubscriptionGate } from "@/components/site-owners/admin/subscription/subscription-gate";
-
 export default async function AdminLayout({
   children,
 }: {
@@ -22,15 +20,13 @@ export default async function AdminLayout({
   return (
     <SubscriptionProvider>
       <DynamicFavicon />
-      <SubscriptionGate>
-        <div className="flex min-h-screen bg-white">
-          <AdminSidebar user={user} />
-          <div className="flex flex-1 flex-col">
-            <AdminHeader user={user} />
-            <main className="flex-1">{children}</main>
-          </div>
+      <div className="flex min-h-screen bg-white">
+        <AdminSidebar user={user} />
+        <div className="flex flex-1 flex-col">
+          <AdminHeader user={user} />
+          <main className="flex-1">{children}</main>
         </div>
-      </SubscriptionGate>
+      </div>
       <SubscriptionBlocker />
     </SubscriptionProvider>
   );

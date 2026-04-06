@@ -321,10 +321,15 @@ export async function POST(req: Request) {
           });
         }
 
+        const totalAmountFormatted = khaltiAPI_instance.formatAmountFromPaisa(
+          response.data.total_amount
+        );
+
         return NextResponse.json({
           success: true,
           data: {
             ...response.data,
+            total_amount: totalAmountFormatted,
             products_purchased: products_purchased,
           },
           message: response.message || "Payment verified successfully",

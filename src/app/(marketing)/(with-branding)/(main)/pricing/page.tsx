@@ -39,6 +39,7 @@ export const dynamic = "force-dynamic";
 import PricingSectionHero from "@/components/marketing/pricing-section/pricing-section-hero";
 import PricingCalculator from "@/components/marketing/pricing-section/pricing-calculator";
 import { subscriptionApi } from "@/services/api/subscription";
+import PricingHero from "@/components/marketing/pricing-section/pricing-hero-header";
 
 export default async function PricingPage() {
   const plans = await subscriptionApi.getPlans().catch(() => []);
@@ -46,6 +47,7 @@ export default async function PricingPage() {
   return (
     <>
       <JsonLd id="pricing-schema" data={pricingSchema} />
+      <PricingHero />
       <PricingSectionHero initialPlans={plans} />
       <PricingCalculator />
     </>
