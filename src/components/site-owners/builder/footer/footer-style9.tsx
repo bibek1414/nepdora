@@ -13,6 +13,7 @@ import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { toast } from "sonner";
 
@@ -174,6 +175,8 @@ export const FooterStyle9 = ({
             {getProcessedCopyright(data.copyright, data.companyName)}
           </div>
         </div>
+
+        {/* Made with Love by Nepdora */}
       </div>
 
       {/* Bottom Huge Text Animation */}
@@ -192,6 +195,9 @@ export const FooterStyle9 = ({
         >
           {data.logoText || data.companyName || "Nepdora"}
         </motion.div>
+      </div>
+      <div className="mt-8 pb-2">
+        <MadeWithLove textColor={data.textColor} />
       </div>
     </footer>
   );

@@ -12,6 +12,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle1Props {
   footerData: FooterData;
@@ -57,7 +58,7 @@ export function FooterStyle1({
           fontFamily: theme.fonts.heading,
           color: footerData.textColor || "white",
         }}
-        className="px-4 py-16 sm:px-6 lg:px-8"
+        className="px-4 py-8 sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-7xl">
           {/* Footer links grid */}
@@ -189,6 +190,10 @@ export function FooterStyle1({
                 </Link>
               ))}
             </div>
+          </div>
+
+          <div className="mt-8 pt-8">
+            <MadeWithLove textColor={footerData.textColor} />
           </div>
         </div>
       </footer>

@@ -10,6 +10,7 @@ import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle4Props {
   footerData: FooterData;
@@ -253,9 +254,9 @@ export function FooterStyle4({
           <div className="flex flex-col items-center gap-2 text-center text-sm leading-relaxed md:items-end md:text-right md:text-base">
             <div>
               <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
-              <p>
-                Powered By <span className="font-medium">Nepdora</span>
-              </p>
+              <div className="mt-2 text-left md:text-right">
+                <MadeWithLove textColor={footerData.textColor} className="justify-start! md:justify-end!" />
+              </div>
             </div>
             {data.policyLinks && data.policyLinks.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center justify-center gap-4 md:justify-end">

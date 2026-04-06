@@ -23,6 +23,7 @@ import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle7Props {
   footerData: FooterData;
@@ -243,6 +244,10 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
               ))}
             </div>
           )}
+        </div>
+
+        <div className="mt-8 text-center">
+          <MadeWithLove textColor={footerData.textColor} />
         </div>
       </div>
     </footer>

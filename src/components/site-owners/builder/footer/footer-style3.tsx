@@ -20,6 +20,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle3Props {
   footerData: FooterData;
@@ -377,6 +378,10 @@ export function FooterStyle3({
               </Link>
             ))}
           </div>
+        </div>
+
+        <div className="pb-8">
+          <MadeWithLove textColor={footerData.textColor} />
         </div>
       </footer>
     </div>

@@ -10,6 +10,7 @@ import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle5Props {
   footerData: FooterData;
@@ -242,7 +243,9 @@ export function FooterStyle5({
           {/* Left: Copyright */}
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
             <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
-            <p>Powered By Nepdora</p>
+            <div className="mt-1">
+                <MadeWithLove textColor={footerData.textColor} className="justify-start! md:justify-end!" />
+            </div>
           </div>
 
           {/* Right: Policy Links */}

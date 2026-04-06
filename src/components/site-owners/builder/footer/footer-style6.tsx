@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 interface FooterStyle6Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -229,6 +230,10 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
               </Link>
             ))}
           </div>
+        </div>
+
+        <div className="mt-8">
+          <MadeWithLove textColor={footerData.textColor} />
         </div>
       </div>
     </footer>

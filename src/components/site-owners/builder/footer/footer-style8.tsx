@@ -17,6 +17,7 @@ import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { MadeWithLove } from "./shared/made-with-love";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
 
 interface FooterStyle8Props {
@@ -225,6 +226,17 @@ export const FooterStyle8 = ({
               </Link>
             ))}
           </div>
+        </div>
+
+        <div
+          className="mt-8 text-center"
+          style={{
+            borderColor: data.textColor
+              ? data.textColor + "10"
+              : "rgba(0,0,0,0.05)",
+          }}
+        >
+          <MadeWithLove textColor={data.textColor} />
         </div>
       </div>
     </footer>
