@@ -269,123 +269,155 @@ function KhaltiPaymentContent() {
   const orderItems = order.items || order.order_items || [];
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md overflow-hidden border-zinc-200/60 shadow-xl">
-        <div className="h-2 w-full bg-[#5d2e8e]" />
-        <CardHeader className="bg-zinc-50/50 pt-6 pb-6">
-          <div className="mb-6 flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.back()}
-              disabled={paymentState.isLoading}
-              className="text-muted-foreground hover:text-foreground -ml-2"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
-            </Button>
-            <div className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
-              Secure Checkout
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 md:p-8">
+      <div className="flex w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-zinc-200/60 bg-white shadow-xl md:flex-row">
+        {/* LEFT COLUMN: Payment Info & Customer Details */}
+        <div className="relative flex w-full flex-col md:w-1/2">
+          <div className="absolute left-0 right-0 top-0 h-2 w-full bg-[#5d2e8e] md:right-auto md:w-full" />
+
+          <div className="flex flex-1 flex-col p-6 pt-8 md:pt-10">
+            <div className="mb-8 flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.back()}
+                disabled={paymentState.isLoading}
+                className="-ml-2 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back
+              </Button>
+              <div className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+                Secure Checkout
+              </div>
+            </div>
+
+            <div className="mb-8 flex flex-col items-center space-y-4 text-center">
+              <div className="relative h-16 w-32 overflow-hidden rounded-lg border border-zinc-100 bg-white p-2 shadow-sm">
+                <img
+                  src="/images/payment-gateway/khalti.png"
+                  alt="Khalti"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <div>
+                <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">
+                  Khalti Payment
+                </h2>
+                <p className="mt-1.5 text-sm text-zinc-500">
+                  Complete your order securely
+                </p>
+              </div>
+            </div>
+
+            {paymentState.error && (
+              <Alert
+                variant="destructive"
+                className="mb-6 border-red-200 bg-red-50 text-red-900"
+              >
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{paymentState.error}</AlertDescription>
+              </Alert>
+            )}
+
+            {paymentState.success && (
+              <Alert className="mb-6 border-purple-200 bg-purple-50 text-purple-900">
+                <Info className="h-4 w-4 text-purple-600" />
+                <AlertDescription>
+                  Payment session created! Redirecting to Khalti...
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <div className="flex-1 space-y-4">
+              <h3 className="border-b border-zinc-200 pb-2 text-base font-semibold text-zinc-900">
+                Customer Details
+              </h3>
+
+              <div className="space-y-3 text-sm">
+                <div className="flex items-start justify-between">
+                  <span className="text-zinc-500">Order Number</span>
+                  <span className="font-medium text-zinc-900">
+                    {order.order_number}
+                  </span>
+                </div>
+                <div className="flex items-start justify-between">
+                  <span className="text-zinc-500">Customer</span>
+                  <span className="font-medium text-zinc-900">
+                    {order.customer_name}
+                  </span>
+                </div>
+                <div className="flex items-start justify-between">
+                  <span className="text-zinc-500">Email</span>
+                  <span className="font-medium text-zinc-900">
+                    {order.customer_email}
+                  </span>
+                </div>
+                <div className="flex items-start justify-between">
+                  <span className="text-zinc-500">Phone</span>
+                  <span className="font-medium text-zinc-900">
+                    {order.customer_phone}
+                  </span>
+                </div>
+                {order.shipping_address && (
+                  <div className="flex items-start justify-between">
+                    <span className="mr-4 text-zinc-500">Shipping</span>
+                    <span className="text-right leading-snug text-zinc-900">
+                      {order.shipping_address}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-8 pt-6">
+              <Button
+                onClick={handlePayment}
+                className="h-12 w-full bg-[#5d2e8e] text-base font-semibold text-white shadow-md transition-all hover:bg-[#4a2571] active:scale-[0.98]"
+                disabled={paymentState.isLoading}
+              >
+                {paymentState.isLoading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></span>
+                    Processing...
+                  </div>
+                ) : (
+                  "Proceed to Khalti"
+                )}
+              </Button>
+              <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-zinc-400">
+                <Lock className="h-3.5 w-3.5" /> Payments are secure and
+                encrypted
+              </p>
             </div>
           </div>
+        </div>
 
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="relative h-16 w-32 overflow-hidden rounded-lg border border-zinc-100 bg-white p-2 shadow-sm">
-              <img
-                src="/images/payment-gateway/khalti.png"
-                alt="Khalti"
-                className="h-full w-full object-contain"
-              />
-            </div>
-            <div>
-              <CardTitle className="text-2xl">Khalti Payment</CardTitle>
-              <CardDescription className="mt-1.5">
-                Complete your order securely with Khalti
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-6 pt-6">
-          {paymentState.error && (
-            <Alert
-              variant="destructive"
-              className="border-red-200 bg-red-50 text-red-900"
-            >
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{paymentState.error}</AlertDescription>
-            </Alert>
-          )}
-
-          {paymentState.success && (
-            <Alert className="border-purple-200 bg-purple-50 text-purple-900">
-              <Info className="h-4 w-4 text-purple-600" />
-              <AlertDescription>
-                Payment session created! Redirecting to Khalti...
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <div className="space-y-4 rounded-xl border border-zinc-100 bg-zinc-50/50 p-5">
-            <h3 className="border-b border-zinc-200 pb-2 text-sm font-semibold text-zinc-900">
+        {/* RIGHT COLUMN: Order Items & Total */}
+        <div className="flex w-full flex-col border-t border-zinc-200 bg-zinc-50 md:w-1/2 md:border-l md:border-t-0">
+          <div className="flex h-full flex-col p-6 pt-8 md:pt-10">
+            <h3 className="mb-6 text-lg font-semibold text-zinc-900">
               Order Summary
             </h3>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-between text-zinc-700">
-                <span className="text-zinc-500">Order Number</span>
-                <span className="font-medium text-zinc-900">
-                  {order.order_number}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between text-zinc-700">
-                <span className="text-zinc-500">Customer</span>
-                <span className="font-medium text-zinc-900">
-                  {order.customer_name}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between text-zinc-700">
-                <span className="text-zinc-500">Email</span>
-                <span className="font-medium text-zinc-900">
-                  {order.customer_email}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between text-zinc-700">
-                <span className="text-zinc-500">Phone</span>
-                <span className="font-medium text-zinc-900">
-                  {order.customer_phone}
-                </span>
-              </div>
-
-              {order.shipping_address && (
-                <div className="mt-2 flex items-start justify-between text-zinc-700">
-                  <span className="text-zinc-500">Shipping</span>
-                  <span className="max-w-[180px] rounded border border-zinc-200 bg-white px-2 py-1 text-right text-xs text-zinc-800">
-                    {order.shipping_address}
-                  </span>
+            <div className="flex-1 space-y-4">
+              {orderItems.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    Items ({orderItems.length})
+                  </h4>
+                  <div className="custom-scrollbar max-h-[320px] space-y-4 overflow-y-auto pr-2">
+                    {orderItems.map((item, index) =>
+                      renderOrderItem(item, index)
+                    )}
+                  </div>
                 </div>
               )}
             </div>
 
-            {orderItems.length > 0 && (
-              <div className="mt-4 border-t border-zinc-200 pt-4">
-                <h4 className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-                  Order Items
-                </h4>
-                <div className="max-h-64 space-y-3 overflow-y-auto pr-2">
-                  {orderItems.map((item, index) =>
-                    renderOrderItem(item, index)
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="mt-4 space-y-3 border-t border-zinc-200 pt-4">
+            <div className="mt-6 space-y-4 border-t border-zinc-200 pt-6">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-500">Subtotal</span>
+                <span className="text-zinc-600">Subtotal</span>
                 <span className="font-medium text-zinc-900">
                   NPR{" "}
                   {(
@@ -400,7 +432,7 @@ function KhaltiPaymentContent() {
               {order.delivery_charge &&
                 parseFloat(order.delivery_charge) > 0 && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-zinc-500">Delivery Charge</span>
+                    <span className="text-zinc-600">Delivery Charge</span>
                     <span className="font-medium text-zinc-900">
                       NPR{" "}
                       {parseFloat(order.delivery_charge).toLocaleString(
@@ -411,9 +443,9 @@ function KhaltiPaymentContent() {
                   </div>
                 )}
 
-              <div className="flex items-center justify-between border-t border-zinc-200 pt-3">
-                <span className="font-semibold text-zinc-900">
-                  Total Amount
+              <div className="flex items-center justify-between border-t border-zinc-200 pt-4">
+                <span className="text-base font-semibold text-zinc-900">
+                  Total
                 </span>
                 <span className="text-2xl font-bold tracking-tight text-zinc-900">
                   <span className="mr-1 text-base font-medium text-zinc-500">
@@ -426,29 +458,8 @@ function KhaltiPaymentContent() {
               </div>
             </div>
           </div>
-        </CardContent>
-
-        <CardFooter className="pb-6">
-          <Button
-            onClick={handlePayment}
-            className="h-12 w-full bg-[#5d2e8e] text-base font-semibold text-white shadow-md transition-all hover:bg-[#4a2571] active:scale-[0.98]"
-            disabled={paymentState.isLoading}
-          >
-            {paymentState.isLoading ? (
-              <div className="flex items-center justify-center gap-2">
-                <span className="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></span>
-                Processing...
-              </div>
-            ) : (
-              "Pay with Khalti"
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
-
-      <p className="mt-8 flex items-center gap-1.5 text-sm text-zinc-400">
-        <Lock className="h-3.5 w-3.5" /> Payments are secure and encrypted
-      </p>
+        </div>
+      </div>
     </div>
   );
 }
