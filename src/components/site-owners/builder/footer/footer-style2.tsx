@@ -14,6 +14,7 @@ import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle2Props {
@@ -30,6 +31,7 @@ export function FooterStyle2({
   siteUser,
 }: FooterStyle2Props) {
   const { data: themeResponse } = useThemeQuery();
+  const { data: siteConfig } = useSiteConfig();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
@@ -220,7 +222,7 @@ export function FooterStyle2({
             }}
           >
             <p className="flex items-center justify-center gap-1 text-sm opacity-80">
-              {getProcessedCopyright(data.copyright, data.companyName)}
+              {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
               <Heart className="inline h-3 w-3 text-red-500" />
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (

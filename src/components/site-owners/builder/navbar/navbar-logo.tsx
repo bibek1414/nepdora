@@ -4,6 +4,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { generateLinkHref } from "@/lib/link-utils";
 
 interface NavbarLogoProps {
@@ -22,7 +23,16 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
   siteUser,
 }) => {
   const { data, getImageUrl } = useBuilderLogic(navbarData);
+  const { data: siteConfig } = useSiteConfig();
   const { logoText, logoImage, logoType } = data;
+  
+  const isPlaceholder = (text?: string) => {
+    if (!text) return true;
+    const placeholders = ["brand", "your brand"];
+    return placeholders.includes(text.toLowerCase().trim());
+  };
+
+  const displayText = !isPlaceholder(logoText) ? logoText : (siteConfig?.business_name || logoText);
 
   const renderLogo = () => {
     switch (logoType) {
@@ -36,13 +46,13 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
                   quality: "auto",
                   format: "auto",
                 })}
-                alt={logoText || "Logo"}
+                alt={displayText || "Logo"}
                 className="h-6 w-auto object-contain object-left sm:h-7 md:h-8"
               />
             ) : (
               <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
                 <span className="text-sm font-bold">
-                  {logoText?.charAt(0)?.toUpperCase() || "L"}
+                  {displayText?.charAt(0)?.toUpperCase() || "L"}
                 </span>
               </div>
             )}
@@ -59,13 +69,13 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
                   quality: "auto",
                   format: "auto",
                 })}
-                alt={logoText || "Logo"}
+                alt={displayText || "Logo"}
                 className="h-6 w-auto object-contain object-left sm:h-7 md:h-8"
               />
             ) : (
               <div className="bg-primary text-primary-foreground flex h-6 w-auto items-center justify-center rounded-sm px-2 sm:h-7 md:h-8">
                 <span className="text-xs font-bold">
-                  {logoText?.charAt(0)?.toUpperCase() || "L"}
+                  {displayText?.charAt(0)?.toUpperCase() || "L"}
                 </span>
               </div>
             )}
@@ -73,7 +83,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
               className="text-base font-bold sm:text-lg md:text-xl"
               style={{ color: navbarData.textColor || "inherit" }}
             >
-              {logoText}
+              {displayText}
             </span>
           </div>
         );
@@ -86,7 +96,7 @@ export const NavbarLogo: React.FC<NavbarLogoProps> = ({
               className="text-base font-bold sm:text-lg md:text-xl"
               style={{ color: navbarData.textColor || "inherit" }}
             >
-              {logoText}
+              {displayText}
             </span>
           </div>
         );

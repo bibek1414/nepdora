@@ -14,6 +14,7 @@ import { FooterLogo } from "./shared/footer-logo";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { getProcessedCopyright } from "./shared/footer-utils";
 import { MadeWithLove } from "./shared/made-with-love";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { useCreateNewsletter } from "@/hooks/owner-site/admin/use-newsletter";
 import { toast } from "sonner";
 
@@ -30,6 +31,14 @@ export const FooterStyle9 = ({
   siteUser,
 }: FooterStyle13Props) => {
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
+  const { data: siteConfig } = useSiteConfig();
+  
+  const isPlaceholder = (text?: string) => {
+    if (!text) return true;
+    const placeholders = ["brand", "your brand"];
+    return placeholders.includes(text.toLowerCase().trim());
+  };
+
   const pathname = usePathname();
   const textRef = useRef(null);
   const isInView = useInView(textRef, { once: false, amount: 0.1 });
@@ -172,7 +181,7 @@ export const FooterStyle9 = ({
           </div>
 
           <div className="text-center lg:text-right">
-            {getProcessedCopyright(data.copyright, data.companyName)}
+            {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
           </div>
         </div>
 
@@ -193,7 +202,9 @@ export const FooterStyle9 = ({
             color: data.textColor,
           }}
         >
-          {data.logoText || data.companyName || "Nepdora"}
+          {!isPlaceholder(data.logoText) 
+            ? data.logoText 
+            : (!isPlaceholder(data.companyName) ? data.companyName : (siteConfig?.business_name || data.logoText || data.companyName || "Nepdora"))}
         </motion.div>
       </div>
       <div className="mt-8 pb-2">

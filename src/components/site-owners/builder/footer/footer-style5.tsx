@@ -10,6 +10,7 @@ import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle5Props {
@@ -69,6 +70,7 @@ export function FooterStyle5({
   siteUser,
 }: FooterStyle5Props) {
   const { data: themeResponse } = useThemeQuery();
+  const { data: siteConfig } = useSiteConfig();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
@@ -242,7 +244,9 @@ export function FooterStyle5({
         <div className="flex flex-col items-center justify-between gap-4 text-sm opacity-70 md:flex-row">
           {/* Left: Copyright */}
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
-            <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
+            <p className="text-sm opacity-60">
+              {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
+            </p>
             <div className="mt-1">
                 <MadeWithLove textColor={footerData.textColor} className="justify-start! md:justify-end!" />
             </div>

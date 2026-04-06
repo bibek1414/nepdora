@@ -13,6 +13,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { getProcessedCopyright } from "./shared/footer-utils";
 import { MadeWithLove } from "./shared/made-with-love";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 interface FooterStyle6Props {
   footerData: FooterData;
   isEditable?: boolean;
@@ -28,6 +29,14 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
   siteUser,
 }) => {
   const { data, getImageUrl } = useBuilderLogic(footerData, onUpdate);
+  const { data: siteConfig } = useSiteConfig();
+  
+  const isPlaceholder = (text?: string) => {
+    if (!text) return true;
+    const placeholders = ["brand", "your brand"];
+    return placeholders.includes(text.toLowerCase().trim());
+  };
+
   const { data: themeResponse } = useThemeQuery();
   // Get theme colors with fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -75,7 +84,9 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
                   backgroundImage: `linear-gradient(to bottom, ${footerData.textColor || "#000"}, transparent)`,
                 }}
               >
-                {data.logoText}
+                {!isPlaceholder(data.logoText) 
+                  ? data.logoText 
+                  : (!isPlaceholder(data.companyName) ? data.companyName : (siteConfig?.business_name || data.logoText || data.companyName))}
               </h1>
             </div>
           )}
@@ -88,7 +99,13 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
             {data.logoType === "image" || data.logoType === "both" ? (
               <Image
                 src={getImageUrl(data.logoImage)}
-                alt={data.companyName}
+                alt={
+                  !isPlaceholder(data.logoText)
+                    ? data.logoText
+                    : !isPlaceholder(data.companyName)
+                      ? data.companyName
+                      : siteConfig?.business_name || "Logo"
+                }
                 width={100}
                 height={100}
                 className="max-h-[50px] w-auto"
@@ -187,7 +204,7 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
         >
           <div className="flex flex-col items-center gap-2 md:items-start">
             <p className="text-xs opacity-60">
-              {getProcessedCopyright(data.copyright, data.companyName)}
+              {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
             </p>
             {data.policyLinks && data.policyLinks.length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">

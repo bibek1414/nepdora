@@ -222,8 +222,8 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
         {/* Bottom Bar */}
         <div className="mt-16 flex flex-col items-center justify-between border-t border-gray-100 pt-8 pb-4 md:flex-row dark:border-gray-800">
-          <p className="mb-4 text-xs opacity-70 md:mb-0">
-            {getProcessedCopyright(data.copyright, data.companyName)}
+          <p className="text-xs opacity-60">
+            {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
           </p>
 
           {data.policyLinks && data.policyLinks.length > 0 && (

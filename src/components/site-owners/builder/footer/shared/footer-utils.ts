@@ -9,13 +9,35 @@
  */
 export const getProcessedCopyright = (
   copyright: string,
-  companyName: string = ""
+  companyName: string = "",
+  businessName: string = ""
 ): string => {
   const currentYear = new Date().getFullYear().toString();
 
-  if (!copyright) {
-    return `© ${currentYear} ${companyName}. All Rights Reserved.`;
+  const isPlaceholder = (text?: string) => {
+    if (!text) return true;
+    const placeholders = ["brand", "your brand"];
+    return placeholders.includes(text.toLowerCase().trim());
+  };
+
+  const finalName = !isPlaceholder(companyName) 
+    ? companyName 
+    : (businessName || companyName || "Brand");
+
+  let result = copyright;
+
+  if (!result || isPlaceholder(result)) {
+    result = `© {year} ${finalName}. All Rights Reserved.`;
+  } else {
+    // If the copyright string contains placeholders, replace them with the final name
+    const lower = result.toLowerCase();
+    if (lower.includes("your brand")) {
+      result = result.replace(/your brand/gi, finalName);
+    } else if (lower.includes("brand") && !lower.includes("branding")) {
+      // Use word boundary to avoid accidental replacements in words like "Branding"
+      result = result.replace(/\bbrand\b/gi, finalName);
+    }
   }
 
-  return copyright.replace(/{year}/g, currentYear);
+  return result.replace(/{year}/g, currentYear);
 };

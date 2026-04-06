@@ -12,6 +12,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { SocialIcon } from "./shared/social-icon";
 import { FooterLogo } from "./shared/footer-logo";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { MadeWithLove } from "./shared/made-with-love";
 
 interface FooterStyle1Props {
@@ -28,6 +29,7 @@ export function FooterStyle1({
   siteUser,
 }: FooterStyle1Props) {
   const { data: themeResponse } = useThemeQuery();
+  const { data: siteConfig } = useSiteConfig();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
       text: "#0F172A",
@@ -136,7 +138,7 @@ export function FooterStyle1({
 
             {/* Copyright */}
             <div className="mb-4 flex flex-col items-center gap-2 md:mb-0 md:items-start md:text-left">
-              <p>{getProcessedCopyright(data.copyright, data.companyName)}</p>
+              <p>{getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}</p>
               {data.policyLinks && data.policyLinks.length > 0 && (
                 <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
                   {data.policyLinks.map(link => (

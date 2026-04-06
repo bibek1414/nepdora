@@ -17,6 +17,7 @@ import { FooterLogo } from "./shared/footer-logo";
 import { NewsletterForm } from "./shared/newsletter-form";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { getProcessedCopyright } from "./shared/footer-utils";
+import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { MadeWithLove } from "./shared/made-with-love";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
 
@@ -33,6 +34,7 @@ export const FooterStyle8 = ({
   siteUser,
 }: FooterStyle8Props) => {
   const { data, getImageUrl } = useBuilderLogic(footerData, undefined);
+  const { data: siteConfig } = useSiteConfig();
   const pathname = usePathname();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -208,7 +210,7 @@ export const FooterStyle8 = ({
           }}
         >
           <p className="text-center md:text-left">
-            {getProcessedCopyright(data.copyright, data.companyName)}
+            {getProcessedCopyright(data.copyright, data.companyName, siteConfig?.business_name)}
           </p>
           <div className="flex space-x-6">
             {(data.policyLinks || []).map(link => (
