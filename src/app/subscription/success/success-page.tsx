@@ -318,8 +318,10 @@ export default function SuccessPage() {
                   )}
                   {verificationData.total_amount && (
                     <p>
-                      <span className="text-gray-600">Amount:</span> Rs.{" "}
-                      {verificationData.total_amount}
+                      <span className="text-gray-600">Amount:</span> Rs. Rs.{" "}
+                      {Number(verificationData.total_amount).toLocaleString(
+                        "en-IN"
+                      )}
                     </p>
                   )}
                   {verificationData.products_purchased &&

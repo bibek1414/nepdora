@@ -41,6 +41,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   );
 }
 
+
 export function useSubscription() {
   const context = useContext(SubscriptionContext);
   if (context === undefined) {

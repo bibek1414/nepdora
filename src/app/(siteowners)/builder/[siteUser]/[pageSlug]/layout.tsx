@@ -13,6 +13,8 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
+import { SubscriptionGate } from "@/components/site-owners/admin/subscription/subscription-gate";
+
 export default function RootLayout({
   children,
 }: {
@@ -21,8 +23,11 @@ export default function RootLayout({
   return (
     <SubscriptionProvider>
       <DynamicFavicon />
-      <DynamicFontProvider>{children}</DynamicFontProvider>
+      <SubscriptionGate>
+        <DynamicFontProvider>{children}</DynamicFontProvider>
+      </SubscriptionGate>
       <SubscriptionBlocker />
     </SubscriptionProvider>
   );
 }
+

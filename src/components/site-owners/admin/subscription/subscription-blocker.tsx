@@ -54,7 +54,7 @@ export function SubscriptionBlocker() {
     isUnauthorized,
   } = useSubscription();
   const { data: plans, isLoading: plansLoading } = usePricingPlans();
-  const { logout } = useAuth(); // Get logout function
+  const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,13 +69,20 @@ export function SubscriptionBlocker() {
       return;
     }
 
+    const isSuperAdmin = user?.role === "super_admin";
+
     // Show dialog if subscription is not active
-    if (!statusLoading && !isActive) {
-      setOpen(true);
+    // We only show it once we have finished initial loading
+    if (!statusLoading && !isSuperAdmin) {
+      if (!isActive) {
+        setOpen(true);
+      } else {
+        setOpen(false);
+      }
     } else {
       setOpen(false);
     }
-  }, [isActive, statusLoading, isUnauthorized, router]);
+  }, [isActive, statusLoading, isUnauthorized, router, user]);
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChoosePlan = (plan: any) => {
@@ -132,7 +139,7 @@ export function SubscriptionBlocker() {
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="h-[115vh] max-w-5xl! scale-85 overflow-y-auto"
+        className="h- max-w-5xl! scale-85 overflow-y-auto"
         onInteractOutside={e => e.preventDefault()}
         onKeyDown={e => e.preventDefault()}
         onEscapeKeyDown={e => e.preventDefault()}
@@ -208,7 +215,7 @@ export function SubscriptionBlocker() {
                         )}
 
                         <CardHeader>
-                          <CardTitle className="flex flex-col justify-between text-lg md:flex-row md:items-center md:text-xl">
+                          <CardTitle className="mb-2 flex flex-col justify-between text-lg md:flex-row md:items-center md:text-xl">
                             {plan.name}
                             <Badge
                               variant="outline"
@@ -217,9 +224,7 @@ export function SubscriptionBlocker() {
                               {plan.plan_type.toUpperCase()}
                             </Badge>
                           </CardTitle>
-                          <CardDescription className="mb-2 text-xs md:text-sm">
-                            {plan.tagline}
-                          </CardDescription>
+
                           <div className="pt-2">
                             <span className="text-foreground text-3xl font-bold md:text-4xl">
                               {Number(plan.price).toLocaleString("en-IN")}
@@ -228,15 +233,10 @@ export function SubscriptionBlocker() {
                               /{plan.unit}
                             </span>
                           </div>
-                          {plan.description && (
-                            <p className="text-muted-foreground mt-2 text-xs">
-                              {plan.description}
-                            </p>
-                          )}
                         </CardHeader>
                         <CardFooter>
                           <Button
-                            className="mb-2 w-full shadow-none"
+                            className="mb-2 mt-3 w-full shadow-none"
                             variant={plan.is_popular ? "default" : "outline"}
                             size={window.innerWidth < 768 ? "sm" : "lg"}
                             onClick={() => handleChoosePlan(plan)}
