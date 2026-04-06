@@ -8,7 +8,6 @@ import { generatePublishPageMetadata } from "@/lib/metadata-utils";
 import { getPublishedLayoutPayload } from "@/lib/publish-page-cache";
 import type { Metadata } from "next";
 import { WebsiteSocketProvider } from "@/providers/website-socket-provider";
-import { MadeInNepdora } from "@/components/site-owners/shared/made-in-nepdora";
 
 interface PublishLayoutProps {
   children: React.ReactNode;
@@ -51,7 +50,6 @@ export default async function PublishLayout({
           </SiteLayoutWrapper>
           <WhatsApp />
           <PopupManager />
-          <MadeInNepdora />
         </DynamicFontProvider>
       </WebsiteSocketProvider>
     </>

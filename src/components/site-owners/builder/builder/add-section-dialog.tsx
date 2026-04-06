@@ -405,6 +405,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/cta/cta3.png",
         description: "Premium CTA with stats and trust indicators",
       },
+      {
+        id: "cta-4",
+        name: "CTA Style 4",
+        image: "/images/site-owners/cta/cta4.png", // This image might not exist yet, but we'll use it as the convention
+        description: "Modern aspect-ratio hero CTA with animations",
+      },
     ],
     appointment: [
       {
@@ -518,6 +524,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "about-20",
         name: "About Style 20 (Mission Scroll)",
         image: "/images/site-owners/about/about20.png",
+      },
+      {
+        id: "about-21",
+        name: "About Style 21 (Feature Section)",
+        image: "/images/site-owners/about/about21.png",
       },
     ],
     products: [

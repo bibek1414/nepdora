@@ -782,6 +782,61 @@ export const defaultAboutUs20Data: AboutUs20Data = {
   ],
 };
 
+export interface AboutUs21Feature {
+  id: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  image: string;
+  imageAlt: string;
+  badgeText: string;
+  badgeIcon: string;
+  badgePosition: "bottom-left" | "top-right";
+  reverse: boolean;
+}
+
+export interface AboutUs21Data {
+  template: "about-21";
+  features: AboutUs21Feature[];
+}
+
+export const defaultAboutUs21Data: AboutUs21Data = {
+  template: "about-21",
+  features: [
+    {
+      id: "1",
+      title: "Dermatology-Tested Skincare You Can Trust",
+      description:
+        "Our formulas are developed in collaboration with dermatologists to ensure maximum comfort and visible results for every skin type.",
+      buttonText: "About us",
+      buttonLink: "#",
+      image:
+        "https://cdn.prod.website-files.com/6918bd445678e83950693c7b/691940b886702b2d2296b5f3_Rectangle%201071.avif",
+      imageAlt: "Dermatology tested skincare application",
+      badgeText: "Dermatologist tested",
+      badgeIcon: "ShieldCheck",
+      badgePosition: "bottom-left",
+      reverse: false,
+    },
+    {
+      id: "2",
+      title: "Naturally Clean. Always Paraben-Free.",
+      description:
+        "Your skin deserves only the best. That's why every product we create is 100% paraben-free, formulated with gentle and natural ingredients.",
+      buttonText: "Learn more",
+      buttonLink: "#",
+      image:
+        "https://cdn.prod.website-files.com/6918bd445678e83950693c7b/69193b3ec862043fc0be46ab_Rectangle%201072.avif",
+      imageAlt: "Natural paraben-free product texture",
+      badgeText: "Paraben free",
+      badgeIcon: "Leaf",
+      badgePosition: "top-right",
+      reverse: true,
+    },
+  ],
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -803,7 +858,8 @@ export type AboutUsData =
   | AboutUs17Data
   | AboutUs18Data
   | AboutUs19Data
-  | AboutUs20Data;
+  | AboutUs20Data
+  | AboutUs21Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -855,7 +911,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs17Data>
     | Partial<AboutUs18Data>
     | Partial<AboutUs19Data>
-    | Partial<AboutUs20Data>;
+    | Partial<AboutUs20Data>
+    | Partial<AboutUs21Data>;
   order?: number;
 }
 
@@ -899,6 +956,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-18": defaultAboutUs18Data,
   "about-19": defaultAboutUs19Data,
   "about-20": defaultAboutUs20Data,
+  "about-21": defaultAboutUs21Data,
 };
 
 // Type guards for each template
@@ -961,3 +1019,6 @@ export const isAboutUsTemplate19 = (data: AboutUsData): data is AboutUs19Data =>
 
 export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
   data.template === "about-20";
+
+export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
+  data.template === "about-21";

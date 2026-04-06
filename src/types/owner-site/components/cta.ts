@@ -56,8 +56,21 @@ export interface CTATemplate3Data {
   imageAlt?: string;
 }
 
+export interface CTATemplate4Data {
+  template: "cta-4";
+  title: string;
+  buttonText: string;
+  buttonHref?: string;
+  imageUrl: string;
+  imageAlt?: string;
+}
+
 // Union type for all CTA templates
-export type CTAData = CTATemplate1Data | CTATemplate2Data | CTATemplate3Data;
+export type CTAData =
+  | CTATemplate1Data
+  | CTATemplate2Data
+  | CTATemplate3Data
+  | CTATemplate4Data;
 
 // Component and API interfaces
 export interface CTAComponentData {
@@ -130,11 +143,22 @@ export const defaultCTATemplate3Data: CTATemplate3Data = {
   ],
 };
 
+export const defaultCTATemplate4Data: CTATemplate4Data = {
+  template: "cta-4",
+  title: "Ready for Your Best <br class='hidden md:block' /> Skin Yet?",
+  buttonText: "Book a Consultation",
+  buttonHref: "#",
+  imageUrl:
+    "https://cdn.prod.website-files.com/6918bd445678e83950693c7b/692ae1f85a3938e08bd09b53_CTA%2001%20(1).avif",
+  imageAlt: "Skincare texture background",
+};
+
 // Default data map for all CTA templates
 export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-1": defaultCTATemplate1Data,
   "cta-2": defaultCTATemplate2Data,
   "cta-3": defaultCTATemplate3Data,
+  "cta-4": defaultCTATemplate4Data,
 };
 
 // Type guards for each template
@@ -146,3 +170,6 @@ export const isCTATemplate2 = (data: CTAData): data is CTATemplate2Data =>
 
 export const isCTATemplate3 = (data: CTAData): data is CTATemplate3Data =>
   data.template === "cta-3";
+
+export const isCTATemplate4 = (data: CTAData): data is CTATemplate4Data =>
+  data.template === "cta-4";
