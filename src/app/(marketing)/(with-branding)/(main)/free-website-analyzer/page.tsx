@@ -1,6 +1,8 @@
 import { WebsiteAnalyzer } from "@/components/marketing/tools/website-analyzer";
-import { Metadata } from "next";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
+import { StandardMarketingHero } from "@/components/marketing/shared/StandardMarketingHero";
+import { StandardMarketingCTA } from "@/components/marketing/shared/StandardMarketingCTA";
+import { BarChart } from "lucide-react";
 
 import { buildMarketingMetadata } from "@/lib/seo";
 
@@ -9,7 +11,6 @@ export const metadata = buildMarketingMetadata({
   description:
     "Audit your website's SEO, speed, and mobile responsiveness for the Nepalese market. Get actionable insights to beat your local competitors.",
   path: "/free-website-analyzer",
-  image: DEFAULT_OG_IMAGE,
   keywords: [
     "website analyzer nepal",
     "free seo audit nepal",
@@ -18,12 +19,10 @@ export const metadata = buildMarketingMetadata({
   ],
 });
 
-import { JsonLd } from "@/components/shared/json-ld";
-
 const analyzerSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: `${SITE_NAME} Website Analyzer`,
+  name: "Nepdora Website Analyzer",
   operatingSystem: "Web",
   applicationCategory: "BusinessApplication",
   offers: {
@@ -37,9 +36,31 @@ const analyzerSchema = {
 
 export default function FreeWebsiteAnalyzerPage() {
   return (
-    <>
+    <main className="min-h-screen bg-white">
       <JsonLd id="analyzer-schema" data={analyzerSchema} />
-      <WebsiteAnalyzer />
-    </>
+      
+      <StandardMarketingHero
+        badgeText="Free SEO tool"
+        badgeIcon={BarChart}
+        title={
+          <>
+            Free website <span className="text-sky-600">analyzer.</span>
+          </>
+        }
+        description="Audit your website's SEO, speed, and mobile responsiveness for the Nepalese market. Discover how to improve your presence in Nepal."
+        centered
+      />
+
+      <div className="py-20 bg-slate-50">
+        <WebsiteAnalyzer />
+      </div>
+
+      <StandardMarketingCTA
+        title="Ready to fix your site?"
+        description="Build a high-performance website that ranks in Nepal. Start building for free with Nepdora."
+        buttonText="Get started for free"
+        buttonHref="/create-website"
+      />
+    </main>
   );
 }

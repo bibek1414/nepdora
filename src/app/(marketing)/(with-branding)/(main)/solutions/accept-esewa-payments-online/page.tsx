@@ -1,9 +1,9 @@
-import { Metadata } from "next";
-import CTASection from "@/components/marketing/cta-section/cta-section";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { StandardMarketingHero } from "@/components/marketing/shared/StandardMarketingHero";
+import { StandardMarketingCTA } from "@/components/marketing/shared/StandardMarketingCTA";
+import { WalletCards, CheckCircle2 } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 
-import { buildMarketingMetadata } from "@/lib/seo";
+import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
   title: "Accept eSewa & Khalti Payments Online in Nepal | One-Click Setup",
@@ -20,37 +20,67 @@ const solutionSchema = {
     "Native integration for eSewa, Khalti, and major wallets for websites in Nepal.",
   provider: {
     "@type": "Organization",
-    name: SITE_NAME,
+    name: "Nepdora",
     url: absoluteUrl(),
   },
 };
 
 export default function AcceptPaymentsSolution() {
   return (
-    <main className="bg-white py-16 md:py-24">
+    <main className="min-h-screen bg-white">
       <JsonLd id="payment-solution-schema" data={solutionSchema} />
-      <div className="container mx-auto max-w-4xl px-4">
-        <h1 className="mb-8 text-4xl font-extrabold md:text-6xl">
-          Accept <span className="text-[#60BB46]">eSewa</span> &{" "}
-          <span className="text-[#5C2D91]">Khalti</span> Hassle-Free
-        </h1>
-        <div className="prose prose-slate lg:prose-xl">
-          <p>
-            Selling products online in Nepal shouldn't be hard. Our platform
-            comes with pre-integrated payment gateways so you can start making
-            money from day one.
-          </p>
-          <h2>Supported Proxies</h2>
-          <ul>
-            <li>eSewa Mobile Wallet</li>
-            <li>Khalti Payment Gateway</li>
-            <li>IME Pay</li>
-            <li>ConnectIPS (Bank Transfers)</li>
-            <li>Fonepay QR</li>
-          </ul>
+      
+      <StandardMarketingHero
+        badgeText="Native integrations"
+        badgeIcon={WalletCards}
+        title={
+          <>
+            Accept <span className="text-[#60BB46]">eSewa</span> & <span className="text-[#5C2D91]">Khalti</span> hassle-free.
+          </>
+        }
+        description="Selling products online in Nepal shouldn't be hard. Our platform comes with pre-integrated payment gateways so you can start making money from day one."
+        centered
+      />
+
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto max-w-3xl px-4">
+          <div className="prose prose-slate prose-lg mx-auto">
+            <h2 className="text-3xl font-extrabold text-slate-900 md:text-4xl">
+              Supported payment methods
+            </h2>
+            <p className="font-medium text-slate-500">
+              Nepdora provides the most comprehensive payment support for the
+              Nepalese market, ensuring your customers can pay you using their
+              preferred wallet or bank.
+            </p>
+            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {[
+                "eSewa Mobile Wallet",
+                "Khalti Payment Gateway",
+                "IME Pay",
+                "ConnectIPS (Bank Transfers)",
+                "Fonepay QR",
+                "Prabhu Pay",
+              ].map(item => (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+                >
+                  <CheckCircle2 className="h-5 w-5 text-sky-600" />
+                  <span className="font-bold text-slate-900">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-      <CTASection />
+      </section>
+
+      <StandardMarketingCTA
+        title="Ready to start accepting payments?"
+        description="Join thousands of Nepali businesses already growing with Nepdora. One-click setup, zero coding."
+        buttonText="Get started for free"
+        buttonHref="/pricing"
+      />
     </main>
   );
 }

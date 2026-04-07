@@ -1,8 +1,12 @@
 import { InvoiceBuilder } from "@/components/marketing/tools/invoice-builder";
-import { Metadata } from "next";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { StandardMarketingHero } from "@/components/marketing/shared/StandardMarketingHero";
+import { StandardMarketingCTA } from "@/components/marketing/shared/StandardMarketingCTA";
+import { FileText } from "lucide-react";
+import { JsonLd } from "@/components/shared/json-ld";
 
-export async function generateMetadata(): Promise<Metadata> {
+import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
+
+export async function generateMetadata() {
   return buildMarketingMetadata({
     title: "Professional Invoice Builder for Nepal | Free & Instant | Nepdora",
     description:
@@ -12,5 +16,47 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function InvoiceBuilderPage() {
-  return <InvoiceBuilder />;
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Nepdora Invoice Builder",
+    description: "Free and instant professional invoice builder for Nepal.",
+    url: absoluteUrl("/invoice-builder"),
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "NPR",
+    },
+  };
+
+  return (
+    <main className="min-h-screen bg-white">
+      <JsonLd id="invoice-builder-schema" data={schema} />
+      
+      <StandardMarketingHero
+        badgeText="Free billing tool"
+        badgeIcon={FileText}
+        title={
+          <>
+            Professional <span className="text-sky-600">invoice builder.</span>
+          </>
+        }
+        description="Create and download professional invoices for your business in Nepal instantly. Free and instant."
+        centered
+      />
+
+      <div className="py-20 bg-slate-50">
+        <InvoiceBuilder />
+      </div>
+
+      <StandardMarketingCTA
+        title="Ready to automate your billing?"
+        description="Build a high-performance website with integrated payments in 2 minutes. Start building for free with Nepdora."
+        buttonText="Get started for free"
+        buttonHref="/create-website"
+      />
+    </main>
+  );
 }

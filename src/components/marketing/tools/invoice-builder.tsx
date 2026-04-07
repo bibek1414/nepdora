@@ -67,43 +67,8 @@ export const InvoiceBuilder = () => {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-5xl px-4">
-        <div className="mb-12 text-center">
-          <h1 className="mb-4 text-3xl font-bold md:text-5xl">
-            Professional Invoice Builder
-          </h1>
-          <p className="text-lg text-slate-600">
-            Create and download professional invoices for your business in
-            Nepal. Free and instant.
-          </p>
-        </div>
-
-        {/* Growth Banner */}
-        <div className="bg-primary shadow-primary/20 group relative mb-8 flex flex-col items-center justify-between gap-6 overflow-hidden rounded-3xl p-6 text-white shadow-2xl md:flex-row">
-          <div className="absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10 blur-[80px] transition-transform duration-700 group-hover:scale-110" />
-          <div className="relative z-10 flex items-center gap-6">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/20 shadow-inner backdrop-blur-md">
-              <Zap className="h-7 w-7 animate-pulse fill-white text-white" />
-            </div>
-            <div>
-              <h3 className="text-xl font-black tracking-tighter uppercase italic md:text-2xl">
-                Love this tool?
-              </h3>
-              <p className="font-bold text-white/80">
-                Build a professional website with integrated payments in 2
-                minutes.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/create-website"
-            className="relative z-10 rounded-full bg-slate-900 px-8 py-4 text-sm font-black tracking-widest text-white uppercase shadow-xl transition-all hover:scale-110 active:scale-95"
-          >
-            Build My Website
-          </Link>
-        </div>
-
         <div className="mb-20 grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
             <div
@@ -150,7 +115,7 @@ export const InvoiceBuilder = () => {
               </div>
 
               <div className="space-y-4">
-                <div className="grid grid-cols-12 gap-4 px-4 text-xs font-semibold text-slate-400 uppercase">
+                <div className="grid grid-cols-12 gap-4 px-4 text-xs font-semibold text-slate-400">
                   <div className="col-span-6">Description</div>
                   <div className="col-span-2">Qty</div>
                   <div className="col-span-3">Price (NPR)</div>
@@ -252,8 +217,8 @@ export const InvoiceBuilder = () => {
 
               <div className="mb-8 space-y-4">
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-400 uppercase">
-                    Your Email
+                  <label className="mb-1 block text-xs font-semibold text-slate-400">
+                    Your email
                   </label>
                   <Input
                     placeholder="name@business.com"
@@ -263,8 +228,8 @@ export const InvoiceBuilder = () => {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-400 uppercase">
-                    Your Phone
+                  <label className="mb-1 block text-xs font-semibold text-slate-400">
+                    Your phone
                   </label>
                   <Input
                     placeholder="98XXXXXXXX"
@@ -317,8 +282,8 @@ export const InvoiceBuilder = () => {
                   <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
                 </Link>
               </Button>
-              <p className="mt-4 text-center text-[10px] font-medium tracking-widest text-slate-500 uppercase">
-                No Credit Card Required
+              <p className="mt-4 text-center text-[10px] font-medium tracking-widest text-slate-500">
+                No credit card required
               </p>
             </div>
           </div>

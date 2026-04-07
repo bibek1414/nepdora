@@ -1,13 +1,12 @@
-import { Metadata } from "next";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
-import Hero from "@/components/marketing/hero-section/hero-section";
+import { StandardMarketingHero } from "@/components/marketing/shared/StandardMarketingHero";
+import { StandardMarketingCTA } from "@/components/marketing/shared/StandardMarketingCTA";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
-import PricingSection from "@/components/marketing/pricing-section/pricing-section";
-import FAQSection from "@/components/marketing/faq-section/faq-section";
-import CTASection from "@/components/marketing/cta-section/cta-section";
+import { HomePricingSection } from "@/components/marketing/pricing-section/home-pricing-section";
+import { HomeFAQSection } from "@/components/marketing/faq-section/home-faq-section";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Sparkles } from "lucide-react";
 
-import { buildMarketingMetadata } from "@/lib/seo";
+import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
   title: "Free Website Builder Nepal | Build Your Site at Zero Cost",
@@ -41,21 +40,40 @@ export default function FreeWebsiteBuilder() {
   return (
     <main>
       <JsonLd id="free-software-schema" data={schema} />
-      <Hero />
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h2 className="mb-6 text-3xl font-bold text-slate-900 md:text-5xl">
-          Start Your Business with Zero Initial Investment
-        </h2>
-        <p className="mx-auto max-w-3xl text-lg text-slate-600">
-          We believe every Nepali business deserves a place online. Start with
-          our free tier, pick a professional template, and launch your site in
-          minutes. Upgrade only when you grow.
-        </p>
+      <StandardMarketingHero
+        badgeText="Zero initial investment"
+        badgeIcon={Sparkles}
+        title={
+          <>
+            Nepal's best <span className="text-sky-600">free website builder.</span>
+          </>
+        }
+        description="We believe every Nepali business deserves a place online. Start with our free tier, pick a professional template, and launch your site in minutes."
+      />
+
+      <div className="bg-white py-24">
+        <div className="container mx-auto max-w-6xl px-4 text-center">
+          <h2 className="mb-6 text-3xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+            Start your business with zero initial investment
+          </h2>
+          <p className="mx-auto max-w-3xl text-xl leading-relaxed font-medium text-slate-500">
+            Nepdora is dedicated to helping local entrepreneurs. Our free plan
+            includes everything you need to test your idea and grow at your own
+            pace. Upgrade only when you're ready.
+          </p>
+        </div>
       </div>
+
       <FeaturesSection />
-      <PricingSection />
-      <FAQSection />
-      <CTASection />
+      <HomePricingSection />
+      <HomeFAQSection />
+      
+      <StandardMarketingCTA
+        title="Launch your free site today"
+        description="Join thousands of Nepali businesses already online. It's free, forever, until you decide to grow."
+        buttonText="Create my free website"
+        buttonHref="/create-website"
+      />
     </main>
   );
 }

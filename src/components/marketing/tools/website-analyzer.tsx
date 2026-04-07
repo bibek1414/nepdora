@@ -21,25 +21,8 @@ export const WebsiteAnalyzer = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-24">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-4xl px-4 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl"
-        >
-          Free Website Analyzer
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-12 text-lg text-slate-600"
-        >
-          Enter your website URL to get a free analysis of SEO, speed, and
-          mobile responsiveness. Discover how to improve your presence in Nepal.
-        </motion.p>
-
         <form
           onSubmit={handleAnalyze}
           className="relative mx-auto mb-20 max-w-2xl"
@@ -47,7 +30,7 @@ export const WebsiteAnalyzer = () => {
           <Input
             type="url"
             placeholder="https://yourwebsite.com"
-            className="focus:ring-primary h-14 rounded-full border-slate-200 pr-40 pl-6 text-base"
+            className="focus:ring-primary h-14 rounded-full border-slate-200 pr-40 pl-6 text-base placeholder:text-slate-400"
             value={url}
             onChange={e => setUrl(e.target.value)}
             required
