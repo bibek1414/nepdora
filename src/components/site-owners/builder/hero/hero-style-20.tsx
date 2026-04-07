@@ -73,7 +73,7 @@ export const HeroTemplate20: React.FC<HeroTemplate20Props> = ({
   return (
     <>
       <section
-        className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white py-20 md:py-32"
+        className="relative flex w-full items-center justify-center overflow-hidden bg-white py-20 md:py-32"
         style={{ fontFamily: theme.fonts.body }}
       >
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-12 px-4 sm:px-6 lg:flex-row lg:gap-20 lg:px-8">

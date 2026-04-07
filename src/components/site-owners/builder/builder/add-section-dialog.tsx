@@ -416,6 +416,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/cta/cta4.png", // This image might not exist yet, but we'll use it as the convention
         description: "Modern aspect-ratio hero CTA with animations",
       },
+      {
+        id: "cta-5",
+        name: "CTA Style 5 (Firm Section)",
+        image: "/images/site-owners/cta/cta5.png",
+        description: "Large rounded image CTA with animated hover state",
+      },
     ],
     appointment: [
       {
@@ -649,6 +655,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Portfolio Details Style 3",
         image: "/images/site-owners/portfolio-details/portfolio-details-3.png",
       },
+      {
+        id: "portfolio-details-style-4",
+        name: "Portfolio Details Style 4 (Clean)",
+        image: "/images/site-owners/portfolio-details/portfolio-details-4.png",
+      },
     ],
     service_details: [
       {
@@ -756,6 +767,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "services-5",
         name: "Services Style 5 (Impact Hover)",
         image: "/images/site-owners/services/services-5.png",
+      },
+      {
+        id: "services-6",
+        name: "Services Style 6 (Animated Cards)",
+        image: "/images/site-owners/services/services-6.png",
       },
     ],
     contact: [
@@ -977,6 +993,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "portfolio-3",
         name: "Portfolio Style 3",
         image: "/images/site-owners/portfolio/portfolio3.png",
+      },
+      {
+        id: "portfolio-4",
+        name: "Portfolio Style 4 (Selected Works)",
+        image: "/images/site-owners/portfolio/portfolio4.png",
       },
     ],
     newsletter: [

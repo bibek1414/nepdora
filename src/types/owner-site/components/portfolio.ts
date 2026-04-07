@@ -3,6 +3,8 @@ export interface PortfolioData {
   style: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4";
   title: string;
   subtitle?: string;
+  buttonText?: string;
+  buttonLink?: string;
   order?: number;
 }
 
@@ -28,5 +30,10 @@ export const DEFAULT_PORTFOLIO_MAP: Record<
   "portfolio-1": { ...defaultPortfolioData, style: "portfolio-1" },
   "portfolio-2": { ...defaultPortfolioData, style: "portfolio-2" },
   "portfolio-3": { ...defaultPortfolioData, style: "portfolio-3" },
-  "portfolio-4": { ...defaultPortfolioData, style: "portfolio-4" },
+  "portfolio-4": {
+    ...defaultPortfolioData,
+    style: "portfolio-4",
+    buttonText: "Browse all portfolio",
+    buttonLink: "/portfolio",
+  },
 };

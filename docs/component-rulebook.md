@@ -133,10 +133,11 @@ These rules apply to every component, without exception.
 
 ### Hover & Motion
 
-- Hover states must be **subtle and professional**. No aggressive scaling or intense color changes.
+- **Hover states must be subtle and professional**. No aggressive scaling or intense color changes.
 - Standard transition: `transition-all duration-200` (150–200ms).
-- **No Group Hovers**: Avoid using `group` + `group-hover` to trigger multiple animations at once (e.g., scaling an image, moving an icon, and changing text color together). This feels "too busy".
-- **Single Component Hover**: Apply hover effects only to single elements (like the image alone or the entire card alone) for a cleaner, more controlled feel.
+- **STRICTLY PROHIBITED: `group` and `group-hover` Tailwind classes**: Do not use `group` + `group-hover` classes anywhere in the codebase for styling complex hover interactions.
+- **React State for Complex Hovers**: If a component requires multiple children to change simultaneously when the parent card/container is hovered (e.g., fading an image, scaling a card, and turning text white), you MUST manage this via React State (`const [isHovered, setIsHovered] = useState(false)`) with `onMouseEnter` and `onMouseLeave` handlers. This ensures a clean, controlled "single hover" state without CSS cascading side-effects.
+- **Use Simple Hover Only**: For simple elements that change themselves on hover, apply `hover:` utilities directly to the element.
 - Avoid bouncy or springy animations unless the product is playful by design.
 - **Interactive Cursors**: Every clickable or interactive element (buttons, cards with click handlers, links) MUST have `cursor-pointer`. This is non-negotiable for UX.
 
@@ -163,7 +164,8 @@ These rules apply to every component, without exception.
 - Check `link.target`: default to `_self`; only use `_blank` when the UX explicitly requires it — cite the decision in the `@beautifulMention` note.
 - Link containers stay within the `max-w-7xl` grid and share the same vertical rhythm as surrounding text.
 - When links act as buttons: use `theme.colors.primary` for background/border and `theme.colors.primaryForeground` for the label.
-- Button sizing: `padding: 10px 20px`, `font-weight: 500`, `border-radius: var(--radius-md)`. Never uppercase.
+- Keep link styling tight: `padding: 10px 20px`, `font-weight: 500`, `border-radius: var(--radius-md)`. Never uppercase.
+- **EditableLink Z-Index & Overflow Clipping**: Because `EditableLink` opens a floating popover for link configuration within the builder, **ALWAYS** wrap it in a container with a high z-index (e.g., `className="relative z-30"`). Additionally, ensure parent `<section>` wrappers do NOT use `overflow-hidden`, or else the link configuration interface will be clipped and inaccessible.
 - For `EditableLink` with inline icons (e.g., `<ArrowRight />`), embed the icon inside the link body as children:
   ```tsx
   <EditableLink text={data.buttonText} ...>
@@ -260,10 +262,11 @@ Before shipping, verify every item:
 - [ ] Border radius consistent — `rounded-lg` / `rounded-xl` used uniformly within a section
 - [ ] Shadows are subtle (`shadow-sm` or `shadow`) — never `shadow-xl` or `shadow-2xl`
 - [ ] Hover transitions are subtle — `duration-200`, no aggressive scaling
-- [ ] No complex `group-hover` animations across multiple children simultaneously
+- [ ] NO `group` or `group-hover` classes used at all. ALL complex card hover effects use React state (`isHovered`) instead.
 - [ ] Typography scale purposeful — max 5–6 distinct sizes
 - [ ] Mobile considered — layout stacks, type scales, touch targets accessible
 - [ ] `EditableText` never wrapped in a semantic tag — uses `as` prop instead
+- [ ] `EditableLink` wrapper has `relative z-30` and avoids `overflow-hidden` parents to prevent popup clipping
 - [ ] `EditableLink` buttons use `theme.colors.primary` / `primaryForeground`
 - [ ] `EditableImage` has sensible `alt` text
 - [ ] `useThemeQuery()` called at top; no hardcoded color/font values in JSX
@@ -292,7 +295,7 @@ Before shipping, verify every item:
 - ❌ Bright colored backgrounds stacked against each other
 - ❌ More than one competing hero CTA button
 - ❌ Emoji used as navigation icons or feature bullets
-- ❌ Complex `group-hover` chains (scale image + move icon + expand text simultaneously)
+- ❌ **ANY use of `group` or `group-hover` classes in Tailwind**. Always use React State (`isHovered`) for complex hovers instead.
 - ❌ Muted grey for primary data labels — use high-contrast text
 - ❌ `<h2><EditableText /></h2>` — wrap via `as` prop, never with a parent semantic tag
 - ❌ Hardcoded hex colors or font names in `className` — use Tailwind neutrals or `style` with theme tokens (e.g., `theme.colors.primary`).

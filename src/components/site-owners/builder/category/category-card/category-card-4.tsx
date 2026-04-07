@@ -57,7 +57,7 @@ export const CategoryCard4: React.FC<CategoryCard4Props> = ({
     description:
       "Explore our wide range of products and find exactly what you're looking for.",
     buttonText: "Shop now",
-    buttonHref: "/products",
+    buttonHref: "#",
     backgroundImages: [
       "https://images.pexels.com/photos/36710456/pexels-photo-36710456.png",
       "https://images.pexels.com/photos/36251125/pexels-photo-36251125.jpeg",

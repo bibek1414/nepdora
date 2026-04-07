@@ -6,7 +6,8 @@ export interface ServicesData {
     | "services-2"
     | "services-3"
     | "services-4"
-    | "services-5";
+    | "services-5"
+    | "services-6";
   title: string;
   subtitle?: string;
   order?: number;
@@ -50,5 +51,14 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
       trustBadge: "Trust",
       trustText:
         "Join the 850+ partners funding our essential child safety initiatives",
+    },
+    "services-6": {
+      ...defaultServicesData,
+      style: "services-6",
+      title: "From Vision to Reality",
+      subtitle:
+        "At Neptecture, we bring your ideas to life through innovative design, smart planning, and a commitment to quality and detail in every project.",
+      buttonText: "Browse all services",
+      buttonLink: "/services",
     },
   };

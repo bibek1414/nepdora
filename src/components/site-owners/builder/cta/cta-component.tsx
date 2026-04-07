@@ -18,11 +18,13 @@ import {
   isCTATemplate2,
   isCTATemplate3,
   isCTATemplate4,
+  isCTATemplate5,
 } from "@/types/owner-site/components/cta";
 import { CTATemplate1 } from "./cta-style-1";
 import { CTATemplate2 } from "./cta-style-2";
 import { CTATemplate3 } from "./cta-style-3";
 import { CTATemplate4 } from "./cta-style-4";
+import { CTATemplate5 } from "./cta-style-5";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -112,6 +114,10 @@ export const CTAComponent: React.FC<CTAComponentProps> = ({
 
     if (isCTATemplate4(component.data)) {
       return <CTATemplate4 ctaData={component.data} {...commonProps} />;
+    }
+
+    if (isCTATemplate5(component.data)) {
+      return <CTATemplate5 ctaData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates

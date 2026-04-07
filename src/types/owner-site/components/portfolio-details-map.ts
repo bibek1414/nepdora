@@ -16,4 +16,8 @@ export const DEFAULT_PORTFOLIO_DETAILS_MAP: Record<
     style: "style-3",
     showRelatedPortfolio: true,
   },
+  "portfolio-details-style-4": {
+    style: "style-4",
+    showRelatedPortfolio: true,
+  },
 };

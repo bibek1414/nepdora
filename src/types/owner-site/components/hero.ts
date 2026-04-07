@@ -479,7 +479,7 @@ export const defaultHeroTemplate12Data: HeroTemplate12Data = {
       description: "Experience console quality gaming on the go.",
       color: "from-navy-950/90",
       buttonText: "Shop Now",
-      buttonHref: "/collections",
+      buttonHref: "#",
     },
     {
       id: "2",
@@ -490,7 +490,7 @@ export const defaultHeroTemplate12Data: HeroTemplate12Data = {
       description: "Power through your workflow with M3 chips.",
       color: "from-blue-900/90",
       buttonText: "Shop Now",
-      buttonHref: "/collections",
+      buttonHref: "#",
     },
     {
       id: "3",
@@ -501,7 +501,7 @@ export const defaultHeroTemplate12Data: HeroTemplate12Data = {
       description: "Track your fitness goals with precision.",
       color: "from-emerald-900/90",
       buttonText: "Shop Now",
-      buttonHref: "/collections",
+      buttonHref: "#",
     },
   ],
   backgroundType: "color",
@@ -774,9 +774,9 @@ export interface HeroTemplate20Data {
 
 export const defaultHeroTemplate20Data: HeroTemplate20Data = {
   template: "hero-20",
-  title: "Crafting spaces with purpose and personality",
+  title: "Crafting Spaces with Purpose and Personality",
   description:
-    "Lorem ipsum dolor sit amet consectetur faucibus nunc habitasse aliquam vestibulum auctor fringilla risus.",
+    "At Neptecture, we transform ideas into inspiring spaces through innovative design, thoughtful planning, and a commitment to quality, detail, and timeless aesthetics.",
   primaryButtonText: "Get in touch",
   primaryButtonHref: "#",
   pills: [

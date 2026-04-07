@@ -65,12 +65,23 @@ export interface CTATemplate4Data {
   imageAlt?: string;
 }
 
+export interface CTATemplate5Data {
+  template: "cta-5";
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonHref: string;
+  imageUrl: string;
+  imageAlt?: string;
+}
+
 // Union type for all CTA templates
 export type CTAData =
   | CTATemplate1Data
   | CTATemplate2Data
   | CTATemplate3Data
-  | CTATemplate4Data;
+  | CTATemplate4Data
+  | CTATemplate5Data;
 
 // Component and API interfaces
 export interface CTAComponentData {
@@ -153,12 +164,25 @@ export const defaultCTATemplate4Data: CTATemplate4Data = {
   imageAlt: "Skincare texture background",
 };
 
+export const defaultCTATemplate5Data: CTATemplate5Data = {
+  template: "cta-5",
+  title: "Let’s Design Your Space",
+  description:
+    "Partner with Neptecture to create spaces that reflect your vision, enhance functionality, and stand the test of time.",
+  buttonText: "Start Your Project",
+  buttonHref: "#",
+  imageUrl:
+    "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a5b011779274c81245d83_inside-firm-archipro-webflow-template.jpg",
+  imageAlt: "Modern architectural workspace",
+};
+
 // Default data map for all CTA templates
 export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-1": defaultCTATemplate1Data,
   "cta-2": defaultCTATemplate2Data,
   "cta-3": defaultCTATemplate3Data,
   "cta-4": defaultCTATemplate4Data,
+  "cta-5": defaultCTATemplate5Data,
 };
 
 // Type guards for each template
@@ -173,3 +197,6 @@ export const isCTATemplate3 = (data: CTAData): data is CTATemplate3Data =>
 
 export const isCTATemplate4 = (data: CTAData): data is CTATemplate4Data =>
   data.template === "cta-4";
+
+export const isCTATemplate5 = (data: CTAData): data is CTATemplate5Data =>
+  data.template === "cta-5";
