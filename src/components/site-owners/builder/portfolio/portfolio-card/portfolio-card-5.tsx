@@ -28,8 +28,11 @@ export const PortfolioCard5: React.FC<PortfolioCard5Props> = ({
   isEditable = false,
   onPortfolioClick,
 }) => {
-  const plainDescription = stripHtml(portfolio.meta_description || portfolio.content || "");
-  const portfolioImage = portfolio.thumbnail_image || "/fallback/image-not-found.png";
+  const plainDescription = stripHtml(
+    portfolio.meta_description || portfolio.content || ""
+  );
+  const portfolioImage =
+    portfolio.thumbnail_image || "/fallback/image-not-found.png";
 
   return (
     <div
@@ -37,7 +40,7 @@ export const PortfolioCard5: React.FC<PortfolioCard5Props> = ({
       onClick={() => !isEditable && onPortfolioClick?.(portfolio.slug)}
     >
       <motion.div
-        className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+        className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
@@ -55,17 +58,17 @@ export const PortfolioCard5: React.FC<PortfolioCard5Props> = ({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          
+
           {/* Category Tag Overlay */}
           <div className="absolute top-4 left-4 z-20">
-            <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold tracking-wider text-gray-900 uppercase backdrop-blur-sm shadow-sm">
+            <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold tracking-wider text-gray-900 uppercase shadow-sm backdrop-blur-sm">
               {portfolio.category?.name || "Project"}
             </span>
           </div>
         </div>
-        
+
         <div className="p-6">
-          <h3 className="mb-2 text-xl font-bold text-gray-900 transition-colors group-hover:text-primary">
+          <h3 className="mb-2 text-xl font-bold text-gray-900 transition-colors">
             {portfolio.title}
           </h3>
           <p className="line-clamp-2 text-sm leading-relaxed text-gray-500">

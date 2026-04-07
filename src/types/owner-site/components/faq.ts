@@ -12,7 +12,8 @@ export interface FAQData {
     | "faq-8"
     | "faq-9"
     | "faq-10"
-    | "faq-11";
+    | "faq-11"
+    | "faq-12";
 
   title: string;
   subtitle?: string;
@@ -31,6 +32,7 @@ export interface FAQData {
   contactTitle?: string;
   contactDescription?: string;
   buttonText?: string;
+  buttonLink?: string;
 }
 
 export interface FAQComponentData {
@@ -63,6 +65,15 @@ export const defaultFAQData6: FAQData = {
   titleItalic: "The Most",
 };
 
+export const defaultFAQData12: FAQData = {
+  component_type: "faq",
+  style: "faq-12",
+  title: "You Ask, We Answer",
+  subtitle:
+    "Find clear answers to your questions about our architectural and interior design services, process, and how we bring your vision to life with precision and creativity.",
+  buttonText: "Get in Touch",
+};
+
 export const DEFAULT_FAQ_MAP: Record<FAQData["style"], FAQData> = {
   "faq-1": { ...defaultFAQData, style: "faq-1" },
   "faq-2": { ...defaultFAQData, style: "faq-2" },
@@ -75,4 +86,5 @@ export const DEFAULT_FAQ_MAP: Record<FAQData["style"], FAQData> = {
   "faq-9": { ...defaultFAQData, style: "faq-9" },
   "faq-10": { ...defaultFAQData, style: "faq-10" },
   "faq-11": { ...defaultFAQData11, style: "faq-11" },
+  "faq-12": { ...defaultFAQData12, style: "faq-12" },
 };

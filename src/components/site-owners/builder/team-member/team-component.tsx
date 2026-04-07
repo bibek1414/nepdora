@@ -24,6 +24,7 @@ import { TeamStyle3 } from "./team-member-style/team-style-3";
 import { TeamStyle4 } from "./team-member-style/team-style-4";
 import { TeamStyle5 } from "./team-member-style/team-style-5";
 import { TeamStyle6 } from "./team-member-style/team-style-6";
+import { TeamTemplate8 } from "./team-member-style/team-style-8";
 import { TeamStyle7 } from "./team-member-style/team-style-7";
 
 interface TeamComponentProps {

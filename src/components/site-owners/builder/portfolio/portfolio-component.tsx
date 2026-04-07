@@ -105,6 +105,8 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
         return <PortfolioStyle2 {...commonProps} />;
       case "portfolio-3":
         return <PortfolioStyle3 {...commonProps} />;
+      case "portfolio-5":
+        return <PortfolioStyle5 {...commonProps} />;
       case "portfolio-1":
       default:
         return <PortfolioStyle1 {...commonProps} />;

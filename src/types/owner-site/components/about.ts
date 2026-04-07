@@ -747,37 +747,41 @@ export interface AboutUs20Data {
 export const defaultAboutUs20Data: AboutUs20Data = {
   template: "about-20",
   badge: "OUR MISSION",
-  title: "We provide essential support to vulnerable communities",
+  title: "Designing spaces that inspire, perform, and stand the test of time",
+
   items: [
     {
       id: "1",
       number: "01",
-      title: "Providing wholesome food that fuels hope and spreads joy.",
+      title: "Thoughtful architectural design solutions",
       description:
-        "We work to ensure communities have access to nutritious meals, empowering them with the resources to thrive and create a brighter future.",
-      buttonText: "Discover more",
+        "We create architecture that goes beyond structure — blending innovation, functionality, and aesthetics to deliver spaces that are efficient, sustainable, and tailored to your vision.",
+      buttonText: "Explore more",
       buttonLink: "#",
-      image: "https://picsum.photos/seed/food/800/600",
+      image:
+        "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
     },
     {
       id: "2",
       number: "02",
-      title: "Bring joy and hope by sending a gift to children",
+      title: "Interior spaces that reflect your lifestyle",
       description:
-        "Through our gift-giving programs, we bring smiles to children, offering them not just toys but a sense of care and hope for a better tomorrow.",
-      buttonText: "Discover more",
+        "Our interior design approach focuses on creating spaces that feel personal and comfortable while maintaining a strong visual identity, smart layout, and premium finishing.",
+      buttonText: "View details",
       buttonLink: "#",
-      image: "https://picsum.photos/seed/gift/800/600",
+      image:
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
     },
     {
       id: "3",
       number: "03",
-      title: "Clean water for every community",
+      title: "Sustainable and future-ready environments",
       description:
-        "Access to clean water is a fundamental human right. We build sustainable water systems to ensure health and prosperity for all.",
-      buttonText: "Discover more",
+        "We integrate eco-friendly materials and modern design techniques to ensure every project is energy-efficient, environmentally responsible, and built for long-term value.",
+      buttonText: "Learn more",
       buttonLink: "#",
-      image: "https://picsum.photos/seed/water/800/600",
+      image:
+        "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
     },
   ],
 };
@@ -1022,3 +1026,4 @@ export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
 
 export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
   data.template === "about-21";
+

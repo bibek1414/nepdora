@@ -1005,6 +1005,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "FAQ Style 6 (Interactive Tabs)",
         image: "/images/site-owners/faq/faq-6.png", // Using placeholder pattern
       },
+      {
+        id: "faq-12",
+        name: "FAQ Style 12 (Premium Accordion)",
+        image: "/images/site-owners/faq/faq-12.png",
+        description: "Modern two-column FAQ with editorial typography and animated accordion",
+      },
     ],
     portfolio: [
       {

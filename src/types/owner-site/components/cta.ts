@@ -168,7 +168,7 @@ export const defaultCTATemplate5Data: CTATemplate5Data = {
   template: "cta-5",
   title: "Let’s Design Your Space",
   description:
-    "Partner with Neptecture to create spaces that reflect your vision, enhance functionality, and stand the test of time.",
+    "Partner with Nepdora to create spaces that reflect your vision, enhance functionality, and stand the test of time.",
   buttonText: "Start Your Project",
   buttonHref: "#",
   imageUrl:
