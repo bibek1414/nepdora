@@ -60,7 +60,7 @@ export const CTATemplate5: React.FC<CTATemplate5Props> = ({
 
   return (
     <section className="bg-white px-6 py-24 md:px-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl px-8">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ export const CTATemplate5: React.FC<CTATemplate5Props> = ({
               alt={data.imageAlt || "Inside the firm CTA"}
               onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
               onAltChange={handleAltUpdate("imageAlt")}
-              className={`h-full w-full object-cover transition-transform duration-1000 ${
+              className={`h-160 w-full object-cover transition-transform duration-1000 ${
                 isHovered ? "scale-105" : ""
               }`}
               width={1600}

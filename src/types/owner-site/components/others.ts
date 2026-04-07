@@ -154,7 +154,8 @@ export type OthersData =
   | OthersTemplate18Data
   | OthersTemplate19Data
   | OthersTemplate20Data
-  | OthersTemplate21Data;
+  | OthersTemplate21Data
+  | OthersTemplate22Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -317,6 +318,24 @@ export interface OthersTemplate21Data {
     url: string;
     alt: string;
   };
+}
+
+export interface OthersTemplate22Step {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+}
+
+export interface OthersTemplate22Data {
+  template: "others-22";
+  heading: string;
+  description: string;
+  steps: OthersTemplate22Step[];
 }
 
 // Component and API interfaces
@@ -1291,6 +1310,48 @@ export const defaultOthersTemplate21Data: OthersTemplate21Data = {
   },
 };
 
+export const defaultOthersTemplate22Data: OthersTemplate22Data = {
+  template: "others-22",
+  heading: "Check how our\nprocess is done",
+  description:
+    "Lorem ipsum dolor sit amet consectetur faucibus nunc habitasse aliquam vestibulum auctor fringilla risus consequat est semper.",
+  steps: [
+    {
+      id: "1",
+      number: "1",
+      title: "Let's talk",
+      description:
+        "Lorem ipsum dolor sit amet consectetur faucibus nunc habitasse aliquam vestibulum auctor fringilla risus consequat est semper.",
+      image: {
+        url: "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a71fb142f345fde59935c_lets-talk-archipro-webflow-template.png",
+        alt: "Let's talk",
+      },
+    },
+    {
+      id: "2",
+      number: "2",
+      title: "We start creating",
+      description:
+        "Lorem ipsum dolor sit amet consectetur faucibus nunc habitasse aliquam vestibulum auctor fringilla risus consequat est semper.",
+      image: {
+        url: "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a71fb40e5592f8f5f6e5b_we-start-creating-archipro-webflow-template.png",
+        alt: "We start creating",
+      },
+    },
+    {
+      id: "3",
+      number: "3",
+      title: "Time to build",
+      description:
+        "Lorem ipsum dolor sit amet consectetur faucibus nunc habitasse aliquam vestibulum auctor fringilla risus consequat est semper.",
+      image: {
+        url: "https://cdn.prod.website-files.com/6883a66d1ebb4685edc545ce/688a71fbd7f0943428664083_time-to-build-archipro-webflow-template.png",
+        alt: "Time to build",
+      },
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -1314,6 +1375,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-19": defaultOthersTemplate19Data,
   "others-20": defaultOthersTemplate20Data,
   "others-21": defaultOthersTemplate21Data,
+  "others-22": defaultOthersTemplate22Data,
 };
 
 // Type guards
@@ -1380,3 +1442,6 @@ export const isOthersTemplate20 = (
 export const isOthersTemplate21 = (
   data: OthersData
 ): data is OthersTemplate21Data => data.template === "others-21";
+export const isOthersTemplate22 = (
+  data: OthersData
+): data is OthersTemplate22Data => data.template === "others-22";

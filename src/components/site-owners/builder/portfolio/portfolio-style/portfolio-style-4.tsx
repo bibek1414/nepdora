@@ -2,16 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, ChevronRight } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { PortfolioData } from "@/types/owner-site/components/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { motion, AnimatePresence } from "framer-motion";
+import { PortfolioCard4 } from "../portfolio-card/portfolio-card-4";
 
 interface PortfolioStyleProps {
   data: PortfolioData;
@@ -95,7 +95,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
         - Images: Standard Next.js Image component handles dynamic data rendering.
         - Hovers: React State (activeProjectId) controls which project focuses and expands avoiding group-hover dependencies.
       */}
-      <div className={`mx-auto max-w-7xl ${theme?.fonts?.heading || ""}`}>
+      <div className={`mx-auto max-w-7xl px-8 ${theme?.fonts?.heading || ""}`}>
         <div className="mx-auto mb-20 max-w-3xl text-center">
           <EditableText
             value={title}
@@ -150,7 +150,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
             {/* Left: Image Display */}
             <div className="sticky top-24 space-y-8">
               <div
-                className="relative aspect-4/3 cursor-pointer overflow-hidden rounded-[2.5rem] bg-gray-100 shadow-sm"
+                className="relative aspect-4/3 cursor-pointer overflow-hidden rounded-[2.5rem] bg-gray-100"
                 onClick={() =>
                   onPortfolioClick &&
                   activeProject &&
@@ -178,9 +178,12 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-gray-200">
-                        <span className="font-medium text-gray-400">
-                          No Image
-                        </span>
+                        <Image
+                          src="/fallback/image-not-found.png"
+                          alt="No Image"
+                          fill
+                          className="object-cover"
+                        />
                       </div>
                     )}
                   </motion.div>
@@ -207,7 +210,10 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                       backgroundColor: theme.colors.primary,
                       color: theme.colors.primaryForeground,
                     }}
-                  />
+                  >
+                    {buttonText}
+                    <ChevronRight className="h-5 w-5" />
+                  </EditableLink>
                 </div>
 
                 <div className="flex gap-4">
@@ -219,7 +225,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                         onClick={() => setActiveProjectId(p.id)}
                         className={`relative h-16 w-16 cursor-pointer overflow-hidden rounded-xl border-2 transition-all ${
                           activeProjectId === p.id
-                            ? "opacity-100 ring-2 ring-offset-2"
+                            ? ""
                             : "border-transparent opacity-60 hover:opacity-100"
                         }`}
                         style={
@@ -249,8 +255,11 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                 const isActive = activeProjectId === project.id;
 
                 return (
-                  <div
+                  <PortfolioCard4
                     key={project.id}
+                    portfolio={project}
+                    isActive={isActive}
+                    theme={theme}
                     onMouseEnter={() => setActiveProjectId(project.id)}
                     onClick={() => {
                       setActiveProjectId(project.id);
@@ -258,62 +267,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                         onPortfolioClick(project.slug);
                       }
                     }}
-                    className={`cursor-pointer rounded-xl border p-6 transition-opacity duration-300 md:p-8 ${
-                      isActive
-                        ? "border-gray-200 bg-white shadow-sm"
-                        : "border-transparent bg-transparent opacity-50 hover:bg-gray-50 hover:opacity-100"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <h3
-                        className="max-w-[85%] text-2xl leading-tight font-medium text-gray-950 transition-colors md:text-3xl"
-                        style={{ fontFamily: theme?.fonts?.heading }}
-                      >
-                        {project.title}
-                      </h3>
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors`}
-                        style={
-                          isActive
-                            ? {
-                                backgroundColor: theme.colors.primary,
-                                color: theme.colors.primaryForeground,
-                              }
-                            : {
-                                backgroundColor: "transparent",
-                                color: "black",
-                                border: "1px solid #e5e7eb",
-                              }
-                        }
-                      >
-                        <Plus
-                          className={`h-5 w-5 transition-transform duration-300 ${isActive ? "rotate-45" : "rotate-0"}`}
-                        />
-                      </div>
-                    </div>
-
-                    <AnimatePresence>
-                      {isActive && project.meta_description && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0, marginTop: 0 }}
-                          animate={{
-                            height: "auto",
-                            opacity: 1,
-                            marginTop: "1rem",
-                          }}
-                          exit={{ height: 0, opacity: 0, marginTop: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <p
-                            className="line-clamp-3 text-lg leading-relaxed text-gray-600"
-                            style={{ fontFamily: theme?.fonts?.body }}
-                          >
-                            {project.meta_description}
-                          </p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                  />
                 );
               })}
             </div>

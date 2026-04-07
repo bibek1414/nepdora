@@ -345,6 +345,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Others Style 21 (Future Care)",
         image: "/images/site-owners/others/others21.png",
       },
+      {
+        id: "others-22",
+        name: "Others Style 22 (Premium Process)",
+        image: "/images/site-owners/placeholder.png",
+      },
     ],
     experience: [
       {
