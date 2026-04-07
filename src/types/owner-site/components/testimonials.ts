@@ -53,7 +53,10 @@ export const DEFAULT_TESTIMONIALS_MAP: Record<
   "testimonial-8": {
     ...defaultTestimonialsData,
     style: "testimonial-8",
-    buttonText: "Get a free consultation",
+    title: "A global reputation for client satisfaction",
+    subtitle:
+      "They understood our vision perfectly and delivered a design beyond our expectations — efficient, elegant, and inspiring.",
+    buttonText: "Get in touch",
     buttonLink: "#",
   },
 };

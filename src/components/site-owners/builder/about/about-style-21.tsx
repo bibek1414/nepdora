@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Leaf, HelpCircle } from "lucide-react";
+import { ChevronRight, ShieldCheck, Leaf, HelpCircle } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { AboutUs21Data } from "@/types/owner-site/components/about";
 import { EditableText } from "@/components/ui/editable-text";
@@ -22,7 +22,7 @@ interface AboutUsTemplate21Props {
 const iconMap: Record<string, any> = {
   ShieldCheck,
   Leaf,
-  ArrowRight,
+  ChevronRight,
 };
 
 export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
@@ -186,7 +186,7 @@ export const AboutUsTemplate21: React.FC<AboutUsTemplate21Props> = ({
                   >
                     <span className="flex items-center gap-2">
                       {feature.buttonText}
-                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      <ChevronRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </Button>
                 </EditableLink>

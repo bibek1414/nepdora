@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeDialog } from "@/components/site-owners/builder/theme/theme-dialog";
 import {
-  ArrowLeft,
+  ChevronLeft,
   Palette,
   RotateCcw,
   Upload,
@@ -47,7 +47,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               size="sm"
               className="rounded-full bg-[#E8EDF2] text-xs text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ChevronLeft className="mr-2 h-4 w-4" />
               Dashboard
             </Button>
           </Link>

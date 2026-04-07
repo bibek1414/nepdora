@@ -166,11 +166,11 @@ These rules apply to every component, without exception.
 - When links act as buttons: use `theme.colors.primary` for background/border and `theme.colors.primaryForeground` for the label.
 - Keep link styling tight: `padding: 10px 20px`, `font-weight: 500`, `border-radius: var(--radius-md)`. Never uppercase.
 - **EditableLink Z-Index & Overflow Clipping**: Because `EditableLink` opens a floating popover for link configuration within the builder, **ALWAYS** wrap it in a container with a high z-index (e.g., `className="relative z-30"`). Additionally, ensure parent `<section>` wrappers do NOT use `overflow-hidden`, or else the link configuration interface will be clipped and inaccessible.
-- For `EditableLink` with inline icons (e.g., `<ArrowRight />`), embed the icon inside the link body as children:
+- For `EditableLink` with inline icons (e.g., `<ChevronRight />`), embed the icon inside the link body as children:
   ```tsx
   <EditableLink text={data.buttonText} ...>
     {data.buttonText}
-    <ArrowRight className="ml-2 w-4 h-4" />
+    <ChevronRight className="ml-2 w-4 h-4" />
   </EditableLink>
   ```
 
@@ -233,6 +233,7 @@ These rules apply to every component, without exception.
 
 - **Standardization**: Use **Lucide React** icons exclusively.
 - **No Custom SVGs**: Never use inline `<svg>` blocks for standard UI elements (arrows, mail icons, close buttons, badges, etc.). This ensures uniform stroke weights and styles.
+- **Chevron Preference**: Always use `ChevronRight` and `ChevronLeft` for directional navigation and CTA indicators instead of `ArrowRight` or `ArrowLeft`. This provides a more refined, modern aesthetic.
 - Sizes: `16px` inline, `20px` UI, `24px` feature icons.
 - Never use emoji as UI icons.
 
