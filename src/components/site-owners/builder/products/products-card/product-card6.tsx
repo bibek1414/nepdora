@@ -16,6 +16,7 @@ import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 interface ProductCard6Props {
   product: Product;
@@ -99,7 +100,9 @@ export const ProductCard6 = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.4 }}
-      className="group cursor-pointer"
+      className={cn(
+        isEditable ? "cursor-default" : "cursor-pointer"
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -187,7 +190,12 @@ export const ProductCard6 = ({
             ) : null}
           </div>
           <Link href={isEditable ? "#" : productUrl}>
-            <h3 className="text-foreground group-hover:text-muted-foreground line-clamp-2 text-sm leading-snug font-medium transition-colors">
+            <h3
+              className={cn(
+                "text-foreground line-clamp-2 text-sm leading-snug font-medium transition-colors",
+                isHovered && !isEditable ? "text-muted-foreground" : ""
+              )}
+            >
               {product.name}
             </h3>
           </Link>

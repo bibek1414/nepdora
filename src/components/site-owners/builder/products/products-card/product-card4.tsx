@@ -17,12 +17,14 @@ import { Button as SOButton } from "@/components/ui/site-owners/button";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 interface ProductCard4Props {
   product: Product;
   siteUser?: string;
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
+  isEditable?: boolean;
 }
 
 export const ProductCard4: React.FC<ProductCard4Props> = ({
@@ -30,7 +32,9 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
   siteUser,
   onClick,
   onWishlistToggle,
+  isEditable = false,
 }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
   const pathname = usePathname();
   const { addToCart } = useCart();
   const { data: wishlistItems } = useWishlist();
@@ -161,9 +165,19 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
           return;
         window.location.href = detailsUrl;
       }}
-      className="block cursor-pointer"
+      className={cn(
+        "block",
+        isEditable ? "cursor-default" : "cursor-pointer"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <Card className="group relative overflow-hidden border border-gray-200 bg-white py-0 transition-all duration-300 hover:-translate-y-1">
+      <Card
+        className={cn(
+          "relative overflow-hidden border border-gray-200 bg-white py-0 transition-all duration-300",
+          isHovered && !isEditable ? "-translate-y-1 shadow-md" : ""
+        )}
+      >
         <CardContent className="p-0">
           {/* Image Section */}
           <div className="relative overflow-hidden">
@@ -172,7 +186,10 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className={cn(
+                  "object-cover transition-transform duration-500",
+                  isHovered && !isEditable ? "scale-105" : ""
+                )}
                 onError={e => {
                   e.currentTarget.src = "/fallback/image-not-found.png";
                 }}
@@ -202,7 +219,12 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
             )}
 
             {/* Quick Actions Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
+            <div
+              className={cn(
+                "absolute inset-0 flex items-center justify-center gap-2 transition-all duration-300",
+                isHovered && !isEditable ? "opacity-100" : "opacity-0"
+              )}
+            >
               <Button
                 size="sm"
                 variant="secondary"

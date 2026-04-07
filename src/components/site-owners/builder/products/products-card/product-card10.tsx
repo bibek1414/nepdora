@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { cn } from "@/lib/utils";
 
 interface ProductCard10Props {
   product: Product;
@@ -30,6 +31,7 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
   onWishlistToggle,
   isEditable = false,
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const pathname = usePathname();
   const { addToCart } = useCart();
   const { data: wishlist } = useWishlist();
@@ -145,7 +147,13 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
   return (
     <div
       onClick={handleClickWrapper}
-      className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:border-gray-200"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={cn(
+        "relative flex h-full flex-col overflow-hidden rounded-2xl border bg-white transition-all duration-300",
+        isEditable ? "cursor-default" : "cursor-pointer",
+        isHovered && !isEditable ? "border-gray-200" : "border-gray-100"
+      )}
     >
       {/* Badges container */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
@@ -162,7 +170,14 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
       </div>
 
       {/* Quick Actions */}
-      <div className="absolute top-3 right-3 z-20 flex translate-x-12 flex-col gap-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+      <div
+        className={cn(
+          "absolute top-3 right-3 z-20 flex flex-col gap-2 transition-all duration-300",
+          isHovered && !isEditable
+            ? "translate-x-0 opacity-100"
+            : "translate-x-12 opacity-0"
+        )}
+      >
         <button
           onClick={handleWishlist}
           data-wishlist="true"
@@ -181,7 +196,10 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
             src={image}
             alt={title}
             fill
-            className="transform object-contain mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-105"
+            className={cn(
+              "transform object-contain mix-blend-multiply transition-transform duration-500 ease-out",
+              isHovered && !isEditable ? "scale-105" : ""
+            )}
           />
         </div>
       </div>
@@ -194,7 +212,10 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
 
         <div className="mb-2 block">
           <h3
-            className="line-clamp-2 h-10 text-sm leading-snug font-medium text-gray-900 transition-colors group-hover:opacity-80"
+            className={cn(
+              "line-clamp-2 h-10 text-sm leading-snug font-medium text-gray-900 transition-colors",
+              isHovered && !isEditable ? "opacity-80" : ""
+            )}
             title={title}
           >
             {title}

@@ -7,17 +7,20 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface ProductCard11Props {
   product: Product;
   siteUser?: string;
   onClick?: () => void;
+  isEditable?: boolean;
 }
 
 export const ProductCard11: React.FC<ProductCard11Props> = ({
   product,
   siteUser,
   onClick,
+  isEditable = false,
 }) => {
   const [isAdded, setIsAdded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -75,21 +78,37 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
   };
 
   return (
-    <div className="group flex cursor-pointer flex-col" onClick={handleClick}>
+    <div
+      className={cn(
+        "flex flex-col",
+        isEditable ? "cursor-default" : "cursor-pointer"
+      )}
+      onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {/* Image Container */}
-      <div className="relative mb-5 aspect-[4/3] w-full overflow-hidden rounded-[1.25rem]">
+      <div className="relative mb-5 aspect-4/3 w-full overflow-hidden rounded-[1.25rem]">
         <div className="relative h-full w-full">
           <Image
             src={productImage}
             alt={product.thumbnail_alt_description || product.name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className={cn(
+              "object-cover transition-transform duration-500",
+              isHovered && !isEditable ? "scale-105" : ""
+            )}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
 
         {/* Add to Cart Floating Button */}
-        <div className="absolute right-3 bottom-11 z-20 translate-y-0 cursor-pointer opacity-100 sm:translate-y-2 sm:opacity-0 sm:transition-all sm:duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
+        <div
+          className={cn(
+            "absolute right-3 bottom-11 z-20 translate-y-0 cursor-pointer opacity-100 sm:translate-y-2 sm:opacity-0 sm:transition-all sm:duration-300",
+            isHovered && !isEditable ? "sm:translate-y-0 sm:opacity-100" : ""
+          )}
+        >
           <button
             onClick={handleAddToCart}
             onMouseEnter={() => setIsHovered(true)}

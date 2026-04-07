@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface ProductCard7Props {
   products?: Product[];
@@ -175,70 +176,101 @@ export const ProductCard7: React.FC<ProductCard7Props> = ({
               scrollbarWidth: "none",
             }}
           >
-            {infiniteProducts.map((product, index) => {
-              const productImage =
-                product.thumbnail_image || "/fallback/image-not-found.png";
-              const price = parseFloat(product.price || "0");
-              const marketPrice = product.market_price
-                ? parseFloat(product.market_price)
-                : null;
-              const discountPercentage =
-                marketPrice && marketPrice > price
-                  ? Math.round(((marketPrice - price) / marketPrice) * 100)
-                  : 0;
-
-              return (
-                <Link
-                  href={getDetailsUrl(product)}
-                  key={`${product.id}-${index}`}
-                  className="w-64 shrink-0 sm:w-72"
-                >
-                  <div className="group flex h-full cursor-pointer flex-col">
-                    {/* Image Container */}
-                    <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg bg-neutral-50">
-                      {discountPercentage > 0 && (
-                        <div className="absolute top-2 right-2 z-20 rounded-md bg-red-600 px-2 py-1 text-xs font-bold text-white">
-                          {discountPercentage}% OFF
-                        </div>
-                      )}
-                      <Image
-                        src={productImage}
-                        alt={product.thumbnail_alt_description || product.name}
-                        fill
-                        className="object-contain p-4 transition-opacity group-hover:opacity-90"
-                      />
-                    </div>
-
-                    {/* Product Name & Price */}
-                    <div className="flex flex-col items-center p-2">
-                      <h3
-                        className="mb-1 text-center font-medium text-gray-900"
-                        style={{ fontFamily: theme.fonts.heading }}
-                      >
-                        {product.name}
-                      </h3>
-                      <div className="flex flex-col items-center gap-1">
-                        <span
-                          className="text-lg font-bold"
-                          style={{ color: theme.colors.primary }}
-                        >
-                          Rs.{Number(price).toLocaleString("en-IN")}
-                        </span>
-                        {marketPrice && marketPrice > price && (
-                          <span className="text-sm text-gray-400 line-through">
-                            Rs.{Number(marketPrice).toLocaleString("en-IN")}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+            {infiniteProducts.map((product, index) => (
+              <ProductItem
+                key={`${product.id}-${index}`}
+                product={product}
+                siteUser={siteUser}
+                isEditable={isEditable}
+                theme={theme}
+                getDetailsUrl={getDetailsUrl}
+              />
+            ))}
           </div>
         </div>
       </div>
     </div>
+  );
+};
+
+const ProductItem = ({
+  product,
+  siteUser,
+  isEditable,
+  theme,
+  getDetailsUrl,
+}: {
+  product: Product;
+  siteUser?: string;
+  isEditable: boolean;
+  theme: any;
+  getDetailsUrl: (product: Product) => string;
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const productImage =
+    product.thumbnail_image || "/fallback/image-not-found.png";
+  const price = parseFloat(product.price || "0");
+  const marketPrice = product.market_price
+    ? parseFloat(product.market_price)
+    : null;
+  const discountPercentage =
+    marketPrice && marketPrice > price
+      ? Math.round(((marketPrice - price) / marketPrice) * 100)
+      : 0;
+
+  return (
+    <Link
+      href={isEditable ? "#" : getDetailsUrl(product)}
+      className={cn(
+        "w-64 shrink-0 sm:w-72",
+        isEditable ? "cursor-default" : "cursor-pointer"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="flex h-full flex-col">
+        {/* Image Container */}
+        <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg bg-neutral-50">
+          {discountPercentage > 0 && (
+            <div className="absolute top-2 right-2 z-20 rounded-md bg-red-600 px-2 py-1 text-xs font-bold text-white">
+              {discountPercentage}% OFF
+            </div>
+          )}
+          <Image
+            src={productImage}
+            alt={product.thumbnail_alt_description || product.name}
+            fill
+            className={cn(
+              "object-contain p-4 transition-opacity",
+              isHovered && !isEditable ? "opacity-90" : "opacity-100"
+            )}
+          />
+        </div>
+
+        {/* Product Name & Price */}
+        <div className="flex flex-col items-center p-2">
+          <h3
+            className="mb-1 text-center font-medium text-gray-900"
+            style={{ fontFamily: theme.fonts.heading }}
+          >
+            {product.name}
+          </h3>
+          <div className="flex flex-col items-center gap-1">
+            <span
+              className="text-lg font-bold"
+              style={{ color: theme.colors.primary }}
+            >
+              Rs.{Number(price).toLocaleString("en-IN")}
+            </span>
+            {marketPrice && marketPrice > price && (
+              <span className="text-sm text-gray-400 line-through">
+                Rs.{Number(marketPrice).toLocaleString("en-IN")}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
 

@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { cn } from "@/lib/utils";
 
 interface ProductCard9Props {
   product: Product;
@@ -25,6 +26,7 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
   onClick,
   isEditable = false,
 }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
   const pathname = usePathname();
   const { addToCart } = useCart();
   const { data: themeResponse } = useThemeQuery();
@@ -102,7 +104,9 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
             handleClick();
           }
         }}
-        className="cursor-pointer"
+        className={cn(isEditable ? "cursor-default" : "cursor-pointer")}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {children}
       </div>
@@ -111,14 +115,17 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
 
   return (
     <CardWrapper>
-      <Card className="group overflow-hidden border-0 bg-transparent shadow-none">
+      <Card className="overflow-hidden border-0 bg-transparent shadow-none">
         <CardContent className="p-0">
           <div className="relative mb-4 aspect-square overflow-hidden rounded-2xl bg-[#F6F6F6]">
             <Image
               src={productImage}
               alt={product.thumbnail_alt_description || product.name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className={cn(
+                "object-cover transition-transform duration-500",
+                isHovered && !isEditable ? "scale-105" : ""
+              )}
             />
             {product.stock === 0 && (
               <div className="absolute top-3 left-3 flex flex-col gap-2">
