@@ -61,9 +61,9 @@ export const DEFAULT_TEAM_MAP: Record<TeamData["style"], TeamData> = {
   "team-8": {
     ...defaultTeamData,
     style: "team-8",
-    title: "Our creative minds",
+    title: "Our Creative Minds",
     subtitle: "Our Team",
     title_description:
-      "Lorem ipsum dolor sit amet consectetur faucibus nunc habitasse aliquam vestibulum auctor fringilla risus consequat est semper.",
+      "Meet the talented architects and designers behind Neptecture, dedicated to creating innovative, functional, and visually inspiring spaces with precision and passion.",
   },
 };

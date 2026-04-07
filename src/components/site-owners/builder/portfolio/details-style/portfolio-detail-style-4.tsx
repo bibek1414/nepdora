@@ -3,19 +3,32 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Clock, Tag } from "lucide-react";
+import { ArrowLeft, Clock, Tag, Home } from "lucide-react";
 import { usePortfolio } from "@/hooks/owner-site/admin/use-portfolio";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { usePathname } from "next/navigation";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 interface PortfolioDetailProps {
   slug: string;
   siteUser: string;
 }
 
-export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({ slug }) => {
+export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
+  slug,
+  siteUser,
+}) => {
+  const pathname = usePathname();
   const { data: portfolio, isLoading, error } = usePortfolio(slug as string);
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -75,11 +88,40 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({ slug }) => {
     <article className="min-h-screen bg-[#fdfcf9] pb-24">
       <div className="mx-auto max-w-7xl px-6 pt-12 md:pt-24 lg:px-8">
         {/* Navigation / Breadcrumb */}
+        <div className="mb-10 flex justify-start">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link
+                    href={
+                      siteUser
+                        ? pathname?.includes("/preview/")
+                          ? `/preview/${siteUser}`
+                          : `/`
+                        : "/"
+                    }
+                    className="flex items-center gap-2 font-medium text-black transition-colors"
+                  >
+                    <Home className="h-4 w-4" />
+                    Home
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-foreground max-w-[150px] truncate font-semibold sm:max-w-[250px]">
+                  {portfolio.title}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
 
         {/* Header */}
         <header className="mb-16 max-w-4xl">
           <h1
-            className="mb-6 text-4xl leading-tight font-bold tracking-tight text-gray-950 md:text-6xl lg:text-7xl"
+            className="l mb-6 text-4xl font-bold text-gray-950 md:text-6xl lg:text-5xl"
             style={{ fontFamily: theme?.fonts?.heading }}
           >
             {portfolio.title}

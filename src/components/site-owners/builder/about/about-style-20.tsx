@@ -164,7 +164,7 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
                   </div>
 
                   {/* Image Content */}
-                  <div className="relative min-h-[350px] flex-1 p-6 md:p-8 lg:p-10 mt-24">
+                  <div className="relative mt-24 min-h-[350px] flex-1 p-6 md:p-8 lg:p-10">
                     <div className="-hidden relative h-full w-full rounded-[30px]">
                       <EditableImage
                         src={item.image}

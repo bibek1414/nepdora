@@ -44,7 +44,7 @@ const PricingHeroContent: React.FC<PricingHeroContentProps> = ({
   const sortedPlans = plans ? sortPlans(plans) : [];
 
   return (
-    <section className="min-h-screen bg-white px-4 py-16 transition-colors font-sans">
+    <section className="min-h-screen bg-white px-4 py-16 font-sans transition-colors">
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 text-center">
           <PricingHeaderAnimation>

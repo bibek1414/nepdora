@@ -37,8 +37,7 @@ export const BlogFeaturedCard6: React.FC<BlogFeaturedCard6Props> = ({
     }
   };
 
-  const blogImage =
-    blog.thumbnail_image || "/fallback/image-not-found.png";
+  const blogImage = blog.thumbnail_image || "/fallback/image-not-found.png";
 
   return (
     <motion.div

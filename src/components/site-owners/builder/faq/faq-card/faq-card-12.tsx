@@ -31,7 +31,9 @@ export const FAQCard12: React.FC<FAQCard12Props> = ({
   onSubtitleChange,
   onButtonUpdate,
 }) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(faqs.length > 0 ? faqs[0].id : null);
+  const [openIndex, setOpenIndex] = useState<number | null>(
+    faqs.length > 0 ? faqs[0].id : null
+  );
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -46,8 +48,8 @@ export const FAQCard12: React.FC<FAQCard12Props> = ({
   };
 
   return (
-    <section className=" px-6 py-32">
-      <div className="mx-auto max-w-7xl">
+    <section className="px-6 py-32">
+      <div className="mx-auto max-w-7xl px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           {/* Left Column */}
           <div className="lg:col-span-5">
@@ -62,7 +64,7 @@ export const FAQCard12: React.FC<FAQCard12Props> = ({
                 value={title}
                 onChange={onTitleChange || (() => {})}
                 isEditable={isEditable}
-                className="mb-8 text-5xl font-medium leading-tight tracking-tight md:text-7xl"
+                className="mb-8 text-5xl leading-tight font-medium tracking-tight md:text-7xl"
                 style={{ fontFamily: theme.fonts.heading }}
                 placeholder="You ask, \n we answer"
               />
@@ -75,7 +77,7 @@ export const FAQCard12: React.FC<FAQCard12Props> = ({
                 placeholder="Enter description..."
                 multiline={true}
               />
-              
+
               <div className="relative z-30 inline-block">
                 <EditableLink
                   text={buttonText}
@@ -107,7 +109,7 @@ export const FAQCard12: React.FC<FAQCard12Props> = ({
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   className={`overflow-hidden rounded-4xl border border-black/5 transition-all ${
-                    isOpen ? "bg-white shadow-md" : "bg-black/5 hover:bg-black/10"
+                    isOpen ? "-md bg-white" : "bg-black/5 hover:bg-black/10"
                   }`}
                 >
                   <button
@@ -122,10 +124,16 @@ export const FAQCard12: React.FC<FAQCard12Props> = ({
                         isOpen ? "text-white" : "bg-white text-black"
                       }`}
                       style={{
-                        backgroundColor: isOpen ? theme.colors.primary : undefined,
+                        backgroundColor: isOpen
+                          ? theme.colors.primary
+                          : undefined,
                       }}
                     >
-                      {isOpen ? <Minus className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+                      {isOpen ? (
+                        <Minus className="h-5 w-5" />
+                      ) : (
+                        <Plus className="h-5 w-5" />
+                      )}
                     </div>
                   </button>
                   <AnimatePresence>

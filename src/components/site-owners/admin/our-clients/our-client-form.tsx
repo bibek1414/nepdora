@@ -100,7 +100,7 @@ export function OurClientForm({
     } catch (error: any) {
       console.error("Failed to save client:", error);
       if (error?.fieldErrors) {
-        Object.keys(error.fieldErrors).forEach((key) => {
+        Object.keys(error.fieldErrors).forEach(key => {
           form.setError(key as any, {
             type: "server",
             message: error.fieldErrors[key].join(", "),

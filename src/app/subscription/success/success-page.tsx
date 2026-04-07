@@ -344,7 +344,9 @@ export default function SuccessPage() {
                       <span className="text-base font-semibold text-zinc-900">
                         Rs.{" "}
                         {Number(
-                          verificationData.total_amount?.toString().replace(/,/g, "")
+                          verificationData.total_amount
+                            ?.toString()
+                            .replace(/,/g, "")
                         ).toLocaleString("en-IN", {
                           minimumFractionDigits: 2,
                         })}

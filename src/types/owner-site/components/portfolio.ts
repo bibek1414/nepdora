@@ -1,6 +1,11 @@
 export interface PortfolioData {
   component_id?: string;
-  style: "portfolio-1" | "portfolio-2" | "portfolio-3" | "portfolio-4" | "portfolio-5";
+  style:
+    | "portfolio-1"
+    | "portfolio-2"
+    | "portfolio-3"
+    | "portfolio-4"
+    | "portfolio-5";
   title: string;
   subtitle?: string;
   buttonText?: string;

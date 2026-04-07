@@ -91,7 +91,10 @@ const ServicesTable: React.FC<ServicesTableProps> = ({
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 overflow-hidden rounded-md border border-black/5">
                     <img
-                      src={service.thumbnail_image || "/fallback/image-not-found.png"}
+                      src={
+                        service.thumbnail_image ||
+                        "/fallback/image-not-found.png"
+                      }
                       alt={service.title}
                       className="h-full w-full object-cover"
                     />

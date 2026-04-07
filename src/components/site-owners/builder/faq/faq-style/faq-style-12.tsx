@@ -43,7 +43,7 @@ export const FAQStyle12: React.FC<FAQStyleProps> = ({
     <div className="w-full">
       {isLoading && (
         <section className="px-6 py-32">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-7xl px-8">
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
               <div className="lg:col-span-5">
                 <Skeleton className="mb-4 h-16 w-3/4 rounded-xl" />

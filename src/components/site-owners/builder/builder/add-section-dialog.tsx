@@ -970,13 +970,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "blog-6",
         name: "Blog Style 6 (Premium Editorial)",
         image: "/images/site-owners/blogs/blog6.png",
-        description: "Featured article with a horizontal list of secondary posts",
+        description:
+          "Featured article with a horizontal list of secondary posts",
       },
       {
         id: "blog-7",
         name: "Blog Style 7 (Paginated Grid)",
         image: "/images/site-owners/blogs/blog7.png",
-        description: "Standard paginated grid with 3 columns and clean article cards",
+        description:
+          "Standard paginated grid with 3 columns and clean article cards",
       },
     ],
     faq: [
@@ -1014,7 +1016,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "faq-12",
         name: "FAQ Style 12 (Premium Accordion)",
         image: "/images/site-owners/faq/faq-12.png",
-        description: "Modern two-column FAQ with editorial typography and animated accordion",
+        description:
+          "Modern two-column FAQ with editorial typography and animated accordion",
       },
     ],
     portfolio: [

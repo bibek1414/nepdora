@@ -37,25 +37,22 @@ export function TeamStyle8({
     },
   };
 
-  const { data, handleTextUpdate } = useBuilderLogic(
-    teamData,
-    onUpdate
-  );
+  const { data, handleTextUpdate } = useBuilderLogic(teamData, onUpdate);
 
   const { data: members = [], isLoading, error } = useTeamMembers();
   const [selectedMember, setSelectedMember] = useState<TEAM | null>(null);
 
   return (
-    <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
+    <section className="bg-white px-4 py-20 sm:px-6 md:py-32 lg:px-8">
+      <div className="mx-auto max-w-7xl px-8">
+        <div className="mb-20 flex flex-col items-end justify-between gap-8 lg:flex-row">
           <div className="max-w-xl">
             <EditableText
               as="h2"
               value={data.title}
               onChange={handleTextUpdate("title")}
               isEditable={isEditable}
-              className="text-5xl md:text-7xl font-medium tracking-tight mb-6 text-gray-950"
+              className="mb-6 text-5xl font-medium tracking-tight text-gray-950 md:text-7xl"
               style={{ fontFamily: theme.fonts.heading }}
             />
           </div>
@@ -65,14 +62,14 @@ export function TeamStyle8({
               value={data.title_description || ""}
               onChange={handleTextUpdate("title_description")}
               isEditable={isEditable}
-              className="text-lg text-gray-600 leading-relaxed"
+              className="text-lg leading-relaxed text-gray-600"
               style={{ fontFamily: theme.fonts.body }}
             />
           </div>
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="aspect-3/4 rounded-3xl" />
             ))}
@@ -84,13 +81,15 @@ export function TeamStyle8({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading Team</AlertTitle>
             <AlertDescription>
-              {error instanceof Error ? error.message : "Failed to load team members."}
+              {error instanceof Error
+                ? error.message
+                : "Failed to load team members."}
             </AlertDescription>
           </Alert>
         )}
 
         {!isLoading && !error && members.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {members.map((member, index) => (
               <TeamCard8
                 key={member.id}
@@ -106,9 +105,13 @@ export function TeamStyle8({
 
         {!isLoading && !error && members.length === 0 && (
           <div className="py-20 text-center">
-            <Users className="text-gray-300 mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-gray-900 mb-4 text-2xl font-semibold">No Team Members</h3>
-            <p className="text-gray-500">Add team members in the admin panel to see them here.</p>
+            <Users className="mx-auto mb-6 h-20 w-20 text-gray-300" />
+            <h3 className="mb-4 text-2xl font-semibold text-gray-900">
+              No Team Members
+            </h3>
+            <p className="text-gray-500">
+              Add team members in the admin panel to see them here.
+            </p>
           </div>
         )}
 
@@ -120,22 +123,22 @@ export function TeamStyle8({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedMember(null)}
-                className="absolute inset-0 bg-black/40 backdrop-blur-sm cursor-pointer"
+                className="absolute inset-0 cursor-pointer bg-black/40 backdrop-blur-sm"
               />
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="relative bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row aspect-3/4 md:aspect-auto"
+                className="relative flex aspect-3/4 w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-xl md:aspect-auto md:flex-row"
               >
                 <button
                   onClick={() => setSelectedMember(null)}
-                  className="absolute top-8 right-8 z-10 w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+                  className="absolute top-8 right-8 z-10 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
                 >
-                  <X className="w-6 h-6 text-gray-900" />
+                  <X className="h-6 w-6 text-gray-900" />
                 </button>
 
-                <div className="w-full md:w-2/5 relative aspect-3/4 md:aspect-auto">
+                <div className="relative aspect-3/4 w-full md:aspect-auto md:w-2/5">
                   <EditableImage
                     src={selectedMember.photo}
                     alt={selectedMember.name}
@@ -147,27 +150,30 @@ export function TeamStyle8({
                   />
                 </div>
 
-                <div className="w-full md:w-3/5 p-8 md:p-16 overflow-y-auto max-h-[70vh] md:max-h-[85vh]">
+                <div className="max-h-[70vh] w-full overflow-y-auto p-8 md:max-h-[85vh] md:w-3/5 md:p-16">
                   <h3
-                    className="text-4xl md:text-6xl font-medium mb-4 tracking-tight text-gray-950"
+                    className="mb-4 text-4xl font-medium tracking-tight text-gray-950 md:text-6xl"
                     style={{ fontFamily: theme.fonts.heading }}
                   >
                     {selectedMember.name}
                   </h3>
-                  <p className="text-xl text-gray-500 mb-8" style={{ fontFamily: theme.fonts.body }}>
+                  <p
+                    className="mb-8 text-xl text-gray-500"
+                    style={{ fontFamily: theme.fonts.body }}
+                  >
                     {selectedMember.role}
                   </p>
-                  
+
                   <div className="space-y-8">
                     <div>
                       <h4
-                        className="text-2xl font-medium mb-4 text-gray-900"
+                        className="mb-4 text-2xl font-medium text-gray-900"
                         style={{ fontFamily: theme.fonts.heading }}
                       >
                         About
                       </h4>
                       <p
-                        className="text-gray-600 text-lg leading-relaxed"
+                        className="text-lg leading-relaxed text-gray-600"
                         style={{ fontFamily: theme.fonts.body }}
                       >
                         {selectedMember.about || "No biography available."}
@@ -177,22 +183,30 @@ export function TeamStyle8({
                     {(selectedMember.email || selectedMember.linkedin) && (
                       <div>
                         <h4
-                          className="text-2xl font-medium mb-4 text-gray-900"
+                          className="mb-4 text-2xl font-medium text-gray-900"
                           style={{ fontFamily: theme.fonts.heading }}
                         >
                           Connect
                         </h4>
                         <div className="flex gap-4">
-                           {selectedMember.email && (
-                             <a href={`mailto:${selectedMember.email}`} className="text-gray-500 hover:text-gray-900 transition-colors">
-                               Email
-                             </a>
-                           )}
-                           {selectedMember.linkedin && (
-                             <a href={selectedMember.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 transition-colors">
-                               LinkedIn
-                             </a>
-                           )}
+                          {selectedMember.email && (
+                            <a
+                              href={`mailto:${selectedMember.email}`}
+                              className="text-gray-500 transition-colors hover:text-gray-900"
+                            >
+                              Email
+                            </a>
+                          )}
+                          {selectedMember.linkedin && (
+                            <a
+                              href={selectedMember.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-500 transition-colors hover:text-gray-900"
+                            >
+                              LinkedIn
+                            </a>
+                          )}
                         </div>
                       </div>
                     )}
@@ -206,4 +220,3 @@ export function TeamStyle8({
     </section>
   );
 }
-

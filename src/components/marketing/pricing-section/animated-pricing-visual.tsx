@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TrendingUp, CreditCard, CheckCircle2, Zap, ShieldCheck } from "lucide-react";
+import {
+  TrendingUp,
+  CreditCard,
+  CheckCircle2,
+  Zap,
+  ShieldCheck,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const plans = [
@@ -10,22 +16,22 @@ const plans = [
     price: "0",
     color: "bg-slate-500",
     features: ["Subdomain", "10 Products", "SSL"],
-    icon: <ShieldCheck className="h-4 w-4 text-slate-500" />
+    icon: <ShieldCheck className="h-4 w-4 text-slate-500" />,
   },
   {
     name: "Business",
     price: "10,000",
     color: "bg-indigo-600",
     features: ["Custom Domain", "eSewa/Khalti", "SEO"],
-    icon: <CreditCard className="h-4 w-4 text-indigo-600" />
+    icon: <CreditCard className="h-4 w-4 text-indigo-600" />,
   },
   {
     name: "Pro",
     price: "20,000",
     color: "bg-violet-600",
     features: ["AI Content", "Advanced Analytics", "Team"],
-    icon: <Zap className="h-4 w-4 text-violet-600" />
-  }
+    icon: <Zap className="h-4 w-4 text-violet-600" />,
+  },
 ];
 
 export function AnimatedPricingDashboard() {
@@ -35,7 +41,7 @@ export function AnimatedPricingDashboard() {
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 0);
     const interval = setInterval(() => {
-      setActivePlanIdx((prev) => (prev + 1) % plans.length);
+      setActivePlanIdx(prev => (prev + 1) % plans.length);
     }, 4000);
     return () => {
       clearTimeout(timer);
@@ -50,7 +56,7 @@ export function AnimatedPricingDashboard() {
   return (
     <div className="relative select-none">
       {/* Main Browser Window */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/80"
@@ -73,14 +79,18 @@ export function AnimatedPricingDashboard() {
         <div className="p-6">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-slate-900">Plan Comparison</p>
-              <p className="text-[11px] text-slate-400">Real-time feature unlocking</p>
+              <p className="text-sm font-semibold text-slate-900">
+                Plan Comparison
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Real-time feature unlocking
+              </p>
             </div>
             <div className="flex gap-1">
               {plans.map((_, i) => (
-                <div 
-                  key={i} 
-                  className={`h-1.5 w-1.5 rounded-full transition-colors duration-500 ${i === activePlanIdx ? activePlan.color : 'bg-slate-200'}`} 
+                <div
+                  key={i}
+                  className={`h-1.5 w-1.5 rounded-full transition-colors duration-500 ${i === activePlanIdx ? activePlan.color : "bg-slate-200"}`}
                 />
               ))}
             </div>
@@ -98,30 +108,42 @@ export function AnimatedPricingDashboard() {
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm`}>
+                    <div
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm`}
+                    >
                       {activePlan.icon}
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-900">{activePlan.name} Plan</p>
-                      <p className="text-[10px] text-slate-500">NPR {activePlan.price} / year</p>
+                      <p className="text-xs font-bold text-slate-900">
+                        {activePlan.name} Plan
+                      </p>
+                      <p className="text-[10px] text-slate-500">
+                        NPR {activePlan.price} / year
+                      </p>
                     </div>
                   </div>
-                  <span className={`rounded-full px-2.5 py-1 text-[9px] font-bold text-white ${activePlan.color}`}>
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-[9px] font-bold text-white ${activePlan.color}`}
+                  >
                     ACTIVE
                   </span>
                 </div>
 
                 <div className="space-y-2.5">
                   {activePlan.features.map((feat, i) => (
-                    <motion.div 
+                    <motion.div
                       key={feat}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
                       className="flex items-center gap-2"
                     >
-                      <CheckCircle2 className={`h-3.5 w-3.5 ${activePlanIdx === 0 ? 'text-slate-400' : 'text-emerald-500'}`} />
-                      <span className="text-[11px] font-medium text-slate-600">{feat}</span>
+                      <CheckCircle2
+                        className={`h-3.5 w-3.5 ${activePlanIdx === 0 ? "text-slate-400" : "text-emerald-500"}`}
+                      />
+                      <span className="text-[11px] font-medium text-slate-600">
+                        {feat}
+                      </span>
                     </motion.div>
                   ))}
                 </div>
@@ -144,9 +166,9 @@ export function AnimatedPricingDashboard() {
 
       {/* Floating Elements */}
       <motion.div
-        animate={{ 
+        animate={{
           y: [0, -10, 0],
-          rotate: [0, 2, 0]
+          rotate: [0, 2, 0],
         }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         className="absolute -top-6 -right-6 flex items-center gap-2.5 rounded-xl border border-slate-100 bg-white p-3 shadow-xl"
@@ -161,11 +183,16 @@ export function AnimatedPricingDashboard() {
       </motion.div>
 
       <motion.div
-        animate={{ 
+        animate={{
           y: [0, 10, 0],
-          rotate: [0, -2, 0]
+          rotate: [0, -2, 0],
         }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
         className="absolute -bottom-6 -left-6 flex items-center gap-2.5 rounded-xl border border-slate-100 bg-white p-3 shadow-xl"
       >
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-50">

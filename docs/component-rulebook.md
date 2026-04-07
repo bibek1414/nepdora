@@ -85,7 +85,7 @@ Use these classes as your palette. Pick from these stops only — don't reach fo
 
 ## @beautifulMention Layout Shell
 
-- **Standard Layout Shell**: Always use a two-layer structure. The outer element (e.g., `section`) is full-width for backgrounds; the inner child is a content wrapper: `mx-auto max-w-7xl px-4 sm:px-6 lg:px-8`.
+- **Standard Layout Shell**: Always use a two-layer structure. The outer element (e.g., `section`) is full-width for backgrounds; the inner child is a content wrapper: `mx-auto max-w-7xl px-8`. (Note: many components use `px-4 sm:px-6 lg:px-8` but `px-8` is preferred for modern editorial layouts).
 - Layer in the semantic `aria` role that matches the component. Keep the outer wrapper responsible for spacing, background, and full-width effects.
 - Section vertical gaps: `80px–120px` between major sections (`py-20 md:py-32`).
 - Max content width: `max-w-7xl` (typically 1280px), always centered.
@@ -283,7 +283,7 @@ Before shipping, verify every item:
 - [ ] `useThemeQuery()` called at top; no hardcoded color/font values in JSX
 - [ ] All colors/fonts from `useThemeQuery()` only where builder control is needed — rest is Tailwind
 - [ ] Interactive states exist for all buttons, links, and rows (hover, focus, active)
-- [ ] Content stays within `max-w-7xl` wrapper
+- [ ] Content stays within `max-w-7xl px-8` wrapper
 - [ ] Component registered in `add-section-dialog` and dispatcher
 - [ ] All clickable/interactive elements (buttons, links, cards) have `cursor-pointer` utility
 - [ ] Interactions (clicks, hovers) are disabled when `isEditable={true}` to prevent builder clashing

@@ -15,7 +15,7 @@ export default function PricingHero() {
             <h1 className="mb-6 text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl">
               Plans that grow with your{" "}
               <span className="relative inline-block">
-                <span className="relative z-10 text-primary">ambition</span>
+                <span className="text-primary relative z-10">ambition</span>
                 <svg
                   className="absolute -bottom-2 left-0 -z-10 h-3 w-full text-indigo-100"
                   viewBox="0 0 100 10"
@@ -40,7 +40,7 @@ export default function PricingHero() {
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/contact"
-                className="bg-primary inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-primary/80 hover:shadow-indigo-300 active:scale-[0.98]"
+                className="bg-primary hover:bg-primary/80 inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-200 transition hover:shadow-indigo-300 active:scale-[0.98]"
               >
                 Contact Us
                 <ChevronRight className="h-4 w-4" />

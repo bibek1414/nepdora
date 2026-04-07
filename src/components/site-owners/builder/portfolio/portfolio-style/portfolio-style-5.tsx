@@ -40,7 +40,10 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
-  const { title = "Latest Projects", subtitle = "A curated selection of our most impactful professional work and achievements." } = data || {};
+  const {
+    title = "Latest Projects",
+    subtitle = "A curated selection of our most impactful professional work and achievements.",
+  } = data || {};
 
   const {
     data: portfoliosData,
@@ -64,7 +67,7 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
   };
 
   return (
-    <section className="bg-white py-24 px-4 sm:px-6 lg:px-8">
+    <section className="bg-white px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Header Section */}
         <div className="mb-20 text-center">
@@ -110,7 +113,9 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading Projects</AlertTitle>
             <AlertDescription>
-              {error instanceof Error ? error.message : "Failed to load portfolios."}
+              {error instanceof Error
+                ? error.message
+                : "Failed to load portfolios."}
             </AlertDescription>
           </Alert>
         )}
@@ -156,7 +161,8 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
               No projects found
             </h3>
             <p className="mx-auto max-w-sm text-gray-600">
-              We haven't added any portfolio items yet. Stay tuned for updates on our latest work and collaborations.
+              We haven't added any portfolio items yet. Stay tuned for updates
+              on our latest work and collaborations.
             </p>
           </div>
         )}

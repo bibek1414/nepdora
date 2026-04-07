@@ -140,13 +140,13 @@ const PopupListPage: React.FC = () => {
     formData.append("disclaimer", popup.disclaimer);
     formData.append("enabled_fields", JSON.stringify(popup.enabled_fields));
     formData.append("is_active", String(isActive));
-    
+
     // Explicitly handle the image if it exists to avoid clearing it
     if (popup.image) {
       if (typeof popup.image === "string" && popup.image) {
         formData.append("image", popup.image);
-        formData.append("image_path", popup.image); 
-        formData.append("image_url", popup.image); 
+        formData.append("image_path", popup.image);
+        formData.append("image_url", popup.image);
       }
     }
 

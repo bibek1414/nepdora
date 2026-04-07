@@ -1026,4 +1026,3 @@ export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
 
 export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
   data.template === "about-21";
-

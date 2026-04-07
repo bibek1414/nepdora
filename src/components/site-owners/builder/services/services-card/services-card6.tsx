@@ -33,7 +33,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden rounded-[2rem] p-8 flex flex-col justify-between min-h-[400px] cursor-pointer transition-all duration-500 h-full ${
+      className={`relative flex h-full min-h-[400px] cursor-pointer flex-col justify-between overflow-hidden rounded-[2rem] p-8 transition-all duration-500 ${
         className || ""
       }`}
       style={{
@@ -42,8 +42,8 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
       }}
     >
       {/* Absolute Image Background */}
-      <div 
-        className="absolute inset-0 transition-opacity duration-700 z-0"
+      <div
+        className="absolute inset-0 z-0 transition-opacity duration-700"
         style={{ opacity: isHovered ? 1 : 0 }}
       >
         <Image
@@ -59,51 +59,57 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
       </div>
 
       {/* Content Overlay */}
-      <div className="relative z-10 flex flex-col h-full bg-transparent flex-grow">
-        <div className="flex justify-between items-start mb-4">
+      <div className="relative z-10 flex h-full flex-grow flex-col bg-transparent">
+        <div className="mb-4 flex items-start justify-between">
           <h3
             className="text-2xl font-medium transition-colors duration-500"
-            style={{ 
+            style={{
               fontFamily: theme?.fonts?.heading,
-              color: isHovered ? "white" : "inherit"
+              color: isHovered ? "white" : "inherit",
             }}
           >
             {title}
           </h3>
-          
-          <div 
-            className="w-10 h-10 rounded-full border border-black/10 flex-shrink-0 flex items-center justify-center transition-all duration-300 relative overflow-hidden bg-transparent"
-            style={{ 
+
+          <div
+            className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-black/10 bg-transparent transition-all duration-300"
+            style={{
               backgroundColor: isHovered ? "white" : "transparent",
-              color: isHovered ? "black" : "inherit"
+              color: isHovered ? "black" : "inherit",
             }}
           >
-            <Plus 
-              className="w-5 h-5 absolute transition-all duration-300 text-black" 
+            <Plus
+              className="absolute h-5 w-5 text-black transition-all duration-300"
               style={{
                 opacity: isHovered ? 0 : 1,
-                transform: isHovered ? "scale(0) rotate(90deg)" : "scale(1) rotate(0deg)"
+                transform: isHovered
+                  ? "scale(0) rotate(90deg)"
+                  : "scale(1) rotate(0deg)",
               }}
             />
-            <ChevronRight 
-              className="w-5 h-5 absolute transition-all duration-300 text-black" 
+            <ChevronRight
+              className="absolute h-5 w-5 text-black transition-all duration-300"
               style={{
                 opacity: isHovered ? 1 : 0,
-                transform: isHovered ? "scale(1) rotate(0deg)" : "scale(0) rotate(-90deg)"
+                transform: isHovered
+                  ? "scale(1) rotate(0deg)"
+                  : "scale(0) rotate(-90deg)",
               }}
             />
           </div>
         </div>
-        
-        <p 
-          className="max-w-xs transition-colors duration-500 line-clamp-3"
-          style={{ color: isHovered ? "rgba(255,255,255,0.8)" : "rgba(26,26,26,0.6)" }}
+
+        <p
+          className="line-clamp-3 max-w-xs transition-colors duration-500"
+          style={{
+            color: isHovered ? "rgba(255,255,255,0.8)" : "rgba(26,26,26,0.6)",
+          }}
         >
           {description}
         </p>
 
         {/* Static Image for mobile/non-hover when it's just the card bg */}
-        <div className="mt-auto pt-8 relative w-full rounded-2xl overflow-hidden md:hidden block min-h-[200px]">
+        <div className="relative mt-auto block min-h-[200px] w-full overflow-hidden rounded-2xl pt-8 md:hidden">
           <Image
             src={imageSrc}
             alt={title || "Service"}

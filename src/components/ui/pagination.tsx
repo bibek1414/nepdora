@@ -150,7 +150,9 @@ const Pagination: React.FC<PaginationProps> = ({
             )}
             <button
               onClick={() => onPageChange(totalPages)}
-              className={buttonClass(currentPage === totalPages) + " cursor-pointer"}
+              className={
+                buttonClass(currentPage === totalPages) + " cursor-pointer"
+              }
             >
               {totalPages}
             </button>
@@ -161,7 +163,9 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={handleNext}
           disabled={currentPage === totalPages}
-          className={navButtonClass(currentPage === totalPages) + " cursor-pointer"}
+          className={
+            navButtonClass(currentPage === totalPages) + " cursor-pointer"
+          }
           title="Go to next page"
         >
           <span className="hidden sm:inline">Next</span>

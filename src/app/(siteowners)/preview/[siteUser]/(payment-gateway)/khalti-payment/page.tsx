@@ -273,7 +273,7 @@ export default function KhaltiPayment() {
       <div className="flex w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-zinc-200/60 bg-white shadow-xl md:flex-row">
         {/* LEFT COLUMN: Payment Info & Customer Details */}
         <div className="relative flex w-full flex-col md:w-1/2">
-          <div className="absolute left-0 right-0 top-0 h-2 w-full bg-[#5d2e8e] md:right-auto md:w-full" />
+          <div className="absolute top-0 right-0 left-0 h-2 w-full bg-[#5d2e8e] md:right-auto md:w-full" />
 
           <div className="flex flex-1 flex-col p-6 pt-8 md:pt-10">
             <div className="mb-8 flex items-center justify-between">
@@ -282,7 +282,7 @@ export default function KhaltiPayment() {
                 size="sm"
                 onClick={() => router.back()}
                 disabled={paymentState.isLoading}
-                className="-ml-2 text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground -ml-2"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
@@ -394,7 +394,7 @@ export default function KhaltiPayment() {
         </div>
 
         {/* RIGHT COLUMN: Order Items & Total */}
-        <div className="flex w-full flex-col border-t border-zinc-200 bg-zinc-50 md:w-1/2 md:border-l md:border-t-0">
+        <div className="flex w-full flex-col border-t border-zinc-200 bg-zinc-50 md:w-1/2 md:border-t-0 md:border-l">
           <div className="flex h-full flex-col p-6 pt-8 md:pt-10">
             <h3 className="mb-6 text-lg font-semibold text-zinc-900">
               Order Summary
@@ -403,7 +403,7 @@ export default function KhaltiPayment() {
             <div className="flex-1 space-y-4">
               {orderItems.length > 0 && (
                 <div className="space-y-4">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                  <h4 className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                     Items ({orderItems.length})
                   </h4>
                   <div className="custom-scrollbar max-h-[320px] space-y-4 overflow-y-auto pr-2">

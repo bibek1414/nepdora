@@ -6,11 +6,11 @@ export interface ServicesData {
     | "services-2"
     | "services-3"
     | "services-4"
-      | "services-5"
-      | "services-6"
-      | "services-7";
-    title: string;
-    subtitle?: string;
+    | "services-5"
+    | "services-6"
+    | "services-7";
+  title: string;
+  subtitle?: string;
   order?: number;
   // Additional fields for services-2 (was 6)
   tag?: string;

@@ -29,7 +29,7 @@ export function TeamCard8({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
-      className={`relative aspect-3/4 rounded-3xl overflow-hidden ${
+      className={`relative aspect-3/4 overflow-hidden rounded-3xl ${
         isEditable ? "cursor-default" : "cursor-pointer"
       }`}
       onMouseEnter={() => !isEditable && setIsHovered(true)}
@@ -47,7 +47,7 @@ export function TeamCard8({
         width={600}
         height={800}
       />
-      
+
       {/* Overlay */}
       <div
         className={`absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent transition-opacity duration-500 ${
@@ -56,18 +56,20 @@ export function TeamCard8({
       />
 
       <div
-        className={`absolute bottom-0 left-0 right-0 p-8 transition-all duration-500 ${
-          isHovered ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 md:opacity-100 md:translate-y-0"
+        className={`absolute right-0 bottom-0 left-0 p-8 transition-all duration-500 ${
+          isHovered
+            ? "translate-y-0 opacity-100"
+            : "translate-y-4 opacity-0 md:translate-y-0 md:opacity-100"
         }`}
       >
         <p
-          className="text-2xl font-medium text-white mb-1"
+          className="mb-1 text-2xl font-medium text-white"
           style={{ fontFamily: theme.fonts.heading }}
         >
           {member.name}
         </p>
         <p
-          className="text-white/70 text-sm"
+          className="text-sm text-white/70"
           style={{ fontFamily: theme.fonts.body }}
         >
           {member.role}
@@ -75,14 +77,14 @@ export function TeamCard8({
       </div>
 
       <div
-        className={`absolute bottom-8 right-8 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-500 ${
+        className={`absolute right-8 bottom-8 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-md transition-all duration-500 ${
           isHovered ? "scale-100" : "scale-0 md:scale-100 md:opacity-0"
         }`}
       >
         {isHovered ? (
-          <ChevronRight className="w-6 h-6 text-gray-900" />
+          <ChevronRight className="h-6 w-6 text-gray-900" />
         ) : (
-          <Plus className="w-6 h-6 text-gray-900" />
+          <Plus className="h-6 w-6 text-gray-900" />
         )}
       </div>
     </motion.div>

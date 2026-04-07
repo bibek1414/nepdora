@@ -40,7 +40,10 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
   const [page, setPage] = useState(1);
   const pageSize = 12;
 
-  const { title = "Our Services", subtitle = "Explore our premium range of professional services tailored to your needs." } = data || {};
+  const {
+    title = "Our Services",
+    subtitle = "Explore our premium range of professional services tailored to your needs.",
+  } = data || {};
 
   const {
     data: servicesData,
@@ -64,7 +67,7 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
   };
 
   return (
-    <section className="bg-white py-24 px-4 sm:px-6 lg:px-8">
+    <section className="bg-white px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Header Section */}
         <div className="mb-20 text-center">
@@ -110,7 +113,9 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading Services</AlertTitle>
             <AlertDescription>
-              {error instanceof Error ? error.message : "Failed to load services."}
+              {error instanceof Error
+                ? error.message
+                : "Failed to load services."}
             </AlertDescription>
           </Alert>
         )}
@@ -156,7 +161,8 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
               No services found
             </h3>
             <p className="mx-auto max-w-sm text-gray-600">
-              We are currently updating our service offerings. Please check back later or contact us for more information.
+              We are currently updating our service offerings. Please check back
+              later or contact us for more information.
             </p>
           </div>
         )}

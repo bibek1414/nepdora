@@ -120,7 +120,7 @@ export const PortfolioDetail3: React.FC<{
                             : `/`
                           : "/"
                       }
-                      className="text-muted-foreground hover:text-primary flex items-center gap-2 font-medium transition-colors"
+                      className="text-muted-foreground flex items-center gap-2 font-medium transition-colors"
                     >
                       <Home className="h-4 w-4" />
                       Home

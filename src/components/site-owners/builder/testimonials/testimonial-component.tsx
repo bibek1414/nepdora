@@ -27,7 +27,6 @@ import { TestimonialStyle6 } from "./testimonial-style/testimonial-style-6";
 import { TestimonialStyle7 } from "./testimonial-style/testimonial-style-7";
 import { TestimonialStyle8 } from "./testimonial-style/testimonial-style-8";
 
-
 interface TestimonialsComponentProps {
   component: TestimonialsComponentData;
   isEditable?: boolean;

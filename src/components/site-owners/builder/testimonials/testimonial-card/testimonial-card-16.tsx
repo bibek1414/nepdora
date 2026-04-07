@@ -21,7 +21,7 @@ export const TestimonialCard16: React.FC<TestimonialCard16Props> = ({
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
       onClick={onClick}
-      className="rounded-3xl border border-black/5 bg-white p-8 shadow-sm transition-shadow hover:shadow-md cursor-pointer"
+      className="cursor-pointer rounded-3xl border border-black/5 bg-white p-8 shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="mb-6 flex items-center gap-4">
         <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-gray-100">
@@ -41,7 +41,9 @@ export const TestimonialCard16: React.FC<TestimonialCard16Props> = ({
         </div>
         <div>
           <h4 className="font-medium text-gray-900">{testimonial.name}</h4>
-          <p className="text-sm text-gray-500 line-clamp-1">{testimonial.designation}</p>
+          <p className="line-clamp-1 text-sm text-gray-500">
+            {testimonial.designation}
+          </p>
         </div>
       </div>
       <p className="text-lg leading-relaxed text-gray-700 italic">
