@@ -4,6 +4,7 @@ import { HeaderAuthButtons } from "./header-auth-buttons";
 import { HeaderMobileMenu } from "./header-mobile-menu";
 
 const navigationItems = [
+  "Home",
   "Features",
   "Templates",
   "Pricing",
@@ -26,6 +27,18 @@ const Header: React.FC = () => {
         >
           {item}
         </a>
+      );
+    }
+
+    if (item === "Home") {
+      return (
+        <Link
+          key={item}
+          href={`/`}
+          className="text-muted-foreground hover:text-primary cursor-pointer text-xs font-normal transition-colors"
+        >
+          {item}
+        </Link>
       );
     }
 
