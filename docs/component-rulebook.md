@@ -178,10 +178,16 @@ These rules apply to every component, without exception.
 
 ## @beautifulMention Image Strategy
 
-- Wrap all imagery inside `EditableImage`. Supply sensible `alt` text. Pass `priority` only for above-the-fold hero images.
+- Always wrap all imagery inside `EditableImage`. Supply sensible `alt` text. Pass `priority` only for above-the-fold hero images.
 - **Standard Image Pathing**: Always use the following directory structure for default assets:
   - **Generic Placeholder**: `/images/site-owners/placeholder.png`
   - **Category-Specific Assets**: `/images/site-owners/[category]/[category][style-number].png` (e.g., `/images/site-owners/others/others22.png` for "Others" Style 22).
+
+- **Image Fallback Strategy**: For dynamic content (Blogs, Products, Services, Portfolio) where an image might be missing, always use one of the standard fallback images from `/public/fallback/`:
+  - **Primary Fallback**: `/fallback/image-not-found.png`
+  - **Secondary Fallback**: `/fallback/image-not-found1.png`
+  - Ensure the fallback strategy is implemented logically within the card component (e.g., `const image = record.thumbnail_image || "/fallback/image-not-found.png"`).
+
 - Restrict width via `max-w-[650px]` or similar when the image sits beside text inside `max-w-7xl`.
 - Use `w-full` on mobile for proper responsive scaling.
 - Mention fallback behavior in the `@beautifulMention` doc so assets can be swapped without a code change.

@@ -778,6 +778,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Services Style 6 (Animated Cards)",
         image: "/images/site-owners/services/services-6.png",
       },
+      {
+        id: "services-7",
+        name: "Services Style 7 (Paginated Grid)",
+        image: "/images/site-owners/services/services-7.png",
+        description: "Modern paginated grid with 4 columns and premium cards",
+      },
     ],
     contact: [
       {
@@ -955,6 +961,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Blog Style 5",
         image: "/images/site-owners/blogs/blog5.png",
       },
+      {
+        id: "blog-6",
+        name: "Blog Style 6 (Premium Editorial)",
+        image: "/images/site-owners/blogs/blog6.png",
+        description: "Featured article with a horizontal list of secondary posts",
+      },
+      {
+        id: "blog-7",
+        name: "Blog Style 7 (Paginated Grid)",
+        image: "/images/site-owners/blogs/blog7.png",
+        description: "Standard paginated grid with 3 columns and clean article cards",
+      },
     ],
     faq: [
       {
@@ -1008,6 +1026,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "portfolio-4",
         name: "Portfolio Style 4 (Selected Works)",
         image: "/images/site-owners/portfolio/portfolio4.png",
+      },
+      {
+        id: "portfolio-5",
+        name: "Portfolio Style 5 (Paginated Grid)",
+        image: "/images/site-owners/portfolio/portfolio-5.png",
+        description: "Modern paginated grid with 4 columns and premium cards",
       },
     ],
     newsletter: [

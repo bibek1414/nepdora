@@ -140,6 +140,19 @@ const PopupListPage: React.FC = () => {
     formData.append("disclaimer", popup.disclaimer);
     formData.append("enabled_fields", JSON.stringify(popup.enabled_fields));
     formData.append("is_active", String(isActive));
+    
+    // Explicitly handle the image if it exists to avoid clearing it
+    if (popup.image) {
+      if (typeof popup.image === "string" && popup.image) {
+        formData.append("image", popup.image);
+        formData.append("image_path", popup.image); 
+        formData.append("image_url", popup.image); 
+      }
+    }
+
+    // Diagnostic logging - View this in your browser console (F12 -> Console)
+    console.log("Toggling Status - Popup FormData:");
+    console.table(Array.from(formData.entries()));
 
     updatePopupMutation.mutate({
       id: popup.id!,
@@ -292,14 +305,15 @@ const PopupListPage: React.FC = () => {
                         onClick={() => handleOpenEditModal(popup)}
                       >
                         <TableCell className="px-6 py-4">
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-sm font-normal text-black">
-                              {popup.title}
-                            </span>
-                            <span className="max-w-[200px] truncate text-xs text-black/50">
-                              {popup.disclaimer}
-                            </span>
-                          </div>
+                          <TableUserCell
+                            imageSrc={
+                              (popup.image as string) ||
+                              "/fallback/image-not-found.png"
+                            }
+                            fallback={popup.title.charAt(0)}
+                            title={popup.title}
+                            subtitle={popup.disclaimer}
+                          />
                         </TableCell>
                         <TableCell className="px-6 py-4">
                           <div className="flex flex-wrap gap-1">

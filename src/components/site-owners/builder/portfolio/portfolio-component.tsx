@@ -22,6 +22,7 @@ import { PortfolioStyle1 } from "./portfolio-style/portfolio-style-1";
 import { PortfolioStyle2 } from "./portfolio-style/portfolio-style-2";
 import { PortfolioStyle3 } from "./portfolio-style/portfolio-style-3";
 import { PortfolioStyle4 } from "./portfolio-style/portfolio-style-4";
+import { PortfolioStyle5 } from "./portfolio-style/portfolio-style-5";
 
 interface PortfolioComponentProps {
   component: PortfolioComponentData;

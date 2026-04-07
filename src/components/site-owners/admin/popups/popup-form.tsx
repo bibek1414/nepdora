@@ -21,7 +21,7 @@ interface PopupFormProps {
 }
 
 type FormState = Omit<PopUp, "id" | "image"> & {
-  image: File | null;
+  image: File | string | null;
 };
 
 const PopupForm: React.FC<PopupFormProps> = ({
@@ -48,9 +48,8 @@ const PopupForm: React.FC<PopupFormProps> = ({
         disclaimer: initialData.disclaimer || "",
         enabled_fields: initialData.enabled_fields || [],
         is_active: initialData.is_active,
-        image: null,
+        image: initialData.image || null,
       });
-      setImageFiles([]);
     } else {
       setFormData({
         title: "",
@@ -59,9 +58,9 @@ const PopupForm: React.FC<PopupFormProps> = ({
         enabled_fields: [],
         is_active: true,
       });
-      setImageFiles([]);
     }
-  }, [initialData]);
+    setImageFiles([]); // Only clear when starting fresh or switching
+  }, [initialData?.id]); // Only run when the popup ID changes
 
   const availableFields = [
     {
@@ -123,9 +122,27 @@ const PopupForm: React.FC<PopupFormProps> = ({
     );
     submitData.append("is_active", String(formData.is_active));
 
-    if (formData.image instanceof File) {
-      submitData.append("image", formData.image);
+    // Send image data
+    if (imageFiles.length > 0) {
+      // Priority: New file(s) uploaded
+      imageFiles.forEach(file => {
+        submitData.append("image", file);
+      });
+    } else if (formData.image) {
+      // Fallback: Existing image URL or File from state
+      if (formData.image instanceof File) {
+        submitData.append("image", formData.image);
+      } else if (typeof formData.image === "string" && formData.image) {
+        // Send under multiple common names to ensure backend compatibility
+        submitData.append("image", formData.image);
+        submitData.append("image_path", formData.image);
+        submitData.append("image_url", formData.image);
+      }
     }
+
+    // Diagnostic logging - View this in your browser console (F12 -> Console)
+    console.log("Submitting Popup FormData:");
+    console.table(Array.from(submitData.entries()));
 
     if (initialData?.id) {
       updatePopupMutation.mutate(

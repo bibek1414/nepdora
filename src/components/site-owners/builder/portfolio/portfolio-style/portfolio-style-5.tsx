@@ -1,0 +1,166 @@
+"use client";
+
+import React, { useState } from "react";
+import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
+import { PortfolioCard5 } from "../portfolio-card/portfolio-card-5";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, FolderOpen } from "lucide-react";
+import { EditableText } from "@/components/ui/editable-text";
+import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
+import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import Pagination from "@/components/ui/pagination";
+
+interface PortfolioStyle5Props {
+  data: PortfolioComponentData["data"];
+  isEditable?: boolean;
+  siteUser?: string;
+  onUpdate?: (updatedData: Partial<PortfolioComponentData["data"]>) => void;
+  onPortfolioClick?: (slug: string) => void;
+}
+
+/**
+ * @beautifulMention: Portfolio Style 5
+ * Paginated portfolio grid with 4 columns on desktop.
+ * Premium layout with card-based design and smooth animations.
+ */
+export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
+  data,
+  isEditable = false,
+  siteUser,
+  onUpdate,
+  onPortfolioClick,
+}) => {
+  const { data: themeResponse } = useThemeQuery();
+  const theme = themeResponse?.data?.[0]?.data?.theme || {
+    colors: { primary: "#000000", primaryForeground: "#ffffff" },
+    fonts: { heading: "Inter", body: "Inter" },
+  };
+
+  const [page, setPage] = useState(1);
+  const pageSize = 12;
+
+  const { title = "Latest Projects", subtitle = "A curated selection of our most impactful professional work and achievements." } = data || {};
+
+  const {
+    data: portfoliosData,
+    isLoading,
+    error,
+  } = usePortfolios({
+    page,
+    page_size: pageSize,
+  });
+
+  const portfolios = portfoliosData?.results || [];
+  const totalCount = portfoliosData?.count || 0;
+  const totalPages = Math.ceil(totalCount / pageSize);
+
+  const handleTitleChange = (newTitle: string) => {
+    onUpdate?.({ title: newTitle });
+  };
+
+  const handleSubtitleChange = (newSubtitle: string) => {
+    onUpdate?.({ subtitle: newSubtitle });
+  };
+
+  return (
+    <section className="bg-white py-24 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        {/* Header Section */}
+        <div className="mb-20 text-center">
+          <EditableText
+            value={title}
+            onChange={handleTitleChange}
+            as="h2"
+            className="mb-4 text-4xl font-bold tracking-tight text-gray-950 md:text-5xl"
+            style={{ fontFamily: theme.fonts.heading }}
+            isEditable={isEditable}
+            placeholder="Enter title..."
+          />
+          <EditableText
+            value={subtitle || ""}
+            onChange={handleSubtitleChange}
+            as="p"
+            className="mx-auto max-w-2xl text-lg text-gray-600"
+            style={{ fontFamily: theme.fonts.body }}
+            isEditable={isEditable}
+            placeholder="Enter subtitle..."
+            multiline
+          />
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="flex flex-col space-y-4">
+                <Skeleton className="aspect-video w-full rounded-2xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error Loading Projects</AlertTitle>
+            <AlertDescription>
+              {error instanceof Error ? error.message : "Failed to load portfolios."}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Content Section */}
+        {!isLoading && !error && portfolios.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+              {portfolios.map((portfolio, index) => (
+                <div key={portfolio.id} className="relative">
+                  {isEditable && <div className="absolute inset-0 z-10" />}
+                  <PortfolioCard5
+                    portfolio={portfolio}
+                    idx={index}
+                    isEditable={isEditable}
+                    onPortfolioClick={onPortfolioClick}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-20">
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !error && portfolios.length === 0 && (
+          <div className="rounded-[2.5rem] bg-gray-50 py-20 text-center">
+            <FolderOpen className="mx-auto mb-6 h-20 w-20 text-gray-400" />
+            <h3
+              className="mb-2 text-2xl font-semibold text-gray-950"
+              style={{ fontFamily: theme.fonts.heading }}
+            >
+              No projects found
+            </h3>
+            <p className="mx-auto max-w-sm text-gray-600">
+              We haven't added any portfolio items yet. Stay tuned for updates on our latest work and collaborations.
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};

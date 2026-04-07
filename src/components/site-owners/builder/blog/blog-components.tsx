@@ -24,6 +24,9 @@ import { BlogStyle3 } from "./blog-style/blog-style-3";
 import { BlogStyle4 } from "./blog-style/blog-style-4";
 import { BlogStyle5 } from "./blog-style/blog-style-5";
 
+import { BlogStyle6 } from "./blog-style/blog-style-6";
+import { BlogStyle7 } from "./blog-style/blog-style-7";
+
 interface BlogComponentProps {
   component: BlogComponentData;
   isEditable?: boolean;
@@ -109,6 +112,10 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         return <BlogStyle4 {...commonProps} />;
       case "blog-5":
         return <BlogStyle5 {...commonProps} />;
+      case "blog-6":
+        return <BlogStyle6 {...commonProps} />;
+      case "blog-7":
+        return <BlogStyle7 {...commonProps} />;
       case "blog-1":
       default:
         return <BlogStyle1 {...commonProps} />;
