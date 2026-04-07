@@ -179,6 +179,9 @@ These rules apply to every component, without exception.
 ## @beautifulMention Image Strategy
 
 - Wrap all imagery inside `EditableImage`. Supply sensible `alt` text. Pass `priority` only for above-the-fold hero images.
+- **Standard Image Pathing**: Always use the following directory structure for default assets:
+  - **Generic Placeholder**: `/images/site-owners/placeholder.png`
+  - **Category-Specific Assets**: `/images/site-owners/[category]/[category][style-number].png` (e.g., `/images/site-owners/others/others22.png` for "Others" Style 22).
 - Restrict width via `max-w-[650px]` or similar when the image sits beside text inside `max-w-7xl`.
 - Use `w-full` on mobile for proper responsive scaling.
 - Mention fallback behavior in the `@beautifulMention` doc so assets can be swapped without a code change.
@@ -367,6 +370,15 @@ Never default to `system-ui` or `Arial`. Always load from Google Fonts or Fontso
 - **Theme Approach**: `useThemeQuery()` destructured into CSS variable assignments. No hardcoded colors in JSX.
 - **Design Notes**: Cards use `var(--shadow-sm)`, `var(--radius-md)`. Hover is a single subtle `opacity` + `translateY` — no complex `group-hover` chains. Body text 15px+, headings responsive.
 - **Variant Note**: Registered as `others-12` in `add-section-dialog.tsx` and the component dispatcher.
+
+## @beautifulMention: Others Style 22 (Process Steps) — Reference Example
+
+- **Template Registration**: Added `OthersTemplate22Data` and default map in `types/owner-site/components/others.ts`.
+- **Text Approach**: `EditableText` with semantic `as` props (`h2`, `p`, `span`). `as="h2"` uses `whitespace-pre-wrap` for precise layout control.
+- **Image Strategy**: Individual `StepCard` components use `EditableImage`. Defaults to category-specific assets: `/images/site-owners/others/others22.png`.
+- **Theme Approach**: `useThemeQuery()` used to dynamically set background and text colors based on card index (0: Generic Neutral, 1: Theme Primary, 2: Theme Secondary).
+- **Design Notes**: Cards use `rounded-[2.5rem]`, `p-10`. Hover effects (scaling the image container) managed via React state (`isHovered`) to avoid `group-hover` issues.
+- **Variant Note**: Registered as `others-22` in `add-section-dialog.tsx` and the component dispatcher.
 
 ---
 
