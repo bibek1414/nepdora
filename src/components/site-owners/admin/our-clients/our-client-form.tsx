@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ImageUploader } from "@/components/ui/image-uploader";
 import { OurClient } from "@/types/owner-site/admin/our-client";
 import {
   useCreateOurClient,
@@ -47,7 +48,6 @@ export function OurClientForm({
 }: OurClientFormProps) {
   const createMutation = useCreateOurClient();
   const updateMutation = useUpdateOurClient();
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,15 +63,14 @@ export function OurClientForm({
       form.reset({
         name: client.name,
         url: client.url || "",
+        logo: client.logo || undefined,
       });
-      setPreviewUrl(client.logo || null);
     } else {
       form.reset({
         name: "",
         url: "",
         logo: undefined,
       });
-      setPreviewUrl(null);
     }
   }, [client, form, open]);
 
@@ -83,23 +82,31 @@ export function OurClientForm({
           data: {
             name: values.name,
             url: values.url || undefined,
-            logo: values.logo instanceof FileList ? values.logo[0] : undefined,
+            logo: values.logo instanceof File ? values.logo : undefined,
           },
         });
       } else {
-        if (!values.logo || values.logo.length === 0) {
+        if (!values.logo) {
           form.setError("logo", { message: "Logo is required" });
           return;
         }
         await createMutation.mutateAsync({
           name: values.name,
           url: values.url || undefined,
-          logo: values.logo[0],
+          logo: values.logo,
         });
       }
       onOpenChange(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to save client:", error);
+      if (error?.fieldErrors) {
+        Object.keys(error.fieldErrors).forEach((key) => {
+          form.setError(key as any, {
+            type: "server",
+            message: error.fieldErrors[key].join(", "),
+          });
+        });
+      }
     }
   };
 
@@ -142,34 +149,15 @@ export function OurClientForm({
             <FormField
               control={form.control}
               name="logo"
-              render={({ field: { value, onChange, ...field } }) => (
+              render={({ field: { value, onChange } }) => (
                 <FormItem>
                   <FormLabel>Logo</FormLabel>
                   <FormControl>
-                    <div className="space-y-4">
-                      {previewUrl && (
-                        <div className="relative h-40 w-full overflow-hidden rounded-md border">
-                          <img
-                            src={previewUrl}
-                            alt="Logo preview"
-                            className="h-full w-full object-contain p-2"
-                          />
-                        </div>
-                      )}
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={e => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            onChange(e.target.files);
-                            const url = URL.createObjectURL(file);
-                            setPreviewUrl(url);
-                          }
-                        }}
-                        {...field}
-                      />
-                    </div>
+                    <ImageUploader
+                      value={value}
+                      onChange={onChange}
+                      multiple={false}
+                    />
                   </FormControl>
                   {client && (
                     <p className="text-muted-foreground text-xs">
