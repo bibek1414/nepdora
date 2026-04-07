@@ -8,6 +8,7 @@ import {
   PlansResponse,
   UpgradeRequest,
   UpgradeResponse,
+  UserSubscriptionResponse,
 } from "@/types/subscription";
 
 const API_BASE_URL = siteConfig.apiBaseUrl;
@@ -52,6 +53,12 @@ export const subscriptionApi = {
 
   // Upgrade/Subscribe to a plan
   upgrade: async (data: UpgradeRequest): Promise<UpgradeResponse> => {
+    const payload = {
+      plan_id: data.plan_id,
+      transaction_id: data.transaction_id,
+      payment_type: data.payment_type,
+    };
+
     const response = await apiFetch(`${API_BASE_URL}/api/upgrade/`, {
       method: "POST",
       headers: {
@@ -59,7 +66,7 @@ export const subscriptionApi = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getAuthToken()}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     await handleApiError(response);
@@ -79,6 +86,47 @@ export const subscriptionApi = {
         },
       }
     );
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  // Get user subscriptions (Subscription History)
+  getUserSubscriptions: async (page = 1): Promise<UserSubscriptionResponse> => {
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/user-subscription/?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          ...createHeaders(),
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        cache: "no-store",
+      }
+    );
+
+    await handleApiError(response);
+    return response.json();
+  },
+
+  // Superadmin: Get all user subscriptions
+  getAllSubscriptions: async (
+    page = 1,
+    search = ""
+  ): Promise<UserSubscriptionResponse> => {
+    let url = `${API_BASE_URL}/api/admin-subscription/?page=${page}`;
+    if (search) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+
+    const response = await apiFetch(url, {
+      method: "GET",
+      headers: {
+        ...createHeaders(),
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      cache: "no-store",
+    });
 
     await handleApiError(response);
     return response.json();

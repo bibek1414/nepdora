@@ -19,6 +19,7 @@ import {
   FileText,
   Newspaper,
   Wallet,
+  History,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuthContext } from "@/components/super-admin/auth-wrapper";
@@ -39,6 +40,11 @@ const navigationGroups = [
     items: [
       { name: "Domains", href: "/superadmin/domains", icon: Globe },
       { name: "Payments", href: "/superadmin/payments", icon: Wallet },
+      {
+        name: "Subscriptions",
+        href: "/superadmin/subscriptions",
+        icon: History,
+      },
       { name: "Templates", href: "/superadmin/template", icon: Layout },
       { name: "FAQ", href: "/superadmin/faq", icon: HelpCircle },
       { name: "Testimonials", href: "/superadmin/testimonial", icon: Shield },

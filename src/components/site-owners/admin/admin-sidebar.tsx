@@ -162,6 +162,15 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       hideForService: true,
     },
     {
+      items: [
+        {
+          name: "Subscription History",
+          href: "/admin/subscriptions/history",
+          icon: History,
+        },
+      ],
+    },
+    {
       items: [{ name: "Analytics", href: "/admin/analytics", icon: BarChart3 }],
       hideForService: true,
     },

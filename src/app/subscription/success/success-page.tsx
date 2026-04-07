@@ -79,7 +79,7 @@ export default function SuccessPage() {
             method === "esewa"
               ? verificationResponse.data.transaction_uuid
               : verificationResponse.data.pidx,
-          w: method,
+          payment_type: method,
         });
 
         if (!upgradeResponse.success) {
@@ -212,7 +212,7 @@ export default function SuccessPage() {
   const upgradeSubscription = async (data: {
     plan_id: string;
     transaction_id: string;
-    w: string;
+    payment_type: string;
   }) => {
     try {
       const response = await apiFetch(
@@ -223,7 +223,7 @@ export default function SuccessPage() {
           body: JSON.stringify({
             plan_id: data.plan_id,
             transaction_id: data.transaction_id,
-            w: data.w,
+            payment_type: data.payment_type,
           }),
         }
       );

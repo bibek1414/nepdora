@@ -10,6 +10,7 @@ import type {
   SubscriptionStatus,
   PlansResponse,
   UpgradeRequest,
+  UserSubscriptionResponse,
 } from "@/types/subscription";
 
 const SUBSCRIPTION_STATUS_STORAGE_KEY = "nepdora-subscription-status";
@@ -128,5 +129,19 @@ export const useCancelSubscription = () => {
     onError: (error: Error) => {
       toast.error(error.message || "Failed to cancel subscription");
     },
+  });
+};
+
+export const useUserSubscriptions = (page = 1) => {
+  return useQuery<UserSubscriptionResponse, Error>({
+    queryKey: ["subscriptions", "history", page],
+    queryFn: () => subscriptionApi.getUserSubscriptions(page),
+  });
+};
+
+export const useAllSubscriptions = (page = 1, search = "") => {
+  return useQuery<UserSubscriptionResponse, Error>({
+    queryKey: ["subscriptions", "all", page, search],
+    queryFn: () => subscriptionApi.getAllSubscriptions(page, search),
   });
 };
