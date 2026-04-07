@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { buildTenantFrontendUrl } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
 
 export interface MarketingPlan {
   name: string;
@@ -26,6 +29,18 @@ export function MarketingPricingCard({
   plan,
   isCurrentPlan,
 }: MarketingPricingCardProps) {
+  const { user } = useAuth();
+
+  // Determine the admin URL based on the user's subdomain
+  const adminUrl = user?.sub_domain
+    ? buildTenantFrontendUrl(user.sub_domain, {
+        path: "/admin",
+        isDev: siteConfig.isDev,
+        baseDomain: siteConfig.baseDomain,
+        port: siteConfig.frontendDevPort,
+      })
+    : "/admin";
+
   return (
     <article
       className={`relative flex flex-col rounded-2xl p-6 transition-all ${
@@ -90,7 +105,7 @@ export function MarketingPricingCard({
       </ul>
 
       <Link
-        href={isCurrentPlan ? "/admin" : plan.href}
+        href={isCurrentPlan ? adminUrl : plan.href}
         target={plan.href.startsWith("https") ? "_blank" : undefined}
         rel={plan.href.startsWith("https") ? "noopener noreferrer" : undefined}
         className={`block rounded-xl px-4 py-2.5 text-center text-sm font-semibold transition-all ${

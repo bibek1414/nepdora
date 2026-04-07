@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { buildMarketingMetadata } from "@/lib/seo";
 import {
-  MoveRight,
+  ChevronRight,
   ExternalLink,
   Smartphone,
   Laptop,

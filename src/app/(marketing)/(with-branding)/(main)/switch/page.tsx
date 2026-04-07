@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ALL_COMPETITORS } from "@/constants/competitors";
 import { buildMarketingMetadata } from "@/lib/seo";
 import {
-  MoveRight,
+  ChevronRight,
   ArrowLeftRight,
   CreditCard,
   ShieldAlert,
@@ -105,7 +105,7 @@ export default function SwitchHubPage() {
                 </h3>
                 <div className="text-primary flex items-center justify-center gap-2 font-bold">
                   View Comparison
-                  <MoveRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4" />
                 </div>
               </Link>
             ))}

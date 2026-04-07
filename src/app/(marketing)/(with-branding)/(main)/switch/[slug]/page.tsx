@@ -6,7 +6,7 @@ import { buildMarketingMetadata } from "@/lib/seo";
 import {
   CheckCircle2,
   XCircle,
-  MoveRight,
+  ChevronRight,
   Receipt,
   Zap,
   ShieldCheck,
@@ -82,7 +82,7 @@ export default async function SwitchComparisonPage({ params }: Props) {
             href="/switch"
             className="hover:text-primary mb-8 inline-flex items-center gap-2 text-sm font-bold tracking-widest text-slate-500 uppercase transition-colors"
           >
-            <MoveRight className="h-4 w-4 rotate-180" />
+            <ChevronRight className="h-4 w-4 rotate-180" />
             Back to Migration Center
           </Link>
 

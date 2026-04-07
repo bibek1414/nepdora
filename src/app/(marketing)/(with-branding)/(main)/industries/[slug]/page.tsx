@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { buildMarketingMetadata } from "@/lib/seo";
 import {
-  MoveRight,
+  ChevronRight,
   CheckCircle2,
   Zap,
   Layout,
@@ -337,7 +337,7 @@ export default async function IndustryDeepDivePage({ params }: Props) {
                   className="flex items-center gap-3 rounded-full bg-white px-10 py-5 font-black text-slate-950 transition-all hover:bg-slate-100"
                 >
                   Create Your Free Website
-                  <MoveRight className="h-5 w-5 text-sky-500" />
+                  <ChevronRight className="h-5 w-5 text-sky-500" />
                 </Link>
                 <Link
                   href="/ecommerce-website"

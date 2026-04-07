@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { BEST_OF_DATA } from "@/constants/best-of";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
-import { MoveRight, Star, Check, X, ShieldCheck, Zap } from "lucide-react";
+import { ChevronRight, Star, Check, X, ShieldCheck, Zap } from "lucide-react";
 
 interface Props {
   params: Promise<{ slug: string }>;

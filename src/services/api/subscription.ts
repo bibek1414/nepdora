@@ -15,7 +15,7 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 export const subscriptionApi = {
   // Get current subscription status
   getStatus: async (): Promise<SubscriptionStatus> => {
-    const response = await fetch(`${API_BASE_URL}/api/subscription-status/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/subscription-status/`, {
       method: "GET",
       headers: {
         ...createHeaders(),

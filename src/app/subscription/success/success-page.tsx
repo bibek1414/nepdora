@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle, XCircle, Loader2, AlertCircle, Info } from "lucide-react";
 import { toast } from "sonner";
 import { createHeaders } from "@/utils/headers";
+import { apiFetch } from "@/lib/api-client";
 
 export default function SuccessPage() {
   const router = useRouter();
@@ -78,7 +79,7 @@ export default function SuccessPage() {
             method === "esewa"
               ? verificationResponse.data.transaction_uuid
               : verificationResponse.data.pidx,
-          payment_type: method,
+          w: method,
         });
 
         if (!upgradeResponse.success) {
@@ -211,10 +212,10 @@ export default function SuccessPage() {
   const upgradeSubscription = async (data: {
     plan_id: string;
     transaction_id: string;
-    payment_type: string;
+    w: string;
   }) => {
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         "https://nepdora.baliyoventures.com/api/upgrade/",
         {
           method: "POST",
@@ -222,7 +223,7 @@ export default function SuccessPage() {
           body: JSON.stringify({
             plan_id: data.plan_id,
             transaction_id: data.transaction_id,
-            payment_type: data.payment_type,
+            w: data.w,
           }),
         }
       );

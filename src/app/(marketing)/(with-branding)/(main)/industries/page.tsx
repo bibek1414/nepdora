@@ -2,7 +2,14 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { MoveRight, Star, BarChart3, Rocket, Heart, Globe } from "lucide-react";
+import {
+  ChevronRight,
+  Star,
+  BarChart3,
+  Rocket,
+  Heart,
+  Globe,
+} from "lucide-react";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Industry Solutions | Built for Your Business | Nepdora",
@@ -65,7 +72,7 @@ export default function IndustriesHubPage() {
                 </p>
                 <div className="group-hover:text-primary mt-auto flex items-center gap-2 text-xs font-black tracking-widest text-slate-400 uppercase transition-colors">
                   Explore Solutions
-                  <MoveRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4" />
                 </div>
               </Link>
             ))}
@@ -90,7 +97,7 @@ export default function IndustriesHubPage() {
             className="bg-primary shadow-primary/20 inline-flex items-center gap-4 rounded-full px-10 py-5 font-black text-white shadow-xl transition-all hover:scale-105"
           >
             Get a Custom Consultation
-            <MoveRight className="h-5 w-5" />
+            <ChevronRight className="h-5 w-5" />
           </Link>
         </div>
       </section>

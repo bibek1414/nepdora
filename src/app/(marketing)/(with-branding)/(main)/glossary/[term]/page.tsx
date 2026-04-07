@@ -3,7 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GLOSSARY_TERMS } from "@/constants/glossary";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { BookOpen, MoveRight, HelpCircle, Info, ArrowLeft } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  HelpCircle,
+  Info,
+  ArrowLeft,
+} from "lucide-react";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 interface Props {
@@ -87,7 +93,7 @@ export default async function GlossaryTermPage({ params }: Props) {
                 className="border-primary inline-flex items-center gap-3 border-b-2 pb-1 font-bold text-white transition-all hover:gap-5"
               >
                 Start building with Nepdora
-                <MoveRight className="text-primary h-5 w-5" />
+                <ChevronRight className="text-primary h-5 w-5" />
               </Link>
             </div>
           </div>
@@ -107,7 +113,7 @@ export default async function GlossaryTermPage({ params }: Props) {
                   <span className="font-bold tracking-tighter text-slate-900 uppercase italic">
                     {t.term}
                   </span>
-                  <MoveRight className="group-hover:text-primary h-5 w-5 text-slate-300 transition-colors" />
+                  <ChevronRight className="group-hover:text-primary h-5 w-5 text-slate-300 transition-colors" />
                 </Link>
               ))}
             </div>

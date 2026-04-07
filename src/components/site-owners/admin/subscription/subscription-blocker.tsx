@@ -57,11 +57,20 @@ export function SubscriptionBlocker() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (isUnauthorized) {
@@ -139,7 +148,7 @@ export function SubscriptionBlocker() {
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="h- max-w-5xl! scale-85 overflow-y-auto"
+        className="max-h-[92vh] w-[calc(100%-1rem)] max-w-5xl! overflow-y-auto p-4 md:w-full md:p-6"
         onInteractOutside={e => e.preventDefault()}
         onKeyDown={e => e.preventDefault()}
         onEscapeKeyDown={e => e.preventDefault()}
@@ -150,7 +159,7 @@ export function SubscriptionBlocker() {
           variant="ghost"
           size="sm"
           onClick={handleLogout}
-          className="text-muted-foreground hover:text-foreground absolute top-4 right-4"
+          className="text-muted-foreground hover:text-foreground absolute top-4 right-4 z-50 h-8 px-2 sm:h-9 sm:px-4"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Logout
@@ -174,7 +183,7 @@ export function SubscriptionBlocker() {
                     alt="Nepdora"
                     className="h-4"
                   />
-                  <DialogTitle className="text-left text-2xl font-bold md:text-3xl">
+                  <DialogTitle className="text-left text-xl font-bold md:pt-4 md:text-3xl">
                     Upgrade Your Plan
                   </DialogTitle>
                 </div>
@@ -243,7 +252,7 @@ export function SubscriptionBlocker() {
                           <Button
                             className="mt-3 mb-2 w-full shadow-none"
                             variant={plan.is_popular ? "default" : "outline"}
-                            size={window.innerWidth < 768 ? "sm" : "lg"}
+                            size={isMobile ? "sm" : "lg"}
                             onClick={() => handleChoosePlan(plan)}
                             disabled={plan.plan_type === "free"}
                           >
@@ -425,7 +434,7 @@ export function SubscriptionBlocker() {
                 <div className="mt-6 space-y-3 md:mt-8">
                   <Button
                     className="w-full"
-                    size={window.innerWidth < 768 ? "sm" : "lg"}
+                    size={isMobile ? "sm" : "lg"}
                     onClick={handleConfirmPayment}
                     disabled={!selectedPaymentMethod}
                   >

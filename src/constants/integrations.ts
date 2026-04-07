@@ -8,7 +8,8 @@ export interface Integration {
   benefits: string[];
   logo: string;
   website: string;
-  isPopular?: boolean;
+  color: string;
+  badge: string;
 }
 
 export const INTEGRATIONS: Integration[] = [
@@ -32,9 +33,10 @@ export const INTEGRATIONS: Integration[] = [
       "Build trust with a familiar payment method",
       "Low transaction fees",
     ],
-    logo: "/images/integrations/esewa.png",
+    logo: "/images/payment-gateway/esewa.png",
     website: "https://esewa.com.np",
-    isPopular: true,
+    color: "#60BB46",
+    badge: "Native integration",
   },
   {
     slug: "khalti-payment",
@@ -45,8 +47,8 @@ export const INTEGRATIONS: Integration[] = [
     longDescription:
       "Khalti provides a robust payment gateway for Nepali businesses. By integrating Khalti with Nepdora, you offer your customers multiple ways to pay, increasing your conversion rates and customer satisfaction.",
     features: [
-      "Wallet and Banking options",
-      "SCT Card support",
+      "Wallet and banking options",
+      "SCT card support",
       "Easy refund management",
       "Developer-friendly API",
     ],
@@ -56,80 +58,109 @@ export const INTEGRATIONS: Integration[] = [
       "High success rates for transactions",
       "Excellent local support",
     ],
-    logo: "/images/integrations/khalti.png",
+    logo: "/images/payment-gateway/khalti.png",
     website: "https://khalti.com",
-    isPopular: true,
+    color: "#5C2D91",
+    badge: "Verified partner",
   },
   {
-    slug: "pathao-logistics",
-    name: "Pathao Logistics",
+    slug: "connectips-payment",
+    name: "ConnectIPS",
+    category: "Payment",
+    description:
+      "Direct bank-to-bank transfers for secure, high-value transactions.",
+    longDescription:
+      "ConnectIPS is the electronic payment system for direct bank-to-bank transfers in Nepal. It's the most trusted way for customers to pay directly from their bank accounts with the lowest fees.",
+    features: [
+      "Direct bank account search",
+      "Real-time interbank transfers",
+      "Highest security standards",
+      "Lowest transaction costs",
+    ],
+    benefits: [
+      "Trust of Nepal Clearing House (NCHL)",
+      "Preferred for high-value purchases",
+      "No wallet loading required",
+      "Direct settlement in your bank account",
+    ],
+    logo: "/images/payment-gateway/connectips.png",
+    website: "https://connectips.com",
+    color: "#004B91",
+    badge: "Bank integration",
+  },
+  {
+    slug: "dash-logistics",
+    name: "Dash Logistics",
     category: "Logistics",
     description:
-      "Automate your local deliveries with Pathao's extensive courier network.",
+      "Automate your local deliveries with Dash's extensive courier network.",
     longDescription:
-      "Pathao is the most reliable delivery partner in Nepal. Our integration allows you to automatically book deliveries as soon as an order is placed on your Nepdora site, saving you hours of manual work.",
+      "Dash Logistics is a premier delivery partner in Nepal. Our integration allows you to automatically book deliveries as soon as an order is placed on your Nepdora site, streamlining your fulfillment process.",
     features: [
       "Automatic parcel booking",
       "Real-time tracking for customers",
-      "COD (Cash on Delivery) management",
-      "Area-wise delivery rate calculation",
+      "COD management",
+      "Area-wise delivery rates",
     ],
     benefits: [
-      "Fastest delivery in Kathmandu and major cities",
+      "Fastest delivery in major cities",
       "Automated logistics workflow",
-      "Improved customer trust with tracking",
-      "Seamless COD settlements",
+      "Improved transparency for buyers",
+      "Seamless settlements",
     ],
-    logo: "/images/integrations/pathao.png",
-    website: "https://pathao.com",
-    isPopular: true,
+    logo: "/images/icons/dash-logistics.png",
+    website: "https://dashlogistics.com.np",
+    color: "#EE1C25",
+    badge: "Official integration",
   },
   {
     slug: "whatsapp-ordering",
     name: "WhatsApp Ordering",
     category: "Communication",
     description:
-      "Let your customers order directly via WhatsApp for a personalized experience.",
+      "Let your customers order directly via WhatsApp for a personal experience.",
     longDescription:
-      "In Nepal, WhatsApp is a primary communication tool. This integration allows customers to send their cart details directly to your WhatsApp, enabling you to close sales through personal conversation.",
+      "Leverage the popularity of WhatsApp in Nepal. This integration allows customers to send their cart details directly to your WhatsApp, enabling you to close sales through one-on-one conversation.",
     features: [
       "One-click WhatsApp checkout",
       "Pre-filled order messages",
-      "Floating WhatsApp contact button",
+      "Floating contact button",
       "Mobile-optimized flow",
     ],
     benefits: [
-      "Higher conversion through personal touch",
-      "No complex payment setup needed",
-      "Instant communication with buyers",
-      "Low barrier to entry for customers",
+      "Higher conversion rates",
+      "No complex payment setup",
+      "Instant communication",
+      "Low barrier for customers",
     ],
-    logo: "/images/integrations/whatsapp.png",
+    logo: "/images/icons/whatsapp-icon.png",
     website: "https://whatsapp.com",
-    isPopular: true,
+    color: "#25D366",
+    badge: "Instant setup",
   },
   {
-    slug: "facebook-pixel",
-    name: "Facebook Pixel",
+    slug: "google-analytics",
+    name: "Google Analytics",
     category: "Marketing",
     description:
-      "Track conversions and optimize your ads with deep Facebook integration.",
+      "Track your website traffic and understand customer behavior with ease.",
     longDescription:
-      "Scale your business with data-driven advertising. Our Facebook Pixel integration tracks every step of the customer journey, from page view to purchase, allowing you to run highly effective retargeting campaigns.",
+      "Gain deep insights into how users interact with your website. Our Google Analytics integration allows you to track views, sources, and conversions without any technical setup.",
     features: [
-      "Automated event tracking",
-      "Catalog sync support",
-      "Conversion API integration",
-      "Easy setup without coding",
+      "Real-time traffic tracking",
+      "Conversion goals setup",
+      "Audience insights",
+      "E-commerce tracking",
     ],
     benefits: [
-      "Measure ad performance accurately",
-      "Reach people more likely to buy",
-      "Optimize for ROI",
-      "Understand your customer behavior",
+      "Data-driven decision making",
+      "Understand your ROI",
+      "Track marketing performance",
+      "Identify growth opportunities",
     ],
-    logo: "/images/integrations/facebook.png",
-    website: "https://facebook.com",
-    isPopular: false,
+    logo: "/images/icons/google-analytic.png",
+    website: "https://analytics.google.com",
+    color: "#F9AB00",
+    badge: "One-click setup",
   },
 ];
