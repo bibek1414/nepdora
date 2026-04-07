@@ -2,24 +2,29 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { Plus, ChevronRight, X } from "lucide-react";
-import { TeamStyle8Data } from "@/types/owner-site/components/team";
+import { Plus, ChevronRight, X, Users, AlertCircle } from "lucide-react";
+import { TeamData } from "@/types/owner-site/components/team";
+import { TEAM } from "@/types/owner-site/admin/team-member";
+import { TeamCard8 } from "../team-member-card/team-card-8";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableImage } from "@/components/ui/editable-image";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
+import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-interface TeamTemplate8Props {
-  data: TeamStyle8Data;
+interface TeamStyle8Props {
+  data: TeamData;
   isEditable?: boolean;
-  onUpdate?: (updatedData: Partial<TeamStyle8Data>) => void;
+  onUpdate?: (updatedData: Partial<TeamData>) => void;
 }
 
-export function TeamTemplate8({
+export function TeamStyle8({
   data: teamData,
   isEditable = false,
   onUpdate,
-}: TeamTemplate8Props) {
+}: TeamStyle8Props) {
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -32,12 +37,13 @@ export function TeamTemplate8({
     },
   };
 
-  const { data, handleArrayItemUpdate, handleTextUpdate } = useBuilderLogic(
+  const { data, handleTextUpdate } = useBuilderLogic(
     teamData,
     onUpdate
   );
 
-  const [selectedMember, setSelectedMember] = useState<(typeof data.members)[0] | null>(null);
+  const { data: members = [], isLoading, error } = useTeamMembers();
+  const [selectedMember, setSelectedMember] = useState<TEAM | null>(null);
 
   return (
     <section className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-white">
@@ -65,19 +71,46 @@ export function TeamTemplate8({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {data.members?.map((member, index) => (
-            <MemberCard
-              key={member.id}
-              member={member}
-              index={index}
-              isEditable={isEditable}
-              onUpdate={handleArrayItemUpdate("members", member.id)}
-              onClick={() => setSelectedMember(member)}
-              theme={theme}
-            />
-          ))}
-        </div>
+        {isLoading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="aspect-3/4 rounded-3xl" />
+            ))}
+          </div>
+        )}
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error Loading Team</AlertTitle>
+            <AlertDescription>
+              {error instanceof Error ? error.message : "Failed to load team members."}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {!isLoading && !error && members.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {members.map((member, index) => (
+              <TeamCard8
+                key={member.id}
+                member={member}
+                index={index}
+                onClick={() => setSelectedMember(member)}
+                theme={theme}
+                isEditable={isEditable}
+              />
+            ))}
+          </div>
+        )}
+
+        {!isLoading && !error && members.length === 0 && (
+          <div className="py-20 text-center">
+            <Users className="text-gray-300 mx-auto mb-6 h-20 w-20" />
+            <h3 className="text-gray-900 mb-4 text-2xl font-semibold">No Team Members</h3>
+            <p className="text-gray-500">Add team members in the admin panel to see them here.</p>
+          </div>
+        )}
 
         <AnimatePresence>
           {selectedMember && (
@@ -104,14 +137,10 @@ export function TeamTemplate8({
 
                 <div className="w-full md:w-2/5 relative aspect-3/4 md:aspect-auto">
                   <EditableImage
-                    src={selectedMember.image}
+                    src={selectedMember.photo}
                     alt={selectedMember.name}
-                    isEditable={isEditable}
-                    onImageChange={url => {
-                      const updatedMember = { ...selectedMember, image: url };
-                      handleArrayItemUpdate("members", selectedMember.id)({ image: url });
-                      setSelectedMember(updatedMember);
-                    }}
+                    isEditable={false} // Dynamic data, not editable here
+                    onImageChange={() => {}}
                     className="h-full w-full object-cover"
                     width={800}
                     height={1000}
@@ -120,65 +149,54 @@ export function TeamTemplate8({
 
                 <div className="w-full md:w-3/5 p-8 md:p-16 overflow-y-auto max-h-[70vh] md:max-h-[85vh]">
                   <h3
-                    className="text-4xl md:text-6xl font-medium mb-8 tracking-tight text-gray-950"
+                    className="text-4xl md:text-6xl font-medium mb-4 tracking-tight text-gray-950"
                     style={{ fontFamily: theme.fonts.heading }}
                   >
-                    About me
+                    {selectedMember.name}
                   </h3>
-                  <EditableText
-                    as="p"
-                    value={selectedMember.about}
-                    onChange={val => {
-                      const updatedMember = { ...selectedMember, about: val };
-                      handleArrayItemUpdate("members", selectedMember.id)({ about: val });
-                      setSelectedMember(updatedMember);
-                    }}
-                    isEditable={isEditable}
-                    className="text-gray-600 text-lg leading-relaxed mb-12"
-                    style={{ fontFamily: theme.fonts.body }}
-                  />
-
-                  <h3
-                    className="text-4xl md:text-6xl font-medium mb-8 tracking-tight text-gray-950"
-                    style={{ fontFamily: theme.fonts.heading }}
-                  >
-                    My experience
-                  </h3>
-                  <EditableText
-                    as="p"
-                    value={selectedMember.experience}
-                    onChange={val => {
-                      const updatedMember = { ...selectedMember, experience: val };
-                      handleArrayItemUpdate("members", selectedMember.id)({ experience: val });
-                      setSelectedMember(updatedMember);
-                    }}
-                    isEditable={isEditable}
-                    className="text-gray-600 text-lg leading-relaxed mb-8"
-                    style={{ fontFamily: theme.fonts.body }}
-                  />
-
-                  <ul className="space-y-4">
-                    {selectedMember.highlights.map((item, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-4 text-gray-600 text-lg leading-relaxed"
+                  <p className="text-xl text-gray-500 mb-8" style={{ fontFamily: theme.fonts.body }}>
+                    {selectedMember.role}
+                  </p>
+                  
+                  <div className="space-y-8">
+                    <div>
+                      <h4
+                        className="text-2xl font-medium mb-4 text-gray-900"
+                        style={{ fontFamily: theme.fonts.heading }}
+                      >
+                        About
+                      </h4>
+                      <p
+                        className="text-gray-600 text-lg leading-relaxed"
                         style={{ fontFamily: theme.fonts.body }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 mt-3 shrink-0" />
-                        <EditableText
-                          value={item}
-                          onChange={val => {
-                            const newHighlights = [...selectedMember.highlights];
-                            newHighlights[i] = val;
-                            const updatedMember = { ...selectedMember, highlights: newHighlights };
-                            handleArrayItemUpdate("members", selectedMember.id)({ highlights: newHighlights });
-                            setSelectedMember(updatedMember);
-                          }}
-                          isEditable={isEditable}
-                        />
-                      </li>
-                    ))}
-                  </ul>
+                        {selectedMember.about || "No biography available."}
+                      </p>
+                    </div>
+
+                    {(selectedMember.email || selectedMember.linkedin) && (
+                      <div>
+                        <h4
+                          className="text-2xl font-medium mb-4 text-gray-900"
+                          style={{ fontFamily: theme.fonts.heading }}
+                        >
+                          Connect
+                        </h4>
+                        <div className="flex gap-4">
+                           {selectedMember.email && (
+                             <a href={`mailto:${selectedMember.email}`} className="text-gray-500 hover:text-gray-900 transition-colors">
+                               Email
+                             </a>
+                           )}
+                           {selectedMember.linkedin && (
+                             <a href={selectedMember.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 transition-colors">
+                               LinkedIn
+                             </a>
+                           )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -189,85 +207,3 @@ export function TeamTemplate8({
   );
 }
 
-function MemberCard({
-  member,
-  index,
-  isEditable,
-  onUpdate,
-  onClick,
-  theme,
-}: {
-  member: any;
-  index: number;
-  isEditable: boolean;
-  onUpdate: (updated: any) => void;
-  onClick: () => void;
-  theme: any;
-}) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="relative aspect-3/4 rounded-3xl overflow-hidden cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
-    >
-      <EditableImage
-        src={member.image}
-        alt={member.name}
-        isEditable={isEditable}
-        onImageChange={url => onUpdate({ image: url })}
-        className={`h-full w-full object-cover transition-transform duration-700 ${
-          isHovered ? "scale-110" : "scale-100"
-        }`}
-        width={600}
-        height={800}
-      />
-      
-      {/* Overlay */}
-      <div
-        className={`absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent transition-opacity duration-500 ${
-          isHovered ? "opacity-100" : "opacity-0"
-        }`}
-      />
-
-      <div
-        className={`absolute bottom-0 left-0 right-0 p-8 transition-all duration-500 ${
-          isHovered ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 md:opacity-100 md:translate-y-0"
-        }`}
-      >
-        <EditableText
-          value={member.name}
-          onChange={val => onUpdate({ name: val })}
-          isEditable={isEditable}
-          className="text-2xl font-medium text-white mb-1"
-          style={{ fontFamily: theme.fonts.heading }}
-        />
-        <EditableText
-          value={member.role}
-          onChange={val => onUpdate({ role: val })}
-          isEditable={isEditable}
-          className="text-white/70 text-sm"
-          style={{ fontFamily: theme.fonts.body }}
-        />
-      </div>
-
-      <div
-        className={`absolute bottom-8 right-8 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-500 ${
-          isHovered ? "scale-100" : "scale-0 md:scale-100 md:opacity-0"
-        }`}
-      >
-        {isHovered ? (
-          <ChevronRight className="w-6 h-6 text-gray-900" />
-        ) : (
-          <Plus className="w-6 h-6 text-gray-900" />
-        )}
-      </div>
-    </motion.div>
-  );
-}

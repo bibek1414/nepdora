@@ -140,6 +140,7 @@ These rules apply to every component, without exception.
 - **Use Simple Hover Only**: For simple elements that change themselves on hover, apply `hover:` utilities directly to the element.
 - Avoid bouncy or springy animations unless the product is playful by design.
 - **Interactive Cursors**: Every clickable or interactive element (buttons, cards with click handlers, links) MUST have `cursor-pointer`. This is non-negotiable for UX.
+- **Disable Interactions in Editor**: If a component has an `isEditable` prop and it is `true`, you MUST disable all non-builder interactions (e.g., detail modals, navigation, complex hover animations) on the element. This prevents the builder UI from clashing with the component's internal logic. Use `cursor-default` instead of `cursor-pointer` in this state.
 
 ---
 
@@ -285,6 +286,7 @@ Before shipping, verify every item:
 - [ ] Content stays within `max-w-7xl` wrapper
 - [ ] Component registered in `add-section-dialog` and dispatcher
 - [ ] All clickable/interactive elements (buttons, links, cards) have `cursor-pointer` utility
+- [ ] Interactions (clicks, hovers) are disabled when `isEditable={true}` to prevent builder clashing
 - [ ] Standard elements use Shadcn UI components (`Button`, `Input`, etc.)
 - [ ] All icons are imported from `lucide-react`, no inline SVGs
 
@@ -311,6 +313,7 @@ Before shipping, verify every item:
 - ❌ Hardcoded hex colors or font names in `className` — use Tailwind neutrals or `style` with theme tokens (e.g., `theme.colors.primary`).
 - ❌ Arbitrary "subtle" hex colors (e.g., `bg-[#f8faf9]`, `bg-[#EEF2FF]`) — use `hexToRgba(token, opacity)` instead.
 - ❌ Clickable elements (divs, spans, cards) without `cursor-pointer` utility.
+- ❌ Active interactions (modals, navigation) triggering while `isEditable` is `true`.
 
 ---
 
