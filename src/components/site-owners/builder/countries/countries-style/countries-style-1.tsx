@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Globe } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { CountriesData } from "@/types/owner-site/components/countries";
@@ -119,10 +120,15 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
               );
             })
           ) : (
-            <div className="col-span-full py-20 text-center">
-              <p className="text-muted-foreground text-lg italic">
-                No countries found in the collection.
-              </p>
+            <div className="col-span-full">
+              <BuilderEmptyState
+                icon={Globe}
+                title="No Countries Found"
+                description="Showcase study destinations to your students. Add countries to your collection in the admin dashboard."
+                actionLabel="Manage Collections"
+                actionLink="/admin/collections"
+                isEditable={isEditable}
+              />
             </div>
           )}
         </div>

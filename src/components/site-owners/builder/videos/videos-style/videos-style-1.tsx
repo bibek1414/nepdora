@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Play } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { VideosComponentData } from "@/types/owner-site/components/videos";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface VideosStyleProps {
   data: VideosComponentData["data"];
@@ -88,12 +89,14 @@ export const VideosStyle1: React.FC<VideosStyleProps> = ({
           )}
 
           {!isLoading && !error && videos.length === 0 && (
-            <div className="py-16 text-center">
-              <Play className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-              <h3 className="text-foreground mb-4 text-2xl font-semibold">
-                No Videos Available
-              </h3>
-            </div>
+            <BuilderEmptyState
+              icon={Play}
+              title="No Videos Available"
+              description="Share your story with videos. Add your first video from the admin dashboard."
+              actionLabel="Manage Videos"
+              actionLink="/admin/videos"
+              isEditable={isEditable}
+            />
           )}
         </div>
       </div>

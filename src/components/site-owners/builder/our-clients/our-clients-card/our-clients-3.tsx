@@ -2,12 +2,18 @@ import React from "react";
 import { OurClientsData } from "@/types/owner-site/components/our-client";
 import { useGetOurClients } from "@/hooks/owner-site/admin/use-our-client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Handshake } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface OurClients3Props {
   data: OurClientsData;
+  isEditable?: boolean;
 }
 
-export const OurClients3: React.FC<OurClients3Props> = ({ data }) => {
+export const OurClients3: React.FC<OurClients3Props> = ({
+  data,
+  isEditable = false,
+}) => {
   const { data: clientsData, isLoading } = useGetOurClients({});
 
   if (isLoading) {
@@ -24,9 +30,14 @@ export const OurClients3: React.FC<OurClients3Props> = ({ data }) => {
 
   if (clients.length === 0) {
     return (
-      <div className="py-8 text-center text-gray-500">
-        No clients added yet.
-      </div>
+      <BuilderEmptyState
+        icon={Handshake}
+        title="No Clients Added"
+        description="Display your clients or partners. Add client logos in the admin dashboard."
+        actionLabel="Manage Clients"
+        actionLink="/admin/our-clients"
+        isEditable={isEditable}
+      />
     );
   }
 
@@ -44,7 +55,7 @@ export const OurClients3: React.FC<OurClients3Props> = ({ data }) => {
           {marqueeItems.map((client, index) => (
             <div
               key={`${client.id}-${index}`}
-              className="mx-6 h-12 w-32 flex-shrink-0 cursor-pointer overflow-hidden opacity-60 transition-all duration-300 hover:opacity-100 md:mx-10 md:h-16 md:w-40"
+              className="mx-6 h-12 w-32 shrink-0 cursor-pointer overflow-hidden opacity-60 transition-all duration-300 hover:opacity-100 md:mx-10 md:h-16 md:w-40"
             >
               {client.url ? (
                 <a

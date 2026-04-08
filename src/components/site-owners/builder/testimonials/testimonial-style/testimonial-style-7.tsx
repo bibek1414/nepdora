@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, MessageSquareQuote } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface TestimonialStyleProps {
   data: TestimonialsComponentData["data"];
@@ -63,7 +64,7 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
         {isLoading && (
           <div className="flex gap-6 overflow-hidden">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="w-80 flex-shrink-0">
+              <div key={i} className="w-80 shrink-0">
                 <Skeleton className="h-[240px] w-full rounded-lg" />
                 <div className="mt-4 space-y-3">
                   <Skeleton className="h-6 w-3/4" />
@@ -97,15 +98,14 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="py-16 text-center">
-            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Testimonials Available
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-lg">
-              Customer testimonials will be displayed here once available.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={MessageSquareQuote}
+            title="No Testimonials Available"
+            description="Share what your clients think about you. Add testimonials from the admin dashboard."
+            actionLabel="Manage Testimonials"
+            actionLink="/admin/testimonials"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

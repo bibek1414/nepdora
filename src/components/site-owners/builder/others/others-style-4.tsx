@@ -46,35 +46,30 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
     <div className="bg-white py-16">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-12 text-center md:text-left">
-          <h2
-            className="flex flex-col text-3xl font-bold md:text-4xl"
-            style={{ color: theme.colors.primary }}
-          >
-            <span
+          <span>
+            <EditableText
+              value={othersData.subtitle}
+              onChange={handleUpdate("subtitle")}
+              as="h3"
               className="mb-2 text-sm font-bold tracking-widest uppercase"
               style={{ color: theme.colors.secondary }}
-            >
-              <EditableText
-                value={othersData.subtitle}
-                onChange={handleUpdate("subtitle")}
-                as="span"
-                isEditable={isEditable}
-              />
-            </span>
-            <EditableText
-              value={othersData.heading}
-              onChange={handleUpdate("heading")}
-              as="span"
               isEditable={isEditable}
             />
-          </h2>
+          </span>
+          <EditableText
+            value={othersData.heading}
+            onChange={handleUpdate("heading")}
+            as="h4"
+            style={{ color: theme.colors.primary }}
+            isEditable={isEditable}
+          />
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {(othersData.steps || []).map((step, index) => (
             <div
               key={step.id || index}
-              className="flex flex-col items-start rounded-2xl bg-white p-6 text-left shadow-sm transition-shadow hover:shadow-md"
+              className="flex flex-col items-start rounded-2xl bg-white p-6 text-left border "
             >
               <div className="mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-gray-100 ring-4 ring-gray-50">
                 <EditableImage
@@ -100,7 +95,7 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
                   onChange={val =>
                     handleStepUpdate(index, "title", val as string)
                   }
-                  as="span"
+                  as="h6"
                   isEditable={isEditable}
                   multiline
                 />
@@ -111,7 +106,7 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
                   onChange={val =>
                     handleStepUpdate(index, "description", val as string)
                   }
-                  as="span"
+                  as="p"
                   isEditable={isEditable}
                   multiline
                 />

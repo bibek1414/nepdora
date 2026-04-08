@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Users } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { TeamComponentData } from "@/types/owner-site/components/team";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { motion } from "framer-motion";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { TeamCard9 } from "../team-member-card/team-card-9";
@@ -115,15 +116,14 @@ export const TeamStyle4: React.FC<TeamStyleProps> = ({
         )}
 
         {!isLoading && !error && members.length === 0 && (
-          <div className="py-16 text-center">
-            <Users className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Team Members
-            </h3>
-            <p className="text-muted-foreground">
-              Our team page is currently being updated. Please check back soon.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Users}
+            title="No Team Members"
+            description="Introduce your team to your visitors. Add team members from the admin dashboard."
+            actionLabel="Manage Team"
+            actionLink="/admin/team-member"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

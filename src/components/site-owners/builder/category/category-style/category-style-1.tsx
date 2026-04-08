@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, FolderOpen } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface CategoryStyleProps {
   data: CategoryComponentData["data"];
@@ -98,15 +99,14 @@ export const CategoryStyle1: React.FC<CategoryStyleProps> = ({
         )}
 
         {!isLoading && !error && categories.length === 0 && (
-          <div className="bg-muted/50 rounded-lg py-12 text-center">
-            <FolderOpen className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-            <h3 className="text-foreground mb-2 text-lg font-semibold">
-              No Categories Found
-            </h3>
-            <p className="text-muted-foreground">
-              Add some categories to display them here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={FolderOpen}
+            title="No Categories Found"
+            description="Organize your content by adding categories from the admin dashboard."
+            actionLabel="Manage Categories"
+            actionLink="/admin/category"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

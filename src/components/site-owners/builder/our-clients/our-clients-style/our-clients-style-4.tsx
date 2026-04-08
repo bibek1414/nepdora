@@ -9,11 +9,14 @@ interface OurClientsStyleProps {
   onUpdate?: (updatedData: Partial<OurClientsComponentData["data"]>) => void;
 }
 
-export const OurClientsStyle4: React.FC<OurClientsStyleProps> = ({ data }) => {
+export const OurClientsStyle4: React.FC<OurClientsStyleProps> = ({
+  data,
+  isEditable = false,
+}) => {
   return (
     <section className="bg-background py-3 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <OurClients4 data={data} />
+        <OurClients4 data={data} isEditable={isEditable} />
       </div>
     </section>
   );

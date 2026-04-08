@@ -6,6 +6,8 @@ import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { SocialIcon } from "../footer/shared/social-icon";
 import { EditableText } from "@/components/ui/editable-text";
 import { motion } from "framer-motion";
+import { Share2 } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface SocialsStyle1Props {
   data: SocialsData;
@@ -105,35 +107,46 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
           />
         </motion.div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 lg:gap-6">
-          {displaySocials.map((s, idx) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-            >
-              <a
-                href={s.href || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={s.label}
-                onClick={e => {
-                  if (isEditable) {
-                    e.preventDefault();
-                  }
-                }}
-                className="hover:border-primary/50 dark:hover:border-primary/50 flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+        {socials.length === 0 && isEditable ? (
+          <BuilderEmptyState
+            icon={Share2}
+            title="No Social Links Configured"
+            description="Connect with your audience by adding your social media profiles in the site configuration."
+            actionLabel="Manage Socials"
+            actionLink="/admin/settings/site-config"
+            isEditable={isEditable}
+          />
+        ) : (
+          <div className="flex flex-wrap items-center justify-center gap-4 lg:gap-6">
+            {displaySocials.map((s, idx) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
               >
-                <SocialIcon
-                  platform={s.platform}
-                  className="h-6 w-6 text-zinc-600 transition-colors dark:text-zinc-400"
-                />
-              </a>
-            </motion.div>
-          ))}
-        </div>
+                <a
+                  href={s.href || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  onClick={e => {
+                    if (isEditable) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className="hover:border-primary/50 dark:hover:border-primary/50 flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                >
+                  <SocialIcon
+                    platform={s.platform}
+                    className="h-6 w-6 text-zinc-600 transition-colors dark:text-zinc-400"
+                  />
+                </a>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

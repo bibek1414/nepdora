@@ -2,8 +2,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, DollarSign } from "lucide-react";
 import { usePricings } from "@/hooks/owner-site/admin/use-pricing";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { EditableText } from "@/components/ui/editable-text";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -216,9 +217,14 @@ export const PricingStyle2: React.FC<PricingStyle2Props> = ({
             </motion.div>
           </div>
         ) : (
-          <div className="py-20 text-center text-gray-500">
-            No pricing plans available.
-          </div>
+          <BuilderEmptyState
+            icon={DollarSign}
+            title="No Pricing Plans Found"
+            description="Create your pricing tables and plans in the admin dashboard."
+            actionLabel="Manage Pricing"
+            actionLink="/admin/pricing"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

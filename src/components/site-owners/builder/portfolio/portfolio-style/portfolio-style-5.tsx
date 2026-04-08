@@ -5,10 +5,11 @@ import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
 import { PortfolioCard5 } from "../portfolio-card/portfolio-card-5";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, FolderOpen } from "lucide-react";
+import { AlertCircle, FolderOpen, Briefcase } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { PortfolioComponentData } from "@/types/owner-site/components/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import Pagination from "@/components/ui/pagination";
 
 interface PortfolioStyle5Props {
@@ -150,21 +151,15 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
           </>
         )}
 
-        {/* Empty State */}
         {!isLoading && !error && portfolios.length === 0 && (
-          <div className="rounded-[2.5rem] bg-gray-50 py-20 text-center">
-            <FolderOpen className="mx-auto mb-6 h-20 w-20 text-gray-400" />
-            <h3
-              className="mb-2 text-2xl font-semibold text-gray-950"
-              style={{ fontFamily: theme.fonts.heading }}
-            >
-              No projects found
-            </h3>
-            <p className="mx-auto max-w-sm text-gray-600">
-              We haven't added any portfolio items yet. Stay tuned for updates
-              on our latest work and collaborations.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Projects Found"
+            description="Showcase your best work. Add portfolio items from the admin dashboard."
+            actionLabel="Manage Portfolio"
+            actionLink="/admin/portfolio"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

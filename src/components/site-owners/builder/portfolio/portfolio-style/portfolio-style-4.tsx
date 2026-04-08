@@ -5,13 +5,14 @@ import Image from "next/image";
 import { usePortfolios } from "@/hooks/owner-site/admin/use-portfolio";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, ChevronRight } from "lucide-react";
+import { AlertCircle, ChevronRight, Briefcase } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { PortfolioData } from "@/types/owner-site/components/portfolio";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { motion, AnimatePresence } from "framer-motion";
 import { PortfolioCard4 } from "../portfolio-card/portfolio-card-4";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface PortfolioStyleProps {
   data: PortfolioData;
@@ -275,14 +276,14 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
         )}
 
         {!isLoading && !error && portfolios.length === 0 && (
-          <div className="py-24 text-center">
-            <h3 className="mb-4 text-2xl font-medium text-gray-900">
-              No works available
-            </h3>
-            <p className="text-gray-500">
-              Publish your projects to see them displayed here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Works Available"
+            description="Showcase your best work. Add portfolio items from the admin dashboard."
+            actionLabel="Manage Portfolio"
+            actionLink="/admin/portfolio"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

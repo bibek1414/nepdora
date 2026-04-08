@@ -6,6 +6,7 @@ import { AlertCircle, FolderOpen } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { Category } from "@/types/owner-site/admin/product";
 import { CategoryCard6 } from "../category-card/category-card-6";
 
@@ -96,15 +97,14 @@ export const CategoryStyle6: React.FC<CategoryStyleProps> = ({
         )}
 
         {!isLoading && !error && categories.length === 0 && (
-          <div className="rounded-2xl border border-gray-100 bg-gray-50 py-16 text-center shadow-inner">
-            <FolderOpen className="mx-auto mb-4 h-16 w-16 text-gray-300" />
-            <h3 className="mb-2 text-xl font-bold text-gray-900">
-              No Categories Found
-            </h3>
-            <p className="text-gray-500">
-              Add some categories to display them here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={FolderOpen}
+            title="No Categories Found"
+            description="Organize your content by adding categories from the admin dashboard."
+            actionLabel="Manage Categories"
+            actionLink="/admin/category"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

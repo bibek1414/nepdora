@@ -13,6 +13,7 @@ import {
 import { EditableText } from "@/components/ui/editable-text";
 import { PortfolioData } from "@/types/owner-site/components/portfolio";
 import { Button } from "@/components/ui/site-owners/button";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface PortfolioStyleProps {
   data: PortfolioData;
@@ -166,12 +167,14 @@ export const PortfolioStyle3: React.FC<PortfolioStyleProps> = ({
         )}
 
         {!isLoading && !error && portfolios.length === 0 && (
-          <div className="py-16 text-center">
-            <Briefcase className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Portfolio Items Available
-            </h3>
-          </div>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Portfolio Items Available"
+            description="Showcase your best work. Add portfolio items from the admin dashboard."
+            actionLabel="Manage Portfolio"
+            actionLink="/admin/portfolio"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

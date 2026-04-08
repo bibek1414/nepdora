@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, DollarSign } from "lucide-react";
 import { PricingComponentData } from "@/types/owner-site/components/pricing";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface PricingStyleProps {
   data: PricingComponentData["data"];
@@ -66,12 +67,14 @@ export const PricingStyle1: React.FC<PricingStyleProps> = ({
         )}
 
         {!isLoading && !error && pricings.length === 0 && (
-          <div className="py-16 text-center">
-            <DollarSign className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Pricing Plans Available
-            </h3>
-          </div>
+          <BuilderEmptyState
+            icon={DollarSign}
+            title="No Pricing Plans Found"
+            description="Create your pricing tables and plans in the admin dashboard."
+            actionLabel="Manage Pricing"
+            actionLink="/admin/pricing"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

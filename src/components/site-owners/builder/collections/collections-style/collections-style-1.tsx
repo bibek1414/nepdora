@@ -9,6 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { Database } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface CollectionsStyleProps {
   data: CollectionsData;
@@ -141,9 +143,14 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
             })}
           </div>
         ) : (
-          <div className="rounded-lg border border-dashed border-gray-300 bg-white py-12 text-center">
-            <p className="text-gray-500">No items found in this collection.</p>
-          </div>
+          <BuilderEmptyState
+            icon={Database}
+            title="No Items Found"
+            description="Manage your dynamic collections. Add items from the admin dashboard."
+            actionLabel="Manage Collections"
+            actionLink="/admin/collections"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

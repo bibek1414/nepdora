@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, MessageSquareQuote } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { motion } from "framer-motion";
 
 interface TestimonialStyleProps {
@@ -81,16 +82,17 @@ export const TestimonialStyle6: React.FC<TestimonialStyleProps> = ({
     );
   }
 
-  if (testimonials.length === 0) {
+  if (!isLoading && !error && testimonials.length === 0) {
     return (
       <section className="bg-background border-border/50 border-y py-20 text-center">
-        <MessageSquareQuote className="text-muted-foreground/20 mx-auto mb-6 h-20 w-20" />
-        <h3 className="text-foreground mb-4 text-2xl font-semibold">
-          No Testimonials Yet
-        </h3>
-        <p className="text-muted-foreground mx-auto max-w-md text-lg">
-          Add some success stories in your dashboard to show them off here.
-        </p>
+        <BuilderEmptyState
+          icon={MessageSquareQuote}
+          title="No Testimonials Available"
+          description="Share what your clients think about you. Add testimonials from the admin dashboard."
+          actionLabel="Manage Testimonials"
+          actionLink="/admin/testimonials"
+          isEditable={isEditable}
+        />
       </section>
     );
   }

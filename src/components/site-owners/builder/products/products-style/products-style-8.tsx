@@ -8,6 +8,7 @@ import { AlertCircle, ShoppingBag } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
@@ -85,7 +86,7 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
           <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex flex-col space-y-5">
-                <Skeleton className="aspect-[4/3] w-full rounded-[1.25rem]" />
+                <Skeleton className="aspect-4/3 w-full rounded-[1.25rem]" />
                 <div className="space-y-3">
                   <Skeleton className="h-7 w-3/4" />
                   <Skeleton className="h-5 w-1/2" />
@@ -130,16 +131,14 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
         )}
 
         {!isLoading && !error && products.length === 0 && (
-          <div className="bg-muted/30 rounded-[1.25rem] py-20 text-center">
-            <ShoppingBag className="text-muted-foreground/40 mx-auto mb-6 h-16 w-16" />
-            <h3 className="text-foreground mb-2 text-xl font-semibold">
-              No Products Found
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-sm">
-              We couldn't find any products in this collection. Check back later
-              or explore other categories.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={ShoppingBag}
+            title="No Products Found"
+            description="Showcase your products to your customers. Add products from the admin dashboard."
+            actionLabel="Manage Products"
+            actionLink="/admin/product"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

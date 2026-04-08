@@ -7,7 +7,9 @@ import {
   ArrowUpRight,
   Clock,
   Tag,
+  Compass,
 } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 import { ToursTemplate1Data } from "@/types/owner-site/components/tours";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
@@ -141,8 +143,15 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
               Failed to load tours data.
             </div>
           ) : tours.length === 0 ? (
-            <div className="text-muted-foreground relative z-10 flex h-full w-full items-center justify-center italic">
-              No tours data found.
+            <div className="relative z-10 flex h-full w-full items-center justify-center p-12">
+              <BuilderEmptyState
+                icon={Compass}
+                title="No Tours Found"
+                description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
+                actionLabel="Manage Tours"
+                actionLink="/admin/collections"
+                isEditable={isEditable}
+              />
             </div>
           ) : currentTour ? (
             <AnimatePresence

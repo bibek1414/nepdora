@@ -7,6 +7,8 @@ import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Category } from "@/types/owner-site/admin/product";
 import { CategoryCard7 } from "../category-card/category-card-7";
+import { FolderOpen } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface CategoryStyleProps {
   data: CategoryComponentData["data"];
@@ -61,8 +63,21 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
     );
   }
 
-  if (!categories || categories.length === 0) {
-    return null;
+  if (!isLoading && (!categories || categories.length === 0)) {
+    return (
+      <section className="bg-white py-16 lg:py-24">
+        <div className="container mx-auto max-w-7xl px-4">
+          <BuilderEmptyState
+            icon={FolderOpen}
+            title="No Categories Found"
+            description="Organize your content by adding categories from the admin dashboard."
+            actionLabel="Manage Categories"
+            actionLink="/admin/category"
+            isEditable={isEditable}
+          />
+        </div>
+      </section>
+    );
   }
 
   return (

@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Briefcase } from "lucide-react";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface ServicesStyleProps {
   component: ServicesComponentData;
@@ -88,15 +89,14 @@ export const ServicesStyle2: React.FC<ServicesStyleProps> = ({
       )}
 
       {!isLoading && !error && services.length === 0 && (
-        <div className="bg-muted/50 rounded-lg py-12 text-center">
-          <Briefcase className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-          <h3 className="text-foreground mb-2 text-lg font-semibold">
-            No Services Found
-          </h3>
-          <p className="text-muted-foreground">
-            Add some services to your site to display them here.
-          </p>
-        </div>
+        <BuilderEmptyState
+          icon={Briefcase}
+          title="No Services Found"
+          description="List your services to attract clients. Add services from the admin dashboard."
+          actionLabel="Manage Services"
+          actionLink="/admin/services"
+          isEditable={isEditable}
+        />
       )}
     </div>
   );

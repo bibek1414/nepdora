@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, HelpCircle } from "lucide-react";
 import { FAQComponentData } from "@/types/owner-site/components/faq";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface FAQStyleProps {
   data: FAQComponentData["data"];
@@ -13,7 +14,9 @@ interface FAQStyleProps {
   onUpdate?: (updatedData: Partial<FAQComponentData["data"]>) => void;
 }
 
-export const FAQStyle4: React.FC<FAQStyleProps> = () => {
+export const FAQStyle4: React.FC<FAQStyleProps> = ({
+  isEditable = false,
+}) => {
   const { data: faqs = [], isLoading, error } = useFAQs();
 
   return (
@@ -43,12 +46,14 @@ export const FAQStyle4: React.FC<FAQStyleProps> = () => {
           {!isLoading && !error && faqs.length > 0 && <FAQCard10 faqs={faqs} />}
 
           {!isLoading && !error && faqs.length === 0 && (
-            <div className="py-16 text-center">
-              <HelpCircle className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-              <h3 className="text-foreground mb-4 text-2xl font-semibold">
-                No FAQs Available
-              </h3>
-            </div>
+            <BuilderEmptyState
+              icon={HelpCircle}
+              title="No FAQs Available"
+              description="Answer common questions from your visitors. Add FAQs from the admin dashboard."
+              actionLabel="Manage FAQs"
+              actionLink="/admin/faqs"
+              isEditable={isEditable}
+            />
           )}
         </div>
       </div>

@@ -12,6 +12,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface BlogStyle5Props {
   data: BlogComponentData["data"];
@@ -141,15 +142,14 @@ export const BlogStyle5: React.FC<BlogStyle5Props> = ({
 
         {/* Empty State */}
         {!isLoading && !error && blogs.length === 0 && (
-          <div className="rounded-3xl bg-white/50 py-12 text-center shadow-sm">
-            <Rss className="mx-auto mb-4 h-16 w-16 text-gray-400" />
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">
-              No Blog Posts Found
-            </h3>
-            <p className="text-gray-500">
-              Add some blog posts to display them here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Rss}
+            title="No Blog Posts Found"
+            description="Share your insights and updates. Add blog posts from the admin dashboard."
+            actionLabel="Manage Blogs"
+            actionLink="/admin/blogs"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

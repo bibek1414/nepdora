@@ -10,6 +10,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { motion } from "framer-motion";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -127,15 +128,14 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
             </AlertDescription>
           </Alert>
         ) : featuredBlogs.length === 0 ? (
-          <div className="bg-muted/50 rounded-lg py-12 text-center">
-            <Rss className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-            <h3 className="text-foreground mb-2 text-lg font-semibold">
-              No Blog Posts Found
-            </h3>
-            <p className="text-muted-foreground">
-              Add some blog posts to your site to display them here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Rss}
+            title="No Blog Posts Found"
+            description="Share your insights and updates. Add blog posts from the admin dashboard."
+            actionLabel="Manage Blogs"
+            actionLink="/admin/blogs"
+            isEditable={isEditable}
+          />
         ) : (
           <motion.div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:gap-8"

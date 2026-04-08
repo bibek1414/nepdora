@@ -2,13 +2,14 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Clock, Tag, ArrowUpRight } from "lucide-react";
+import { Clock, Tag, ArrowUpRight, Compass } from "lucide-react";
 import { ToursTemplate2Data } from "@/types/owner-site/components/tours";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/editable-text";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useCollectionData } from "@/hooks/owner-site/admin/use-collections";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface ToursStyle2Props {
   toursData: ToursTemplate2Data;
@@ -235,9 +236,14 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
             Failed to load tours.
           </div>
         ) : tours.length === 0 ? (
-          <div className="flex h-40 items-center justify-center text-gray-500 italic">
-            No tours found in the collection.
-          </div>
+          <BuilderEmptyState
+            icon={Compass}
+            title="No Tours Found"
+            description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
+            actionLabel="Manage Tours"
+            actionLink="/admin/collections"
+            isEditable={isEditable}
+          />
         ) : (
           <div className="flex flex-col gap-6">
             {/* Top row: first 2 tours as horizontal cards */}

@@ -4,6 +4,8 @@ import React from "react";
 import { SkillsData } from "@/types/owner-site/components/skills";
 import { useSkills } from "@/hooks/owner-site/admin/use-skill";
 import { EditableText } from "@/components/ui/editable-text";
+import { Hammer } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface SkillsStyle2Props {
   data: SkillsData;
@@ -63,10 +65,14 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
                 </div>
               ))
             ) : (
-              <div className="py-12 text-lg text-slate-400">
-                No skills added yet. Manage your skills in the admin panel to
-                display them here.
-              </div>
+              <BuilderEmptyState
+                icon={Hammer}
+                title="No Skills Added Yet"
+                description="Showcase your expertise to your visitors. Manage your skills in the admin panel to display them here."
+                actionLabel="Manage Skills"
+                actionLink="/admin/skills"
+                isEditable={isEditable}
+              />
             )}
           </div>
         </div>

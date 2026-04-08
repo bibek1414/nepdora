@@ -28,7 +28,7 @@ export const OurClientsStyle3: React.FC<OurClientsStyleProps> = ({
   return (
     <section className="bg-background py-3 md:py-20">
       <div className="container mx-auto max-w-7xl px-4">
-        <OurClients3 data={data} />
+        <OurClients3 data={data} isEditable={isEditable} />
       </div>
     </section>
   );

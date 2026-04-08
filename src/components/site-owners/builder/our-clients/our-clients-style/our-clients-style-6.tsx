@@ -7,6 +7,8 @@ import { OurClientsComponentData } from "@/types/owner-site/components/our-clien
 import { useGetOurClients } from "@/hooks/owner-site/admin/use-our-client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { Handshake } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface OurClientsStyleProps {
   data: OurClientsComponentData["data"];
@@ -91,8 +93,17 @@ export const OurClientsStyle6: React.FC<OurClientsStyleProps> = ({
               />
             ))}
           </div>
+        ) : clientsData && clientsData.length > 0 ? (
+          <OurClientsCard6 clients={clientsData} data={data} />
         ) : (
-          <OurClientsCard6 clients={clientsData || []} data={data} />
+          <BuilderEmptyState
+            icon={Handshake}
+            title="No Clients Added"
+            description="Display your clients or partners. Add client logos in the admin dashboard."
+            actionLabel="Manage Clients"
+            actionLink="/admin/our-clients"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

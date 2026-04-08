@@ -11,6 +11,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface ServicesStyle6Props {
   data: ServicesComponentData["data"];
@@ -111,14 +112,14 @@ export const ServicesStyle6: React.FC<ServicesStyle6Props> = ({
         {isLoading && (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="relative transform transition-transform duration-200 md:col-span-2">
-              <Skeleton className="h-[400px] w-full rounded-[2rem]" />
+              <Skeleton className="h-[400px] w-full rounded-4xl" />
             </div>
             {Array.from({ length: 2 }).map((_, i) => (
               <div
                 key={i}
                 className="relative transform transition-transform duration-200 md:col-span-1"
               >
-                <Skeleton className="h-[400px] w-full rounded-[2rem]" />
+                <Skeleton className="h-[400px] w-full rounded-4xl" />
               </div>
             ))}
           </div>
@@ -177,19 +178,14 @@ export const ServicesStyle6: React.FC<ServicesStyle6Props> = ({
 
         {/* Empty State */}
         {!isLoading && !error && services.length === 0 && (
-          <div className="rounded-[2rem] border border-gray-100 bg-gray-50 py-16 text-center">
-            <Briefcase className="mx-auto mb-6 h-20 w-20 text-gray-400" />
-            <h3
-              className="mb-4 text-2xl font-semibold text-gray-900"
-              style={{ fontFamily: theme?.fonts?.heading }}
-            >
-              No Services Available
-            </h3>
-            <p className="mx-auto max-w-md text-lg text-gray-600">
-              We&apos;re currently working on new services. Please check back
-              soon.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Services Available"
+            description="List your services to attract clients. Add services from the admin dashboard."
+            actionLabel="Manage Services"
+            actionLink="/admin/services"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

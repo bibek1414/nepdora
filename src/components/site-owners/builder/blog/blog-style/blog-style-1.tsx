@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Rss } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface BlogStyleProps {
   data: BlogComponentData["data"];
@@ -109,15 +110,14 @@ export const BlogStyle1: React.FC<BlogStyleProps> = ({
         )}
 
         {!isLoading && !error && blogs.length === 0 && (
-          <div className="bg-muted/50 rounded-lg py-12 text-center">
-            <Rss className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-            <h3 className="text-foreground mb-2 text-lg font-semibold">
-              No Blog Posts Found
-            </h3>
-            <p className="text-muted-foreground">
-              Add some blog posts to display them here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Rss}
+            title="No Blog Posts Found"
+            description="Share your insights and updates. Add blog posts from the admin dashboard."
+            actionLabel="Manage Blogs"
+            actionLink="/admin/blogs"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

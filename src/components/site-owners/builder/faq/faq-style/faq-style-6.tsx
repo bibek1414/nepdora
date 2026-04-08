@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { FaqCard6 } from "../faq-card/faq-card-6";
 import { AlertCircle, HelpCircle } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface FAQStyleProps {
   data: FAQComponentData["data"];
@@ -84,12 +85,14 @@ export const FAQStyle6: React.FC<FAQStyleProps> = ({
             </AlertDescription>
           </Alert>
         ) : faqs.length === 0 ? (
-          <div className="py-16 text-center">
-            <HelpCircle className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No FAQs Available
-            </h3>
-          </div>
+          <BuilderEmptyState
+            icon={HelpCircle}
+            title="No FAQs Available"
+            description="Answer common questions from your visitors. Add FAQs from the admin dashboard."
+            actionLabel="Manage FAQs"
+            actionLink="/admin/faqs"
+            isEditable={isEditable}
+          />
         ) : (
           <FaqCard6 faqs={faqs} accentColor={accentColor} />
         )}

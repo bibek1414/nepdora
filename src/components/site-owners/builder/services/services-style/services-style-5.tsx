@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EditableText } from "@/components/ui/editable-text";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { ServicesCard5 } from "../services-card/services-card5";
 import { hexToRgba } from "@/lib/utils";
 
@@ -89,12 +90,14 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
             </AlertDescription>
           </Alert>
         ) : services.length === 0 ? (
-          <div className="py-16 text-center">
-            <Briefcase className="text-muted-foreground mx-auto mb-6 h-20 w-20" />
-            <h3 className="text-foreground mb-4 text-2xl font-semibold">
-              No Services Available
-            </h3>
-          </div>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Services Available"
+            description="List your services to attract clients. Add services from the admin dashboard."
+            actionLabel="Manage Services"
+            actionLink="/admin/services"
+            isEditable={isEditable}
+          />
         ) : (
           /* White card - overflow visible so image escapes */
           <div

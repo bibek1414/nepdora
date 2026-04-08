@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EditableText } from "@/components/ui/editable-text";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 import { BlogFeaturedCard6 } from "../blog-card/blog-featured-card-6";
 import { BlogListItem6 } from "../blog-card/blog-list-item-6";
@@ -159,19 +160,14 @@ export const BlogStyle6: React.FC<BlogStyle6Props> = ({
 
         {/* Empty State */}
         {!isLoading && !error && blogs.length === 0 && (
-          <div className="rounded-[2.5rem] bg-gray-50 py-20 text-center">
-            <Rss className="mx-auto mb-6 h-20 w-20 text-gray-400" />
-            <h3
-              className="mb-2 text-2xl font-medium text-gray-900"
-              style={{ fontFamily: theme.fonts.heading }}
-            >
-              No articles found
-            </h3>
-            <p className="mx-auto max-w-sm text-gray-600">
-              Ready to share your insights? Add some blog posts to see them
-              beautifully displayed here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Rss}
+            title="No Articles Found"
+            description="Share your insights and updates. Add blog posts from the admin dashboard."
+            actionLabel="Manage Blogs"
+            actionLink="/admin/blogs"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

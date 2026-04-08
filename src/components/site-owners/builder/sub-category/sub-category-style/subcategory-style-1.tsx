@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, FolderOpen } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { SubCategoryComponentData } from "@/types/owner-site/components/sub-category";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface SubCategoryStyleProps {
   data: SubCategoryComponentData["data"];
@@ -103,15 +104,14 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
         )}
 
         {!isLoading && !error && subcategories.length === 0 && (
-          <div className="bg-muted/50 rounded-lg py-12 text-center">
-            <FolderOpen className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-            <h3 className="text-foreground mb-2 text-lg font-semibold">
-              No SubCategories Found
-            </h3>
-            <p className="text-muted-foreground">
-              Add some subcategories to display them here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={FolderOpen}
+            title="No SubCategories Found"
+            description="Organize your categories further by adding subcategories in the admin dashboard."
+            actionLabel="Manage SubCategories"
+            actionLink="/admin/sub-category"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

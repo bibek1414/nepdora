@@ -2,13 +2,19 @@ import React from "react";
 import { OurClientsData } from "@/types/owner-site/components/our-client";
 import { useGetOurClients } from "@/hooks/owner-site/admin/use-our-client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Handshake } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface OurClients2Props {
   data: OurClientsData;
+  isEditable?: boolean;
 }
 
-export const OurClients2: React.FC<OurClients2Props> = ({ data }) => {
+export const OurClients2: React.FC<OurClients2Props> = ({
+  data,
+  isEditable = false,
+}) => {
   const { data: clientsData, isLoading } = useGetOurClients({});
 
   if (isLoading) {
@@ -25,9 +31,14 @@ export const OurClients2: React.FC<OurClients2Props> = ({ data }) => {
 
   if (clients.length === 0) {
     return (
-      <div className="py-8 text-center text-gray-500">
-        No clients added yet.
-      </div>
+      <BuilderEmptyState
+        icon={Handshake}
+        title="No Clients Added"
+        description="Display your clients or partners. Add client logos in the admin dashboard."
+        actionLabel="Manage Clients"
+        actionLink="/admin/our-clients"
+        isEditable={isEditable}
+      />
     );
   }
 

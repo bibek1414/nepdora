@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { TeamComponentData } from "@/types/owner-site/components/team";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
+import { Users } from "lucide-react";
 
 interface TeamStyleProps {
   data: TeamComponentData["data"];
@@ -81,113 +83,128 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
         </svg>
       </div>
 
-      <div className="container mx-auto grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-        <div>
-          <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="mb-12 text-4xl leading-tight font-bold md:text-5xl"
+      <div className="container mx-auto">
+        {!isLoading && !error && members.length === 0 ? (
+          <BuilderEmptyState
+            icon={Users}
+            title="No Team Members"
+            description="Introduce your team to your visitors. Add team members from the admin dashboard."
+            actionLabel="Manage Team"
+            actionLink="/admin/team-member"
             isEditable={isEditable}
-            placeholder="Meet Our Team"
           />
-
-          <div className="space-y-6">
-            {isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-24 w-full rounded-2xl" />
-              ))
-            ) : error ? (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>Failed to load members.</AlertDescription>
-              </Alert>
-            ) : (
-              members
-                .slice(0, 3)
-                .map(member => (
-                  <TeamCard7
-                    key={member.id}
-                    member={member}
-                    isActive={activeMember?.id === member.id}
-                    onClick={() => setActiveMemberId(member.id)}
-                  />
-                ))
-            )}
-          </div>
-        </div>
-
-        <div className="relative">
-          <div className="relative h-[500px] w-full overflow-hidden rounded-[40px] bg-gray-200">
-            {activeMember ? (
-              <Image
-                src={activeMember.photo}
-                alt={activeMember.name}
-                fill
-                className="object-cover"
+        ) : (
+          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+            <div>
+              <EditableText
+                value={title}
+                onChange={handleTitleChange}
+                as="h2"
+                className="mb-12 text-4xl leading-tight font-bold md:text-5xl"
+                isEditable={isEditable}
+                placeholder="Meet Our Team"
               />
-            ) : (
-              <div className="flex h-full items-center justify-center text-gray-400">
-                No active member
-              </div>
-            )}
 
-            {/* Social Links overlay */}
-            {activeMember && (
-              <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-white/90 px-6 py-2 backdrop-blur-sm">
-                {activeMember.facebook && (
-                  <a
-                    href={activeMember.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-700 transition-colors"
-                  >
-                    <Facebook size={18} />
-                  </a>
-                )}
-                {activeMember.instagram && (
-                  <a
-                    href={activeMember.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-700 transition-colors hover:text-pink-600"
-                  >
-                    <Instagram size={18} />
-                  </a>
-                )}
-                {activeMember.linkedin && (
-                  <a
-                    href={activeMember.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-700 transition-colors"
-                  >
-                    <Linkedin size={18} />
-                  </a>
-                )}
-                {activeMember.twitter && (
-                  <a
-                    href={activeMember.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-700 transition-colors hover:text-black"
-                  >
-                    <Twitter size={18} />
-                  </a>
-                )}
-                {activeMember.email && (
-                  <a
-                    href={`mailto:${activeMember.email}`}
-                    className="text-gray-700 transition-colors hover:text-red-500"
-                  >
-                    <Mail size={18} />
-                  </a>
+              <div className="space-y-6">
+                {isLoading ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <Skeleton key={i} className="h-24 w-full rounded-2xl" />
+                  ))
+                ) : error ? (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                      Failed to load members.
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  members
+                    .slice(0, 3)
+                    .map(member => (
+                      <TeamCard7
+                        key={member.id}
+                        member={member}
+                        isActive={activeMember?.id === member.id}
+                        onClick={() => setActiveMemberId(member.id)}
+                      />
+                    ))
                 )}
               </div>
-            )}
+            </div>
+
+            <div className="relative">
+              <div className="relative h-[500px] w-full overflow-hidden rounded-[40px] bg-gray-200">
+                {activeMember ? (
+                  <Image
+                    src={activeMember.photo}
+                    alt={activeMember.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-gray-400">
+                    No active member
+                  </div>
+                )}
+
+                {/* Social Links overlay */}
+                {activeMember && (
+                  <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-4 rounded-full bg-white/90 px-6 py-2 backdrop-blur-sm">
+                    {activeMember.facebook && (
+                      <a
+                        href={activeMember.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-700 transition-colors"
+                      >
+                        <Facebook size={18} />
+                      </a>
+                    )}
+                    {activeMember.instagram && (
+                      <a
+                        href={activeMember.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-700 transition-colors hover:text-pink-600"
+                      >
+                        <Instagram size={18} />
+                      </a>
+                    )}
+                    {activeMember.linkedin && (
+                      <a
+                        href={activeMember.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-700 transition-colors"
+                      >
+                        <Linkedin size={18} />
+                      </a>
+                    )}
+                    {activeMember.twitter && (
+                      <a
+                        href={activeMember.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-700 transition-colors hover:text-black"
+                      >
+                        <Twitter size={18} />
+                      </a>
+                    )}
+                    {activeMember.email && (
+                      <a
+                        href={`mailto:${activeMember.email}`}
+                        className="text-gray-700 transition-colors hover:text-red-500"
+                      >
+                        <Mail size={18} />
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

@@ -7,6 +7,8 @@ import { SubCategoryComponentData } from "@/types/owner-site/components/sub-cate
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { SubCategory } from "@/types/owner-site/admin/product";
 import { SubCategoryCard7 } from "../sub-category-card/sub-category-card-7";
+import { FolderOpen } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface SubCategoryStyleProps {
   data: SubCategoryComponentData["data"];
@@ -61,8 +63,21 @@ export const SubCategoryStyle4: React.FC<SubCategoryStyleProps> = ({
     );
   }
 
-  if (!subcategories || subcategories.length === 0) {
-    return null;
+  if (!isLoading && (!subcategories || subcategories.length === 0)) {
+    return (
+      <section className="bg-white py-16 lg:py-24">
+        <div className="container mx-auto max-w-7xl px-4">
+          <BuilderEmptyState
+            icon={FolderOpen}
+            title="No SubCategories Found"
+            description="Organize your categories further by adding subcategories in the admin dashboard."
+            actionLabel="Manage SubCategories"
+            actionLink="/admin/sub-category"
+            isEditable={isEditable}
+          />
+        </div>
+      </section>
+    );
   }
 
   return (

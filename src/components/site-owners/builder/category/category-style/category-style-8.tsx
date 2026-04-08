@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight, Loader2, FolderOpen } from "lucide-react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
@@ -10,6 +10,7 @@ import { CategoryComponentData } from "@/types/owner-site/components/category";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Category } from "@/types/owner-site/admin/product";
 import { CategoryCard8 } from "../category-card/category-card-8";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface CategoryStyleProps {
   data: CategoryComponentData["data"];
@@ -217,11 +218,14 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
                 ))}
               </div>
             ) : (
-              <div className="border-border/50 bg-muted/30 rounded-3xl border-2 border-dashed py-20 text-center">
-                <p className="text-muted-foreground">
-                  No categories available to build a routine.
-                </p>
-              </div>
+              <BuilderEmptyState
+                icon={FolderOpen}
+                title="No Categories Found"
+                description="Organize your content by adding categories from the admin dashboard."
+                actionLabel="Manage Categories"
+                actionLink="/admin/category"
+                isEditable={isEditable}
+              />
             )}
           </motion.div>
         </div>

@@ -4,6 +4,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { useFAQs } from "@/hooks/owner-site/admin/use-faq";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { FAQCard11 } from "../faq-card/faq-card-11";
+import { HelpCircle } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface FAQStyle5Props {
   data: FAQData;
@@ -68,8 +70,17 @@ export const FAQStyle5: React.FC<FAQStyle5Props> = ({
               />
             ))}
           </div>
-        ) : (
+        ) : faqs.length > 0 ? (
           <FAQCard11 faqs={faqs} theme={theme} />
+        ) : (
+          <BuilderEmptyState
+            icon={HelpCircle}
+            title="No FAQs Available"
+            description="Answer common questions from your visitors. Add FAQs from the admin dashboard."
+            actionLabel="Manage FAQs"
+            actionLink="/admin/faqs"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

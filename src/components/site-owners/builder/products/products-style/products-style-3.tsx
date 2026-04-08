@@ -8,6 +8,7 @@ import { AlertCircle, ShoppingBag } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import {
   Carousel,
   CarouselContent,
@@ -153,12 +154,14 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
         )}
 
         {!isLoading && !error && products.length === 0 && (
-          <div className="rounded-3xl border-2 border-dashed border-neutral-200 py-20 text-center">
-            <ShoppingBag className="mx-auto mb-6 h-16 w-16 text-neutral-200" />
-            <h3 className="mb-2 text-xl font-bold text-neutral-400">
-              No Best Sellers Found
-            </h3>
-          </div>
+          <BuilderEmptyState
+            icon={ShoppingBag}
+            title="No Best Sellers Found"
+            description="Showcase your popular products to your customers. Add products from the admin dashboard."
+            actionLabel="Manage Products"
+            actionLink="/admin/product"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

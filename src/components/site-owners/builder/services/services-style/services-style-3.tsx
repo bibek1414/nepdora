@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Briefcase } from "lucide-react";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ServicesCard3 } from "../services-card/services-card3";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface ServicesStyleProps {
   component: ServicesComponentData;
@@ -73,14 +74,14 @@ export const ServicesStyle3: React.FC<ServicesStyleProps> = ({
       )}
 
       {!isLoading && !error && services.length === 0 && (
-        <div className="py-16 text-center">
-          <Briefcase className="mx-auto mb-6 h-20 w-20 text-gray-400 opacity-50" />
-          <h3 className="mb-4 text-2xl font-semibold">No Services Available</h3>
-          <p className="mx-auto max-w-md text-lg opacity-70">
-            We&apos;re currently working on new services. Please check back
-            soon.
-          </p>
-        </div>
+        <BuilderEmptyState
+          icon={Briefcase}
+          title="No Services Available"
+          description="List your services to attract clients. Add services from the admin dashboard."
+          actionLabel="Manage Services"
+          actionLink="/admin/services"
+          isEditable={isEditable}
+        />
       )}
     </div>
   );

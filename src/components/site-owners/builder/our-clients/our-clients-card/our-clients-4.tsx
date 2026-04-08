@@ -2,12 +2,18 @@ import React from "react";
 import { OurClientsData } from "@/types/owner-site/components/our-client";
 import { useGetOurClients } from "@/hooks/owner-site/admin/use-our-client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Handshake } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface OurClients4Props {
   data: OurClientsData;
+  isEditable?: boolean;
 }
 
-export const OurClients4: React.FC<OurClients4Props> = ({ data }) => {
+export const OurClients4: React.FC<OurClients4Props> = ({
+  data,
+  isEditable = false,
+}) => {
   const { data: clientsData, isLoading } = useGetOurClients({});
 
   if (isLoading) {
@@ -24,8 +30,15 @@ export const OurClients4: React.FC<OurClients4Props> = ({ data }) => {
 
   if (clients.length === 0) {
     return (
-      <div className="w-full border-y border-gray-100 py-8 text-center text-gray-500">
-        No clients added yet.
+      <div className="w-full border-y border-gray-100 py-8">
+        <BuilderEmptyState
+          icon={Handshake}
+          title="No Clients Added"
+          description="Display your clients or partners. Add client logos in the admin dashboard."
+          actionLabel="Manage Clients"
+          actionLink="/admin/our-clients"
+          isEditable={isEditable}
+        />
       </div>
     );
   }

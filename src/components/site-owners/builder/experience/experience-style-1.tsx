@@ -7,6 +7,8 @@ import { EditableText } from "@/components/ui/editable-text";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useCollectionData } from "@/hooks/owner-site/admin/use-collections";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Briefcase } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface ExperienceStyle1Props {
   experienceData: ExperienceTemplate1Data;
@@ -84,9 +86,14 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
                 Failed to load experience data.
               </div>
             ) : experiences.length === 0 ? (
-              <div className="text-gray-500 italic">
-                No experience data found.
-              </div>
+              <BuilderEmptyState
+                icon={Briefcase}
+                title="No Experience Items"
+                description="List your professional history or major milestones. Add items from the admin dashboard."
+                actionLabel="Manage Experience"
+                actionLink="/admin/collections"
+                isEditable={isEditable}
+              />
             ) : (
               experiences.map((exp: any, index: number) => (
                 <div

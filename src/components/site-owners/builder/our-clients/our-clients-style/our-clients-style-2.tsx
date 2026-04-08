@@ -51,7 +51,7 @@ export const OurClientsStyle2: React.FC<OurClientsStyleProps> = ({
           )}
         </div>
 
-        <OurClients2 data={data} />
+        <OurClients2 data={data} isEditable={isEditable} />
       </div>
     </section>
   );

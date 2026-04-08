@@ -13,6 +13,7 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { useTeamMembers } from "@/hooks/owner-site/admin/use-team-member";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface TeamStyle8Props {
   data: TeamData;
@@ -104,15 +105,14 @@ export function TeamStyle8({
         )}
 
         {!isLoading && !error && members.length === 0 && (
-          <div className="py-20 text-center">
-            <Users className="mx-auto mb-6 h-20 w-20 text-gray-300" />
-            <h3 className="mb-4 text-2xl font-semibold text-gray-900">
-              No Team Members
-            </h3>
-            <p className="text-gray-500">
-              Add team members in the admin panel to see them here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Users}
+            title="No Team Members"
+            description="Introduce your team to your visitors. Add team members from the admin dashboard."
+            actionLabel="Manage Team"
+            actionLink="/admin/team-member"
+            isEditable={isEditable}
+          />
         )}
 
         <AnimatePresence>

@@ -6,6 +6,8 @@ import { useServices } from "@/hooks/owner-site/admin/use-services";
 import { EditableText } from "@/components/ui/editable-text";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { ServicesCard4 } from "../services-card/services-card4";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
+import { Briefcase } from "lucide-react";
 
 interface ServicesStyle4Props {
   data: ServicesComponentData["data"];
@@ -106,9 +108,14 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
             ))}
           </div>
         ) : (
-          <div className="py-10 text-center text-gray-500">
-            No services found.
-          </div>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Services Found"
+            description="List your services to attract clients. Add services from the admin dashboard."
+            actionLabel="Manage Services"
+            actionLink="/admin/services"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

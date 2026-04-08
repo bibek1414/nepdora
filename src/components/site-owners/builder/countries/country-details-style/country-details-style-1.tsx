@@ -12,6 +12,7 @@ import {
   Shield,
   BookOpen,
 } from "lucide-react";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +42,7 @@ const fadeInUp: Variants = {
 
 export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
   data,
+  isEditable = false,
 }) => {
   const params = useParams();
   const slug = params?.slug as string;
@@ -91,14 +93,14 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
   if (!country) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center p-4">
-        <div className="max-w-md text-center">
-          <Globe className="text-muted-foreground mx-auto mb-4 h-16 w-16 opacity-20" />
-          <h2 className="mb-2 text-3xl font-bold">Select a Country</h2>
-          <p className="text-muted-foreground mb-6">
-            This page will display details for the selected study destination.
-            Add some countries to your collection to see them here.
-          </p>
-        </div>
+        <BuilderEmptyState
+          icon={Globe}
+          title="Select a Country"
+          description="This page will display details for the selected study destination. Add some countries to your collection to see them here."
+          actionLabel="Manage Collections"
+          actionLink="/admin/collections"
+          isEditable={isEditable}
+        />
       </div>
     );
   }

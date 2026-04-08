@@ -14,6 +14,7 @@ import {
   DEFAULT_TESTIMONIALS_MAP,
   TestimonialsComponentData,
 } from "@/types/owner-site/components/testimonials";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface TestimonialStyleProps {
   data: TestimonialsComponentData["data"];
@@ -106,34 +107,17 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
     );
   }
 
-  if (testimonials.length === 0) {
+  if (!isLoading && !error && testimonials.length === 0) {
     return (
       <section className="border-y border-black/5 px-6 py-24 text-center">
-        <MessageSquareQuote className="mx-auto mb-6 h-20 w-20 text-black/10" />
-        <h3 className="mb-4 text-2xl font-semibold text-gray-900">
-          No Testimonials Yet
-        </h3>
-        <p className="mx-auto mb-10 max-w-md text-lg text-gray-500">
-          Add some success stories in your dashboard to show them off here.
-        </p>
-        <div className="flex justify-center">
-          <EditableLink
-            text={buttonText}
-            href={buttonLink}
-            isEditable={isEditable}
-            onChange={(newText: string, newHref: string) =>
-              onUpdate?.({ buttonText: newText, buttonLink: newHref })
-            }
-            className="group relative z-30 inline-flex cursor-pointer items-center gap-2 rounded-full px-10 py-5 text-lg font-medium transition-all hover:brightness-110"
-            style={{
-              backgroundColor: theme.colors.primary,
-              color: theme.colors.primaryForeground,
-            }}
-          >
-            {buttonText}
-            <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-          </EditableLink>
-        </div>
+        <BuilderEmptyState
+          icon={MessageSquareQuote}
+          title="No Testimonials Available"
+          description="Share what your clients think about you. Add testimonials from the admin dashboard."
+          actionLabel="Manage Testimonials"
+          actionLink="/admin/testimonials"
+          isEditable={isEditable}
+        />
       </section>
     );
   }

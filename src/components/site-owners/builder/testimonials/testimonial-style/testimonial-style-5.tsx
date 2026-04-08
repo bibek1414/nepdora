@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, MessageSquareQuote } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { TestimonialsComponentData } from "@/types/owner-site/components/testimonials";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { TestimonialCard12 } from "../testimonial-card/testimonial-card-12";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -95,7 +96,7 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
 
         {isLoading && (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <Skeleton className="aspect-[4/5] w-full rounded-3xl md:aspect-[5/6]" />
+            <Skeleton className="aspect-4/5 w-full rounded-3xl md:aspect-5/6" />
             <div className="flex flex-col space-y-4 py-10">
               <Skeleton className="h-6 w-32" />
               <Skeleton className="h-10 w-3/4" />
@@ -160,15 +161,14 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
         )}
 
         {!isLoading && !error && testimonials.length === 0 && (
-          <div className="py-20 text-center">
-            <MessageSquareQuote className="text-muted-foreground mx-auto mb-6 h-20 w-20 opacity-20" />
-            <h3 className="text-foreground mb-4 text-3xl font-semibold tracking-tight">
-              No Testimonials Yet
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-sm text-lg">
-              Add some testimonials in your dashboard to show them off here.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={MessageSquareQuote}
+            title="No Testimonials Available"
+            description="Share what your clients think about you. Add testimonials from the admin dashboard."
+            actionLabel="Manage Testimonials"
+            actionLink="/admin/testimonials"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

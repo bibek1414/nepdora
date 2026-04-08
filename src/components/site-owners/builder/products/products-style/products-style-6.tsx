@@ -11,6 +11,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
@@ -124,13 +125,14 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
             ))}
           </div>
         ) : (
-          <div className="bg-muted/50 rounded-lg py-12 text-center">
-            <ShoppingBag className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-            <h3 className="mb-2 text-lg font-semibold">No Trending Products</h3>
-            <p className="text-muted-foreground">
-              Check back later for our most popular items.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={ShoppingBag}
+            title="No Trending Products"
+            description="Showcase your popular products to your customers. Add products from the admin dashboard."
+            actionLabel="Manage Products"
+            actionLink="/admin/product"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

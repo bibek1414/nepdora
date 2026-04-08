@@ -11,6 +11,7 @@ import { AlertCircle, ShoppingBag, Filter } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import Pagination from "@/components/ui/site-owners/pagination";
 import ProductFilterSidebar from "../products-filter/product-filter-sidebar";
 import { Button } from "@/components/ui/button";
@@ -186,15 +187,18 @@ export const ProductsStyle7: React.FC<ProductsStyleProps> = ({
             )}
 
             {!isLoading && !error && products.length === 0 && (
-              <div className="bg-muted/50 rounded-lg py-12 text-center">
-                <ShoppingBag className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                <h3 className="text-foreground mb-2 text-lg font-semibold">
-                  No Products Found
-                </h3>
-                <p className="text-muted-foreground">
-                  No products match your current filters.
-                </p>
-              </div>
+              <BuilderEmptyState
+                icon={ShoppingBag}
+                title="No Products Found"
+                description={
+                  isEditable
+                    ? "Showcase your products to your customers. Add products from the admin dashboard."
+                    : "No products match your current filters."
+                }
+                actionLabel={isEditable ? "Manage Products" : undefined}
+                actionLink={isEditable ? "/admin/product" : undefined}
+                isEditable={isEditable}
+              />
             )}
           </div>
         </div>

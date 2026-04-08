@@ -9,6 +9,7 @@ import { AlertCircle, Rss } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { BlogComponentData } from "@/types/owner-site/components/blog";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import Pagination from "@/components/ui/pagination";
 
 interface BlogStyle7Props {
@@ -154,19 +155,14 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
 
         {/* Empty State */}
         {!isLoading && !error && blogs.length === 0 && (
-          <div className="rounded-2xl bg-slate-50 py-20 text-center">
-            <Rss className="mx-auto mb-6 h-20 w-20 text-slate-300" />
-            <h3
-              className="mb-2 text-2xl font-semibold text-slate-900"
-              style={{ fontFamily: theme.fonts.heading }}
-            >
-              No blog posts available
-            </h3>
-            <p className="mx-auto max-w-sm text-slate-500">
-              We haven't published any articles yet. Check back soon for
-              exciting updates and new stories.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Rss}
+            title="No Blog Posts Available"
+            description="Share your insights and updates. Add blog posts from the admin dashboard."
+            actionLabel="Manage Blogs"
+            actionLink="/admin/blogs"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>

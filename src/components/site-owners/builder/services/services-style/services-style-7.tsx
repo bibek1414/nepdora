@@ -9,7 +9,9 @@ import { AlertCircle, Package } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { ServicesComponentData } from "@/types/owner-site/components/services";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import Pagination from "@/components/ui/pagination";
+import { Briefcase } from "lucide-react";
 
 interface ServicesStyle7Props {
   data: ServicesComponentData["data"];
@@ -152,19 +154,14 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
 
         {/* Empty State */}
         {!isLoading && !error && services.length === 0 && (
-          <div className="rounded-[2.5rem] bg-gray-50 py-20 text-center">
-            <Package className="mx-auto mb-6 h-20 w-20 text-gray-400" />
-            <h3
-              className="mb-2 text-2xl font-semibold text-gray-950"
-              style={{ fontFamily: theme.fonts.heading }}
-            >
-              No services found
-            </h3>
-            <p className="mx-auto max-w-sm text-gray-600">
-              We are currently updating our service offerings. Please check back
-              later or contact us for more information.
-            </p>
-          </div>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Services Found"
+            description="List your services to attract clients. Add services from the admin dashboard."
+            actionLabel="Manage Services"
+            actionLink="/admin/services"
+            isEditable={isEditable}
+          />
         )}
       </div>
     </section>
