@@ -46,11 +46,7 @@ const navigationGroups = [
         href: "/superadmin/subscriptions-history",
         icon: History,
       },
-      {
-        name: "Pricing Plans",
-        href: "/superadmin/pricing-plans",
-        icon: DollarSign,
-      },
+
       { name: "Templates", href: "/superadmin/template", icon: Layout },
       { name: "FAQ", href: "/superadmin/faq", icon: HelpCircle },
       { name: "Testimonials", href: "/superadmin/testimonial", icon: Shield },

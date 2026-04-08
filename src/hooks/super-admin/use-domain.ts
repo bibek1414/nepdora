@@ -7,6 +7,7 @@ import {
   deleteDomain,
   CreateDomainPayload,
   UpdateDomainPayload,
+  upgradeDomainPlan,
 } from "@/services/api/super-admin/domain";
 import { PaginatedResponse } from "@/types/super-admin/domain";
 import { Domain } from "@/types/super-admin/domain";
@@ -48,6 +49,15 @@ export function useDeleteDomain() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => deleteDomain(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["domains"] }),
+  });
+}
+
+export function useUpgradeDomainPlan() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ tenantId, planId }: { tenantId: number; planId: number }) =>
+      upgradeDomainPlan(tenantId, planId),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["domains"] }),
   });
 }

@@ -92,14 +92,6 @@ export default function DomainsPage() {
     // Analytics or logging can go here
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="flex h-64 items-center justify-center text-red-500">
@@ -135,6 +127,7 @@ export default function DomainsPage() {
         onEdit={handleEdit}
         onDelete={confirmDelete}
         onFrontendUrlClick={handleFrontendUrlClick}
+        isLoading={isLoading}
       />
 
       {/* Pagination */}

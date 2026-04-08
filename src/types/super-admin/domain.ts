@@ -11,6 +11,12 @@ export interface Tenant {
   name: string;
   created_on: string;
   owner: Owner;
+  pricing_plan?: {
+    id: number;
+    name: string;
+    price: string;
+    unit: string;
+  };
 }
 
 export interface Domain {

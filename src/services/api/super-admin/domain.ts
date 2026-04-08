@@ -106,3 +106,24 @@ export async function deleteDomain(id: number): Promise<void> {
     );
   }
 }
+
+// ── UPDATE PLAN ────────────────────────────────────────────────────────────────
+
+export async function upgradeDomainPlan(
+  tenantId: number,
+  planId: number
+): Promise<any> {
+  const res = await apiFetch(`${API_BASE_URL}/api/upgrade/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tenant_id: tenantId, plan_id: planId }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      err?.detail || err?.error || err?.message || `Failed to change plan: ${res.statusText}`
+    );
+  }
+  return res.json();
+}

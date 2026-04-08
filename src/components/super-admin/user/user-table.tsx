@@ -1,5 +1,6 @@
 import { User } from "@/types/super-admin/user";
 import { Trash2, Mail, MapPin, Phone } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -22,44 +23,6 @@ export default function UserTable({
   onDelete,
   isLoading = false,
 }: UserTableProps) {
-  if (isLoading) {
-    return (
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-b border-gray-200 bg-gray-50">
-              <TableHead className="text-left font-semibold text-gray-700">
-                User
-              </TableHead>
-              <TableHead className="text-left font-semibold text-gray-700">
-                Role
-              </TableHead>
-              <TableHead className="text-left font-semibold text-gray-700">
-                Associated Stores
-              </TableHead>
-              <TableHead className="text-left font-semibold text-gray-700">
-                Phone
-              </TableHead>
-              <TableHead className="text-left font-semibold text-gray-700">
-                Date
-              </TableHead>
-              <TableHead className="text-left font-semibold text-gray-700">
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell colSpan={5} className="h-32 text-center text-gray-400">
-                Loading users...
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-    );
-  }
-
   return (
     <div className="overflow-hidden rounded-xl bg-white">
       <Table>
@@ -89,7 +52,40 @@ export default function UserTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.length > 0 ? (
+          {isLoading ? (
+            [...Array(5)].map((_, i) => (
+              <TableRow key={i}>
+                <TableCell className="py-4">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-[150px]" />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-6 w-16 rounded-full" />
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-[120px]" />
+                    <Skeleton className="h-3 w-[180px]" />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-[100px]" />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-[100px]" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-[80px]" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-8 w-8 rounded-md" />
+                </TableCell>
+              </TableRow>
+            ))
+          ) : users.length > 0 ? (
             users.map(user => (
               <TableRow
                 key={user.id}
@@ -186,7 +182,11 @@ export default function UserTable({
                   )}
                 </TableCell>
                 <TableCell className="py-4 text-left">
-                  {user.created_at || "N/A"}
+                  {user.created_at ? new Date(user.created_at).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric"
+                  }) : "N/A"}
                 </TableCell>
                 <TableCell className="py-4 text-left">
                   <Button

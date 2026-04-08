@@ -13,6 +13,16 @@ import { Button } from "@/components/ui/button";
 import { useTemplateToken } from "@/hooks/super-admin/components/use-template-token";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
+import { Skeleton } from "@/components/ui/skeleton";
+import { usePricingPlans } from "@/hooks/use-subscription";
+import { useUpgradeDomainPlan } from "@/hooks/super-admin/use-domain";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DomainTableProps {
   domains: Domain[];
@@ -20,6 +30,7 @@ interface DomainTableProps {
   onEdit: (domain: Domain) => void;
   onDelete: (id: number) => void;
   onFrontendUrlClick: (tenantSchemaName: string) => void;
+  isLoading?: boolean;
 }
 const formatDate = (dateString: string | null | undefined) => {
   if (!dateString) return "N/A";
@@ -35,11 +46,23 @@ export default function DomainTable({
   onEdit,
   onDelete,
   onFrontendUrlClick,
+  isLoading = false,
 }: DomainTableProps) {
   const [loggingInTenantId, setLoggingInTenantId] = useState<number | null>(
     null
   );
   const templateTokenMutation = useTemplateToken();
+  const { data: plansData } = usePricingPlans();
+  const upgradeDomainPlan = useUpgradeDomainPlan();
+  
+  const handlePlanChange = async (tenantId: number, planId: number) => {
+    try {
+      await upgradeDomainPlan.mutateAsync({ tenantId, planId });
+      toast.success("Plan updated successfully.");
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to update plan.");
+    }
+  };
 
   const handleFrontendUrlClick = (
     tenantSchemaName: string,
@@ -148,6 +171,7 @@ export default function DomainTable({
               Tenant
             </TableHead>
             <TableHead className="font-semibold text-gray-700">Owner</TableHead>
+            <TableHead className="font-semibold text-gray-700">Plan</TableHead>
             <TableHead className="font-semibold text-gray-700">
               Created On
             </TableHead>
@@ -157,7 +181,19 @@ export default function DomainTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {domains.length > 0 ? (
+          {isLoading ? (
+            [...Array(5)].map((_, i) => (
+              <TableRow key={i}>
+                <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-[180px]" /></TableCell>
+                <TableCell><Skeleton className="h-8 w-[120px] rounded-md" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                <TableCell><div className="flex justify-end space-x-1"><Skeleton className="h-8 w-8 rounded-md" /><Skeleton className="h-8 w-8 rounded-md" /></div></TableCell>
+              </TableRow>
+            ))
+          ) : domains.length > 0 ? (
             domains.map(domain => {
               return (
                 <TableRow
@@ -194,6 +230,24 @@ export default function DomainTable({
                   </TableCell>
                   <TableCell className="max-w-[150px] truncate text-gray-600">
                     {domain.tenant.owner.email}
+                  </TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Select
+                      defaultValue={domain.tenant.pricing_plan?.id?.toString()}
+                      onValueChange={(val) => handlePlanChange(domain.tenant.id, parseInt(val))}
+                      disabled={upgradeDomainPlan.isPending}
+                    >
+                      <SelectTrigger className="w-[140px] h-8 text-xs">
+                        <SelectValue placeholder="Select Plan" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {plansData?.map((plan) => (
+                          <SelectItem key={plan.id} value={plan.id.toString()}>
+                            {plan.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   <TableCell className="text-gray-600">
                     {formatDate(domain.created_at)}
