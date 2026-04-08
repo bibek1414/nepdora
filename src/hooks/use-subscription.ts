@@ -4,7 +4,9 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 import { subscriptionApi } from "@/services/api/subscription";
+import { getAuthToken } from "@/utils/auth";
 import { toast } from "sonner";
 import type {
   SubscriptionStatus,
@@ -62,7 +64,16 @@ function persistSubscriptionStatus(status: SubscriptionStatus) {
 }
 
 export const useSubscriptionStatus = () => {
+  const pathname = usePathname();
+  const token = getAuthToken();
   const persistedStatus = readPersistedSubscriptionStatus();
+
+  // Only call the API if we have a token AND we are on allowed dashboard routes
+  // The user specifically requested this to avoid calls on the main landing page
+  const isAllowedPath =
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/builder") ||
+    pathname?.startsWith("/preview");
 
   return useQuery<SubscriptionStatus, Error>({
     queryKey: ["subscription", "status"],
@@ -71,6 +82,7 @@ export const useSubscriptionStatus = () => {
       persistSubscriptionStatus(status);
       return status;
     },
+    enabled: !!token && isAllowedPath,
     initialData: persistedStatus?.data,
     initialDataUpdatedAt: persistedStatus?.updatedAt,
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -84,7 +96,8 @@ export const usePricingPlans = (
   return useQuery<PlansResponse, Error>({
     queryKey: ["plans"],
     queryFn: subscriptionApi.getPlans,
-    staleTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
     ...options,
   });
 };

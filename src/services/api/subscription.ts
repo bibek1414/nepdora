@@ -16,14 +16,17 @@ const API_BASE_URL = siteConfig.apiBaseUrl;
 export const subscriptionApi = {
   // Get current subscription status
   getStatus: async (): Promise<SubscriptionStatus> => {
-    const response = await apiFetch(`${API_BASE_URL}/api/subscription-status/`, {
-      method: "GET",
-      headers: {
-        ...createHeaders(),
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-      cache: "no-store",
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/subscription-status/`,
+      {
+        method: "GET",
+        headers: {
+          ...createHeaders(),
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        cache: "no-store",
+      }
+    );
 
     await handleApiError(response);
     return response.json();
@@ -37,7 +40,6 @@ export const subscriptionApi = {
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
       });
 
       if (!response.ok) {
