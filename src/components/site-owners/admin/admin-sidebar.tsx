@@ -9,14 +9,12 @@ import {
   Package,
   FileText,
   Bug,
-  MessageSquare,
   Mail,
   PanelRight,
   PanelLeft,
   MessageCircle,
   Wallet,
   Unplug,
-  Facebook,
   LayoutPanelTop,
   Settings,
   Calendar,
@@ -30,6 +28,7 @@ import {
 } from "lucide-react";
 import { User } from "@/types/auth/auth";
 import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
+import { SidebarSubscriptionWidget } from "./subscription/sidebar-subscription-widget";
 
 interface NavigationItem {
   name: string;
@@ -339,6 +338,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           ))}
         </nav>
       </div>
+
+      {/* Subscription Widget */}
+      <SidebarSubscriptionWidget collapsed={collapsed} />
 
       <div className="border-t border-gray-100 p-4">
         <div

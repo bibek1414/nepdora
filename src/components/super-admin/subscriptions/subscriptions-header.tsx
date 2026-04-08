@@ -1,14 +1,8 @@
 "use client";
-
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Search, Info } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 
 interface SubscriptionsHeaderProps {
   search: string;
