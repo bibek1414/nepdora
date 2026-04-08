@@ -39,7 +39,7 @@ export function SubscriptionsOverview() {
   const subscriptions = data?.results || [];
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6">
+    <div className="space-y-6 p-6">
       <SubscriptionsHeader search={search} setSearch={setSearch} />
 
       <SubscriptionsTable subscriptions={subscriptions} isLoading={isLoading} />

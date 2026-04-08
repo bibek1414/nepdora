@@ -4,6 +4,8 @@ import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { SubscriptionBlocker } from "@/components/site-owners/admin/subscription/subscription-blocker";
+import { getServerUser } from "@/hooks/use-jwt-server";
+import { redirect } from "next/navigation";
 export async function generateMetadata(): Promise<Metadata> {
   return generateAdminPageMetadata({
     pageName: "Website Builder",
@@ -13,11 +15,16 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getServerUser();
+
+  if (!user) {
+    redirect("/permission-denied");
+  }
   return (
     <SubscriptionProvider>
       <DynamicFavicon />

@@ -10,6 +10,8 @@ import type { Metadata } from "next";
 import { WebsiteSocketProvider } from "@/providers/website-socket-provider";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { SubscriptionBlocker } from "@/components/site-owners/admin/subscription/subscription-blocker";
+import { getServerUser } from "@/hooks/use-jwt-server";
+import { redirect } from "next/navigation";
 
 interface PreviewLayoutProps {
   children: React.ReactNode;
@@ -33,6 +35,12 @@ export default async function PreviewLayout({
   children,
   params,
 }: PreviewLayoutProps) {
+  const user = await getServerUser();
+
+  if (!user) {
+    redirect("/permission-denied");
+  }
+
   const { siteUser } = await params;
 
   return (
