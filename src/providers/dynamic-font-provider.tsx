@@ -22,15 +22,19 @@ export function DynamicFontProvider({
   children: React.ReactNode;
 }) {
   const [subdomain, setSubdomain] = useState<string | null>(null);
+  const [isPathPreview, setIsPathPreview] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setSubdomain(extractSubdomain(new URL(window.location.href)));
+      const url = new URL(window.location.href);
+      setSubdomain(extractSubdomain(url));
+      setIsPathPreview(url.pathname.startsWith("/preview"));
     }
   }, []);
 
   const hasSubdomain = Boolean(subdomain);
-  const { data: themeResponse } = useThemeQuery(hasSubdomain);
+  const status = isPathPreview ? "preview" : "published";
+  const { data: themeResponse } = useThemeQuery(hasSubdomain, status);
 
   // Get theme fonts, fallback to defaults
   const theme = themeResponse?.data?.[0]?.data?.theme || {

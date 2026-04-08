@@ -1285,12 +1285,14 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(
           )}
         </div>
 
-        <MediaLibraryDialog
-          open={isMediaLibraryOpen}
-          onOpenChange={setIsMediaLibraryOpen}
-          onSelect={handleMediaLibrarySelect}
-          folder={uploadFolder || "text-editor"}
-        />
+        {!readOnly && (
+          <MediaLibraryDialog
+            open={isMediaLibraryOpen}
+            onOpenChange={setIsMediaLibraryOpen}
+            onSelect={handleMediaLibrarySelect}
+            folder={uploadFolder || "text-editor"}
+          />
+        )}
       </div>
     );
   }

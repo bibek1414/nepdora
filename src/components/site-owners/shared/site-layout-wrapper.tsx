@@ -36,7 +36,10 @@ export function SiteLayoutWrapper({
   const { data: previewFooterResponse, isLoading: isFooterLoading } =
     useFooterQuery(isPreview);
 
-  const { data: previewThemeResponse } = useThemeQuery(isPreview);
+  const { data: previewThemeResponse } = useThemeQuery(
+    isPreview,
+    isPreview ? "preview" : "published"
+  );
 
   const navbarResponse = isPreview
     ? previewNavbarResponse

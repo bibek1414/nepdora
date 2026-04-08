@@ -11,10 +11,10 @@ import {
 } from "@/types/owner-site/components/theme";
 
 export const useThemeApi = {
-  getThemes: async (): Promise<GetThemeResponse> => {
+  getThemes: async (status: string = "preview"): Promise<GetThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(
-      `${API_BASE_URL}/api/theme/?status=preview`,
+      `${API_BASE_URL}/api/theme/?status=${status}`,
       {
         method: "GET",
         headers: createHeaders(),

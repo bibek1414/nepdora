@@ -12,6 +12,8 @@ import {
 } from "@/providers/website-socket-provider";
 import { useContext } from "react";
 
+import { usePathname } from "next/navigation";
+
 export const PAGES_QUERY_KEY = (
   status: "preview" | "published" = "preview"
 ) => ["pages", status];
@@ -19,14 +21,21 @@ export const PAGES_QUERY_KEY = (
 export const PAGE_QUERY_KEY = (slug: string) => ["pages", slug];
 
 // Get all pages
-export const usePages = () => {
+export const usePages = (status?: "preview" | "published") => {
   const socket = useContext(WebsiteSocketContext);
+  const pathname = usePathname();
+
+  const effectiveStatus =
+    status ||
+    (pathname?.startsWith("/preview") || pathname?.startsWith("/builder")
+      ? "preview"
+      : "published");
 
   return useQuery({
-    queryKey: PAGES_QUERY_KEY("preview"),
+    queryKey: PAGES_QUERY_KEY(effectiveStatus),
     queryFn: () => {
       if (!socket || !socket.enabled) {
-        return pageApi.getPages("preview");
+        return pageApi.getPages(effectiveStatus);
       }
       return new Promise<Page[]>((resolve, reject) => {
         let isFinished = false;
@@ -65,11 +74,11 @@ export const usePages = () => {
 
         socket.sendMessage({
           action: "list_pages",
-          status: "preview",
+          status: "preview", // We still use "preview" for socket subscription for now as it maps to draft
         });
       });
     },
-    staleTime: 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 

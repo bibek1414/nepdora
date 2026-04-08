@@ -291,15 +291,17 @@ export const GalleryTemplate2: React.FC<GalleryTemplateProps> = ({
         </div>
       )}
 
-      <MediaLibraryDialog
-        open={isMediaDialogOpen}
-        onOpenChange={setIsMediaDialogOpen}
-        onSelect={url => {
-          handleAddImage(url);
-          setIsMediaDialogOpen(false);
-        }}
-        folder="gallery-images"
-      />
+      {isEditable && (
+        <MediaLibraryDialog
+          open={isMediaDialogOpen}
+          onOpenChange={setIsMediaDialogOpen}
+          onSelect={url => {
+            handleAddImage(url);
+            setIsMediaDialogOpen(false);
+          }}
+          folder="gallery-images"
+        />
+      )}
 
       {selectedImage && !isEditable && (
         <Dialog

@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { buildTenantFrontendUrl } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
 
 type RedirectOptions = {
   /**
@@ -30,7 +32,28 @@ export function useAuthRedirect(
     if (isLoading || !user) return;
 
     const shouldUseFirstLoginPath = respectFirstLogin && user.first_login;
-    const destination = shouldUseFirstLoginPath ? firstLoginPath : redirectTo;
+    let destination = shouldUseFirstLoginPath ? firstLoginPath : redirectTo;
+
+    // Tenant-aware redirection
+    if (user.sub_domain) {
+      const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+      const isAlreadyOnSubdomain = hostname.startsWith(`${user.sub_domain}.`);
+
+      // If we're on the root domain but have a subdomain, redirect to the subdomain
+      if (!isAlreadyOnSubdomain && destination.startsWith("/")) {
+        const tenantUrl = buildTenantFrontendUrl(user.sub_domain, {
+          path: destination,
+          isDev: siteConfig.isDev,
+          baseDomain: siteConfig.baseDomain,
+          port: siteConfig.frontendDevPort,
+        });
+
+        if (typeof window !== "undefined") {
+          window.location.href = tenantUrl;
+          return;
+        }
+      }
+    }
 
     router.replace(destination);
   }, [user, isLoading, router, redirectTo, firstLoginPath, respectFirstLogin]);

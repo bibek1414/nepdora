@@ -54,6 +54,66 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const router = useRouter();
 
+  const getCurrentTenantSubdomain = () => {
+    if (typeof window === "undefined") return null;
+
+    const hostname = window.location.hostname;
+    if (hostname.endsWith(".localhost")) {
+      return hostname.replace(".localhost", "");
+    }
+
+    if (hostname.endsWith(`.${siteConfig.baseDomain}`)) {
+      const subdomain = hostname.replace(`.${siteConfig.baseDomain}`, "");
+      if (subdomain && subdomain !== "www") return subdomain;
+    }
+
+    const pathSegments = window.location.pathname.split("/").filter(Boolean);
+    if (pathSegments[0] === "builder" || pathSegments[0] === "preview") {
+      return pathSegments[1] || null;
+    }
+
+    return null;
+  };
+
+  const parseStoredUser = (rawUser: string | null) => {
+    if (!rawUser) return null;
+
+    try {
+      return JSON.parse(rawUser) as Partial<User>;
+    } catch {
+      return null;
+    }
+  };
+
+  const parseCookieUser = (rawCookieUser: string | null) => {
+    if (!rawCookieUser) return null;
+
+    try {
+      return JSON.parse(decodeURIComponent(rawCookieUser)) as Partial<User>;
+    } catch {
+      try {
+        return JSON.parse(rawCookieUser) as Partial<User>;
+      } catch {
+        return null;
+      }
+    }
+  };
+
+  const clearLocalAuthStorage = () => {
+    localStorage.removeItem("authTokens");
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("verificationEmail");
+    localStorage.removeItem("nepdora-subscription-status");
+
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("redirectAfterLogin");
+      sessionStorage.removeItem("verified_subscription_payment");
+      sessionStorage.removeItem("subscription_payment_data");
+      sessionStorage.removeItem("esewa_transaction");
+      sessionStorage.removeItem("khalti_transaction");
+    }
+  };
+
   // Simple cookie utility - sets cookie with expiration from JWT
   const setCookieWithExpiration = (
     name: string,
@@ -78,12 +138,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+    const isLocalhost = baseDomain.includes("localhost") || window.location.hostname === "localhost";
 
-    // Set for current domain
+    // Set for current domain (host-only)
     document.cookie = `${name}=${value}${expiresStr}; path=/; SameSite=Lax${secure}`;
 
-    // Set for base domain
-    document.cookie = `${name}=${value}${expiresStr}; domain=.${baseDomain}; path=/; SameSite=Lax${secure}`;
+    // Set for base domain to allow sharing across subdomains
+    if (isLocalhost) {
+      // For localhost, some browsers handle 'domain=localhost' better than '.localhost'
+      document.cookie = `${name}=${value}${expiresStr}; domain=localhost; path=/; SameSite=Lax${secure}`;
+    } else if (baseDomain) {
+      document.cookie = `${name}=${value}${expiresStr}; domain=.${baseDomain}; path=/; SameSite=Lax${secure}`;
+    }
   };
 
   const getCookie = (name: string): string | null => {
@@ -99,9 +165,110 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const deleteCookie = (name: string) => {
     const baseDomain = siteConfig.baseDomain;
+    const isLocalhost = baseDomain.includes("localhost") || (typeof window !== "undefined" && window.location.hostname === "localhost");
+
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.${baseDomain}; path=/;`;
+
+    if (isLocalhost) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=localhost; path=/;`;
+    } else if (baseDomain) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.${baseDomain}; path=/;`;
+    }
   };
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const syncAuthFromSharedCookies = useCallback(() => {
+    const getAuthSubdomain = (
+      authToken?: string | null,
+      rawUser?: string | null
+    ) => {
+      const storedUser = parseStoredUser(rawUser ?? null);
+      if (storedUser?.sub_domain) return storedUser.sub_domain;
+
+      const cookieUser = parseCookieUser(rawUser ?? null);
+      if (cookieUser?.sub_domain) return cookieUser.sub_domain;
+
+      const decoded = authToken
+        ? (decodeJwt(authToken) as { sub_domain?: string } | null)
+        : null;
+
+      return decoded?.sub_domain ?? null;
+    };
+
+    if (typeof window === "undefined") return false;
+
+    const cookieAuthToken = getCookie("authToken");
+    const cookieRefreshToken = getCookie("refreshToken");
+    const cookieAuthUser = getCookie("authUser");
+    const currentTenantSubdomain = getCurrentTenantSubdomain();
+    const cookieAuthSubdomain = getAuthSubdomain(
+      cookieAuthToken,
+      cookieAuthUser
+    );
+
+    if (!cookieAuthToken) {
+      clearLocalAuthStorage();
+      setUser(null);
+      setTokens(null);
+      return false;
+    }
+
+    if (
+      currentTenantSubdomain &&
+      cookieAuthSubdomain &&
+      currentTenantSubdomain !== cookieAuthSubdomain
+    ) {
+      clearLocalAuthStorage();
+      setUser(null);
+      setTokens(null);
+      return false;
+    }
+
+    const nextTokens: AuthTokens = {
+      access_token: cookieAuthToken,
+      refresh_token: cookieRefreshToken || "",
+    };
+    const rawStoredTokens = localStorage.getItem("authTokens");
+    const rawStoredUser = localStorage.getItem("authUser");
+    const nextUser =
+      parseCookieUser(cookieAuthUser) ||
+      (decodeJwt(cookieAuthToken) as unknown as Partial<User> | null);
+    const nextUserJson = nextUser ? JSON.stringify(nextUser) : null;
+
+    let storedAccessToken: string | null = null;
+    if (rawStoredTokens) {
+      try {
+        storedAccessToken = (JSON.parse(rawStoredTokens) as AuthTokens)
+          .access_token;
+      } catch {
+        storedAccessToken = null;
+      }
+    }
+
+    const storedUserSubdomain = getAuthSubdomain(null, rawStoredUser);
+    const storageNeedsSync =
+      storedAccessToken !== cookieAuthToken ||
+      rawStoredUser !== nextUserJson ||
+      storedUserSubdomain !== cookieAuthSubdomain;
+
+    if (storageNeedsSync) {
+      localStorage.setItem("authTokens", JSON.stringify(nextTokens));
+      if (nextUserJson) {
+        localStorage.setItem("authUser", nextUserJson);
+      } else {
+        localStorage.removeItem("authUser");
+      }
+
+      // If we are on the main domain and the user state is empty, fill it immediately
+      // This helps with the "Sign In" button showing when it shouldn't
+      if (!currentTenantSubdomain && !user && nextUser) {
+        setUser(nextUser as User);
+        setTokens(nextTokens);
+      }
+    }
+
+    return true;
+  }, [user]);
 
   // Check if token is expired
   const isTokenExpired = (token: string): boolean => {
@@ -158,9 +325,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       router.push("/account/login");
       return false;
     }
-  }, [router]);
+  }, [router, clearAuthData, updateTokens]);
 
-  const updateUser = (userData: Partial<User>) => {
+  function updateUser(userData: Partial<User>) {
     setUser(prev => {
       if (!prev) return prev;
       const updatedUser = { ...prev, ...userData };
@@ -179,9 +346,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       return updatedUser;
     });
-  };
+  }
 
-  const updateTokens = (newTokens: AuthTokens) => {
+  function updateTokens(newTokens: AuthTokens) {
     setTokens(newTokens);
     localStorage.setItem("authTokens", JSON.stringify(newTokens));
 
@@ -204,29 +371,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (storedUser) {
       setCookieWithExpiration("authUser", storedUser, newTokens.access_token);
     }
-  };
+  }
 
-  const clearAuthData = () => {
+  function clearAuthData() {
     setUser(null);
     setTokens(null);
-
-    localStorage.removeItem("authTokens");
-    localStorage.removeItem("authUser");
-    localStorage.removeItem("verificationEmail");
-    localStorage.removeItem("nepdora-subscription-status");
-
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("redirectAfterLogin");
-      sessionStorage.removeItem("verified_subscription_payment");
-      sessionStorage.removeItem("subscription_payment_data");
-      sessionStorage.removeItem("esewa_transaction");
-      sessionStorage.removeItem("khalti_transaction");
-    }
+    clearLocalAuthStorage();
 
     deleteCookie("authToken");
     deleteCookie("authUser");
     deleteCookie("refreshToken");
-  };
+  }
 
   // Initialize auth on mount
   useEffect(() => {
@@ -252,7 +407,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             access_token: authTokenFromUrl,
             refresh_token: refreshTokenFromUrl || "",
           };
-          handleAuthSuccess(decoded as User, tokenData);
+          const persistedUser = {
+            user_id:
+              decoded.user_id ??
+              (typeof decoded.id === "number" ? decoded.id : undefined),
+            email: decoded.email,
+            store_name: decoded.store_name,
+            has_profile: decoded.has_profile,
+            role: decoded.role,
+            phone_number: decoded.phone_number,
+            domain: decoded.domain,
+            sub_domain: decoded.sub_domain,
+            has_profile_completed: decoded.has_profile_completed,
+            is_onboarding_complete: decoded.is_onboarding_complete,
+            first_login: decoded.first_login,
+            website_type: decoded.website_type,
+          };
+
+          setUser(decoded as User);
+          setTokens(tokenData);
+
+          localStorage.setItem("authTokens", JSON.stringify(tokenData));
+          localStorage.setItem("authUser", JSON.stringify(persistedUser));
+
+          setCookieWithExpiration(
+            "authToken",
+            tokenData.access_token,
+            tokenData.access_token
+          );
+          setCookieWithExpiration(
+            "authUser",
+            JSON.stringify(persistedUser),
+            tokenData.access_token
+          );
+          if (tokenData.refresh_token) {
+            setCookieWithExpiration(
+              "refreshToken",
+              tokenData.refresh_token,
+              tokenData.refresh_token
+            );
+          }
         }
 
         // Clean URL
@@ -265,46 +459,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Check localStorage
-      let storedTokens = localStorage.getItem("authTokens");
-      let storedUser = localStorage.getItem("authUser");
+      const hasSharedAuth = syncAuthFromSharedCookies();
+      const storedTokens = localStorage.getItem("authTokens");
+      const storedUser = localStorage.getItem("authUser");
 
-      // Check cookies if localStorage is empty (e.g. after middleware redirect on new subdomain)
-      if (!storedTokens) {
-        const cookieAuthToken = getCookie("authToken");
-        const cookieRefreshToken = getCookie("refreshToken");
-        const cookieAuthUser = getCookie("authUser");
-
-        if (cookieAuthToken) {
-          console.log("[AuthContext] Initializing from cookies...");
-          const tokenData: AuthTokens = {
-            access_token: cookieAuthToken,
-            refresh_token: cookieRefreshToken || "",
-          };
-          storedTokens = JSON.stringify(tokenData);
-          localStorage.setItem("authTokens", storedTokens);
-
-          if (cookieAuthUser) {
-            try {
-              const decodedUser = JSON.parse(
-                decodeURIComponent(cookieAuthUser)
-              );
-              storedUser = JSON.stringify(decodedUser);
-              localStorage.setItem("authUser", storedUser);
-            } catch (e) {
-              // Try raw parse if URL decoded fails
-              try {
-                storedUser = cookieAuthUser;
-                localStorage.setItem("authUser", storedUser);
-              } catch (e2) {
-                console.error(
-                  "[AuthContext] Failed to parse authUser cookie:",
-                  e2
-                );
-              }
-            }
-          }
-        }
+      if (!hasSharedAuth) {
+        setIsLoading(false);
+        return;
       }
 
       if (storedTokens) {
@@ -366,9 +527,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     initAuth();
-  }, [refreshAccessToken]);
+  }, [
+    clearAuthData,
+    refreshAccessToken,
+    syncAuthFromSharedCookies,
+  ]);
 
-  const handleAuthSuccess = (userData: User, tokenData: AuthTokens) => {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const reconcileAuth = () => {
+      syncAuthFromSharedCookies();
+    };
+
+    window.addEventListener("focus", reconcileAuth);
+    document.addEventListener("visibilitychange", reconcileAuth);
+
+    return () => {
+      window.removeEventListener("focus", reconcileAuth);
+      document.removeEventListener("visibilitychange", reconcileAuth);
+    };
+  }, [syncAuthFromSharedCookies]);
+  /* eslint-enable react-hooks/exhaustive-deps */
+
+  function handleAuthSuccess(userData: User, tokenData: AuthTokens) {
     const persistedUser = {
       user_id:
         userData.user_id ??
@@ -410,7 +592,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         tokenData.refresh_token
       );
     }
-  };
+  }
 
   const login = async (data: LoginData) => {
     setIsLoading(true);

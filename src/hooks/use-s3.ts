@@ -7,11 +7,12 @@ export const s3Keys = {
   files: () => [...s3Keys.all, "files"] as const,
 };
 
-export function useS3Files() {
+export function useS3Files(enabled: boolean = true) {
   return useQuery({
     queryKey: s3Keys.files(),
     queryFn: () => listS3Files(),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled,
   });
 }
 

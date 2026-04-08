@@ -120,12 +120,14 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
   return (
     <div className="relative">
-      <MediaLibraryDialog
-        open={isLibraryOpen}
-        onOpenChange={setIsLibraryOpen}
-        onSelect={handleImageSelect}
-        folder={s3Options.folder}
-      />
+      {isEditable && (
+        <MediaLibraryDialog
+          open={isLibraryOpen}
+          onOpenChange={setIsLibraryOpen}
+          onSelect={handleImageSelect}
+          folder={s3Options.folder}
+        />
+      )}
 
       {/* Image Container */}
       <div

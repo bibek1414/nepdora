@@ -59,14 +59,49 @@ export const extractSubdomain = (url: URL): string | null => {
  */
 export const getTenantDomain = async (): Promise<string | null> => {
   if (typeof window !== "undefined") {
-    return window.location.host;
+    const host = window.location.host;
+
+    // Check if it's the root domain (main site)
+    // In dev: localhost:3000
+    // In prod: nepdora.com or www.nepdora.com
+    const isRoot =
+      host === rootDomain ||
+      host === `www.${rootDomain}` ||
+      host === siteConfig.baseDomain ||
+      host === `www.${siteConfig.baseDomain}`;
+
+    if (isRoot) {
+      // If on root domain, we only return a tenant domain if we are in preview mode
+      const url = new URL(window.location.href);
+      const subdomain = extractSubdomain(url);
+
+      if (subdomain) {
+        // Construct the full tenant domain for the backend
+        return `${subdomain}.${siteConfig.baseDomain}`;
+      }
+
+      return null;
+    }
+
+    return host;
   }
 
   if (typeof process !== "undefined" && process.release?.name === "node") {
     try {
       const { headers } = require("next/headers");
       const headersList = await headers();
-      return headersList.get("x-forwarded-host") || headersList.get("host");
+      const host = headersList.get("x-forwarded-host") || headersList.get("host");
+
+      if (host) {
+        const isRoot =
+          host === rootDomain ||
+          host === `www.${rootDomain}` ||
+          host === siteConfig.baseDomain ||
+          host === `www.${siteConfig.baseDomain}`;
+
+        if (isRoot) return null;
+        return host;
+      }
     } catch (error) {
       return null;
     }

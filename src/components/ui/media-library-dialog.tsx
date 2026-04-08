@@ -58,7 +58,7 @@ export function MediaLibraryDialog({
   const [urlToDelete, setUrlToDelete] = useState<string | null>(null);
   const [isCompressing, setIsCompressing] = useState(false);
 
-  const { data: files = [], isLoading } = useS3Files();
+  const { data: files = [], isLoading } = useS3Files(open);
   const uploadMutation = useUploadS3();
   const deleteMutation = useDeleteS3();
 

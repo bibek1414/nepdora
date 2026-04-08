@@ -59,7 +59,7 @@ export const useNavbarQuery = (enabled: boolean = true) => {
         });
       });
     },
-    staleTime: 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
     enabled,
   });

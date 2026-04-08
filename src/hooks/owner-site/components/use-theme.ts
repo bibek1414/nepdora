@@ -12,16 +12,33 @@ import {
 } from "@/providers/website-socket-provider";
 import { useContext } from "react";
 
+import { usePathname } from "next/navigation";
+
 const THEME_QUERY_KEY = ["themes"];
 
-export const useThemeQuery = (enabled: boolean = true) => {
+export const useThemeQuery = (
+  enabled: boolean = true,
+  status?: "preview" | "published"
+) => {
   const socket = useContext(WebsiteSocketContext);
+  const pathname = usePathname();
+
+  const effectiveStatus =
+    status ||
+    (pathname?.startsWith("/preview") || pathname?.startsWith("/builder")
+      ? "preview"
+      : "published");
 
   return useQuery({
-    queryKey: THEME_QUERY_KEY,
+    queryKey: [...THEME_QUERY_KEY, effectiveStatus],
     queryFn: () => {
+      // If we are in published mode, we should NOT use sockets or preview APIs
+      if (effectiveStatus === "published") {
+        return useThemeApi.getThemes("published");
+      }
+
       if (!socket || !socket.enabled || !enabled) {
-        return useThemeApi.getThemes();
+        return useThemeApi.getThemes(effectiveStatus);
       }
       return new Promise<GetThemeResponse>((resolve, reject) => {
         let isFinished = false;
@@ -71,7 +88,7 @@ export const useThemeQuery = (enabled: boolean = true) => {
         });
       });
     },
-    staleTime: 0, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes (increased from 0 to reduce calls)
     retry: 2,
     enabled,
   });

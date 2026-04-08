@@ -335,15 +335,17 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
         </motion.div>
       </div>
 
-      <MediaLibraryDialog
-        open={isMediaDialogOpen}
-        onOpenChange={setIsMediaDialogOpen}
-        onSelect={url => {
-          handleAddImage(url);
-          setIsMediaDialogOpen(false);
-        }}
-        folder="gallery-images"
-      />
+      {isEditable && (
+        <MediaLibraryDialog
+          open={isMediaDialogOpen}
+          onOpenChange={setIsMediaDialogOpen}
+          onSelect={url => {
+            handleAddImage(url);
+            setIsMediaDialogOpen(false);
+          }}
+          folder="gallery-images"
+        />
+      )}
     </motion.section>
   );
 };
