@@ -45,6 +45,62 @@ const PAYMENT_METHODS = [
   },
 ];
 
+const ENTERPRISE_PLAN = {
+  id: "enterprise",
+  name: "Enterprise",
+  plan_type: "pro",
+  tagline: "Custom solutions for large organisations",
+  price: "Custom",
+  unit: "",
+  is_popular: false,
+  cta: "Contact Sales",
+  href: "https://wa.me/9779866316114",
+  features: [
+    {
+      id: "e1",
+      feature: "Everything in Pro",
+      is_available: true,
+      order: 1,
+      description: null,
+    },
+    {
+      id: "e2",
+      feature: "Unlimited Websites",
+      is_available: true,
+      order: 2,
+      description: null,
+    },
+    {
+      id: "e3",
+      feature: "SLA Guarantee",
+      is_available: true,
+      order: 3,
+      description: null,
+    },
+    {
+      id: "e4",
+      feature: "White-label Option",
+      is_available: true,
+      order: 4,
+      description: null,
+    },
+    {
+      id: "e5",
+      feature: "On-premise Hosting",
+      is_available: true,
+      order: 5,
+      description: null,
+    },
+    {
+      id: "e6",
+      feature: "Dedicated Account Manager",
+      is_available: true,
+      order: 6,
+      description: null,
+    },
+  ],
+};
+
 export function SubscriptionBlocker() {
   const router = useRouter();
   const {
@@ -95,6 +151,10 @@ export function SubscriptionBlocker() {
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChoosePlan = (plan: any) => {
+    if (plan.href) {
+      window.open(plan.href, "_blank");
+      return;
+    }
     if (plan.plan_type === "free") return;
 
     setSelectedPlan(plan);
@@ -189,7 +249,7 @@ export function SubscriptionBlocker() {
                 </div>
                 <DialogDescription className="text-left text-sm md:text-base">
                   {subscription?.status === "expired"
-                    ? `Your subscription expired on ${new Date(subscription.expires_on).toLocaleDateString()}. Choose a plan to continue using all features.`
+                    ? `Your subscription expired on ${new Date(subscription.expires_on).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}. Choose a plan to continue using all features.`
                     : "You need an active subscription to access admin features. Choose a plan to get started."}
                 </DialogDescription>
               </DialogHeader>
@@ -214,7 +274,15 @@ export function SubscriptionBlocker() {
                   </div>
                 ) : plans && plans.length > 0 ? (
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    {plans.map(plan => (
+                    {[
+                      ...plans.filter(
+                        (p: any) =>
+                          p.price !== "0.00" &&
+                          p.price !== 0 &&
+                          p.plan_type !== "free"
+                      ),
+                      ENTERPRISE_PLAN,
+                    ].map((plan: any) => (
                       <Card
                         key={plan.id}
                         className={`relative gap-0 py-2 ${plan.is_popular ? "border-primary border-2 shadow-lg" : ""}`}
@@ -241,11 +309,17 @@ export function SubscriptionBlocker() {
 
                           <div className="pt-2">
                             <span className="text-foreground text-3xl font-bold md:text-4xl">
-                              {Number(plan.price).toLocaleString("en-IN")}
+                              {plan.price === "Custom" ? (
+                                plan.price
+                              ) : (
+                                <>Rs. {Number(plan.price).toLocaleString("en-IN")}</>
+                              )}
                             </span>
-                            <span className="text-muted-foreground ml-1 text-sm">
-                              /{plan.unit}
-                            </span>
+                            {plan.unit && (
+                              <span className="text-muted-foreground ml-1 text-sm">
+                                /{plan.unit}
+                              </span>
+                            )}
                           </div>
                         </CardHeader>
                         <CardFooter>
@@ -258,14 +332,14 @@ export function SubscriptionBlocker() {
                           >
                             {plan.plan_type === "free"
                               ? "Current Plan"
-                              : "Choose Plan"}
+                              : plan.cta || "Choose Plan"}
                           </Button>
                         </CardFooter>
                         <CardContent>
                           <ul className="space-y-1">
                             {plan.features
-                              .sort((a, b) => a.order - b.order)
-                              .map(feature => (
+                              .sort((a: any, b: any) => a.order - b.order)
+                              .map((feature: any) => (
                                 <li
                                   key={feature.id}
                                   className={`flex items-start gap-2 ${!feature.is_available ? "opacity-50" : ""}`}

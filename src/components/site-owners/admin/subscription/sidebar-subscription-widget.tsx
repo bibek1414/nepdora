@@ -61,6 +61,31 @@ const PAYMENT_METHODS = [
   },
 ];
 
+const ENTERPRISE_PLAN = {
+  id: "enterprise",
+  name: "Enterprise",
+  plan_type: "pro",
+  tagline: "Custom solutions for large organisations",
+  price: "Custom",
+  unit: "",
+  is_popular: false,
+  cta: "Contact Sales",
+  href: "https://wa.me/9779866316114",
+  features: [
+    { id: "e1", feature: "Everything in Pro", is_available: true, order: 1 },
+    { id: "e2", feature: "Unlimited Websites", is_available: true, order: 2 },
+    { id: "e3", feature: "SLA Guarantee", is_available: true, order: 3 },
+    { id: "e4", feature: "White-label Option", is_available: true, order: 4 },
+    { id: "e5", feature: "On-premise Hosting", is_available: true, order: 5 },
+    {
+      id: "e6",
+      feature: "Dedicated Account Manager",
+      is_available: true,
+      order: 6,
+    },
+  ],
+};
+
 // --- Sub-Components ---
 
 /**
@@ -98,13 +123,19 @@ const PlanCard = ({
       </CardTitle>
       <div className="mt-2">
         <span className="text-3xl font-bold">
-          Rs.{Number(plan.price).toLocaleString()}
+          {plan.price === "Custom" ? (
+            plan.price
+          ) : (
+            <>Rs.{Number(plan.price).toLocaleString()}</>
+          )}
         </span>
-        <span className="text-muted-foreground text-sm">/{plan.unit}</span>
+        {plan.unit && (
+          <span className="text-muted-foreground text-sm">/{plan.unit}</span>
+        )}
       </div>
     </CardHeader>
     <CardContent className="flex-1">
-      <ul className="space-y-2 text-sm text-balance leading-snug">
+      <ul className="space-y-2 text-sm leading-snug text-balance">
         {plan.features
           .sort((a: any, b: any) => a.order - b.order)
           .map((feature: any) => (
@@ -135,7 +166,7 @@ const PlanCard = ({
         disabled={isCurrentPlan}
         onClick={() => onChoosePlan(plan)}
       >
-        {isCurrentPlan ? "Current Plan" : "Choose Plan"}
+        {isCurrentPlan ? "Current Plan" : plan.cta || "Choose Plan"}
       </Button>
     </CardFooter>
   </Card>
@@ -168,7 +199,11 @@ const SubscriptionTrigger = ({
   const planName = status?.plan || "No Plan";
   const statusColor = status?.active ? "text-green-500" : "text-red-500";
   const expiryDate = status?.expires_on
-    ? new Date(status.expires_on).toLocaleDateString()
+    ? new Date(status.expires_on).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
     : "N/A";
 
   if (collapsed) {
@@ -211,14 +246,14 @@ const SubscriptionTrigger = ({
 
   return (
     <div className="mt-auto px-4 py-4">
-      <div className="group border-primary/10 hover:border-primary/20 relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/5 via-primary/[0.02] to-transparent p-4 transition-all duration-300 hover:shadow-md">
+      <div className="group border-primary/10 hover:border-primary/20 from-primary/5 via-primary/[0.02] relative overflow-hidden rounded-2xl border bg-gradient-to-br to-transparent p-4 transition-all duration-300 hover:shadow-md">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
               <Zap className="h-4 w-4" />
             </div>
             <div className="overflow-hidden">
-              <p className="text-primary/80 text-[10px] font-semibold uppercase tracking-wider">
+              <p className="text-primary/80 text-sm font-semibold">
                 Active Plan
               </p>
               <h3 className="max-w-[120px] truncate text-sm font-bold capitalize">
@@ -269,6 +304,10 @@ export function SidebarSubscriptionWidget({
   >(null);
 
   const handleChoosePlan = (plan: any) => {
+    if (plan.href) {
+      window.open(plan.href, "_blank");
+      return;
+    }
     if (plan.plan_type === "free" && status?.plan?.toLowerCase() === "free")
       return;
     setSelectedPlan(plan);
@@ -317,9 +356,6 @@ export function SidebarSubscriptionWidget({
                 className="h-5 opacity-90"
               />
               <div className="flex items-center gap-3">
-                <div className="bg-primary/10 text-primary rounded-xl p-2.5">
-                  <Crown className="h-6 w-6" />
-                </div>
                 <DialogTitle className="text-left text-2xl font-bold md:text-3xl">
                   Upgrade Your Experience
                 </DialogTitle>
@@ -327,7 +363,7 @@ export function SidebarSubscriptionWidget({
             </div>
             <DialogDescription className="text-left text-sm text-balance md:text-base">
               {status?.status === "expired"
-                ? `Your subscription expired on ${new Date(status.expires_on).toLocaleDateString()}. Re-activate to continue growing your business.`
+                ? `Your subscription expired on ${new Date(status.expires_on).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}. Re-activate to continue growing your business.`
                 : "Unlock powerful features and scale your online presence with a plan that fits your vision."}
             </DialogDescription>
           </DialogHeader>
@@ -352,7 +388,15 @@ export function SidebarSubscriptionWidget({
               </div>
             ) : plans && plans.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {plans.map(plan => {
+                {[
+                  ...plans.filter(
+                    (p: any) =>
+                      p.price !== "0.00" &&
+                      p.price !== 0 &&
+                      p.plan_type !== "free"
+                  ),
+                  ENTERPRISE_PLAN,
+                ].map(plan => {
                   const isCurrent =
                     status?.plan?.toLowerCase() === plan.name?.toLowerCase() ||
                     (plan.plan_type === "free" &&
@@ -380,16 +424,12 @@ export function SidebarSubscriptionWidget({
               </div>
             )}
           </div>
-
-          <div className="text-muted-foreground border-t mt-8 pt-6 text-center text-sm">
-            <p>Need custom requirements? Contact our support team.</p>
-          </div>
         </DialogContent>
       </Dialog>
 
       {/* Payment Selection Dialog */}
       <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-        <DialogContent className="sm:max-w-[450px] p-6 md:p-8">
+        <DialogContent className="p-6 sm:max-w-[450px] md:p-8">
           <DialogHeader className="mb-6">
             <Button
               variant="ghost"
@@ -409,8 +449,9 @@ export function SidebarSubscriptionWidget({
                 Payment Method
               </DialogTitle>
             </div>
-            <DialogDescription className="text-balance text-left text-sm md:text-base">
-              Finalize your subscription to <strong>{selectedPlan?.name}</strong>
+            <DialogDescription className="text-left text-sm text-balance md:text-base">
+              Finalize your subscription to{" "}
+              <strong>{selectedPlan?.name}</strong>
             </DialogDescription>
           </DialogHeader>
 
@@ -423,12 +464,12 @@ export function SidebarSubscriptionWidget({
                     <h3 className="text-base font-bold md:text-lg">
                       {selectedPlan?.name}
                     </h3>
-                    <p className="text-muted-foreground text-[10px] uppercase tracking-wider font-semibold">
+                    <p className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase">
                       {selectedPlan?.tagline}
                     </p>
                   </div>
                   <div className="text-left md:text-right">
-                    <div className="text-2xl font-black text-primary">
+                    <div className="text-primary text-2xl font-black">
                       Rs.{Number(selectedPlan?.price || 0).toLocaleString()}
                     </div>
                     <div className="text-muted-foreground text-xs font-medium">
@@ -440,7 +481,7 @@ export function SidebarSubscriptionWidget({
             </Card>
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground/80">
+              <h3 className="text-muted-foreground/80 text-sm font-bold tracking-widest uppercase">
                 Choose Payment Option
               </h3>
               <div className="grid gap-3">
@@ -451,12 +492,12 @@ export function SidebarSubscriptionWidget({
                     className={cn(
                       "group relative flex items-center justify-between rounded-2xl border-2 p-4 transition-all duration-300",
                       selectedPaymentMethod === method.id
-                        ? "border-primary bg-primary/[0.03] shadow-md ring-1 ring-primary/20"
+                        ? "border-primary bg-primary/[0.03] ring-primary/20 shadow-md ring-1"
                         : "border-border hover:border-primary/30 hover:bg-muted/50"
                     )}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="relative h-12 w-12 grayscale group-hover:grayscale-0 transition-all duration-300">
+                      <div className="relative h-12 w-12 grayscale transition-all duration-300 group-hover:grayscale-0">
                         <Image
                           src={method.image}
                           alt={method.name}
@@ -475,7 +516,7 @@ export function SidebarSubscriptionWidget({
                       )}
                     >
                       {selectedPaymentMethod === method.id && (
-                        <Check className="h-3 w-3 text-white stroke-[4]" />
+                        <Check className="h-3 w-3 stroke-[4] text-white" />
                       )}
                     </div>
                   </button>
@@ -483,9 +524,9 @@ export function SidebarSubscriptionWidget({
               </div>
             </div>
 
-            <div className="pt-4 space-y-4">
+            <div className="space-y-4 pt-4">
               <Button
-                className="w-full py-6 text-base font-black shadow-lg hover:shadow-xl transition-all duration-300 bg-primary hover:bg-primary/95"
+                className="bg-primary hover:bg-primary/95 w-full py-6 text-base font-black shadow-lg transition-all duration-300 hover:shadow-xl"
                 disabled={!selectedPaymentMethod}
                 onClick={handleConfirmPayment}
               >
@@ -493,7 +534,7 @@ export function SidebarSubscriptionWidget({
                   ? `Proceed with ${PAYMENT_METHODS.find(m => m.id === selectedPaymentMethod)?.name}`
                   : "Select a Method"}
               </Button>
-              <p className="text-muted-foreground text-center text-[10px] uppercase font-bold tracking-tighter">
+              <p className="text-muted-foreground text-center text-[10px] font-bold tracking-tighter uppercase">
                 🔒 Secure 256-bit SSL Encrypted Payment
               </p>
             </div>
