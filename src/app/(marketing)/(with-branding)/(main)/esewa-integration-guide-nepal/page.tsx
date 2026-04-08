@@ -58,13 +58,14 @@ export default function EsewaPage() {
   return (
     <main className="min-h-screen bg-white">
       <JsonLd id="esewa-guide-schema" data={guideSchema} />
-      
+
       <StandardMarketingHero
         badgeText="Native integration"
         badgeIcon={ShieldCheck}
         title={
           <>
-            Master <span className="text-[#60BB46]">eSewa</span> integration in Nepal
+            Master <span className="text-[#60BB46]">eSewa</span> integration in
+            Nepal
           </>
         }
         description="The ultimate guide for Nepali merchants to start accepting eSewa payments online without touching a single line of code."
@@ -72,7 +73,7 @@ export default function EsewaPage() {
       />
 
       {/* Comparison Section */}
-      <section className="py-24 bg-slate-50">
+      <section className="bg-slate-50 py-24">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="mb-16 text-center">
             <h2 className="mb-6 text-3xl font-extrabold text-slate-900 md:text-5xl">
@@ -179,7 +180,7 @@ export default function EsewaPage() {
       </section>
 
       <FAQSection />
-      
+
       <StandardMarketingCTA
         title="Start accepting eSewa today"
         description="Join thousands of merchants across Nepal who trust Nepdora for their digital payments. Build your store for free."

@@ -29,20 +29,21 @@ export default function AcceptPaymentsSolution() {
   return (
     <main className="min-h-screen bg-white">
       <JsonLd id="payment-solution-schema" data={solutionSchema} />
-      
+
       <StandardMarketingHero
         badgeText="Native integrations"
         badgeIcon={WalletCards}
         title={
           <>
-            Accept <span className="text-[#60BB46]">eSewa</span> & <span className="text-[#5C2D91]">Khalti</span> hassle-free.
+            Accept <span className="text-[#60BB46]">eSewa</span> &{" "}
+            <span className="text-[#5C2D91]">Khalti</span> hassle-free.
           </>
         }
         description="Selling products online in Nepal shouldn't be hard. Our platform comes with pre-integrated payment gateways so you can start making money from day one."
         centered
       />
 
-      <section className="py-24 bg-slate-50">
+      <section className="bg-slate-50 py-24">
         <div className="container mx-auto max-w-3xl px-4">
           <div className="prose prose-slate prose-lg mx-auto">
             <h2 className="text-3xl font-extrabold text-slate-900 md:text-4xl">

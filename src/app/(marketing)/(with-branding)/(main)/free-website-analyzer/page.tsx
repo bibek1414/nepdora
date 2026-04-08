@@ -38,7 +38,7 @@ export default function FreeWebsiteAnalyzerPage() {
   return (
     <main className="min-h-screen bg-white">
       <JsonLd id="analyzer-schema" data={analyzerSchema} />
-      
+
       <StandardMarketingHero
         badgeText="Free SEO tool"
         badgeIcon={BarChart}
@@ -51,7 +51,7 @@ export default function FreeWebsiteAnalyzerPage() {
         centered
       />
 
-      <div className="py-20 bg-slate-50">
+      <div className="bg-slate-50 py-20">
         <WebsiteAnalyzer />
       </div>
 

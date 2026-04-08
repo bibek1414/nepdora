@@ -165,10 +165,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
           return;
         window.location.href = detailsUrl;
       }}
-      className={cn(
-        "block",
-        isEditable ? "cursor-default" : "cursor-pointer"
-      )}
+      className={cn("block", isEditable ? "cursor-default" : "cursor-pointer")}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

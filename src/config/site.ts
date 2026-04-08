@@ -90,7 +90,8 @@ export const getTenantDomain = async (): Promise<string | null> => {
     try {
       const { headers } = require("next/headers");
       const headersList = await headers();
-      const host = headersList.get("x-forwarded-host") || headersList.get("host");
+      const host =
+        headersList.get("x-forwarded-host") || headersList.get("host");
 
       if (host) {
         const isRoot =

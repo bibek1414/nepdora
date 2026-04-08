@@ -114,9 +114,7 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>
-                      Failed to load members.
-                    </AlertDescription>
+                    <AlertDescription>Failed to load members.</AlertDescription>
                   </Alert>
                 ) : (
                   members

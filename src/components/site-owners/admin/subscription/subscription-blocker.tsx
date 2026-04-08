@@ -312,7 +312,10 @@ export function SubscriptionBlocker() {
                               {plan.price === "Custom" ? (
                                 plan.price
                               ) : (
-                                <>Rs. {Number(plan.price).toLocaleString("en-IN")}</>
+                                <>
+                                  Rs.{" "}
+                                  {Number(plan.price).toLocaleString("en-IN")}
+                                </>
                               )}
                             </span>
                             {plan.unit && (

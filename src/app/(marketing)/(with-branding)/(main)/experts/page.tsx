@@ -90,7 +90,7 @@ export default function ExpertsPage() {
                 <h3 className="mb-3 text-2xl font-bold text-slate-900 transition-colors group-hover:text-sky-600">
                   {expert.name}
                 </h3>
-                
+
                 <div className="mb-6 flex items-center gap-4 text-xs font-semibold text-slate-500">
                   <div className="flex items-center gap-1">
                     <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
@@ -102,7 +102,7 @@ export default function ExpertsPage() {
                   <span>{expert.location}</span>
                 </div>
 
-                <p className="mb-8 line-clamp-3 text-sm leading-relaxed text-slate-500 font-medium">
+                <p className="mb-8 line-clamp-3 text-sm leading-relaxed font-medium text-slate-500">
                   {expert.description}
                 </p>
 

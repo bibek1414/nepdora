@@ -156,7 +156,7 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
               alt={portfolio.thumbnail_image_alt_description || portfolio.title}
               fill
               className="object-cover"
-            priority
+              priority
             />
           </div>
         )}

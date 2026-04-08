@@ -36,7 +36,8 @@ export function useAuthRedirect(
 
     // Tenant-aware redirection
     if (user.sub_domain) {
-      const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+      const hostname =
+        typeof window !== "undefined" ? window.location.hostname : "";
       const isAlreadyOnSubdomain = hostname.startsWith(`${user.sub_domain}.`);
 
       // If we're on the root domain but have a subdomain, redirect to the subdomain

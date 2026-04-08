@@ -62,7 +62,7 @@ export default function LearnHubPage() {
         centered
       />
 
-      <section className="py-24 bg-slate-50">
+      <section className="bg-slate-50 py-24">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="mb-12 flex items-center justify-between">
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
@@ -96,7 +96,7 @@ export default function LearnHubPage() {
                 <h3 className="mb-4 text-2xl font-bold text-slate-900 transition-colors group-hover:text-sky-600">
                   {course.title}
                 </h3>
-                <p className="mb-8 grow text-sm font-medium leading-relaxed text-slate-500">
+                <p className="mb-8 grow text-sm leading-relaxed font-medium text-slate-500">
                   {course.description}
                 </p>
                 <div className="flex items-center gap-2 text-xs font-bold text-sky-600 transition-all group-hover:gap-3">
@@ -128,7 +128,7 @@ export default function LearnHubPage() {
                 <h3 className="mb-4 text-2xl font-bold text-slate-900 transition-colors group-hover:text-sky-600">
                   Best e-commerce platforms in Nepal
                 </h3>
-                <p className="mb-6 text-sm font-medium leading-relaxed text-slate-500">
+                <p className="mb-6 text-sm leading-relaxed font-medium text-slate-500">
                   We compared Nepdora, Shopify, WordPress, and more based on
                   local payment success and logistics automation.
                 </p>
@@ -147,7 +147,7 @@ export default function LearnHubPage() {
                 <h3 className="mb-4 text-2xl font-bold text-slate-900 transition-colors group-hover:text-sky-600">
                   Best restaurant website builders
                 </h3>
-                <p className="mb-6 text-sm font-medium leading-relaxed text-slate-500">
+                <p className="mb-6 text-sm leading-relaxed font-medium text-slate-500">
                   Expert analysis for Kathmandu-based cafes and restaurants
                   looking for online ordering and menu management.
                 </p>

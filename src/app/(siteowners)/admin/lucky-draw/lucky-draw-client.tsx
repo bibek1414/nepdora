@@ -151,7 +151,7 @@ export default function LuckyDrawClient() {
                       <p>End Date: {draw.endDate}</p>
                     </div>
                     <div className="mt-3 flex space-x-2">
-                       <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline">
                         View Details
                       </Button>
                       {draw.status === "Active" && (

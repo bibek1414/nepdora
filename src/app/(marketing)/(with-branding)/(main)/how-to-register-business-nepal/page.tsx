@@ -76,7 +76,8 @@ export default function BusinessRegistrationPage() {
         badgeIcon={Sparkles}
         title={
           <>
-            Turn your idea into a <span className="text-sky-600">legal business</span> in Nepal.
+            Turn your idea into a{" "}
+            <span className="text-sky-600">legal business</span> in Nepal.
           </>
         }
         description="A complete founder's guide to navigating the registration process, legal requirements, and tax compliance for Nepali startups."
@@ -84,7 +85,7 @@ export default function BusinessRegistrationPage() {
       />
 
       {/* Steps Section */}
-      <section className="py-24 bg-slate-50">
+      <section className="bg-slate-50 py-24">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, index) => (
@@ -98,8 +99,10 @@ export default function BusinessRegistrationPage() {
                 <div className="mb-2 text-xs font-bold tracking-tight text-sky-600">
                   Step 0{index + 1}
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-slate-900">{step.title}</h3>
-                <p className="mb-4 text-sm font-medium leading-relaxed text-slate-500">
+                <h3 className="mb-3 text-xl font-bold text-slate-900">
+                  {step.title}
+                </h3>
+                <p className="mb-4 text-sm leading-relaxed font-medium text-slate-500">
                   {step.description}
                 </p>
                 <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 text-xs font-medium text-slate-400">
@@ -118,12 +121,12 @@ export default function BusinessRegistrationPage() {
             <h2 className="mb-8 text-3xl font-extrabold text-slate-900 md:text-4xl">
               Why register your business?
             </h2>
-            <div className="prose prose-slate prose-lg text-slate-600 font-medium">
+            <div className="prose prose-slate prose-lg font-medium text-slate-600">
               <p>
                 Operating as a registered entity in Nepal opens doors to several
                 benefits:
               </p>
-              <ul className="mb-8 list-disc pl-6 space-y-2">
+              <ul className="mb-8 list-disc space-y-2 pl-6">
                 <li>Legal validity for contracts and partnerships.</li>
                 <li>Access to bank loans and startup funding.</li>
                 <li>Exclusive government subsidies and support programs.</li>
@@ -137,7 +140,7 @@ export default function BusinessRegistrationPage() {
                 Before you begin the online or physical application, ensure you
                 have the following ready:
               </p>
-              <ul className="mb-8 list-disc pl-6 space-y-2">
+              <ul className="mb-8 list-disc space-y-2 pl-6">
                 <li>Citizenship certificate of all promoters (founders).</li>
                 <li>Proposed name and alternative options.</li>
                 <li>Rental agreement for the office location.</li>
@@ -151,7 +154,7 @@ export default function BusinessRegistrationPage() {
                 Once your company is registered, the journey just begins. Your
                 next steps are:
               </p>
-              <ul className="mb-12 list-disc pl-6 space-y-2">
+              <ul className="mb-12 list-disc space-y-2 pl-6">
                 <li>Opening a business bank account.</li>
                 <li>PAN/VAT portal setup.</li>
                 <li className="font-bold text-sky-600">

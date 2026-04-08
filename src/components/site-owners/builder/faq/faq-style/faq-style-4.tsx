@@ -14,9 +14,7 @@ interface FAQStyleProps {
   onUpdate?: (updatedData: Partial<FAQComponentData["data"]>) => void;
 }
 
-export const FAQStyle4: React.FC<FAQStyleProps> = ({
-  isEditable = false,
-}) => {
+export const FAQStyle4: React.FC<FAQStyleProps> = ({ isEditable = false }) => {
   const { data: faqs = [], isLoading, error } = useFAQs();
 
   return (

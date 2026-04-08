@@ -45,7 +45,8 @@ export default function FreeWebsiteBuilder() {
         badgeIcon={Sparkles}
         title={
           <>
-            Nepal's best <span className="text-sky-600">free website builder.</span>
+            Nepal's best{" "}
+            <span className="text-sky-600">free website builder.</span>
           </>
         }
         description="We believe every Nepali business deserves a place online. Start with our free tier, pick a professional template, and launch your site in minutes."
@@ -67,7 +68,7 @@ export default function FreeWebsiteBuilder() {
       <FeaturesSection />
       <HomePricingSection />
       <HomeFAQSection />
-      
+
       <StandardMarketingCTA
         title="Launch your free site today"
         description="Join thousands of Nepali businesses already online. It's free, forever, until you decide to grow."

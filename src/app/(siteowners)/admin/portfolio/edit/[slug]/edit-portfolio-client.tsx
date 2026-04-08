@@ -41,18 +41,58 @@ export default function EditPortfolioClient() {
   const handleUpdatePortfolio = async (data: PortfolioFormData) => {
     if (!portfolio) return;
 
-    const portfolioData: Omit<UpdatePortfolio, "id"> = {
-      title: data.title,
-      content: data.content,
-      category: data.category,
-      tags: data.tags,
-      thumbnail_image: data.thumbnail_image,
-      thumbnail_image_alt_description: data.thumbnail_image_alt_description,
-      meta_title: data.meta_title,
-      meta_description: data.meta_description,
-      project_url: data.project_url,
-      github_url: data.github_url,
-    };
+    const portfolioData: Partial<Omit<UpdatePortfolio, "id">> = {};
+
+    const normalize = (val: string | null | undefined) =>
+      val === "" ? null : (val ?? null);
+
+    if (data.title !== portfolio.title) portfolioData.title = data.title;
+    if (data.content !== portfolio.content)
+      portfolioData.content = data.content;
+    if (data.category !== portfolio.category.id)
+      portfolioData.category = data.category;
+
+    const currentTagIds = portfolio.tags.map(t => t.id).sort();
+    const newTagIds = (data.tags || []).slice().sort();
+    if (JSON.stringify(currentTagIds) !== JSON.stringify(newTagIds)) {
+      portfolioData.tags = data.tags;
+    }
+
+    if (data.thumbnail_image instanceof File) {
+      portfolioData.thumbnail_image = data.thumbnail_image;
+    } else if (
+      data.thumbnail_image === null &&
+      portfolio.thumbnail_image !== null
+    ) {
+      portfolioData.thumbnail_image = null;
+    }
+
+    if (
+      normalize(data.thumbnail_image_alt_description) !==
+      normalize(portfolio.thumbnail_image_alt_description)
+    ) {
+      portfolioData.thumbnail_image_alt_description =
+        data.thumbnail_image_alt_description;
+    }
+    if (normalize(data.meta_title) !== normalize(portfolio.meta_title)) {
+      portfolioData.meta_title = data.meta_title;
+    }
+    if (
+      normalize(data.meta_description) !== normalize(portfolio.meta_description)
+    ) {
+      portfolioData.meta_description = data.meta_description;
+    }
+    if (normalize(data.project_url) !== normalize(portfolio.project_url)) {
+      portfolioData.project_url = data.project_url;
+    }
+    if (normalize(data.github_url) !== normalize(portfolio.github_url)) {
+      portfolioData.github_url = data.github_url;
+    }
+
+    if (Object.keys(portfolioData).length === 0) {
+      toast.info("No changes to update.");
+      return;
+    }
 
     updatePortfolioMutation.mutate(
       {

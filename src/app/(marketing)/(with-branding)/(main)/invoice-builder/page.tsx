@@ -34,7 +34,7 @@ export default function InvoiceBuilderPage() {
   return (
     <main className="min-h-screen bg-white">
       <JsonLd id="invoice-builder-schema" data={schema} />
-      
+
       <StandardMarketingHero
         badgeText="Free billing tool"
         badgeIcon={FileText}
@@ -47,7 +47,7 @@ export default function InvoiceBuilderPage() {
         centered
       />
 
-      <div className="py-20 bg-slate-50">
+      <div className="bg-slate-50 py-20">
         <InvoiceBuilder />
       </div>
 

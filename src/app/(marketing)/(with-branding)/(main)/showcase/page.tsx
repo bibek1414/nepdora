@@ -85,7 +85,7 @@ export default function ShowcasePage() {
       />
 
       {/* Gallery Grid */}
-      <section className="py-24 bg-slate-50">
+      <section className="bg-slate-50 py-24">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
             {SHOWCASE_ITEMS.map(item => (
@@ -93,7 +93,7 @@ export default function ShowcasePage() {
                 <div className="relative mb-8 aspect-16/10 overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-slate-200/50">
                   {/* Placeholder for images if they don't exist */}
                   <div className="absolute inset-0 bg-linear-to-br from-slate-50 to-slate-100" />
-                  
+
                   {/* Overlay on hover */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-slate-900/40 opacity-0 backdrop-blur-[2px] transition-all duration-300 group-hover:opacity-100">
                     <div className="flex gap-4">
@@ -121,7 +121,7 @@ export default function ShowcasePage() {
                   <h3 className="text-2xl font-bold text-slate-900">
                     {item.name}
                   </h3>
-                  <p className="line-clamp-2 text-sm font-medium leading-relaxed text-slate-500">
+                  <p className="line-clamp-2 text-sm leading-relaxed font-medium text-slate-500">
                     {item.description}
                   </p>
                 </div>

@@ -69,7 +69,7 @@ export const OthersTemplate4: React.FC<OthersTemplate4Props> = ({
           {(othersData.steps || []).map((step, index) => (
             <div
               key={step.id || index}
-              className="flex flex-col items-start rounded-2xl bg-white p-6 text-left border "
+              className="flex flex-col items-start rounded-2xl border bg-white p-6 text-left"
             >
               <div className="mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-gray-100 ring-4 ring-gray-50">
                 <EditableImage
