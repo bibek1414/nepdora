@@ -7,6 +7,17 @@ import {
   getCustomDomains,
   CustomDomain,
 } from "@/lib/actions/custom-domain-actions";
+import { generateAdminPageMetadata } from "@/lib/metadata-utils";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generateAdminPageMetadata({
+    pageName: "Domain Settings",
+    pageDescription:
+      "Manage your domain settings efficiently. Update your domain settings directly from the admin dashboard.",
+    pageRoute: "/admin/settings/domains",
+  });
+}
 
 async function DomainsPage() {
   const user = await getServerUser();

@@ -11,6 +11,17 @@ import {
 import { User, Lock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteAccountButton } from "@/components/site-owners/admin/profile/delete-account-button";
+import { generateAdminPageMetadata } from "@/lib/metadata-utils";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generateAdminPageMetadata({
+    pageName: "Account Settings",
+    pageDescription:
+      "Manage your account settings efficiently. Update your account settings directly from the admin dashboard.",
+    pageRoute: "/admin/settings/account",
+  });
+}
 
 export default function AccountSettingsPage() {
   return (

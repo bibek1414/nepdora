@@ -1,6 +1,17 @@
 import React from "react";
 import SettingsTabs from "./setting-tabs";
 import { getServerUser } from "@/hooks/use-jwt-server";
+import { generateAdminPageMetadata } from "@/lib/metadata-utils";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generateAdminPageMetadata({
+    pageName: "Settings",
+    pageDescription:
+      "Manage your store configuration, branding, delivery, domains, and account settings for {storeName}.",
+    pageRoute: "/admin/settings",
+  });
+}
 interface SettingItem {
   id: string;
   title: string;
@@ -30,6 +41,12 @@ const settingsItems: SettingItem[] = [
     path: "/admin/settings/domains",
   },
   {
+    id: "subscription",
+    title: "Subscription",
+    description: "Manage your plans, billing history and usage",
+    path: "/admin/settings/subscription",
+  },
+  {
     id: "account",
     title: "Account",
     description: "Manage your profile and security settings",
@@ -49,14 +66,16 @@ export default async function SettingsLayout({
   const user = await getServerUser();
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mt-4 mb-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Settings
-        </h1>
-        <p className="mt-2 text-sm text-gray-500">
-          Manage your store configuration, branding, delivery, domains, and
-          account security.
-        </p>
+      <div className="mt-4 mb-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
+            Settings
+          </h1>
+          <p className="text-muted-foreground mt-2 text-sm font-medium text-balance">
+            Manage your store configuration, branding, delivery, domains, and
+            account security.
+          </p>
+        </div>
       </div>
 
       <div className="mb-8 cursor-pointer">
