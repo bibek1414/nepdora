@@ -5,7 +5,9 @@ import { useUserSubscriptions } from "@/hooks/use-subscription";
 import { SubscriptionHistoryTable } from "@/components/site-owners/admin/subscription/subscription-history-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import Pagination from "@/components/ui/pagination";
-import { History } from "lucide-react";
+import { History, LayoutGrid, CreditCard, ChevronLeft } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function SubscriptionHistoryList() {
   const [page, setPage] = useState(1);
@@ -39,27 +41,27 @@ export function SubscriptionHistoryList() {
   const subscriptions = data?.results || [];
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 p-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight text-slate-900">
-          Subscription History
-        </h1>
-        <p className="text-muted-foreground text-sm">
-          View your past subscription plans, payments, and billing cycles.
-        </p>
-      </div>
-
-      <SubscriptionHistoryTable subscriptions={subscriptions} />
-
-      {data && data.count > 10 && (
-        <div className="flex justify-end pt-4">
-          <Pagination
-            currentPage={page}
-            totalPages={Math.ceil(data.count / 10)}
-            onPageChange={setPage}
-          />
+    <div className="bg-white">
+      <div className="mx-auto mt-12 mb-40 max-w-7xl px-6 md:px-8">
+        {/* Header */}
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <h1 className="px-5 text-xl font-bold text-[#003d79]">
+            Subscription History
+          </h1>
         </div>
-      )}
+
+        <SubscriptionHistoryTable subscriptions={subscriptions} />
+
+        {data && data.count > 10 && (
+          <div className="mt-8 flex justify-end">
+            <Pagination
+              currentPage={page}
+              totalPages={Math.ceil(data.count / 10)}
+              onPageChange={setPage}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

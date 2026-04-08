@@ -26,7 +26,7 @@ export function TableWrapper({ children }: { children: React.ReactNode }) {
 // Reusable Cell for User/Product info (Avatar + Title + Subtitle)
 interface TableUserCellProps {
   imageSrc?: string | null;
-  fallback: string;
+  fallback?: string;
   title: string;
   subtitle?: string;
 }
@@ -41,9 +41,11 @@ export function TableUserCell({
     <div className="flex items-center gap-3">
       <Avatar className="h-9 w-9">
         {imageSrc && <AvatarImage src={imageSrc} className="object-cover" />}
-        <AvatarFallback className="bg-slate-100 text-xs font-semibold text-slate-600">
-          {fallback}
-        </AvatarFallback>
+        {fallback && (
+          <AvatarFallback className="bg-slate-100 text-xs font-semibold text-slate-600">
+            {fallback}
+          </AvatarFallback>
+        )}
       </Avatar>
       <div className="min-w-0">
         <div className="truncate font-medium text-slate-900">{title}</div>

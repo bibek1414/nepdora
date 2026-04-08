@@ -31,6 +31,9 @@ import {
   Folder,
   FolderTree,
   Upload,
+  Banknote,
+  Layers,
+  Package,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -283,25 +286,32 @@ const ProductList = () => {
                       </TableCell>
 
                       <TableCell className="px-6 py-4">
-                        <div className="font-medium text-gray-900">
+                        <div className="flex items-center gap-2 font-medium text-gray-900">
+                          <Package className="h-4 w-4 text-black/20" />
                           {product.name}
                         </div>
                       </TableCell>
 
                       <TableCell className="px-6 py-4">
-                        <div className="font-medium text-gray-900">
+                        <div className="flex items-center gap-2 font-medium text-gray-900">
+                          <Banknote className="h-4 w-4 text-black/20" />
                           NPR {product.price}
                         </div>
                       </TableCell>
 
                       <TableCell className="px-6 py-4">
-                        <span
-                          className={`font-medium ${
-                            product.stock > 0 ? "text-gray-900" : "text-red-600"
-                          }`}
-                        >
-                          {product.stock}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <Layers className="h-4 w-4 text-black/20" />
+                          <span
+                            className={`font-medium ${
+                              product.stock > 0
+                                ? "text-gray-900"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {product.stock}
+                          </span>
+                        </div>
                       </TableCell>
 
                       <TableCell className="px-6 py-4">

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-import { TableWrapper, TableUserCell } from "@/components/ui/custom-table";
 import {
   Table,
   TableBody,
@@ -10,9 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { Calendar, CreditCard } from "lucide-react";
+import { Calendar, CreditCard, Hash } from "lucide-react";
 import { UserSubscription } from "@/types/subscription";
 
 interface SubscriptionHistoryTableProps {
@@ -23,16 +20,28 @@ export function SubscriptionHistoryTable({
   subscriptions,
 }: SubscriptionHistoryTableProps) {
   return (
-    <TableWrapper>
+    <div className="rounded-lg bg-white">
       <Table>
         <TableHeader>
-          <TableRow className="bg-slate-50/50 hover:bg-slate-50/50">
-            <TableHead className="w-[250px]">Plan Details</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Payment Type</TableHead>
-            <TableHead>Started On</TableHead>
-            <TableHead>Expires On</TableHead>
-            <TableHead>Status</TableHead>
+          <TableRow className="border-b border-black/5 hover:bg-transparent">
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Plan Details
+            </TableHead>
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Amount
+            </TableHead>
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Payment Type
+            </TableHead>
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Started On
+            </TableHead>
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Expires On
+            </TableHead>
+            <TableHead className="px-6 py-3 text-xs font-normal text-black/60">
+              Status
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -40,68 +49,67 @@ export function SubscriptionHistoryTable({
             <TableRow>
               <TableCell
                 colSpan={6}
-                className="h-32 text-center text-muted-foreground"
+                className="h-32 text-center text-xs text-black/40"
               >
                 No subscription history found.
               </TableCell>
             </TableRow>
           ) : (
-            subscriptions.map((sub) => (
+            subscriptions.map(sub => (
               <TableRow
                 key={sub.id}
-                className="hover:bg-slate-50/30 transition-colors"
+                className="group border-b border-black/5 transition-colors hover:bg-black/2"
               >
-                <TableCell>
-                  <TableUserCell
-                    fallback={sub.plan.name.charAt(0)}
-                    title={sub.plan.name}
-                    subtitle={`ID: ${sub.transaction_id || "N/A"}`}
-                  />
+                <TableCell className="px-6 py-4">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-black">
+                      {sub.plan.name}
+                    </p>
+                    <div className="flex items-center gap-1.5 text-[10px] text-black/40">
+                      <Hash className="h-3 w-3" />
+                      Txn: {sub.transaction_id}
+                    </div>
+                  </div>
                 </TableCell>
-                <TableCell className="font-medium text-slate-700">
-                  Rs. {Number(sub.amount).toLocaleString()}
+                <TableCell className="px-6 py-4">
+                  <div className="text-sm font-medium text-black">
+                    NPR {Number(sub.amount).toLocaleString()}
+                  </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1.5 capitalize text-slate-600">
-                    <CreditCard className="h-3.5 w-3.5 text-slate-400" />
+                <TableCell className="px-6 py-4">
+                  <div className="flex items-center gap-2 text-xs text-black/60 capitalize">
+                    <CreditCard className="h-3.5 w-3.5 text-black/40" />
                     {sub.payment_type}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1.5 text-slate-600">
-                    <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                <TableCell className="px-6 py-4">
+                  <div className="flex items-center gap-2 text-xs text-black/60">
+                    <Calendar className="h-3.5 w-3.5 text-black/40" />
                     {format(new Date(sub.started_on), "MMM d, yyyy")}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1.5 text-slate-600">
-                    <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                <TableCell className="px-6 py-4">
+                  <div className="flex items-center gap-2 text-xs text-black/60">
+                    <Calendar className="h-3.5 w-3.5 text-black/40" />
                     {format(new Date(sub.expires_on), "MMM d, yyyy")}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      new Date(sub.expires_on) > new Date()
-                        ? "default"
-                        : "secondary"
-                    }
-                    className={
-                      new Date(sub.expires_on) > new Date()
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-100"
-                        : "bg-slate-100 text-slate-600"
-                    }
-                  >
-                    {new Date(sub.expires_on) > new Date()
-                      ? "Active"
-                      : "Expired"}
-                  </Badge>
+                <TableCell className="px-6 py-4">
+                  {new Date(sub.expires_on) > new Date() ? (
+                    <span className="rounded bg-green-400/10 px-2 py-1 text-[10px] font-semibold text-green-700">
+                      Active
+                    </span>
+                  ) : (
+                    <span className="rounded bg-black/5 px-2 py-1 text-[10px] font-semibold text-black/60">
+                      Expired
+                    </span>
+                  )}
                 </TableCell>
               </TableRow>
             ))
           )}
         </TableBody>
       </Table>
-    </TableWrapper>
+    </div>
   );
 }
