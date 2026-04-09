@@ -22,7 +22,7 @@ export const StandardMarketingCTA: React.FC<StandardMarketingCTAProps> = ({
           <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-sky-100/50 blur-[100px]" />
           <div className="absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-amber-50/30 blur-[100px]" />
 
-          <h2 className="relative z-10 mb-6 text-3xl font-extrabold text-slate-900 md:text-5xl">
+          <h2 className="relative z-10 mb-6 text-3xl font-semibold text-slate-900 md:text-5xl">
             {title}
           </h2>
           <p className="relative z-10 mx-auto mb-10 max-w-xl text-lg leading-relaxed font-medium text-slate-500">

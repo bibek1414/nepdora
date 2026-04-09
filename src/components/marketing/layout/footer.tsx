@@ -293,6 +293,10 @@ export const Footer = () => {
                   Hire Website Experts Nepal
                 </FooterLink>
 
+                <FooterLink href="/website-builder-nepal">
+                  Website Builder Nepal
+                </FooterLink>
+
                 <FooterLink href="/showcase">Website Examples Nepal</FooterLink>
               </div>
             </div>

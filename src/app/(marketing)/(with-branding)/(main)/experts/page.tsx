@@ -1,233 +1,439 @@
 import { Metadata } from "next";
-import Link from "next/link";
-import { buildMarketingMetadata } from "@/lib/seo";
-import { MarketingPageHero } from "@/components/marketing/shared/MarketingPageHero";
+import { SITE_NAME, buildMarketingMetadata } from "@/lib/seo";
 import {
-  BadgeCheck,
-  MessageSquare,
-  Star,
-  Globe,
-  ShieldCheck,
+  CheckCircle2,
   Zap,
-  ArrowRight,
+  ShieldCheck,
+  Rocket,
+  ChevronRight,
+  Users,
+  Star,
+  MessageSquare,
+  Search,
+  Globe,
+  Layout,
+  Smartphone,
+  CreditCard,
+  Clock,
+  Award,
+  Briefcase,
+  TrendingUp,
+  UserCheck,
+  Building2,
 } from "lucide-react";
+import Link from "next/link";
+import { ExpertsVisualMock } from "@/components/marketing/experts/experts-visual-mock";
 
-export const metadata: Metadata = buildMarketingMetadata({
-  title: "Hire Nepdora Experts | Verified Agencies & Freelancers in Nepal",
+export const metadata = buildMarketingMetadata({
+  title: "Hire Expert Website Builders in Nepal | Nepdora Expert Hub",
   description:
-    "Find the best agencies and freelancers in Nepal to build, design, and grow your Nepdora website. Verified partners with local expertise.",
+    "Connect with experienced designers and developers to build fast, modern, and high-converting websites with Nepdora. Hire verified professionals in Nepal.",
   path: "/experts",
-  ogLabel: "Expert Marketplace",
+  keywords: [
+    "hire web developer nepal",
+    "website designers kathmandu",
+    "nepdora experts",
+    "freelance website builder nepal",
+    "ecommerce experts nepal",
+  ],
 });
-
-const EXPERTS = [
-  {
-    name: "Kathmandu Digital Agency",
-    description:
-      "Full-service digital agency specializing in high-converting e-commerce stores on Nepdora.",
-    tags: ["E-commerce", "SEO", "Branding"],
-    location: "Kathmandu",
-    rating: 5.0,
-    projects: 42,
-    verified: true,
-  },
-  {
-    name: "Pokhara Web Studios",
-    description:
-      "Creative design studio focused on beautiful restaurant and hospitality websites.",
-    tags: ["UI/UX", "Restaurant", "Hospitality"],
-    location: "Pokhara",
-    rating: 4.9,
-    projects: 28,
-    verified: true,
-  },
-  {
-    name: "Nepal SEO Pros",
-    description:
-      "The leading experts in local SEO and growth marketing for Nepali businesses.",
-    tags: ["SEO", "Content", "Growth"],
-    location: "Lalitpur",
-    rating: 4.8,
-    projects: 15,
-    verified: true,
-  },
-];
 
 export default function ExpertsPage() {
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <MarketingPageHero
-        badgeText="Verified Partners"
-        badgeIcon={BadgeCheck}
-        title={<>Hire a <span className="text-primary italic">Nepdora</span> expert.</>}
-        description="Don't have time to build it yourself? Work with verified local pros who know the Nepali market inside out and can bring your vision to life."
-        breadcrumbs={[{ label: "Experts", href: "/experts" }]}
-      />
-
-      {/* Trust/Benefits Section */}
-      <section className="py-20 bg-slate-50 border-b border-slate-100">
-        <div className="container mx-auto max-w-7xl px-4">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
+    <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
+      {/* Hero Section */}
+      <section className="pt-20 pb-32">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            {/* LEFT SIDE */}
             <div>
-              <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                Ready to launch, <span className="text-primary">faster.</span>
-              </h2>
-              <p className="mb-8 text-lg leading-relaxed text-slate-500">
-                Our experts are more than just designers. They are strategic partners 
-                who help you navigate local logistics, payment setups, and growth marketing.
+              <h1 className="mb-6 text-4xl leading-tight font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
+                Hire Expert Website{" "}
+                <span className="text-primary">Builders in Nepal.</span>
+              </h1>
+              <p className="mb-8 text-base leading-relaxed font-medium text-slate-500 sm:text-lg">
+                Work with experienced designers and developers to build fast,
+                modern, and high-converting websites with Nepdora.
               </p>
-              <div className="grid gap-4 sm:grid-cols-2">
-                 <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                    <ShieldCheck className="h-8 w-8 text-primary mb-4" />
-                    <h4 className="font-bold mb-2">Vetted Quality</h4>
-                    <p className="text-sm text-slate-500">Every expert is manually reviewed for their portfolio and client satisfaction.</p>
-                 </div>
-                 <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                    <Globe className="h-8 w-8 text-sky-500 mb-4" />
-                    <h4 className="font-bold mb-2">Local Context</h4>
-                    <p className="text-sm text-slate-500">They understand the specific needs of businesses in Kathmandu, Pokhara, and beyond.</p>
-                 </div>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link
+                  href="/experts"
+                  className="bg-primary inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105 active:scale-95"
+                >
+                  Find Experts
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/experts"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
+                >
+                  Hire Now
+                </Link>
               </div>
             </div>
-            
-            {/* Visual Mockup: Expert matching UI */}
+
+            {/* RIGHT SIDE */}
             <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 rounded-[48px] -rotate-3 blur-3xl" />
-              <div className="relative bg-white rounded-[40px] border border-slate-200 shadow-2xl p-8">
-                 <div className="flex items-center gap-4 mb-8">
-                    <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                       <Zap className="h-6 w-6" />
+              <ExpertsVisualMock />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Intro Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-24">
+        <div className="container mx-auto max-w-6xl px-6 text-center">
+          <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+            Finding the right expert shouldn't be hard.
+          </h2>
+          <p className="mx-auto max-w-3xl text-lg leading-relaxed font-medium text-slate-500">
+            Finding the right website expert in Nepal can be challenging. With
+            Nepdora Expert Hub, you can connect with skilled professionals who
+            understand your business needs and can help you build, customize,
+            and optimize your website quickly and efficiently.
+          </p>
+        </div>
+      </section>
+
+      {/* What are Nepdora Experts Section */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            <div>
+              <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                What are <span className="text-primary">Nepdora Experts?</span>
+              </h2>
+              <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500">
+                Nepdora Experts are experienced designers, developers, and
+                digital professionals who specialize in building websites using
+                modern tools and best practices.
+              </p>
+              <div className="space-y-4">
+                {[
+                  "Design professional websites",
+                  "Build and customize your online presence",
+                  "Optimize for speed and SEO",
+                  "Integrate payment systems like eSewa and Khalti",
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <CheckCircle2 className="text-primary h-5 w-5" />
+                    <span className="font-medium text-slate-700">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <div className="space-y-6">
+                <div className="flex items-center gap-5">
+                  <div className="bg-primary/10 text-primary flex h-14 w-14 items-center justify-center rounded-xl">
+                    <ShieldCheck className="h-7 w-7" />
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold text-slate-900">
+                      Verified Skills
                     </div>
-                    <div className="flex-1">
-                       <div className="h-3 w-1/3 bg-slate-100 rounded mb-2" />
-                       <div className="h-2 w-1/4 bg-slate-50 rounded" />
+                    <div className="text-sm font-medium text-slate-500">
+                      Every expert is vetted by Nepdora.
                     </div>
-                 </div>
-                 <div className="space-y-4">
-                    <div className="p-4 rounded-2xl border border-primary bg-primary/5 flex items-center justify-between">
-                       <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold">A</div>
-                          <span className="font-bold text-sm">Agency Matching...</span>
-                       </div>
-                       <div className="h-2 w-12 bg-primary/20 rounded-full overflow-hidden">
-                          <div className="h-full w-2/3 bg-primary" />
-                       </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                    <Star className="h-7 w-7" />
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold text-slate-900">
+                      Top Rated
                     </div>
-                    {[1, 2].map((i) => (
-                       <div key={i} className="p-4 rounded-2xl border border-slate-100 flex items-center gap-3 opacity-50">
-                          <div className="h-10 w-10 rounded-xl bg-slate-100" />
-                          <div className="flex-1">
-                             <div className="h-2 w-1/2 bg-slate-100 rounded mb-2" />
-                             <div className="h-2 w-1/3 bg-slate-50 rounded" />
-                          </div>
-                       </div>
-                    ))}
-                 </div>
+                    <div className="text-sm font-medium text-slate-500">
+                      Work with the best talent in Nepal.
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Expert Marketplace Grid */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-7xl px-4 text-center mb-16">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Meet our certified partners.
-          </h2>
-          <p className="mx-auto max-w-2xl text-lg text-slate-500">
-            Browse through our network of talented professionals ready to help you grow.
-          </p>
+      {/* Why Hire an Expert Section */}
+      <section className="bg-slate-50 py-24">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Why hire an <span className="text-primary">Expert?</span>
+            </h2>
+            <p className="text-lg font-medium text-slate-500">
+              Hiring a website expert saves you time and ensures quality
+              results.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <h3 className="mb-4 text-2xl font-bold text-slate-900">
+                Save Time & Effort
+              </h3>
+              <p className="mb-6 leading-relaxed font-medium text-slate-500">
+                Instead of figuring everything out yourself, you can work with
+                professionals who know how to build scalable, high-performing
+                websites.
+              </p>
+              <div className="text-primary flex items-center gap-3 font-semibold">
+                <Clock className="h-5 w-5" />
+                Focus on your business
+              </div>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <h3 className="mb-4 text-2xl font-bold text-slate-900">
+                Ensure Quality
+              </h3>
+              <p className="mb-6 leading-relaxed font-medium text-slate-500">
+                Experts help you avoid common mistakes, improve performance, and
+                deliver a better experience to your customers.
+              </p>
+              <div className="text-primary flex items-center gap-3 font-semibold">
+                <TrendingUp className="h-5 w-5" />
+                Better ROI for your site
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="container mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {EXPERTS.map(expert => (
-              <div
-                key={expert.name}
-                className="group relative flex flex-col rounded-[40px] border border-slate-200 bg-white p-10 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10"
-              >
-                <div className="mb-8 flex items-start justify-between">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 p-3 shadow-sm transition-transform group-hover:scale-110">
-                    <Globe className="h-full w-full text-slate-400" />
-                  </div>
-                  {expert.verified && (
-                    <div className="flex items-center gap-1.5 rounded-full border border-green-100 bg-green-50 px-3 py-1 text-[10px] font-bold tracking-widest text-green-600 uppercase">
-                      <BadgeCheck className="h-3 w-3" />
-                      Verified
-                    </div>
-                  )}
+      </section>
+
+      {/* Benefits Grid */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Expert <span className="text-primary">Benefits.</span>
+            </h2>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                icon: UserCheck,
+                title: "Skilled Professionals",
+                desc: "Access to verified and skilled professionals in Nepal.",
+              },
+              {
+                icon: Zap,
+                title: "Faster Completion",
+                desc: "Get your project completed in record time.",
+              },
+              {
+                icon: Layout,
+                title: "High-Quality Design",
+                desc: "Modern and professional design for your brand.",
+              },
+              {
+                icon: Rocket,
+                title: "Better Performance",
+                desc: "Optimized for speed and user experience.",
+              },
+              {
+                icon: Search,
+                title: "SEO-Optimized",
+                desc: "Built with search engines in mind from day one.",
+              },
+              {
+                icon: MessageSquare,
+                title: "Reliable Support",
+                desc: "Direct communication and ongoing support.",
+              },
+            ].map((item, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-50">
+                  <item.icon className="h-5 w-5" />
                 </div>
-
-                <h3 className="mb-3 text-2xl font-bold text-slate-900 transition-colors group-hover:text-primary">
-                  {expert.name}
-                </h3>
-
-                <div className="mb-6 flex items-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                  <div className="flex items-center gap-1">
-                    <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                    <span className="text-slate-900">{expert.rating}</span>
-                  </div>
-                  <span className="text-slate-200">|</span>
-                  <span>{expert.projects} projects</span>
-                  <span className="text-slate-200">|</span>
-                  <span>{expert.location}</span>
+                <div>
+                  <h4 className="mb-1 text-lg font-semibold text-slate-900">
+                    {item.title}
+                  </h4>
+                  <p className="text-sm leading-relaxed font-medium text-slate-500">
+                    {item.desc}
+                  </p>
                 </div>
-
-                <p className="mb-8 line-clamp-3 text-base leading-relaxed text-slate-500">
-                  {expert.description}
-                </p>
-
-                <div className="mb-10 flex flex-wrap gap-2">
-                  {expert.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-slate-100 bg-slate-50/50 px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-tight"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <Link
-                  href="/contact"
-                  className="mt-auto flex w-full items-center justify-center gap-3 rounded-2xl bg-slate-900 py-5 text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-xl"
-                >
-                  Contact expert
-                  <MessageSquare className="h-4 w-4" />
-                </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Become an Expert CTA */}
+      {/* Who Should Use This Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-24">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Who is this <span className="text-primary">for?</span>
+            </h2>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            {[
+              { icon: Building2, title: "Businesses" },
+              { icon: Rocket, title: "Startups" },
+              { icon: Users, title: "Agencies" },
+              { icon: Briefcase, title: "Entrepreneurs" },
+              { icon: UserCheck, title: "Everyone" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex w-36 flex-col items-center rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-md"
+              >
+                <item.icon className="text-primary mx-auto mb-3 h-8 w-8" />
+                <h4 className="text-base font-semibold text-slate-900">
+                  {item.title}
+                </h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
       <section className="py-24">
-         <div className="container mx-auto max-w-5xl px-4">
-            <div className="relative overflow-hidden rounded-[48px] bg-primary px-8 py-20 text-center text-white md:px-16 md:py-24 shadow-2xl shadow-primary/20">
-               <div className="absolute inset-0 bg-slate-900/10" />
-               <div className="relative z-10 flex flex-col items-center">
-                  <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-white/20 backdrop-blur-md">
-                     <Star className="h-8 w-8 text-white fill-white" />
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              How it <span className="text-primary">works.</span>
+            </h2>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                step: "1",
+                title: "Find an Expert",
+                desc: "Browse and choose from verified Nepdora experts.",
+              },
+              {
+                step: "2",
+                title: "Connect & Discuss",
+                desc: "Share your requirements and goals with them.",
+              },
+              {
+                step: "3",
+                title: "Build Your Website",
+                desc: "The expert creates or improves your website.",
+              },
+              {
+                step: "4",
+                title: "Launch & Grow",
+                desc: "Go live with a professional, high-performing website.",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              >
+                <div className="bg-primary absolute -top-3 -left-3 flex h-10 w-10 items-center justify-center rounded-xl text-base font-semibold text-white shadow-md">
+                  {item.step}
+                </div>
+                <h4 className="mt-4 mb-2 text-lg font-semibold text-slate-900">
+                  {item.title}
+                </h4>
+                <p className="text-sm leading-relaxed font-medium text-slate-500">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Nepdora Experts Section */}
+      <section className="bg-slate-50 py-24">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            <div className="order-2 lg:order-1">
+              <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Expertise without{" "}
+                <span className="text-primary">the complexity.</span>
+              </h2>
+              <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500">
+                Unlike traditional hiring, Nepdora Experts are already familiar
+                with modern website-building workflows. This means faster
+                delivery, better quality, and smoother communication.
+              </p>
+              <div className="border-primary/20 bg-primary/5 rounded-2xl border p-6">
+                <div className="flex gap-4">
+                  <Zap className="text-primary h-6 w-6 shrink-0" />
+                  <div>
+                    <div className="text-primary mb-1 text-sm font-semibold">
+                      Pro Tip
+                    </div>
+                    <p className="text-sm font-medium text-slate-600">
+                      Even if you plan to build your website yourself,
+                      consulting an expert can save time and help you avoid
+                      costly mistakes. A short consultation can significantly
+                      improve your final result.
+                    </p>
                   </div>
-                  <h2 className="mb-6 text-3xl font-bold tracking-tight md:text-6xl">
-                     Are you a pro?
-                  </h2>
-                  <p className="mx-auto mb-10 max-w-xl text-lg text-white/90">
-                     Join our expert marketplace and help businesses across Nepal build their digital dreams on the world's most localized builder.
-                  </p>
-                  <Link
-                     href="/support"
-                     className="inline-flex items-center gap-3 rounded-2xl bg-white px-10 py-5 text-base font-bold text-primary transition-all hover:scale-105 active:scale-95 shadow-2xl"
-                  >
-                     Apply to join
-                     <ArrowRight className="h-5 w-5" />
-                  </Link>
-               </div>
+                </div>
+              </div>
             </div>
-         </div>
+            <div className="order-1 lg:order-2">
+              <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
+                  <Zap className="text-primary h-5 w-5" />
+                  <span className="font-medium text-slate-700">
+                    Modern Workflows
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
+                  <CheckCircle2 className="text-primary h-5 w-5" />
+                  <span className="font-medium text-slate-700">
+                    Faster Delivery
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
+                  <ShieldCheck className="text-primary h-5 w-5" />
+                  <span className="font-medium text-slate-700">
+                    Better Quality
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA - Clean white background */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+            <div className="flex flex-col items-center">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <Award className="text-primary h-8 w-8" />
+              </div>
+              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Ready to build with an expert?
+              </h2>
+              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
+                Connect with a Nepdora expert today and take your business to
+                the next level.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link
+                  href="/experts"
+                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105 active:scale-95"
+                >
+                  Find Experts
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/experts"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );
 }
-

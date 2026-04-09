@@ -1,64 +1,91 @@
 "use client";
+
 import React, { useState, useRef } from "react";
-import { motion } from "framer-motion";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Download, Plus, Trash2, FileText, Loader2, Zap } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Download,
+  Plus,
+  Trash2,
+  FileText,
+  Loader2,
+  Zap,
+  PlusCircle,
+  Building2,
+  Mail,
+  User,
+  Hash,
+  Calendar,
+  CreditCard,
+  Phone,
+} from "lucide-react";
 import Link from "next/link";
-import CTA from "@/components/marketing/cta-section/cta-section";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+
+// ── Types ────────────────────────────────────────────────────────────────────
+
+interface LineItem {
+  id: string;
+  description: string;
+  quantity: number;
+  price: number;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function today(): string {
+  return new Date().toISOString().split("T")[0];
+}
+
+// ── Main Component ────────────────────────────────────────────────────────────
 
 export const InvoiceBuilder = () => {
-  const [items, setItems] = useState([
-    { description: "", quantity: 1, price: 0 },
+  const [items, setItems] = useState<LineItem[]>([
+    {
+      id: "1",
+      description: "Design & Development Services",
+      quantity: 1,
+      price: 0,
+    },
   ]);
+  const [businessName, setBusinessName] = useState("");
+  const [businessAddress, setBusinessAddress] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [clientAddress, setClientAddress] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState(
+    `INV-${Math.floor(1000 + Math.random() * 9000)}`
+  );
+  const [invoiceDate, setInvoiceDate] = useState(today());
+
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const invoiceRef = useRef<HTMLDivElement>(null);
+
+  // ── Handlers ───────────────────────────────────────────────────────────────
 
   const addItem = () =>
-    setItems([...items, { description: "", quantity: 1, price: 0 }]);
-  const removeItem = (index: number) =>
-    setItems(items.filter((_, i) => i !== index));
+    setItems([
+      ...items,
+      {
+        id: Math.random().toString(36).substr(2, 9),
+        description: "",
+        quantity: 1,
+        price: 0,
+      },
+    ]);
 
-  const updateItem = (index: number, field: string, value: any) => {
-    const newItems = [...items];
-    (newItems[index] as any)[field] = value;
-    setItems(newItems);
+  const removeItem = (id: string) => {
+    if (items.length <= 1) return;
+    setItems(items.filter(it => it.id !== id));
   };
 
-  const handleDownloadPDF = async () => {
-    if (!invoiceRef.current) return;
-    setIsGenerating(true);
-
-    try {
-      const element = invoiceRef.current;
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        logging: false,
-        useCORS: true,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
-
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`invoice-${new Date().getTime()}.pdf`);
-    } catch (error) {
-      console.error("PDF generation failed:", error);
-    } finally {
-      setIsGenerating(false);
-    }
+  const updateItem = (id: string, field: keyof LineItem, value: any) => {
+    setItems(items.map(it => (it.id === id ? { ...it, [field]: value } : it)));
   };
 
   const total = items.reduce(
@@ -66,78 +93,254 @@ export const InvoiceBuilder = () => {
     0
   );
 
+  // ── PDF Generation (High Quality direct drawing) ──────────────────────────
+
+  const handleDownloadPDF = async () => {
+    setIsGenerating(true);
+    try {
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const W = 595,
+        ml = 48,
+        mr = 48,
+        cw = W - ml - mr;
+      let y = 60;
+
+      const accent: [number, number, number] = [103, 61, 230]; // primary (approx #673de6)
+      const dark: [number, number, number] = [15, 23, 42]; // slate-900
+      const muted: [number, number, number] = [100, 116, 139]; // slate-500
+      const light: [number, number, number] = [241, 245, 249]; // slate-100
+
+      // Title
+      doc
+        .setFontSize(26)
+        .setFont("helvetica", "bold")
+        .setTextColor(...dark);
+      doc.text("INVOICE", W - mr, y + 5, { align: "right" });
+      doc
+        .setFontSize(10)
+        .setFont("helvetica", "normal")
+        .setTextColor(...muted);
+      doc.text(`#${invoiceNumber}`, W - mr, y + 22, { align: "right" });
+
+      y += 80;
+      doc
+        .setFontSize(8)
+        .setFont("helvetica", "bold")
+        .setTextColor(...muted);
+      doc.text("FROM", ml, y);
+      doc.text("BILL TO", ml + cw / 2, y);
+
+      y += 15;
+      doc
+        .setFontSize(11)
+        .setFont("helvetica", "bold")
+        .setTextColor(...dark);
+      doc.text(businessName || "Your Business Name", ml, y);
+      doc.text(clientName || "Client Name", ml + cw / 2, y);
+
+      y += 15;
+      doc
+        .setFontSize(9)
+        .setFont("helvetica", "normal")
+        .setTextColor(...muted);
+      if (businessAddress)
+        doc.text(doc.splitTextToSize(businessAddress, cw / 2 - 20), ml, y);
+      if (clientAddress)
+        doc.text(
+          doc.splitTextToSize(clientAddress, cw / 2 - 20),
+          ml + cw / 2,
+          y
+        );
+
+      y += 60;
+      doc.setFillColor(...light).roundedRect(ml, y, cw, 40, 3, 3, "F");
+      const cols = [ml + 20, ml + cw / 2 + 20];
+      doc
+        .setFontSize(8)
+        .setFont("helvetica", "bold")
+        .setTextColor(...muted);
+      doc.text("INVOICE DATE", cols[0], y + 15);
+      doc.text("TOTAL AMOUNT", cols[1], y + 15);
+      doc
+        .setFontSize(11)
+        .setFont("helvetica", "bold")
+        .setTextColor(...dark);
+      doc.text(invoiceDate, cols[0], y + 30);
+      doc.text(`NPR ${total.toLocaleString()}`, cols[1], y + 30);
+
+      y += 70;
+      doc.setFillColor(...accent).rect(ml, y, cw, 28, "F");
+      const tCols = [ml + 15, ml + cw * 0.6, ml + cw * 0.75, ml + cw - 15];
+      doc
+        .setFontSize(9)
+        .setFont("helvetica", "bold")
+        .setTextColor(255, 255, 255);
+      doc.text("DESCRIPTION", tCols[0], y + 18);
+      doc.text("QTY", tCols[1], y + 18);
+      doc.text("PRICE", tCols[2], y + 18);
+      doc.text("TOTAL", tCols[3], y + 18, { align: "right" });
+
+      y += 28;
+      items.forEach((it, i) => {
+        const rowH = 26;
+        if (i % 2 === 0) doc.setFillColor(252, 252, 254);
+        else doc.setFillColor(255, 255, 255);
+        doc.rect(ml, y, cw, rowH, "F");
+        doc
+          .setFontSize(10)
+          .setFont("helvetica", "normal")
+          .setTextColor(...dark);
+        doc.text(it.description || "-", tCols[0], y + 16);
+        doc.text(String(it.quantity), tCols[1], y + 16);
+        doc.text(it.price.toLocaleString(), tCols[2], y + 16);
+        doc.setFont("helvetica", "bold");
+        doc.text((it.quantity * it.price).toLocaleString(), tCols[3], y + 16, {
+          align: "right",
+        });
+        y += rowH;
+      });
+
+      y += 40;
+      doc
+        .setFontSize(10)
+        .setFont("helvetica", "normal")
+        .setTextColor(...muted);
+      doc.text("Amount Due", W - mr - 100, y);
+      doc
+        .setFontSize(18)
+        .setFont("helvetica", "bold")
+        .setTextColor(...accent);
+      doc.text(`NPR ${total.toLocaleString()}`, W - mr, y + 20, {
+        align: "right",
+      });
+
+      doc.setFontSize(8).setTextColor(...muted);
+      doc.text(
+        "This invoice was generated using Nepdora Invoice Builder, a fast and modern way to create professional invoices for businesses in Nepal.",
+        W / 2,
+        800,
+        { align: "center" }
+      );
+
+      doc.save(`invoice-${invoiceNumber}.pdf`);
+      toast.success("Invoice downloaded!");
+    } catch (err) {
+      toast.error("Error generating PDF");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // ── Render Helpers ─────────────────────────────────────────────────────────
+
+  const placeholderStyle = "placeholder:text-slate-400";
+
   return (
-    <div className="bg-transparent">
-      <div className="container mx-auto max-w-5xl px-4">
-        <div className="mb-20 grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-8 lg:col-span-2">
-            <div
-              ref={invoiceRef}
-              className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
-            >
-              <div className="mb-12 flex items-start justify-between">
-                <div className="space-y-4">
-                  <h2 className="flex items-center gap-2 text-xl font-bold">
-                    <FileText className="text-primary h-5 w-5" /> Invoice
-                    Details
-                  </h2>
-                  <Input
-                    placeholder="Your Business Name"
-                    className="border-none px-0 text-lg font-bold focus-visible:ring-0"
-                  />
-                  <Input
-                    placeholder="Your Address"
-                    className="border-none px-0 text-base focus-visible:ring-0"
-                  />
+    <div className="container mx-auto max-w-6xl px-4 py-12">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {/* Main Editor (2/3) */}
+        <div className="space-y-8 lg:col-span-2">
+          <Card className="relative overflow-hidden border-slate-200 bg-white p-8 shadow-sm">
+            <div className="bg-primary absolute top-0 left-0 h-full w-2" />
+
+            {/* Header info */}
+            <div className="mb-12 flex flex-col justify-between gap-8 md:flex-row">
+              <div className="flex-1 space-y-6">
+                <div className="mb-4 flex items-center gap-2">
+                  <Building2 className="text-primary h-5 w-5" />
+                  <h2 className="text-lg font-bold">Your Business</h2>
                 </div>
-                <div className="space-y-2 text-right">
-                  <p className="text-xs font-medium text-slate-500">
+                <Input
+                  placeholder="Your Business Name"
+                  value={businessName}
+                  onChange={e => setBusinessName(e.target.value)}
+                  className={`border bg-transparent px-2 text-2xl font-black shadow-none focus-visible:ring-0 ${placeholderStyle}`}
+                />
+                <Input
+                  placeholder="Street Address, City, Phone"
+                  value={businessAddress}
+                  onChange={e => setBusinessAddress(e.target.value)}
+                  className={`border bg-transparent px-2 text-slate-500 shadow-none focus-visible:ring-0 ${placeholderStyle}`}
+                />
+              </div>
+
+              <div className="min-w-[180px] space-y-4 text-right">
+                <div className="space-y-1">
+                  <Label className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
                     Invoice #
-                  </p>
+                  </Label>
                   <Input
                     placeholder="INV-001"
-                    className="border-slate-200 text-right shadow-none"
+                    value={invoiceNumber}
+                    onChange={e => setInvoiceNumber(e.target.value)}
+                    className={`focus-visible:ring-primary border-slate-200 text-right shadow-none ${placeholderStyle}`}
                   />
-                  <p className="mt-4 text-xs font-medium text-slate-500">
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
                     Date
-                  </p>
+                  </Label>
                   <Input
                     type="date"
-                    className="border-slate-200 text-right shadow-none"
+                    value={invoiceDate}
+                    onChange={e => setInvoiceDate(e.target.value)}
+                    className={`focus-visible:ring-primary border-slate-200 text-right shadow-none ${placeholderStyle}`}
                   />
                 </div>
               </div>
+            </div>
 
-              <div className="mb-12">
-                <h3 className="mb-4 font-semibold text-slate-900">Bill To:</h3>
-                <Input placeholder="Client Name" className="mb-2 shadow-none" />
-                <Input placeholder="Client Address" className="shadow-none" />
+            {/* Bill to */}
+            <div className="mb-12">
+              <div className="mb-6 flex items-center gap-2">
+                <User className="text-primary h-5 w-5" />
+                <h3 className="text-md border-b-2 border-slate-100 pb-1 font-bold text-slate-900">
+                  Bill To
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <Input
+                  placeholder="Client Name"
+                  value={clientName}
+                  onChange={e => setClientName(e.target.value)}
+                  className={`h-10 border-slate-200 shadow-none ${placeholderStyle}`}
+                />
+                <Input
+                  placeholder="Client Address"
+                  value={clientAddress}
+                  onChange={e => setClientAddress(e.target.value)}
+                  className={`h-10 border-slate-200 shadow-none ${placeholderStyle}`}
+                />
+              </div>
+            </div>
+
+            {/* Line items */}
+            <div className="space-y-6">
+              <div className="grid grid-cols-12 gap-4 px-4 text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+                <div className="col-span-6">Description</div>
+                <div className="col-span-2 text-right">Qty</div>
+                <div className="col-span-3 text-right">Price (NPR)</div>
+                <div className="col-span-1"></div>
               </div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-12 gap-4 px-4 text-xs font-semibold text-slate-400">
-                  <div className="col-span-6">Description</div>
-                  <div className="col-span-2">Qty</div>
-                  <div className="col-span-3">Price (NPR)</div>
-                  <div className="col-span-1"></div>
-                </div>
-
-                {items.map((item, index) => (
+              <AnimatePresence mode="popLayout">
+                {items.map(item => (
                   <motion.div
                     layout
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    key={index}
-                    className="grid grid-cols-12 items-center gap-4"
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    key={item.id}
+                    className="group grid grid-cols-12 items-center gap-4 rounded-xl border border-transparent bg-slate-50/50 p-2 transition-all hover:border-slate-200"
                   >
                     <div className="col-span-6">
                       <Input
-                        placeholder="Item name or description"
+                        placeholder="Project name or service description"
                         value={item.description}
                         onChange={e =>
-                          updateItem(index, "description", e.target.value)
+                          updateItem(item.id, "description", e.target.value)
                         }
-                        className="shadow-none"
+                        className={`h-10 border-slate-100 bg-white shadow-none ${placeholderStyle}`}
                       />
                     </div>
                     <div className="col-span-2">
@@ -146,12 +349,12 @@ export const InvoiceBuilder = () => {
                         value={item.quantity}
                         onChange={e =>
                           updateItem(
-                            index,
+                            item.id,
                             "quantity",
-                            parseInt(e.target.value) || 0
+                            parseFloat(e.target.value) || 0
                           )
                         }
-                        className="shadow-none"
+                        className="h-10 border-slate-100 bg-white text-right shadow-none"
                       />
                     </div>
                     <div className="col-span-3">
@@ -160,133 +363,116 @@ export const InvoiceBuilder = () => {
                         value={item.price}
                         onChange={e =>
                           updateItem(
-                            index,
+                            item.id,
                             "price",
                             parseFloat(e.target.value) || 0
                           )
                         }
-                        className="shadow-none"
+                        className="h-10 border-slate-100 bg-white text-right shadow-none"
                       />
                     </div>
-                    <div className="col-span-1">
+                    <div className="col-span-1 flex justify-end">
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-slate-400 hover:text-red-500"
-                        onClick={() => removeItem(index)}
+                        className="text-slate-300 hover:bg-red-50 hover:text-red-500"
+                        onClick={() => removeItem(item.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </motion.div>
                 ))}
+              </AnimatePresence>
 
-                <Button
-                  variant="outline"
-                  className="hover:border-primary hover:text-primary mt-4 w-full border-2 border-dashed shadow-none"
-                  onClick={addItem}
-                >
-                  <Plus className="mr-2 h-4 w-4" /> Add Item
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                className="hover:text-primary hover:border-primary/30 hover:bg-primary/5 group h-12 w-full border-2 border-dashed border-slate-200 text-slate-400 transition-all"
+                onClick={addItem}
+              >
+                <Plus className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
+                Add Line Item
+              </Button>
+            </div>
 
-              <div className="mt-12 flex justify-end">
-                <div className="w-64 space-y-4 border-t border-slate-100 pt-6">
-                  <div className="flex items-center justify-between text-sm text-slate-500">
-                    <span>Subtotal</span>
-                    <span>Rs. {total.toLocaleString()}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-lg font-bold">
-                    <span>Total</span>
-                    <span className="text-primary">
-                      Rs. {total.toLocaleString()}
-                    </span>
-                  </div>
+            {/* Total */}
+            <div className="mt-12 flex justify-end">
+              <div className="w-full space-y-4 border-t border-slate-100 pt-8 md:w-80">
+                <div className="flex items-center justify-between font-medium text-slate-500">
+                  <span>Subtotal</span>
+                  <span>Rs. {total.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center justify-between text-2xl font-black text-slate-900">
+                  <span>Total Due</span>
+                  <span className="text-primary">
+                    Rs. {total.toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
+        </div>
 
-          <div className="space-y-6">
-            <div className="sticky top-24 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-              <h3 className="mb-6 text-xl font-bold">Download Invoice</h3>
-              <p className="mb-6 text-sm text-slate-500">
-                Enter your contact info to download your professional invoice
-                PDF.
-              </p>
+        {/* Sidebar Actions (1/3) */}
+        <div className="space-y-6">
+          <Card className="sticky top-24 border-slate-200 bg-white p-8 shadow-sm">
+            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
+              <Download className="text-primary h-5 w-5" />
+              Get PDF
+            </h3>
+            <p className="mb-8 text-sm leading-relaxed text-slate-500">
+              Enter your contact details to download a professional invoice for
+              your client.
+            </p>
 
-              <div className="mb-8 space-y-4">
-                <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-400">
-                    Your email
-                  </label>
+            <div className="mb-8 space-y-5">
+              <div className="space-y-2">
+                <Label className="text-xs font-bold tracking-widest text-slate-400 uppercase">
+                  Your Email
+                </Label>
+                <div className="relative">
+                  <Mail className="absolute top-3 left-3 h-4 w-4 text-slate-300" />
                   <Input
                     placeholder="name@business.com"
                     value={clientEmail}
                     onChange={e => setClientEmail(e.target.value)}
-                    className="shadow-none"
+                    className={`focus-visible:ring-primary h-11 border-slate-200 pl-10 shadow-none ${placeholderStyle}`}
                   />
                 </div>
-                <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-400">
-                    Your phone
-                  </label>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold tracking-widest text-slate-400 uppercase">
+                  Your Phone
+                </Label>
+                <div className="relative">
+                  <Phone className="absolute top-3 left-3 h-4 w-4 text-slate-300" />
                   <Input
                     placeholder="98XXXXXXXX"
                     value={clientPhone}
                     onChange={e => setClientPhone(e.target.value)}
-                    className="shadow-none"
+                    className={`focus-visible:ring-primary h-11 border-slate-200 pl-10 shadow-none ${placeholderStyle}`}
                   />
                 </div>
               </div>
-
-              <Button
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl font-bold"
-                disabled={!clientEmail || !clientPhone || isGenerating}
-                onClick={handleDownloadPDF}
-              >
-                {isGenerating ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-                {isGenerating ? "Generating..." : "Download PDF"}
-              </Button>
-
-              <p className="mt-4 text-center text-[10px] text-slate-400">
-                By downloading, you agree to receive helpful business tips from
-                Nepdora.
-              </p>
             </div>
 
-            {/* Growth Loop CTA */}
-            <div className="rounded-2xl bg-slate-900 p-8 text-white shadow-xl shadow-slate-200">
-              <div className="bg-primary/20 ring-primary/30 mb-6 flex h-12 w-12 items-center justify-center rounded-xl ring-1">
-                <Zap className="text-primary h-6 w-6" />
-              </div>
-              <h3 className="mb-4 text-xl font-bold">
-                Never lose an invoice again.
-              </h3>
-              <p className="mb-8 text-sm leading-relaxed text-slate-400">
-                Save this invoice and automate your entire billing process by
-                creating a{" "}
-                <span className="font-semibold text-white">free website</span>{" "}
-                on Nepdora.
-              </p>
-              <Button
-                asChild
-                className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white font-bold text-slate-950 hover:bg-slate-100"
-              >
-                <Link href="/create-website">
-                  Save this Invoice
-                  <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
-                </Link>
-              </Button>
-              <p className="mt-4 text-center text-[10px] font-medium tracking-widest text-slate-500">
-                No credit card required
-              </p>
-            </div>
-          </div>
+            <Button
+              className="bg-primary hover:bg-primary/90 shadow-primary/10 h-12 w-full rounded-xl font-bold text-white shadow-lg transition-all hover:translate-y-[-2px] disabled:opacity-50"
+              disabled={!clientEmail || !clientPhone || isGenerating}
+              onClick={handleDownloadPDF}
+            >
+              {isGenerating ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Download className="mr-2 h-5 w-5" />
+              )}
+              {isGenerating ? "Exporting..." : "Download Invoice"}
+            </Button>
+
+            <p className="mt-4 text-center text-[10px] font-medium text-slate-400">
+              Free to use. No credit card required.
+            </p>
+          </Card>
         </div>
       </div>
     </div>

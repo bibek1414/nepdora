@@ -2,22 +2,21 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { 
-  CheckCircle2, 
-  AlertCircle, 
-  ChevronRight, 
-  Zap, 
-  Settings, 
-  ShieldCheck, 
+import {
+  CheckCircle2,
+  ChevronRight,
+  Zap,
+  Settings,
+  ShieldCheck,
   Rocket,
-  Globe
+  Globe,
 } from "lucide-react";
 import { INTEGRATIONS } from "@/constants/integrations";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { 
-  IntegrationHero, 
-  IntegrationShowcaseSection, 
-  ConnectionMockup 
+import {
+  IntegrationHero,
+  IntegrationShowcaseSection,
+  ConnectionMockup,
 } from "@/components/marketing/integrations/integration-sections";
 
 interface Props {
@@ -27,7 +26,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const integration = INTEGRATIONS.find(i => i.slug === slug);
-  
+
   if (!integration) return {};
 
   return buildMarketingMetadata({
@@ -46,7 +45,7 @@ export default async function IntegrationDetailsPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <IntegrationHero 
+      <IntegrationHero
         name={integration.name}
         logo={integration.logo}
         color={integration.color}
@@ -65,9 +64,8 @@ export default async function IntegrationDetailsPage({ params }: Props) {
           bullets={section.bullets}
           image={section.image}
           visual={
-            // Show ConnectionMockup for the first section OR if the title mentions 'Activation' or 'Connection'
             idx === 0 || section.title.toLowerCase().includes("activation") ? (
-              <ConnectionMockup 
+              <ConnectionMockup
                 activeName={integration.name}
                 activeLogo={integration.logo}
                 color={integration.color}
@@ -79,38 +77,38 @@ export default async function IntegrationDetailsPage({ params }: Props) {
         />
       ))}
 
-      {/* Comparison Section (Hard Way vs Nepdora Way) */}
-      <section className="py-24 bg-slate-50 border-t border-slate-100">
+      {/* Comparison Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="mb-16 text-center">
-            <h2 className="mb-6 text-3xl font-bold text-slate-900 md:text-5xl">
+          <div className="mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
               Why use our integration?
             </h2>
-            <p className="mx-auto max-w-2xl text-lg font-medium text-slate-500">
-              Skip the technical complexity and go live in minutes with our native, zero-code connection.
+            <p className="text-lg font-medium text-slate-500">
+              Skip the technical complexity and go live in minutes with our
+              native, zero-code connection.
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+          <div className="grid gap-8 md:grid-cols-2 lg:gap-8">
             {/* The Hard Way */}
-            <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
-              <div className="mb-10 flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-500">
-                  <AlertCircle className="h-6 w-6" />
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <div className="mb-8 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
+                  <ShieldCheck className="h-5 w-5" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 tracking-wider uppercase">The Hard Way</h3>
+                <h3 className="text-lg font-semibold text-slate-900">
+                  The Hard Way
+                </h3>
               </div>
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {integration.hardWay.map((step, idx) => (
-                  <div key={idx} className="flex gap-4 relative">
-                    {idx !== integration.hardWay.length - 1 && (
-                      <div className="absolute top-10 left-2.5 h-full w-px bg-slate-100" />
-                    )}
-                    <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-400 z-10">
+                  <div key={idx} className="flex gap-3">
+                    <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-400">
                       {idx + 1}
                     </div>
                     <div>
-                      <h4 className="mb-1 text-base font-bold text-slate-800">
+                      <h4 className="mb-1 font-semibold text-slate-800">
                         {step.title}
                       </h4>
                       <p className="text-sm leading-relaxed text-slate-500">
@@ -120,58 +118,57 @@ export default async function IntegrationDetailsPage({ params }: Props) {
                   </div>
                 ))}
               </div>
-              <div className="mt-10 rounded-2xl border border-red-100 bg-red-50 p-4">
-                <p className="text-sm text-red-700 italic">
-                  Requires technical expertise, weeks of development, and ongoing maintenance costs.
+              <div className="mt-8 rounded-xl border border-rose-100 bg-rose-50 p-4">
+                <p className="text-sm text-rose-700">
+                  Requires technical expertise, weeks of development, and
+                  ongoing maintenance costs.
                 </p>
               </div>
             </div>
 
             {/* The Nepdora Way */}
-            <div className="relative overflow-hidden rounded-[32px] border-2 border-slate-100 bg-white p-8 shadow-xl shadow-slate-100/50">
+            <div className="border-primary/20 relative rounded-2xl border-2 bg-white p-8 shadow-sm">
               <div
-                className="absolute top-0 right-0 rounded-bl-2xl px-6 py-2 text-[10px] font-bold tracking-widest text-white uppercase"
+                className="absolute -top-3 right-6 rounded-full px-4 py-1 text-xs font-semibold text-white"
                 style={{ backgroundColor: integration.color }}
               >
                 Zero Code
               </div>
-              <div className="mb-10 flex items-center gap-4">
+              <div className="mb-8 flex items-center gap-3">
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl"
                   style={{
                     backgroundColor: `${integration.color}15`,
                     color: integration.color,
                   }}
                 >
-                  <Rocket className="h-6 w-6" fill="currentColor" />
+                  <Rocket className="h-5 w-5" />
                 </div>
-                <h3 
-                  className="text-lg font-bold tracking-wider uppercase text-slate-900"
-                >
+                <h3 className="text-lg font-semibold text-slate-900">
                   The Nepdora Way
                 </h3>
               </div>
-              <div className="space-y-10">
+              <div className="space-y-6">
                 {[
                   {
                     title: "Instant activation",
                     desc: "Turn on the integration with a single click from your dashboard.",
-                    icon: <Settings size={20} />,
+                    icon: <Settings size={18} />,
                   },
                   {
                     title: "No coding required",
                     desc: "Simply enter your API keys and we handle all the technical plumbing.",
-                    icon: <Zap size={20} />,
+                    icon: <Zap size={18} />,
                   },
                   {
                     title: "Updates included",
                     desc: "We monitor and update the integration so it never stops working.",
-                    icon: <ShieldCheck size={20} />,
+                    icon: <ShieldCheck size={18} />,
                   },
                 ].map((step, idx) => (
-                  <div key={idx} className="flex gap-5">
+                  <div key={idx} className="flex gap-3">
                     <div
-                      className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                      className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
                       style={{
                         backgroundColor: `${integration.color}10`,
                         color: integration.color,
@@ -180,35 +177,36 @@ export default async function IntegrationDetailsPage({ params }: Props) {
                       {step.icon}
                     </div>
                     <div>
-                      <h4 className="mb-1 text-lg font-bold text-slate-900">
+                      <h4 className="mb-1 font-semibold text-slate-900">
                         {step.title}
                       </h4>
-                      <p className="text-base leading-relaxed text-slate-600">
+                      <p className="text-sm leading-relaxed text-slate-500">
                         {step.desc}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
-              
-              <div className="mt-12 space-y-4">
-                <div className="flex items-center gap-3 text-sm font-bold text-emerald-600">
-                  <CheckCircle2 className="h-5 w-5" />
+
+              <div className="mt-8 space-y-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-emerald-600">
+                  <CheckCircle2 className="h-4 w-4" />
                   <span>Zero Coding Required</span>
                 </div>
-                <div className="flex items-center gap-3 text-sm font-bold text-emerald-600">
-                  <CheckCircle2 className="h-5 w-5" />
+                <div className="flex items-center gap-2 text-sm font-medium text-emerald-600">
+                  <CheckCircle2 className="h-4 w-4" />
                   <span>Active in 5 Minutes</span>
                 </div>
               </div>
 
-              <div className="mt-10">
-                <div 
-                  className="rounded-2xl p-6 text-white shadow-lg shadow-slate-200"
+              <div className="mt-8">
+                <div
+                  className="rounded-xl p-5 text-white shadow-md"
                   style={{ backgroundColor: integration.color }}
                 >
-                  <p className="leading-relaxed font-semibold italic text-white/90">
-                    "With Nepdora, {integration.name} is ready to use from day one. Focus on your business, not the code."
+                  <p className="leading-relaxed font-medium text-white/90">
+                    "With Nepdora, {integration.name} is ready to use from day
+                    one. Focus on your business, not the code."
                   </p>
                 </div>
               </div>
@@ -218,26 +216,25 @@ export default async function IntegrationDetailsPage({ params }: Props) {
       </section>
 
       {/* Benefits & Resources */}
-      <section className="bg-white py-24 border-t border-slate-100">
+      <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-3">
-             {/* Benefits Column */}
-             <div className="lg:col-span-2 space-y-20">
-               <div>
-                <h2 className="mb-12 flex items-center gap-4 text-3xl font-bold text-slate-900">
-                  <span className="block h-8 w-1 rounded-full bg-emerald-500" />
+          <div className="grid gap-12 lg:grid-cols-3">
+            {/* Benefits Column */}
+            <div className="lg:col-span-2">
+              <div>
+                <h2 className="mb-8 text-2xl font-bold text-slate-900">
                   Key Benefits
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   {integration.benefits.map((benefit, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-4 rounded-2xl border border-slate-50 p-6 transition-all hover:bg-slate-50 active:scale-95"
+                      className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-4 shadow-sm"
                     >
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-500">
-                         <CheckCircle2 className="h-5 w-5" />
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-500">
+                        <CheckCircle2 className="h-4 w-4" />
                       </div>
-                      <p className="text-base font-bold text-slate-700">
+                      <p className="text-sm font-medium text-slate-700">
                         {benefit}
                       </p>
                     </div>
@@ -245,68 +242,62 @@ export default async function IntegrationDetailsPage({ params }: Props) {
                 </div>
               </div>
 
-               {/* Resources */}
-               <div>
-                <h4 className="mb-8 flex items-center gap-2.5 text-2xl font-bold text-slate-900">
-                  <Globe className="h-6 w-6 text-slate-400" />
+              {/* Resources */}
+              <div className="mt-12">
+                <h4 className="mb-6 text-xl font-semibold text-slate-900">
                   Integration Resources
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <Link
                     href={integration.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-col gap-4 rounded-3xl border border-slate-100 p-8 transition-all hover:bg-slate-50 hover:border-slate-200 group"
+                    className="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-4 transition-all hover:bg-slate-50"
                   >
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Website</span>
-                    <span className="text-lg font-bold text-slate-900 flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">
                       Official site
-                      <ChevronRight size={16} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
                     </span>
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
                   </Link>
                   <Link
                     href="/support"
-                    className="flex flex-col gap-4 rounded-3xl border border-slate-100 p-8 transition-all hover:bg-slate-50 hover:border-slate-200 group"
+                    className="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-4 transition-all hover:bg-slate-50"
                   >
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Docs</span>
-                    <span className="text-lg font-bold text-slate-900 flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">
                       Setup Guide
-                      <ChevronRight size={16} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
                     </span>
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
                   </Link>
                   <Link
                     href="/pricing"
-                    className="flex flex-col gap-4 rounded-3xl border border-slate-100 p-8 transition-all hover:bg-slate-50 hover:border-slate-200 group"
+                    className="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-4 transition-all hover:bg-slate-50"
                   >
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Cost</span>
-                    <span className="text-lg font-bold text-slate-900 flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">
                       Pricing Plans
-                      <ChevronRight size={16} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
                     </span>
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
                   </Link>
                 </div>
               </div>
             </div>
 
-            {/* Sidebar / Last section - minimalist info */}
+            {/* Sidebar */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 space-y-8">
-                <div className="rounded-[40px] bg-slate-50 p-10 border border-slate-100">
-                  <h3 className="mb-6 text-2xl font-bold text-slate-900">
-                    Trusted by Nepali Sellers
-                  </h3>
-                  <p className="text-base font-medium text-slate-500 leading-relaxed">
-                    Nepdora simplifies {integration.slug.split('-')[0]} for local businesses. Join the network leading the digital revolution in Nepal.
-                  </p>
-                  <div className="mt-10 pt-10 border-t border-slate-200">
-                    <Link 
-                      href="/register"
-                      className="block w-full text-center py-4 rounded-2xl bg-slate-900 text-white font-bold text-sm tracking-wider uppercase transition-transform hover:scale-105 active:scale-95"
-                    >
-                      Start Free Trial
-                    </Link>
-                  </div>
-                </div>
+              <div className="sticky top-24 rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+                <h3 className="mb-4 text-xl font-semibold text-slate-900">
+                  Trusted by Nepali Sellers
+                </h3>
+                <p className="mb-6 text-sm leading-relaxed font-medium text-slate-500">
+                  Nepdora simplifies {integration.slug.split("-")[0]} for local
+                  businesses. Join the network leading the digital revolution in
+                  Nepal.
+                </p>
+                <Link
+                  href="/register"
+                  className="bg-primary block w-full rounded-xl px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:scale-105"
+                >
+                  Start Free Trial
+                </Link>
               </div>
             </div>
           </div>

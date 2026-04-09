@@ -9,7 +9,21 @@ import {
   Settings,
   ShieldCheck,
   Rocket,
+  Clock,
+  DollarSign,
+  Users,
+  Globe,
+  Smartphone,
+  CreditCard,
+  Award,
+  TrendingUp,
+  Heart,
+  Layout,
+  BarChart3,
+  Target,
+  ThumbsUp,
 } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -26,6 +40,10 @@ interface FeatureDetail {
   description: string;
   hardWay: IntegrationStep[];
   easyWay: IntegrationStep[];
+  benefits?: string[];
+  stats?: { value: string; label: string }[];
+  faqs?: { q: string; a: string }[];
+  testimonial?: { quote: string; author: string; business: string };
 }
 
 const FEATURE_DATA: Record<string, FeatureDetail> = {
@@ -71,6 +89,44 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
           "Start accepting payments instantly. No coding or testing required.",
       },
     ],
+    benefits: [
+      "Accept payments from millions of eSewa users",
+      "Increase conversion rates with familiar payment methods",
+      "No transaction fees for the first 3 months",
+      "24/7 payment processing with automatic settlement",
+      "Automatic refund handling",
+      "Real-time transaction reporting",
+    ],
+    stats: [
+      { value: "5M+", label: "Active eSewa Users" },
+      { value: "30s", label: "Setup Time" },
+      { value: "0", label: "Lines of Code" },
+      { value: "100%", label: "Uptime Guarantee" },
+    ],
+    faqs: [
+      {
+        q: "Do I need a merchant account?",
+        a: "Yes, you need an eSewa merchant account. Nepdora helps you with the application process.",
+      },
+      {
+        q: "How long does settlement take?",
+        a: "Settlements are processed daily. Funds are transferred to your bank account within 24-48 hours.",
+      },
+      {
+        q: "Is there a monthly fee?",
+        a: "No monthly fees. You only pay the standard transaction fee set by eSewa.",
+      },
+      {
+        q: "Does it support refunds?",
+        a: "Yes, full refund management is built into the integration.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Setting up eSewa with Nepdora took less than 5 minutes. Our online sales increased by 40% within the first month.",
+      author: "Rajesh Shrestha",
+      business: "Urban Style",
+    },
   },
   khalti: {
     title: "Khalti Integration",
@@ -103,6 +159,44 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
           "Nepdora handles all status updates and verification automatically.",
       },
     ],
+    benefits: [
+      "Reach millions of Khalti wallet users across Nepal",
+      "Seamless checkout experience with one-click payments",
+      "Real-time transaction tracking and reporting",
+      "Automatic refund processing capabilities",
+      "Mobile-optimized payment flow",
+      "No additional gateway fees",
+    ],
+    stats: [
+      { value: "3M+", label: "Khalti Users" },
+      { value: "2min", label: "Setup Time" },
+      { value: "0", label: "Lines of Code" },
+      { value: "99.9%", label: "Success Rate" },
+    ],
+    faqs: [
+      {
+        q: "Does it support both UAT and Production?",
+        a: "Yes, Nepdora supports both test and live environments. Switch between them easily.",
+      },
+      {
+        q: "Can I accept international payments?",
+        a: "Khalti focuses on Nepali transactions. For international, consider other gateways.",
+      },
+      {
+        q: "How are failed transactions handled?",
+        a: "Failed transactions are automatically retried and logged for review.",
+      },
+      {
+        q: "Is PCI compliance required?",
+        a: "No, Nepdora handles all PCI compliance for you.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Khalti integration was seamless. Our customers love the one-click payment option, and we've seen a 35% increase in completed orders.",
+      author: "Sita Gurung",
+      business: "Namaste Travels",
+    },
   },
   sms: {
     title: "SMS Integration",
@@ -110,8 +204,7 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
     hardWay: [
       {
         title: "Provider Research",
-        description:
-          "Find and compare verschiedene SMS gateway providers in Nepal.",
+        description: "Find and compare various SMS gateway providers in Nepal.",
       },
       {
         title: "Credit Management",
@@ -136,6 +229,44 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
           "Set your preferences and let Nepdora handle all customer alerts.",
       },
     ],
+    benefits: [
+      "Increase customer engagement with timely updates",
+      "Reduce missed orders with delivery notifications",
+      "Build trust with OTP verification",
+      "Cost-effective communication channel",
+      "Automated marketing campaigns",
+      "Two-way messaging support",
+    ],
+    stats: [
+      { value: "98%", label: "Open Rate" },
+      { value: "3s", label: "Delivery Time" },
+      { value: "24/7", label: "Availability" },
+      { value: "100k+", label: "Monthly Messages" },
+    ],
+    faqs: [
+      {
+        q: "What SMS providers do you support?",
+        a: "We support all major Nepali SMS providers including Spiro, Janani, and others.",
+      },
+      {
+        q: "Can I customize message templates?",
+        a: "Yes, you can fully customize all SMS templates from your dashboard.",
+      },
+      {
+        q: "How are SMS credits managed?",
+        a: "You can add credits directly from your Nepdora dashboard. No separate login needed.",
+      },
+      {
+        q: "Can I schedule SMS campaigns?",
+        a: "Yes, you can schedule messages for future dates and times.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Automated SMS notifications reduced our customer service calls by 60%. Customers love getting real-time order updates.",
+      author: "Bikash Thapa",
+      business: "Green Grocery",
+    },
   },
   "facebook-pixel": {
     title: "Facebook Pixel",
@@ -169,6 +300,44 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
           "All e-commerce events are tracked automatically with high precision.",
       },
     ],
+    benefits: [
+      "Track every customer action from view to purchase",
+      "Build retargeting audiences for better ROAS",
+      "Optimize ad delivery for conversions",
+      "Measure cross-device customer journeys",
+      "Automatic event parameter mapping",
+      "Real-time conversion reporting",
+    ],
+    stats: [
+      { value: "15+", label: "Auto-tracked Events" },
+      { value: "100%", label: "Data Accuracy" },
+      { value: "Real-time", label: "Reporting" },
+      { value: "30%", label: "Avg ROAS Increase" },
+    ],
+    faqs: [
+      {
+        q: "Does it work with Facebook CAPI?",
+        a: "Yes, we support both standard Pixel and Conversions API for better data reliability.",
+      },
+      {
+        q: "Will it slow down my site?",
+        a: "No, the pixel loads asynchronously and doesn't affect site performance.",
+      },
+      {
+        q: "Can I track custom events?",
+        a: "Yes, you can add custom event tracking without any coding.",
+      },
+      {
+        q: "Is GDPR compliant?",
+        a: "Yes, our implementation follows all privacy regulations.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Facebook Pixel setup was effortless. We now track every conversion and our ad ROAS has doubled.",
+      author: "Anjali Sharma",
+      business: "Elite Fitness",
+    },
   },
   dash: {
     title: "Dash Logistics",
@@ -200,6 +369,44 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
           "Print shipping labels and track deliveries without leaving Nepdora.",
       },
     ],
+    benefits: [
+      "Automated order fulfillment workflow",
+      "Real-time delivery tracking for customers",
+      "Bulk label printing for multiple orders",
+      "Reduced manual data entry errors",
+      "Automatic COD settlement",
+      "Delivery proof capture",
+    ],
+    stats: [
+      { value: "50+", label: "Cities Covered" },
+      { value: "24h", label: "Delivery Time" },
+      { value: "100%", label: "COD Support" },
+      { value: "10k+", label: "Daily Deliveries" },
+    ],
+    faqs: [
+      {
+        q: "What areas does Dash cover?",
+        a: "Dash delivers to all major cities and many rural areas across Nepal.",
+      },
+      {
+        q: "How are COD payments handled?",
+        a: "Dash collects COD payments and settles them to your account weekly.",
+      },
+      {
+        q: "Can I track shipments in real-time?",
+        a: "Yes, both you and your customers can track shipments live.",
+      },
+      {
+        q: "What about lost packages?",
+        a: "All shipments are insured. Dash covers up to the full value.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Dash integration saved us 20+ hours per week on shipping logistics. Our customers love the tracking updates.",
+      author: "Nabin Karki",
+      business: "Tech Solutions",
+    },
   },
   "pathao-parcel": {
     title: "Pathao Parcel",
@@ -232,6 +439,44 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
           "Your customers see live tracking updates on their order status page.",
       },
     ],
+    benefits: [
+      "Fast delivery within Kathmandu Valley",
+      "Live tracking for customer satisfaction",
+      "Automatic delivery status updates",
+      "Competitive shipping rates",
+      "Instant rider assignment",
+      "Proof of delivery photos",
+    ],
+    stats: [
+      { value: "2hr", label: "Avg Delivery" },
+      { value: "500+", label: "Daily Rides" },
+      { value: "100%", label: "Insurance Coverage" },
+      { value: "24/7", label: "Service Hours" },
+    ],
+    faqs: [
+      {
+        q: "Is Pathao available outside Kathmandu?",
+        a: "Pathao Parcel primarily serves Kathmandu Valley with expanding coverage to other cities.",
+      },
+      {
+        q: "How are payments handled?",
+        a: "You can pay per delivery or use prepaid credits. Nepdora integrates both options.",
+      },
+      {
+        q: "What if a delivery fails?",
+        a: "Pathao makes multiple delivery attempts. Failed deliveries are returned to you.",
+      },
+      {
+        q: "Can I schedule pickups?",
+        a: "Yes, you can schedule pickups for specific times.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Pathao integration made same-day delivery possible. Our customers are thrilled with the speed.",
+      author: "Manish Pradhan",
+      business: "Urban Style",
+    },
   },
   "pos-system": {
     title: "POS System",
@@ -248,7 +493,8 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
       },
       {
         title: "Complex Hardware",
-        description: "Purchase expensive specialized POS hardware and software.",
+        description:
+          "Purchase expensive specialized POS hardware and software.",
       },
     ],
     easyWay: [
@@ -265,13 +511,50 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
         description: "Turn your tablet or phone into a powerful POS instantly.",
       },
     ],
+    benefits: [
+      "Real-time inventory sync across all channels",
+      "Unified customer database and loyalty program",
+      "Comprehensive sales analytics and reports",
+      "Staff management with role-based access",
+      "Offline mode support",
+      "Multi-branch management",
+    ],
+    stats: [
+      { value: "1000+", label: "Active POS Users" },
+      { value: "99.9%", label: "Uptime" },
+      { value: "24/7", label: "Support" },
+      { value: "50%", label: "Time Saved" },
+    ],
+    faqs: [
+      {
+        q: "Do I need special hardware?",
+        a: "No, you can use any tablet or smartphone. We also support barcode scanners and receipt printers.",
+      },
+      {
+        q: "Can I use offline mode?",
+        a: "Yes, our POS works offline and syncs when connection is restored.",
+      },
+      {
+        q: "How many users can I add?",
+        a: "Unlimited staff accounts with role-based permissions.",
+      },
+      {
+        q: "Does it integrate with accounting software?",
+        a: "Yes, we integrate with popular accounting platforms.",
+      },
+    ],
+    testimonial: {
+      quote:
+        "Managing our physical store and online shop from one dashboard is a game-changer. Inventory never goes out of sync.",
+      author: "Rita Tamang",
+      business: "Fashion Hub",
+    },
   },
 };
 
 // Add common aliases/typos
 FEATURE_DATA["esewa-integartion"] = FEATURE_DATA["esewa-integration"];
 FEATURE_DATA["pathao"] = FEATURE_DATA["pathao-parcel"];
-FEATURE_DATA["pathao-parcel"] = FEATURE_DATA["pathao-parcel"];
 
 // SEO Rich Aliases
 FEATURE_DATA["esewa-integration-nepal"] = FEATURE_DATA["esewa-integration"];
@@ -291,18 +574,6 @@ FEATURE_DATA["facebook-pixel-integration-in-nepdora"] =
   FEATURE_DATA["facebook-pixel"];
 FEATURE_DATA["logistics-pathao-dash-in-nepdora"] = FEATURE_DATA["dash"];
 FEATURE_DATA["pos-system-in-nepdora"] = FEATURE_DATA["pos-system"];
-FEATURE_DATA["ai-website-builder-in-nepdora"] = {
-  title: "AI Website Builder",
-  description: "Create your website in seconds with Nepdora AI.",
-  hardWay: [
-    { title: "Hire Designer", description: "Wait weeks for mockups." },
-    { title: "Manual Dev", description: "Write thousands of lines of code." },
-  ],
-  easyWay: [
-    { title: "AI Generation", description: "Type a prompt, get a site." },
-    { title: "Instant Customize", description: "Edit everything visually." },
-  ],
-};
 
 import { absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
@@ -364,145 +635,350 @@ export default async function FeatureProcessPage({ params }: Props) {
     },
   ];
 
+  const benefits = data?.benefits || [
+    "Save thousands in development costs",
+    "Launch in minutes instead of months",
+    "Automatic updates and maintenance",
+    "Dedicated support team",
+    "No hidden fees",
+    "Scale effortlessly",
+  ];
+
+  const stats = data?.stats || [
+    { value: "1000+", label: "Businesses Using" },
+    { value: "5min", label: "Setup Time" },
+    { value: "0", label: "Lines of Code" },
+    { value: "24/7", label: "Support" },
+  ];
+
+  const faqs = data?.faqs || [
+    {
+      q: "Is this feature available on all plans?",
+      a: "Yes, this feature is available on all Nepdora plans. Some advanced features may require higher tiers.",
+    },
+    {
+      q: "Can I get help with setup?",
+      a: "Absolutely! Our support team is available 24/7 to help you with any questions.",
+    },
+    {
+      q: "Is there any additional cost?",
+      a: "The integration is included in your Nepdora plan. No hidden fees.",
+    },
+    {
+      q: "How long does support take?",
+      a: "Our average response time is under 2 minutes for chat support.",
+    },
+  ];
+
+  const testimonial = data?.testimonial || {
+    quote:
+      "The integration was incredibly smooth. We were up and running in minutes, not weeks.",
+    author: "Satisfied Customer",
+    business: "Nepali Business",
+  };
+
   return (
-    <div className="bg-slate-50 py-12 md:py-24">
-      <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
-            {featureName} Integration
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-600">
-            {data?.description ||
-              `Everything you need to connect ${featureName} to your online presence.`}
-          </p>
-        </div>
-
-        <div className="mx-auto mb-20 grid max-w-6xl gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* The Hard Way */}
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <div className="mb-8 flex items-center gap-3 text-slate-500">
-              <AlertCircle className="h-6 w-6 text-red-500" />
-              <h2 className="text-xl font-bold tracking-wider">The Hard Way</h2>
-            </div>
-            <div className="space-y-6">
-              {hardWay.map((step, idx) => (
-                <div key={idx} className="relative flex gap-4">
-                  {idx !== hardWay.length - 1 && (
-                    <div className="absolute top-10 left-4 h-full w-px bg-slate-100" />
-                  )}
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-slate-100 bg-slate-50 font-medium text-slate-400 italic">
-                    {idx + 1}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-800">{step.title}</h4>
-                    <p className="text-sm leading-relaxed text-slate-500">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-10 rounded-2xl border border-red-100 bg-red-50 p-4">
-              <p className="text-sm text-red-700 italic">
-                Requires technical expertise, weeks of development, and ongoing
-                maintenance costs.
-              </p>
-            </div>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="pt-20 pb-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
+              {featureName} Integration
+            </h1>
+            <p className="text-lg leading-relaxed font-medium text-slate-500">
+              {data?.description ||
+                `Everything you need to connect ${featureName} to your online presence.`}
+            </p>
           </div>
+        </div>
+      </section>
 
-          {/* The Nepdora Way */}
-          <div className="border-primary/20 shadow-primary/5 relative overflow-hidden rounded-3xl border-2 bg-white p-8 shadow-xl">
-            <div className="bg-primary absolute top-0 right-0 rounded-bl-3xl px-6 py-2 text-xs font-bold tracking-tighter text-white">
-              Integrated by Default
-            </div>
-            <div className="text-primary mb-8 flex items-center gap-3">
-              <Zap className="fill-primary h-6 w-6" />
-              <h2 className="text-xl font-bold tracking-wider">
-                The Nepdora Way
-              </h2>
-            </div>
-            <div className="space-y-8">
-              {easyWay.map((step, idx) => (
-                <div key={idx} className="flex gap-5">
-                  <div className="bg-primary/10 text-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl">
-                    {idx === 0 ? (
-                      <Settings className="h-5 w-5" />
-                    ) : idx === 1 ? (
-                      <ShieldCheck className="h-5 w-5" />
-                    ) : (
-                      <Rocket className="h-5 w-5" />
+      {/* Comparison Section */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-8">
+            {/* The Hard Way */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 -sm">
+              <div className="mb-6 flex items-center gap-3">
+                <AlertCircle className="h-6 w-6 text-rose-500" />
+                <h2 className="text-xl font-semibold text-slate-900">
+                  The Hard Way
+                </h2>
+              </div>
+              <div className="space-y-5">
+                {hardWay.map((step, idx) => (
+                  <div key={idx} className="relative flex gap-3">
+                    {idx !== hardWay.length - 1 && (
+                      <div className="absolute top-8 left-4 h-full w-px bg-slate-100" />
                     )}
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-xs font-medium text-slate-400">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800">
+                        {step.title}
+                      </h4>
+                      <p className="text-sm leading-relaxed text-slate-500">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-slate-900">
-                      {step.title}
-                    </h4>
-                    <p className="leading-relaxed text-slate-600">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12 space-y-4">
-              <div className="flex items-center gap-3 text-sm font-semibold text-emerald-600">
-                <CheckCircle2 className="h-5 w-5" />
-                <span>Zero Coding Required</span>
+                ))}
               </div>
-              <div className="flex items-center gap-3 text-sm font-semibold text-emerald-600">
-                <CheckCircle2 className="h-5 w-5" />
-                <span>Active in 5 Minutes</span>
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <div className="bg-primary shadow-primary/20 rounded-2xl p-6 text-white shadow-lg">
-                <p className="leading-relaxed font-semibold italic">
-                  "With Nepdora, {featureName} is ready to use from day one.
-                  Focus on your business, not the code."
+              <div className="mt-8 rounded-xl border border-rose-100 bg-rose-50 p-4">
+                <p className="text-sm text-rose-700">
+                  Requires technical expertise, weeks of development, and
+                  ongoing maintenance costs.
                 </p>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Benefits Section */}
-        <div className="mx-auto mb-20 max-w-4xl rounded-3xl border border-slate-100 bg-white p-10 text-center shadow-sm">
-          <h2 className="mb-10 text-3xl font-bold">
-            Why settle for manual setup?
-          </h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            <div>
-              <div className="text-primary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50">
-                <Zap className="h-8 w-8" />
+            {/* The Nepdora Way */}
+            <div className="border-primary/20 relative rounded-2xl border-2 bg-white p-8 -sm">
+              <div className="bg-primary absolute -top-3 right-6 rounded-full px-4 py-1 text-xs font-semibold text-white">
+                Integrated by Default
               </div>
-              <h3 className="mb-2 font-bold">Instant Scale</h3>
-              <p className="text-sm text-slate-500">
-                Go from idea to integrated store in minutes, not months.
-              </p>
+              <div className="mb-6 flex items-center gap-3">
+                <Zap className="text-primary h-6 w-6" />
+                <h2 className="text-xl font-semibold text-slate-900">
+                  The Nepdora Way
+                </h2>
+              </div>
+              <div className="space-y-6">
+                {easyWay.map((step, idx) => (
+                  <div key={idx} className="flex gap-4">
+                    <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
+                      {idx === 0 ? (
+                        <Settings className="h-4 w-4" />
+                      ) : idx === 1 ? (
+                        <ShieldCheck className="h-4 w-4" />
+                      ) : (
+                        <Rocket className="h-4 w-4" />
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-900">
+                        {step.title}
+                      </h4>
+                      <p className="text-sm leading-relaxed text-slate-500">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 space-y-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-emerald-600">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>Zero Coding Required</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-emerald-600">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>Active in 5 Minutes</span>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <div className="bg-primary rounded-xl p-5 text-white -md">
+                  <p className="leading-relaxed font-medium text-white/90">
+                    "With Nepdora, {featureName} is ready to use from day one.
+                    Focus on your business, not the code."
+                  </p>
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="text-primary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50">
-                <ShieldCheck className="h-8 w-8" />
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section - 4 columns */}
+      <section className="border-y border-slate-100 bg-slate-50 py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+            {stats.map((stat, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl border border-slate-200 bg-white p-5 text-center -sm transition-all hover:-md"
+              >
+                <div className="text-primary mb-1 text-2xl font-bold">
+                  {stat.value}
+                </div>
+                <div className="text-xs font-medium text-slate-500">
+                  {stat.label}
+                </div>
               </div>
-              <h3 className="mb-2 font-bold">Secure & Reliable</h3>
-              <p className="text-sm text-slate-500">
-                Enterprise-grade security on every transaction and sync.
-              </p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section - 2 columns grid */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Why choose the <span className="text-primary">Nepdora way?</span>
+            </h2>
+            <p className="text-lg font-medium text-slate-500">
+              Save time, money, and headaches with our pre-built integrations
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {benefits.map((benefit, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 -sm transition-all hover:-md"
+              >
+                <CheckCircle2 className="text-primary h-5 w-5 shrink-0" />
+                <span className="text-sm font-medium text-slate-700">
+                  {benefit}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-16">
+        <div className="container mx-auto max-w-4xl px-6">
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center -sm">
+            <div className="mb-4 flex justify-center">
+              <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full">
+                <ThumbsUp className="h-6 w-6" />
+              </div>
             </div>
+            <p className="mb-6 text-xl leading-relaxed font-medium text-slate-700 italic">
+              "{testimonial.quote}"
+            </p>
             <div>
-              <div className="text-primary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50">
-                <Settings className="h-8 w-8" />
-              </div>
-              <h3 className="mb-2 font-bold">Auto-Updates</h3>
-              <p className="text-sm text-slate-500">
-                Worry-free maintenance as we handle all API upgrades.
+              <p className="font-semibold text-slate-900">
+                {testimonial.author}
+              </p>
+              <p className="text-sm font-medium text-slate-500">
+                {testimonial.business}
               </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* How It Works - Detailed */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              How to get started in{" "}
+              <span className="text-primary">3 simple steps</span>
+            </h2>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                step: "1",
+                title: "Sign up for Nepdora",
+                desc: "Create your free account and choose a template.",
+                icon: Rocket,
+              },
+              {
+                step: "2",
+                title: "Navigate to Settings",
+                desc: "Go to the integrations section in your dashboard.",
+                icon: Settings,
+              },
+              {
+                step: "3",
+                title: "Enable & Configure",
+                desc: `Toggle on ${featureName} and enter your credentials.`,
+                icon: Zap,
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="relative rounded-2xl border border-slate-200 bg-white p-6 text-center -sm transition-all hover:-md"
+              >
+                <div className="bg-primary absolute -top-3 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full text-sm font-bold text-white -md">
+                  {item.step}
+                </div>
+                <div className="mt-4 flex justify-center">
+                  <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-xl">
+                    <item.icon className="h-6 w-6" />
+                  </div>
+                </div>
+                <h3 className="mt-4 font-semibold text-slate-900">
+                  {item.title}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-slate-500">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-16">
+        <div className="container mx-auto max-w-4xl px-6">
+          <div className="mx-auto mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Frequently Asked <span className="text-primary">Questions</span>
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl border border-slate-200 bg-white p-6 -sm transition-all hover:-md"
+              >
+                <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
+                <p className="text-sm leading-relaxed font-medium text-slate-500">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
+            <div className="flex flex-col items-center">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
+                <Layout className="text-primary h-8 w-8" />
+              </div>
+              <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Ready to integrate {featureName}?
+              </h2>
+              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
+                Start your free trial today and see how easy integration can be.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link
+                  href="/create-website"
+                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
+                >
+                  Start Free Trial
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
+                >
+                  Contact Sales
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
