@@ -40,6 +40,7 @@ import PricingSectionHero from "@/components/marketing/pricing-section/pricing-s
 import PricingCalculator from "@/components/marketing/pricing-section/pricing-calculator";
 import { subscriptionApi } from "@/services/api/subscription";
 import PricingHero from "@/components/marketing/pricing-section/pricing-hero-header";
+import PricingComparisonLinks from "@/components/marketing/pricing-section/pricing-comparison-links";
 
 export default async function PricingPage() {
   const plans = await subscriptionApi.getPlans().catch(() => []);
@@ -50,6 +51,7 @@ export default async function PricingPage() {
       <PricingHero />
       <PricingSectionHero initialPlans={plans} />
       <PricingCalculator />
+      <PricingComparisonLinks />
     </>
   );
 }

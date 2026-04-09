@@ -147,6 +147,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  // Pricing Comparison pages
+  const pricingComparisonPages = [
+    "shopify",
+    "wix",
+    "webflow",
+    "squarespace",
+    "blanxer",
+  ].map(slug => ({
+    url: `${baseUrl}/pricing/comparison/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   // Compare pages (Direct Comparisons & Pricing)
   const comparePages = ALL_COMPETITORS.map(
     ({ slug }) => `${slug}-and-nepdora`
@@ -274,5 +288,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...switchPages,
     ...glossaryPages,
     ...bestOfPages,
+    ...pricingComparisonPages,
   ];
 }
