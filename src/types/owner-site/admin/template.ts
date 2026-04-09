@@ -8,6 +8,8 @@ export interface Template {
   template_image: string | null;
   is_template_account: boolean;
   domains: string[];
+  template_category?: { id: number; slug: string; name: string } | null;
+  template_subcategory?: { id: number; slug: string; name: string } | null;
   preview_url?: string | null;
   description?: string | null;
 }

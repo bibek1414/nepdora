@@ -233,12 +233,76 @@ const FEATURE_DATA: Record<string, FeatureDetail> = {
       },
     ],
   },
+  "pos-system": {
+    title: "POS System",
+    description: "Manage your offline and online sales with a single system.",
+    hardWay: [
+      {
+        title: "Separate Inventory",
+        description:
+          "Manually sync stock between your physical store and online website.",
+      },
+      {
+        title: "Multiple Logins",
+        description: "Switch between different apps for sales and accounting.",
+      },
+      {
+        title: "Complex Hardware",
+        description: "Purchase expensive specialized POS hardware and software.",
+      },
+    ],
+    easyWay: [
+      {
+        title: "Unified Inventory",
+        description: "One stock for both physical and digital storefronts.",
+      },
+      {
+        title: "Cloud Access",
+        description: "Access your POS from any device, anytime, anywhere.",
+      },
+      {
+        title: "Instant Setup",
+        description: "Turn your tablet or phone into a powerful POS instantly.",
+      },
+    ],
+  },
 };
 
 // Add common aliases/typos
 FEATURE_DATA["esewa-integartion"] = FEATURE_DATA["esewa-integration"];
 FEATURE_DATA["pathao"] = FEATURE_DATA["pathao-parcel"];
 FEATURE_DATA["pathao-parcel"] = FEATURE_DATA["pathao-parcel"];
+
+// SEO Rich Aliases
+FEATURE_DATA["esewa-integration-nepal"] = FEATURE_DATA["esewa-integration"];
+FEATURE_DATA["khalti-integration-nepal"] = FEATURE_DATA["khalti"];
+FEATURE_DATA["sms-notifications-nepal"] = FEATURE_DATA["sms"];
+FEATURE_DATA["facebook-pixel-integration-nepal"] =
+  FEATURE_DATA["facebook-pixel"];
+FEATURE_DATA["logistics-pathao-dash-nepal"] = FEATURE_DATA["dash"];
+FEATURE_DATA["pos-system-nepal"] = FEATURE_DATA["pos-system"];
+
+// In Nepdora Aliases
+FEATURE_DATA["esewa-integration-in-nepdora"] =
+  FEATURE_DATA["esewa-integration"];
+FEATURE_DATA["khalti-integration-in-nepdora"] = FEATURE_DATA["khalti"];
+FEATURE_DATA["sms-notifications-in-nepdora"] = FEATURE_DATA["sms"];
+FEATURE_DATA["facebook-pixel-integration-in-nepdora"] =
+  FEATURE_DATA["facebook-pixel"];
+FEATURE_DATA["logistics-pathao-dash-in-nepdora"] = FEATURE_DATA["dash"];
+FEATURE_DATA["pos-system-in-nepdora"] = FEATURE_DATA["pos-system"];
+FEATURE_DATA["ai-website-builder-in-nepdora"] = {
+  title: "AI Website Builder",
+  description: "Create your website in seconds with Nepdora AI.",
+  hardWay: [
+    { title: "Hire Designer", description: "Wait weeks for mockups." },
+    { title: "Manual Dev", description: "Write thousands of lines of code." },
+  ],
+  easyWay: [
+    { title: "AI Generation", description: "Type a prompt, get a site." },
+    { title: "Instant Customize", description: "Edit everything visually." },
+  ],
+};
 
 import { absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 

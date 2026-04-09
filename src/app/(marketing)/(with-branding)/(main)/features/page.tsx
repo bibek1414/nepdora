@@ -3,6 +3,7 @@ import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 import FeaturesHero from "@/components/marketing/features/features-hero";
 import FeatureShowcase from "@/components/marketing/features/feature-showcase";
+import IntegrationsFeature from "@/components/marketing/features/integrations-feature";
 import CTA from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
@@ -88,6 +89,7 @@ export default function FeaturesPage() {
 
       <FeaturesHero />
       <FeatureShowcase />
+      <IntegrationsFeature />
       <CTA />
     </>
   );

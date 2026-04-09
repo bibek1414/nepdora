@@ -9,7 +9,10 @@ import {
   Rocket,
   Heart,
   Globe,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
+import { MarketingPageHero } from "@/components/marketing/shared/MarketingPageHero";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Industry Solutions | Built for Your Business | Nepdora",
@@ -34,45 +37,46 @@ const getIndustryIcon = (slug: string) => {
 export default function IndustriesHubPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="border-b border-slate-100 bg-slate-50 py-24">
-        <div className="container mx-auto max-w-7xl px-4 text-center">
-          <h1 className="mb-8 text-4xl font-black tracking-tight text-slate-900 md:text-7xl">
-            Built for <span className="text-primary italic">every</span>{" "}
-            industry.
-          </h1>
-          <p className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-slate-600">
-            From local restaurants in Kathmandu to global e-commerce brands,
-            Nepdora provides the specific tools each industry needs to thrive
-            online.
-          </p>
-        </div>
-      </section>
+      <MarketingPageHero
+        badgeText="Industry Solutions"
+        badgeIcon={Sparkles}
+        title={<>Built for <span className="text-primary italic">every</span> industry.</>}
+        description="From local restaurants in Kathmandu to global e-commerce brands, Nepdora provides the specific tools each industry needs to thrive online."
+        breadcrumbs={[{ label: "Industries", href: "/industries" }]}
+        centered
+      />
 
       {/* Industry Grid */}
-      <section className="py-24">
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto max-w-7xl px-4 text-center mb-16">
+           <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+             Explore tailored solutions.
+           </h2>
+           <p className="mx-auto max-w-2xl text-lg text-slate-500">
+             Choose your niche to see how Nepdora can automate your unique business workflows.
+           </p>
+        </div>
         <div className="container mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {industries.map(slug => (
               <Link
                 key={slug}
                 href={`/industries/${slug}`}
-                className="group hover:border-primary hover:shadow-primary/5 flex flex-col items-center rounded-3xl border border-slate-200 bg-white p-8 text-center transition-all duration-300 hover:shadow-2xl"
+                className="group flex flex-col items-center rounded-[40px] border border-slate-200 bg-white p-10 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10"
               >
-                <div className="group-hover:bg-primary/5 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 transition-colors">
+                <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-50 transition-colors group-hover:bg-primary/5 group-hover:scale-110">
                   {getIndustryIcon(slug)}
                 </div>
-                <h3 className="group-hover:text-primary mb-4 text-xl font-bold text-slate-900 transition-colors">
+                <h3 className="mb-4 text-2xl font-bold text-slate-900 transition-colors group-hover:text-primary">
                   {INDUSTRY_LABELS[slug] || slug}
                 </h3>
-                <p className="mb-8 line-clamp-2 text-sm text-slate-500">
+                <p className="mb-10 line-clamp-2 text-base leading-relaxed text-slate-500">
                   Tailored features and professional templates specifically
-                  designed for {INDUSTRY_LABELS[slug]?.toLowerCase() || slug}{" "}
-                  businesses.
+                  designed for {INDUSTRY_LABELS[slug]?.toLowerCase() || slug} businesses.
                 </p>
-                <div className="group-hover:text-primary mt-auto flex items-center gap-2 text-xs font-black tracking-widest text-slate-400 uppercase transition-colors">
+                <div className="mt-auto flex items-center gap-2 text-xs font-bold tracking-widest text-slate-400 uppercase transition-all group-hover:text-primary group-hover:gap-3">
                   Explore Solutions
-                  <ChevronRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" />
                 </div>
               </Link>
             ))}
@@ -81,26 +85,32 @@ export default function IndustriesHubPage() {
       </section>
 
       {/* Custom Solution CTA */}
-      <section className="relative overflow-hidden bg-slate-900 py-24 text-white">
-        <div className="bg-primary/20 pointer-events-none absolute top-1/2 left-1/2 h-[1000px] w-[1000px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[150px]" />
-        <div className="relative z-10 container mx-auto max-w-4xl px-4 text-center">
-          <h2 className="mb-8 text-3xl font-bold md:text-5xl">
-            Don't see your industry?
-          </h2>
-          <p className="mb-12 text-xl leading-relaxed text-slate-400">
-            Our flexible builder can handle any business model. Talk to our
-            experts about creating a custom digital presence for your unique
-            niche.
-          </p>
-          <Link
-            href="/contact"
-            className="bg-primary shadow-primary/20 inline-flex items-center gap-4 rounded-full px-10 py-5 font-black text-white shadow-xl transition-all hover:scale-105"
-          >
-            Get a Custom Consultation
-            <ChevronRight className="h-5 w-5" />
-          </Link>
-        </div>
+      <section className="py-24">
+         <div className="container mx-auto max-w-5xl px-4">
+            <div className="relative overflow-hidden rounded-[48px] bg-slate-900 px-8 py-20 text-center text-white md:px-16 md:py-24">
+               <div className="absolute inset-0 bg-linear-to-br from-primary/30 to-transparent" />
+               <div className="relative z-10 flex flex-col items-center">
+                  <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-white/10 backdrop-blur-md">
+                     <Sparkles className="h-8 w-8 text-primary" />
+                  </div>
+                  <h2 className="mb-6 text-3xl font-bold tracking-tight md:text-6xl">
+                     Don't see your industry?
+                  </h2>
+                  <p className="mx-auto mb-10 max-w-xl text-lg text-slate-400">
+                     Our flexible builder can handle any business model. Talk to our experts about creating a custom digital presence for your unique niche.
+                  </p>
+                  <Link
+                     href="/contact"
+                     className="inline-flex items-center gap-3 rounded-2xl bg-white px-10 py-5 text-base font-bold text-slate-900 transition-all hover:scale-105 active:scale-95 shadow-2xl"
+                  >
+                     Get a Custom Consultation
+                     <ArrowRight className="h-5 w-5" />
+                  </Link>
+               </div>
+            </div>
+         </div>
       </section>
     </div>
   );
 }
+

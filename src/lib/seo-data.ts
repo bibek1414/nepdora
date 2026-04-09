@@ -1,17 +1,18 @@
 import { NEPAL_CITIES } from "@/constants/nepal-cities";
 
 export const industries = [
-  "restaurant",
+  "restaurant-website",
   "clothing-store",
   "gym",
   "school",
   "clinic",
   "travel-agency",
+  "grocery-website",
   "real-estate",
   "salon",
   "educational-consultancy",
   "grocery",
-  "ecommerce",
+  "ecommerce-website",
   "agency-website",
   "booking-website",
   "medical-clinic",
@@ -34,6 +35,7 @@ export const MAJOR_CITIES = [
   "Dhangadhi",
   "Bhairahawa",
   "Siddharthanagar",
+  "Nepal",
 ].map(c => c.toLowerCase());
 
 export const cities = NEPAL_CITIES.map(city => city.toLowerCase());
@@ -51,6 +53,7 @@ export const INDUSTRY_LABELS: Record<string, string> = {
   grocery: "Grocery Store",
   ecommerce: "E-commerce Store",
   "agency-website": "Digital Agency",
+  "grocery-website": "Grocery Store",
   "booking-website": "Booking & Appointments",
   "medical-clinic": "Medical Clinic",
 };

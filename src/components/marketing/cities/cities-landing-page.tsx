@@ -39,13 +39,20 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
     ],
   };
 
-  if (cityLower !== "nepal") {
+  if (cityLower !== "nepal" && cityLower !== "nepdora") {
     const hasWebsiteWord = industryLabel.toLowerCase().includes("website");
-    content.customH1 = `Create your ${industryLabel}${hasWebsiteWord ? "" : " website"} in ${cityName} today`;
+    content.customH1 = `Create your ${industryLabel}${
+      hasWebsiteWord ? "" : " website"
+    } in ${cityName} today`;
 
     if (category === "ecommerce" && cityLower === "kathmandu") {
       content.customH1 = `Create a free e-commerce website in Kathmandu (2026)`;
     }
+  } else if (cityLower === "nepdora") {
+    const hasWebsiteWord = industryLabel.toLowerCase().includes("website");
+    content.customH1 = `Create your ${industryLabel}${
+      hasWebsiteWord ? "" : " website"
+    } in Nepdora`;
   }
 
   return (

@@ -78,7 +78,7 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
                   title="No Skills Added Yet"
                   description="Showcase your expertise to your visitors. Manage your skills in the admin panel to display them here."
                   actionLabel="Manage Skills"
-                  actionLink="/admin/skills"
+                  actionLink="/admin/portfolio/skills"
                   isEditable={isEditable}
                 />
               </div>

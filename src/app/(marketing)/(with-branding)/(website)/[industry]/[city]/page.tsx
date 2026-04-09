@@ -17,7 +17,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { industry, city } = await params;
-  if (!industries.includes(industry) || !cities.includes(city.toLowerCase())) {
+  if (
+    industry === "templates" ||
+    !industries.includes(industry) ||
+    !cities.includes(city.toLowerCase())
+  ) {
     notFound();
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
@@ -40,7 +44,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function IndustryCityLandingPage({ params }: Props) {
   const { industry, city } = await params;
-  if (!industries.includes(industry) || !cities.includes(city.toLowerCase())) {
+  if (
+    industry === "templates" ||
+    !industries.includes(industry) ||
+    !cities.includes(city.toLowerCase())
+  ) {
     notFound();
   }
 

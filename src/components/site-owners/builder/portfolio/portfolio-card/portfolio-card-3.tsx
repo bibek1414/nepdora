@@ -105,11 +105,10 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
               <p
                 className="text-sm leading-relaxed md:text-base lg:text-lg"
                 style={{ fontFamily: theme.fonts.body }}
-              >
-                {portfolio.content?.slice(0, 200) ||
-                  "A comprehensive project showcasing modern web development practices and cutting-edge technologies."}
-                {portfolio.content && portfolio.content.length > 200 && "..."}
-              </p>
+                dangerouslySetInnerHTML={{
+                  __html: portfolio.content || "",
+                }}
+              ></p>
             </div>
 
             {/* Technologies */}

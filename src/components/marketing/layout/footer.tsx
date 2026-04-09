@@ -96,62 +96,68 @@ export const Footer = () => {
             {/* Solutions / Industries */}
             <div>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Solutions
+                Build with Nepdora
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/ecommerce">E-commerce</FooterLink>
-                <FooterLink href="/restaurant">Restaurant</FooterLink>
-                <FooterLink href="/clothing-store">Clothing Store</FooterLink>
-                <FooterLink href="/educational-consultancy">
-                  Education
+                <FooterLink href="/create-ecommerce-website-in-nepdora">
+                  Create eCommerce Website in Nepdora
                 </FooterLink>
-                <FooterLink href="/travel-agency">Travel & Tours</FooterLink>
-                <FooterLink href="/grocery">Grocery Store</FooterLink>
-                <FooterLink href="/clinic">Medical Clinic</FooterLink>
+                <FooterLink href="/create-restaurant-website-in-nepdora">
+                  Create Restaurant Website in Nepdora
+                </FooterLink>
+                <FooterLink href="/create-clothing-store-website-in-nepdora">
+                  Create Clothing Store Website in Nepdora
+                </FooterLink>
+                <FooterLink href="/create-educational-consultancy-website-in-nepdora">
+                  Create Education Website in Nepdora
+                </FooterLink>
+                <FooterLink href="/create-travel-agency-website-in-nepdora">
+                  Create Travel & Tour Website in Nepdora
+                </FooterLink>
+                <FooterLink href="/create-grocery-website-in-nepdora">
+                  Create Grocery Website in Nepdora
+                </FooterLink>
+                <FooterLink href="/create-clinic-website-in-nepdora">
+                  Create Medical Clinic Website in Nepdora
+                </FooterLink>
               </div>
             </div>
 
             {/* Original Categories */}
-            <div>
-              <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Categories
-              </h4>
-              <div className="flex flex-col space-y-2">
-                <FooterLink href="/ecommerce">E-commerce Hub</FooterLink>
-                <FooterLink href="/restaurant-website">
-                  Restaurant Hub
-                </FooterLink>
-                <FooterLink href="/agency-website">Agency Hub</FooterLink>
-                <FooterLink href="/clinic-website">Clinic Hub</FooterLink>
-                <FooterLink href="/booking-website">Booking Hub</FooterLink>
-              </div>
-            </div>
 
             {/* Features */}
             <div>
-              <h4 className="mb-4 text-lg font-bold text-gray-900">Features</h4>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
+                Platform Features
+              </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/features/esewa-integration">
-                  eSewa Integration
+                <FooterLink href="/features/esewa-integration-in-nepdora">
+                  eSewa Integration in Nepdora
                 </FooterLink>
-                <FooterLink href="/features/khalti">
-                  Khalti Integration
+                <FooterLink href="/features/khalti-integration-in-nepdora">
+                  Khalti Integration in Nepdora
                 </FooterLink>
-                <FooterLink href="/features/sms">SMS Notifications</FooterLink>
-                <FooterLink href="/ai-website-builder">AI Builder</FooterLink>
-                <FooterLink href="/features/facebook-pixel">
-                  Facebook Pixel
+                <FooterLink href="/features/sms-notifications-in-nepdora">
+                  SMS Notifications in Nepdora
                 </FooterLink>
-                <FooterLink href="/features/logistics">
-                  Logistics (Pathao, YDM & Dash)
+                <FooterLink href="/ai-website-builder-in-nepdora">
+                  AI Builder in Nepdora
+                </FooterLink>
+                <FooterLink href="/features/facebook-pixel-integration-in-nepdora">
+                  Facebook Pixel in Nepdora
+                </FooterLink>
+                <FooterLink href="/features/logistics-pathao-dash-in-nepdora">
+                  Logistics (Pathao, YDM & Dash) in Nepdora
                 </FooterLink>
 
-                <FooterLink href="/features/pos-system">POS System</FooterLink>
-                <FooterLink href="/esewa-integration-guide-nepal">
-                  eSewa Setup Guide
+                <FooterLink href="/features/pos-system-in-nepdora">
+                  POS System in Nepdora
                 </FooterLink>
-                <FooterLink href="/khalti-payment-gateway-nepal">
-                  Khalti Setup Guide
+                <FooterLink href="/esewa-integration-guide-in-nepdora">
+                  eSewa Setup Guide in Nepdora
+                </FooterLink>
+                <FooterLink href="/khalti-payment-gateway-in-nepdora">
+                  Khalti Setup Guide in Nepdora
                 </FooterLink>
               </div>
             </div>
@@ -159,7 +165,7 @@ export const Footer = () => {
             {/* Free Tools */}
             <div>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Free Tools
+                Free Business Tools
               </h4>
               <div className="flex flex-col space-y-2">
                 <FooterLink href="/tools/business-name-generator-nepal">
@@ -168,7 +174,7 @@ export const Footer = () => {
                 <FooterLink href="/tools/domain-name-checker-nepal">
                   Domain Checker
                 </FooterLink>
-                <FooterLink href="/tools/qr-code-generator-for-payments">
+                <FooterLink href="/tools/qr-code-generator">
                   QR Generator
                 </FooterLink>
                 <FooterLink href="/tools/seo-checker">SEO Audit</FooterLink>
@@ -180,68 +186,44 @@ export const Footer = () => {
             </div>
 
             {/* Resources / Learn */}
-            <div>
-              <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Resources
-              </h4>
-              <div className="flex flex-col space-y-2">
-                <FooterLink href="/learn">Learning Hub</FooterLink>
-                <FooterLink href="/learn/how-to-start-online-business-in-nepal">
-                  Start Online Business
-                </FooterLink>
-                <FooterLink href="/learn/register-company-in-nepal-online">
-                  Company Registration
-                </FooterLink>
-                <FooterLink href="/learn/pan-vs-vat-for-online-shops-nepal">
-                  PAN vs VAT Guide
-                </FooterLink>
-                <FooterLink href="/use-cases/sell-products-online-nepal">
-                  Selling Online
-                </FooterLink>
-                <FooterLink href="/website-developer-nepal">
-                  Dev Solutions
-                </FooterLink>
-              </div>
-            </div>
 
             {/* Templates */}
             <div>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Templates
+                Nepdora Templates
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/templates/ecommerce">E-commerce</FooterLink>
-                <FooterLink href="/templates/restaurant">Restaurant</FooterLink>
-                <FooterLink href="/templates/portfolio">Portfolio</FooterLink>
-                <FooterLink href="/templates/agency">Agency</FooterLink>
-                <FooterLink href="/templates/medical">Medical</FooterLink>
-                <FooterLink href="/templates/grocery">Grocery</FooterLink>
-              </div>
-            </div>
-            <div className="">
-              <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Top Cities
-              </h4>
-              <div className="flex flex-col space-y-2">
-                <FooterLink href="/ecommerce/kathmandu">Kathmandu</FooterLink>
-                <FooterLink href="/restaurant-website/pokhara">
-                  Pokhara
+                <FooterLink href="/templates/ecommerce">
+                  E-commerce Templates
                 </FooterLink>
-                <FooterLink href="/clinic-website/lalitpur">
-                  Lalitpur
+                <FooterLink href="/templates/restaurant">
+                  Restaurant Templates
                 </FooterLink>
-                <FooterLink href="/agency-website/butwal">Butwal</FooterLink>
-                <FooterLink href="/dental-website/biratnagar">
-                  Biratnagar
+                <FooterLink href="/templates/portfolio">
+                  Portfolio & CV Templates
                 </FooterLink>
-                <FooterLink href="/booking-website/bhaktapur">
-                  Bhaktapur
+                <FooterLink href="/templates/agency">
+                  Digital Agency Templates
+                </FooterLink>
+                <FooterLink href="/templates/medical-clinic">
+                  Medical & Clinic Templates
+                </FooterLink>
+                <FooterLink href="/templates/grocery-store">
+                  Grocery Store Templates
+                </FooterLink>
+                <FooterLink href="/templates/clothing-store">
+                  Clothing Store Templates
+                </FooterLink>
+                <FooterLink href="/templates/educational-consultancy">
+                  Educational Consultancy Templates
                 </FooterLink>
               </div>
             </div>
             {/* Compare & Locations */}
             <div>
-              <h4 className="mb-4 text-lg font-bold text-gray-900">Compare</h4>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
+                Compare Alternatives
+              </h4>
               <div className="mb-6 flex flex-col space-y-2">
                 <FooterLink href="/alternative/shopify-nepal">
                   Shopify vs Nepdora
@@ -258,6 +240,51 @@ export const Footer = () => {
                 <FooterLink href="/alternative/blanxer-nepal">
                   Blanxer vs Nepdora
                 </FooterLink>
+              </div>
+            </div>
+            {/* Cities/Rankings */}
+            <div>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
+                Best in Nepal
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/best/website-builders-for-restaurants-nepal">
+                  Best Restaurant Website Builder in Nepal
+                </FooterLink>
+                <FooterLink href="/best/website-builders-for-ecommerce-nepal">
+                  Best E-commerce Website Builder in Nepal
+                </FooterLink>
+                <FooterLink href="/best/website-builders-for-clothing-store-nepal">
+                  Best Clothing Store Builder in Nepal
+                </FooterLink>
+                <FooterLink href="/best/website-builders-for-educational-consultancy-nepal">
+                  Best Educational Consultancy Builder in Nepal
+                </FooterLink>
+              </div>
+            </div>
+
+            {/* Others column (moved to second row/next col) */}
+            <div>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
+                Learn & Resources
+              </h4>
+              <div className="flex flex-col space-y-2">
+                <FooterLink href="/learn/how-to-start-online-business-in-nepal">
+                  Start Online Business
+                </FooterLink>
+                <FooterLink href="/learn/register-company-in-nepal-online">
+                  Company Registration
+                </FooterLink>
+                <FooterLink href="/use-cases/sell-products-online-nepal">
+                  Sell Products Online
+                </FooterLink>
+                <FooterLink href="/website-developer-nepal">
+                  Website developer
+                </FooterLink>
+                <FooterLink href="/learn">Nepdora Academy</FooterLink>
+                <FooterLink href="/partners">Partner Program</FooterLink>
+                <FooterLink href="/experts">Expert Hub</FooterLink>
+                <FooterLink href="/showcase">Showcase</FooterLink>
               </div>
             </div>
           </div>

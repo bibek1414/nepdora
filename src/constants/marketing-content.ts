@@ -549,7 +549,7 @@ const clothingStoreContent: IndustryContent = {
 };
 
 const educationalConsultancyContent: IndustryContent = {
-  title: "Build a Clinic Website in Nepal (Fast Setup) | Nepdora",
+  title: "Build an Educational Consultancy Website in Nepal | Nepdora Builder",
   description:
     "Build trust with students and parents using a high-converting website for your consultancy.",
   customH1: "Create Your Education Website in Nepal Today.",

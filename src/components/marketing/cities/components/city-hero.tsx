@@ -38,7 +38,13 @@ export const CityHero: React.FC<CityHeroProps> = ({
         <div className="grid items-center gap-12 lg:grid-cols-2">
           {/* Left — text */}
           <div>
-            <p className="mb-4 text-sm text-slate-400">{cityName}, Nepal</p>
+            {cityName === "Nepdora" ? (
+              <span className="mb-4 inline-block rounded-full bg-slate-900 px-3 py-1 text-xs font-bold tracking-wider text-white uppercase">
+                Official Nepdora Solution
+              </span>
+            ) : (
+              <p className="mb-4 text-sm text-slate-400">{cityName}, Nepal</p>
+            )}
 
             <h1 className="mb-5 text-4xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-5xl">
               {heading}

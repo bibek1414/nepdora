@@ -357,11 +357,19 @@ export const NEPAL_CITIES = [
 ];
 
 export const SERVICE_CATEGORIES = [
-  { slug: "ecommerce", name: "Ecommerce Website" },
-  { slug: "ecommerce-website", name: "Ecommerce Website" },
-  { slug: "agency-website", name: "Agency Website" },
-  { slug: "booking-website", name: "Booking Website" },
-  { slug: "restaurant-website", name: "Restaurant Website" },
-  { slug: "clinic-website", name: "Clinic Website" },
-  { slug: "dental-website", name: "Dental Website" },
+  { slug: "ecommerce-website", name: "Create Ecommerce Website" },
+  { slug: "agency-website", name: "Create Agency Website" },
+  { slug: "grocery-website", name: "Create Grocery Website" },
+  { slug: "clothing-store", name: "Create Clothing Store" },
+  { slug: "gym", name: "Create Gym Website" },
+  { slug: "school", name: "Create School Website" },
+  { slug: "travel-agency", name: "Create Travel Agency Website" },
+  {
+    slug: "educational-consultancy",
+    name: "Create Educational Consultancy Website",
+  },
+  { slug: "booking-website", name: "Create Booking Website" },
+  { slug: "restaurant-website", name: "Create Restaurant Website" },
+  { slug: "clinic-website", name: "Create Clinic Website" },
+  { slug: "dental-website", name: "Create Dental Website" },
 ];

@@ -18,7 +18,7 @@ import { buildMarketingMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { industry } = await params;
-  if (!industries.includes(industry)) {
+  if (industry === "templates" || !industries.includes(industry)) {
     notFound();
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function IndustryPage({ params }: Props) {
   const { industry } = await params;
-  if (!industries.includes(industry)) {
+  if (industry === "templates" || !industries.includes(industry)) {
     notFound();
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
@@ -74,7 +74,7 @@ export default async function IndustryPage({ params }: Props) {
   return (
     <>
       <JsonLd id="industry-schema" data={schema} />
-      <CitiesLandingPage category={industry} city="nepal" />
+      <CitiesLandingPage category={industry} city="Nepdora" />
     </>
   );
 }

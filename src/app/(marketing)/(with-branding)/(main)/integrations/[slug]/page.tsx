@@ -1,205 +1,177 @@
+import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
+import { 
+  CheckCircle2, 
+  AlertCircle, 
+  ChevronRight, 
+  Zap, 
+  Settings, 
+  ShieldCheck, 
+  Rocket,
+  Globe
+} from "lucide-react";
 import { INTEGRATIONS } from "@/constants/integrations";
 import { buildMarketingMetadata } from "@/lib/seo";
-import {
-  CheckCircle2,
-  ShieldCheck,
-  Globe,
-  Zap,
-  AlertCircle,
-  Rocket,
-  ChevronRight,
-} from "lucide-react";
-import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
-import FAQSection from "@/components/marketing/faq-section/faq-section";
-import CTASection from "@/components/marketing/cta-section/cta-section";
+import { 
+  IntegrationHero, 
+  IntegrationShowcaseSection, 
+  ConnectionMockup 
+} from "@/components/marketing/integrations/integration-sections";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return INTEGRATIONS.map(integration => ({
-    slug: integration.slug,
-  }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const integration = INTEGRATIONS.find(i => i.slug === slug);
-
-  if (!integration) return notFound();
+  
+  if (!integration) return {};
 
   return buildMarketingMetadata({
-    title: `${integration.name} Integration for your Website | Nepdora`,
-    description: `Connect ${integration.name} with your Nepdora store. ${integration.description} Seamless setup for businesses in Nepal.`,
+    title: `${integration.name} Integration for Nepdora | Setup Guide`,
+    description: integration.description,
     path: `/integrations/${slug}`,
-    ogLabel: "Integration Spotlight",
   });
 }
 
-export default async function IntegrationPage({ params }: Props) {
+export default async function IntegrationDetailsPage({ params }: Props) {
   const { slug } = await params;
   const integration = INTEGRATIONS.find(i => i.slug === slug);
 
   if (!integration) return notFound();
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="border-b border-slate-100 bg-white pt-24 pb-20 text-slate-900">
-        <div className="container mx-auto max-w-6xl px-4 text-center md:text-left">
-          <div className="flex justify-center md:justify-start">
-            <Breadcrumbs
-              items={[
-                { label: "Integrations", href: "/integrations" },
-                { label: integration.name, href: `/integrations/${slug}` },
-              ]}
-            />
-          </div>
+      <IntegrationHero 
+        name={integration.name}
+        logo={integration.logo}
+        color={integration.color}
+        badge={integration.badge}
+        title={integration.heroTitle}
+        subtitle={integration.heroSubtitle}
+        description={integration.longDescription}
+      />
 
-          <div className="mt-12 flex flex-col items-center md:flex-row md:gap-12 md:text-left">
-            <div className="mb-10 flex h-32 w-32 shrink-0 items-center justify-center rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-slate-200/40 md:mb-0 md:h-44 md:w-44">
-              <Image
-                src={integration.logo}
-                alt={integration.name}
-                width={176}
-                height={176}
-                className="h-full w-full object-contain"
+      {/* Dynamic Showcase Sections */}
+      {integration.showcaseSections?.map((section, idx) => (
+        <IntegrationShowcaseSection
+          key={idx}
+          title={section.title}
+          description={section.description}
+          bullets={section.bullets}
+          image={section.image}
+          visual={
+            // Show ConnectionMockup for the first section OR if the title mentions 'Activation' or 'Connection'
+            idx === 0 || section.title.toLowerCase().includes("activation") ? (
+              <ConnectionMockup 
+                activeName={integration.name}
+                activeLogo={integration.logo}
+                color={integration.color}
               />
-            </div>
+            ) : undefined
+          }
+          flip={idx % 2 !== 0}
+          color={integration.color}
+        />
+      ))}
 
-            <div className="flex-1">
-              <div
-                className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition-all"
-                style={{
-                  backgroundColor: `${integration.color}10`,
-                  color: integration.color,
-                }}
-              >
-                <ShieldCheck size={18} /> {integration.badge}
-              </div>
-
-              <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-slate-900 md:text-7xl">
-                Connect{" "}
-                <span style={{ color: integration.color }}>
-                  {integration.name}
-                </span>{" "}
-                easily
-              </h1>
-              <p className="mx-auto max-w-2xl text-lg leading-relaxed font-medium text-slate-500 md:mx-0 md:text-xl">
-                {integration.longDescription}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison Section */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-6xl px-4">
+      {/* Comparison Section (Hard Way vs Nepdora Way) */}
+      <section className="py-24 bg-slate-50 border-t border-slate-100">
+        <div className="container mx-auto max-w-6xl px-6">
           <div className="mb-16 text-center">
             <h2 className="mb-6 text-3xl font-bold text-slate-900 md:text-5xl">
-              The integration breakdown
+              Why use our integration?
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-slate-500">
-              Why spend weeks on development when you can go live in minutes?
-              Experience the difference with Nepdora.
+            <p className="mx-auto max-w-2xl text-lg font-medium text-slate-500">
+              Skip the technical complexity and go live in minutes with our native, zero-code connection.
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:gap-10">
+          <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
             {/* The Hard Way */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
-              <div className="mb-10 flex items-center gap-4 text-slate-500">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50">
-                  <AlertCircle className="h-6 w-6 text-red-500" />
+            <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+              <div className="mb-10 flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-500">
+                  <AlertCircle className="h-6 w-6" />
                 </div>
-                <h2 className="text-sm font-semibold tracking-tight text-slate-400">
-                  Manual setup
-                </h2>
+                <h3 className="text-lg font-bold text-slate-900 tracking-wider uppercase">The Hard Way</h3>
               </div>
               <div className="space-y-8">
-                {[
-                  {
-                    title: "Technical setup",
-                    desc: "Manually importing scripts and matching API specifications.",
-                  },
-                  {
-                    title: "Security & validation",
-                    desc: "Implementing hash generation and sensitive data encryption.",
-                  },
-                  {
-                    title: "Maintenance",
-                    desc: "Constant updates to keep up with changing provider APIs.",
-                  },
-                ].map((step, idx) => (
-                  <div key={idx} className="flex gap-5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-400">
+                {integration.hardWay.map((step, idx) => (
+                  <div key={idx} className="flex gap-4 relative">
+                    {idx !== integration.hardWay.length - 1 && (
+                      <div className="absolute top-10 left-2.5 h-full w-px bg-slate-100" />
+                    )}
+                    <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-400 z-10">
                       {idx + 1}
                     </div>
                     <div>
-                      <h4 className="mb-1 text-lg font-bold text-slate-800">
+                      <h4 className="mb-1 text-base font-bold text-slate-800">
                         {step.title}
                       </h4>
                       <p className="text-sm leading-relaxed text-slate-500">
-                        {step.desc}
+                        {step.description}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
+              <div className="mt-10 rounded-2xl border border-red-100 bg-red-50 p-4">
+                <p className="text-sm text-red-700 italic">
+                  Requires technical expertise, weeks of development, and ongoing maintenance costs.
+                </p>
+              </div>
             </div>
 
             {/* The Nepdora Way */}
-            <div className="relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-xl shadow-slate-200/50">
+            <div className="relative overflow-hidden rounded-[32px] border-2 border-slate-100 bg-white p-8 shadow-xl shadow-slate-100/50">
               <div
-                className="absolute top-0 right-0 rounded-bl-2xl px-6 py-2 text-[10px] font-semibold tracking-wide text-white"
+                className="absolute top-0 right-0 rounded-bl-2xl px-6 py-2 text-[10px] font-bold tracking-widest text-white uppercase"
                 style={{ backgroundColor: integration.color }}
               >
-                Zero code
+                Zero Code
               </div>
               <div className="mb-10 flex items-center gap-4">
                 <div
                   className="flex h-12 w-12 items-center justify-center rounded-2xl"
                   style={{
-                    backgroundColor: `${integration.color}10`,
+                    backgroundColor: `${integration.color}15`,
                     color: integration.color,
                   }}
                 >
-                  <Zap className="h-6 w-6" fill="currentColor" />
+                  <Rocket className="h-6 w-6" fill="currentColor" />
                 </div>
-                <h2
-                  className="text-sm font-semibold tracking-tight"
-                  style={{ color: integration.color }}
+                <h3 
+                  className="text-lg font-bold tracking-wider uppercase text-slate-900"
                 >
-                  The Nepdora way
-                </h2>
+                  The Nepdora Way
+                </h3>
               </div>
               <div className="space-y-10">
                 {[
                   {
                     title: "Instant activation",
-                    desc: "Enable the integration from your dashboard with one click.",
-                    icon: <Rocket size={20} />,
+                    desc: "Turn on the integration with a single click from your dashboard.",
+                    icon: <Settings size={20} />,
                   },
                   {
-                    title: "Auto configuration",
-                    desc: "No code needed. Just enter your credentials and you're set.",
+                    title: "No coding required",
+                    desc: "Simply enter your API keys and we handle all the technical plumbing.",
+                    icon: <Zap size={20} />,
+                  },
+                  {
+                    title: "Updates included",
+                    desc: "We monitor and update the integration so it never stops working.",
                     icon: <ShieldCheck size={20} />,
-                  },
-                  {
-                    title: "Always up-to-date",
-                    desc: "We handle all API updates so your site never stops working.",
-                    icon: <CheckCircle2 size={20} />,
                   },
                 ].map((step, idx) => (
                   <div key={idx} className="flex gap-5">
                     <div
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                      className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
                       style={{
                         backgroundColor: `${integration.color}10`,
                         color: integration.color,
@@ -218,145 +190,125 @@ export default async function IntegrationPage({ params }: Props) {
                   </div>
                 ))}
               </div>
+              
+              <div className="mt-12 space-y-4">
+                <div className="flex items-center gap-3 text-sm font-bold text-emerald-600">
+                  <CheckCircle2 className="h-5 w-5" />
+                  <span>Zero Coding Required</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm font-bold text-emerald-600">
+                  <CheckCircle2 className="h-5 w-5" />
+                  <span>Active in 5 Minutes</span>
+                </div>
+              </div>
+
+              <div className="mt-10">
+                <div 
+                  className="rounded-2xl p-6 text-white shadow-lg shadow-slate-200"
+                  style={{ backgroundColor: integration.color }}
+                >
+                  <p className="leading-relaxed font-semibold italic text-white/90">
+                    "With Nepdora, {integration.name} is ready to use from day one. Focus on your business, not the code."
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features & Detailed Info */}
-      <section className="bg-white py-24">
-        <div className="container mx-auto max-w-6xl px-4">
+      {/* Benefits & Resources */}
+      <section className="bg-white py-24 border-t border-slate-100">
+        <div className="container mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-3">
-            <div className="space-y-16 lg:col-span-2">
-              {/* Features Grid */}
-              <div>
+             {/* Benefits Column */}
+             <div className="lg:col-span-2 space-y-20">
+               <div>
                 <h2 className="mb-12 flex items-center gap-4 text-3xl font-bold text-slate-900">
-                  <span
-                    className="block h-8 w-1 rounded-full"
-                    style={{ backgroundColor: integration.color }}
-                  />
-                  Powerful features
+                  <span className="block h-8 w-1 rounded-full bg-emerald-500" />
+                  Key Benefits
                 </h2>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  {integration.features.map((feature, idx) => (
-                    <div
-                      key={idx}
-                      className="group flex items-start gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-6 transition-all hover:bg-white hover:shadow-lg hover:shadow-slate-200/50"
-                    >
-                      <div className="rounded-xl border border-slate-200 bg-white p-2.5 shadow-sm transition-transform group-hover:scale-110">
-                        <Zap className="h-5 w-5 text-sky-500" />
-                      </div>
-                      <p className="text-base font-bold text-slate-800">
-                        {feature}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Benefits */}
-              <div>
-                <h2 className="mb-12 flex items-center gap-4 text-3xl font-bold text-slate-900">
-                  <span className="block h-8 w-1 rounded-full bg-amber-500" />
-                  Why you need this
-                </h2>
-                <div className="grid gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {integration.benefits.map((benefit, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-5 transition-colors hover:bg-slate-50"
+                      className="flex items-center gap-4 rounded-2xl border border-slate-50 p-6 transition-all hover:bg-slate-50 active:scale-95"
                     >
-                      <CheckCircle2 className="h-6 w-6 shrink-0 text-green-500" />
-                      <p className="text-lg font-medium text-slate-700">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-500">
+                         <CheckCircle2 className="h-5 w-5" />
+                      </div>
+                      <p className="text-base font-bold text-slate-700">
                         {benefit}
                       </p>
                     </div>
                   ))}
                 </div>
               </div>
+
+               {/* Resources */}
+               <div>
+                <h4 className="mb-8 flex items-center gap-2.5 text-2xl font-bold text-slate-900">
+                  <Globe className="h-6 w-6 text-slate-400" />
+                  Integration Resources
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <Link
+                    href={integration.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col gap-4 rounded-3xl border border-slate-100 p-8 transition-all hover:bg-slate-50 hover:border-slate-200 group"
+                  >
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Website</span>
+                    <span className="text-lg font-bold text-slate-900 flex items-center justify-between">
+                      Official site
+                      <ChevronRight size={16} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Link>
+                  <Link
+                    href="/support"
+                    className="flex flex-col gap-4 rounded-3xl border border-slate-100 p-8 transition-all hover:bg-slate-50 hover:border-slate-200 group"
+                  >
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Docs</span>
+                    <span className="text-lg font-bold text-slate-900 flex items-center justify-between">
+                      Setup Guide
+                      <ChevronRight size={16} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Link>
+                  <Link
+                    href="/pricing"
+                    className="flex flex-col gap-4 rounded-3xl border border-slate-100 p-8 transition-all hover:bg-slate-50 hover:border-slate-200 group"
+                  >
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Cost</span>
+                    <span className="text-lg font-bold text-slate-900 flex items-center justify-between">
+                      Pricing Plans
+                      <ChevronRight size={16} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Link>
+                </div>
+              </div>
             </div>
 
-            {/* Sidebar Sticky */}
+            {/* Sidebar / Last section - minimalist info */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 space-y-6">
-                <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/40">
-                  <h3 className="mb-4 text-2xl leading-tight font-bold">
-                    Start using {integration.name}
+              <div className="sticky top-24 space-y-8">
+                <div className="rounded-[40px] bg-slate-50 p-10 border border-slate-100">
+                  <h3 className="mb-6 text-2xl font-bold text-slate-900">
+                    Trusted by Nepali Sellers
                   </h3>
-                  <p className="mb-8 text-base leading-relaxed font-medium text-slate-600">
-                    Connect your {integration.name} account to your Nepdora site
-                    in just a few clicks. No developer needed.
+                  <p className="text-base font-medium text-slate-500 leading-relaxed">
+                    Nepdora simplifies {integration.slug.split('-')[0]} for local businesses. Join the network leading the digital revolution in Nepal.
                   </p>
-                  <Link
-                    href="/create-website"
-                    className="group mb-4 flex w-full items-center justify-center gap-3 rounded-2xl bg-slate-900 py-5 text-base font-bold text-white transition-all hover:bg-slate-800"
-                  >
-                    Build your site for free
-                    <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" />
-                  </Link>
-                  <p className="text-center text-[10px] font-semibold tracking-wide text-slate-400">
-                    Available on all plans
-                  </p>
-                </div>
-
-                <div className="rounded-3xl border border-slate-100 bg-slate-50 p-8">
-                  <h4 className="mb-6 flex items-center gap-2.5 text-lg font-bold text-slate-900">
-                    <Globe className="h-5 w-5 text-slate-400" />
-                    Quick links
-                  </h4>
-                  <div className="space-y-4">
-                    <a
-                      href={integration.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between text-base font-medium text-slate-600 transition-colors hover:text-slate-900"
+                  <div className="mt-10 pt-10 border-t border-slate-200">
+                    <Link 
+                      href="/register"
+                      className="block w-full text-center py-4 rounded-2xl bg-slate-900 text-white font-bold text-sm tracking-wider uppercase transition-transform hover:scale-105 active:scale-95"
                     >
-                      Official website
-                      <ChevronRight size={16} className="text-slate-300" />
-                    </a>
-                    <Link
-                      href="/support"
-                      className="flex items-center justify-between text-base font-medium text-slate-600 transition-colors hover:text-slate-900"
-                    >
-                      Setup tutorial
-                      <ChevronRight size={16} className="text-slate-300" />
-                    </Link>
-                    <Link
-                      href="/pricing"
-                      className="flex items-center justify-between text-base font-medium text-slate-600 transition-colors hover:text-slate-900"
-                    >
-                      Pricing and fees
-                      <ChevronRight size={16} className="text-slate-300" />
+                      Start Free Trial
                     </Link>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Suggest Tool / CTA Section */}
-      <section className="border-t border-slate-100 bg-white py-24">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-slate-50 px-8 py-16 text-center md:px-16 md:py-24">
-            <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-sky-100/50 blur-[100px]" />
-            <div className="absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-amber-50/30 blur-[100px]" />
-
-            <h2 className="relative z-10 mb-6 text-3xl font-extrabold text-slate-900 md:text-5xl">
-              Missing a tool?
-            </h2>
-            <p className="relative z-10 mx-auto mb-10 max-w-xl text-lg leading-relaxed font-medium text-slate-500">
-              We're constantly adding new integrations. If you need a specific
-              tool connected to your Nepdora site, reach out to our team.
-            </p>
-            <Link
-              href="/contact"
-              className="relative z-10 inline-flex items-center gap-3 rounded-full bg-slate-900 px-10 py-5 text-sm font-bold text-white transition-all hover:scale-105 hover:shadow-xl"
-            >
-              Request an integration
-              <ChevronRight className="h-5 w-5 text-sky-400" />
-            </Link>
           </div>
         </div>
       </section>
