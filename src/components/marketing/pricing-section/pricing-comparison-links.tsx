@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { PRICING_COMPARISON_DATA } from "@/constants/pricing-comparison";
 
 export default function PricingComparisonLinks() {
@@ -38,21 +38,6 @@ export default function PricingComparisonLinks() {
               </div>
             </Link>
           ))}
-          
-          <Link
-            href="/website-developer-nepal"
-            className="group flex flex-col justify-center rounded-2xl border border-dashed border-slate-300 bg-white/50 p-6 transition-all hover:bg-slate-50"
-          >
-            <h3 className="text-lg font-bold text-slate-700 group-hover:text-slate-900">
-              Custom Developer vs Nepdora
-            </h3>
-            <p className="mt-1 text-sm text-slate-500 group-hover:text-slate-600">
-              Is hiring a developer worth it?
-            </p>
-            <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-blue-600">
-              View Comparison <ArrowRight className="h-4 w-4" />
-            </div>
-          </Link>
         </div>
       </div>
     </section>
