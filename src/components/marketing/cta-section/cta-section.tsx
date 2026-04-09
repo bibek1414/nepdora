@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const CTA: React.FC = () => {
   return (
@@ -13,19 +14,23 @@ const CTA: React.FC = () => {
         service business anything can be built on Nepdora.
       </p>
       <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-        <Button
-          size="lg"
-          className="w-full rounded-full text-sm sm:w-auto sm:text-base"
-        >
-          Start Building Now
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full rounded-full text-sm sm:w-auto sm:text-base"
-        >
-          Talk to Sales
-        </Button>
+        <Link href="/admin/signup" className="w-full sm:w-auto">
+          <Button
+            size="lg"
+            className="w-full rounded-full text-sm sm:text-base"
+          >
+            Start Building Now
+          </Button>
+        </Link>
+        <Link href="/contact" className="w-full sm:w-auto">
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full rounded-full text-sm sm:text-base"
+          >
+            Talk to Sales
+          </Button>
+        </Link>
       </div>
       <p className="mt-6 text-xs text-slate-600 sm:mt-8 sm:text-sm">
         Includes free domain connection, hosting, and SSL.

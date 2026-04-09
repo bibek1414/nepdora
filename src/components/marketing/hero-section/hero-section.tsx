@@ -33,10 +33,12 @@ const Hero: React.FC = () => {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="default" rounded={true}>
-                Start Building Free
-                <ChevronRight className="ml-1.5 h-4 w-4" />
-              </Button>
+              <Link href="/admin/signup">
+                <Button variant="default" rounded={true}>
+                  Start Building Free
+                  <ChevronRight className="ml-1.5 h-4 w-4" />
+                </Button>
+              </Link>
               <Link
                 href="https://wa.me/9779866316114"
                 target="_blank"

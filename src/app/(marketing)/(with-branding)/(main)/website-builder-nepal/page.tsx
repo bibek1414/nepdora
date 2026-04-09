@@ -29,6 +29,8 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
+import { JsonLd } from "@/components/shared/json-ld";
+import { absoluteUrl } from "@/lib/seo";
 import { BuilderVisualMock } from "@/components/marketing/website-builder-nepal/website-builder-visual-mock";
 
 export const metadata: Metadata = buildMarketingMetadata({
@@ -47,8 +49,24 @@ export const metadata: Metadata = buildMarketingMetadata({
 });
 
 export default function WebsiteBuilderNepalPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Nepdora Website Builder",
+    description: "Build a professional website in Nepal without coding. Drag-and-drop, eSewa/Khalti integration, and SEO tools included.",
+    applicationCategory: "DesignApplication, BusinessApplication",
+    version: "2.0",
+    url: absoluteUrl("/website-builder-nepal"),
+    author: {
+      "@type": "Organization",
+      name: "Nepdora",
+      url: absoluteUrl(),
+    },
+  };
+
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
+      <JsonLd id="builder-schema" data={schema} />
       {/* Hero Section */}
       <section className="pt-20 pb-32">
         <div className="container mx-auto max-w-6xl px-6">

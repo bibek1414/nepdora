@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { INTEGRATIONS } from "@/constants/integrations";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import IntegrationsMarketplace from "@/components/marketing/integrations/integrations-marketplace";
 
 export const metadata: Metadata = buildMarketingMetadata({
@@ -12,8 +13,17 @@ export const metadata: Metadata = buildMarketingMetadata({
 });
 
 export default function IntegrationsPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Integrations Marketplace | Nepdora",
+    description: "Explore eSewa, Khalti, WhatsApp and 50+ other integrations for your website.",
+    url: absoluteUrl("/integrations"),
+  };
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
+      <JsonLd id="integrations-schema" data={schema} />
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">

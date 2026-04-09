@@ -181,6 +181,9 @@ export const Footer = () => {
                 <FooterLink href="/tools/website-speed-test">
                   Speed Test
                 </FooterLink>
+                <FooterLink href="/tools/privacy-policy-generator-nepal">
+                  Privacy Policy
+                </FooterLink>
                 <FooterLink href="/invoice-builder">Invoice Maker</FooterLink>
               </div>
             </div>
@@ -239,6 +242,9 @@ export const Footer = () => {
                 </FooterLink>
                 <FooterLink href="/alternative/blanxer-nepal">
                   Blanxer vs Nepdora
+                </FooterLink>
+                <FooterLink href="/switch">
+                  Switch to Nepdora
                 </FooterLink>
               </div>
             </div>

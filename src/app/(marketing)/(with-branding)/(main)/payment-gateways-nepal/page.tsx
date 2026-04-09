@@ -134,9 +134,11 @@ export default function PaymentGatewaysPage() {
                            </div>
                         </div>
                      </div>
-                     <button className="w-full py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20">
-                        Pay with eSewa
-                     </button>
+                     <Link href="/admin/signup" className="block w-full">
+                        <button className="w-full py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-transform active:scale-95">
+                           Pay with eSewa
+                        </button>
+                     </Link>
                   </div>
                </div>
             </div>

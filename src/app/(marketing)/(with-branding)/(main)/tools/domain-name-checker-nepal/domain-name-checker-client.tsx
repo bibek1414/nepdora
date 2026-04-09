@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, 
@@ -208,9 +209,11 @@ export default function DomainNameCheckerClient() {
                   
                   <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
                     {result.registered === false ? (
-                      <Button size="lg" className="h-16 rounded-[2rem] px-12 text-lg font-black tracking-tight shadow-2xl transition-all hover:scale-105 bg-slate-900 hover:bg-slate-800 text-white w-full sm:w-auto uppercase">
-                        Secure Domain
-                      </Button>
+                      <Link href="/admin/signup" className="w-full sm:w-auto">
+                        <Button size="lg" className="h-16 rounded-[2rem] px-12 text-lg font-black tracking-tight shadow-2xl transition-all hover:scale-105 bg-slate-900 hover:bg-slate-800 text-white w-full uppercase">
+                          Secure Domain
+                        </Button>
+                      </Link>
                     ) : (
                       <Button onClick={() => setResult(null)} variant="outline" size="lg" className="h-16 rounded-[2rem] px-12 border-slate-200 text-slate-900 font-black tracking-tight hover:bg-slate-50 w-full sm:w-auto uppercase">
                         Search Another

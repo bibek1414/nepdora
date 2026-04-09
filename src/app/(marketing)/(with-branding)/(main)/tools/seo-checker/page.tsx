@@ -82,7 +82,7 @@ export default function SEOChecker() {
             <div className="flex flex-col items-center">
               <Search className="text-primary mb-4 h-12 w-12" />
               <div className="text-primary mb-2 font-mono text-sm font-semibold">
-                NEPDORA SEO ANALYZER
+                Nepdora SEO Analyzer
               </div>
               <p className="mb-6 text-sm font-medium text-slate-400">
                 Enter your website URL to get a free SEO analysis

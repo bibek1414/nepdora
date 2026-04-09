@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ALL_COMPETITORS } from "@/constants/competitors";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import {
   CheckCircle2,
   XCircle,
@@ -182,6 +183,17 @@ export default async function SwitchComparisonPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd
+        id="switch-schema"
+        data={{
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          headline: `Switch from ${competitor.name} to Nepdora`,
+          description: `Comprehensive comparison and migration guide from ${competitor.name} to Nepdora for Nepali businesses.`,
+          url: absoluteUrl(`/switch/${slug}`),
+          author: { "@type": "Organization", name: "Nepdora" },
+        }}
+      />
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">
