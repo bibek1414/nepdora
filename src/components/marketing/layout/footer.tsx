@@ -270,21 +270,30 @@ export const Footer = () => {
               </h4>
               <div className="flex flex-col space-y-2">
                 <FooterLink href="/learn/how-to-start-online-business-in-nepal">
-                  Start Online Business
+                  Start Online Business in Nepal
                 </FooterLink>
+
                 <FooterLink href="/learn/register-company-in-nepal-online">
-                  Company Registration
+                  Company Registration in Nepal
                 </FooterLink>
+
                 <FooterLink href="/use-cases/sell-products-online-nepal">
-                  Sell Products Online
+                  Sell Products Online in Nepal
                 </FooterLink>
+
                 <FooterLink href="/website-developer-nepal">
-                  Website developer
+                  Website Developer Nepal
                 </FooterLink>
-                <FooterLink href="/learn">Nepdora Academy</FooterLink>
-                <FooterLink href="/partners">Partner Program</FooterLink>
-                <FooterLink href="/experts">Expert Hub</FooterLink>
-                <FooterLink href="/showcase">Showcase</FooterLink>
+
+                <FooterLink href="/learn">Nepdora Learn</FooterLink>
+
+                <FooterLink href="/partners">Partner Program Nepal</FooterLink>
+
+                <FooterLink href="/experts">
+                  Hire Website Experts Nepal
+                </FooterLink>
+
+                <FooterLink href="/showcase">Website Examples Nepal</FooterLink>
               </div>
             </div>
           </div>
