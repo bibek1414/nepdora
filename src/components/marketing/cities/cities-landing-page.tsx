@@ -13,6 +13,7 @@ import { PaymentIntegration } from "./components/payment-integration";
 import { ComparisonSection } from "./components/comparison-section";
 import { LeadCaptureCRM } from "./components/lead-capture-crm";
 import { IndustryDiscovery } from "./components/industry-discovery";
+import { CityDiscovery } from "./components/city-discovery";
 
 interface CitiesLandingPageProps {
   category: string;
@@ -89,6 +90,8 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
       <CityResources />
 
       <CityFAQ />
+
+      <CityDiscovery currentCity={city} category={category} />
 
       <IndustryDiscovery currentCategory={category} />
 

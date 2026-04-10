@@ -58,10 +58,30 @@ const faqSchema = {
   ],
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "FAQ",
+      item: absoluteUrl("/faq"),
+    },
+  ],
+};
+
 export default function FAQPage() {
   return (
     <>
       <JsonLd id="faq-schema" data={faqSchema} />
+      <JsonLd id="faq-breadcrumb" data={breadcrumbSchema} />
       <div className="container mx-auto max-w-6xl px-6 pt-4">
         <Breadcrumbs items={[{ label: "FAQ", href: "/faq" }]} />
       </div>

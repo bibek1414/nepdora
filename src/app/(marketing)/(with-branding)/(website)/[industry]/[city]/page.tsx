@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { industries, INDUSTRY_LABELS, cities } from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 
 interface Props {
@@ -71,9 +72,43 @@ export default async function IndustryCityLandingPage({ params }: Props) {
     },
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: industryLabel,
+        item: absoluteUrl(`/${industry}`),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: cityName,
+        item: absoluteUrl(`/${industry}/${city}`),
+      },
+    ],
+  };
+
   return (
     <>
       <JsonLd id="industry-city-schema" data={schema} />
+      <JsonLd id="industry-city-breadcrumb" data={breadcrumbSchema} />
+      <div className="container mx-auto max-w-6xl px-6 pt-4">
+        <Breadcrumbs 
+          items={[
+            { label: industryLabel, href: `/${industry}` },
+            { label: cityName, href: `/${industry}/${city}` }
+          ]} 
+        />
+      </div>
       <CitiesLandingPage category={industry} city={city} />
     </>
   );

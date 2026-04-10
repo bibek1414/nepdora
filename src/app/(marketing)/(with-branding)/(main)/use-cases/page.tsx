@@ -52,11 +52,31 @@ const orgSchema = {
   url: absoluteUrl(),
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Use Cases",
+      item: absoluteUrl("/use-cases"),
+    },
+  ],
+};
+
 export default function UseCasesPage() {
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="use-case-list-schema" data={useCaseSchema} />
       <JsonLd id="nepdora-org-usecase" data={orgSchema} />
+      <JsonLd id="use-case-breadcrumb" data={breadcrumbSchema} />
 
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Use Cases", href: "/use-cases" }]} />

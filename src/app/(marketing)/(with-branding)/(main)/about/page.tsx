@@ -41,10 +41,30 @@ const aboutSchema = {
   },
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "About",
+      item: absoluteUrl("/about"),
+    },
+  ],
+};
+
 export default function AboutPage() {
   return (
     <div className="bg-white">
       <JsonLd id="about-schema" data={aboutSchema} />
+      <JsonLd id="about-breadcrumb" data={breadcrumbSchema} />
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "About", href: "/about" }]} />
       </div>

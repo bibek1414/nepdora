@@ -17,7 +17,7 @@ import {
   Rocket,
 } from "lucide-react";
 import { SOLUTIONS_LIST } from "@/constants/solutions";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
@@ -37,12 +37,32 @@ export default function SolutionsHubPage() {
     name: "Business Solutions for Nepal",
     description:
       "Explore business solutions built for Nepal. E-commerce, payments, delivery, and growth tools.",
-    url: "https://nepdora.com/solutions",
+    url: absoluteUrl("/solutions"),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Solutions",
+        item: absoluteUrl("/solutions"),
+      },
+    ],
   };
 
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="solutions-schema" data={schema} />
+      <JsonLd id="solutions-breadcrumb" data={breadcrumbSchema} />
 
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Solutions", href: "/solutions" }]} />

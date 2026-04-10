@@ -22,6 +22,7 @@ import {
 } from "@/constants/competitors";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+import { absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
@@ -63,12 +64,32 @@ export default function CompareHubPage() {
     name: "Website Builder Comparison Hub",
     description:
       "Compare Nepdora with leading website builders for Nepali businesses.",
-    url: "https://nepdora.com/compare",
+    url: absoluteUrl("/compare"),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Compare",
+        item: absoluteUrl("/compare"),
+      },
+    ],
   };
 
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="comparison-schema" data={comparisonSchema} />
+      <JsonLd id="comparison-breadcrumb" data={breadcrumbSchema} />
       
       <div className="container mx-auto max-w-6xl px-6 pt-4">
         <Breadcrumbs items={[{ label: "Compare", href: "/compare" }]} />

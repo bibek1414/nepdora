@@ -51,12 +51,32 @@ const templatesSchema = {
   },
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Templates",
+      item: absoluteUrl("/templates"),
+    },
+  ],
+};
+
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export default function Templates() {
   return (
     <>
       <JsonLd id="templates-schema" data={templatesSchema} />
+      <JsonLd id="templates-breadcrumb" data={breadcrumbSchema} />
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Templates", href: "/templates" }]} />
       </div>

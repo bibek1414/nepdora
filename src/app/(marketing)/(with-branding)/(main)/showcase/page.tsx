@@ -130,10 +130,30 @@ const showcaseSchema = {
   },
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Showcase",
+      item: absoluteUrl("/showcase"),
+    },
+  ],
+};
+
 export default function ShowcasePage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
       <JsonLd id="showcase-schema-itemlist" data={showcaseSchema} />
+      <JsonLd id="showcase-breadcrumb" data={breadcrumbSchema} />
       
       <div className="container mx-auto max-w-6xl px-6 pt-4">
         <Breadcrumbs items={[{ label: "Showcase", href: "/showcase" }]} />

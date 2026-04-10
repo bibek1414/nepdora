@@ -4,6 +4,7 @@ import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
@@ -100,6 +101,14 @@ export default async function IndustryPage({ params }: Props) {
     <>
       <JsonLd id="industry-schema" data={schema} />
       <JsonLd id="industry-breadcrumb" data={breadcrumbSchema} />
+      <div className="container mx-auto max-w-6xl px-6 pt-4">
+        <Breadcrumbs 
+          items={[
+            { label: "Industries", href: "/industries" },
+            { label: industryLabel, href: `/${industry}` }
+          ]} 
+        />
+      </div>
       <CitiesLandingPage category={industry} city="Nepdora" />
     </>
   );

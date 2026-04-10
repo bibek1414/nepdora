@@ -77,9 +77,29 @@ export default function IndustriesHubPage() {
     },
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Industries",
+        item: absoluteUrl("/industries"),
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="industries-schema" data={industriesSchema} />
+      <JsonLd id="industries-breadcrumb" data={breadcrumbSchema} />
       
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Industries", href: "/industries" }]} />

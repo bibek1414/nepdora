@@ -17,6 +17,8 @@ export const metadata = buildMarketingMetadata({
   ],
 });
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 import { JsonLd } from "@/components/shared/json-ld";
 
 const privacySchema = {
@@ -31,12 +33,37 @@ const privacySchema = {
   },
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Privacy Policy",
+      item: absoluteUrl("/privacy-policy"),
+    },
+  ],
+};
+
 export default function PrivacyPolicyPage() {
   const lastUpdated = "October 29, 2025";
 
   return (
     <div className="bg-background min-h-screen">
       <JsonLd id="privacy-schema" data={privacySchema} />
+      <JsonLd id="privacy-breadcrumb" data={breadcrumbSchema} />
+      
+      <div className="mx-auto max-w-4xl px-4 pt-4 sm:px-6 lg:px-8">
+        <Breadcrumbs items={[{ label: "Privacy Policy", href: "/privacy-policy" }]} />
+      </div>
+      
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">

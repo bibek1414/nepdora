@@ -15,6 +15,7 @@ import {
   User,
   Lock,
 } from "lucide-react";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 import { buildMarketingMetadata } from "@/lib/seo";
 
@@ -66,10 +67,34 @@ export default function DataDeletionPage() {
     ],
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Data Deletion",
+        item: absoluteUrl("/data-delete"),
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="deletion-schema" data={deletionSchema} />
       <JsonLd id="how-to-delete" data={howToSchema} />
+      <JsonLd id="deletion-breadcrumb" data={breadcrumbSchema} />
+      
+      <div className="container mx-auto max-w-4xl px-6 pt-4">
+        <Breadcrumbs items={[{ label: "Data Deletion", href: "/data-delete" }]} />
+      </div>
       <div className="container mx-auto max-w-4xl px-6 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">

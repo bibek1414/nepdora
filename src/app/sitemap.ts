@@ -76,6 +76,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/create-medical-clinic-website-in-nepdora", priority: 0.9 },
     { path: "/create-restaurant-website-in-nepdora", priority: 0.9 },
     { path: "/create-travel-tours-website-in-nepdora", priority: 0.9 },
+    { path: "/ai-website-builder-in-nepdora", priority: 0.9 },
+    { path: "/esewa-integration-guide-in-nepdora", priority: 0.9 },
+    { path: "/khalti-payment-gateway-in-nepdora", priority: 0.9 },
   ];
 
   const basePages = baseRoutes.map(route => ({

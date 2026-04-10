@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { GLOSSARY_TERMS, GlossaryTerm } from "@/constants/glossary";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 import { BookOpen, ChevronRight, Zap, TrendingUp } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 import { GlossaryList } from "@/components/marketing/glossary/glossary-list";
@@ -183,9 +183,29 @@ export default function GlossaryHubPage() {
     numberOfItems: ALL_GLOSSARY_TERMS.length,
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Glossary",
+        item: absoluteUrl("/glossary"),
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="glossary-schema" data={schema} />
+      <JsonLd id="glossary-breadcrumb" data={breadcrumbSchema} />
 
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Glossary", href: "/glossary" }]} />

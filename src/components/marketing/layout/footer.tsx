@@ -61,6 +61,8 @@ export const Footer = () => {
                 <FooterLink href="/about">About Us</FooterLink>
                 <FooterLink href="/blog">Blog</FooterLink>
                 <FooterLink href="/pricing">Pricing</FooterLink>
+                <FooterLink href="/showcase">Showcase</FooterLink>
+                <FooterLink href="/compare">Compare</FooterLink>
               </div>
               <div className="flex flex-col space-y-3">
                 <FooterLink href="/contact">Contact Us</FooterLink>

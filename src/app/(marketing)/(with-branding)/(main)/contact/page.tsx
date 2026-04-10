@@ -41,10 +41,30 @@ const contactSchema = {
   },
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Contact",
+      item: absoluteUrl("/contact"),
+    },
+  ],
+};
+
 export default function ContactPage() {
   return (
     <>
       <JsonLd id="contact-schema" data={contactSchema} />
+      <JsonLd id="contact-breadcrumb" data={breadcrumbSchema} />
       <div className="container mx-auto max-w-6xl px-6 pt-4">
         <Breadcrumbs items={[{ label: "Contact", href: "/contact" }]} />
       </div>

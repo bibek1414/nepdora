@@ -35,6 +35,25 @@ const pricingSchema = {
   },
 };
 
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: absoluteUrl(),
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Pricing",
+      item: absoluteUrl("/pricing"),
+    },
+  ],
+};
+
 export const dynamic = "force-dynamic";
 import PricingSectionHero from "@/components/marketing/pricing-section/pricing-section-hero";
 import PricingCalculator from "@/components/marketing/pricing-section/pricing-calculator";
@@ -50,6 +69,7 @@ export default async function PricingPage() {
   return (
     <>
       <JsonLd id="pricing-schema" data={pricingSchema} />
+      <JsonLd id="pricing-breadcrumb" data={breadcrumbSchema} />
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Pricing", href: "/pricing" }]} />
       </div>
