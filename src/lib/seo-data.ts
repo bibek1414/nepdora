@@ -62,3 +62,22 @@ export const INDUSTRY_LABELS: Record<string, string> = {
   "booking-website": "Booking & Appointments",
   "medical-clinic": "Medical Clinic",
 };
+
+export const SEO_LOCATION_CONFIG = [
+  { city: "Kathmandu", industry: "restaurant-website" },
+  { city: "Pokhara", industry: "ecommerce-website" },
+  { city: "Lalitpur", industry: "clinic-website" },
+  { city: "Bharatpur", industry: "educational-consultancy" },
+  { city: "Biratnagar", industry: "clothing-store" },
+  { city: "Birgunj", industry: "grocery-website" },
+  { city: "Dharan", industry: "agency-website" },
+  { city: "Itahari", industry: "booking-website" },
+  { city: "Butwal", industry: "medical-clinic" },
+  { city: "Hetauda", industry: "travel-tours" },
+  { city: "Janakpur", industry: "restaurant-website" },
+  { city: "Jhapa", industry: "ecommerce-website" },
+  { city: "Nepalgunj", industry: "clinic-website" },
+  { city: "Dhangadhi", industry: "educational-consultancy" },
+  { city: "Bhairahawa", industry: "clothing-store" },
+  { city: "Siddharthanagar", industry: "grocery-website" },
+];

@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import { ExpertsVisualMock } from "@/components/marketing/experts/experts-visual-mock";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata = buildMarketingMetadata({
   title: "Hire Expert Website Builders in Nepal | Nepdora Expert Hub",
@@ -58,6 +59,11 @@ export default function ExpertsPage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
       <JsonLd id="experts-schema" data={expertsSchema} />
+      
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Experts", href: "/experts" }]} />
+      </div>
+
       {/* Hero Section */}
       <section className="pt-20 pb-32">
         <div className="container mx-auto max-w-6xl px-6">

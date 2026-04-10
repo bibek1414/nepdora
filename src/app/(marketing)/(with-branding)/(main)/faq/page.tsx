@@ -2,6 +2,7 @@ import FAQSection from "@/components/marketing/faq-section/faq-section";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 import { buildMarketingMetadata } from "@/lib/seo";
 
@@ -61,6 +62,9 @@ export default function FAQPage() {
   return (
     <>
       <JsonLd id="faq-schema" data={faqSchema} />
+      <div className="container mx-auto max-w-6xl px-6 pt-4">
+        <Breadcrumbs items={[{ label: "FAQ", href: "/faq" }]} />
+      </div>
       <FAQSection />
     </>
   );

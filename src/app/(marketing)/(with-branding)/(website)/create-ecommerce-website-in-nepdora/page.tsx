@@ -61,10 +61,15 @@ const ecommerceSchema = {
   },
 };
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 export default function Page() {
   return (
     <>
       <JsonLd id="ecommerce-schema" data={ecommerceSchema} />
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "E-commerce", href: "/create-ecommerce-website-in-nepdora" }]} />
+      </div>
       <CitiesLandingPage category="ecommerce" city="Nepdora" />
     </>
   );

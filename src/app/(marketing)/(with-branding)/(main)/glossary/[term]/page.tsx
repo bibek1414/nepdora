@@ -221,6 +221,8 @@ const TermVisual = ({ term, slug }: { term: string; slug: string }) => {
   );
 };
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 export default async function GlossaryTermPage({ params }: Props) {
   const { term } = await params;
   const item = ALL_GLOSSARY_TERMS.find(t => t.slug === term);
@@ -243,58 +245,17 @@ export default async function GlossaryTermPage({ params }: Props) {
     },
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: absoluteUrl(),
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Glossary",
-        item: `${absoluteUrl()}/glossary`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: item.term,
-        item: `${absoluteUrl()}/glossary/${term}`,
-      },
-    ],
-  };
-
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="glossary-term-schema" data={definedTermSchema} />
-      <JsonLd id="glossary-breadcrumb" data={breadcrumbSchema} />
-      {/* Navigation Breadcrumb */}
-      <div className="sticky top-0 z-10 border-b border-slate-100 bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto max-w-6xl px-6 py-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm">
-              <Link
-                href="/"
-                className="text-slate-400 transition-colors hover:text-slate-600"
-              >
-                Home
-              </Link>
-              <ChevronRight className="h-3 w-3 text-slate-300" />
-              <Link
-                href="/glossary"
-                className="text-slate-400 transition-colors hover:text-slate-600"
-              >
-                Glossary
-              </Link>
-              <ChevronRight className="h-3 w-3 text-slate-300" />
-              <span className="font-medium text-slate-800">{item.term}</span>
-            </div>
-          </div>
-        </div>
+      
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs
+          items={[
+            { label: "Glossary", href: "/glossary" },
+            { label: item.term, href: `/glossary/${term}` },
+          ]}
+        />
       </div>
 
       {/* Hero Section - Minimal & Clean */}

@@ -20,6 +20,7 @@ import Link from "next/link";
 import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { ShowcaseVisualMock } from "@/components/marketing/showcase/showcase-visual-mock";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Showcase | Built with Nepdora | Real Success Stories",
@@ -133,6 +134,11 @@ export default function ShowcasePage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
       <JsonLd id="showcase-schema-itemlist" data={showcaseSchema} />
+      
+      <div className="container mx-auto max-w-6xl px-6 pt-4">
+        <Breadcrumbs items={[{ label: "Showcase", href: "/showcase" }]} />
+      </div>
+
       {/* Hero Section */}
       <section className="pt-20 pb-32">
         <div className="container mx-auto max-w-6xl px-6">

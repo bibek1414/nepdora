@@ -23,6 +23,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Industry Solutions | Built for Your Business | Nepdora",
   description:
@@ -78,6 +80,10 @@ export default function IndustriesHubPage() {
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="industries-schema" data={industriesSchema} />
+      
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Industries", href: "/industries" }]} />
+      </div>
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">

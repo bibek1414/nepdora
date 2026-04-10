@@ -19,6 +19,7 @@ import {
 import { SOLUTIONS_LIST } from "@/constants/solutions";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
@@ -42,6 +43,10 @@ export default function SolutionsHubPage() {
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="solutions-schema" data={schema} />
+
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Solutions", href: "/solutions" }]} />
+      </div>
 
       {/* Hero Section */}
       <section className="pt-20 pb-16">

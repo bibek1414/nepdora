@@ -42,12 +42,17 @@ import { subscriptionApi } from "@/services/api/subscription";
 import PricingHero from "@/components/marketing/pricing-section/pricing-hero-header";
 import PricingComparisonLinks from "@/components/marketing/pricing-section/pricing-comparison-links";
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 export default async function PricingPage() {
   const plans = await subscriptionApi.getPlans().catch(() => []);
 
   return (
     <>
       <JsonLd id="pricing-schema" data={pricingSchema} />
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Pricing", href: "/pricing" }]} />
+      </div>
       <PricingHero />
       <PricingSectionHero initialPlans={plans} />
       <PricingCalculator />

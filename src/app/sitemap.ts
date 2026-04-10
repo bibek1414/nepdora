@@ -52,6 +52,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/khalti-payment-gateway-nepal", priority: 0.9 },
     { path: "/esewa-integration-guide-nepal", priority: 0.9 },
     { path: "/website-registration-nepal", priority: 0.8 },
+    { path: "/how-to-register-business-nepal", priority: 0.8 },
+    { path: "/payment-gateways-nepal", priority: 0.8 },
     { path: "/partners", priority: 0.8 },
     { path: "/ecommerce", priority: 0.9 },
     { path: "/showcase", priority: 0.9 },
@@ -63,6 +65,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/glossary", priority: 0.8 },
     { path: "/switch", priority: 0.8 },
     { path: "/website-builder-nepal", priority: 0.9 },
+    { path: "/create-agency-website-in-nepdora", priority: 0.9 },
+    { path: "/create-booking-website-in-nepdora", priority: 0.9 },
+    { path: "/create-clinic-website-in-nepdora", priority: 0.9 },
+    { path: "/create-clothing-store-website-in-nepdora", priority: 0.9 },
+    { path: "/create-dental-website-in-nepdora", priority: 0.9 },
+    { path: "/create-ecommerce-website-in-nepdora", priority: 0.9 },
+    { path: "/create-educational-consultancy-website-in-nepdora", priority: 0.9 },
+    { path: "/create-grocery-website-in-nepdora", priority: 0.9 },
+    { path: "/create-medical-clinic-website-in-nepdora", priority: 0.9 },
+    { path: "/create-restaurant-website-in-nepdora", priority: 0.9 },
+    { path: "/create-travel-tours-website-in-nepdora", priority: 0.9 },
   ];
 
   const basePages = baseRoutes.map(route => ({

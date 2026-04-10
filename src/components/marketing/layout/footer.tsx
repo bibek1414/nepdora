@@ -4,7 +4,7 @@ import {
   nepdoraEmail,
   nepdoraPhone,
 } from "@/constants/contact";
-import { MAJOR_CITIES } from "@/lib/seo-data";
+import { MAJOR_CITIES, SEO_LOCATION_CONFIG } from "@/lib/seo-data";
 import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "./newsletter-form";
@@ -107,19 +107,31 @@ export const Footer = () => {
                 <FooterLink href="/create-restaurant-website-in-nepdora">
                   Create Restaurant Website in Nepdora
                 </FooterLink>
+                <FooterLink href="/create-booking-website-in-nepdora">
+                  Create Booking Website in Nepdora
+                </FooterLink>
+                <FooterLink href="/create-clinic-website-in-nepdora">
+                  Create Clinic Website in Nepdora
+                </FooterLink>
+                <FooterLink href="/create-dental-website-in-nepdora">
+                  Create Dental Website in Nepdora
+                </FooterLink>
                 <FooterLink href="/create-clothing-store-website-in-nepdora">
                   Create Clothing Store Website in Nepdora
                 </FooterLink>
                 <FooterLink href="/create-educational-consultancy-website-in-nepdora">
-                  Create Education Website in Nepdora
+                  Create Education Consultancy Website in Nepdora
                 </FooterLink>
                 <FooterLink href="/create-travel-tours-website-in-nepdora">
                   Create Travel & Tour Website in Nepdora
                 </FooterLink>
+                <FooterLink href="/create-agency-website-in-nepdora">
+                  Create Agency Website in Nepdora
+                </FooterLink>
                 <FooterLink href="/create-grocery-website-in-nepdora">
                   Create Grocery Website in Nepdora
                 </FooterLink>
-                <FooterLink href="/create-clinic-website-in-nepdora">
+                <FooterLink href="/create-medical-clinic-website-in-nepdora">
                   Create Medical Clinic Website in Nepdora
                 </FooterLink>
               </div>
@@ -278,10 +290,10 @@ export const Footer = () => {
                 Popular Locations
               </h4>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                {MAJOR_CITIES.slice(0, 16).map(city => (
+                {SEO_LOCATION_CONFIG.map(({ city, industry }) => (
                   <FooterLink
-                    key={city}
-                    href={`/restaurant-website/${city.toLowerCase()}`}
+                    key={`${city}-${industry}`}
+                    href={`/${industry}/${city.toLowerCase()}`}
                   >
                     <span className="capitalize">{city}</span>
                   </FooterLink>

@@ -24,6 +24,8 @@ import {
 import Link from "next/link";
 import { PartnersVisualMock } from "@/components/marketing/patners/partners-visual-mock";
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 export const metadata = buildMarketingMetadata({
   title: "Nepdora Partner Program - Grow Your Agency or Freelance Business",
   description:
@@ -59,6 +61,10 @@ export default function PartnersPage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
       <JsonLd id="partners-program-schema" data={schema} />
+      
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Partners", href: "/partners" }]} />
+      </div>
       {/* Hero Section */}
       <section className="pt-20 pb-32">
         <div className="container mx-auto max-w-6xl px-6">

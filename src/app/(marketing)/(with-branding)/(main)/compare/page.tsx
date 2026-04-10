@@ -21,6 +21,7 @@ import {
   ALL_COMPETITORS,
 } from "@/constants/competitors";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
@@ -68,6 +69,10 @@ export default function CompareHubPage() {
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="comparison-schema" data={comparisonSchema} />
+      
+      <div className="container mx-auto max-w-6xl px-6 pt-4">
+        <Breadcrumbs items={[{ label: "Compare", href: "/compare" }]} />
+      </div>
 
       {/* Hero Section */}
       <section className="pt-20 pb-16">

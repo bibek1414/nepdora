@@ -138,6 +138,8 @@ const getCategoryDescription = (category: string): string => {
   );
 };
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 export default async function TemplateCategoryPage({ params }: Props) {
   const { category: rawCategory } = await params;
   const category = rawCategory.toLowerCase();
@@ -159,6 +161,15 @@ export default async function TemplateCategoryPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-white">
       <JsonLd id="template-coll-schema" data={schema} />
+
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs
+          items={[
+            { label: "Templates", href: "/templates" },
+            { label: displayName, href: `/templates/${category}` },
+          ]}
+        />
+      </div>
 
       {/* Hero Section */}
       <section className="pt-20 pb-12">

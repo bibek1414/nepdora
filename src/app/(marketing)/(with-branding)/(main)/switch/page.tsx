@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 import { SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Switch to Nepdora | Migrate Your Website Seamlessly | Nepal",

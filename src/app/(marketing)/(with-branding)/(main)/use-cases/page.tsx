@@ -19,6 +19,7 @@ import {
 import { USE_CASES } from "@/constants/use-cases";
 import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Use Cases | How Businesses Use Nepdora in Nepal",
@@ -56,6 +57,10 @@ export default function UseCasesPage() {
     <div className="min-h-screen bg-white">
       <JsonLd id="use-case-list-schema" data={useCaseSchema} />
       <JsonLd id="nepdora-org-usecase" data={orgSchema} />
+
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Use Cases", href: "/use-cases" }]} />
+      </div>
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">

@@ -5,6 +5,7 @@ import { buildMarketingMetadata } from "@/lib/seo";
 import { BookOpen, ChevronRight, Zap, TrendingUp } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 import { GlossaryList } from "@/components/marketing/glossary/glossary-list";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata = buildMarketingMetadata({
   title: "Web Glossary | Website & Tech Terms Explained | Nepdora",
@@ -185,6 +186,10 @@ export default function GlossaryHubPage() {
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="glossary-schema" data={schema} />
+
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Glossary", href: "/glossary" }]} />
+      </div>
 
       {/* Hero Section */}
       <section className="pt-20 pb-16">

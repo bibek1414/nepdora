@@ -71,9 +71,35 @@ export default async function IndustryPage({ params }: Props) {
     },
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Industries",
+        item: absoluteUrl("/industries"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: industryLabel,
+        item: absoluteUrl(`/${industry}`),
+      },
+    ],
+  };
+
   return (
     <>
       <JsonLd id="industry-schema" data={schema} />
+      <JsonLd id="industry-breadcrumb" data={breadcrumbSchema} />
       <CitiesLandingPage category={industry} city="Nepdora" />
     </>
   );

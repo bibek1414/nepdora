@@ -51,10 +51,15 @@ const templatesSchema = {
   },
 };
 
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+
 export default function Templates() {
   return (
     <>
       <JsonLd id="templates-schema" data={templatesSchema} />
+      <div className="container mx-auto max-w-6xl px-6">
+        <Breadcrumbs items={[{ label: "Templates", href: "/templates" }]} />
+      </div>
       <TemplateHero categoryName="All" />
       <Suspense fallback={<div className="min-h-screen py-20" />}>
         <TemplatesPage asH1={true} />

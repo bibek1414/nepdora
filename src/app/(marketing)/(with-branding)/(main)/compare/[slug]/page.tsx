@@ -23,6 +23,7 @@ import { capitalizeWords } from "@/lib/string-utils";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { ALL_COMPETITORS } from "@/constants/competitors";
 
 interface Props {
@@ -162,6 +163,11 @@ export default async function ComparePage({ params }: Props) {
     },
   };
 
+  const breadcrumbItems = [
+    { label: "Compare", href: "/compare" },
+    { label: `${competitorName} vs ${SITE_NAME}`, href: `/compare/${slug}` },
+  ];
+
   // Feature comparison data
   const featureRows = [
     { feature: "Built for Nepal", nepdora: "✅ Yes", competitor: "❌ No" },
@@ -237,6 +243,10 @@ export default async function ComparePage({ params }: Props) {
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="comparison-schema" data={comparisonSchema} />
+
+      <div className="container mx-auto max-w-6xl px-6 pt-4">
+        <Breadcrumbs items={breadcrumbItems} />
+      </div>
 
       {/* Hero Section */}
       <section className="pt-20 pb-16">
