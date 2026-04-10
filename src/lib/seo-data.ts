@@ -33,6 +33,7 @@ export const MAJOR_CITIES = [
   "Butwal",
   "Hetauda",
   "Janakpur",
+  "Jhapa",
   "Nepalgunj",
   "Dhangadhi",
   "Bhairahawa",

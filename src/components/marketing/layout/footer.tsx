@@ -278,7 +278,7 @@ export const Footer = () => {
                 Popular Locations
               </h4>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                {MAJOR_CITIES.slice(0, 10).map(city => (
+                {MAJOR_CITIES.slice(0, 16).map(city => (
                   <FooterLink
                     key={city}
                     href={`/restaurant-website/${city.toLowerCase()}`}
