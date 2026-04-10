@@ -43,7 +43,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/tools/seo-checker", priority: 0.8 },
     { path: "/tools/website-speed-test", priority: 0.8 },
     { path: "/tools/privacy-policy-generator-nepal", priority: 0.8 },
-    { path: "/website-templates", priority: 0.8 },
     { path: "/privacy-policy", priority: 0.5 },
     { path: "/terms", priority: 0.5 },
     { path: "/khalti-payment-gateway-nepal", priority: 0.9 },
@@ -145,20 +144,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
-  }));
-
-  // Pricing Comparison pages
-  const pricingComparisonPages = [
-    "shopify",
-    "wix",
-    "webflow",
-    "squarespace",
-    "blanxer",
-  ].map(slug => ({
-    url: `${baseUrl}/pricing/comparison/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
   }));
 
   // Compare pages (Direct Comparisons & Pricing)
@@ -288,6 +273,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...switchPages,
     ...glossaryPages,
     ...bestOfPages,
-    ...pricingComparisonPages,
   ];
 }

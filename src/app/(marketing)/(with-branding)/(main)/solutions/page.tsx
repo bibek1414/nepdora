@@ -1,89 +1,190 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { 
-  ArrowRight, 
-  ShoppingBag, 
-  Globe, 
-  Layout, 
-  BarChart3,
-  Rocket,
+import {
+  ArrowRight,
+  ShoppingBag,
+  Layout,
+  Smartphone,
   ShieldCheck,
-  Smartphone
+  CreditCard,
+  Truck,
+  BarChart3,
+  Globe,
+  Users,
+  Zap,
+  CheckCircle2,
+  ChevronRight,
+  Rocket,
 } from "lucide-react";
-import { MarketingPageHero } from "@/components/marketing/shared/MarketingPageHero";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = buildMarketingMetadata({
-  title: "Solutions | Built for Every Business Stage | Nepdora",
-  description: "From startups to enterprises, Nepdora provides the foundation your business needs to grow online in Nepal.",
+  title:
+    "Business Solutions in Nepal | E-commerce, Payments, Delivery & Website Growth | Nepdora",
+  description:
+    "Explore business solutions built for Nepal. Launch e-commerce websites, accept eSewa and Khalti payments, automate Pathao delivery, and grow with fast, SEO-friendly websites on Nepdora.",
   path: "/solutions",
 });
 
-const SOLUTIONS = [
+// All available solutions
+export const SOLUTIONS_LIST = [
   {
+    slug: "ecommerce",
     title: "E-commerce Solutions",
-    description: "Full-stack digital commerce with local payments, shipping automation, and inventory management.",
+    description:
+      "Full-stack digital commerce with local payments, shipping automation, and inventory management.",
     icon: ShoppingBag,
-    color: "text-primary",
-    href: "/solutions/ecommerce",
+    color: "from-primary to-primary/80",
+    bgColor: "bg-primary/10",
+    textColor: "text-primary",
   },
   {
+    slug: "accept-esewa-payments-online",
+    title: "Payment Gateway Integration",
+    description:
+      "Accept eSewa, Khalti, IME Pay, and ConnectIPS on your website instantly. No coding required.",
+    icon: CreditCard,
+    color: "from-emerald-500 to-emerald-600",
+    bgColor: "bg-emerald-50",
+    textColor: "text-emerald-600",
+  },
+  {
+    slug: "local-delivery-integration-pathao",
+    title: "Delivery & Logistics",
+    description:
+      "Automate your shipping with Pathao and other local delivery partners in Nepal.",
+    icon: Truck,
+    color: "from-sky-500 to-sky-600",
+    bgColor: "bg-sky-50",
+    textColor: "text-sky-600",
+  },
+  {
+    slug: "marketing",
     title: "Business Marketing",
-    description: "High-performance websites designed to capture leads, build brand authority, and grow your local presence.",
-    icon: Layout,
-    color: "text-sky-500",
-    href: "/solutions/marketing",
+    description:
+      "High-performance websites designed to capture leads, build brand authority, and grow your local presence.",
+    icon: BarChart3,
+    color: "from-amber-500 to-amber-600",
+    bgColor: "bg-amber-50",
+    textColor: "text-amber-600",
   },
   {
+    slug: "portfolio",
     title: "Portfolio & Personal Branding",
-    description: "Stunning, fast-loading sites for creatives and professionals wishing to stand out in the digital crowd.",
+    description:
+      "Stunning, fast-loading sites for creatives and professionals to stand out in the digital crowd.",
     icon: Smartphone,
-    color: "text-amber-500",
-    href: "/solutions/portfolio",
+    color: "from-purple-500 to-purple-600",
+    bgColor: "bg-purple-50",
+    textColor: "text-purple-600",
   },
   {
+    slug: "enterprise",
     title: "Enterprise & Custom Build",
-    description: "Advanced infrastructure for high-scale needs with dedicated support and custom integrations.",
+    description:
+      "Advanced infrastructure for high-scale needs with dedicated support and custom integrations.",
     icon: ShieldCheck,
-    color: "text-slate-900",
-    href: "/solutions/enterprise",
+    color: "from-slate-500 to-slate-600",
+    bgColor: "bg-slate-100",
+    textColor: "text-slate-700",
   },
 ];
 
 export default function SolutionsHubPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Business Solutions for Nepal",
+    description:
+      "Explore business solutions built for Nepal. E-commerce, payments, delivery, and growth tools.",
+    url: "https://nepdora.com/solutions",
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      <MarketingPageHero
-        badgeText="Core Solutions"
-        badgeIcon={Rocket}
-        title={<>Fueling <span className="text-primary italic">growth</span> at every scale.</>}
-        description="Nepdora isn't just a website builder; it's a complete operating system for your digital business in Nepal."
-        breadcrumbs={[{ label: "Solutions", href: "/solutions" }]}
-        centered
-      />
+      <JsonLd id="solutions-schema" data={schema} />
+
+      {/* Hero Section */}
+      <section className="pt-20 pb-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="bg-primary/10 text-primary mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1 text-sm font-medium">
+              Business Solutions
+            </div>
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+              Business Solutions Built for{" "}
+              <span className="text-primary">Nepal</span>
+            </h1>
+            <p className="text-lg leading-relaxed font-medium text-slate-500">
+              Nepdora helps Nepali businesses launch, sell, accept payments, and
+              deliver faster with local-first digital solutions. From e-commerce
+              websites and payment gateway integration to Pathao delivery
+              automation and lead-generation websites, every solution is built
+              for the way businesses operate in Nepal.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/create-website"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
+              >
+                Start Building
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50"
+              >
+                Talk to an Expert
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Intro Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-12">
+        <div className="container mx-auto max-w-4xl px-6 text-center">
+          <p className="text-lg leading-relaxed font-medium text-slate-600">
+            Whether you run an online store, restaurant, service company, or
+            growing brand, you need more than a basic website. You need a system
+            that supports local payments, mobile-first checkout, delivery
+            coordination, SEO, and customer trust. Nepdora combines all of these
+            into practical solutions designed for the Nepali market.
+          </p>
+        </div>
+      </section>
 
       {/* Solutions Grid */}
-      <section className="py-24 bg-slate-50">
-        <div className="container mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-            {SOLUTIONS.map((solution) => (
+      <section className="py-20">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+              Solutions for every stage of online growth
+            </h2>
+            <p className="mt-2 text-slate-500">
+              Choose the right solution for your business
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {SOLUTIONS_LIST.map(solution => (
               <Link
-                key={solution.title}
-                href={solution.href}
-                className="group relative overflow-hidden rounded-[56px] border border-slate-200 bg-white p-12 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5"
+                key={solution.slug}
+                href={`/solutions/${solution.slug}`}
+                className="group -sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-1"
               >
-                <div className="mb-10 flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-50 transition-colors group-hover:bg-primary/5">
-                  <solution.icon className={`h-10 w-10 ${solution.color} transition-transform group-hover:scale-110`} />
+                <div className={`mb-4 inline-flex rounded-xl p-3`}>
+                  <solution.icon className={`h-6 w-6 ${solution.textColor}`} />
                 </div>
-                <h3 className="mb-4 text-3xl font-bold text-slate-900 transition-colors group-hover:text-primary">
+                <h3 className="mb-2 text-xl font-bold text-slate-900 transition-colors">
                   {solution.title}
                 </h3>
-                <p className="mb-12 text-lg leading-relaxed text-slate-500 font-medium">
+                <p className="text-sm leading-relaxed font-medium text-slate-500">
                   {solution.description}
                 </p>
-                <div className="flex items-center gap-3 text-sm font-bold tracking-widest text-primary uppercase transition-all group-hover:gap-5">
-                  Explore Solution
-                  <ArrowRight className="h-5 w-5" />
+                <div className="mt-4 flex items-center gap-1 text-sm font-medium opacity-0 transition-opacity group-hover:opacity-100">
+                  Learn More
+                  <ChevronRight className="h-4 w-4" />
                 </div>
               </Link>
             ))}
@@ -91,54 +192,159 @@ export default function SolutionsHubPage() {
         </div>
       </section>
 
-      {/* Featured Metric Section */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-7xl px-4">
-           <div className="relative overflow-hidden rounded-[64px] bg-slate-900 px-8 py-24 text-center text-white md:px-24">
-              <div className="absolute inset-0 bg-linear-to-br from-primary/30 to-transparent opacity-50" />
-              <div className="relative z-10">
-                 <div className="mx-auto mb-10 flex h-20 w-20 items-center justify-center rounded-3xl bg-white/10 backdrop-blur-md">
-                    <BarChart3 className="h-10 w-10 text-primary" />
-                 </div>
-                 <h2 className="mb-8 text-4xl font-bold tracking-tight md:text-7xl">
-                    Built for <span className="text-primary italic">performance.</span>
-                 </h2>
-                 <p className="mx-auto mb-12 max-w-2xl text-xl text-slate-400 font-medium leading-relaxed">
-                    Our solutions are optimized for the local internet infrastructure in Nepal, 
-                    ensuring your site loads instantly on Ncell, NTC, and major ISPs.
-                 </p>
-                 <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-                    {[
-                       { label: "Uptime", value: "99.9%" },
-                       { label: "SEO Score", value: "100/100" },
-                       { label: "Mobile Ready", value: "Native" },
-                       { label: "Integrated", value: "Local" },
-                    ].map((stat) => (
-                       <div key={stat.label}>
-                          <div className="text-3xl font-black text-white mb-2">{stat.value}</div>
-                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{stat.label}</div>
-                       </div>
-                    ))}
-                 </div>
+      {/* Why Choose Nepdora Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+              Why Nepali businesses choose{" "}
+              <span className="text-primary">Nepdora</span>
+            </h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                icon: CreditCard,
+                title: "Local Payments",
+                desc: "Supports eSewa, Khalti, IME Pay, ConnectIPS, and other local payment options",
+              },
+              {
+                icon: Truck,
+                title: "Delivery Integration",
+                desc: "Works with local delivery workflows including Pathao-based fulfillment",
+              },
+              {
+                icon: Zap,
+                title: "Fast Loading",
+                desc: "Optimized for mobile users in Nepal with fast-loading pages",
+              },
+              {
+                icon: Globe,
+                title: "SEO Friendly",
+                desc: "SEO-friendly structure for ranking service and product pages",
+              },
+              {
+                icon: Smartphone,
+                title: "No Code Needed",
+                desc: "No-code or low-code setup for non-technical teams",
+              },
+              {
+                icon: Users,
+                title: "Versatile",
+                desc: "Designed for stores, restaurants, consultancies, agencies, and personal brands",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="-sm flex items-start gap-3 rounded-2xl bg-white p-5"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">{item.title}</h3>
+                  <p className="text-sm text-slate-500">{item.desc}</p>
+                </div>
               </div>
-           </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-24 text-center">
-         <div className="container mx-auto max-w-4xl px-4">
-            <h2 className="mb-8 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
-               Not sure which solution fits?
+      {/* Who These Solutions Are For */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+              Who these solutions are for
             </h2>
-            <Link 
-               href="/contact"
-               className="inline-flex items-center gap-4 rounded-[28px] bg-primary px-12 py-6 text-xl font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-primary/20"
-            >
-               Talk to a Strategist
-               <ArrowRight className="h-6 w-6" />
-            </Link>
-         </div>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              "E-commerce Stores",
+              "Restaurants",
+              "Service Providers",
+              "Consultancies",
+              "Agencies",
+              "Freelancers",
+              "Personal Brands",
+              "Enterprises",
+            ].map(item => (
+              <span
+                key={item}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-16">
+        <div className="container mx-auto max-w-4xl px-6">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <div className="space-y-4">
+            {[
+              {
+                q: "What business solutions does Nepdora provide in Nepal?",
+                a: "Nepdora provides website, e-commerce, payment integration, logistics integration, and digital growth solutions for businesses operating in Nepal.",
+              },
+              {
+                q: "Can I accept eSewa and Khalti on my website?",
+                a: "Yes. Nepdora supports local payment integration so businesses can accept trusted digital wallet and bank-based payments online.",
+              },
+              {
+                q: "Does Nepdora support delivery integration?",
+                a: "Yes. Businesses can automate parts of the fulfillment process through local delivery integration workflows such as Pathao-based operations.",
+              },
+              {
+                q: "Are Nepdora solution pages SEO-friendly?",
+                a: "Yes. Nepdora websites are built with fast-loading pages, structured metadata, and search-friendly architecture to help businesses rank better in Nepal.",
+              },
+            ].map((faq, i) => (
+              <div
+                key={i}
+                className="-sm rounded-2xl border border-slate-200 bg-white p-6"
+              >
+                <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
+                <p className="text-sm text-slate-500">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
+            <div className="flex flex-col items-center">
+              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
+                <Rocket className="text-primary h-8 w-8" />
+              </div>
+              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900">
+                Not sure which solution fits?
+              </h2>
+              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
+                Talk to our team and we'll help you find the right solution for
+                your business.
+              </p>
+              <Link
+                href="/contact"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
+              >
+                Talk to a Strategist
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

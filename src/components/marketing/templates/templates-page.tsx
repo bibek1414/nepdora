@@ -24,15 +24,9 @@ const TemplatesPage = async ({ asH1 = false }: TemplatesPageProps) => {
       <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
         <div className="mb-8 flex flex-col items-center gap-4 text-center sm:mb-10 sm:gap-5 md:mb-12">
           <div className="w-full">
-            {asH1 ? (
-              <h1 className="mb-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl">
-                Website Templates for Every Nepali Business
-              </h1>
-            ) : (
-              <h2 className="mb-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl">
-                Website Templates for Every Nepali Business
-              </h2>
-            )}
+            <h2 className="mb-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl">
+              Website Templates for Every Nepali Business
+            </h2>
             <p className="mx-auto text-sm text-slate-500 sm:text-base">
               Ready-made website templates for Nepal - pick your industry and go
               live today.

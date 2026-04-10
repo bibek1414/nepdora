@@ -92,7 +92,7 @@ export const Footer = () => {
 
         {/* New Resources Section - Linked Features */}
         <FooterSection className="mb-12 border-t border-gray-200 pt-10">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
             {/* Solutions / Industries */}
             <div>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
@@ -184,6 +184,9 @@ export const Footer = () => {
                 <FooterLink href="/tools/privacy-policy-generator-nepal">
                   Privacy Policy
                 </FooterLink>
+                <FooterLink href="/free-website-analyzer">
+                  Website Analyzer
+                </FooterLink>
                 <FooterLink href="/invoice-builder">Invoice Maker</FooterLink>
               </div>
             </div>
@@ -243,9 +246,7 @@ export const Footer = () => {
                 <FooterLink href="/alternative/blanxer-nepal">
                   Blanxer vs Nepdora
                 </FooterLink>
-                <FooterLink href="/switch">
-                  Switch to Nepdora
-                </FooterLink>
+                <FooterLink href="/switch">Switch to Nepdora</FooterLink>
               </div>
             </div>
             {/* Cities/Rankings */}
@@ -302,7 +303,7 @@ export const Footer = () => {
                 <FooterLink href="/website-builder-nepal">
                   Website Builder Nepal
                 </FooterLink>
-
+                <FooterLink href="/glossary">Glossary</FooterLink>
                 <FooterLink href="/showcase">Website Examples Nepal</FooterLink>
               </div>
             </div>

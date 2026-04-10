@@ -11,6 +11,7 @@ const navigationItems = [
   "About",
   "Contact",
   "Blog",
+  "Compare",
   "Docs",
 ];
 

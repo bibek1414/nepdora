@@ -21,6 +21,7 @@ export const metadata = buildMarketingMetadata({
 });
 
 import { JsonLd } from "@/components/shared/json-ld";
+import { TemplateHero } from "@/components/marketing/templates/template-hero";
 
 const templatesSchema = {
   "@context": "https://schema.org",
@@ -54,6 +55,7 @@ export default function Templates() {
   return (
     <>
       <JsonLd id="templates-schema" data={templatesSchema} />
+      <TemplateHero categoryName="All" />
       <Suspense fallback={<div className="min-h-screen py-20" />}>
         <TemplatesPage asH1={true} />
       </Suspense>

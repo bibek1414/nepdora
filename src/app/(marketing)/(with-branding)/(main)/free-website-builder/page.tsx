@@ -4,7 +4,19 @@ import FeaturesSection from "@/components/marketing/features-section/features-se
 import { HomePricingSection } from "@/components/marketing/pricing-section/home-pricing-section";
 import { HomeFAQSection } from "@/components/marketing/faq-section/home-faq-section";
 import { JsonLd } from "@/components/shared/json-ld";
-import { Sparkles } from "lucide-react";
+import {
+  Sparkles,
+  CheckCircle2,
+  Zap,
+  Globe,
+  Smartphone,
+  Shield,
+  Users,
+  Rocket,
+  Layout,
+  CreditCard,
+} from "lucide-react";
+import Link from "next/link";
 
 import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
@@ -37,44 +49,277 @@ export default function FreeWebsiteBuilder() {
     },
   };
 
+  // Free plan features
+  const freeFeatures = [
+    "1 professional website",
+    "Nepdora subdomain (yourstore.nepdora.com)",
+    "Up to 10 products",
+    "Mobile-responsive design",
+    "SSL certificate included",
+    "Email support",
+    "Basic SEO tools",
+    "Contact forms",
+    "Social media integration",
+    "Analytics dashboard",
+  ];
+
+  // Benefits of starting free
+  const benefits = [
+    {
+      icon: Rocket,
+      title: "Launch in minutes",
+      desc: "Get your website online quickly without any technical knowledge.",
+    },
+    {
+      icon: Layout,
+      title: "Professional templates",
+      desc: "Choose from beautifully designed templates for any business type.",
+    },
+    {
+      icon: Smartphone,
+      title: "Mobile optimized",
+      desc: "Your site looks great on all devices automatically.",
+    },
+    {
+      icon: CreditCard,
+      title: "No credit card required",
+      desc: "Start building immediately with zero financial commitment.",
+    },
+  ];
+
   return (
-    <main>
+    <main className="min-h-screen bg-white">
       <JsonLd id="free-software-schema" data={schema} />
-      <StandardMarketingHero
-        badgeText="Zero initial investment"
-        badgeIcon={Sparkles}
-        title={
-          <>
-            Nepal's best{" "}
-            <span className="text-sky-600">free website builder.</span>
-          </>
-        }
-        description="We believe every Nepali business deserves a place online. Start with our free tier, pick a professional template, and launch your site in minutes."
-      />
 
-      <div className="bg-white py-24">
-        <div className="container mx-auto max-w-6xl px-4 text-center">
-          <h2 className="mb-6 text-3xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
-            Start your business with zero initial investment
-          </h2>
-          <p className="mx-auto max-w-3xl text-xl leading-relaxed font-medium text-slate-500">
-            Nepdora is dedicated to helping local entrepreneurs. Our free plan
-            includes everything you need to test your idea and grow at your own
-            pace. Upgrade only when you're ready.
-          </p>
+      {/* Hero Section */}
+      <section className="pt-20 pb-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="bg-primary/10 text-primary mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1 text-sm font-medium">
+              <Sparkles className="h-4 w-4" />
+              Zero initial investment
+            </div>
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+              Nepal's best{" "}
+              <span className="text-primary">free website builder.</span>
+            </h1>
+            <p className="text-lg leading-relaxed font-medium text-slate-500">
+              We believe every Nepali business deserves a place online. Start
+              with our free tier, pick a professional template, and launch your
+              site in minutes.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/admin/signup"
+                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105"
+              >
+                Start Building for Free
+              </Link>
+              <Link
+                href="/templates"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50"
+              >
+                View Templates
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
+      {/* Introduction Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Start your business with zero initial investment
+            </h2>
+            <p className="text-lg leading-relaxed font-medium text-slate-500">
+              Nepdora is dedicated to helping local entrepreneurs. Our free plan
+              includes everything you need to test your idea and grow at your
+              own pace. Upgrade only when you're ready.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((benefit, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-md"
+              >
+                <div className="bg-primary/10 text-primary mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <benefit.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 font-semibold text-slate-900">
+                  {benefit.title}
+                </h3>
+                <p className="text-sm font-medium text-slate-500">
+                  {benefit.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Free Plan Features Section */}
+      <section className="border-y border-slate-100 bg-slate-50 py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <div className="bg-primary/10 text-primary mb-4 inline-flex rounded-full px-3 py-1 text-xs font-medium">
+                Free Forever
+              </div>
+              <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Everything you need to{" "}
+                <span className="text-primary">start for free</span>
+              </h2>
+              <p className="mb-6 text-lg leading-relaxed font-medium text-slate-500">
+                Our free plan gives you all the essential tools to create a
+                professional website for your business.
+              </p>
+              <ul className="space-y-3">
+                {freeFeatures.slice(0, 6).map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <CheckCircle2 className="text-primary h-5 w-5" />
+                    <span className="font-medium text-slate-700">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <h3 className="mb-4 text-center text-xl font-bold text-slate-900">
+                Free Plan Includes
+              </h3>
+              <ul className="space-y-3">
+                {freeFeatures.slice(6).map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <CheckCircle2 className="text-primary h-5 w-5" />
+                    <span className="font-medium text-slate-700">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="bg-primary/5 mt-6 rounded-xl p-4 text-center">
+                <p className="text-sm font-medium text-slate-600">
+                  No credit card required. No time limit.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Free Tier Section */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Why start with our free tier?
+            </h2>
+            <p className="text-lg font-medium text-slate-500">
+              Perfect for testing your business idea
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: Zap,
+                title: "Test Your Idea",
+                desc: "Validate your business concept without any financial risk.",
+              },
+              {
+                icon: Users,
+                title: "Build an Audience",
+                desc: "Start collecting customers and grow your email list.",
+              },
+              {
+                icon: Globe,
+                title: "Learn the Platform",
+                desc: "Master Nepdora's tools before upgrading to premium.",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm"
+              >
+                <div className="bg-primary/10 text-primary mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 font-semibold text-slate-900">
+                  {item.title}
+                </h3>
+                <p className="text-sm font-medium text-slate-500">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
       <FeaturesSection />
+
+      {/* Pricing Section */}
       <HomePricingSection />
+
+      {/* FAQ Section */}
       <HomeFAQSection />
 
-      <StandardMarketingCTA
-        title="Launch your free site today"
-        description="Join thousands of Nepali businesses already online. It's free, forever, until you decide to grow."
-        buttonText="Create my free website"
-        buttonHref="/create-website"
-      />
+      {/* Final CTA */}
+      <section className="py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+            <div className="flex flex-col items-center">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <Rocket className="text-primary h-8 w-8" />
+              </div>
+              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Launch your free site today
+              </h2>
+              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
+                Join thousands of Nepali businesses already online. It's free,
+                forever, until you decide to grow.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link
+                  href="/admin/signup"
+                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
+                >
+                  Create my free website
+                </Link>
+                <Link
+                  href="/templates"
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
+                >
+                  Browse Templates
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Closing Paragraph */}
+      <section className="border-t border-slate-100 bg-white py-12">
+        <div className="container mx-auto max-w-4xl px-6 text-center">
+          <p className="text-base leading-relaxed font-medium text-slate-500">
+            Looking for a free website builder in Nepal? Nepdora offers the best
+            free plan to get your business online. No credit card required, no
+            hidden fees. Start building your professional website today and
+            upgrade only when you need more features.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

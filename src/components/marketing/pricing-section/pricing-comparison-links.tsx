@@ -22,7 +22,7 @@ export default function PricingComparisonLinks() {
           {comparisons.map(item => (
             <Link
               key={item.slug}
-              href={`/pricing/comparison/${item.slug}`}
+              href={`/compare/${item.slug}-and-nepdora`}
               className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-lg"
             >
               <div>

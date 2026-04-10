@@ -199,9 +199,9 @@ function AnimatedTemplateMockup() {
   );
 }
 
-export function CategoryHero({ categoryName }: { categoryName: string }) {
+export function TemplateHero({ categoryName }: { categoryName: string }) {
   return (
-    <section className="mx-auto max-w-7xl px-9 overflow-hidden bg-white py-20 sm:py-32">
+    <section className="mx-auto max-w-7xl overflow-hidden bg-white px-9 py-20 sm:py-32">
       {/* Background decorative elements */}
       <div className="pointer-events-none absolute top-0 left-1/2 h-full w-full max-w-7xl -translate-x-1/2">
         <div className="absolute top-0 left-0 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-indigo-50/60 blur-3xl"></div>
@@ -217,7 +217,7 @@ export function CategoryHero({ categoryName }: { categoryName: string }) {
             </div>
 
             <h1 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
-              Stunning agency templates for every need
+              Stunning templates for every need
             </h1>
 
             <p className="mb-7 text-base leading-relaxed text-slate-500 sm:text-lg">
@@ -247,9 +247,9 @@ export function CategoryHero({ categoryName }: { categoryName: string }) {
             </ul>
 
             <div className="flex flex-wrap items-center gap-4">
-              <Link href="/templates">
-                <button className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/20">
-                  Explore Templates
+              <Link href="/free-website-builder">
+                <button className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-900 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/20">
+                  Create Free Website
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </Link>
