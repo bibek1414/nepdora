@@ -29,12 +29,14 @@ import {
   Search,
   ChevronRight,
   User,
+  Menu,
 } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useProductsWithParams } from "@/hooks/owner-site/admin/use-product";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -76,6 +78,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
   );
   const { links, showCart, bannerText, topBarItems, enableLogin } = data;
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -298,6 +301,65 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
             className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8 lg:px-8"
             style={{ color: data.textColor || "inherit" }}
           >
+            {/* Mobile Menu Toggle */}
+            <div className="flex items-center md:hidden">
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="px-2"
+                    onClick={() => !disableClicks && setIsMobileMenuOpen(true)}
+                  >
+                    <Menu className="h-6 w-6" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent
+                  side="left"
+                  className="w-[300px] sm:w-[400px] overflow-y-auto"
+                  style={{
+                    backgroundColor: data.backgroundColor || "white",
+                    color: data.textColor || "inherit",
+                  }}
+                >
+                  <SheetHeader>
+                    <SheetTitle style={{ color: data.textColor || "inherit" }}>Menu</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-4 py-4">
+                    <div className="px-2 pb-4">
+                      <form onSubmit={handleSearchSubmit} className="relative w-full">
+                        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 opacity-40" />
+                        <input
+                          type="text"
+                          placeholder="Search anything..."
+                          value={searchQuery}
+                          onChange={e => setSearchQuery(e.target.value)}
+                          className="w-full rounded-full border border-gray-100 bg-gray-50/50 py-2 pr-4 pl-10 text-sm focus:outline-none"
+                          disabled={disableClicks || isEditable}
+                        />
+                      </form>
+                    </div>
+                    {links.map(link => (
+                      <Link
+                        key={link.id}
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        className="px-2 text-lg font-medium hover:opacity-80"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {link.text}
+                      </Link>
+                    ))}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
             {/* Logo */}
             <div
               className={

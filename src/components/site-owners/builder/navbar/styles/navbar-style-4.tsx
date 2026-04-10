@@ -6,6 +6,7 @@ import {
   NavbarButton,
   TopBarItem,
 } from "@/types/owner-site/components/navbar";
+import { getButtonVariant } from "@/lib/utils";
 import {
   Edit,
   Trash2,
@@ -16,6 +17,7 @@ import {
   ChevronDown,
   Package,
   ShoppingCart,
+  Menu,
 } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
@@ -37,6 +39,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -79,6 +82,7 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
     topBarItems: initialTopBarItems,
   } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
 
@@ -385,6 +389,79 @@ export const NavbarStyle4: React.FC<NavbarStyleProps> = ({
             style={{ color: navbarData.textColor || "inherit" }}
           >
             <div className="flex h-20 items-center justify-between">
+              <div className="flex items-center lg:hidden">
+                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                  <SheetTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="px-2"
+                      onClick={() => !disableClicks && setIsMobileMenuOpen(true)}
+                    >
+                      <Menu className="h-6 w-6" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="left"
+                    className="w-[300px] sm:w-[400px]"
+                    style={{
+                      backgroundColor: navbarData.backgroundColor || "white",
+                      color: navbarData.textColor || "inherit",
+                    }}
+                  >
+                    <SheetHeader>
+                      <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+                    </SheetHeader>
+                    <div className="flex flex-col gap-4 py-4">
+                      {links.map(link => (
+                        <Link
+                          key={link.id}
+                          href={generateLinkHref(
+                            link.href,
+                            siteUser,
+                            pathname,
+                            isEditable,
+                            disableClicks
+                          )}
+                          className="text-lg font-medium hover:opacity-80"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {link.text}
+                        </Link>
+                      ))}
+                      <div className="border-t pt-4">
+                        {buttons.map(button => (
+                          <Button
+                            key={button.id}
+                            variant={getButtonVariant(button.variant)}
+                            size="sm"
+                            className="mb-2 w-full"
+                            style={{
+                              backgroundColor: theme.colors.primary,
+                              color: theme.colors.primaryForeground,
+                            }}
+                            asChild
+                          >
+                            <Link
+                              href={generateLinkHref(
+                                button.href,
+                                siteUser,
+                                pathname,
+                                isEditable,
+                                disableClicks
+                              )}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {button.text}
+                            </Link>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+
               <div
                 className={`flex ${disableClicks ? "pointer-events-auto" : ""}`}
               >

@@ -15,6 +15,7 @@ import {
   Package,
   LogOut,
   ShoppingCart,
+  Menu,
 } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
@@ -39,6 +40,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -75,6 +78,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
 }) => {
   const { links, buttons, showCart, enableLogin } = navbarData;
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
 
@@ -210,7 +214,150 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
         } ${disableClicks ? "pointer-events-none" : ""}`}
         style={{ color: navbarData.textColor || "inherit" }}
       >
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
+          <div className="md:hidden">
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="px-2"
+                  onClick={() => !disableClicks && setIsMobileMenuOpen(true)}
+                  style={{ color: navbarData.textColor || "inherit" }}
+                >
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="w-[300px] sm:w-[400px] overflow-y-auto"
+                style={{
+                  backgroundColor: navbarData.backgroundColor || "white",
+                  color: navbarData.textColor || "inherit",
+                }}
+              >
+                <SheetHeader>
+                  <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-4 py-4">
+                  <div className="px-2 pb-4">
+                    <SearchBar
+                      siteUser={siteUser}
+                      isEditable={isEditable}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  {links.map(link => (
+                    <Link
+                      key={link.id}
+                      href={generateLinkHref(
+                        link.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      className="px-2 text-lg font-medium hover:opacity-80"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.text}
+                    </Link>
+                  ))}
+
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="categories" className="border-none">
+                      <AccordionTrigger className="px-2 py-0 text-lg font-medium hover:no-underline">
+                        Categories
+                      </AccordionTrigger>
+                      <AccordionContent className="flex flex-col gap-2 pt-2 pb-0">
+                        {categories.map(category => {
+                          const categorySubCategories = getSubCategoriesForCategory(category.id);
+                          
+                          if (categorySubCategories.length > 0) {
+                            return (
+                              <Accordion type="single" collapsible key={category.id} className="w-full">
+                                <AccordionItem value={`cat-${category.id}`} className="border-none">
+                                  <AccordionTrigger className="px-4 py-2 text-base font-medium hover:no-underline">
+                                    {category.name}
+                                  </AccordionTrigger>
+                                  <AccordionContent className="flex flex-col gap-2 pl-4 pt-1 pb-0">
+                                    <button
+                                      className="text-left py-1 text-sm opacity-70 hover:opacity-100"
+                                      onClick={() => {
+                                        handleCategoryFilter(category.slug, category.name);
+                                        setIsMobileMenuOpen(false);
+                                      }}
+                                    >
+                                      View All {category.name}
+                                    </button>
+                                    {categorySubCategories.map(subCategory => (
+                                      <button
+                                        key={subCategory.id}
+                                        className="text-left py-1 text-sm opacity-70 hover:opacity-100"
+                                        onClick={() => {
+                                          handleSubCategoryFilter(subCategory.slug, subCategory.name);
+                                          setIsMobileMenuOpen(false);
+                                        }}
+                                      >
+                                        {subCategory.name}
+                                      </button>
+                                    ))}
+                                  </AccordionContent>
+                                </AccordionItem>
+                              </Accordion>
+                            );
+                          }
+                          return (
+                            <button
+                              key={category.id}
+                              className="px-4 py-2 text-left text-base font-medium opacity-80 hover:opacity-100"
+                              onClick={() => {
+                                handleCategoryFilter(category.slug, category.name);
+                                setIsMobileMenuOpen(false);
+                              }}
+                            >
+                              {category.name}
+                            </button>
+                          );
+                        })}
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+
+                  <div className="border-t pt-4 px-2">
+                    {buttons.map(button => (
+                      <Button
+                        key={button.id}
+                        variant={getButtonVariant(button.variant)}
+                        size="sm"
+                        className="mb-2 w-full"
+                        style={{
+                          backgroundColor: theme.colors.primary,
+                          color: theme.colors.primaryForeground,
+                        }}
+                        asChild
+                      >
+                        <Link
+                          href={generateLinkHref(
+                            button.href,
+                            siteUser,
+                            pathname,
+                            isEditable,
+                            disableClicks
+                          )}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {button.text}
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+          
           <div className={disableClicks ? "pointer-events-auto" : ""}>
             {isEditable && onEditLogo ? (
               <EditableItem>

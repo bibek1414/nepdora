@@ -13,6 +13,7 @@ import {
   Youtube,
   ShoppingCart,
   User,
+  Menu,
 } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 import { EditableLink } from "@/components/ui/navbar/editable-link";
@@ -31,6 +32,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { Heart, Package, LogOut, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 const EditableItem: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => (
@@ -64,6 +66,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
 }) => {
   const { links, buttons, showCart, enableLogin } = navbarData;
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // Fetch site config for social media links
   const { data: siteConfig } = useSiteConfig();
   const { isAuthenticated, user, logout } = useAuth();
@@ -137,6 +140,77 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             style={{ color: navbarData.textColor || "inherit" }}
           >
             <div className="flex h-20 items-center justify-between">
+              {/* Mobile Menu Toggle */}
+              <div className="flex items-center lg:hidden">
+                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                  <SheetTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="px-2"
+                      onClick={() => !disableClicks && setIsMobileMenuOpen(true)}
+                    >
+                      <Menu className="h-6 w-6" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="left"
+                    className="w-[300px] sm:w-[400px]"
+                    style={{
+                      backgroundColor: navbarData.backgroundColor || "white",
+                      color: navbarData.textColor || "inherit",
+                    }}
+                  >
+                    <SheetHeader>
+                      <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+                    </SheetHeader>
+                    <div className="flex flex-col gap-4 py-4">
+                      {links.map(link => (
+                        <Link
+                          key={link.id}
+                          href={generateLinkHref(
+                            link.href,
+                            siteUser,
+                            pathname,
+                            isEditable,
+                            disableClicks
+                          )}
+                          className="text-lg font-medium hover:opacity-80"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {link.text}
+                        </Link>
+                      ))}
+                      
+                      {availableSocialLinks.length > 0 && (
+                        <div className="flex items-center gap-2 border-t pt-4">
+                          {availableSocialLinks.map(social => {
+                            const Icon = social.icon;
+                            const url = siteConfig?.[
+                              social.key as keyof typeof siteConfig
+                            ] as string;
+
+                            return (
+                              <Link
+                                key={social.key}
+                                href={disableClicks ? "#" : url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="p-2 transition-colors hover:opacity-100"
+                                aria-label={social.label}
+                              >
+                                <Icon className="h-5 w-5 opacity-70 hover:opacity-100" />
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+
               {/* Left: Logo */}
               <div
                 className={`flex ${disableClicks ? "pointer-events-auto" : ""}`}
@@ -161,7 +235,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
               </div>
 
               {/* Center: Navigation Links */}
-              <div className="flex items-center gap-8">
+              <div className="hidden items-center gap-8 lg:flex">
                 {links.map((link, index) => (
                   <React.Fragment key={link.id}>
                     {isEditable ? (
