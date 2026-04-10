@@ -11,6 +11,8 @@ interface Props {
   params: Promise<{ industry: string; city: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   // Static params are currently pre-rendered on-demand or via specific industry logic
   return [];

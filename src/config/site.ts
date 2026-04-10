@@ -88,8 +88,18 @@ export const getTenantDomain = async (): Promise<string | null> => {
 
   if (typeof process !== "undefined" && process.release?.name === "node") {
     try {
-      const { headers } = require("next/headers");
-      const headersList = await headers();
+      // During build time, skip header checks to avoid static-to-dynamic errors
+      if (process.env.NEXT_PHASE === "phase-production-build") {
+        return null;
+      }
+
+      // In Next.js 15, headers() is async and calling it during static generation
+      // will trigger a dynamic-to-static error if not handled by Next.js itself.
+      const { headers: nextHeaders } = require("next/headers");
+      const headersList = await nextHeaders();
+
+      if (!headersList) return null;
+
       const host =
         headersList.get("x-forwarded-host") || headersList.get("host");
 
@@ -104,6 +114,8 @@ export const getTenantDomain = async (): Promise<string | null> => {
         return host;
       }
     } catch (error) {
+      // Gracefully handle cases where headers() is called during static generation
+      // or in a context where headers are not available.
       return null;
     }
   }

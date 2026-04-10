@@ -11,6 +11,8 @@ interface Props {
   params: Promise<{ industry: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   return industries.map(industry => ({ industry }));
 }
