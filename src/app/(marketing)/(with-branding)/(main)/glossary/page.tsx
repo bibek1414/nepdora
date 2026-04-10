@@ -2,12 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { GLOSSARY_TERMS, GlossaryTerm } from "@/constants/glossary";
 import { buildMarketingMetadata } from "@/lib/seo";
-import {
-  BookOpen,
-  ChevronRight,
-  Zap,
-  TrendingUp,
-} from "lucide-react";
+import { BookOpen, ChevronRight, Zap, TrendingUp } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 import { GlossaryList } from "@/components/marketing/glossary/glossary-list";
 
@@ -227,7 +222,7 @@ export default function GlossaryHubPage() {
       <section className="py-12">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-5 text-center">
               <div className="text-primary mb-2 text-2xl font-bold">
                 {ALL_GLOSSARY_TERMS.length}+
               </div>
@@ -235,19 +230,19 @@ export default function GlossaryHubPage() {
                 Terms Explained
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-5 text-center">
               <div className="text-primary mb-2 text-2xl font-bold">10+</div>
               <div className="text-xs font-medium text-slate-500">
                 Categories
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-5 text-center">
               <div className="text-primary mb-2 text-2xl font-bold">Simple</div>
               <div className="text-xs font-medium text-slate-500">
                 Plain English
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-5 text-center">
               <div className="text-primary mb-2 text-2xl font-bold">Free</div>
               <div className="text-xs font-medium text-slate-500">
                 For Everyone
@@ -302,7 +297,7 @@ export default function GlossaryHubPage() {
       {/* Why Learn These Terms */}
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center -sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-white p-8 text-center">
             <div className="flex flex-col items-center">
               <div className="bg-primary/10 text-primary mb-6 flex h-16 w-16 items-center justify-center rounded-2xl">
                 <TrendingUp className="h-8 w-8" />
@@ -324,11 +319,8 @@ export default function GlossaryHubPage() {
       {/* CTA Section */}
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
-                <Zap className="text-primary h-8 w-8" />
-              </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Ready to build your website?
               </h2>
@@ -338,7 +330,7 @@ export default function GlossaryHubPage() {
               </p>
               <Link
                 href="/create-website"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
               >
                 Build My Professional Website
                 <ChevronRight className="h-4 w-4" />

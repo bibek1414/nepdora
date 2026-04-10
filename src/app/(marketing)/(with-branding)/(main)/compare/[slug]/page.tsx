@@ -242,7 +242,7 @@ export default async function ComparePage({ params }: Props) {
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="bg-primary/10 text-primary mb-6 inline-block rounded-full px-4 py-1 text-sm font-medium">
+            <div className="mb-6 inline-block rounded-full px-4 py-1 text-sm font-medium">
               Platform Comparison
             </div>
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
@@ -297,7 +297,7 @@ export default async function ComparePage({ params }: Props) {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid gap-8 md:grid-cols-2">
             <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
-              <div className="bg-primary/10 text-primary mb-4 inline-flex rounded-full px-3 py-1 text-xs font-medium">
+              <div className="mb-4 inline-flex rounded-full px-3 py-1 text-xs font-medium">
                 🇳🇵 Built for Nepal
               </div>
               <h3 className="mb-3 text-xl font-bold text-slate-900">Nepdora</h3>
@@ -328,7 +328,7 @@ export default async function ComparePage({ params }: Props) {
       <section className="border-y border-slate-100 bg-slate-50 py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <div className="bg-primary/10 text-primary mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium">
               <DollarSign className="h-3 w-3" />
               Cost Breakdown
             </div>
@@ -399,7 +399,7 @@ export default async function ComparePage({ params }: Props) {
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <div className="bg-primary/10 text-primary mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium">
               <Zap className="h-3 w-3" />
               Feature Breakdown
             </div>
@@ -457,7 +457,7 @@ export default async function ComparePage({ params }: Props) {
           <div className="grid gap-8 md:grid-cols-2">
             {/* Built for Nepal */}
             <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
-              <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Globe className="h-6 w-6" />
               </div>
               <h3 className="mb-3 text-lg font-bold text-slate-900">
@@ -476,11 +476,11 @@ export default async function ComparePage({ params }: Props) {
 
             {/* Pricing */}
             <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
-              <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <DollarSign className="h-6 w-6" />
               </div>
               <h3 className="mb-3 text-lg font-bold text-slate-900">
-                💸 Pricing & Affordability
+                Pricing & Affordability
               </h3>
               <p className="text-sm leading-relaxed font-medium text-slate-500">
                 Nepdora offers simple and affordable pricing designed for the
@@ -494,11 +494,11 @@ export default async function ComparePage({ params }: Props) {
 
             {/* Speed */}
             <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
-              <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Zap className="h-6 w-6" />
               </div>
               <h3 className="mb-3 text-lg font-bold text-slate-900">
-                ⚡ Speed & Performance
+                Speed & Performance
               </h3>
               <p className="text-sm leading-relaxed font-medium text-slate-500">
                 Nepdora websites are optimized for fast loading speeds in Nepal
@@ -512,11 +512,11 @@ export default async function ComparePage({ params }: Props) {
 
             {/* Ease of Use */}
             <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
-              <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Users className="h-6 w-6" />
               </div>
               <h3 className="mb-3 text-lg font-bold text-slate-900">
-                🛠️ Ease of Use
+                Ease of Use
               </h3>
               <p className="text-sm leading-relaxed font-medium text-slate-500">
                 Nepdora focuses on simplicity — allowing anyone to build a
@@ -599,11 +599,6 @@ export default async function ComparePage({ params }: Props) {
       <section className="border-y border-slate-100 bg-slate-50 py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="-sm rounded-2xl border border-slate-200 bg-white p-8 text-center">
-            <div className="mb-4 flex justify-center">
-              <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full">
-                <Trophy className="h-8 w-8" />
-              </div>
-            </div>
             <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
               Why Nepdora Wins for Nepal
             </h2>

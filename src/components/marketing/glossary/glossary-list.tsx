@@ -86,7 +86,7 @@ export function GlossaryList({ groupedTerms }: GlossaryListProps) {
                     <Link
                       key={term.slug}
                       href={`/glossary/${term.slug}`}
-                      className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                      className="group rounded-2xl border border-slate-200 bg-white p-5 -sm transition-all hover:-translate-y-1 hover:-md"
                     >
                       <div className="mb-3 flex items-center justify-between">
                         <h3 className="group-hover:text-primary text-lg font-semibold text-slate-900 transition-colors">
