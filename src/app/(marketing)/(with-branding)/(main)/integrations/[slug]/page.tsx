@@ -12,7 +12,8 @@ import {
   Globe,
 } from "lucide-react";
 import { INTEGRATIONS } from "@/constants/integrations";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import {
   IntegrationHero,
   IntegrationShowcaseSection,
@@ -42,8 +43,42 @@ export default async function IntegrationDetailsPage({ params }: Props) {
 
   if (!integration) return notFound();
 
+  const integrationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `${integration.name} Integration`,
+    description: integration.description,
+    provider: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: absoluteUrl(),
+    },
+  };
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to Setup ${integration.name} on Nepdora`,
+    step: [
+      {
+        "@type": "HowToStep",
+        name: "Enter API Keys",
+        text: `Securely input your ${integration.name} credentials into your Nepdora dashboard.`,
+        position: 1,
+      },
+      {
+        "@type": "HowToStep",
+        name: "Toggle Activation",
+        text: "Enable the integration with a single click.",
+        position: 2,
+      },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-white">
+      <JsonLd id="integration-service-schema" data={integrationSchema} />
+      <JsonLd id="integration-howto-schema" data={howToSchema} />
       {/* Hero Section */}
       <IntegrationHero
         name={integration.name}

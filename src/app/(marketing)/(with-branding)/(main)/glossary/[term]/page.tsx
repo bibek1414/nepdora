@@ -29,6 +29,8 @@ import {
   Target,
   BarChart3,
 } from "lucide-react";
+import { JsonLd } from "@/components/shared/json-ld";
+import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ term: string }>;
@@ -229,8 +231,47 @@ export default async function GlossaryTermPage({ params }: Props) {
     3
   );
 
+  const definedTermSchema = {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    name: item.term,
+    description: item.definition,
+    inDefinedTermSet: {
+      "@type": "DefinedTermSet",
+      name: "Nepdora Web Glossary",
+      url: `${absoluteUrl()}/glossary`,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Glossary",
+        item: `${absoluteUrl()}/glossary`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: item.term,
+        item: `${absoluteUrl()}/glossary/${term}`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd id="glossary-term-schema" data={definedTermSchema} />
+      <JsonLd id="glossary-breadcrumb" data={breadcrumbSchema} />
       {/* Navigation Breadcrumb */}
       <div className="sticky top-0 z-10 border-b border-slate-100 bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto max-w-6xl px-6 py-4">

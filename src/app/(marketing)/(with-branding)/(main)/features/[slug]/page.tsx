@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { JsonLd } from "@/components/shared/json-ld";
+import { SITE_NAME } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -677,8 +679,34 @@ export default async function FeatureProcessPage({ params }: Props) {
     business: "Nepali Business",
   };
 
+  const featureSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `${featureName} Integration`,
+    description: data?.description || `Learn how to easily integrate ${featureName} into your Nepdora website.`,
+    provider: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: absoluteUrl(),
+    },
+  };
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to Integrate ${featureName} with Nepdora`,
+    step: easyWay.map((step, idx) => ({
+      "@type": "HowToStep",
+      name: step.title,
+      text: step.description,
+      position: idx + 1,
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd id="feature-service-schema" data={featureSchema} />
+      <JsonLd id="feature-howto-schema" data={howToSchema} />
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">

@@ -4,6 +4,7 @@ import {
   nepdoraEmail,
   nepdoraPhone,
 } from "@/constants/contact";
+import { MAJOR_CITIES } from "@/lib/seo-data";
 import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "./newsletter-form";
@@ -268,6 +269,23 @@ export const Footer = () => {
                 <FooterLink href="/best/website-builders-for-educational-consultancy-nepal">
                   Best Educational Consultancy Builder in Nepal
                 </FooterLink>
+              </div>
+            </div>
+
+            {/* Popular Locations */}
+            <div>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
+                Popular Locations
+              </h4>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                {MAJOR_CITIES.slice(0, 10).map(city => (
+                  <FooterLink
+                    key={city}
+                    href={`/restaurant-website/${city.toLowerCase()}`}
+                  >
+                    <span className="capitalize">{city}</span>
+                  </FooterLink>
+                ))}
               </div>
             </div>
 

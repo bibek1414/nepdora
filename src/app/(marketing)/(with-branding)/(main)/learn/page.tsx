@@ -16,7 +16,8 @@ import {
   Rocket,
   Globe,
 } from "lucide-react";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata = buildMarketingMetadata({
   title: "Nepdora Learn | Learn to Start & Grow Your Online Business in Nepal",
@@ -74,9 +75,38 @@ const GUIDES = [
   },
 ];
 
+const learnSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Nepdora Learn Guides",
+  description:
+    "Free guides and tutorials to help you start and grow an online business in Nepal.",
+  itemListElement: GUIDES.map((guide, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": "HowTo",
+      name: guide.title,
+      description: guide.description,
+      url: `${absoluteUrl()}/learn/${guide.slug}`,
+    },
+  })),
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: absoluteUrl(),
+  logo: `${absoluteUrl()}/logo.png`,
+  description: "The easiest way to start an online business in Nepal.",
+};
+
 export default function LearnHubPage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
+      <JsonLd id="learn-item-list" data={learnSchema} />
+      <JsonLd id="nepdora-org" data={organizationSchema} />
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32">
         <div className="bg-primary/5 pointer-events-none absolute top-0 right-0 h-[600px] w-[600px] translate-x-1/3 -translate-y-1/2 rounded-full blur-[120px]" />

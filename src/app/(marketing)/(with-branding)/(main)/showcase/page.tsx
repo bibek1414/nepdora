@@ -17,8 +17,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { ShowcaseVisualMock } from "@/components/marketing/showcase/showcase-visual-mock";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Showcase | Built with Nepdora | Real Success Stories",
@@ -102,9 +103,36 @@ const SHOWCASE_ITEMS = [
   },
 ];
 
+const showcaseSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Nepdora Customer Showcase",
+  description:
+    "Discover real success stories from businesses across Nepal built with Nepdora.",
+  publisher: {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: absoluteUrl(),
+  },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: CASE_STUDIES.map((study, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "CreativeWork",
+        name: study.company,
+        description: study.desc,
+        url: study.link,
+      },
+    })),
+  },
+};
+
 export default function ShowcasePage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
+      <JsonLd id="showcase-schema-itemlist" data={showcaseSchema} />
       {/* Hero Section */}
       <section className="pt-20 pb-32">
         <div className="container mx-auto max-w-6xl px-6">

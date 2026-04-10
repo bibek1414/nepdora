@@ -17,7 +17,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { USE_CASES } from "@/constants/use-cases";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Use Cases | How Businesses Use Nepdora in Nepal",
@@ -26,10 +27,35 @@ export const metadata: Metadata = buildMarketingMetadata({
   path: "/use-cases",
 });
 
+const useCaseSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Nepdora Business Use Cases",
+  description: "Explore how different businesses use Nepdora to automate sales and take bookings in Nepal.",
+  itemListElement: USE_CASES.map((useCase, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    item: {
+      "@type": "Service",
+      name: useCase.title,
+      description: useCase.description,
+      url: `${absoluteUrl()}/use-cases/${useCase.slug}`,
+    },
+  })),
+};
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: absoluteUrl(),
+};
 
 export default function UseCasesPage() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd id="use-case-list-schema" data={useCaseSchema} />
+      <JsonLd id="nepdora-org-usecase" data={orgSchema} />
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">

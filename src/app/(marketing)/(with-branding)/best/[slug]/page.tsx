@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { JsonLd } from "@/components/shared/json-ld";
+import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -124,8 +126,40 @@ export default async function BestOfPage({ params }: Props) {
     ? item.description.replace(/Kathmandu|Nepal/gi, cityName)
     : item.description;
 
+  const bestOfSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: displayTitle,
+    description: displayDescription,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: absoluteUrl(),
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      name: "Top Tools",
+      itemListElement: item.ranking.map((tool, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "SoftwareApplication",
+          name: tool.name,
+          description: tool.description,
+          applicationCategory: "BusinessApplication",
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: tool.rating,
+            reviewCount: "100",
+          },
+        },
+      })),
+    },
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd id="bestof-schema" data={bestOfSchema} />
       {/* ── Hero ── */}
       <section className="border-b border-slate-100 pt-28 pb-20">
         <div className="container mx-auto max-w-6xl px-6">

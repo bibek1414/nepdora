@@ -20,6 +20,8 @@ import {
   Smartphone,
   Headphones,
 } from "lucide-react";
+import { JsonLd } from "@/components/shared/json-ld";
+import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Switch to Nepdora | Migrate Your Website Seamlessly | Nepal",
@@ -80,9 +82,35 @@ const featuredCompetitors = COMPETITORS_FOR_SWITCH.filter(c =>
   topCompetitors.includes(c.slug)
 );
 
+const switchSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Nepdora Website Migration Service",
+  description:
+    "Seamless migration from any platform to Nepdora. Handle product and customer import with zero downtime.",
+  provider: {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: absoluteUrl(),
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Migration Paths",
+    itemListElement: COMPETITORS_FOR_SWITCH.map(c => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: `Migrate from ${c.name} to Nepdora`,
+        description: c.description,
+      },
+    })),
+  },
+};
+
 export default function SwitchHubPage() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd id="switch-migration-schema" data={switchSchema} />
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">
