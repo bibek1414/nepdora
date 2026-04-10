@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { ALL_COMPETITORS } from "@/constants/competitors";
 import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
+
+export const dynamic = "force-dynamic";
 import {
   CheckCircle2,
   XCircle,

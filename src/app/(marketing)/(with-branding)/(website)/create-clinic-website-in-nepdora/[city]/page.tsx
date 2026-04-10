@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ city: string }>;
 }

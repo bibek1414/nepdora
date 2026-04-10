@@ -12,6 +12,8 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import RelatedAlternatives from "@/components/marketing/alternative/related-alternatives";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

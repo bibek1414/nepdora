@@ -7,6 +7,7 @@ import { TemplateSection } from "@/components/marketing/templates/template-secti
 import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
 import { buildMarketingMetadata } from "@/lib/seo";
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ category: string }>;

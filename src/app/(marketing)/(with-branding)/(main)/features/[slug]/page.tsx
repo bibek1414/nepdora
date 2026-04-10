@@ -1,5 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
 import { capitalizeWords } from "@/lib/string-utils";
 import {
   CheckCircle2,

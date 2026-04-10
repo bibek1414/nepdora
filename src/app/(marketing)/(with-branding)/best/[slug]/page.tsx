@@ -17,6 +17,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/shared/json-ld";
 import { SITE_NAME, absoluteUrl } from "@/lib/seo";
+export const dynamic = "force-dynamic";
 interface Props {
   params: Promise<{ slug: string }>;
 }

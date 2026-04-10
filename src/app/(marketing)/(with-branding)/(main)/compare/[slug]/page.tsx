@@ -26,6 +26,8 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { ALL_COMPETITORS } from "@/constants/competitors";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

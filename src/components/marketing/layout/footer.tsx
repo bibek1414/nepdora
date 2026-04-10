@@ -95,10 +95,10 @@ export const Footer = () => {
         </FooterSection>
 
         {/* New Resources Section - Linked Features */}
-        <FooterSection className="mb-12 border-t border-gray-200 pt-10">
+        <div className="mb-12 border-t border-gray-200 pt-10">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
             {/* Solutions / Industries */}
-            <div>
+            <FooterSection delay={0.05}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Build with Nepdora
               </h4>
@@ -137,12 +137,10 @@ export const Footer = () => {
                   Create Medical Clinic Website in Nepdora
                 </FooterLink>
               </div>
-            </div>
+            </FooterSection>
 
-            {/* Original Categories */}
-
-            {/* Features */}
-            <div>
+            {/* Platform Features */}
+            <FooterSection delay={0.1}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Platform Features
               </h4>
@@ -176,10 +174,10 @@ export const Footer = () => {
                   Khalti Setup Guide in Nepdora
                 </FooterLink>
               </div>
-            </div>
+            </FooterSection>
 
             {/* Free Tools */}
-            <div>
+            <FooterSection delay={0.15}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Free Business Tools
               </h4>
@@ -205,12 +203,10 @@ export const Footer = () => {
                 </FooterLink>
                 <FooterLink href="/invoice-builder">Invoice Maker</FooterLink>
               </div>
-            </div>
-
-            {/* Resources / Learn */}
+            </FooterSection>
 
             {/* Templates */}
-            <div>
+            <FooterSection delay={0.2}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Nepdora Templates
               </h4>
@@ -240,9 +236,10 @@ export const Footer = () => {
                   Educational Consultancy Templates
                 </FooterLink>
               </div>
-            </div>
-            {/* Compare & Locations */}
-            <div>
+            </FooterSection>
+
+            {/* Compare & Alternatives */}
+            <FooterSection delay={0.25}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Compare Alternatives
               </h4>
@@ -264,9 +261,10 @@ export const Footer = () => {
                 </FooterLink>
                 <FooterLink href="/switch">Switch to Nepdora</FooterLink>
               </div>
-            </div>
+            </FooterSection>
+
             {/* Cities/Rankings */}
-            <div>
+            <FooterSection delay={0.3}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Best in Nepal
               </h4>
@@ -284,10 +282,10 @@ export const Footer = () => {
                   Best Educational Consultancy Builder in Nepal
                 </FooterLink>
               </div>
-            </div>
+            </FooterSection>
 
             {/* Popular Locations */}
-            <div>
+            <FooterSection delay={0.35}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Popular Locations
               </h4>
@@ -301,10 +299,10 @@ export const Footer = () => {
                   </FooterLink>
                 ))}
               </div>
-            </div>
+            </FooterSection>
 
-            {/* Others column (moved to second row/next col) */}
-            <div>
+            {/* Learn & Resources */}
+            <FooterSection delay={0.4}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Learn & Resources
               </h4>
@@ -341,9 +339,9 @@ export const Footer = () => {
                 <FooterLink href="/solutions">Solutions</FooterLink>
                 <FooterLink href="/use-cases">Use Cases</FooterLink>
               </div>
-            </div>
+            </FooterSection>
           </div>
-        </FooterSection>
+        </div>
 
         {/* Bottom Bar */}
         <FooterSection

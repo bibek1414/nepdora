@@ -10,8 +10,8 @@ interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Revalidate every hour (3600 seconds)
-export const revalidate = 3600;
+// Force dynamic rendering to prevent static-to-dynamic runtime errors
+export const dynamic = "force-dynamic";
 
 import { buildMarketingMetadata } from "@/lib/seo";
 

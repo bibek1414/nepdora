@@ -4,6 +4,8 @@ import Link from "next/link";
 import { JsonLd } from "@/components/shared/json-ld";
 import { buildMarketingMetadata, absoluteUrl, SITE_NAME } from "@/lib/seo";
 import { SOLUTIONS_LIST } from "@/constants/solutions";
+
+export const dynamic = "force-dynamic";
 import {
   CheckCircle2,
   ArrowRight,

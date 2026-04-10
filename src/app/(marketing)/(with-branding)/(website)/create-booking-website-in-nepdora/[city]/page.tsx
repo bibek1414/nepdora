@@ -35,6 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 import { MAJOR_CITIES, cities } from "@/lib/seo-data";
 import { JsonLd } from "@/components/shared/json-ld";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   return MAJOR_CITIES.map(city => ({
     city: city.toLowerCase(),

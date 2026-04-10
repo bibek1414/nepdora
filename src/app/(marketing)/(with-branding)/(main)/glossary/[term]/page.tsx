@@ -32,6 +32,8 @@ import {
 import { JsonLd } from "@/components/shared/json-ld";
 import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ term: string }>;
 }
@@ -209,7 +211,7 @@ const TermVisual = ({ term, slug }: { term: string; slug: string }) => {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${visual.bg} p-8 text-white shadow-lg`}
+      className={`relative overflow-hidden rounded-2xl bg-linear-to-br ${visual.bg} p-8 text-white shadow-lg`}
     >
       <div className="absolute -top-6 -right-6 opacity-10">{visual.icon}</div>
       <div className="relative z-10">

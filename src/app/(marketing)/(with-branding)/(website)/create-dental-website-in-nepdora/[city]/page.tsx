@@ -5,6 +5,8 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { MAJOR_CITIES, cities } from "@/lib/seo-data";
 import { JsonLd } from "@/components/shared/json-ld";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ city: string }>;
 }

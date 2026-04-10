@@ -25,7 +25,7 @@ export const FooterSection = ({
       className={className}
       initial={initial}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.8, ease: "easeOut", delay }}
     >
       {children}

@@ -7,6 +7,8 @@ import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { CheckCircle2, ChevronRight, Clock, BookOpen } from "lucide-react";
 import { buildMarketingMetadata } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
