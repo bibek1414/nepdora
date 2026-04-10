@@ -3,9 +3,10 @@ import { X, Search, ChevronRight, RotateCcw, Loader2 } from "lucide-react";
 import { useCategories } from "@/hooks/owner-site/admin/use-category";
 import { useSubCategories } from "@/hooks/owner-site/admin/use-subcategory";
 import { useDebouncer } from "@/hooks/use-debouncer";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useProductFilters } from "@/hooks/owner-site/admin/use-product";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { generateLinkHref } from "@/lib/link-utils";
 import PriceRangeSlider from "./price-range-slider";
 import AppliedFilters from "./applied-filters";
 
@@ -63,6 +64,7 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
   const leaveTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   const minPrice = 0;
   const maxPrice = 100000;
@@ -97,9 +99,18 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
       }
     });
 
-    const productsUrl = siteUser
-      ? `/preview/${siteUser}/collections?${searchParams.toString()}`
-      : `/collections?${searchParams.toString()}`;
+    const baseCollectionsUrl = generateLinkHref(
+      "collections",
+      siteUser,
+      pathname,
+      false,
+      false
+    );
+
+    const productsUrl =
+      baseCollectionsUrl === "#"
+        ? `/collections?${searchParams.toString()}`
+        : `${baseCollectionsUrl}?${searchParams.toString()}`;
 
     router.push(productsUrl);
   };
@@ -239,10 +250,14 @@ const ProductFilterSidebar: React.FC<ProductFilterSidebarProps> = ({
     setHoveredSubcategory(null);
 
     if (!isEditable) {
-      const productsUrl = siteUser
-        ? `/preview/${siteUser}/collections`
-        : `/collections`;
-      router.push(productsUrl);
+      const productsUrl = generateLinkHref(
+        "collections",
+        siteUser,
+        pathname,
+        false,
+        false
+      );
+      router.push(productsUrl === "#" ? "/collections" : productsUrl);
     }
   };
 

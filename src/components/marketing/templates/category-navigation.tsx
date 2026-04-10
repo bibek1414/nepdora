@@ -23,22 +23,19 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
     <div className="flex flex-wrap gap-2">
       {categories.map(category => {
         const isActive = selectedCategory === category.key;
-        const href =
-          category.key === "All" ? "/templates" : `/templates/${category.key}`;
 
         return (
-          <Link
+          <button
             key={category.key}
-            href={href}
             onClick={() => onCategoryChange?.(category.key)}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+            className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors ${
               isActive
                 ? "bg-slate-900 text-white"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             {category.label}
-          </Link>
+          </button>
         );
       })}
     </div>

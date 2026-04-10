@@ -74,7 +74,7 @@ export default function CompareHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-3xl text-center">
             <div className="bg-primary/10 text-primary mb-6 inline-block rounded-full px-4 py-1 text-sm font-medium">
-              ⚔️ Comparison Hub
+              Comparison
             </div>
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
               Compare Website Builders —{" "}
@@ -89,7 +89,7 @@ export default function CompareHubPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 href="/create-website"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white -md transition-all hover:scale-105"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
               >
                 Start Building
                 <ChevronRight className="h-4 w-4" />
@@ -106,23 +106,26 @@ export default function CompareHubPage() {
       </section>
 
       {/* Intro Section */}
-      <section className="border-y border-slate-100 bg-slate-50 py-16">
+      <section className="bg-white py-16">
         <div className="container mx-auto max-w-4xl px-6 text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-            Choosing the right platform for your business
+            Why these comparisons matter
           </h2>
-          <p className="mb-6 text-lg leading-relaxed font-medium text-slate-500">
-            Choosing the right website platform is one of the most important
-            decisions for your business.
+
+          <p className="mb-4 text-lg leading-relaxed text-slate-600">
+            Most website builders are designed for global users — not Nepal.
+            That means higher costs, payment limitations, and slower performance
+            for local businesses.
           </p>
-          <p className="mb-6 text-lg leading-relaxed font-medium text-slate-500">
-            With so many options available, it can be difficult to know which
-            one fits your needs — especially in Nepal, where pricing, payments,
-            and performance matter differently.
+
+          <p className="mb-4 text-lg leading-relaxed text-slate-600">
+            Nepdora is built specifically for the Nepali market, with local
+            payments, optimized infrastructure, and pricing in NPR.
           </p>
-          <p className="text-lg leading-relaxed font-medium text-slate-500">
-            That's why we've created detailed comparisons to help you make the
-            right choice.
+
+          <p className="text-lg leading-relaxed text-slate-600">
+            These comparisons help you understand exactly what you gain — and
+            what you lose — when choosing a platform.
           </p>
         </div>
       </section>
@@ -140,7 +143,7 @@ export default function CompareHubPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {[
               {
                 icon: Layout,
@@ -170,7 +173,7 @@ export default function CompareHubPage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center rounded-2xl border border-slate-200 bg-white p-6 text-center -sm"
+                className="-sm flex flex-col items-center rounded-2xl border border-slate-200 bg-white p-6 text-center"
               >
                 <div
                   className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 ${item.color}`}
@@ -204,15 +207,15 @@ export default function CompareHubPage() {
               <Link
                 key={i}
                 href={`/compare/${competitor.slug}-and-nepdora`}
-                className="group rounded-2xl border border-slate-200 bg-white p-6 -sm transition-all hover:-translate-y-1 hover:-md"
+                className="group -sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-1"
               >
                 <div className="mb-3 flex items-center justify-between">
-                  <div className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-medium">
+                  <div className="rounded-full border border-slate-200 px-2 py-0.5 text-xs font-medium text-gray-500">
                     {competitor.category === "General Website Builders"
                       ? "General"
                       : "E-commerce"}
                   </div>
-                  <ArrowRight className="group-hover:text-primary h-4 w-4 text-slate-300 transition-transform group-hover:translate-x-1" />
+                  <ChevronRight className="h-4 w-4 text-slate-300 transition-transform group-hover:translate-x-1" />
                 </div>
                 <h3 className="mb-1 text-xl font-bold text-slate-900">
                   {competitor.name} vs Nepdora
@@ -224,10 +227,6 @@ export default function CompareHubPage() {
               </Link>
             ))}
           </div>
-
-          <p className="mt-8 text-center text-sm font-medium text-slate-500">
-            👆 Click on any comparison to see detailed breakdown
-          </p>
         </div>
       </section>
 
@@ -310,9 +309,9 @@ export default function CompareHubPage() {
                 easier, faster, and more affordable to get online.
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-8">
               <div className="flex items-center gap-4">
-                <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-xl">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl border">
                   <Award className="h-8 w-8" />
                 </div>
                 <div>
@@ -368,9 +367,9 @@ export default function CompareHubPage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-5 -sm"
+                className="-sm rounded-2xl border border-slate-200 bg-white p-5"
               >
-                <div className="bg-primary/10 text-primary mb-3 flex h-10 w-10 items-center justify-center rounded-lg">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg">
                   <item.icon className="h-5 w-5" />
                 </div>
                 <h3 className="mb-1 font-semibold text-slate-900">
@@ -439,11 +438,8 @@ export default function CompareHubPage() {
       {/* Final CTA */}
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
-                <Zap className="text-primary h-8 w-8" />
-              </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Still unsure which platform is right for you?
               </h2>
@@ -454,9 +450,9 @@ export default function CompareHubPage() {
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/create-website"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
+                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
                 >
-                  Start Building for Free
+                  Start My Better Website
                   <ChevronRight className="h-4 w-4" />
                 </Link>
                 <Link

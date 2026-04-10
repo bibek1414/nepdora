@@ -86,7 +86,7 @@ export default function AiBuilderPage() {
                   href="/create-website"
                   className="inline-flex items-center justify-center gap-3 rounded-full bg-blue-500 px-10 py-5 text-base font-semibold text-white shadow-2xl shadow-blue-500/20 transition-all hover:scale-105 hover:shadow-blue-500/40 active:scale-95"
                 >
-                  Start Building for Free
+                  Generate My AI Website
                   <ChevronRight className="h-5 w-5" />
                 </Link>
                 <Link
@@ -622,7 +622,7 @@ export default function AiBuilderPage() {
                 href="/create-website"
                 className="inline-flex items-center gap-3 rounded-full bg-blue-500 px-12 py-6 text-lg font-semibold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
               >
-                Start Building for Free
+                Generate My AI Website
                 <ChevronRight className="h-6 w-6" />
               </Link>
             </div>

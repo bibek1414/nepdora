@@ -175,7 +175,7 @@ export default function ShowcasePage() {
                   </p>
 
                   <div className="mb-8 grid grid-cols-2 gap-6">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="-sm rounded-2xl border border-slate-200 bg-white p-5">
                       <div className="text-primary mb-1 text-2xl font-bold">
                         {study.metric.split(" ")[0]}
                       </div>
@@ -183,7 +183,7 @@ export default function ShowcasePage() {
                         {study.metric.split(" ").slice(1).join(" ")}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="-sm rounded-2xl border border-slate-200 bg-white p-5">
                       <div className="mb-1 text-2xl font-bold text-slate-900">
                         100%
                       </div>
@@ -244,7 +244,7 @@ export default function ShowcasePage() {
             ].map((stat, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 text-center transition-all"
               >
                 <div className="text-primary mb-2 text-3xl font-bold tracking-tight md:text-4xl">
                   {stat.value}
@@ -261,11 +261,8 @@ export default function ShowcasePage() {
       {/* Final CTA - Clean white background */}
       <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <Layout className="text-primary h-8 w-8" />
-              </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Your success story{" "}
                 <span className="text-primary">could be next.</span>
@@ -277,7 +274,7 @@ export default function ShowcasePage() {
               </p>
               <Link
                 href="/create-website"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105 active:scale-95"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
               >
                 Build Your Website
                 <ChevronRight className="h-4 w-4" />

@@ -60,7 +60,7 @@ export function ExpertsVisualMock() {
               <Filter className="h-3.5 w-3.5" />
               Filter
             </div>
-            <div className="bg-primary -primary/20 -lg -widest rounded-xl px-4 py-2 text-[10px] font-black text-white">
+            <div className="bg-primary -primary/20 -lg -widest rounded-xl px-4 py-2 text-sm font-semibold text-white">
               Find Experts
             </div>
           </div>
@@ -78,13 +78,9 @@ export function ExpertsVisualMock() {
                 className="hover:border-primary/20 group -sm hover:-xl rounded-2xl border border-slate-100 bg-white p-6 transition-all"
               >
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="relative h-12 w-12">
-                    <div className="absolute -right-1 -bottom-1 h-4 w-4 rounded-full border-2 border-white bg-emerald-500" />
-                  </div>
                   <div>
-                    <div className="flex items-center gap-1 text-sm font-bold text-slate-900">
+                    <div className="flex items-center gap-1 text-sm font-semibold text-slate-900">
                       {expert.name}
-                      <CheckCircle2 className="h-3 w-3 fill-blue-50 text-blue-500" />
                     </div>
                     <div className="text-[10px] font-medium text-slate-500">
                       {expert.role}
@@ -96,7 +92,7 @@ export function ExpertsVisualMock() {
                   {expert.tags.map(tag => (
                     <span
                       key={tag}
-                      className="bg-primary/5 text-primary rounded-md px-2 py-1 text-[9px] font-bold"
+                      className="rounded-md border border-slate-200 px-2 py-1 text-[9px] font-bold text-slate-500"
                     >
                       {tag}
                     </span>

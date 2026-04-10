@@ -340,7 +340,7 @@ export default function GlossaryHubPage() {
                 href="/create-website"
                 className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
               >
-                Start Building for Free
+                Build My Professional Website
                 <ChevronRight className="h-4 w-4" />
               </Link>
             </div>

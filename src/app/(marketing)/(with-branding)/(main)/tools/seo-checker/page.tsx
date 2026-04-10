@@ -595,7 +595,7 @@ export default function SEOChecker() {
                   href="/create-website"
                   className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
                 >
-                  Start Building for Free
+                  Launch SEO Optimized Site
                   <ChevronRight className="h-4 w-4" />
                 </Link>
                 <Link

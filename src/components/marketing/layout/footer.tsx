@@ -66,6 +66,7 @@ export const Footer = () => {
                 <FooterLink href="/partners">Partners</FooterLink>
                 <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
                 <FooterLink href="/terms">Terms and Conditions</FooterLink>
+                <FooterLink href="/data-delete">Data Delete</FooterLink>
                 <FooterLink href="/support">Support</FooterLink>
                 <FooterLink href="/faq">FAQ</FooterLink>
               </div>
@@ -305,6 +306,8 @@ export const Footer = () => {
                 </FooterLink>
                 <FooterLink href="/glossary">Glossary</FooterLink>
                 <FooterLink href="/showcase">Website Examples Nepal</FooterLink>
+                <FooterLink href="/solutions">Solutions</FooterLink>
+                <FooterLink href="/use-cases">Use Cases</FooterLink>
               </div>
             </div>
           </div>

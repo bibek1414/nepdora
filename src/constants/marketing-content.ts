@@ -30,7 +30,7 @@ const ecommerceContent: IndustryContent = {
   customH1: "Create Your E-Commerce Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your E-commerce online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Launch My Online Store",
   benefits: [
     "Sell products 24/7 across Nepal",
     "Manage inventory and orders in one place",
@@ -123,7 +123,7 @@ const agencyContent: IndustryContent = {
   customH1: "Build Your Agency Website in Nepal Fast",
   subHeadline:
     "Start fast and cheap. Launch your Agency online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Build My Agency Website",
   customH2: "Why Nepdora is the Best Builder for Nepali Agencies",
   benefits: [
     "Display your work with stunning portfolios",
@@ -196,7 +196,7 @@ const bookingContent: IndustryContent = {
   customH1: "Create Your Booking Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your Booking online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Setup My Appointment System",
   benefits: [
     "24/7 automated appointment booking",
     "Reduce no-shows with SMS/Email reminders",
@@ -257,7 +257,7 @@ const clinicContent: IndustryContent = {
   customH1: "Create Your Clinic Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your Medical Clinic online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Create My Clinic Website",
   benefits: [
     "Easy patient appointment scheduling",
     "Professional doctor profiles",
@@ -318,7 +318,7 @@ const dentalContent: IndustryContent = {
   customH1: "Create Your Dental Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your Dental Clinic online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Build My Dental Page",
   benefits: [
     "Specific booking for dental procedures",
     "Showcase results with 'Before & After' galleries",
@@ -378,7 +378,7 @@ const restaurantContent: IndustryContent = {
     "Get your cafe, bakery, or restaurant online in minutes. Nepdora is the easiest and most affordable way to build a professional restaurant website in Nepal, complete with digital menus and table reservations.",
   subHeadline:
     "Start fast and cheap. Launch your Restaurant online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Launch My Restaurant Site",
   customH2: "Why Nepdora is the Best Website Builder for Nepali Restaurants",
   howToSteps: [
     {
@@ -497,7 +497,7 @@ const clothingStoreContent: IndustryContent = {
   customH1: "Create Your Clothing Store Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your Fashion online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Start My Fashion Brand",
   benefits: [
     "Showcase your latest fashion collections",
     "Manage sizes, colors, and stock easily",
@@ -555,7 +555,7 @@ const educationalConsultancyContent: IndustryContent = {
   customH1: "Create Your Education Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your Consultancy online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Build My Consultancy Website",
   benefits: [
     "Display university partnerships and courses",
     "Capture student leads with optimized forms",
@@ -616,7 +616,7 @@ const travelAgencyContent: IndustryContent = {
   customH1: "Create Your Travel Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your Tour Agency online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Create My Travel Site",
   benefits: [
     "Showcase tour packages with rich media",
     "Integrated booking and inquiry system",
@@ -677,7 +677,7 @@ const groceryContent: IndustryContent = {
   customH1: "Create Your Grocery Website in Nepal Today.",
   subHeadline:
     "Start fast and cheap. Launch your Store online in under 10 minutes.",
-  ctaText: "Start Building for Free",
+  ctaText: "Start Selling Groceries",
   benefits: [
     "Fast checkout for recurring orders",
     "Manage thousands of SKUs easily",

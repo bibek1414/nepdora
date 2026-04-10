@@ -50,7 +50,7 @@ export default function DataDeletionPage() {
         </div>
 
         {/* Quick Contact Info */}
-        <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+        <div className="mb-8 rounded-2xl border border-slate-200 bg-slate-50 p-6 -sm">
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="flex items-center gap-3">
               <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full">
@@ -95,7 +95,7 @@ export default function DataDeletionPage() {
         </div>
 
         {/* Introduction */}
-        <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 -sm">
           <p className="text-base leading-relaxed font-medium text-slate-600">
             At Nepdora, we respect your privacy and your right to control your
             personal data. This page provides instructions on how to request
@@ -107,7 +107,7 @@ export default function DataDeletionPage() {
         {/* Content */}
         <div className="space-y-8">
           {/* Section 1: What Data We Store */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
             <h2 className="mb-4 text-xl font-bold text-slate-900">
               1. What Data We Store
             </h2>
@@ -128,7 +128,7 @@ export default function DataDeletionPage() {
           </section>
 
           {/* Section 2: How to Request Data Deletion */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
             <h2 className="mb-4 text-xl font-bold text-slate-900">
               2. How to Request Data Deletion
             </h2>
@@ -178,7 +178,7 @@ export default function DataDeletionPage() {
                 Send an email to our data protection team with your deletion
                 request:
               </p>
-              <div className="rounded-lg bg-white p-4 shadow-sm">
+              <div className="rounded-lg bg-white p-4 -sm">
                 <p className="mb-2">
                   <strong>Email:</strong>{" "}
                   <a
@@ -213,7 +213,7 @@ export default function DataDeletionPage() {
               </p>
               <Link
                 href="/contact"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:scale-105"
+                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-white -md transition-all hover:scale-105"
               >
                 Submit Deletion Request
               </Link>
@@ -221,7 +221,7 @@ export default function DataDeletionPage() {
           </section>
 
           {/* Section 3: Facebook Login Data Deletion */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
             <h2 className="mb-4 text-xl font-bold text-slate-900">
               3. Facebook Login Data Deletion
             </h2>
@@ -273,7 +273,7 @@ export default function DataDeletionPage() {
           </section>
 
           {/* Section 4: What Happens After You Request Deletion */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
             <h2 className="mb-4 text-xl font-bold text-slate-900">
               4. What Happens After You Request Deletion
             </h2>
@@ -342,7 +342,7 @@ export default function DataDeletionPage() {
           </section>
 
           {/* Section 5: Data We May Retain */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
             <h2 className="mb-4 text-xl font-bold text-slate-900">
               5. Data We May Retain
             </h2>
@@ -364,7 +364,7 @@ export default function DataDeletionPage() {
           </section>
 
           {/* Section 6: Important Notes */}
-          <section className="rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-sm">
+          <section className="rounded-2xl border border-amber-200 bg-amber-50 p-6 -sm">
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-6 w-6 shrink-0 text-amber-600" />
               <div>
@@ -396,7 +396,7 @@ export default function DataDeletionPage() {
           </section>
 
           {/* Section 7: Contact Information */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
             <h2 className="mb-4 text-xl font-bold text-slate-900">
               6. Contact Information
             </h2>
@@ -443,7 +443,7 @@ export default function DataDeletionPage() {
           </section>
 
           {/* Section 8: Your Rights */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
             <h2 className="mb-4 text-xl font-bold text-slate-900">
               7. Your Rights
             </h2>
@@ -473,7 +473,7 @@ export default function DataDeletionPage() {
         </div>
 
         {/* Call to Action */}
-        <div className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center shadow-sm">
+        <div className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center -sm">
           <div className="flex flex-col items-center">
             <div className="bg-primary/10 text-primary mb-4 flex h-16 w-16 items-center justify-center rounded-full">
               <Trash2 className="h-8 w-8" />
@@ -487,20 +487,20 @@ export default function DataDeletionPage() {
             <div className="flex flex-col gap-4 sm:flex-row">
               <a
                 href="mailto:nepdoranepal@gmail.com?subject=Data%20Deletion%20Request"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105"
+                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white -md transition-all hover:scale-105"
               >
                 <Mail className="h-4 w-4" />
                 Email Us
               </a>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 -sm transition-all hover:bg-slate-50"
               >
                 Contact Form
               </Link>
               <a
                 href="tel:+9779866316114"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 -sm transition-all hover:bg-slate-50"
               >
                 <Phone className="h-4 w-4" />
                 Call Us

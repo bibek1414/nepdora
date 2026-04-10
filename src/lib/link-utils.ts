@@ -115,9 +115,12 @@ export const getLinkPrefix = (
   if (
     !siteUser &&
     pathname &&
-    (pathname.includes("/preview/") || pathname.includes("/publish/"))
+    (pathname.includes("/preview/") ||
+      pathname.includes("/publish/") ||
+      pathname.includes("/builder/"))
   ) {
     const parts = pathname.split("/");
+    // For /preview/{siteUser}... or /builder/{siteId}...
     if (parts.length >= 3) {
       siteUser = parts[2];
     }
@@ -125,6 +128,7 @@ export const getLinkPrefix = (
 
   if (!siteUser) return "";
   if (pathname?.includes("/preview/")) return `/preview/${siteUser}`;
+  if (pathname?.includes("/builder/")) return `/builder/${siteUser}`;
   if (pathname?.includes("/publish/")) return ``;
   return "";
 };

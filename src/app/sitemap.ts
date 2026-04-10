@@ -6,6 +6,8 @@ import { industries } from "@/lib/seo-data";
 import { INTEGRATIONS } from "@/constants/integrations";
 import { GLOSSARY_TERMS } from "@/constants/glossary";
 import { BEST_OF_DATA } from "@/constants/best-of";
+import { SOLUTIONS_LIST } from "@/constants/solutions";
+import { USE_CASES } from "@/constants/use-cases";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
@@ -36,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/support", priority: 0.7 },
     { path: "/website-developer-nepal", priority: 0.9 },
     { path: "/free-website-analyzer", priority: 0.8 },
+    { path: "/free-website-builder", priority: 0.9 },
     { path: "/invoice-builder", priority: 0.8 },
     { path: "/tools/business-name-generator-nepal", priority: 0.8 },
     { path: "/tools/domain-name-checker-nepal", priority: 0.8 },
@@ -45,6 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/tools/privacy-policy-generator-nepal", priority: 0.8 },
     { path: "/privacy-policy", priority: 0.5 },
     { path: "/terms", priority: 0.5 },
+    { path: "/data-delete", priority: 0.3 },
     { path: "/khalti-payment-gateway-nepal", priority: 0.9 },
     { path: "/esewa-integration-guide-nepal", priority: 0.9 },
     { path: "/website-registration-nepal", priority: 0.8 },
@@ -53,6 +57,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/showcase", priority: 0.9 },
     { path: "/integrations", priority: 0.9 },
     { path: "/industries", priority: 0.9 },
+    { path: "/solutions", priority: 0.9 },
+    { path: "/use-cases", priority: 0.9 },
+    { path: "/compare", priority: 0.8 },
+    { path: "/glossary", priority: 0.8 },
     { path: "/switch", priority: 0.8 },
     { path: "/website-builder-nepal", priority: 0.9 },
   ];
@@ -112,15 +120,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // Solution Pages (Problem-Solution traffic)
-  const solutionPages = [
-    "accept-esewa-payments-online",
-    "local-delivery-integration-pathao",
-  ].map(slug => ({
-    url: `${baseUrl}/solutions/${slug}`,
+  // Solution Pages
+  const solutionPages = SOLUTIONS_LIST.map(solution => ({
+    url: `${baseUrl}/solutions/${solution.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.8,
+  }));
+
+  // Use Case Pages
+  const useCasePages = USE_CASES.map(useCase => ({
+    url: `${baseUrl}/use-cases/${useCase.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
 
   // Category pages (Hubs)
@@ -207,25 +220,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // Programmatic Industry & City pages (Lower priority to save crawl budget)
+  // Programmatic Industry & City pages
   const dynamicIndustryCities: MetadataRoute.Sitemap = [];
-
   industries.forEach(industry => {
     TOP_CITIES.forEach(city => {
       const citySlug = city.toLowerCase();
-      // industry/city
       dynamicIndustryCities.push({
         url: `${baseUrl}/${industry}/${citySlug}`,
         lastModified: new Date(),
         changeFrequency: "monthly" as const,
-        priority: 0.6,
+        priority: 0.5, // Lowered priority for programmatic pages
       });
-      // create-website-for/industry/city
       dynamicIndustryCities.push({
         url: `${baseUrl}/create-website-for/${industry}/${citySlug}`,
         lastModified: new Date(),
         changeFrequency: "monthly" as const,
-        priority: 0.5,
+        priority: 0.4,
       });
     });
   });
@@ -238,7 +248,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${baseUrl}/${category.slug}/${city.toLowerCase()}`,
         lastModified: new Date(),
         changeFrequency: "monthly" as const,
-        priority: 0.6,
+        priority: 0.5,
       });
     });
   });
@@ -246,6 +256,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...basePages,
     ...solutionPages,
+    ...useCasePages,
     ...categoryPages,
     ...features,
     ...comparePages,

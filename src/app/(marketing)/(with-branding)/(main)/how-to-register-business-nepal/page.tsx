@@ -169,7 +169,7 @@ export default function BusinessRegistrationPage() {
       <StandardMarketingCTA
         title="Ready to take your business online?"
         description="Now that you've got the vision, build the professional image it deserves. Nepdora is the easiest way for new Nepali companies to get a high-performing website."
-        buttonText="Start building for free"
+        buttonText="Build My Business Website"
         buttonHref="/pricing"
       />
     </div>

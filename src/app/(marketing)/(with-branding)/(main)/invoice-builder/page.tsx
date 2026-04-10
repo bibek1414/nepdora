@@ -60,7 +60,7 @@ export default function InvoiceBuilderPage() {
       <StandardMarketingCTA
         title="Ready to automate your billing?"
         description="Build a high-performance website with integrated payments in 2 minutes. Start building for free with Nepdora."
-        buttonText="Get started for free"
+        buttonText="Automate My Business"
         buttonHref="/create-website"
       />
     </main>

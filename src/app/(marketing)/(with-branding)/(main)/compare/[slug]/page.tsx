@@ -243,7 +243,7 @@ export default async function ComparePage({ params }: Props) {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-3xl text-center">
             <div className="bg-primary/10 text-primary mb-6 inline-block rounded-full px-4 py-1 text-sm font-medium">
-              ⚔️ Platform Comparison
+              Platform Comparison
             </div>
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
               Nepdora vs {competitorName} —{" "}
@@ -256,7 +256,7 @@ export default async function ComparePage({ params }: Props) {
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 href="/create-website"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white -md transition-all hover:scale-105"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
               >
                 Start with Nepdora
                 <ChevronRight className="h-4 w-4" />
@@ -296,7 +296,7 @@ export default async function ComparePage({ params }: Props) {
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid gap-8 md:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 inline-flex rounded-full px-3 py-1 text-xs font-medium">
                 🇳🇵 Built for Nepal
               </div>
@@ -307,7 +307,7 @@ export default async function ComparePage({ params }: Props) {
                 faster performance within Nepal.
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="mb-4 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
                 🌍 Global Platform
               </div>
@@ -341,7 +341,7 @@ export default async function ComparePage({ params }: Props) {
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white -sm">
+          <div className="-sm overflow-hidden rounded-2xl border border-slate-200 bg-white">
             <div className="grid grid-cols-3 border-b border-slate-200 bg-slate-50">
               <div className="p-4 font-semibold text-slate-900">Plan</div>
               <div className="bg-primary/5 text-primary p-4 text-center font-semibold">
@@ -412,7 +412,7 @@ export default async function ComparePage({ params }: Props) {
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white -sm">
+          <div className="-sm overflow-hidden rounded-2xl border border-slate-200 bg-white">
             <div className="grid grid-cols-3 border-b border-slate-200 bg-slate-50">
               <div className="p-4 font-semibold text-slate-900">Feature</div>
               <div className="bg-primary/5 text-primary p-4 text-center font-semibold">
@@ -456,7 +456,7 @@ export default async function ComparePage({ params }: Props) {
 
           <div className="grid gap-8 md:grid-cols-2">
             {/* Built for Nepal */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Globe className="h-6 w-6" />
               </div>
@@ -475,7 +475,7 @@ export default async function ComparePage({ params }: Props) {
             </div>
 
             {/* Pricing */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <DollarSign className="h-6 w-6" />
               </div>
@@ -493,7 +493,7 @@ export default async function ComparePage({ params }: Props) {
             </div>
 
             {/* Speed */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Zap className="h-6 w-6" />
               </div>
@@ -511,7 +511,7 @@ export default async function ComparePage({ params }: Props) {
             </div>
 
             {/* Ease of Use */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Users className="h-6 w-6" />
               </div>
@@ -542,7 +542,7 @@ export default async function ComparePage({ params }: Props) {
 
           <div className="grid gap-8 md:grid-cols-2">
             {/* Choose Nepdora */}
-            <div className="border-primary/20 bg-primary/5 rounded-2xl border p-6 -sm">
+            <div className="border-primary/20 bg-primary/5 -sm rounded-2xl border p-6">
               <div className="bg-primary/20 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Award className="h-6 w-6" />
               </div>
@@ -568,7 +568,7 @@ export default async function ComparePage({ params }: Props) {
             </div>
 
             {/* Choose Competitor */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
                 <Globe className="h-6 w-6" />
               </div>
@@ -598,7 +598,7 @@ export default async function ComparePage({ params }: Props) {
       {/* Why Nepdora Wins */}
       <section className="border-y border-slate-100 bg-slate-50 py-16">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center -sm">
+          <div className="-sm rounded-2xl border border-slate-200 bg-white p-8 text-center">
             <div className="mb-4 flex justify-center">
               <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full">
                 <Trophy className="h-8 w-8" />
@@ -620,11 +620,8 @@ export default async function ComparePage({ params }: Props) {
       {/* Final CTA */}
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
-                <Zap className="text-primary h-8 w-8" />
-              </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Ready to build your website the smarter way?
               </h2>
@@ -635,7 +632,7 @@ export default async function ComparePage({ params }: Props) {
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/create-website"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
+                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
                 >
                   Start Building
                   <ChevronRight className="h-4 w-4" />

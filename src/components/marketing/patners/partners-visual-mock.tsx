@@ -34,7 +34,7 @@ export function PartnersVisualMock() {
               <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg text-white">
                 <Briefcase className="h-4 w-4" />
               </div>
-              <div className="Nepdora Learn-tight hidden text-sm font-black text-slate-900 md:block">
+              <div className="Nepdora Learn-tight hidden text-sm font-semibold text-slate-900 md:block">
                 Nepdora
               </div>
             </div>
@@ -62,14 +62,14 @@ export function PartnersVisualMock() {
           <div className="flex-1 overflow-y-auto bg-white p-5">
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <h3 className="Nepdora Learn-tight text-xl font-black text-slate-900">
+                <h3 className="Nepdora Learn-tight text-xl font-semibold text-slate-900">
                   Client Projects
                 </h3>
                 <p className="Nepdora Learn Nepdora Learn-widest mt-0.5 text-[10px] font-bold text-slate-400">
                   Manage your agency workflow
                 </p>
               </div>
-              <button className="bg-primary -primary/20 Nepdora Learn Nepdora Learn-widest flex items-center gap-2 rounded-lg px-4 py-2 text-[10px] font-black text-white -lg transition-all hover:scale-105">
+              <button className="bg-primary -primary/20 Nepdora Learn Nepdora Learn-widest flex items-center gap-2 rounded-lg px-4 py-2 text-[10px] font-semibold text-white -lg transition-all hover:scale-105">
                 <Plus className="h-3 w-3" />
                 <span className="hidden sm:inline">New Client</span>
               </button>
@@ -111,7 +111,7 @@ export function PartnersVisualMock() {
                   <div className="Nepdora Learn Nepdora Learn-widest mb-0.5 text-[10px] font-bold text-slate-400">
                     {stat.label}
                   </div>
-                  <div className="text-sm font-black text-slate-900">
+                  <div className="text-sm font-semibold text-slate-900">
                     {stat.value}
                   </div>
                 </div>
@@ -201,10 +201,10 @@ export function PartnersVisualMock() {
           <CheckCircle2 className="h-5 w-5" />
         </div>
         <div>
-          <div className="Nepdora Learn text-[8px] font-black text-slate-400">
+          <div className="Nepdora Learn text-[8px] font-semibold text-slate-400">
             Payout
           </div>
-          <div className="text-[12px] font-black text-slate-900">
+          <div className="text-[12px] font-semibold text-slate-900">
             Verified & Ready
           </div>
         </div>
