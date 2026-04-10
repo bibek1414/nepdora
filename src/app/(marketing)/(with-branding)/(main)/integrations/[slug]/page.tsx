@@ -293,7 +293,7 @@ export default async function IntegrationDetailsPage({ params }: Props) {
                   Nepal.
                 </p>
                 <Link
-                  href="/register"
+                  href="/admin/signup"
                   className="bg-primary block w-full rounded-xl px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:scale-105"
                 >
                   Start Free Trial

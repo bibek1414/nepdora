@@ -21,7 +21,7 @@ export default function FeaturesHero() {
             </p>
 
             <Link
-              href="/register"
+              href="admin/signup"
               className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-700"
             >
               Start Building Free

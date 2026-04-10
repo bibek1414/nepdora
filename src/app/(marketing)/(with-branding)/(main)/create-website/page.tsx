@@ -86,8 +86,8 @@ export default function CreateWebsitePage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
-                  className="bg-primary inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105 active:scale-95"
+                  href="/admin/signup"
+                  className="bg-primary -md inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
                 >
                   Get My Website Online Now
                   <ChevronRight className="h-4 w-4" />
@@ -166,7 +166,7 @@ export default function CreateWebsitePage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-8 -sm transition-all hover:-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-8 transition-all"
               >
                 <div className="text-primary mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50">
                   <item.icon className="h-6 w-6" />
@@ -210,7 +210,7 @@ export default function CreateWebsitePage() {
                 ))}
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-8">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-medium text-slate-500">
@@ -339,9 +339,9 @@ export default function CreateWebsitePage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="relative rounded-2xl border border-slate-200 bg-white p-6 -sm"
+                className="-sm relative rounded-2xl border border-slate-200 bg-white p-6"
               >
-                <div className="bg-primary absolute -top-3 -left-3 flex h-10 w-10 items-center justify-center rounded-xl text-base font-semibold text-white -md">
+                <div className="bg-primary -md absolute -top-3 -left-3 flex h-10 w-10 items-center justify-center rounded-xl text-base font-semibold text-white">
                   {item.step}
                 </div>
                 <h4 className="mt-4 mb-2 text-lg font-semibold text-slate-900">
@@ -414,9 +414,9 @@ export default function CreateWebsitePage() {
       {/* Final CTA */}
       <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
+              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
                 <Rocket className="text-primary h-8 w-8" />
               </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
@@ -429,7 +429,7 @@ export default function CreateWebsitePage() {
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/admin/signup"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105 active:scale-95"
+                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
                 >
                   Start for Free
                   <ChevronRight className="h-4 w-4" />
