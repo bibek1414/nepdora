@@ -112,7 +112,7 @@ export const Footer = () => {
                 <FooterLink href="/create-educational-consultancy-website-in-nepdora">
                   Create Education Website in Nepdora
                 </FooterLink>
-                <FooterLink href="/create-travel-agency-website-in-nepdora">
+                <FooterLink href="/create-travel-tours-website-in-nepdora">
                   Create Travel & Tour Website in Nepdora
                 </FooterLink>
                 <FooterLink href="/create-grocery-website-in-nepdora">

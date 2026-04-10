@@ -6,8 +6,8 @@ import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Create Travel & Tour Website in Nepdora | Official Platform",
   description:
-    "Launch your stunning travel agency or tour website in Nepdora. Integrated bookings, local payments, and easy-to-use tools for Nepali tourism businesses.",
-  path: "/create-travel-agency-website-in-nepdora",
+    "Launch your stunning travel & tour website in Nepdora. Integrated bookings, local payments, and easy-to-use tools for Nepali tourism businesses.",
+  path: "/create-travel-tours-website-in-nepdora",
   keywords: [
     "travel agency website Nepal",
     "tour package website nepal",
@@ -34,7 +34,7 @@ export default function Page() {
   return (
     <>
       <JsonLd id="travel-agency-schema" data={schema} />
-      <CitiesLandingPage category="travel-agency" city="Nepdora" />
+      <CitiesLandingPage category="travel-tours" city="Nepdora" />
     </>
   );
 }

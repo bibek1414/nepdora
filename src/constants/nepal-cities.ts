@@ -364,6 +364,7 @@ export const SERVICE_CATEGORIES = [
   { slug: "gym", name: "Create Gym Website" },
   { slug: "school", name: "Create School Website" },
   { slug: "travel-agency", name: "Create Travel Agency Website" },
+  { slug: "travel-tours", name: "Create Travel Tours Website" },
   {
     slug: "educational-consultancy",
     name: "Create Educational Consultancy Website",
