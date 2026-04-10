@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { SITE_NAME, buildMarketingMetadata } from "@/lib/seo";
+import { SITE_NAME, buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 import {
   CheckCircle2,
   Zap,
@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ExpertsVisualMock } from "@/components/marketing/experts/experts-visual-mock";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata = buildMarketingMetadata({
   title: "Hire Expert Website Builders in Nepal | Nepdora Expert Hub",
@@ -39,8 +40,24 @@ export const metadata = buildMarketingMetadata({
 });
 
 export default function ExpertsPage() {
+  const expertsSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Nepdora Expert Hub",
+    description:
+      "Hire verified website developers and designers in Nepal to build and scale your business.",
+    provider: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: absoluteUrl(),
+    },
+    areaServed: "NP",
+    serviceType: "Website Development",
+  };
+
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
+      <JsonLd id="experts-schema" data={expertsSchema} />
       {/* Hero Section */}
       <section className="pt-20 pb-32">
         <div className="container mx-auto max-w-6xl px-6">

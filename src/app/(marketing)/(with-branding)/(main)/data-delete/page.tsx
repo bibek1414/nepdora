@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { JsonLd } from "@/components/shared/json-ld";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import Link from "next/link";
 import {
@@ -34,8 +35,41 @@ export const metadata = buildMarketingMetadata({
 export default function DataDeletionPage() {
   const lastUpdated = "April 10, 2026";
 
+  const deletionSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Data Deletion Instructions | Nepdora",
+    description: "How to request deletion of your personal data and account from Nepdora.",
+    lastReviewed: "2026-04-10",
+  };
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to Delete Your Nepdora Account",
+    step: [
+      {
+        "@type": "HowToStep",
+        name: "Log in",
+        text: "Log in to your Nepdora account dashboard.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Go to Admin Settings",
+        text: "Navigate to Admin Dashboard → Settings → Account Settings.",
+      },
+      {
+        "@type": "HowToStep",
+        name: "Delete Account",
+        text: "Scroll to the Danger Zone and click Delete Account.",
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd id="deletion-schema" data={deletionSchema} />
+      <JsonLd id="how-to-delete" data={howToSchema} />
       <div className="container mx-auto max-w-4xl px-6 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">

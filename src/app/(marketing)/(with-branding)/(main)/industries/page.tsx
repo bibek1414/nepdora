@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
-import { buildMarketingMetadata } from "@/lib/seo";
+import { industries, INDUSTRY_LABELS, MAJOR_CITIES } from "@/lib/seo-data";
+import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import {
   ChevronRight,
   Star,
@@ -61,8 +62,22 @@ export default function IndustriesHubPage() {
   const featuredIndustries = industries.slice(0, 6);
   const moreIndustries = industries.slice(6);
 
+  const industriesSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Industry Solutions Hub | Nepdora",
+    description:
+      "Professional website solutions for Restaurants, E-commerce, Schools, and more in Nepal.",
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: absoluteUrl(),
+    },
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd id="industries-schema" data={industriesSchema} />
       {/* Hero Section */}
       <section className="pt-20 pb-16">
         <div className="container mx-auto max-w-6xl px-6">
@@ -241,6 +256,51 @@ export default function IndustriesHubPage() {
               <div className="text-primary text-2xl font-bold">99.9%</div>
               <div className="text-xs text-slate-500">Uptime Guarantee</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Industry by City Section */}
+      <section className="bg-slate-50 py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <h2 className="mb-10 text-center text-3xl font-bold text-slate-900">
+            Solutions for Every <span className="text-primary">City in Nepal</span>
+          </h2>
+          <div className="grid gap-12 lg:grid-cols-2">
+             {/* Restaurant Example Hub */}
+             <div className="rounded-3xl border border-slate-200 bg-white p-8">
+                <h4 className="mb-6 text-sm font-bold uppercase tracking-widest text-slate-400">
+                  Restaurant Solutions by Location
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                   {MAJOR_CITIES.slice(0, 8).map(city => (
+                     <Link 
+                       key={city} 
+                       href={`/restaurant-website/${city.toLowerCase()}`}
+                       className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
+                     >
+                        Restaurants in <span className="capitalize">{city}</span>
+                     </Link>
+                   ))}
+                </div>
+             </div>
+             {/* E-commerce Example Hub */}
+             <div className="rounded-3xl border border-slate-200 bg-white p-8">
+                <h4 className="mb-6 text-sm font-bold uppercase tracking-widest text-slate-400">
+                  E-commerce Solutions by Location
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                   {MAJOR_CITIES.slice(0, 8).map(city => (
+                     <Link 
+                       key={city} 
+                       href={`/grocery-website/${city.toLowerCase()}`}
+                       className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
+                     >
+                        Store Builders in <span className="capitalize">{city}</span>
+                     </Link>
+                   ))}
+                </div>
+             </div>
           </div>
         </div>
       </section>
