@@ -90,6 +90,22 @@ const EXTENDED_GLOSSARY: GlossaryTerm[] = [
       "A CMS like Nepdora allows you to update your website without any coding knowledge. You can add products, write blog posts, change images, and manage pages through an easy-to-use dashboard, putting you in control of your website.",
   },
   {
+    term: "Domain",
+    slug: "what-is-domain",
+    definition:
+      "Your website's unique address on the internet (e.g., yourbusiness.com).",
+    detailedExplanation:
+      "Your domain name is how customers find you online. Choose something memorable and related to your business. .com.np domains are available for registered Nepali businesses.",
+  },
+  {
+    term: "Web Hosting",
+    slug: "what-is-web-hosting",
+    definition:
+      "A service that stores your website files and makes them accessible online.",
+    detailedExplanation:
+      "Web hosting is like renting space on the internet. Good hosting ensures your website is fast, secure, and always available to your customers in Nepal.",
+  },
+  {
     term: "eSewa",
     slug: "what-is-esewa",
     definition: "Nepal's most popular digital wallet for online payments.",
@@ -250,7 +266,7 @@ export default async function GlossaryTermPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-white">
       <JsonLd id="glossary-term-schema" data={definedTermSchema} />
-      
+
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs
           items={[
