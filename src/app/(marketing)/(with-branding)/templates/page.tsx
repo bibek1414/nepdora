@@ -77,9 +77,7 @@ export default function Templates() {
     <>
       <JsonLd id="templates-schema" data={templatesSchema} />
       <JsonLd id="templates-breadcrumb" data={breadcrumbSchema} />
-      <div className="container mx-auto max-w-6xl px-6">
-        <Breadcrumbs items={[{ label: "Templates", href: "/templates" }]} />
-      </div>
+
       <TemplateHero categoryName="All" />
       <Suspense fallback={<div className="min-h-screen py-20" />}>
         <TemplatesPage asH1={true} />

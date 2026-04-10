@@ -65,9 +65,7 @@ export default function AboutPage() {
     <div className="bg-white">
       <JsonLd id="about-schema" data={aboutSchema} />
       <JsonLd id="about-breadcrumb" data={breadcrumbSchema} />
-      <div className="container mx-auto max-w-6xl px-6">
-        <Breadcrumbs items={[{ label: "About", href: "/about" }]} />
-      </div>
+
       <AboutHero />
       <AboutStory />
       <div className="space-y-24 pb-24 sm:space-y-32 sm:pb-32 lg:space-y-48 lg:pb-48">

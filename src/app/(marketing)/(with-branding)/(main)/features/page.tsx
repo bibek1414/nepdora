@@ -87,10 +87,6 @@ export default function FeaturesPage() {
   return (
     <>
       <JsonLd id="features-app-schema" data={featuresSchema} />
-      
-      <div className="container mx-auto max-w-6xl px-6">
-        <Breadcrumbs items={[{ label: "Features", href: "/features" }]} />
-      </div>
 
       <FeaturesHero />
       <FeatureShowcase />

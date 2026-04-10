@@ -46,6 +46,9 @@ export const cities = NEPAL_CITIES.map(city => city.toLowerCase());
 export const INDUSTRY_LABELS: Record<string, string> = {
   restaurant: "Restaurant",
   "clothing-store": "Clothing Store",
+  "restaurant-website": "Restaurant Website",
+  "ecommerce-website": "Ecommerce Website",
+  "clinic-website": "Clinic Website",
   gym: "Gym & Fitness",
   school: "School & Education",
   clinic: "Medical Clinic",

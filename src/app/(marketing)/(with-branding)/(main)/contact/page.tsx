@@ -65,9 +65,7 @@ export default function ContactPage() {
     <>
       <JsonLd id="contact-schema" data={contactSchema} />
       <JsonLd id="contact-breadcrumb" data={breadcrumbSchema} />
-      <div className="container mx-auto max-w-6xl px-6 pt-4">
-        <Breadcrumbs items={[{ label: "Contact", href: "/contact" }]} />
-      </div>
+
       <ContactSection />
     </>
   );

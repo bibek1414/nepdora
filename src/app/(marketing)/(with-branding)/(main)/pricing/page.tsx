@@ -70,9 +70,6 @@ export default async function PricingPage() {
     <>
       <JsonLd id="pricing-schema" data={pricingSchema} />
       <JsonLd id="pricing-breadcrumb" data={breadcrumbSchema} />
-      <div className="container mx-auto max-w-6xl px-6">
-        <Breadcrumbs items={[{ label: "Pricing", href: "/pricing" }]} />
-      </div>
       <PricingHero />
       <PricingSectionHero initialPlans={plans} />
       <PricingCalculator />

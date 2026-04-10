@@ -100,7 +100,7 @@ export default function IndustriesHubPage() {
     <div className="min-h-screen bg-white">
       <JsonLd id="industries-schema" data={industriesSchema} />
       <JsonLd id="industries-breadcrumb" data={breadcrumbSchema} />
-      
+
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Industries", href: "/industries" }]} />
       </div>
@@ -109,10 +109,9 @@ export default function IndustriesHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-3xl text-center">
             <div className="bg-primary/10 text-primary mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1 text-sm font-medium">
-              <Sparkles className="h-4 w-4" />
               Industry Solutions
             </div>
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+            <h1 className="-tight mb-6 text-4xl font-bold text-slate-900 md:text-5xl lg:text-6xl">
               Built for <span className="text-primary">every industry.</span>
             </h1>
             <p className="text-lg leading-relaxed font-medium text-slate-500">
@@ -123,7 +122,7 @@ export default function IndustriesHubPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 href="/create-website"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
               >
                 Start Building
                 <ChevronRight className="h-4 w-4" />
@@ -165,14 +164,14 @@ export default function IndustriesHubPage() {
                 <Link
                   key={slug}
                   href={`/templates/${slug}`}
-                  className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                  className="group -sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-1"
                 >
                   <div
-                    className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${color} p-3 text-white shadow-md`}
+                    className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${color} -md p-3 text-white`}
                   >
                     {getIndustryIcon(slug)}
                   </div>
-                  <h3 className="group-hover:text-primary mb-2 text-xl font-bold text-slate-900 transition-colors">
+                  <h3 className="group- mb-2 text-xl font-bold text-slate-900 transition-colors">
                     {label}
                   </h3>
                   <p className="text-sm leading-relaxed font-medium text-slate-500">
@@ -202,7 +201,7 @@ export default function IndustriesHubPage() {
                 <Link
                   key={slug}
                   href={`/templates/${slug}`}
-                  className="hover:border-primary hover:text-primary rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition-all"
+                  className="hover:border-primary rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition-all"
                 >
                   {INDUSTRY_LABELS[slug] || slug}
                 </Link>
@@ -216,7 +215,7 @@ export default function IndustriesHubPage() {
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+            <h2 className="-tight mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
               Everything you need to succeed
             </h2>
             <p className="text-lg font-medium text-slate-500">
@@ -245,7 +244,7 @@ export default function IndustriesHubPage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm"
+                className="-sm rounded-2xl border border-slate-200 bg-white p-5 text-center"
               >
                 <div className="bg-primary/10 text-primary mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl">
                   <item.icon className="h-6 w-6" />
@@ -290,43 +289,44 @@ export default function IndustriesHubPage() {
       <section className="bg-slate-50 py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <h2 className="mb-10 text-center text-3xl font-bold text-slate-900">
-            Solutions for Every <span className="text-primary">City in Nepal</span>
+            Solutions for Every{" "}
+            <span className="text-primary">City in Nepal</span>
           </h2>
           <div className="grid gap-12 lg:grid-cols-2">
-             {/* Restaurant Example Hub */}
-             <div className="rounded-3xl border border-slate-200 bg-white p-8">
-                <h4 className="mb-6 text-sm font-bold uppercase tracking-widest text-slate-400">
-                  Restaurant Solutions by Location
-                </h4>
-                <div className="grid grid-cols-2 gap-4">
-                   {MAJOR_CITIES.slice(0, 8).map(city => (
-                     <Link 
-                       key={city} 
-                       href={`/restaurant-website/${city.toLowerCase()}`}
-                       className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
-                     >
-                        Restaurants in <span className="capitalize">{city}</span>
-                     </Link>
-                   ))}
-                </div>
-             </div>
-             {/* E-commerce Example Hub */}
-             <div className="rounded-3xl border border-slate-200 bg-white p-8">
-                <h4 className="mb-6 text-sm font-bold uppercase tracking-widest text-slate-400">
-                  E-commerce Solutions by Location
-                </h4>
-                <div className="grid grid-cols-2 gap-4">
-                   {MAJOR_CITIES.slice(0, 8).map(city => (
-                     <Link 
-                       key={city} 
-                       href={`/grocery-website/${city.toLowerCase()}`}
-                       className="text-sm font-medium text-slate-600 transition-colors hover:text-primary"
-                     >
-                        Store Builders in <span className="capitalize">{city}</span>
-                     </Link>
-                   ))}
-                </div>
-             </div>
+            {/* Restaurant Example Hub */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-8">
+              <h4 className="-widest mb-6 text-sm font-bold text-slate-400 uppercase">
+                Restaurant Solutions by Location
+              </h4>
+              <div className="grid grid-cols-2 gap-4">
+                {MAJOR_CITIES.slice(0, 8).map(city => (
+                  <Link
+                    key={city}
+                    href={`/restaurant-website/${city.toLowerCase()}`}
+                    className="text-sm font-medium text-slate-600 transition-colors"
+                  >
+                    Restaurants in <span className="capitalize">{city}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            {/* E-commerce Example Hub */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-8">
+              <h4 className="-widest mb-6 text-sm font-bold text-slate-400 uppercase">
+                E-commerce Solutions by Location
+              </h4>
+              <div className="grid grid-cols-2 gap-4">
+                {MAJOR_CITIES.slice(0, 8).map(city => (
+                  <Link
+                    key={city}
+                    href={`/grocery-website/${city.toLowerCase()}`}
+                    className="text-sm font-medium text-slate-600 transition-colors"
+                  >
+                    Store Builders in <span className="capitalize">{city}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -334,12 +334,12 @@ export default function IndustriesHubPage() {
       {/* Custom Solution CTA */}
       <section className="py-20">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
                 <Sparkles className="text-primary h-8 w-8" />
               </div>
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              <h2 className="-tight mb-4 max-w-3xl text-3xl font-bold text-slate-900 md:text-4xl">
                 Don't see your industry?
               </h2>
               <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
@@ -349,7 +349,7 @@ export default function IndustriesHubPage() {
               </p>
               <Link
                 href="/contact"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
               >
                 Get a Custom Consultation
                 <ChevronRight className="h-4 w-4" />

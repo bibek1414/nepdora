@@ -30,12 +30,12 @@ export const IndustryDiscovery: React.FC<IndustryDiscoveryProps> = ({
             <Link
               key={industry}
               href={`/${industry}`}
-              className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 transition hover:border-slate-300 hover:shadow-sm"
+              className="group flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 transition :border-slate-300 :shadow-sm"
             >
-              <h3 className="mb-2 text-sm font-semibold text-slate-900 group-hover:text-blue-600">
+              <h3 className="mb-2 text-sm font-semibold text-slate-900 group-:text-blue-600">
                 {INDUSTRY_LABELS[industry] || industry}
               </h3>
-              <div className="flex items-center text-xs font-medium text-slate-400 group-hover:text-blue-500">
+              <div className="flex items-center text-xs font-medium text-slate-400 group-:text-blue-500">
                 View Solution
                 <ChevronRight className="ml-1 h-3 w-3" />
               </div>
