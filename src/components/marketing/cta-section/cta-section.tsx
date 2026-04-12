@@ -1,42 +1,133 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+"use client";
 
-const CTA: React.FC = () => {
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+
+interface CityCTAProps {
+  cityName?: string;
+  category?: string;
+}
+
+export const CityCTA: React.FC<CityCTAProps> = ({
+  cityName = "Nepal",
+  category = "online",
+}) => {
+  const industryLabel = category?.replace(/-/g, " ") || "online";
+
   return (
-    <section className="mx-auto max-w-4xl px-3 py-12 text-center sm:px-4 sm:py-16 md:py-20 lg:px-6 lg:py-24">
-      <h2 className="mb-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-        Want to build your website?
-      </h2>
-      <p className="mx-auto mb-8 max-w-2xl text-sm text-slate-700 sm:mb-10 sm:text-base md:text-lg lg:text-xl">
-        Build it yourself or get help from our support team to get your website
-        live within few minutes. All functionalities, ecommerce, restaurant,
-        service business anything can be built on Nepdora.
-      </p>
-      <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-        <Link href="/admin/signup" className="w-full sm:w-auto">
-          <Button
-            size="lg"
-            className="w-full rounded-full text-sm sm:text-base"
-          >
-            Start Building Now
-          </Button>
-        </Link>
-        <Link href="/contact" className="w-full sm:w-auto">
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full rounded-full text-sm sm:text-base"
-          >
-            Talk to Sales
-          </Button>
-        </Link>
+    <section className="relative mb-20 overflow-hidden px-6 py-16">
+      <div className="mx-auto max-w-6xl">
+        <div className="group relative overflow-hidden rounded-[2rem] bg-primary px-8 py-12 text-center text-white shadow-xl md:px-12 md:py-16">
+          {/* Decorative Shapes/Background */}
+          <div className="pointer-events-none absolute inset-0 select-none overflow-hidden">
+            {/* Main Gradient Overlay */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_50%)]" />
+
+            {/* Secondary Color Circle Cutout */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 0.1, scale: 1 }}
+              transition={{ duration: 1.2 }}
+              className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-secondary blur-2xl"
+            />
+
+            {/* "Cut Pot" / Semi-circle decorative element */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.7, rotate: -25 }}
+              whileInView={{ opacity: 0.1, scale: 1, rotate: -15 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full border-[30px] border-white ring-[15px] ring-white/10"
+            />
+
+            {/* Floating Orbs */}
+            <motion.div
+              animate={{
+                y: [0, -20, 0],
+                x: [0, 10, 0],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute right-[5%] top-1/4 h-32 w-32 rounded-full bg-white/5 blur-3xl"
+            />
+
+            <motion.div
+              animate={{
+                y: [0, 15, 0],
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+              className="absolute bottom-1/4 left-1/3 h-20 w-20 rounded-full bg-white/5 blur-2xl"
+            />
+
+            {/* Filled Circle bottom right */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 0.1, scale: 1 }}
+              transition={{ duration: 1.5, delay: 0.5 }}
+              className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-white/10 blur-xl"
+            />
+          </div>
+
+          <div className="relative z-10 mx-auto max-w-3xl">
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mb-5 text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-5xl"
+            >
+              Ready to launch your{" "}
+              <span className="relative inline-block text-white">
+                {industryLabel}
+                <motion.span
+                  initial={{ width: 0 }}
+                  whileInView={{ width: "100%" }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="absolute -bottom-0.5 left-0 h-1 rounded-full bg-white/40"
+                />
+              </span>{" "}
+              business in {cityName}?
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-indigo-50/80 md:text-lg"
+            >
+              Join hundreds of {cityName} businesses who trust Nepdora to build
+              and grow their presence online. Start your journey today.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="flex justify-center"
+            >
+              <Link href="/signup">
+                <Button
+                  size="lg"
+                  className="group relative h-auto rounded-full bg-white px-10 py-4 text-lg font-medium text-primary transition-all hover:bg-neutral-50 hover:shadow-lg active:scale-95"
+                >
+                  Start Building Free
+                  <ChevronRight className="ml-2.5 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
       </div>
-      <p className="mt-6 text-xs text-slate-600 sm:mt-8 sm:text-sm">
-        Includes free domain connection, hosting, and SSL.
-      </p>
     </section>
   );
 };
 
-export default CTA;
+export default CityCTA;

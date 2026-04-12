@@ -18,11 +18,13 @@ import { CityDiscovery } from "./components/city-discovery";
 interface CitiesLandingPageProps {
   category: string;
   city: string;
+  breadcrumbItems?: { label: string; href: string }[];
 }
 
 export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
   category,
   city,
+  breadcrumbItems: manualBreadcrumbItems,
 }) => {
   const cityName = capitalizeWords(city);
   const cityLower = city.toLowerCase();
@@ -56,6 +58,22 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
     } in Nepdora`;
   }
 
+  const defaultBreadcrumbItems = [
+    {
+      label: industryLabel.includes("Store") ? industryLabel.replace(" Store", "") : industryLabel,
+      href: `/create-${category}-website-in-nepdora`,
+    },
+  ];
+
+  if (cityLower !== "nepal" && cityLower !== "nepdora") {
+    defaultBreadcrumbItems.push({
+      label: cityName,
+      href: `/create-${category}-website-in-nepdora/${cityLower}`,
+    });
+  }
+
+  const breadcrumbsToRender = manualBreadcrumbItems || defaultBreadcrumbItems;
+
   return (
     <main className="bg-white">
       <CityHero
@@ -67,6 +85,7 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
         customIntro={content.customIntro}
         subHeadline={content.subHeadline}
         ctaText={content.ctaText}
+        breadcrumbItems={breadcrumbsToRender}
       />
 
       <HowItWorks steps={content.howToSteps || []} category={category} />

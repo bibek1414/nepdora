@@ -27,7 +27,7 @@ const TemplatesPage = async ({ asH1 = false }: TemplatesPageProps) => {
             <h2 className="mb-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl">
               Website Templates for Every Nepali Business
             </h2>
-            <p className="mx-auto text-sm text-slate-500 sm:text-base">
+            <p className="mx-auto text-sm sm:text-base">
               Ready-made website templates for Nepal - pick your industry and go
               live today.
             </p>

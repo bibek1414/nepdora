@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ChevronRight, Home } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -29,31 +28,24 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
   };
 
   return (
-    <nav className="scrollbar-hide flex items-center gap-2 overflow-x-auto py-4 text-sm font-medium whitespace-nowrap text-slate-500">
+    <nav className="scrollbar-hide flex items-center gap-2 overflow-x-auto py-2 text-sm font-medium whitespace-nowrap">
       <JsonLd id="breadcrumb-schema" data={schema} />
 
       {allItems.map((item, index) => (
         <div key={item.href} className="flex items-center gap-2">
-          {index === 0 ? (
-            <Link
-              href={item.href}
-              className="hover:text-primary flex items-center gap-1 transition-colors hover:scale-105 active:scale-95"
-            >
-              <Home className="h-3.5 w-3.5" />
-            </Link>
-          ) : (
-            <Link
-              href={item.href}
-              className={`hover:text-primary transition-colors hover:scale-105 active:scale-95 ${
-                index === allItems.length - 1 ? "font-bold text-slate-900" : ""
-              }`}
-            >
-              {item.label}
-            </Link>
-          )}
+          <Link
+            href={item.href}
+            className={`transition-colors duration-200 ${
+              index === allItems.length - 1
+                ? "text-slate-900 pointer-events-none"
+                : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            {item.label}
+          </Link>
 
           {index < allItems.length - 1 && (
-            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-300" />
+            <span className="select-none text-slate-300 font-light transition-opacity">/</span>
           )}
         </div>
       ))}

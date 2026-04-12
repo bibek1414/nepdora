@@ -12,11 +12,11 @@ const Hero: React.FC = () => {
         <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
           {/* Left Content */}
           <div className="max-w-xl flex-1">
-            <h1 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+            <h1 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-black sm:text-4xl md:text-6xl">
               Build your website in Nepal - From RS 833/Month
             </h1>
 
-            <p className="mb-7 text-base leading-relaxed text-slate-500 sm:text-lg">
+            <p className="mb-7 text-base leading-relaxed text-black sm:text-lg">
               Nepal&apos;s Simplest Way to Go Online. Build a professional
               website for your Nepali E-Commerce and Service business in
               minutes. eSewa &amp; Khalti payments, Nepali language, and hosting
@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
             {/* Business type links */}
             <div className="mb-8">
               <p className="mb-3 text-xs font-medium">
-                Choose your business type
+                Website for any kind of business
               </p>
               <BusinessTypeSelector />
             </div>
@@ -34,7 +34,7 @@ const Hero: React.FC = () => {
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3">
               <Link href="/admin/signup">
-                <Button variant="default" rounded={true}>
+                <Button variant="default" rounded={true} size="lg">
                   Start Building Free
                   <ChevronRight className="ml-1.5 h-4 w-4" />
                 </Button>
@@ -43,7 +43,7 @@ const Hero: React.FC = () => {
                 href="https://wa.me/9779866316114"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-secondary transform hover:-translate-y-1 transition-all duration-200"
               >
                 <MessageCircle className="h-4 w-4 text-[#25D366]" />
                 Chat on WhatsApp

@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 interface CityCTAProps {
   cityName: string;
@@ -10,27 +14,114 @@ export const CityCTA: React.FC<CityCTAProps> = ({ cityName, category }) => {
   const industryLabel = category.replace(/-/g, " ");
 
   return (
-    <section className="border-t border-slate-100 bg-white py-20 sm:py-24">
-      <div className="mx-auto max-w-6xl px-6 text-center">
-        <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Ready to launch your {industryLabel} business in {cityName}?
-        </h2>
-        <p className="mx-auto mb-8 max-w-lg text-base leading-relaxed text-slate-500">
-          Join hundreds of {cityName} businesses who trust Nepdora to build and
-          grow their presence online. Start free today.
-        </p>
+    <section className="relative px-6 py-16 mb-20 overflow-hidden">
+      <div className="mx-auto max-w-6xl">
+        <div className="group relative overflow-hidden rounded-[2rem] bg-primary px-8 py-12 text-center text-white shadow-xl md:px-12 md:py-16">
+          {/* Decorative Shapes/Background */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+            {/* Main Gradient Overlay */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_50%)]" />
+            
+            {/* Secondary Color Circle Cutout */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 0.1, scale: 1 }}
+              transition={{ duration: 1.2 }}
+              className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-secondary blur-2xl"
+            />
 
-        <Link
-          href="/admin/signup"
-          className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-7 py-3.5 text-base font-medium text-white transition hover:bg-slate-800"
-        >
-          Get Started for Free
-          <ChevronRight className="h-4 w-4" />
-        </Link>
+            {/* "Cut Pot" / Semi-circle decorative element */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.7, rotate: -25 }}
+              whileInView={{ opacity: 0.1, scale: 1, rotate: -15 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full border-[30px] border-white ring-[15px] ring-white/10"
+            />
 
-        <p className="mt-3 text-sm text-slate-400">
-          No credit card required · Launch in minutes
-        </p>
+            {/* Floating Orbs */}
+            <motion.div
+              animate={{ 
+                y: [0, -20, 0],
+                x: [0, 10, 0],
+              }}
+              transition={{ 
+                duration: 8, 
+                repeat: Infinity,
+                ease: "easeInOut" 
+              }}
+              className="absolute top-1/4 right-[5%] h-32 w-32 rounded-full bg-white/5 blur-3xl"
+            />
+            
+            <motion.div
+              animate={{ 
+                y: [0, 15, 0],
+              }}
+              transition={{ 
+                duration: 10, 
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1
+              }}
+              className="absolute bottom-1/4 left-1/3 h-20 w-20 rounded-full bg-white/5 blur-2xl"
+            />
+
+            {/* Filled Circle bottom right */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 0.1, scale: 1 }}
+              transition={{ duration: 1.5, delay: 0.5 }}
+              className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-white/10 blur-xl"
+            />
+          </div>
+
+          <div className="relative z-10 mx-auto max-w-3xl">
+            <motion.h2 
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mb-5 text-3xl font-bold tracking-tight leading-tight sm:text-4xl md:text-5xl"
+            >
+              Ready to launch your{" "}
+              <span className="relative inline-block text-white">
+                {industryLabel}
+                <motion.span 
+                  initial={{ width: 0 }}
+                  whileInView={{ width: "100%" }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="absolute -bottom-0.5 left-0 h-1 bg-white/40 rounded-full"
+                />
+              </span>{" "}
+              business in {cityName}?
+            </motion.h2>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-indigo-50/80 md:text-lg"
+            >
+              Join hundreds of {cityName} businesses who trust Nepdora to build and
+              grow their presence online. Start your journey today.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="flex justify-center"
+            >
+              <Link href="/signup">
+                <Button 
+                  size="lg" 
+                  className="group relative h-auto rounded-full bg-white px-10 py-4 text-lg font-medium text-primary transition-all hover:bg-neutral-50 hover:shadow-lg active:scale-95"
+                >
+                  Start Building Free
+                  <ChevronRight className="ml-2.5 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

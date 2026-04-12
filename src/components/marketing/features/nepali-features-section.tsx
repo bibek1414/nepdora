@@ -9,9 +9,9 @@ const features = [
   },
   {
     Icon: Globe,
-    title: "Nepali Language & NPR Currency Support",
+    title: "Connect Logistics Partner - Dash, Patho parcel and all",
     description:
-      "Display prices in Nepali Rupees, write content in Nepali script, and serve your local customers in their preferred language and currency from day one.",
+      "Connect with Nepal's leading logistics partners like Dash, Patho parcel and many more to deliver your products to your customers across Nepal.",
   },
   {
     Icon: Smartphone,
@@ -45,18 +45,16 @@ export function NepaliBusinessFeatures() {
           {features.map(({ Icon, title, description }) => (
             <div
               key={title}
-              className="bg-secondary/60 flex gap-4 rounded-lg p-3 py-5"
+              className="bg-secondary/60 flex gap-4 rounded-2xl px-7 py-5"
             >
-              <div className="shrink-0 pt-0.5">
-                <Icon className="text-primary h-5 w-5" />
-              </div>
               <div>
-                <h3 className="mb-1.5 text-base leading-snug font-semibold text-slate-900">
+                <div className="shrink-0 pt-0.5 mb-5">
+                  <Icon className="text-primary h-10 w-10" />
+                </div>
+                <h3 className="mb-1.5 text-lg leading-snug font-semibold text-black">
                   {title}
                 </h3>
-                <p className="text-sm leading-relaxed text-slate-600">
-                  {description}
-                </p>
+                <p className="text-sm leading-relaxed">{description}</p>
               </div>
             </div>
           ))}

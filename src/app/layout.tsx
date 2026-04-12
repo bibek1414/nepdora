@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Wix_Madefor_Display } from 'next/font/google';
+import { DM_Sans  } from 'next/font/google';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";
@@ -14,8 +14,9 @@ import { SchemaOrg } from "@/components/shared/schema-org";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
-const inter = Wix_Madefor_Display({
+const inter = DM_Sans({
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {

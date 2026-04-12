@@ -6,9 +6,9 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Create eCommerce Website in Nepdora | Official Platform",
+  title: "Create Free E-Commerce Website in Nepal (2026)",
   description:
-    "Launch your professional eCommerce website in Nepdora with integrated payments, local support, and AI tools. Start selling online today with Nepdora.",
+    "Build your E-Commerce website in Kathmandu for free with Nepdora. Choose from 100+ templates, customize your brand, and manage orders, payments, and logistics.",
   path: "/create-ecommerce-website-in-nepdora",
   keywords: [
     "ecommerce website Nepal",
@@ -61,15 +61,11 @@ const ecommerceSchema = {
   },
 };
 
-import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export default function Page() {
   return (
     <>
       <JsonLd id="ecommerce-schema" data={ecommerceSchema} />
-      <div className="container mx-auto max-w-6xl px-6">
-        <Breadcrumbs items={[{ label: "E-commerce", href: "/create-ecommerce-website-in-nepdora" }]} />
-      </div>
       <CitiesLandingPage category="ecommerce" city="Nepdora" />
     </>
   );

@@ -11,7 +11,6 @@ const navigationItems = [
   "About",
   "Contact",
   "Blog",
-  "Compare",
   "Docs",
 ];
 
@@ -23,8 +22,7 @@ const Header: React.FC = () => {
           key={item}
           href="https://docs.nepdora.com"
           target="_blank"
-          rel="noopener noreferrer"
-          className="text-muted-foreground hover:text-primary cursor-pointer text-xs font-normal transition-colors"
+          className="text-black cursor-pointer text-xs font-normal transition-colors"
         >
           {item}
         </a>
@@ -36,7 +34,7 @@ const Header: React.FC = () => {
         <Link
           key={item}
           href={`/`}
-          className="text-muted-foreground hover:text-primary cursor-pointer text-xs font-normal transition-colors"
+          className="text-black cursor-pointer text-xs font-normal transition-colors"
         >
           {item}
         </Link>
@@ -47,7 +45,7 @@ const Header: React.FC = () => {
       <Link
         key={item}
         href={`/${item.toLowerCase()}`}
-        className="text-muted-foreground hover:text-primary cursor-pointer text-xs font-normal transition-colors"
+        className="text-black cursor-pointer text-xs font-normal transition-colors"
       >
         {item}
       </Link>
@@ -69,12 +67,14 @@ const Header: React.FC = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center space-x-6 md:flex">
-          {navigationItems.map(item => renderNavigationItem(item))}
-        </div>
+        <div className="flex gap-5">
+          <div className="hidden items-center space-x-6 md:flex">
+            {navigationItems.map(item => renderNavigationItem(item))}
+          </div>
 
-        {/* Desktop Auth Buttons (Client Component) */}
-        <HeaderAuthButtons />
+          {/* Desktop Auth Buttons (Client Component) */}
+          <HeaderAuthButtons />
+        </div>
 
         {/* Mobile Menu (Client Component) */}
         <HeaderMobileMenu navigationItems={navigationItems} />

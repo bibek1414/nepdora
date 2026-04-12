@@ -134,7 +134,7 @@ export default async function CreateWebsiteForPage({ params }: Props) {
 
       <FeaturesSection />
       <FAQSection />
-      <CTASection />
+      <CTASection cityName={cityName} category={industry} />
     </main>
   );
 }

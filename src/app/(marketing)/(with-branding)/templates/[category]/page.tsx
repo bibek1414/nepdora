@@ -213,7 +213,7 @@ export default async function TemplateCategoryPage({ params }: Props) {
       </div>
 
       <FAQSection />
-      <CTASection />
+      <CTASection category={category} />
     </main>
   );
 }
