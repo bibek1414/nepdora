@@ -325,13 +325,13 @@ export function SubscriptionsTable({
                           <div>
                             <p className="text-[11px] text-slate-400">Email</p>
                             <p className="mt-0.5 text-xs font-medium text-slate-700">
-                              {contact?.email || "—"}
+                              {contact?.email || "-"}
                             </p>
                           </div>
                           <div>
                             <p className="text-[11px] text-slate-400">Phone</p>
                             <p className="mt-0.5 text-xs font-medium text-slate-700">
-                              {contact?.phone_number || "—"}
+                              {contact?.phone_number || "-"}
                             </p>
                           </div>
                           <div>
@@ -339,7 +339,7 @@ export function SubscriptionsTable({
                               Platform
                             </p>
                             <p className="mt-0.5 text-xs font-medium text-slate-700 capitalize">
-                              {contact?.website_type || "—"}
+                              {contact?.website_type || "-"}
                             </p>
                           </div>
                         </div>

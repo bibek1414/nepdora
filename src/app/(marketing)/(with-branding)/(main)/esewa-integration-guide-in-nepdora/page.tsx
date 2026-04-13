@@ -105,7 +105,7 @@ export default function EsewaPage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="inline-flex items-center justify-center gap-3 rounded-full bg-[#60BB46] px-10 py-5 text-base font-bold text-white shadow-2xl shadow-[#60BB46]/20 transition-all hover:scale-105 hover:shadow-[#60BB46]/40 active:scale-95"
                 >
                   Start Accepting Payments
@@ -467,7 +467,7 @@ export default function EsewaPage() {
                 their payment processes with Nepdora.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="inline-flex items-center gap-3 rounded-full bg-[#60BB46] px-12 py-6 text-lg font-bold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
               >
                 Build Your Website Now

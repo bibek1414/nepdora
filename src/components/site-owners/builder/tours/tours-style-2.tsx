@@ -26,7 +26,7 @@ function HorizontalCard({ tour, theme }: { tour: any; theme: any }) {
       viewport={{ once: true }}
       className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#E8E3DC] bg-white sm:h-[380px] sm:flex-row"
     >
-      {/* Image — left 50% on desktop, top on mobile */}
+      {/* Image - left 50% on desktop, top on mobile */}
       <div className="h-64 shrink-0 overflow-hidden sm:h-auto sm:w-1/2">
         <img
           src={
@@ -39,7 +39,7 @@ function HorizontalCard({ tour, theme }: { tour: any; theme: any }) {
         />
       </div>
 
-      {/* Content — right 50% */}
+      {/* Content - right 50% */}
       <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
         <div>
           {/* Title + arrow */}
@@ -69,7 +69,7 @@ function HorizontalCard({ tour, theme }: { tour: any; theme: any }) {
           </p>
         </div>
 
-        {/* Duration & price — stacked, with divider line above */}
+        {/* Duration & price - stacked, with divider line above */}
         <div className="mt-6 flex flex-col gap-3 border-t border-[#E8E3DC] pt-5">
           <div className="flex items-center gap-3 font-serif text-base text-[#1A1A1A]/70 italic">
             <Clock
@@ -105,7 +105,7 @@ function VerticalCard({ tour, theme }: { tour: any; theme: any }) {
       viewport={{ once: true }}
       className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#E8E3DC] bg-white"
     >
-      {/* Image — top, full width */}
+      {/* Image - top, full width */}
       <div className="h-[280px] w-full overflow-hidden">
         <img
           src={
@@ -146,7 +146,7 @@ function VerticalCard({ tour, theme }: { tour: any; theme: any }) {
           {tour.data.Description}
         </p>
 
-        {/* Duration & price — side by side, with divider line above */}
+        {/* Duration & price - side by side, with divider line above */}
         <div className="mt-6 flex items-center justify-between border-t border-[#E8E3DC] pt-5">
           <div className="flex items-center gap-3 font-serif text-base text-[#1A1A1A]/70 italic">
             <Clock

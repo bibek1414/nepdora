@@ -154,7 +154,7 @@ export default function WebsiteDeveloperNepalPage() {
 
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="bg-primary shadow-primary/20 hover:shadow-primary/40 inline-flex items-center justify-center gap-3 rounded-full px-10 py-5 text-base font-semibold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
                 >
                   Build My High-End Website
@@ -297,12 +297,12 @@ export default function WebsiteDeveloperNepalPage() {
             <div>
               <h2 className="mb-6 text-4xl font-bold tracking-tighter text-slate-900 md:text-5xl">
                 The Better Alternative{" "}
-                <span className="text-primary">— Nepdora.</span>
+                <span className="text-primary">- Nepdora.</span>
               </h2>
               <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500">
                 Nepdora is a modern website builder designed for businesses in
                 Nepal. Instead of relying on developers, you can create, manage,
-                and scale your website yourself — quickly and easily.
+                and scale your website yourself - quickly and easily.
               </p>
               <div className="space-y-3">
                 {[
@@ -540,7 +540,7 @@ export default function WebsiteDeveloperNepalPage() {
                 Start your website with Nepdora today and go live in minutes.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary inline-flex items-center gap-3 rounded-full px-12 py-6 text-lg font-semibold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
               >
                 Start for Free

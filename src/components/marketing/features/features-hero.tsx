@@ -7,7 +7,7 @@ export default function FeaturesHero() {
     <section className="bg-white py-20 sm:py-28">
       <div className="mx-auto max-w-5xl px-6">
         <div className="grid items-center gap-16 lg:grid-cols-2">
-          {/* Left — text */}
+          {/* Left - text */}
           <div>
             <h1 className="mb-6 text-5xl leading-[1.08] font-bold tracking-tight text-slate-900 sm:text-6xl">
               Everything you need to{" "}
@@ -15,7 +15,7 @@ export default function FeaturesHero() {
             </h1>
 
             <p className="mb-8 max-w-lg text-lg leading-relaxed text-slate-500">
-              One platform built for Nepali businesses — website builder, eSewa
+              One platform built for Nepali businesses - website builder, eSewa
               &amp; Khalti payments, e-commerce, SEO, real-time analytics, and
               much more.
             </p>
@@ -29,7 +29,7 @@ export default function FeaturesHero() {
             </Link>
           </div>
 
-          {/* Right — interactive animated dashboard (client component) */}
+          {/* Right - interactive animated dashboard (client component) */}
           <div className="relative lg:pl-6">
             <AnimatedDashboard />
           </div>

@@ -258,7 +258,7 @@ export default async function ComparePage({ params }: Props) {
               Platform Comparison
             </div>
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
-              Nepdora vs {competitorName} —{" "}
+              Nepdora vs {competitorName} -{" "}
               <span className="text-primary">Which is Better for Nepal?</span>
             </h1>
             <p className="text-lg leading-relaxed font-medium text-slate-500">
@@ -267,7 +267,7 @@ export default async function ComparePage({ params }: Props) {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
               >
                 Start with Nepdora
@@ -292,7 +292,7 @@ export default async function ComparePage({ params }: Props) {
               Choosing the right platform for your business
             </h2>
             <p className="mb-6 text-lg leading-relaxed font-medium text-slate-500">
-              Choosing the right website platform can be confusing — especially
+              Choosing the right website platform can be confusing - especially
               when comparing global tools with platforms built for Nepal.
             </p>
             <p className="text-lg leading-relaxed font-medium text-slate-500">
@@ -531,7 +531,7 @@ export default async function ComparePage({ params }: Props) {
                 Ease of Use
               </h3>
               <p className="text-sm leading-relaxed font-medium text-slate-500">
-                Nepdora focuses on simplicity — allowing anyone to build a
+                Nepdora focuses on simplicity - allowing anyone to build a
                 website without technical knowledge.
               </p>
               <p className="mt-3 text-sm leading-relaxed font-medium text-slate-500">
@@ -617,7 +617,7 @@ export default async function ComparePage({ params }: Props) {
             <p className="mx-auto max-w-2xl text-lg leading-relaxed font-medium text-slate-500">
               For businesses in Nepal, Nepdora provides a more practical and
               efficient solution. It removes unnecessary complexity and focuses
-              on what truly matters — helping you launch and grow your business
+              on what truly matters - helping you launch and grow your business
               online.
             </p>
           </div>
@@ -638,7 +638,7 @@ export default async function ComparePage({ params }: Props) {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
                 >
                   Start Building

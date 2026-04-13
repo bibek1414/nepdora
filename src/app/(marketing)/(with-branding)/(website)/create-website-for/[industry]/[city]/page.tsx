@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMarketingMetadata({
     title,
     description,
-    path: `/create-website-for/${industry}/${city}`,
+    path: `/admin/signup-for/${industry}/${city}`,
   });
 }
 
@@ -89,7 +89,7 @@ export default async function CreateWebsiteForPage({ params }: Props) {
           </p>
           <div className="flex justify-center">
             <Link
-              href="/create-website"
+              href="/admin/signup"
               className="decoration-primary rounded-full bg-slate-900 px-10 py-5 text-lg font-bold text-white underline-offset-4 transition-all hover:bg-slate-800"
             >
               Start Building in {cityName}

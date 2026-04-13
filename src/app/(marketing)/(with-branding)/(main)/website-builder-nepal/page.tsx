@@ -31,13 +31,14 @@ import {
 import Link from "next/link";
 import { JsonLd } from "@/components/shared/json-ld";
 import { absoluteUrl } from "@/lib/seo";
-import { BuilderVisualMock } from "@/components/marketing/website-builder-nepal/website-builder-visual-mock";
+import { HeroAnimations } from "@/components/marketing/hero-section/hero-animations";
+import { CityCTA } from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
-    "Website Builder in Nepal - Build Your Website Without Coding | Nepdora",
+    "Website Builder in Nepal - No Coding Required | Nepdora",
   description:
-    "Create a professional website in minutes with Nepdora's powerful and easy-to-use website builder. No coding required. Launch faster and grow your brand in Nepal.",
+    "Create free professional websites on your own domain in minutes. Nepdora's website builder makes launching a full website easy with customizable templates.",
   path: "/website-builder-nepal",
   keywords: [
     "website builder nepal",
@@ -74,23 +75,22 @@ export default function WebsiteBuilderNepalPage() {
             {/* LEFT SIDE */}
             <div>
               <h1 className="mb-6 text-4xl leading-tight font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
-                Website Builder in Nepal{" "}
-                <span className="text-primary">— No Coding Required.</span>
+                Website Builder in Nepal, No Coding Required.
               </h1>
-              <p className="mb-8 text-base leading-relaxed font-medium text-slate-500 sm:text-lg">
+              <p className="mb-8 text-base leading-relaxed  sm:text-lg">
                 Create a professional website in minutes with Nepdora's powerful
-                and easy-to-use website builder.
+                and easy-to-use website builder. 
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="bg-primary -md inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
                 >
                   Start Building Free
                   <ChevronRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/create-website"
+                  href="/templates"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
                 >
                   View Templates
@@ -100,7 +100,7 @@ export default function WebsiteBuilderNepalPage() {
 
             {/* RIGHT SIDE */}
             <div className="relative">
-              <BuilderVisualMock />
+              <HeroAnimations />
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function WebsiteBuilderNepalPage() {
           <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
             Building a website in Nepal has never been easier.
           </h2>
-          <p className="mx-auto max-w-3xl text-lg leading-relaxed font-medium text-slate-500">
+          <p className="mx-auto max-w-3xl text-lg leading-relaxed ">
             With Nepdora's website builder, you don't need any coding knowledge
             or technical skills. Whether you're starting a business, launching a
             startup, or growing your brand, you can create a beautiful,
@@ -126,11 +126,11 @@ export default function WebsiteBuilderNepalPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             <div>
-              <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              <h2 className="mb-2 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                 What is{" "}
                 <span className="text-primary">Nepdora Website Builder?</span>
               </h2>
-              <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500">
+              <p className="mb-8 text-sm leading-relaxed ">
                 Nepdora Website Builder is a modern platform that allows you to
                 design, customize, and launch websites without writing a single
                 line of code. It is designed for entrepreneurs, businesses, and
@@ -143,7 +143,7 @@ export default function WebsiteBuilderNepalPage() {
                   <h4 className="mb-1 font-semibold text-slate-900">
                     Fast Launch
                   </h4>
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm ">
                     Go live in minutes, not weeks.
                   </p>
                 </div>
@@ -152,7 +152,7 @@ export default function WebsiteBuilderNepalPage() {
                   <h4 className="mb-1 font-semibold text-slate-900">
                     Secure Hosting
                   </h4>
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm ">
                     Enterprise-grade security built-in.
                   </p>
                 </div>
@@ -206,7 +206,7 @@ export default function WebsiteBuilderNepalPage() {
             <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
               Why use a <span className="text-primary">website builder?</span>
             </h2>
-            <p className="text-lg font-medium text-slate-500">
+            <p className="text-lg ">
               Using a website builder saves time, money, and effort. Instead of
               hiring a full development team, you can build your website
               yourself with complete control.
@@ -297,7 +297,7 @@ export default function WebsiteBuilderNepalPage() {
                 <h3 className="mb-2 font-semibold text-slate-900">
                   {item.title}
                 </h3>
-                <p className="text-sm font-medium text-slate-500">
+                <p className="text-sm ">
                   {item.desc}
                 </p>
               </div>
@@ -314,7 +314,7 @@ export default function WebsiteBuilderNepalPage() {
               <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Perfect for <span className="text-primary">every creator.</span>
               </h2>
-              <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500">
+              <p className="mb-8 text-lg leading-relaxed ">
                 Nepdora Website Builder is perfect for those who want a
                 professional website without complexity.
               </p>
@@ -351,14 +351,14 @@ export default function WebsiteBuilderNepalPage() {
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <CheckCircle2 className="text-primary h-5 w-5 shrink-0" />
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm ">
                     Spend your time growing your business while we handle the
                     technical heavy lifting.
                   </p>
                 </div>
                 <div className="flex gap-3">
                   <CheckCircle2 className="text-primary h-5 w-5 shrink-0" />
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm ">
                     Launch landing pages for your campaigns in minutes to test
                     new ideas quickly.
                   </p>
@@ -411,7 +411,7 @@ export default function WebsiteBuilderNepalPage() {
                 <h4 className="mt-4 mb-2 text-lg font-semibold text-slate-900">
                   {item.title}
                 </h4>
-                <p className="text-sm leading-relaxed font-medium text-slate-500">
+                <p className="text-sm leading-relaxed ">
                   {item.desc}
                 </p>
               </div>
@@ -470,7 +470,7 @@ export default function WebsiteBuilderNepalPage() {
                   <h4 className="mb-1 font-semibold text-slate-900">
                     {item.title}
                   </h4>
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm ">
                     {item.desc}
                   </p>
                 </div>
@@ -480,89 +480,14 @@ export default function WebsiteBuilderNepalPage() {
         </div>
       </section>
 
-      {/* Trusted By Section */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-6xl px-6 text-center">
-          <div className="bg-primary/5 text-primary mb-6 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium">
-            <Trophy className="h-3 w-3" />
-            Trusted by businesses across Nepal
-          </div>
-          <h2 className="mb-6 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-            From Kathmandu to Pokhara,{" "}
-            <span className="text-primary">thousands trust Nepdora.</span>
-          </h2>
-          <p className="mx-auto mb-10 max-w-2xl text-lg font-medium text-slate-500">
-            Our platform helps you create websites that not only look great but
-            also perform well and grow your business.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6 opacity-40">
-            {[
-              "Kathmandu",
-              "Pokhara",
-              "Biratnagar",
-              "Butwal",
-              "Dharan",
-              "Janakpur",
-              "Hetauda",
-              "Bharatpur",
-              "Lalitpur",
-              "Bhaktapur",
-            ].map((city, i) => (
-              <span
-                key={i}
-                className="text-base font-bold tracking-tight text-slate-500"
-              >
-                {city}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Final CTA - Clean white background */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-                <Layout className="text-primary h-8 w-8" />
-              </div>
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Start building your website today.
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Turn your idea into a live website in minutes with the easiest
-                website builder in Nepal.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link
-                  href="/create-website"
-                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-                >
-                  Start Building
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/create-website"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
-                >
-                  Explore Templates
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CityCTA />
 
       {/* SEO Closing Section */}
       <section className="border-t border-slate-100 bg-white py-16">
         <div className="container mx-auto max-w-6xl px-6 text-center">
-          <p className="text-base leading-relaxed font-medium text-slate-500">
-            If you are looking for a website builder in Nepal, Nepdora provides
-            the fastest and easiest way to create a professional website without
-            coding. With powerful tools, modern templates, and local features,
-            you can build, customize, and launch your website quickly and
-            efficiently.
+          <p className="text-base leading-relaxed ">
+            Describe what you want and get a unique website in minutes. Refine any detail in a way that feels most natural to you on our flagship AI website builder.
           </p>
         </div>
       </section>

@@ -327,7 +327,7 @@ export default function ShowcasePage() {
                 first step toward scaling your business.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
               >
                 Build Your Website

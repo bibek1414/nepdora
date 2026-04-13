@@ -110,7 +110,7 @@ export const CityCTA: React.FC<CityCTAProps> = ({ cityName, category }) => {
               transition={{ duration: 0.4, delay: 0.2 }}
               className="flex justify-center"
             >
-              <Link href="/signup">
+              <Link href="/admin/signup">
                 <Button 
                   size="lg" 
                   className="group relative h-auto rounded-full bg-white px-10 py-4 text-lg font-medium text-primary transition-all hover:bg-neutral-50 hover:shadow-lg active:scale-95"

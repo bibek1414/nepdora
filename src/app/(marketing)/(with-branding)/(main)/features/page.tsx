@@ -10,7 +10,7 @@ export const metadata: Metadata = buildMarketingMetadata({
   title:
     "Nepdora Features: Website Builder, E-commerce & Payment Tools for Nepal",
   description:
-    "Explore every Nepdora feature — AI website builder, eSewa & Khalti payments, built-in SEO, e-commerce, CRM, SMS, logistics, and real-time analytics. Built for Nepali businesses.",
+    "Explore every Nepdora feature - AI website builder, eSewa & Khalti payments, built-in SEO, e-commerce, CRM, SMS, logistics, and real-time analytics. Built for Nepali businesses.",
   path: "/features",
   keywords: [
     "Nepdora features",

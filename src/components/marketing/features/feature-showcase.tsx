@@ -254,7 +254,7 @@ function EcommerceMockup() {
           <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
         </div>
         <div className="mx-3 flex-1 rounded border border-slate-200 bg-white px-3 py-1 text-[11px] text-slate-400">
-          Orders — Store Admin
+          Orders - Store Admin
         </div>
       </div>
       <div className="space-y-3 p-5">
@@ -476,7 +476,7 @@ const sections = [
   {
     title: "Build a stunning website in minutes",
     description:
-      "Choose from 100+ industry-specific templates and make it yours with our drag-and-drop editor — no code, no designer, no waiting.",
+      "Choose from 100+ industry-specific templates and make it yours with our drag-and-drop editor - no code, no designer, no waiting.",
     bullets: [
       "100+ mobile-ready professional templates",
       "Drag-and-drop visual editor",
@@ -490,7 +490,7 @@ const sections = [
   {
     title: "Accept Nepal's favourite payments, instantly",
     description:
-      "Connect eSewa, Khalti, Fonepay, and ConnectIPS with a few clicks. No developer needed — your customers pay the way they're already used to.",
+      "Connect eSewa, Khalti, Fonepay, and ConnectIPS with a few clicks. No developer needed - your customers pay the way they're already used to.",
     bullets: [
       "eSewa & Khalti built in",
       "Fonepay & ConnectIPS support",
@@ -504,7 +504,7 @@ const sections = [
   {
     title: "Rank on Google without hiring an agency",
     description:
-      "Nepdora automatically generates meta tags, schema markup, and XML sitemaps. Get found when customers search — no SEO expertise required.",
+      "Nepdora automatically generates meta tags, schema markup, and XML sitemaps. Get found when customers search - no SEO expertise required.",
     bullets: [
       "Auto meta tags and Open Graph tags",
       "JSON-LD schema markup",
@@ -518,7 +518,7 @@ const sections = [
   {
     title: "Run your entire store from one dashboard",
     description:
-      "List products, process orders, manage inventory, and print invoices — all from a single clean dashboard built for Nepali sellers.",
+      "List products, process orders, manage inventory, and print invoices - all from a single clean dashboard built for Nepali sellers.",
     bullets: [
       "Unlimited product listings",
       "Order management and tracking",
@@ -532,7 +532,7 @@ const sections = [
   {
     title: "Know your numbers at a glance",
     description:
-      "Real-time dashboards show you exactly where visitors come from, what they buy, and how your revenue is growing — so you can make smart decisions fast.",
+      "Real-time dashboards show you exactly where visitors come from, what they buy, and how your revenue is growing - so you can make smart decisions fast.",
     bullets: [
       "Real-time traffic and revenue tracking",
       "Traffic source breakdown",
@@ -546,7 +546,7 @@ const sections = [
   {
     title: "Manage customers, SMS and bookings in one place",
     description:
-      "Keep a mini-CRM, send automated SMS order updates, and let customers book appointments — everything your business needs to run smoothly.",
+      "Keep a mini-CRM, send automated SMS order updates, and let customers book appointments - everything your business needs to run smoothly.",
     bullets: [
       "Mini CRM and customer database",
       "Automated SMS order notifications",

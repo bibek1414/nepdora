@@ -114,7 +114,7 @@ export class AuthErrorHandler {
           type: "error",
           action: {
             label: "Sign up instead",
-            href: "/signup",
+            href: "/admin/signup",
           },
         };
 
@@ -246,7 +246,7 @@ export class AuthErrorHandler {
           type: "error",
           action: {
             label: "Sign up instead",
-            href: "/signup",
+            href: "/admin/signup",
           },
         };
 

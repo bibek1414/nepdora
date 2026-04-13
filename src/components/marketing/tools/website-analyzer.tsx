@@ -352,7 +352,7 @@ export const WebsiteAnalyzer = () => {
                 that are ready for the Nepali market.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="text-primary inline-flex items-center gap-1 text-sm font-semibold transition-all hover:gap-2"
               >
                 Create My High-Speed Website

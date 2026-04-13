@@ -186,7 +186,7 @@ export default async function BestOfPage({ params }: Props) {
               <ul className="space-y-4">
                 {[
                   "Hands-on testing with real Nepali business scenarios",
-                  "Local payment support — eSewa, Khalti, and more",
+                  "Local payment support - eSewa, Khalti, and more",
                   "Rated on performance, ease of use, and value",
                   "Updated regularly as tools evolve",
                 ].map(point => (
@@ -213,7 +213,7 @@ export default async function BestOfPage({ params }: Props) {
                 The story
               </p>
               <h2 className="mb-4 text-2xl font-semibold text-slate-900">
-                Why most tools fail Nepali businesses — and what we looked for
+                Why most tools fail Nepali businesses - and what we looked for
                 instead.
               </h2>
               <p className="text-base leading-relaxed text-slate-500">

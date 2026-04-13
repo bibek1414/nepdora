@@ -200,7 +200,7 @@ export default function KhaltiPage() {
                      Join hundreds of businesses in Nepal who have already simplified their payment processes with Nepdora.
                   </p>
                   <Link
-                     href="/create-website"
+                     href="/admin/signup"
                      className="inline-flex items-center gap-3 rounded-[24px] bg-white px-10 py-5 text-base font-bold text-[#5C2D91] transition-all hover:scale-105 active:scale-95 shadow-2xl"
                   >
                      Build Your Website

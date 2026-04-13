@@ -53,7 +53,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="border-primary/10 sticky top-0 z-50 border-b bg-white/80 px-4 py-4 backdrop-blur-md sm:px-6">
+    <header className="sticky top-0 z-50 bg-white/80 px-4 py-4 backdrop-blur-md sm:px-6">
       <nav className="mx-auto flex max-w-6xl items-center justify-between">
         {/* Logo */}
         <div className="flex items-center space-x-2">

@@ -83,7 +83,7 @@ export default function AiBuilderPage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="inline-flex items-center justify-center gap-3 rounded-full bg-blue-500 px-10 py-5 text-base font-semibold text-white shadow-2xl shadow-blue-500/20 transition-all hover:scale-105 hover:shadow-blue-500/40 active:scale-95"
                 >
                   Generate My AI Website
@@ -577,7 +577,7 @@ export default function AiBuilderPage() {
               },
               {
                 q: "Is my website mobile responsive?",
-                a: "Absolutely. All websites built with Nepdora are fully responsive and look great on all devices—desktop, tablet, and mobile.",
+                a: "Absolutely. All websites built with Nepdora are fully responsive and look great on all devices-desktop, tablet, and mobile.",
               },
               {
                 q: "Can I use my own domain?",
@@ -619,7 +619,7 @@ export default function AiBuilderPage() {
                 Nepdora AI.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="inline-flex items-center gap-3 rounded-full bg-blue-500 px-12 py-6 text-lg font-semibold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
               >
                 Generate My AI Website

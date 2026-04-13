@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 
 const paymentFeatures = [
-  "Direct checkout — no redirect, no friction",
+  "Direct checkout - no redirect, no friction",
   "Instant payment alerts to your dashboard",
   "Secure, encrypted transactions",
   "Easy settlement tracking and reports",
@@ -25,7 +25,7 @@ export const PaymentIntegration: React.FC = () => {
               Accept Nepal&apos;s favourite payments, instantly
             </h2>
             <p className="mb-7 text-base leading-relaxed text-slate-500">
-              Your customers pay with eSewa, Khalti, Fonepay, or ConnectIPS —
+              Your customers pay with eSewa, Khalti, Fonepay, or ConnectIPS -
               the wallets they already use. No manual transfers, no payment
               screenshots.
             </p>

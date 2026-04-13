@@ -355,7 +355,7 @@ export default function FreeWebsiteAnalyzerPage() {
                 secure, and SEO-friendly out of the box.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
               >
                 Create My High-Speed Website
@@ -424,7 +424,7 @@ export default function FreeWebsiteAnalyzerPage() {
                 building for free with Nepdora.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
               >
                 Get started for free

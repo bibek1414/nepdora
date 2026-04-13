@@ -992,7 +992,7 @@ export default async function FeatureProcessPage({ params }: Props) {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
                 >
                   Start Free Trial

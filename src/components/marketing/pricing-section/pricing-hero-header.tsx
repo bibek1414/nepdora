@@ -10,7 +10,7 @@ export default function PricingHero() {
 
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid items-center gap-16 lg:grid-cols-2">
-          {/* Left — text */}
+          {/* Left - text */}
           <div className="relative z-10">
             <h1 className="mb-6 text-5xl leading-[1.1] font-bold tracking-tight text-slate-900 sm:text-7xl">
               Plans that grow with your{" "}
@@ -54,7 +54,7 @@ export default function PricingHero() {
             </div>
           </div>
 
-          {/* Right — interactive animated dashboard */}
+          {/* Right - interactive animated dashboard */}
           <div className="relative lg:pl-10">
             <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-indigo-50/50 blur-3xl" />
             <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-violet-50/50 blur-3xl" />

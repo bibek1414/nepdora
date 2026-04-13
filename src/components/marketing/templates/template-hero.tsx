@@ -210,7 +210,7 @@ export function TemplateHero({ categoryName }: { categoryName: string }) {
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
-          {/* Left — text */}
+          {/* Left - text */}
           <div className="max-w-2xl">
             <div className="text-primary mb-8 inline-flex items-center gap-2 rounded-full border border-indigo-100/50 bg-indigo-50 px-3 py-1.5 text-sm font-semibold">
               <span>Nepdora Template Library</span>
@@ -256,7 +256,7 @@ export function TemplateHero({ categoryName }: { categoryName: string }) {
             </div>
           </div>
 
-          {/* Right — interactive animated mockup */}
+          {/* Right - interactive animated mockup */}
           <div className="relative lg:pl-6">
             <AnimatedTemplateMockup />
           </div>

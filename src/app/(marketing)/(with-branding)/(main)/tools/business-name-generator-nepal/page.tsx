@@ -50,7 +50,7 @@ export default function BusinessNameGeneratorPage() {
 
             <p className="mx-auto mb-10 max-w-2xl text-base leading-relaxed text-slate-500 sm:text-lg">
               Describe your idea, choose your style, and get unique, memorable
-              names crafted just for you — powered by AI for the Nepali market.
+              names crafted just for you - powered by AI for the Nepali market.
             </p>
 
             <Suspense

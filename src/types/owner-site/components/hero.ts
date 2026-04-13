@@ -326,7 +326,7 @@ export const defaultHeroTemplate8Data: HeroTemplate8Data = {
   template: "hero-8",
   title: "Best Abroad Study Consultancy <br /> In Nepal",
   description:
-    "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing — we've got you covered.",
+    "Expert guidance for studying in USA, UK, Australia, Canada & New Zealand. From course selection to visa processing - we've got you covered.",
   badge1Text: "Approved by Ministry of Education",
   badge1Image: "/ministry-of-education.png",
   badge2Text: "TITI Certified Counselors",
@@ -567,7 +567,7 @@ export const defaultHeroTemplate15Data: HeroTemplate15Data = {
   title: "Professional Accounting, Compliance & Business Setup",
   spanText: "Business Setup",
   description:
-    "We help businesses stay compliant, manage finances, and grow — so you can focus on running your business.",
+    "We help businesses stay compliant, manage finances, and grow - so you can focus on running your business.",
   backgroundImageUrl:
     "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
   imageAlt: "Corporate Finance",

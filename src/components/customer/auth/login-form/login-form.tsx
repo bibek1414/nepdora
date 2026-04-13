@@ -150,7 +150,7 @@ export function LoginForm({
     }
 
     const redirect = searchParams.get("redirect");
-    let signupPath = "/signup";
+    let signupPath = "/admin/signup";
 
     if (isPreview && siteUser) {
       signupPath = `/preview/${siteUser}/signup`;

@@ -13,7 +13,7 @@ const categories = [
     id: "website-builder",
     title: "Website Builder & Design",
     description:
-      "Create a professional website in minutes — no coding required. Choose from 100+ industry-specific templates and customise every detail.",
+      "Create a professional website in minutes - no coding required. Choose from 100+ industry-specific templates and customise every detail.",
     Icon: Layout,
     features: [
       "100+ professional templates",
@@ -41,9 +41,9 @@ const categories = [
   },
   {
     id: "payments",
-    title: "Payments — Nepal & International",
+    title: "Payments - Nepal & International",
     description:
-      "Accept payments the way your customers prefer. eSewa, Khalti, and Fonepay for Nepal — Stripe and PayPal for global sales.",
+      "Accept payments the way your customers prefer. eSewa, Khalti, and Fonepay for Nepal - Stripe and PayPal for global sales.",
     Icon: CreditCard,
     features: [
       "eSewa integration",
@@ -110,7 +110,7 @@ export default function FeatureCategories() {
             One platform. Every tool your business needs.
           </h2>
           <p className="text-base leading-relaxed text-slate-500">
-            From your first website to scaling sales across Nepal and beyond —
+            From your first website to scaling sales across Nepal and beyond -
             everything ships in one subscription.
           </p>
         </div>

@@ -323,7 +323,7 @@ export default function PartnersPage() {
                 Focus on <span className="text-primary">Value Delivery.</span>
               </h2>
               <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500">
-                Nepdora helps you focus on what matters — delivering value to
+                Nepdora helps you focus on what matters - delivering value to
                 your clients. Instead of spending time on complex development,
                 hosting, and maintenance, you can use Nepdora to streamline your
                 workflow and increase productivity.

@@ -78,7 +78,7 @@ export const DomainDetailsDialog: React.FC<DomainDetailsDialogProps> = ({
   if (!currentDomain) return null;
 
   const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return "—";
+    if (!dateString) return "-";
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -97,7 +97,7 @@ export const DomainDetailsDialog: React.FC<DomainDetailsDialogProps> = ({
             "0 8px 40px -8px rgba(0,0,0,0.12), 0 2px 8px -2px rgba(0,0,0,0.06)",
         }}
       >
-        {/* Navigation Arrows — Desktop (outside dialog) */}
+        {/* Navigation Arrows - Desktop (outside dialog) */}
         {domains.length > 1 && (
           <>
             <Button
@@ -276,7 +276,7 @@ export const DomainDetailsDialog: React.FC<DomainDetailsDialogProps> = ({
                   <dd className="text-sm font-medium text-gray-800">
                     {(currentDomain.tenant as any).paid_until
                       ? formatDate((currentDomain.tenant as any).paid_until)
-                      : "—"}
+                      : "-"}
                   </dd>
                 </div>
               </div>

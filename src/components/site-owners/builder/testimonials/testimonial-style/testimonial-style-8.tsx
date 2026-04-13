@@ -155,7 +155,7 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
             {/* Gradient Overlays for smooth entry/exit */}
 
             <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-2">
-              {/* Left column — moves UP */}
+              {/* Left column - moves UP */}
               <div className="animate-scroll-up space-y-6">
                 {duplicatedTestimonials.map((t, index) => (
                   <TestimonialCard16
@@ -168,7 +168,7 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
                 ))}
               </div>
 
-              {/* Right column — moves DOWN */}
+              {/* Right column - moves DOWN */}
               <div className="animate-scroll-down hidden space-y-6 md:block">
                 {duplicatedTestimonials.map((t, index) => (
                   <TestimonialCard16

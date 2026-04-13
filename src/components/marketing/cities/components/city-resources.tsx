@@ -1,7 +1,7 @@
 const resources = [
   {
     title: "Local SEO for Nepali Businesses",
-    desc: "How to rank for localized searches in Nepal — practical tips for Google Maps, meta tags, and schema markup.",
+    desc: "How to rank for localized searches in Nepal - practical tips for Google Maps, meta tags, and schema markup.",
     image:
       "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=600&q=70",
     alt: "Local SEO guide for Nepal",
@@ -15,7 +15,7 @@ const resources = [
   },
   {
     title: "Build Your Website in 10 Minutes",
-    desc: "A step-by-step walkthrough of Nepdora's AI website wizard — from template to live site in minutes.",
+    desc: "A step-by-step walkthrough of Nepdora's AI website wizard - from template to live site in minutes.",
     image:
       "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=70",
     alt: "AI website builder guide",

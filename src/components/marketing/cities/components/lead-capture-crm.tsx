@@ -26,7 +26,7 @@ export const LeadCaptureCRM: React.FC<LeadCaptureCRMProps> = ({ data }) => {
               {data.title}
             </h2>
             <p className="mb-7 text-base leading-relaxed text-slate-500">
-              Every enquiry, lead, and booking captured automatically — visible
+              Every enquiry, lead, and booking captured automatically - visible
               in your dashboard from day one.
             </p>
             <ul className="space-y-3">

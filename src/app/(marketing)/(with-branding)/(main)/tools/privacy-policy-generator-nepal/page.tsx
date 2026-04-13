@@ -396,7 +396,7 @@ export default function PrivacyPolicyGenerator() {
                   <ChevronRight className="h-4 w-4" />
                 </button>
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
                 >
                   Build Your Website

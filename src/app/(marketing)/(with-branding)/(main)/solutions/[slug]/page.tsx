@@ -310,7 +310,7 @@ export default async function SolutionsSlugPage({ params }: Props) {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
                 >
                   Get Started Now <ChevronRight className="h-4 w-4" />
@@ -484,7 +484,7 @@ export default async function SolutionsSlugPage({ params }: Props) {
                 Join thousands of Nepali businesses already using Nepdora
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
               >
                 Start Building for Free <ChevronRight className="h-4 w-4" />

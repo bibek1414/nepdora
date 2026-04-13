@@ -29,7 +29,7 @@ export const IndustryFeaturesGrid: React.FC<IndustryFeaturesGridProps> = ({
             {customH2 || `Features built for ${industryLabel} businesses`}
           </h2>
           <p className="text-base leading-relaxed text-slate-500">
-            Every tool you need to run, manage, and grow — all in one place.
+            Every tool you need to run, manage, and grow - all in one place.
           </p>
         </div>
 

@@ -755,7 +755,7 @@ export const defaultAboutUs20Data: AboutUs20Data = {
       number: "01",
       title: "Thoughtful architectural design solutions",
       description:
-        "We create architecture that goes beyond structure — blending innovation, functionality, and aesthetics to deliver spaces that are efficient, sustainable, and tailored to your vision.",
+        "We create architecture that goes beyond structure - blending innovation, functionality, and aesthetics to deliver spaces that are efficient, sustainable, and tailored to your vision.",
       buttonText: "Explore more",
       buttonLink: "#",
       image:

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { CheckCircle2, ChevronRight, Clock, BookOpen } from "lucide-react";
 import { buildMarketingMetadata } from "@/lib/seo";
+import CityCTA from "@/components/marketing/cta-section/cta-section";
 
 export const dynamic = "force-dynamic";
 
@@ -280,8 +281,8 @@ export default async function LearnPage({ params }: Props) {
       <JsonLd id="learn-breadcrumb-schema" data={breadcrumbSchema} />
 
       {/* Hero Section */}
-      <section className="bg-slate-50 pt-16 pb-12 md:pt-24 md:pb-16">
-        <div className="container mx-auto max-w-6xl px-6">
+      <section className="bg-secondary pt-16 pb-12 md:pt-24 md:pb-16">
+        <div className="container mx-auto max-w-5xl px-6">
           <nav className="mb-8 text-sm text-slate-500">
             <Link href="/" className="hover:text-primary transition-colors">
               Home
@@ -296,24 +297,11 @@ export default async function LearnPage({ params }: Props) {
             <span className="mx-2">/</span>
             <span className="font-medium text-slate-900">{title}</span>
           </nav>
-
-          <div className="mb-4 flex items-center gap-4 text-sm text-slate-500">
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              {slug === "how-to-start-online-business-in-nepal" &&
-                "15 min read"}
-              {slug === "register-company-in-nepal-online" && "12 min read"}
-              {slug === "pan-vs-vat-for-online-shops-nepal" && "10 min read"}
-              {slug === "best-payment-gateways-nepal" && "14 min read"}
-              {slug === "seo-guide-for-nepali-businesses" && "18 min read"}
-            </div>
-          </div>
-
-          <h1 className="mb-6 text-4xl font-bold tracking-tighter text-slate-900 md:text-5xl lg:text-6xl">
+          <h1 className="mb-2 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-5xl mb-4">
             {title}
           </h1>
 
-          <p className="text-xl leading-relaxed text-slate-600">
+          <p className="text-sm leading-relaxed">
             {content.intro}
           </p>
         </div>
@@ -321,9 +309,9 @@ export default async function LearnPage({ params }: Props) {
 
       {/* Content Section */}
       <section className="py-12 md:py-16">
-        <div className="container mx-auto max-w-4xl px-6">
+        <div className="container mx-auto max-w-5xl px-6">
           {/* What You'll Learn */}
-          <div className="bg-primary/5 border-primary/10 mb-12 rounded-2xl border p-8">
+          <div className="mb-12 rounded-2xl border p-8">
             <h2 className="mb-4 text-2xl font-bold text-slate-900">
               What You'll Learn
             </h2>
@@ -344,7 +332,7 @@ export default async function LearnPage({ params }: Props) {
                 <h2 className="mb-4 text-2xl font-bold text-slate-900">
                   {i + 1}. {section.title}
                 </h2>
-                <p className="leading-relaxed text-slate-600">
+                <p className="leading-relaxed">
                   {section.content}
                 </p>
               </div>
@@ -353,11 +341,11 @@ export default async function LearnPage({ params }: Props) {
 
           {/* Pro Tip Box */}
           {content.proTip && (
-            <div className="mt-12 rounded-2xl border border-amber-200 bg-amber-50 p-8">
-              <h3 className="mb-2 text-lg font-bold text-amber-800">
-                💡 Pro Tip
+            <div className="mt-12 rounded-2xl bg-secondary p-8">
+              <h3 className="mb-2 text-lg font-bold text-black">
+                Pro Tip
               </h3>
-              <p className="leading-relaxed text-amber-700">{content.proTip}</p>
+              <p className="leading-relaxed text-black">{content.proTip}</p>
             </div>
           )}
 
@@ -421,21 +409,7 @@ export default async function LearnPage({ params }: Props) {
           )}
 
           {/* CTA */}
-          <div className="mt-12 rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center">
-            <h3 className="mb-2 text-xl font-bold text-slate-900">
-              Ready to build your website?
-            </h3>
-            <p className="mb-6 text-slate-500">
-              Start your online business with Nepdora today.
-            </p>
-            <Link
-              href="/create-website"
-              className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
-            >
-              Build Your Website
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <CityCTA />
         </div>
       </section>
     </main>

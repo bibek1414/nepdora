@@ -146,7 +146,7 @@ export default function PaymentsClient() {
           day: "numeric",
           year: "numeric",
         })
-      : "—";
+      : "-";
 
   return (
     <div className="max-w-80rem mx-auto space-y-6">
@@ -399,7 +399,7 @@ export default function PaymentsClient() {
                       Rs. {transfer.amount}
                     </TableCell>
                     <TableCell className="max-w-xs truncate text-xs text-gray-500 italic">
-                      {transfer.reference_note || "—"}
+                      {transfer.reference_note || "-"}
                     </TableCell>
                     <TableCell className="text-right text-xs text-gray-500">
                       {formatDate(transfer.transfer_date)}

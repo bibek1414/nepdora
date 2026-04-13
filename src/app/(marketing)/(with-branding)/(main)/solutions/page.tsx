@@ -88,7 +88,7 @@ export default function SolutionsHubPage() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
               >
                 Start Building

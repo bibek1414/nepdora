@@ -33,13 +33,13 @@ export const CityHero: React.FC<CityHeroProps> = ({
     subHeadline ||
     customIntro ||
     description ||
-    `Join local ${industryLabel} businesses in ${cityName} who build and grow online with Nepdora — Nepal's all-in-one website and e-commerce platform.`;
+    `Join local ${industryLabel} businesses in ${cityName} who build and grow online with Nepdora - Nepal's all-in-one website and e-commerce platform.`;
 
   return (
     <section className="border-b border-slate-100 bg-white py-12 sm:py-20">
       <div className="mx-auto max-w-6xl px-6 md:px-0">
         <div className="grid items-center gap-8 lg:grid-cols-2">
-          {/* Left — text */}
+          {/* Left - text */}
           <div>
             {breadcrumbItems && (
               <div className="px-1"><Breadcrumbs items={breadcrumbItems} /></div>
@@ -54,7 +54,7 @@ export const CityHero: React.FC<CityHeroProps> = ({
             </p>
 
             <Link
-              href="/signup"
+              href="/admin/signup"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-base font-semibold text-white transition hover:bg-primary/90 hover:-translate-y-1"
             >
               {ctaText || "Start Building Free"}
@@ -66,7 +66,7 @@ export const CityHero: React.FC<CityHeroProps> = ({
             </p>
           </div>
 
-          {/* Right — checklist card */}
+          {/* Right - checklist card */}
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
             <p className="mb-5 text-xs font-bold">
               What you get

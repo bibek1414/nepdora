@@ -7,14 +7,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   AlertCircle,
-  CheckCircle,
-  Info,
   Eye,
   EyeOff,
-  Mail,
-  Lock,
-  User,
-  Phone,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { signupSchema, SignupFormValues } from "@/schemas/signup.form";
@@ -40,9 +35,12 @@ export function SignupForm({
   const oauthErrorParam = searchParams?.get("error");
   const [formError, setFormError] = useState<FormErrorState | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  
+  // Set E-commerce as default
   const [selectedWebsiteType, setSelectedWebsiteType] = useState<
-    "ecommerce" | "service" | null
-  >(null);
+    "ecommerce" | "service"
+  >("ecommerce");
+  
   const [isGoogleDialogOpen, setIsGoogleDialogOpen] = useState(false);
 
   const {
@@ -52,8 +50,12 @@ export function SignupForm({
     watch,
     setError,
     clearErrors,
+    setValue
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      website_type: "ecommerce"
+    }
   });
 
   const password = watch("password");
@@ -78,13 +80,9 @@ export function SignupForm({
       for (let i = 0; i < 2; i += 1) {
         try {
           const decoded = decodeURIComponent(result);
-          if (decoded === result) {
-            break;
-          }
+          if (decoded === result) break;
           result = decoded;
-        } catch {
-          break;
-        }
+        } catch { break; }
       }
       return result;
     };
@@ -102,581 +100,193 @@ export function SignupForm({
 
     if (oauthErrorParam === "OAuthCallback") {
       setFormError({
-        message:
-          "Google sign-in failed. Please try again or complete your email signup first.",
+        message: "Google sign-in failed. Please try again or complete your email signup first.",
         type: "error",
       });
     }
   }, [oauthErrorParam, setFormError]);
 
-  const getErrorIcon = (type: FormErrorState["type"]) => {
-    switch (type) {
-      case "error":
-        return <AlertCircle className="mr-2 h-5 w-5" />;
-      case "warning":
-        return <Info className="mr-2 h-5 w-5" />;
-      case "info":
-        return <CheckCircle className="mr-2 h-5 w-5" />;
-      default:
-        return <AlertCircle className="mr-2 h-5 w-5" />;
-    }
-  };
-
-  const getErrorStyles = (type: FormErrorState["type"]) => {
-    switch (type) {
-      case "error":
-        return "border-red-200 bg-red-50 text-red-800";
-      case "warning":
-        return "border-yellow-200 bg-yellow-50 text-yellow-800";
-      case "info":
-        return "border-blue-200 bg-blue-50 text-blue-800";
-      default:
-        return "border-red-200 bg-red-50 text-red-800";
-    }
-  };
-
   const onSubmit = async (data: SignupFormValues) => {
     try {
       setFormError(null);
       clearErrors();
-
       await signup(data);
     } catch (error) {
       const errorResponse = error as ErrorResponse;
       const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
       setFormError(parsedError);
-
-      // Set field-specific errors
-      const emailError = AuthErrorHandler.getFieldError("email", errorResponse);
-      const storeNameError = AuthErrorHandler.getFieldError(
-        "store_name",
-        errorResponse
-      );
-      const phoneError = AuthErrorHandler.getFieldError("phone", errorResponse);
-
-      if (emailError) {
-        setError("email", {
-          type: "manual",
-          message: emailError,
-        });
-      }
-
-      if (storeNameError) {
-        setError("store_name", {
-          type: "manual",
-          message: storeNameError,
-        });
-      }
-
-      if (phoneError) {
-        setError("phone", {
-          type: "manual",
-          message: phoneError,
-        });
-      }
-
-      console.error("Signup error:", error);
+      ["email", "store_name", "phone"].forEach((field) => {
+        const msg = AuthErrorHandler.getFieldError(field === "store_name" ? "store_name" : field as any, errorResponse);
+        if (msg) setError(field as any, { type: "manual", message: msg });
+      });
     }
   };
 
-  const handleInputChange =
-    (field: keyof SignupFormValues) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      register(field).onChange(e);
-      if (formError) {
-        setFormError(null);
-      }
-      // Clear specific field error
-      if (errors[field]) {
-        clearErrors(field);
-      }
-    };
-
-  const handleGoogleSignup = () => {
-    const existingStoreName = watch("store_name");
-    const existingPhone = watch("phone");
-    setIsGoogleDialogOpen(true);
+  const handleInputChange = (field: keyof SignupFormValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    register(field).onChange(e);
+    if (formError) setFormError(null);
+    if (errors[field]) clearErrors(field);
   };
+
+  const handleGoogleSignup = () => setIsGoogleDialogOpen(true);
 
   return (
     <>
-      <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-        {/* Floating Icons */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div
-            className="absolute top-20 left-10 animate-bounce text-4xl text-gray-400 opacity-20"
-            style={{ animationDelay: "0s", animationDuration: "3s" }}
-          >
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-          </div>
-          <div
-            className="absolute top-40 right-20 animate-bounce text-4xl text-yellow-400 opacity-20"
-            style={{ animationDelay: "1s", animationDuration: "4s" }}
-          >
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L1 21h22L12 2zm0 4l7.53 13H4.47L12 6z"></path>
-            </svg>
-          </div>
-          <div
-            className="absolute bottom-32 left-32 animate-bounce text-4xl text-gray-400 opacity-20"
-            style={{ animationDelay: "2s", animationDuration: "5s" }}
-          >
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
-            </svg>
-          </div>
-          <div
-            className="absolute right-10 bottom-20 animate-bounce text-4xl text-gray-500 opacity-20"
-            style={{ animationDelay: "1.5s", animationDuration: "4.5s" }}
-          >
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M13 7.5h5v2h-5zm0 7h5v2h-5zM19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM11 6H6v5h5V6zm-1 4H7V7h3v3zm1 3H6v5h5v-5zm-1 4H7v-3h3v3z"></path>
-            </svg>
-          </div>
-        </div>
-
-        <div className="relative z-10 flex w-full flex-col items-center gap-8 md:flex-row">
-          {/* Left Side - Illustration */}
-          <div className="hidden w-full flex-col items-center justify-center p-8 md:flex md:w-1/2">
-            <div className="mt-8 text-center">
-              <h2 className="mb-2 text-3xl font-bold text-gray-800">
-                Build and manage websites
-              </h2>
-              <p className="text-sm text-gray-600">
-                Create, customize, and grow your online presence with smart
-                tools.
-              </p>
-            </div>
-            <div className="relative w-full max-w-md">
-              <img
-                src="/images/illustration-dashboard-login.webp"
-                alt="Dashboard"
-                className="h-auto w-full drop-shadow-2xl"
-              />
-            </div>
+      <div className="flex min-h-screen w-full flex-col items-center justify-start bg-white px-6 pt-12 pb-12 md:pt-20">
+        <div className="w-full max-w-[400px] transition-all">
+          
+          <div className="mb-8 text-center">
+            <h1 className="text-2xl sm:text-3xl tracking-tight font-bold">Create your account</h1>
+            <p className="mt-2 text-sm">Join our platform to manage your business with ease.</p>
           </div>
 
-          {/* Right Side - Form */}
-          <div className="w-full max-w-md md:w-1/3">
-            <div className="rounded-2xl bg-white p-8 shadow-2xl">
-              <div className="mb-6">
-                <h3 className="mb-2 text-2xl font-bold text-gray-900">
-                  Get started absolutely free
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Already have an account?{" "}
-                  <Link
-                    href="/admin/login"
-                    className="font-medium text-emerald-600 hover:text-emerald-700"
-                  >
-                    Sign in
-                  </Link>
-                </p>
+          {formError && (
+            <div className={cn("mb-6 flex items-center gap-3 rounded-xl border p-4 text-sm transition-all", 
+              formError.type === "error" ? "border-red-100 bg-red-50 text-red-800" : "border-blue-100 bg-blue-50 text-blue-800")}>
+              <AlertCircle className="h-5 w-5 shrink-0" />
+              <p>{formError.message}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            
+            {/* Website type selection - Row Toggle */}
+            <div className="flex gap-2 pb-2">
+              {["ecommerce", "service"].map((type) => (
+                <label
+                  key={type}
+                  className={cn(
+                    "flex flex-1 h-11 cursor-pointer items-center justify-center rounded-xl border text-sm transition-all duration-200",
+                    selectedWebsiteType === type
+                      ? "border-blue-600 bg-blue-50 text-blue-700 shadow-sm shadow-blue-50"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-blue-200"
+                  )}
+                >
+                  <input
+                    type="radio"
+                    value={type}
+                    checked={selectedWebsiteType === type}
+                    className="hidden"
+                    onChange={() => {
+                      const val = type as "ecommerce" | "service";
+                      setSelectedWebsiteType(val);
+                      setValue("website_type", val);
+                      if (formError) setFormError(null);
+                    }}
+                  />
+                  {type === "ecommerce" ? "E-commerce" : "Service"}
+                </label>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              <div className="relative">
+                <FloatingInput
+                  id="store_name"
+                  className="rounded-xl border-slate-200 px-4 py-6 focus:border-blue-500 focus:ring-0"
+                  {...register("store_name")}
+                  onChange={handleInputChange("store_name")}
+                />
+                <FloatingLabel htmlFor="store_name">Store name</FloatingLabel>
+                {errors.store_name && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.store_name.message}</p>}
               </div>
 
-              {formError && (
-                <div
-                  className={`mb-4 flex items-start rounded-lg border p-4 text-sm ${getErrorStyles(formError.type)}`}
-                >
-                  {getErrorIcon(formError.type)}
-                  <div className="flex-1">
-                    <span>{formError.message}</span>
-                    {formError.action && (
-                      <div className="mt-2">
-                        <Link
-                          href={formError.action.href}
-                          className="font-medium underline hover:no-underline"
-                        >
-                          {formError.action.label}
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {/* ... rest of your form fields remain the same ... */}
-                <div className="relative">
-                  <FloatingInput
-                    id="store_name"
-                    type="text"
-                    disabled={isLoading}
-                    className={cn(
-                      "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                      errors.store_name &&
-                        "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    )}
-                    {...register("store_name")}
-                    onChange={handleInputChange("store_name")}
-                  />
-                  <FloatingLabel htmlFor="store_name">
-                    <User className="mr-2 h-4 w-4" />
-                    Store Name
-                  </FloatingLabel>
-                  {errors.store_name && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {errors.store_name.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <FloatingInput
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    disabled={isLoading}
-                    className={cn(
-                      "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                      errors.email &&
-                        "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    )}
-                    {...register("email")}
-                    onChange={handleInputChange("email")}
-                  />
-                  <FloatingLabel htmlFor="email">
-                    <Mail className="mr-2 h-4 w-4" />
-                    Email Address
-                  </FloatingLabel>
-                  {errors.email && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <FloatingInput
-                    id="phone"
-                    type="tel"
-                    disabled={isLoading}
-                    className={cn(
-                      "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                      errors.phone &&
-                        "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    )}
-                    {...register("phone")}
-                    onChange={handleInputChange("phone")}
-                  />
-                  <FloatingLabel htmlFor="phone">
-                    <Phone className="mr-2 h-4 w-4" />
-                    Phone Number
-                  </FloatingLabel>
-                  {errors.phone && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {errors.phone.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="">
-                  <label className="text-xs font-medium text-gray-500">
-                    Website Type
-                  </label>
-                  <div className="grid grid-cols-2 gap-3 py-0">
-                    <label
-                      className={cn(
-                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-2 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
-                        selectedWebsiteType === "ecommerce"
-                          ? "border-emerald-500 bg-emerald-50"
-                          : "border-gray-300 bg-white"
-                      )}
-                    >
-                      <input
-                        type="radio"
-                        value="ecommerce"
-                        {...register("website_type")}
-                        className="hidden"
-                        onChange={e => {
-                          setSelectedWebsiteType("ecommerce");
-                          handleInputChange("website_type")(e);
-                        }}
-                      />
-                      <span
-                        className={cn(
-                          "text-sm font-medium",
-                          selectedWebsiteType === "ecommerce"
-                            ? "text-emerald-700"
-                            : "text-gray-700"
-                        )}
-                      >
-                        E-commerce
-                      </span>
-                    </label>
-
-                    <label
-                      className={cn(
-                        "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-2 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50",
-                        selectedWebsiteType === "service"
-                          ? "border-emerald-500 bg-emerald-50"
-                          : "border-gray-300 bg-white"
-                      )}
-                    >
-                      <input
-                        type="radio"
-                        value="service"
-                        {...register("website_type")}
-                        className="hidden"
-                        onChange={e => {
-                          setSelectedWebsiteType("service");
-                          handleInputChange("website_type")(e);
-                        }}
-                      />
-                      <span
-                        className={cn(
-                          "text-sm font-medium",
-                          selectedWebsiteType === "service"
-                            ? "text-emerald-700"
-                            : "text-gray-700"
-                        )}
-                      >
-                        Service
-                      </span>
-                    </label>
-                  </div>
-
-                  {errors.website_type && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {errors.website_type.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <div className="relative">
-                    <FloatingInput
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      disabled={isLoading}
-                      className={cn(
-                        "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 pr-12 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                        errors.password &&
-                          "border-red-300 focus:border-red-500 focus:ring-red-500"
-                      )}
-                      {...register("password")}
-                      onChange={handleInputChange("password")}
-                    />
-                    <FloatingLabel htmlFor="password">
-                      <Lock className="mr-2 h-4 w-4" />
-                      Password
-                    </FloatingLabel>
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff size={18} className="transition-colors" />
-                      ) : (
-                        <Eye size={18} className="transition-colors" />
-                      )}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {errors.password.message}
-                    </p>
-                  )}
-                  {password && password.length > 0 && !errors.password && (
-                    <div className="mt-2 space-y-1 text-xs">
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          password.length >= 8
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            password.length >= 8
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        At least 8 characters
-                      </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[a-z]/.test(password)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[a-z]/.test(password)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One lowercase letter
-                      </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[A-Z]/.test(password)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[A-Z]/.test(password)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One uppercase letter
-                      </div>
-                      <div
-                        className={cn(
-                          "flex items-center",
-                          /[0-9]/.test(password)
-                            ? "text-green-600"
-                            : "text-gray-500"
-                        )}
-                      >
-                        <CheckCircle
-                          className={cn(
-                            "mr-1 h-3 w-3",
-                            /[0-9]/.test(password)
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          )}
-                        />
-                        One number
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <FloatingInput
-                    id="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    disabled={isLoading}
-                    className={cn(
-                      "peer block w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm transition-all focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none",
-                      errors.confirmPassword &&
-                        "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    )}
-                    {...register("confirmPassword")}
-                    onChange={handleInputChange("confirmPassword")}
-                  />
-                  <FloatingLabel htmlFor="confirmPassword">
-                    <Lock className="mr-2 h-4 w-4" />
-                    Confirm Password
-                  </FloatingLabel>
-                  {errors.confirmPassword && (
-                    <p className="mt-2 flex items-center text-sm font-medium text-red-500">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
-                  {confirmPassword &&
-                    password &&
-                    password !== confirmPassword &&
-                    !errors.confirmPassword && (
-                      <p className="mt-2 flex items-center text-sm font-medium text-red-600">
-                        <AlertCircle className="mr-1 h-4 w-4" />
-                        Passwords do not match
-                      </p>
-                    )}
-                  {confirmPassword &&
-                    password &&
-                    password === confirmPassword &&
-                    !errors.confirmPassword && (
-                      <p className="mt-2 flex items-center text-sm font-medium text-green-600">
-                        <CheckCircle className="mr-1 h-4 w-4" />
-                        Passwords match
-                      </p>
-                    )}
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className={cn(
-                    "w-full rounded-lg bg-gray-900 px-4 py-3 font-semibold text-white transition-colors duration-200 hover:bg-gray-800",
-                    isLoading ? "cursor-not-allowed opacity-50" : ""
-                  )}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <svg
-                        className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Creating Account...
-                    </div>
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
-
-                <div className="relative flex items-center py-2">
-                  <div className="flex-grow border-t border-gray-300"></div>
-                  <span className="mx-4 flex-shrink text-sm text-gray-500">
-                    OR
-                  </span>
-                  <div className="flex-grow border-t border-gray-300"></div>
-                </div>
-
-                <GoogleLoginButton
-                  onClick={handleGoogleSignup}
-                  isRegister={true}
+              <div className="relative">
+                <FloatingInput
+                  id="email"
+                  type="email"
+                  className="rounded-xl border-slate-200 px-4 py-6 focus:border-blue-500 focus:ring-0"
+                  {...register("email")}
+                  onChange={handleInputChange("email")}
                 />
+                <FloatingLabel htmlFor="email">Email address</FloatingLabel>
+                {errors.email && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.email.message}</p>}
+              </div>
 
-                <div className="text-center text-sm text-gray-600">
-                  By creating an account, you agree to our{" "}
-                  <Link
-                    href="/terms"
-                    className="font-medium text-gray-900 hover:underline"
-                  >
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    href="/privacy-policy"
-                    className="font-medium text-gray-900 hover:underline"
-                  >
-                    Privacy Policy
-                  </Link>
-                </div>
-              </form>
+              <div className="relative">
+                <FloatingInput
+                  id="phone"
+                  type="tel"
+                  className="rounded-xl border-slate-200 px-4 py-6 focus:border-blue-500 focus:ring-0"
+                  {...register("phone")}
+                  onChange={handleInputChange("phone")}
+                />
+                <FloatingLabel htmlFor="phone">Phone number</FloatingLabel>
+                {errors.phone && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.phone.message}</p>}
+              </div>
+
+              <div className="relative">
+                <FloatingInput
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  className="rounded-xl border-slate-200 px-4 py-6 pr-10 focus:border-blue-500 focus:ring-0"
+                  {...register("password")}
+                  onChange={handleInputChange("password")}
+                />
+                <FloatingLabel htmlFor="password">Password</FloatingLabel>
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+                {errors.password && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.password.message}</p>}
+              </div>
+
+              <div className="relative">
+                <FloatingInput
+                  id="confirmPassword"
+                  type="password"
+                  className="rounded-xl border-slate-200 px-4 py-6 focus:border-blue-500 focus:ring-0"
+                  {...register("confirmPassword")}
+                  onChange={handleInputChange("confirmPassword")}
+                />
+                <FloatingLabel htmlFor="confirmPassword">Confirm password</FloatingLabel>
+                {errors.confirmPassword && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.confirmPassword.message}</p>}
+              </div>
             </div>
-          </div>
+
+            {/* Terms and conditions */}
+            <div className="flex items-start space-x-3 py-1 pt-2">
+              <div className="relative mt-0.5 flex items-center">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  required
+                  className="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-200 checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition-all"
+                />
+                <Check className="absolute h-3 w-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-0.5" />
+              </div>
+              <label htmlFor="terms" className="text-xs text-slate-500 leading-normal cursor-pointer select-none">
+                By creating an account, you agree to our{" "}
+                <Link href="/terms" className="text-blue-600 hover:underline underline-offset-2">terms</Link> and{" "}
+                <Link href="/privacy" className="text-blue-600 hover:underline underline-offset-2">privacy policy</Link>
+              </label>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="h-12 w-full rounded-xl bg-blue-600 text-sm font-medium text-white transition-all hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50"
+            >
+              {isLoading ? "Creating account..." : "Create account"}
+            </Button>
+            <p className="text-center text-sm text-slate-500 pt-2">
+              Already have an account?{" "}
+              <Link href="/admin/login" className="font-medium text-blue-600 hover:text-blue-700">
+                Sign in
+              </Link>
+            </p>
+
+            <div className="relative flex items-center py-2">
+              <div className="flex-grow border-t border-slate-100"></div>
+              <span className="mx-4 text-[11px] text-slate-400">Or sign up with</span>
+              <div className="flex-grow border-t border-slate-100"></div>
+            </div>
+
+            <GoogleLoginButton onClick={handleGoogleSignup} isRegister={true} />
+          </form>
         </div>
       </div>
 

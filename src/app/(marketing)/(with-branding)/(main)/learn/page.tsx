@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
+import CityCTA from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title: "Nepdora Learn | Learn to Start & Grow Your Online Business in Nepal",
@@ -114,15 +115,10 @@ export default function LearnHubPage() {
 
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="border-primary/10 bg-primary/5 text-primary mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium">
-              <GraduationCap className="h-4 w-4" />
-              Free Learning Resources
-            </div>
-            <h1 className="mb-8 text-5xl leading-[0.95] font-bold tracking-tighter text-slate-900 md:text-7xl">
-              Learn to start & grow{" "}
-              <span className="text-primary">your online business.</span>
+            <h1 className="mb-8 text-5xl font-bold tracking-tight md:text-7xl">
+              Learn to start & grow your online business.
             </h1>
-            <p className="mx-auto mb-10 max-w-lg text-lg leading-relaxed font-medium text-slate-500 md:text-xl">
+            <p className="mx-auto mb-10 max-w-xl text-lg leading-relaxed">
               Free guides, tutorials, and resources to help Nepali entrepreneurs
               build successful online businesses with Nepdora.
             </p>
@@ -135,7 +131,7 @@ export default function LearnHubPage() {
                 <ChevronRight className="h-5 w-5" />
               </Link>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="inline-flex items-center justify-center gap-3 rounded-full border border-slate-200 bg-white px-10 py-5 text-base font-semibold text-slate-900 transition-all hover:bg-slate-50"
               >
                 Build Your Website
@@ -166,15 +162,11 @@ export default function LearnHubPage() {
       {/* What You'll Learn Section */}
       <section className="py-10">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="mx-auto mb-20 max-w-3xl text-center">
-            <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">
-              Nepdora Learn
-            </div>
-            <h2 className="mt-4 mb-6 text-4xl font-bold tracking-tighter text-slate-900 md:text-5xl">
-              Everything you need to{" "}
-              <span className="text-primary">succeed online.</span>
+          <div className="mx-auto mb-20 text-center">
+            <h2 className="mt-4 mb-2 text-4xl font-bold tracking-tighter text-slate-900 md:text-5xl">
+              Everything you need to succeed online.
             </h2>
-            <p className="text-lg leading-relaxed font-medium text-slate-500">
+            <p className="text-lg leading-relaxed max-w-3xl mx-auto">
               From choosing your business idea to scaling with SEO and payments,
               we've got you covered with practical, Nepal-focused guides.
             </p>
@@ -229,35 +221,29 @@ export default function LearnHubPage() {
       </section>
 
       {/* All Guides Section */}
-      <section id="guides" className="bg-slate-50 py-24 md:py-32">
+      <section id="guides" className="bg-secondary py-24 md:py-32">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-4xl font-bold tracking-tighter text-slate-900 md:text-5xl">
               Free guides for Nepali entrepreneurs
             </h2>
-            <p className="text-lg font-medium text-slate-500">
+            <p className="text-sm">
               Practical, step-by-step tutorials to help you build and grow.
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-wrap gap-5 justify-center">
             {GUIDES.map(guide => (
               <Link
                 key={guide.slug}
                 href={`/learn/${guide.slug}`}
-                className="group rounded-3xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl"
+                className="group max-w-[350px] rounded-3xl bg-white p-8 transition-all hover:-translate-y-1 "
               >
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-xs font-medium text-slate-400">
-                    <Clock className="h-3 w-3" />
-                    {guide.duration}
-                  </div>
-                </div>
 
                 <h3 className="mb-2 text-xl font-semibold text-slate-900 transition-colors">
                   {guide.title}
                 </h3>
-                <p className="mb-4 text-sm leading-relaxed font-medium text-slate-500">
+                <p className="mb-4 text-sm leading-relaxed">
                   {guide.description}
                 </p>
                 <div className="text-primary flex items-center gap-2 text-sm font-medium">
@@ -275,11 +261,10 @@ export default function LearnHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             <div>
-              <h2 className="mb-6 text-4xl font-bold tracking-tighter text-slate-900 md:text-5xl">
-                Learn from experts who{" "}
-                <span className="text-primary">understand Nepal.</span>
+              <h2 className="mb-2 text-4xl font-bold tracking-tight md:text-2xl">
+                Learn from experts who understand Nepal.
               </h2>
-              <p className="mb-8 text-lg font-medium text-slate-500">
+              <p className="mb-8 text-sm">
                 Our guides are written specifically for the Nepali market,
                 covering local regulations, payment systems, and customer
                 behavior.
@@ -293,22 +278,22 @@ export default function LearnHubPage() {
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <CheckCircle2 className="text-primary h-5 w-5" />
-                    <span className="font-medium text-slate-600">{item}</span>
+                    <span className="font-normal">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="relative rounded-3xl border border-slate-200 bg-slate-50 p-8">
+            <div className="relative rounded-3xl bg-secondary p-8">
               <div className="text-center">
                 <div className="mb-4 flex justify-center">
-                  <div className="bg-primary/10 rounded-full p-3">
-                    <Users className="text-primary h-8 w-8" />
+                  <div className="bg-primary rounded-full p-3">
+                    <Users className="text-white h-8 w-8" />
                   </div>
                 </div>
                 <h3 className="mb-2 text-2xl font-bold text-slate-900">
                   Join 5,000+ entrepreneurs
                 </h3>
-                <p className="font-medium text-slate-500">
+                <p>
                   Who have started their online journey with Nepdora
                 </p>
               </div>
@@ -318,28 +303,7 @@ export default function LearnHubPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="pb-32">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="">
-            <div className="relative z-10 flex flex-col items-center">
-              <h2 className="mb-8 max-w-4xl text-5xl leading-[0.9] font-semibold tracking-tighter">
-                Ready to start your online business?
-              </h2>
-              <p className="mx-auto mb-12 max-w-xl text-xl font-medium text-slate-600">
-                Build your website with Nepdora and get access to all our free
-                guides and resources.
-              </p>
-              <Link
-                href="/create-website"
-                className="bg-primary inline-flex items-center gap-3 rounded-full px-12 py-6 text-lg font-semibold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
-              >
-                Build Your Website Now
-                <ChevronRight className="h-6 w-6" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CityCTA />
     </div>
   );
 }

@@ -2,7 +2,7 @@ const faqItems = [
   {
     question: "What is Nepdora?",
     answer:
-      "Nepdora is Nepal's all-in-one business platform. It lets you build a professional website, accept eSewa and Khalti payments, manage orders, and track analytics — all from one dashboard, with no coding required.",
+      "Nepdora is Nepal's all-in-one business platform. It lets you build a professional website, accept eSewa and Khalti payments, manage orders, and track analytics - all from one dashboard, with no coding required.",
   },
   {
     question: "How does Nepdora optimise for Nepal's local market?",

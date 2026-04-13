@@ -62,7 +62,7 @@ export default function IntegrationsPage() {
                   Request Integration
                 </Link>
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50"
                 >
                   Build your site

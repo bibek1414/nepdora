@@ -1,4 +1,4 @@
-import { AuthHeader } from "@/components/auth/auth-header";
+import Header from "@/components/marketing/layout/header";
 
 export default function AdminAuthLayout({
   children,
@@ -7,7 +7,7 @@ export default function AdminAuthLayout({
 }) {
   return (
     <div className="relative">
-      <AuthHeader />
+      <Header />
       {children}
     </div>
   );

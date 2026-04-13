@@ -55,7 +55,7 @@ export const DEFAULT_TESTIMONIALS_MAP: Record<
     style: "testimonial-8",
     title: "A global reputation for client satisfaction",
     subtitle:
-      "They understood our vision perfectly and delivered a design beyond our expectations — efficient, elegant, and inspiring.",
+      "They understood our vision perfectly and delivered a design beyond our expectations - efficient, elegant, and inspiring.",
     buttonText: "Get in touch",
     buttonLink: "#",
   },

@@ -26,7 +26,7 @@ import { absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
-    "Compare Website Builders — Find the Best Platform for Nepal | Nepdora",
+    "Compare Website Builders - Find the Best Platform for Nepal | Nepdora",
   description:
     "Explore how Nepdora compares with popular website builders like Webflow, Wix, Shopify, and more. Find the perfect platform for your Nepali business.",
   path: "/compare",
@@ -103,7 +103,7 @@ export default function CompareHubPage() {
               Comparison
             </div>
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
-              Compare Website Builders —{" "}
+              Compare Website Builders -{" "}
               <span className="text-primary">
                 Find the Best Platform for Nepal
               </span>
@@ -114,7 +114,7 @@ export default function CompareHubPage() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105"
               >
                 Start Building
@@ -139,7 +139,7 @@ export default function CompareHubPage() {
           </h2>
 
           <p className="mb-4 text-lg leading-relaxed text-slate-600">
-            Most website builders are designed for global users — not Nepal.
+            Most website builders are designed for global users - not Nepal.
             That means higher costs, payment limitations, and slower performance
             for local businesses.
           </p>
@@ -150,8 +150,8 @@ export default function CompareHubPage() {
           </p>
 
           <p className="text-lg leading-relaxed text-slate-600">
-            These comparisons help you understand exactly what you gain — and
-            what you lose — when choosing a platform.
+            These comparisons help you understand exactly what you gain - and
+            what you lose - when choosing a platform.
           </p>
         </div>
       </section>
@@ -331,7 +331,7 @@ export default function CompareHubPage() {
                 </div>
               </div>
               <p className="text-lg leading-relaxed font-medium text-slate-500">
-                Nepdora is built specifically for Nepali businesses — making it
+                Nepdora is built specifically for Nepali businesses - making it
                 easier, faster, and more affordable to get online.
               </p>
             </div>
@@ -475,7 +475,7 @@ export default function CompareHubPage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/create-website"
+                  href="/admin/signup"
                   className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
                 >
                   Start My Better Website

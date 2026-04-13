@@ -573,7 +573,7 @@ export const defaultOthersTemplate9Data: OthersTemplate9Data = {
   label: "The basics",
   title: "Your daily routine, simplified",
   subtitle:
-    "Every great skin day starts with the right order. Here's the essential structure — morning and night.",
+    "Every great skin day starts with the right order. Here's the essential structure - morning and night.",
   routines: [
     {
       id: "morning",
@@ -597,7 +597,7 @@ export const defaultOthersTemplate9Data: OthersTemplate9Data = {
         {
           id: "m-3",
           name: "Serum",
-          description: "Targets concerns — acne, glow, pigmentation",
+          description: "Targets concerns - acne, glow, pigmentation",
           icon: "✨",
         },
         {
@@ -609,7 +609,7 @@ export const defaultOthersTemplate9Data: OthersTemplate9Data = {
         {
           id: "m-5",
           name: "Sunscreen",
-          description: "Shields from UV damage — never skip",
+          description: "Shields from UV damage - never skip",
           icon: "🛡️",
         },
       ],
@@ -624,7 +624,7 @@ export const defaultOthersTemplate9Data: OthersTemplate9Data = {
         {
           id: "n-1",
           name: "Cleanser",
-          description: "Deep clean — remove makeup, SPF, pollutants",
+          description: "Deep clean - remove makeup, SPF, pollutants",
           icon: "🧴",
         },
         {
@@ -636,7 +636,7 @@ export const defaultOthersTemplate9Data: OthersTemplate9Data = {
         {
           id: "n-3",
           name: "Treatment / Serum",
-          description: "Retinol, AHA, niacinamide — repair overnight",
+          description: "Retinol, AHA, niacinamide - repair overnight",
           icon: "🔬",
         },
         {
@@ -661,7 +661,7 @@ export const defaultOthersTemplate10Data: OthersTemplate10Data = {
       icon: "🧪",
       title: "Layer thinnest to thickest",
       description:
-        "Always apply products from lightest to heaviest — serums before moisturizers — so actives can absorb properly.",
+        "Always apply products from lightest to heaviest - serums before moisturizers - so actives can absorb properly.",
     },
     {
       id: "2",
@@ -927,7 +927,7 @@ export const defaultOthersTemplate15Data: OthersTemplate15Data = {
       icon: "HeartHandshake",
       title: "End-to-End Support",
       description:
-        "From first consultation to airport pickup abroad — we're with you every step.",
+        "From first consultation to airport pickup abroad - we're with you every step.",
     },
     {
       id: "f-6",

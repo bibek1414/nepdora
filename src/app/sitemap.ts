@@ -248,7 +248,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.5, // Lowered priority for programmatic pages
       });
       dynamicIndustryCities.push({
-        url: `${baseUrl}/create-website-for/${industry}/${citySlug}`,
+        url: `${baseUrl}/admin/signup-for/${industry}/${citySlug}`,
         lastModified: new Date(),
         changeFrequency: "monthly" as const,
         priority: 0.4,

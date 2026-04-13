@@ -203,7 +203,7 @@ export const LoginStyle3: React.FC<LoginStyle3Props> = ({
                   New here?{" "}
                   <Link
                     href={generateLinkHref(
-                      "/signup",
+                      "/admin/signup",
                       siteUser,
                       pathname,
                       isEditable,

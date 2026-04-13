@@ -6,13 +6,13 @@ This guide turns the `@beautifulMention` callout into a repeatable checklist whe
 
 ## @beautifulMention Design System Setup
 
-All styling is done with **Tailwind CSS utility classes** directly on elements — no CSS custom properties, no inline style objects for layout or color (theme tokens are the only exception, fed via `style` props from `useThemeQuery()`). This keeps the codebase scannable and consistent.
+All styling is done with **Tailwind CSS utility classes** directly on elements - no CSS custom properties, no inline style objects for layout or color (theme tokens are the only exception, fed via `style` props from `useThemeQuery()`). This keeps the codebase scannable and consistent.
 
 Always call `useThemeQuery()` near the top of the component and use `theme.colors.primary`, `theme.colors.primaryForeground`, `theme.colors.secondary`, `theme.fonts.heading`, and `theme.fonts.body` only where the builder must control the value. Everything else comes from the Tailwind classes below.
 
 ### Tailwind Token Reference
 
-Use these classes as your palette. Pick from these stops only — don't reach for arbitrary values.
+Use these classes as your palette. Pick from these stops only - don't reach for arbitrary values.
 
 **Backgrounds**
 | Role | Tailwind Class |
@@ -102,21 +102,21 @@ These rules apply to every component, without exception.
 - **Be generous with whitespace.** Sections must breathe. More padding than you think is needed.
 - Use a **boxy, grid-aligned layout**. Cards and panels should feel solid and structured.
 - Minimum padding inside containers: `24px`; typical for sections: `32–48px`.
-- Use **consistent horizontal rhythm** — align everything to the grid. No arbitrary positioning.
+- Use **consistent horizontal rhythm** - align everything to the grid. No arbitrary positioning.
 
 ### Typography
 
-- **Never use `text-transform: uppercase`** on any element — headings, labels, buttons, nav items.
+- **Never use `text-transform: uppercase`** on any element - headings, labels, buttons, nav items.
 - **Never use `letter-spacing > 0.02em`** (wide tracking). Keep tracking natural.
 - Font weights: `400` (body), `500` (UI labels), `600` (emphasis), `700` (headings). Avoid `800+` except for single hero numbers.
 - Line heights: `1.2–1.3` for headings, `1.6–1.7` for body text.
-- Responsive headings: `text-3xl md:text-5xl font-bold` — readable on small screens.
+- Responsive headings: `text-3xl md:text-5xl font-bold` - readable on small screens.
 - Body text minimum: `15px`. Never go below `14px`.
-- Keep font sizes purposeful — no more than 5–6 distinct sizes per component.
+- Keep font sizes purposeful - no more than 5–6 distinct sizes per component.
 
 ### Color
 
-- **Restrained color** — the accent color appears in: primary CTA buttons, active states, links, key highlights only.
+- **Restrained color** - the accent color appears in: primary CTA buttons, active states, links, key highlights only.
 - Everything else is neutral: white, off-white, light grey, dark grey, near-black.
 - No rainbow UI. Don't assign different colors to every card or section decoratively.
 - Backgrounds: white or very light grey by default. Avoid heavy-colored sections unless explicitly required by variant.
@@ -129,7 +129,7 @@ These rules apply to every component, without exception.
 ### Shadows
 
 - Use `var(--shadow-sm)` or `var(--shadow-md)` only. Deep or heavy shadows feel dated.
-- Choose between border-based and shadow-based separation consistently — don't mix arbitrarily.
+- Choose between border-based and shadow-based separation consistently - don't mix arbitrarily.
 
 ### Hover & Motion
 
@@ -153,7 +153,7 @@ These rules apply to every component, without exception.
 - Supported `as` values: `"p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span"`.
 - Keep typography tight: headline classes bold, subheadings sized proportionally, everything within `max-w-7xl`.
 - Inject theme tokens via `style` or `className`: colors from `theme.colors.secondary`, fonts from `theme.fonts.heading`.
-- All text elements must have sufficient contrast — primary data labels should be high-contrast (near-black on white), never muted grey.
+- All text elements must have sufficient contrast - primary data labels should be high-contrast (near-black on white), never muted grey.
 - Document each text slot under `@beautifulMention` so designers know what is editable vs. fixed.
 
 ---
@@ -162,7 +162,7 @@ These rules apply to every component, without exception.
 
 - Prefer `EditableLink` for all buttons and CTAs.
 - Always set `href`, `aria-label` when link text is ambiguous, and `rel="noreferrer"` for external destinations.
-- Check `link.target`: default to `_self`; only use `_blank` when the UX explicitly requires it — cite the decision in the `@beautifulMention` note.
+- Check `link.target`: default to `_self`; only use `_blank` when the UX explicitly requires it - cite the decision in the `@beautifulMention` note.
 - Link containers stay within the `max-w-7xl` grid and share the same vertical rhythm as surrounding text.
 - When links act as buttons: use `theme.colors.primary` for background/border and `theme.colors.primaryForeground` for the label.
 - Keep link styling tight: `padding: 10px 20px`, `font-weight: 500`, `border-radius: var(--radius-md)`. Never uppercase.
@@ -198,7 +198,7 @@ These rules apply to every component, without exception.
 ## @beautifulMention Theme Strategy
 
 - Always call `useThemeQuery()` near the top of the component. Fall back to the default theme object.
-- Map theme tokens into CSS variables or `style` props — never hardcode color or font values inside JSX.
+- Map theme tokens into CSS variables or `style` props - never hardcode color or font values inside JSX.
 - Colors flow into `style` props; fonts flow through `className`.
 - Keep all theming within the `max-w-7xl` wrapper. Document key tokens under `@beautifulMention: Theme`.
 
@@ -209,9 +209,9 @@ These rules apply to every component, without exception.
 ### Cards
 
 - Background: `bg-gray-50` or `bg-white`.
-- Border: `border border-gray-200` or `shadow-sm` — pick one approach and stay consistent within the section.
+- Border: `border border-gray-200` or `shadow-sm` - pick one approach and stay consistent within the section.
 - Padding: `p-6` (24px) minimum, `p-8` (32px) for spacious layouts.
-- Radius: `rounded-lg` or `rounded-xl` — consistent within a section.
+- Radius: `rounded-lg` or `rounded-xl` - consistent within a section.
 
 ### Buttons
 
@@ -225,12 +225,12 @@ These rules apply to every component, without exception.
 
 - **Shadcn UI**: Always use the `Input`, `Textarea`, and `Select` components from `@/components/ui/` instead of raw HTML elements. This ensures consistent focusing, styling, and accessibility.
 - Border: `border border-gray-200 rounded-lg`.
-- Focus: `focus:ring-2 focus:ring-offset-1` with accent ring via `style` — never just a fill.
+- Focus: `focus:ring-2 focus:ring-offset-1` with accent ring via `style` - never just a fill.
 - Labels: above the input, `text-sm font-medium text-gray-700`, NOT uppercase.
 
 ### Timelines & Activity Feeds
 
-- Use **dot + vertical line** treatment — no filled background boxes on rows.
+- Use **dot + vertical line** treatment - no filled background boxes on rows.
 - Plain text carries the narrative; decoration should not compete.
 
 ### Tables & Data
@@ -252,9 +252,9 @@ These rules apply to every component, without exception.
 ## @beautifulMention Mobile Responsiveness Strategy
 
 - **Mobile-First**: Prefix-free classes for mobile; `md:` / `lg:` for larger screens.
-- **Stacking**: Multi-column desktop layouts stack vertically on mobile — use `flex-col md:flex-row` or `grid-cols-1 md:grid-cols-2`.
+- **Stacking**: Multi-column desktop layouts stack vertically on mobile - use `flex-col md:flex-row` or `grid-cols-1 md:grid-cols-2`.
 - **Spacing**: `py-12 md:py-24`, always `px-4` minimum on mobile.
-- **Typography**: `text-3xl md:text-5xl` — scale headings responsively.
+- **Typography**: `text-3xl md:text-5xl` - scale headings responsively.
 - **Images**: Use `w-full` on mobile with proper aspect ratios.
 - **Touch targets**: `EditableLink` buttons must meet minimum touch target sizes for mobile.
 
@@ -266,22 +266,22 @@ Before shipping, verify every item:
 
 - [ ] No `text-transform: uppercase` anywhere
 - [ ] No `letter-spacing > 0.02em` (no wide tracking)
-- [ ] Whitespace is generous — sections breathe
-- [ ] Color is restrained — accent used purposefully, not decoratively
+- [ ] Whitespace is generous - sections breathe
+- [ ] Color is restrained - accent used purposefully, not decoratively
 - [ ] All body text ≥ 15px with sufficient contrast
-- [ ] Primary data labels are high-contrast — not muted grey
-- [ ] Border radius consistent — `rounded-lg` / `rounded-xl` used uniformly within a section
-- [ ] Shadows are subtle (`shadow-sm` or `shadow`) — never `shadow-xl` or `shadow-2xl`
-- [ ] Hover transitions are subtle — `duration-200`, no aggressive scaling
+- [ ] Primary data labels are high-contrast - not muted grey
+- [ ] Border radius consistent - `rounded-lg` / `rounded-xl` used uniformly within a section
+- [ ] Shadows are subtle (`shadow-sm` or `shadow`) - never `shadow-xl` or `shadow-2xl`
+- [ ] Hover transitions are subtle - `duration-200`, no aggressive scaling
 - [ ] NO `group` or `group-hover` classes used at all. ALL complex card hover effects use React state (`isHovered`) instead.
-- [ ] Typography scale purposeful — max 5–6 distinct sizes
-- [ ] Mobile considered — layout stacks, type scales, touch targets accessible
-- [ ] `EditableText` never wrapped in a semantic tag — uses `as` prop instead
+- [ ] Typography scale purposeful - max 5–6 distinct sizes
+- [ ] Mobile considered - layout stacks, type scales, touch targets accessible
+- [ ] `EditableText` never wrapped in a semantic tag - uses `as` prop instead
 - [ ] `EditableLink` wrapper has `relative z-30` and avoids `overflow-hidden` parents to prevent popup clipping
 - [ ] `EditableLink` buttons use `theme.colors.primary` / `primaryForeground`
 - [ ] `EditableImage` has sensible `alt` text
 - [ ] `useThemeQuery()` called at top; no hardcoded color/font values in JSX
-- [ ] All colors/fonts from `useThemeQuery()` only where builder control is needed — rest is Tailwind
+- [ ] All colors/fonts from `useThemeQuery()` only where builder control is needed - rest is Tailwind
 - [ ] Interactive states exist for all buttons, links, and rows (hover, focus, active)
 - [ ] Content stays within `max-w-7xl px-8` wrapper
 - [ ] Component registered in `add-section-dialog` and dispatcher
@@ -292,7 +292,7 @@ Before shipping, verify every item:
 
 ---
 
-## @beautifulMention Anti-Patterns — Never Do These
+## @beautifulMention Anti-Patterns - Never Do These
 
 - ❌ `text-transform: uppercase` on any element
 - ❌ `letter-spacing: 0.1em` or wider tracking
@@ -302,16 +302,16 @@ Before shipping, verify every item:
 - ❌ Cramped padding (`< 16px` in cards)
 - ❌ Heavy drop shadows on everything (`shadow-xl`, `shadow-2xl` as defaults)
 - ❌ Gradient-heavy sections with clashing colors
-- ❌ Inconsistent corner rounding — mixing `rounded-none` and `rounded-3xl` arbitrarily
+- ❌ Inconsistent corner rounding - mixing `rounded-none` and `rounded-3xl` arbitrarily
 - ❌ Borders that are too dark or visually heavy
 - ❌ Bright colored backgrounds stacked against each other
 - ❌ More than one competing hero CTA button
 - ❌ Emoji used as navigation icons or feature bullets
 - ❌ **ANY use of `group` or `group-hover` classes in Tailwind**. Always use React State (`isHovered`) for complex hovers instead.
-- ❌ Muted grey for primary data labels — use high-contrast text
-- ❌ `<h2><EditableText /></h2>` — wrap via `as` prop, never with a parent semantic tag
-- ❌ Hardcoded hex colors or font names in `className` — use Tailwind neutrals or `style` with theme tokens (e.g., `theme.colors.primary`).
-- ❌ Arbitrary "subtle" hex colors (e.g., `bg-[#f8faf9]`, `bg-[#EEF2FF]`) — use `hexToRgba(token, opacity)` instead.
+- ❌ Muted grey for primary data labels - use high-contrast text
+- ❌ `<h2><EditableText /></h2>` - wrap via `as` prop, never with a parent semantic tag
+- ❌ Hardcoded hex colors or font names in `className` - use Tailwind neutrals or `style` with theme tokens (e.g., `theme.colors.primary`).
+- ❌ Arbitrary "subtle" hex colors (e.g., `bg-[#f8faf9]`, `bg-[#EEF2FF]`) - use `hexToRgba(token, opacity)` instead.
 - ❌ Clickable elements (divs, spans, cards) without `cursor-pointer` utility.
 - ❌ Active interactions (modals, navigation) triggering while `isEditable` is `true`.
 
@@ -337,7 +337,7 @@ Before shipping, verify every item:
 1. **Plan**: Analyze the component area. Write the `@beautifulMention` checklist in this document before touching code. Confirm design tokens and reference aesthetic (Stripe-like precision, Apple-like whitespace, Linear-like density).
 2. **Design System**: Define or reference the CSS variable tokens (`--accent`, `--surface`, `--border`, `--radius-*`, `--shadow-*`) before writing any component styles.
 3. **Draft**: Write the data type + default record, add the `max-w-7xl` skeleton, and document the text/link/image/theme approach inside `@beautifulMention`.
-4. **Build**: Wire component logic. All colors and fonts flow from theme tokens — nothing hardcoded.
+4. **Build**: Wire component logic. All colors and fonts flow from theme tokens - nothing hardcoded.
 5. **Register**: Wire into the renderer and `add-section-dialog`; call out the registration steps in the final `@beautifulMention` block.
 6. **Verify Responsiveness**: Test across mobile, tablet, and desktop. Check layout, typography, and touch targets at each breakpoint.
 7. **Quality Gate**: Run through the Design Quality Checklist above. All items must pass before the component lands.
@@ -370,17 +370,17 @@ Never default to `system-ui` or `Arial`. Always load from Google Fonts or Fontso
 
 ---
 
-## @beautifulMention: Others Style 12 (Exclusive Tours) — Reference Example
+## @beautifulMention: Others Style 12 (Exclusive Tours) - Reference Example
 
 - **Template Registration**: Added `OthersTemplate12Data` and default map in `types/owner-site/components/others.ts`.
 - **Text Approach**: `EditableText` with semantic `as` props (`h2`, `h3`, `p`, `span`). Theme heading font injected via `--font-heading`.
 - **Link Strategy**: `EditableLink` with `theme.primary` background and `theme.primaryForeground` label. `rel="noreferrer"` on external links.
-- **Image Strategy**: Framer Motion animated cards use `EditableImage` for `mainImage` and `subImage` — swappable natively in the builder.
+- **Image Strategy**: Framer Motion animated cards use `EditableImage` for `mainImage` and `subImage` - swappable natively in the builder.
 - **Theme Approach**: `useThemeQuery()` destructured into CSS variable assignments. No hardcoded colors in JSX.
-- **Design Notes**: Cards use `var(--shadow-sm)`, `var(--radius-md)`. Hover is a single subtle `opacity` + `translateY` — no complex `group-hover` chains. Body text 15px+, headings responsive.
+- **Design Notes**: Cards use `var(--shadow-sm)`, `var(--radius-md)`. Hover is a single subtle `opacity` + `translateY` - no complex `group-hover` chains. Body text 15px+, headings responsive.
 - **Variant Note**: Registered as `others-12` in `add-section-dialog.tsx` and the component dispatcher.
 
-## @beautifulMention: Others Style 22 (Process Steps) — Reference Example
+## @beautifulMention: Others Style 22 (Process Steps) - Reference Example
 
 - **Template Registration**: Added `OthersTemplate22Data` and default map in `types/owner-site/components/others.ts`.
 - **Text Approach**: `EditableText` with semantic `as` props (`h2`, `p`, `span`). `as="h2"` uses `whitespace-pre-wrap` for precise layout control.

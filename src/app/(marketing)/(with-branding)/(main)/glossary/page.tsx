@@ -354,7 +354,7 @@ export default function GlossaryHubPage() {
                 action. Create your website with Nepdora today.
               </p>
               <Link
-                href="/create-website"
+                href="/admin/signup"
                 className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
               >
                 Build My Professional Website
