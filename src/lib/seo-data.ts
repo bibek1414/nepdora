@@ -3,6 +3,7 @@ import { NEPAL_CITIES } from "@/constants/nepal-cities";
 export const industries = [
   "restaurant-website",
   "clothing-store",
+  "ecommerce",
   "gym",
   "school",
   "clinic",
