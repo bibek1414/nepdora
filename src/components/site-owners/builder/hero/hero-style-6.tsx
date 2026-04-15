@@ -105,11 +105,11 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
   return (
     <section
       ref={bannerRef}
-      className="relative h-screen w-full overflow-hidden bg-gray-900"
+      className="relative flex min-h-dvh w-full flex-col items-center justify-center overflow-hidden bg-gray-900"
     >
       {/* Background Image with Zoom Effect */}
       <div
-        className="group absolute inset-0 transition-transform duration-2000 ease-out"
+        className="group absolute inset-0 z-0 transition-transform duration-2000 ease-out"
         style={{ transform: isVisible ? "scale(1.05)" : "scale(1)" }}
       >
         <EditableImage
@@ -125,29 +125,30 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
           }}
           onAltChange={handleAltUpdate("imageAlt")}
           isEditable={isEditable}
-          className="h-screen w-full"
+          className="h-240 object-cover"
           disableImageChange={true}
         />
-        <ImageEditOverlay
-          onImageSelect={url => {
-            const update = { backgroundImageUrl: url };
-            setData({ ...data, ...update });
-            onUpdate?.(update);
-          }}
-          imageWidth={1920}
-          imageHeight={1080}
-          isEditable={isEditable}
-          label="Change Background"
-          folder="hero-banners"
-          className="absolute top-10 right-10 z-20 flex items-center justify-center"
-        />
         {/* Dark Overlay for text contrast */}
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-black/40" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
       </div>
 
+      <ImageEditOverlay
+        onImageSelect={url => {
+          const update = { backgroundImageUrl: url };
+          setData({ ...data, ...update });
+          onUpdate?.(update);
+        }}
+        imageWidth={1920}
+        imageHeight={1080}
+        isEditable={isEditable}
+        label="Change Background"
+        folder="hero-banners"
+        className="absolute top-4 right-4 z-50 flex items-center justify-center md:top-10 md:right-10"
+      />
+
       {/* Content Container - Reset to Centered */}
-      <div className="relative flex h-full w-full flex-col items-center justify-center px-4 text-center text-white sm:px-6">
+      <div className="relative z-10 flex w-full flex-col items-center justify-center px-4 text-center text-white sm:px-6">
         {/* Title & Subtitle with Fade Up Animation */}
         <div
           className={`transition-all delay-100 duration-1000 ease-out ${
@@ -163,7 +164,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
               placeholder="Exclusive Drop"
             />
           </p>
-          <h2 className="mb-6 text-4xl font-light tracking-tight sm:mb-8 sm:text-6xl md:text-7xl lg:text-8xl">
+          <h2 className="mb-6 text-5xl font-light tracking-tight sm:mb-8 sm:text-6xl md:text-7xl lg:text-8xl">
             <EditableText
               value={data.title || "MIDNIGHT SERIES"}
               onChange={handleTextUpdate("title")}

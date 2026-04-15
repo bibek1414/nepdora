@@ -108,7 +108,7 @@ export const CategoryStyle3: React.FC<CategoryStyleProps> = ({
             title="No Categories Found"
             description="Organize your content by adding categories from the admin dashboard."
             actionLabel="Manage Categories"
-            actionLink="/admin/category"
+            actionLink="/admin/categories"
             isEditable={isEditable}
           />
         )}
