@@ -9,19 +9,19 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title: "Web Glossary | Website & Tech Terms Explained | Nepdora",
+  title: "Web & Website Glossary | Learn Tech Terms Easily | Nepdora",
   description:
-    "Understand key website and tech terms with our simple glossary. Perfect for Nepali business owners starting their online journey.",
+    "Learn website and tech terms in simple language. Understand domains, hosting, SSL, SEO, and more—perfect for beginners and business owners in Nepal.",
   path: "/glossary",
   keywords: [
-    "web glossary nepal",
+    "web glossary Nepal",
     "website terms explained",
-    "tech glossary for beginners",
-    "domain hosting definition",
-    "ssl certificate meaning",
+    "what is domain hosting",
+    "SSL certificate meaning",
+    "SEO glossary for beginners",
+    "tech terms Nepal beginners",
   ],
 });
-
 // Group terms by category
 const getTermCategory = (term: string): string => {
   const categories: Record<string, string[]> = {

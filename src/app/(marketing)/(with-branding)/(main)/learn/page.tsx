@@ -21,11 +21,11 @@ import { JsonLd } from "@/components/shared/json-ld";
 import CityCTA from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora Learn | Learn to Start & Grow Your Online Business in Nepal",
+  title: "Nepdora Learn | Startup & Online Business Guides for Nepal",
   description:
-    "Free guides and tutorials to help you start an online business in Nepal. Learn about company registration, payment gateways, SEO, and more.",
+    "Free step-by-step guides to start and grow your online business in Nepal. Learn website building, SEO, payment gateways, company registration, and digital growth strategies.",
   path: "/learn",
-  ogLabel: "Growth Academy",
+  ogLabel: "Nepdora Growth Academy",
 });
 
 const GUIDES = [

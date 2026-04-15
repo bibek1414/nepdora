@@ -7,15 +7,17 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Frequently Asked Questions | Nepdora - Website Builder Nepal",
+  title: "Nepdora FAQ | Website Builder Questions & Support in Nepal",
   description:
-    "Have questions about building your website in Nepal? Find answers about pricing, e-commerce, hosting, and how to get started with Nepdora.",
+    "Find answers to common questions about Nepdora. Learn about website building, pricing, ecommerce, hosting, and how to get started in Nepal.",
   path: "/faq",
   keywords: [
-    "FAQ",
-    "Nepdora questions",
-    "website builder Nepal help",
-    "ecommerce Nepal support",
+    "Nepdora FAQ",
+    "website builder Nepal FAQ",
+    "Nepdora help",
+    "ecommerce website Nepal questions",
+    "website builder support Nepal",
+    "how to build website Nepal",
   ],
 });
 

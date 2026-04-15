@@ -11,16 +11,18 @@ import Testimonials from "@/components/marketing/testimonials/testimonials";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "About Nepdora : Made in Nepal Website Builder",
+  title: "About Nepdora – Made in Nepal Website Builder for Businesses",
   description:
-    "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management. Build your complete digital presence here.",
+    "Learn about Nepdora, a made-in-Nepal website builder designed for businesses. Create websites, online stores, and manage your digital presence with local payments and powerful tools.",
   path: "/about",
   keywords: [
-    "Nepdora about",
-    "Nepal website builder",
+    "About Nepdora",
+    "Nepdora Nepal",
+    "website builder Nepal",
+    "made in Nepal software",
     "ecommerce platform Nepal",
-    "digital presence solution",
-    "Made in Nepal",
+    "Nepal startup website builder",
+    "business software Nepal",
   ],
 });
 

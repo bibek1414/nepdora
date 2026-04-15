@@ -23,16 +23,17 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title:
-    "AI Website Builder in Nepal - Build Modern Sites in Minutes | Nepdora",
+    "AI Website Builder in Nepal | Create Websites in Minutes Without Coding | Nepdora",
   description:
-    "Build modern, high-performance websites in minutes using AI. Nepdora's AI Website Builder helps you create stunning, responsive websites without coding.",
+    "Create a professional website instantly using AI. Nepdora's AI website builder lets you generate, customize, and launch responsive websites in minutes—no coding required.",
   path: "/ai-website-builder-in-nepdora",
   keywords: [
-    "ai website builder nepal",
-    "build website with ai",
-    "nepdora ai builder",
-    "no code website builder nepal",
-    "automatic website generation",
+    "AI website builder Nepal",
+    "build website with AI",
+    "generate website automatically",
+    "no code website builder Nepal",
+    "AI website generator Nepal",
+    "Nepdora AI builder",
   ],
 });
 

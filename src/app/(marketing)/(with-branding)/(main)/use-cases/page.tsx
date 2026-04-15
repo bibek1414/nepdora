@@ -23,9 +23,10 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
-  title: "Use Cases | How Businesses Use Nepdora in Nepal",
+  title:
+    "Website Use Cases in Nepal | Restaurants, Shops & Businesses | Nepdora",
   description:
-    "Explore how different businesses use Nepdora to automate sales, take bookings, and build a digital identity in Nepal.",
+    "See how Nepali businesses use Nepdora to build websites, launch online stores, accept bookings, and grow their digital presence with eSewa & Khalti support.",
   path: "/use-cases",
 });
 

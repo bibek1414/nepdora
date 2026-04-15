@@ -7,16 +7,19 @@ import { Suspense } from "react";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora : Professional Website Templates for Any Business in Nepal",
+  title: "Website Templates in Nepal (Free & Premium Designs) | Nepdora",
   description:
-    "Browse hundreds of professionally designed website templates for E-commerce, Restaurants, Agencies, and more. Customize any design with our easy builder.",
+    "Explore professionally designed website templates in Nepal for ecommerce, restaurants, agencies, and more. Fully customizable, mobile-friendly, and ready to launch.",
   path: "/templates",
   keywords: [
     "website templates Nepal",
-    "ecommerce templates",
-    "restaurant website design",
+    "free website templates Nepal",
+    "ecommerce website templates",
+    "restaurant website templates",
     "agency website templates",
-    "customizable website designs",
+    "business website templates Nepal",
+    "responsive website templates",
+    "no code website templates",
   ],
 });
 

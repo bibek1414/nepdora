@@ -8,9 +8,10 @@ import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
 export async function generateMetadata() {
   return buildMarketingMetadata({
-    title: "Professional Invoice Builder for Nepal | Free & Instant | Nepdora",
+    title:
+      "Free Invoice Generator in Nepal | Create & Download Instant Invoices | Nepdora",
     description:
-      "Create and download professional invoices for your business in Nepal instantly. Free invoice templates for freelancers, agencies, and small businesses.",
+      "Generate professional invoices instantly for your business in Nepal. Free invoice builder for freelancers, agencies, and small businesses with downloadable, ready-to-use templates.",
     path: "/invoice-builder",
   });
 }

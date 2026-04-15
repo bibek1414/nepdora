@@ -55,17 +55,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!TEMPLATE_CATEGORIES.includes(category)) {
     notFound();
   }
+
   const name = capitalizeWords(category);
-  const title = `Best ${name} Website Templates for Nepal | Ready to Use`;
-  const description = `Browse free and premium ${name} templates designed for the Nepali market. Mobile-friendly, fast, and integrated with eSewa & Khalti.`;
+
+  const title = `${name} Website Templates in Nepal (Free & Premium) | Nepdora`;
+
+  const description = `Explore ${name.toLowerCase()} website templates in Nepal. Choose from free and premium designs, fully customizable, mobile-friendly, and ready to launch with eSewa & Khalti support.`;
 
   return buildMarketingMetadata({
     title,
     description,
     path: `/templates/${category}`,
     keywords: [
-      `${category} website templates nepal`,
-      `${category} website design nepal`,
+      `${category} website templates Nepal`,
+      `${category} website design Nepal`,
+      `best ${category} templates Nepal`,
+      `free ${category} website templates`,
+      `${category} website builder Nepal`,
     ],
   });
 }

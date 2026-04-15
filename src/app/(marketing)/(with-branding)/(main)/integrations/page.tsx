@@ -7,9 +7,10 @@ import IntegrationsMarketplace from "@/components/marketing/integrations/integra
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
-  title: "Integrations Marketplace | Connect Your Business with Nepdora",
+  title:
+    "Website Integrations in Nepal | eSewa, Khalti, WhatsApp & More | Nepdora",
   description:
-    "Explore and connect the best local and global tools to your Nepdora website. eSewa, Khalti, Dash Logistics, WhatsApp, and more.",
+    "Connect your Nepdora website with powerful integrations in Nepal. Add eSewa, Khalti, Dash delivery, WhatsApp, analytics, and global tools in one click.",
   path: "/integrations",
 });
 

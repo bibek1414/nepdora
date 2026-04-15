@@ -6,16 +6,18 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora Support | Help Center & FAQs",
+  title: "Nepdora Support Center | Help, FAQs & Customer Support Nepal",
   description:
-    "Get help with Nepdora. Visit our Support Center to find answers to common questions, explore FAQs, and contact our team for personalized assistance.",
+    "Get help with Nepdora website builder. Find answers in FAQs, learn how to use features, fix issues, and contact our support team for quick assistance in Nepal.",
   path: "/support",
   keywords: [
     "Nepdora support",
-    "help center",
-    "website FAQ",
-    "ecommerce help",
-    "customer support Nepal",
+    "Nepdora help center",
+    "website builder support Nepal",
+    "Nepal customer support software",
+    "website FAQ Nepal",
+    "ecommerce support Nepal",
+    "how to use Nepdora",
   ],
 });
 

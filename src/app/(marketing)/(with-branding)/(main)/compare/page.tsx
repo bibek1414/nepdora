@@ -27,16 +27,18 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
-    "Compare Website Builders - Find the Best Platform for Nepal | Nepdora",
+    "Compare Website Builders in Nepal | Nepdora vs Wix, Shopify & Webflow",
   description:
-    "Explore how Nepdora compares with popular website builders like Webflow, Wix, Shopify, and more. Find the perfect platform for your Nepali business.",
+    "Compare Nepdora with Wix, Shopify, Blanxer, and Webflow. See pricing, features, and which website builder is best for your business in Nepal.",
   path: "/compare",
   keywords: [
-    "compare website builders nepal",
-    "nepdora vs wix",
-    "nepdora vs shopify",
-    "website builder comparison nepal",
-    "best website platform nepal",
+    "compare website builders Nepal",
+    "Nepdora vs Wix",
+    "Nepdora vs Blanxer",
+    "Nepdora vs Shopify",
+    "Nepdora vs Webflow",
+    "best website builder Nepal",
+    "website builder comparison Nepal",
   ],
 });
 

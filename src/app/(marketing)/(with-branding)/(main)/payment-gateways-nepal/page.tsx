@@ -16,14 +16,13 @@ import { MarketingPageHero } from "@/components/marketing/shared/MarketingPageHe
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title:
-    "Complete Guide to Payment Gateways in Nepal | eSewa, Khalti, ConnectIPS",
+  title: "Payment Gateways in Nepal | eSewa, Khalti & IME Pay Guide | Nepdora",
   description:
-    "Learn how to accept online payments in Nepal. A comprehensive guide to eSewa, Khalti, and IME Pay integration for your website with Nepdora.",
+    "Learn how to accept online payments in Nepal using eSewa, Khalti, and IME Pay. Step-by-step guide to integrating payment gateways into your website with Nepdora.",
   path: "/payment-gateways-nepal",
-  ogTitle: "Accepting Online Payments in Nepal: The Ultimate Guide",
+  ogTitle: "How to Accept Online Payments in Nepal",
   ogSubtitle:
-    "Everything you need to know about eSewa, Khalti and local bank integration.",
+    "Complete guide to eSewa, Khalti, IME Pay & bank payment integration for websites.",
 });
 
 export default function PaymentGatewaysPage() {

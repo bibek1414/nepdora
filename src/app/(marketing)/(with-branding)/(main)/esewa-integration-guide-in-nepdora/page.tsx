@@ -18,17 +18,18 @@ import { JsonLd } from "@/components/shared/json-ld";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title: "eSewa Payment Gateway Integration in Nepal | Nepdora",
+  title:
+    "eSewa Payment Gateway Integration in Nepal | One-Click Setup | Nepdora",
   description:
-    "Native, zero-code eSewa integration for your business. Accept payments from over 9 million eSewa users in Nepal instantly with Nepdora's secure gateway.",
+    "Integrate eSewa payment gateway in minutes with Nepdora. Accept secure payments from millions of users in Nepal using a fast, zero-code, one-click integration for your website.",
   path: "/esewa-integration-guide-in-nepdora",
   keywords: [
-    "esewa integration nepal",
-    "payment gateway nepal",
-    "accept esewa payments",
-    "nepal digital wallet integration",
-    "esewa merchant account",
-    "esewa api nepal",
+    "eSewa payment gateway Nepal",
+    "eSewa integration Nepal",
+    "accept eSewa payments website",
+    "payment gateway integration Nepal",
+    "eSewa API Nepal",
+    "Nepal digital wallet integration",
   ],
 });
 

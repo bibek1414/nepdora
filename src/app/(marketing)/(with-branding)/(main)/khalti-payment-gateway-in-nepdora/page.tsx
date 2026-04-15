@@ -18,16 +18,17 @@ import { JsonLd } from "@/components/shared/json-ld";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title: "Khalti Payment Gateway Integration in Nepal | Nepdora",
+  title:
+    "Khalti Payment Gateway Integration in Nepal | One-Click Setup | Nepdora",
   description:
-    "Native, one-click Khalti integration for your business. Accept payments from millions of Khalti users in Nepal instantly with Nepdora's secure gateway.",
+    "Integrate Khalti payment gateway in minutes with Nepdora. Accept secure payments from millions of users in Nepal using a fast, native, one-click integration for your website or online store.",
   path: "/khalti-payment-gateway-in-nepdora",
   keywords: [
-    "khalti integration nepal",
-    "payment gateway nepal",
-    "accept khalti payments",
-    "nepal digital wallet integration",
-    "khalti api nepal",
+    "Khalti payment gateway Nepal",
+    "Khalti integration Nepal",
+    "accept Khalti payments website",
+    "payment gateway Nepal API",
+    "Nepal digital wallet integration",
   ],
 });
 

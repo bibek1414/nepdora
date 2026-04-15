@@ -12,13 +12,14 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "How to Register a Business in Nepal (2026 Guide) | Step-by-Step",
+  title:
+    "How to Register a Business in Nepal (2026 Guide) | Company Registration Step-by-Step",
   description:
-    "A comprehensive step-by-step guide on how to register a company in Nepal. Company registration process, documents required, and tax (PAN/VAT) registration.",
+    "Learn how to register a company in Nepal step by step. Complete guide covering Office of Company Registrar, PAN/VAT registration, required documents, fees, and process explained simply.",
   path: "/how-to-register-business-nepal",
-  ogTitle: "Starting a Business in Nepal: The Complete Registration Guide",
+  ogTitle: "How to Register a Business in Nepal (2026 Guide)",
   ogSubtitle:
-    "From Office of Company Registrar to PAN/VAT registration. Everything you need.",
+    "Step-by-step company registration, PAN/VAT process, and legal requirements in Nepal.",
 });
 
 export default function BusinessRegistrationPage() {

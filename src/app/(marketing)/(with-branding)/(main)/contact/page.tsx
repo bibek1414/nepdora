@@ -5,16 +5,18 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Contact Nepdora: Get Web Development & E-commerce Support",
+  title: "Contact Nepdora – Website Builder Support in Nepal",
   description:
-    "Need help? Contact the Nepdora team via phone, email, or live chat. Get quick answers about website, e-commerce, and social media solutions.",
+    "Contact Nepdora for website builder support in Nepal. Get help with ecommerce, payments (eSewa & Khalti), and building your website. سریع response via chat, email, or phone.",
   path: "/contact",
   keywords: [
-    "Nepdora contact",
-    "web development Nepal",
-    "ecommerce support",
-    "website help",
-    "digital marketing Nepal",
+    "contact Nepdora",
+    "Nepdora support Nepal",
+    "website builder support Nepal",
+    "ecommerce support Nepal",
+    "website help Nepal",
+    "Nepal website builder contact",
+    "customer support Nepal software",
   ],
 });
 

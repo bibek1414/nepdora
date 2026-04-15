@@ -35,16 +35,20 @@ import { HeroAnimations } from "@/components/marketing/hero-section/hero-animati
 import { CityCTA } from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
-  title: "Website Builder in Nepal - No Coding Required | Nepdora",
+  title:
+    "Website Builder in Nepal (No Coding) | Create Websites in Minutes | Nepdora",
   description:
-    "Create free professional websites on your own domain in minutes. Nepdora's website builder makes launching a full website easy with customizable templates.",
+    "Build a professional website in Nepal without coding. Launch business, ecommerce, or portfolio sites in minutes with Nepdora, featuring templates, hosting, and eSewa & Khalti payments.",
   path: "/website-builder-nepal",
   keywords: [
-    "website builder nepal",
-    "best website builder nepal",
-    "no code website builder nepal",
-    "nepdora website builder",
-    "create website nepal",
+    "website builder Nepal",
+    "best website builder Nepal",
+    "no code website builder Nepal",
+    "create website Nepal",
+    "Nepdora website builder",
+    "free website builder Nepal",
+    "AI website builder Nepal",
+    "build website without coding Nepal",
   ],
 });
 

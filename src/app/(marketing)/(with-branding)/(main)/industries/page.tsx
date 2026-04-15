@@ -27,11 +27,12 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
-  title: "Industry Solutions | Built for Your Business | Nepdora",
+  title:
+    "Industry Website Solutions in Nepal | Restaurants, Schools & E-commerce | Nepdora",
   description:
-    "Explore industry-specific website solutions for Restaurants, E-commerce, Schools, and more in Nepal. Professional designs with built-in business tools.",
+    "Explore industry-specific website solutions in Nepal. Build professional websites for restaurants, online stores, schools, and businesses with built-in tools and modern designs.",
   path: "/industries",
-  ogLabel: "Industry Hub",
+  ogLabel: "Nepdora Industry Hub",
 });
 
 const getIndustryIcon = (slug: string) => {

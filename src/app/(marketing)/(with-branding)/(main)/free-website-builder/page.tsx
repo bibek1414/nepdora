@@ -22,15 +22,18 @@ import Link from "next/link";
 import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Free Website Builder Nepal | Build Your Site at Zero Cost",
+  title:
+    "Free Website Builder in Nepal | Create Websites Without Coding | Nepdora",
   description:
-    "Start your online presence for free with Nepdora. The best free website builder in Nepal with professional templates and easy-to-use tools. No credit card required.",
+    "Build a professional website for free in Nepal with Nepdora. No coding required—use ready-made templates, drag-and-drop tools, and launch your site instantly.",
   path: "/free-website-builder",
   keywords: [
-    "free website builder nepal",
-    "free website nepal",
+    "free website builder Nepal",
+    "create free website Nepal",
+    "no code website builder Nepal",
+    "free website maker Nepal",
     "zero cost website builder",
-    "create free website nepal",
+    "website builder without coding Nepal",
   ],
 });
 

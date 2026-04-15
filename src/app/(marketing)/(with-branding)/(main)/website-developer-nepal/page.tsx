@@ -33,16 +33,18 @@ import {
 } from "@/constants/contact";
 
 export const metadata = buildMarketingMetadata({
-  title: "Website Developer in Nepal - Build Professional Sites with Nepdora",
+  title: "Website Developer in Nepal (No Coding Needed) | Nepdora",
   description:
-    "Looking for a website developer in Nepal? Build a professional website for your business in minutes without coding. Launch faster and cheaper with Nepdora.",
+    "Need a website developer in Nepal? Build professional websites yourself in minutes without hiring a developer. Nepdora lets you launch fast, cheap, and fully customizable websites.",
   path: "/website-developer-nepal",
   keywords: [
-    "website developer nepal",
-    "web design nepal",
-    "best website builder nepal",
-    "hire web developer nepal",
-    "nepdora website builder",
+    "website developer Nepal",
+    "hire website developer Nepal",
+    "web design Nepal",
+    "website builder Nepal",
+    "no code website Nepal",
+    "Nepdora website builder",
+    "affordable website solution Nepal",
   ],
 });
 

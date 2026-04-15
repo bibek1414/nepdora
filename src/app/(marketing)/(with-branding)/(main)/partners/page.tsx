@@ -28,16 +28,18 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora Partner Program - Grow Your Agency or Freelance Business",
+  title: "Nepdora Partner Program | Earn by Building Websites in Nepal",
   description:
-    "Join the Nepdora Partner Program and earn by helping others build websites. Perfect for agencies, freelancers, and developers in Nepal.",
+    "Join the Nepdora Partner Program and earn money by building websites for clients. Perfect for freelancers, agencies, and developers in Nepal growing their web design business.",
   path: "/partners",
   keywords: [
-    "nepdora partner program",
-    "website agency nepal",
-    "freelance web developer nepal",
-    "earn money building websites nepal",
-    "nepdora affiliate nepal",
+    "Nepdora partner program",
+    "earn money building websites Nepal",
+    "freelance web developer Nepal",
+    "website agency Nepal",
+    "website builder affiliate Nepal",
+    "make money online Nepal web design",
+    "Nepal web development business",
   ],
 });
 

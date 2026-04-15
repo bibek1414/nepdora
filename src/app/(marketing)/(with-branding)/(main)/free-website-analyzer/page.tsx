@@ -19,15 +19,18 @@ import { buildMarketingMetadata } from "@/lib/seo";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title: "Free Website Analyzer | Audit Your Site in Nepal | Nepdora",
+  title:
+    "Free Website SEO Analyzer in Nepal | Audit Speed, SEO & Mobile | Nepdora",
   description:
-    "Audit your website's SEO, speed, and mobile responsiveness for the Nepalese market. Get actionable insights to beat your local competitors.",
+    "Analyze your website for SEO, speed, and mobile performance in seconds. Get a free website audit with actionable insights to improve rankings and beat competitors in Nepal.",
   path: "/free-website-analyzer",
   keywords: [
-    "website analyzer nepal",
-    "free seo audit nepal",
-    "website speed test nepal",
-    "mobile friendly check nepal",
+    "website analyzer Nepal",
+    "free SEO audit Nepal",
+    "website SEO checker Nepal",
+    "website speed test Nepal",
+    "mobile friendly test Nepal",
+    "website audit tool Nepal",
   ],
 });
 

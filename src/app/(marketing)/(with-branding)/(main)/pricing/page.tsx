@@ -4,15 +4,18 @@ import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata = buildMarketingMetadata({
-  title: "Website Builder Pricing Nepal | Free Plan + Paid Upgrades | Nepdora",
+  title: "Website Builder Pricing in Nepal (Free & Paid Plans) | Nepdora",
   description:
-    "Compare Nepdora pricing for websites, ecommerce, and business tools in Nepal. Start free, upgrade only when you need more features.",
+    "Explore Nepdora website builder pricing in Nepal. Start free and upgrade anytime. Includes hosting, ecommerce tools, and local payments like Khalti and eSewa.",
   path: "/pricing",
   keywords: [
-    "Nepdora pricing",
+    "website builder pricing Nepal",
     "website cost Nepal",
-    "ecommerce pricing",
-    "free website builder",
+    "Nepdora pricing",
+    "free website builder Nepal",
+    "ecommerce website cost Nepal",
+    "affordable website builder Nepal",
+    "no code website builder Nepal",
   ],
 });
 

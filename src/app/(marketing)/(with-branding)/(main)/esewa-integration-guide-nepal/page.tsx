@@ -4,9 +4,10 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata = buildMarketingMetadata({
-  title: "eSewa Integration Guide for Nepali Websites | Nepdora",
+  title:
+    "eSewa Payment Gateway Integration in Nepal | Step-by-Step Guide | Nepdora",
   description:
-    "Step-by-step guide to integrate eSewa payment gateway on your website in Nepal. Native integration, no-code required.",
+    "Learn how to integrate eSewa payment gateway into your website in Nepal. Step-by-step guide with no-code setup, secure payments, and fast integration using Nepdora.",
   path: "/esewa-integration-guide-nepal",
 });
 

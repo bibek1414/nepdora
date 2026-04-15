@@ -24,9 +24,9 @@ import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
-    "Business Solutions in Nepal | E-commerce, Payments, Delivery & Website Growth | Nepdora",
+    "Business Solutions in Nepal | Ecommerce, Payments & Growth Tools | Nepdora",
   description:
-    "Explore business solutions built for Nepal. Launch e-commerce websites, accept eSewa and Khalti payments, automate Pathao delivery, and grow with fast, SEO-friendly websites on Nepdora.",
+    "Discover Nepdora business solutions for Nepal. Build ecommerce websites, accept eSewa & Khalti payments, manage delivery, and grow your business with fast, SEO-friendly tools.",
   path: "/solutions",
 });
 

@@ -28,16 +28,18 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
-  title: "Hire Expert Website Builders in Nepal | Nepdora Expert Hub",
+  title:
+    "Hire Web Developers in Nepal | Verified Designers & Experts | Nepdora",
   description:
-    "Connect with experienced designers and developers to build fast, modern, and high-converting websites with Nepdora. Hire verified professionals in Nepal.",
+    "Hire experienced web developers and designers in Nepal. Connect with verified Nepdora experts to build fast, modern, and high-converting websites for your business.",
   path: "/experts",
   keywords: [
-    "hire web developer nepal",
-    "website designers kathmandu",
-    "nepdora experts",
-    "freelance website builder nepal",
-    "ecommerce experts nepal",
+    "hire web developer Nepal",
+    "website designers Nepal",
+    "freelance web developer Nepal",
+    "ecommerce developers Nepal",
+    "Nepdora experts",
+    "hire website builder Nepal",
   ],
 });
 

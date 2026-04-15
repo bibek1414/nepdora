@@ -8,19 +8,19 @@ import CTA from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
-    "Nepdora Features: Website Builder, E-commerce & Payment Tools for Nepal",
+    "Website Builder Features in Nepal (Ecommerce, Payments, SEO) | Nepdora",
   description:
-    "Explore every Nepdora feature - AI website builder, eSewa & Khalti payments, built-in SEO, e-commerce, CRM, SMS, logistics, and real-time analytics. Built for Nepali businesses.",
+    "Discover Nepdora features: AI website builder, ecommerce tools, SEO optimization, CRM, analytics, and local payments with eSewa & Khalti. Everything you need to grow online in Nepal.",
   path: "/features",
   keywords: [
+    "website builder features Nepal",
     "Nepdora features",
+    "ecommerce tools Nepal",
     "website builder Nepal",
-    "eSewa Khalti payment integration",
-    "ecommerce features Nepal",
     "SEO tools Nepal",
     "online store Nepal",
-    "website builder features",
-    "Nepal business software",
+    "no code website builder Nepal",
+    "business software Nepal",
   ],
 });
 

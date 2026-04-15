@@ -24,9 +24,9 @@ import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
-  title: "Showcase | Built with Nepdora | Real Success Stories",
+  title: "Built with Nepdora | Website Examples & Success Stories in Nepal",
   description:
-    "Discover real success stories from businesses across Nepal that have grown with Nepdora. From local startups to established brands, see how modern websites are transforming their growth.",
+    "See real websites built with Nepdora across Nepal. Explore success stories from startups, restaurants, and businesses growing online with modern, high-performing websites.",
   path: "/showcase",
 });
 
