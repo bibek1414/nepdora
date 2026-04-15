@@ -52,7 +52,7 @@ import { FiDollarSign, FiArrowUpRight, FiArrowDownLeft } from "react-icons/fi";
 import ManualTransferDialog from "./manual-transfer-dialog";
 import { PaymentDetailsDialog } from "./payment-details-dialog";
 import { useDebouncer } from "@/hooks/use-debouncer";
-import Pagination from "@/components/ui/site-owners/pagination";
+import Pagination from "@/components/ui/pagination";
 
 const ITEMS_PER_PAGE = 30;
 type PaymentViewType = "payments" | "transfers";

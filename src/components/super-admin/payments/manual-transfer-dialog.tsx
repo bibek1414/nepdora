@@ -93,7 +93,7 @@ export default function ManualTransferDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto scroll-smooth sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-gray-800">
             Record Manual Transfer
@@ -131,26 +131,34 @@ export default function ManualTransferDialog({
                   <CommandList>
                     <CommandEmpty>No tenant found.</CommandEmpty>
                     <CommandGroup>
-                      {tenantsData?.results.map(domain => (
-                        <CommandItem
-                          key={domain.tenant.id}
-                          value={`${domain.tenant.name} ${domain.tenant.schema_name}`}
-                          onSelect={() => {
-                            setTenant(domain.tenant.schema_name);
-                            setOpen(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              tenant === domain.tenant.schema_name
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {formatTenantName(domain.tenant.name)}
-                        </CommandItem>
-                      ))}
+                      {tenantsData?.results
+                        .filter(
+                          (domain, index, self) =>
+                            index ===
+                            self.findIndex(
+                              d => d.tenant.id === domain.tenant.id
+                            )
+                        )
+                        .map(domain => (
+                          <CommandItem
+                            key={domain.id}
+                            value={`${domain.tenant.name} ${domain.tenant.schema_name}`}
+                            onSelect={() => {
+                              setTenant(domain.tenant.schema_name);
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                tenant === domain.tenant.schema_name
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {formatTenantName(domain.tenant.name)}
+                          </CommandItem>
+                        ))}
                     </CommandGroup>
                   </CommandList>
                 </Command>
