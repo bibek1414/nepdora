@@ -82,14 +82,14 @@ export default function PartnersPage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/partners"
+                  href="/admin/signup"
                   className="bg-primary -md inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
                 >
                   Join as a Partner
                   <ChevronRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/partners"
+                  href="/admin/signup"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
                 >
                   Become a Partner
@@ -414,7 +414,7 @@ export default function PartnersPage() {
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/partners"
+                  href="/admin/signup"
                   className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
                 >
                   Join Now

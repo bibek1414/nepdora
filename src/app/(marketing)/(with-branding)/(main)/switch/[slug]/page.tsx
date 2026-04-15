@@ -243,7 +243,7 @@ export default async function SwitchComparisonPage({ params }: Props) {
       {/* Comparison Table */}
       <section className="py-8">
         <div className="container mx-auto max-w-5xl px-6">
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="-sm overflow-hidden rounded-2xl border border-slate-200 bg-white">
             {/* Table Header */}
             <div className="grid grid-cols-3 border-b border-slate-200 bg-slate-50">
               <div className="p-4 text-left font-semibold text-slate-900">
@@ -352,7 +352,7 @@ export default async function SwitchComparisonPage({ params }: Props) {
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <DollarSign className="h-6 w-6" />
               </div>
@@ -365,7 +365,7 @@ export default async function SwitchComparisonPage({ params }: Props) {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <CreditCard className="h-6 w-6" />
               </div>
@@ -377,7 +377,7 @@ export default async function SwitchComparisonPage({ params }: Props) {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                 <Headphones className="h-6 w-6" />
               </div>
@@ -404,7 +404,7 @@ export default async function SwitchComparisonPage({ params }: Props) {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="-sm rounded-2xl border border-slate-200 bg-white p-8">
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                 <span className="font-medium text-slate-700">
@@ -467,11 +467,8 @@ export default async function SwitchComparisonPage({ params }: Props) {
                 </ul>
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="mb-4 flex items-center gap-3">
-                <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
-                  <Rocket className="text-primary h-6 w-6" />
-                </div>
                 <h3 className="text-xl font-bold text-slate-900">
                   Migration Made Easy
                 </h3>
@@ -502,11 +499,8 @@ export default async function SwitchComparisonPage({ params }: Props) {
       {/* CTA Section */}
       <section className="py-16">
         <div className="container mx-auto max-w-5xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <ShieldCheck className="text-primary h-8 w-8" />
-              </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Ready to make the switch?
               </h2>
@@ -517,7 +511,7 @@ export default async function SwitchComparisonPage({ params }: Props) {
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/admin/signup"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
+                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
                 >
                   Start Free Trial
                   <ChevronRight className="h-4 w-4" />

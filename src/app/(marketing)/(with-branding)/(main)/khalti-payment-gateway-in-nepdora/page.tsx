@@ -210,9 +210,6 @@ export default function KhaltiPage() {
             <div className="order-2 lg:order-1">
               <div className="space-y-6">
                 <div className="group relative overflow-hidden rounded-[32px] border border-slate-200 bg-white p-8 shadow-2xl">
-                  <div className="absolute top-0 right-0 p-4 opacity-5 transition-opacity group-hover:opacity-10">
-                    <Rocket className="h-24 w-24" />
-                  </div>
                   <div className="mb-6 flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 font-bold text-white">
                       01

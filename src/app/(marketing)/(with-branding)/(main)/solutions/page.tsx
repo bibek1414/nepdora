@@ -287,9 +287,6 @@ export default function SolutionsHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-                <Rocket className="text-primary h-8 w-8" />
-              </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900">
                 Not sure which solution fits?
               </h2>

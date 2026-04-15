@@ -23,7 +23,7 @@ export function ConnectionMockup({
 
   return (
     <div className="relative">
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white -sm">
         <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-3">
           <div className="flex gap-1.5">
             <div className="h-2 w-2 rounded-full bg-red-400" />
@@ -39,7 +39,7 @@ export function ConnectionMockup({
           <div className="grid grid-cols-2 gap-3">
             {/* Active Integration */}
             <div
-              className="flex scale-105 flex-col items-center rounded-xl border-2 bg-white p-4 shadow-sm"
+              className="flex scale-105 flex-col items-center rounded-xl border-2 bg-white p-4 -sm"
               style={{ borderColor: `${color}30` }}
             >
               <div
@@ -96,7 +96,7 @@ export function ConnectionMockup({
 
             {/* Add more */}
             <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4">
-              <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-400 shadow-sm">
+              <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-400 -sm">
                 <Zap className="h-3.5 w-3.5" />
               </div>
               <span className="text-[10px] font-medium text-slate-400">
@@ -171,14 +171,14 @@ export function IntegrationHero({
 
             <Link
               href="/admin/signup"
-              className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105"
+              className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white -md transition-all hover:scale-105"
             >
               Join Nepdora
             </Link>
           </div>
 
           <div className="shrink-0">
-            <div className="flex h-40 w-40 items-center justify-center rounded-2xl border border-slate-100 bg-white p-6 shadow-md lg:h-56 lg:w-56">
+            <div className="flex h-40 w-40 items-center justify-center rounded-2xl border border-slate-100 bg-white p-6 -md lg:h-56 lg:w-56">
               <Image
                 src={logo}
                 alt={name}
@@ -258,7 +258,7 @@ export function IntegrationShowcaseSection({
             {visual ? (
               visual
             ) : image ? (
-              <div className="overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm">
+              <div className="overflow-hidden rounded-xl border border-slate-100 bg-white -sm">
                 <Image
                   src={image}
                   alt={title}
@@ -276,7 +276,7 @@ export function IntegrationShowcaseSection({
                   }}
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white shadow-md">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white -md">
                     <div
                       className="h-6 w-6 animate-pulse rounded-full opacity-50"
                       style={{ backgroundColor: color }}

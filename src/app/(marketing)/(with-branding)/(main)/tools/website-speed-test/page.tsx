@@ -79,7 +79,7 @@ export default function SpeedTest() {
       {/* Speed Test Tool Placeholder */}
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-12 text-center shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-12 text-center -sm">
             <div className="flex flex-col items-center">
               <Activity className="text-primary mb-4 h-12 w-12" />
               <div className="text-primary mb-2 font-mono text-sm font-semibold">
@@ -138,7 +138,7 @@ export default function SpeedTest() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+                className="rounded-2xl border border-slate-200 bg-white p-6 -sm transition-all hover:-md"
               >
                 <item.icon className="text-primary mb-4 h-8 w-8" />
                 <h3 className="mb-2 text-lg font-semibold text-slate-900">
@@ -190,7 +190,7 @@ export default function SpeedTest() {
             ].map((stat, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm"
+                className="rounded-2xl border border-slate-200 bg-white p-6 text-center -sm"
               >
                 <stat.icon className="text-primary mx-auto mb-3 h-8 w-8" />
                 <div className="text-primary mb-1 text-3xl font-bold">
@@ -233,7 +233,7 @@ export default function SpeedTest() {
                 ))}
               </div>
             </div>
-            <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 -sm">
               <div className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
                 <Cloud className="text-primary h-5 w-5" />
                 <span className="font-medium text-slate-700">
@@ -311,7 +311,7 @@ export default function SpeedTest() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5 -sm"
               >
                 <div className="flex items-center gap-3">
                   <Network className="text-primary h-5 w-5" />
@@ -353,7 +353,7 @@ export default function SpeedTest() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 -sm">
               <div className="mb-6 flex items-center gap-3">
                 <AlertCircle className="h-6 w-6 text-rose-500" />
                 <h3 className="text-xl font-semibold text-slate-900">
@@ -391,7 +391,7 @@ export default function SpeedTest() {
               </ul>
             </div>
 
-            <div className="border-primary/20 bg-primary/5 rounded-2xl border p-8 shadow-sm">
+            <div className="border-primary/20 bg-primary/5 rounded-2xl border p-8 -sm">
               <div className="mb-6 flex items-center gap-3">
                 <Zap className="text-primary h-6 w-6" />
                 <h3 className="text-xl font-semibold text-slate-900">
@@ -470,7 +470,7 @@ export default function SpeedTest() {
             ].map((story, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="rounded-2xl border border-slate-200 bg-white p-6 -sm"
               >
                 <h3 className="mb-4 font-semibold text-slate-900">
                   {story.business}
@@ -511,7 +511,7 @@ export default function SpeedTest() {
       {/* Free Speed Audit Offer */}
       <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center -sm">
             <div className="flex flex-col items-center">
               <div className="bg-primary/10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl">
                 <BarChart3 className="text-primary h-8 w-8" />
@@ -525,7 +525,7 @@ export default function SpeedTest() {
               </p>
               <Link
                 href="/contact"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
+                className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
               >
                 Request Free Audit
                 <ChevronRight className="h-4 w-4" />
@@ -569,7 +569,7 @@ export default function SpeedTest() {
             ].map((faq, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="rounded-2xl border border-slate-200 bg-white p-6 -sm"
               >
                 <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
                 <p className="text-sm leading-relaxed font-medium text-slate-500">
@@ -584,9 +584,9 @@ export default function SpeedTest() {
       {/* Final CTA - Build with Nepdora */}
       <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
                 <Rocket className="text-primary h-8 w-8" />
               </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
@@ -599,7 +599,7 @@ export default function SpeedTest() {
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/admin/signup"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
+                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
                 >
                   Build a Faster Website
                   <ChevronRight className="h-4 w-4" />

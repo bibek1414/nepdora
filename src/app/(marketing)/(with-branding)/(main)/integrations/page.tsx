@@ -46,7 +46,7 @@ export default function IntegrationsPage() {
       {/* CTA Section - Clean */}
       <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
             <div className="mx-auto max-w-3xl">
               <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Ready to connect?
@@ -58,7 +58,7 @@ export default function IntegrationsPage() {
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   href="/contact"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-105"
+                  className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white -md transition-all hover:scale-105"
                 >
                   Request Integration
                 </Link>

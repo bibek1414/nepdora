@@ -78,7 +78,7 @@ export default function SEOChecker() {
       {/* SEO Tool Placeholder */}
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-12 text-center shadow-sm">
+          <div className="-sm rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-12 text-center">
             <div className="flex flex-col items-center">
               <Search className="text-primary mb-4 h-12 w-12" />
               <div className="text-primary mb-2 font-mono text-sm font-semibold">
@@ -136,7 +136,7 @@ export default function SEOChecker() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all"
               >
                 <item.icon className="text-primary mb-4 h-8 w-8" />
                 <h3 className="mb-2 text-lg font-semibold text-slate-900">
@@ -183,7 +183,7 @@ export default function SEOChecker() {
             ].map((stat, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm"
+                className="-sm rounded-2xl border border-slate-200 bg-white p-6 text-center"
               >
                 <stat.icon className="text-primary mx-auto mb-3 h-8 w-8" />
                 <div className="text-primary mb-1 text-3xl font-bold">
@@ -227,7 +227,7 @@ export default function SEOChecker() {
                 ))}
               </div>
             </div>
-            <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="-sm space-y-4 rounded-2xl border border-slate-200 bg-white p-6">
               <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
                 <div className="mb-2 flex items-center justify-between">
                   <span className="text-sm font-medium text-slate-600">
@@ -320,7 +320,7 @@ export default function SEOChecker() {
             ].map((tip, i) => (
               <div
                 key={i}
-                className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                className="-sm flex gap-4 rounded-2xl border border-slate-200 bg-white p-5"
               >
                 <div className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
                   <tip.icon className="h-5 w-5" />
@@ -388,7 +388,7 @@ export default function SEOChecker() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 text-center transition-all"
               >
                 <div className="bg-primary/10 text-primary mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                   <feature.icon className="h-6 w-6" />
@@ -443,7 +443,7 @@ export default function SEOChecker() {
             ].map((story, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="-sm rounded-2xl border border-slate-200 bg-white p-6"
               >
                 <div className="mb-3 flex items-center gap-2">
                   <Award className="text-primary h-5 w-5" />
@@ -492,7 +492,7 @@ export default function SEOChecker() {
             ].map((mistake, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+                className="-sm flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4"
               >
                 <AlertCircle className="h-5 w-5 text-rose-500" />
                 <span className="font-medium text-slate-700">{mistake}</span>
@@ -505,7 +505,7 @@ export default function SEOChecker() {
       {/* Free SEO Consultation Offer */}
       <section className="border-y border-slate-100 bg-slate-50 py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-white p-12 text-center">
             <div className="flex flex-col items-center">
               <div className="bg-primary/10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl">
                 <BarChart3 className="text-primary h-8 w-8" />
@@ -519,7 +519,7 @@ export default function SEOChecker() {
               </p>
               <Link
                 href="/contact"
-                className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
+                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
               >
                 Book Free Consultation
                 <ChevronRight className="h-4 w-4" />
@@ -563,7 +563,7 @@ export default function SEOChecker() {
             ].map((faq, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="-sm rounded-2xl border border-slate-200 bg-white p-6"
               >
                 <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
                 <p className="text-sm leading-relaxed font-medium text-slate-500">
@@ -578,11 +578,8 @@ export default function SEOChecker() {
       {/* Final CTA */}
       <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <Rocket className="text-primary h-8 w-8" />
-              </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Ready to rank #1 in Nepal?
               </h2>
@@ -593,7 +590,7 @@ export default function SEOChecker() {
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/admin/signup"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
+                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
                 >
                   Launch SEO Optimized Site
                   <ChevronRight className="h-4 w-4" />

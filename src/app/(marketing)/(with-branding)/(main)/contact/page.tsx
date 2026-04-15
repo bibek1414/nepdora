@@ -20,6 +20,8 @@ export const metadata = buildMarketingMetadata({
 
 import { JsonLd } from "@/components/shared/json-ld";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+import FAQPage from "../faq/page";
+import FAQSection from "@/components/marketing/faq-section/faq-section";
 
 const contactSchema = {
   "@context": "https://schema.org",
@@ -67,6 +69,7 @@ export default function ContactPage() {
       <JsonLd id="contact-breadcrumb" data={breadcrumbSchema} />
 
       <ContactSection />
+      <FAQSection />
     </>
   );
 }
