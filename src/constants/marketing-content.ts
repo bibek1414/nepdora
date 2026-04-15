@@ -670,13 +670,197 @@ const travelAgencyContent: IndustryContent = {
   heroImageAlt: "Adventure and tour package website preview",
 };
 
-const groceryContent: IndustryContent = {
-  title: "Build an E-commerce Website in Nepal (Start Selling Today) | Nepdora",
+const schoolCollegeContent: IndustryContent = {
+  title: "Build a School or College Website in Nepal | Nepdora",
   description:
-    "Bring your local grocery shop online and deliver daily essentials to your neighborhood.",
-  customH1: "Create Your Grocery Website in Nepal Today.",
+    "Empower your educational institution with a professional digital presence. Manage student admissions, events, and results online.",
+  customH1: "Create Your School Website in Nepal Today.",
   subHeadline:
-    "Start fast and cheap. Launch your Store online in under 10 minutes.",
+    "Launch your Educational Institution online in under 10 minutes.",
+  ctaText: "Start Building School Site",
+  benefits: [
+    "Online admission and inquiry forms",
+    "Digital notice boards and event calendars",
+    "Student and teacher directories",
+    "Mobile-optimized for parents and students",
+  ],
+  features: [
+    "Academic Management System",
+    "Result Publication Portal",
+    "Attendance Tracking",
+    "Feedback & Survey Tools",
+  ],
+  detailedFeatures: [
+    {
+      title: "Notice Board",
+      desc: "Instant digital updates for parents and students.",
+      icon: "📢",
+    },
+    {
+      title: "Admission Forms",
+      desc: "Collect applications online with ease.",
+      icon: "📝",
+    },
+    {
+      title: "Event Gallery",
+      desc: "Showcase school activities and celebrations.",
+      icon: "📸",
+    },
+    {
+      title: "Mobile App Integration",
+      desc: "Stay connected on the go with dedicated apps.",
+      icon: "📱",
+    },
+  ],
+  whyUs:
+    "Education is about communication. Nepdora provides the tools to keep parents, students, and teachers in perfect sync.",
+  heroImageAlt: "Modern school website mockup",
+};
+
+const gymFitnessContent: IndustryContent = {
+  title: "Build a Gym & Fitness Website in Nepal | Nepdora",
+  description:
+    "Grow your fitness business with online class bookings, membership management, and workout plans.",
+  customH1: "Create Your Gym Website in Nepal Today.",
+  subHeadline: "Launch your Fitness Center online in under 10 minutes.",
+  ctaText: "Launch My Gym Site",
+  benefits: [
+    "Online class and personal training bookings",
+    "Membership registration via eSewa/Khalti",
+    "Trainer profiles and workout schedules",
+    "Engage members with fitness blogs",
+  ],
+  features: [
+    "Class Scheduling Engine",
+    "Membership Management",
+    "Trainer CRM",
+    "Progress Tracking Tools",
+  ],
+  detailedFeatures: [
+    {
+      title: "Class Bookings",
+      desc: "Members can book slots for yoga, zumba, or gym.",
+      icon: "🧘",
+    },
+    {
+      title: "Online Payments",
+      desc: "Automated monthly membership renewals.",
+      icon: "💳",
+    },
+    {
+      title: "Trainer Profiles",
+      desc: "Showcase expertise and book sessions directly.",
+      icon: "💪",
+    },
+    {
+      title: "Transformation Gallery",
+      desc: "Share member success stories to inspire others.",
+      icon: "✨",
+    },
+  ],
+  whyUs:
+    "Fitness is personal. Nepdora helps you build that personal connection with your members through a professional digital platform.",
+  heroImageAlt: "Modern gym and fitness website design",
+};
+
+const realEstateContent: IndustryContent = {
+  title: "Build a Real Estate Website in Nepal | Nepdora",
+  description:
+    "List properties, capture leads, and manage real estate inquiries with a powerful property portal.",
+  customH1: "Create Your Real Estate Website in Nepal Today.",
+  subHeadline: "Launch your Property Portal online in under 10 minutes.",
+  ctaText: "Build My Property Site",
+  benefits: [
+    "Stunning property listings with maps",
+    "Capture high-intent real estate leads",
+    "Advanced property search and filters",
+    "Build trust with professional agent profiles",
+  ],
+  features: [
+    "Property Inventory Management",
+    "Lead Capture Forms",
+    "Map Search Integration",
+    "Agent Dashboard",
+  ],
+  detailedFeatures: [
+    {
+      title: "Property Listings",
+      desc: "Showcase homes, land, and commercial spaces.",
+      icon: "🏠",
+    },
+    {
+      title: "Lead Management",
+      desc: "Track every inquiry from prospective buyers.",
+      icon: "🎯",
+    },
+    {
+      title: "Map Integration",
+      desc: "Help buyers find locations exactly where they want.",
+      icon: "📍",
+    },
+    {
+      title: "Virtual Tours",
+      desc: "Embed video walk-throughs for every property.",
+      icon: "🎥",
+    },
+  ],
+  whyUs:
+    "Real estate is all about trust and visibility. Nepdora gives your listings the professional edge they need to stand out in the Nepali market.",
+  heroImageAlt: "Clean real estate listing website",
+};
+
+const beautySalonContent: IndustryContent = {
+  title: "Build a Beauty Salon Website in Nepal | Nepdora",
+  description:
+    "Automate your salon bookings, showcase your portfolio, and sell beauty products online.",
+  customH1: "Create Your Salon Website in Nepal Today.",
+  subHeadline: "Launch your Beauty Business online in under 10 minutes.",
+  ctaText: "Build My Salon Site",
+  benefits: [
+    "24/7 online appointment booking",
+    "Showcase hairstyles and makeup results",
+    "Sell beauty products with integrated store",
+    "Manage staff schedules and commissions",
+  ],
+  features: [
+    "Appointment Scheduling",
+    "Service Menu & Pricing",
+    "Product E-commerce",
+    "Staff Performance Tracking",
+  ],
+  detailedFeatures: [
+    {
+      title: "Online Booking",
+      desc: "Let clients book their next haircut while you work.",
+      icon: "✂️",
+    },
+    {
+      title: "Visual Portfolio",
+      desc: "Stunning galleries of your best hair and makeup work.",
+      icon: "💅",
+    },
+    {
+      title: "Gift Vouchers",
+      desc: "Sell digital vouchers for salon treatments.",
+      icon: "🎁",
+    },
+    {
+      title: "Client Reminders",
+      desc: "Reduce no-shows with automated SMS reminders.",
+      icon: "📱",
+    },
+  ],
+  whyUs:
+    "Beauty is an art. Nepdora provides the perfect canvas to showcase your work and manage your thriving salon business.",
+  heroImageAlt: "Elegant beauty salon website design",
+};
+
+const groceryContent: IndustryContent = {
+  title: "Build an Online Grocery Store in Nepal | Nepdora",
+  description:
+    "Bring your local grocery shop online and deliver daily essentials to your neighborhood. Manage inventory and deliveries effortlessly.",
+  customH1: "Create Your Grocery Website in Nepal Today.",
+  subHeadline: "Launch your Store online in under 10 minutes.",
   ctaText: "Start Selling Groceries",
   benefits: [
     "Fast checkout for recurring orders",
@@ -729,19 +913,17 @@ const groceryContent: IndustryContent = {
 };
 
 export const INDUSTRY_CONTENT: Record<string, IndustryContent> = {
-  ecommerce: ecommerceContent,
-  agency: agencyContent,
-  "agency-website": agencyContent,
-  booking: bookingContent,
-  "booking-website": bookingContent,
-  clinic: clinicContent,
-  "clinic-website": clinicContent,
-  dental: dentalContent,
-  "dental-website": dentalContent,
-  restaurant: restaurantContent,
   "restaurant-website": restaurantContent,
-  "clothing-store": clothingStoreContent,
-  "educational-consultancy": educationalConsultancyContent,
+  "ecommerce-store": ecommerceContent,
+  "clothing-brand": clothingStoreContent,
+  "school-college": schoolCollegeContent,
+  "medical-clinic": clinicContent,
+  ecommerce: ecommerceContent,
   "travel-agency": travelAgencyContent,
-  grocery: groceryContent,
+  "gym-fitness": gymFitnessContent,
+  "real-estate": realEstateContent,
+  "beauty-salon": beautySalonContent,
+  "grocery-store": groceryContent,
+  "educational-consultancy": educationalConsultancyContent,
+  "digital-agency": agencyContent,
 };

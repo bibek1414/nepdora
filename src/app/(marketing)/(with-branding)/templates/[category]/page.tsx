@@ -16,32 +16,20 @@ interface Props {
 export const dynamicParams = true;
 
 const TEMPLATE_CATEGORIES = [
-  "restaurant",
   "restaurant-website",
-  "ecommerce",
-  "ecommerce-website",
-  "portfolio",
-  "agency",
-  "hotel",
-  "grocery-store",
-  "agency-website",
-  "business",
-  "educational",
-  "educational-consultancy",
-  "travel",
-  "portfolio-cv-website",
-  "travel-agency",
-  "grocery",
-  "grocery-website",
-  "medical",
+  "ecommerce-store",
+  "clothing-brand",
+  "school-college",
   "medical-clinic",
-  "clinic",
-  "clothing-store",
-  "gym",
-  "school",
+  "travel-agency",
+  "gym-fitness",
   "real-estate",
-  "salon",
-  "booking-website",
+  "beauty-salon",
+  "grocery-store",
+  "educational-consultancy",
+  "digital-agency",
+  "portfolio",
+  "business",
 ];
 
 export async function generateStaticParams() {
@@ -79,32 +67,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // Helper to get category display name
 const getCategoryDisplayName = (category: string): string => {
   const displayNames: Record<string, string> = {
-    restaurant: "Restaurant",
-    "restaurant-website": "Restaurant",
-    ecommerce: "E-commerce",
-    "ecommerce-website": "E-commerce",
-    portfolio: "Portfolio",
-    agency: "Agency",
-    "agency-website": "Agency",
-    business: "Business",
-    educational: "Educational",
-    "educational-consultancy": "Educational Consultancy",
-    travel: "Travel",
-    "travel-agency": "Travel Agency",
-    "portfolio-cv-website": "Portfolio & CV",
-    grocery: "Grocery",
-    "grocery-store": "Grocery Store",
-    "grocery-website": "Grocery",
-    medical: "Medical",
+    "restaurant-website": "Restaurant & Cafe",
+    "ecommerce-store": "Ecommerce Store",
+    "clothing-brand": "Clothing Brand",
+    "school-college": "School & College",
     "medical-clinic": "Medical Clinic",
-    clinic: "Clinic",
-    "clothing-store": "Clothing Store",
-    gym: "Gym & Fitness",
-    hotel: "Hotel",
-    school: "School",
+    "travel-agency": "Travel Agency",
+    "gym-fitness": "Gym & Fitness",
     "real-estate": "Real Estate",
-    salon: "Salon & Spa",
-    "booking-website": "Booking",
+    "beauty-salon": "Beauty Salon",
+    "grocery-store": "Grocery Store",
+    "educational-consultancy": "Educational Consultancy",
+    "digital-agency": "Digital Agency",
+    portfolio: "Portfolio",
+    business: "Business",
   };
   return displayNames[category] || capitalizeWords(category);
 };
@@ -112,36 +88,40 @@ const getCategoryDisplayName = (category: string): string => {
 // Helper to get category description
 const getCategoryDescription = (category: string): string => {
   const descriptions: Record<string, string> = {
-    restaurant:
-      "Showcase your menu, accept online orders, and manage reservations with our beautiful restaurant templates.",
     "restaurant-website":
       "Showcase your menu, accept online orders, and manage reservations with our beautiful restaurant templates.",
-    ecommerce:
+    "ecommerce-store":
       "Launch your online store with built-in eSewa and Khalti payments, inventory management, and more.",
-    "ecommerce-website":
-      "Launch your online store with built-in eSewa and Khalti payments, inventory management, and more.",
-    portfolio:
-      "Showcase your work beautifully with our portfolio templates designed for creatives and professionals.",
-    agency:
-      "Build trust and showcase your services with agency templates that convert visitors into clients.",
-    business:
-      "Professional business websites that establish credibility and drive growth.",
-    educational:
+    "clothing-brand":
+      "Showcase your latest collections and manage size/color variants with fashion-forward templates.",
+    "school-college":
       "Connect with students and parents through professional educational institution websites.",
-    travel:
-      "Inspire travelers and book tours with stunning travel agency templates.",
-    medical:
+    "medical-clinic":
       "Provide a professional online presence for your medical practice or clinic.",
-    gym: "Attract new members and showcase your fitness programs with gym website templates.",
-    school: "Engage parents and students with modern school website designs.",
+    "travel-agency":
+      "Inspire travelers and book tours with stunning travel agency templates.",
+    "gym-fitness":
+      "Attract new members and showcase your fitness programs with gym website templates.",
     "real-estate":
       "Showcase properties and attract buyers with real estate website templates.",
-    salon:
+    "beauty-salon":
       "Book appointments and showcase your beauty services with salon templates.",
+    "grocery-store":
+      "Optimized retail layouts for neighborhood grocery stores and marts.",
+    "educational-consultancy":
+      "High-trust layouts for study abroad and educational consultancies.",
+    "digital-agency":
+      "Build trust and showcase your services with agency templates that convert visitors into clients.",
+    portfolio:
+      "Showcase your work beautifully with our portfolio templates designed for creatives and professionals.",
+    business:
+      "Professional business websites that establish credibility and drive growth.",
   };
   return (
     descriptions[category] ||
-    `Browse our collection of professional ${getCategoryDisplayName(category).toLowerCase()} website templates designed for Nepali businesses.`
+    `Browse our collection of professional ${getCategoryDisplayName(
+      category
+    ).toLowerCase()} website templates designed for Nepali businesses.`
   );
 };
 

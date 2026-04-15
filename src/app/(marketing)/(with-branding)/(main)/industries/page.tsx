@@ -10,7 +10,6 @@ import {
   Rocket,
   Heart,
   Globe,
-  ArrowRight,
   Sparkles,
   Utensils,
   ShoppingBag,
@@ -21,6 +20,9 @@ import {
   Briefcase,
   Zap,
   CheckCircle2,
+  Shirt,
+  Dumbbell,
+  ShoppingBasket,
 } from "lucide-react";
 
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
@@ -39,32 +41,79 @@ const getIndustryIcon = (slug: string) => {
   if (slug.includes("restaurant")) return <Utensils className="h-6 w-6" />;
   if (slug.includes("ecommerce") || slug.includes("store"))
     return <ShoppingBag className="h-6 w-6" />;
-  if (slug.includes("school") || slug.includes("educational"))
+  if (slug.includes("clothing") || slug.includes("brand"))
+    return <Shirt className="h-6 w-6" />;
+  if (slug.includes("school") || slug.includes("college"))
     return <GraduationCap className="h-6 w-6" />;
-  if (slug.includes("clinic") || slug.includes("medical"))
+  if (slug.includes("medical") || slug.includes("clinic"))
     return <Stethoscope className="h-6 w-6" />;
+  if (slug.includes("travel")) return <Globe className="h-6 w-6" />;
+  if (slug.includes("gym") || slug.includes("fitness"))
+    return <Dumbbell className="h-6 w-6" />;
   if (slug.includes("real-estate")) return <Home className="h-6 w-6" />;
-  if (slug.includes("agency")) return <Briefcase className="h-6 w-6" />;
+  if (slug.includes("beauty") || slug.includes("salon"))
+    return <Sparkles className="h-6 w-6" />;
+  if (slug.includes("grocery")) return <ShoppingBasket className="h-6 w-6" />;
+  if (slug.includes("consultancy")) return <Briefcase className="h-6 w-6" />;
+  if (slug.includes("agency")) return <Rocket className="h-6 w-6" />;
   return <Building2 className="h-6 w-6" />;
 };
 
 const getIndustryColor = (slug: string) => {
   if (slug.includes("restaurant")) return "from-orange-500 to-orange-600";
-  if (slug.includes("ecommerce") || slug.includes("store"))
-    return "from-sky-500 to-sky-600";
-  if (slug.includes("school") || slug.includes("educational"))
+  if (slug.includes("ecommerce")) return "from-sky-500 to-sky-600";
+  if (slug.includes("clothing")) return "from-pink-500 to-pink-600";
+  if (slug.includes("school") || slug.includes("college"))
     return "from-blue-500 to-blue-600";
-  if (slug.includes("clinic") || slug.includes("medical"))
+  if (slug.includes("medical") || slug.includes("clinic"))
     return "from-rose-500 to-rose-600";
-  if (slug.includes("real-estate")) return "from-emerald-500 to-emerald-600";
-  if (slug.includes("agency")) return "from-purple-500 to-purple-600";
+  if (slug.includes("travel")) return "from-emerald-500 to-emerald-600";
+  if (slug.includes("gym") || slug.includes("fitness"))
+    return "from-red-500 to-red-600";
+  if (slug.includes("real-estate")) return "from-amber-600 to-amber-700";
+  if (slug.includes("beauty") || slug.includes("salon"))
+    return "from-purple-500 to-purple-600";
+  if (slug.includes("grocery")) return "from-green-500 to-green-600";
+  if (slug.includes("consultancy")) return "from-indigo-500 to-indigo-600";
+  if (slug.includes("agency")) return "from-violet-500 to-violet-600";
   return "from-slate-500 to-slate-600";
 };
 
+const getIndustryDescription = (slug: string) => {
+  const descriptions: Record<string, string> = {
+    "restaurant-website":
+      "Digital menus, QR codes, and reservation systems for cafes & restaurants.",
+    "ecommerce-store":
+      "Scalable online stores with eSewa/Khalti integration and order management.",
+    "clothing-brand":
+      "High-converting fashion boutiques with size/color variants and lookbooks.",
+    "school-college":
+      "Institutional websites with admission portals, notices, and event galleries.",
+    "medical-clinic":
+      "Professional doctor profiles and automated patient appointment scheduling.",
+    "travel-agency":
+      "Exotic itinerary builders and online booking systems for tours & travel.",
+    "gym-fitness":
+      "Membership management and class booking systems for fitness centers.",
+    "real-estate":
+      "Stunning property listings with map integration and lead capture.",
+    "beauty-salon":
+      "Online booking for salons & spas with stylist portfolios and product sales.",
+    "grocery-store":
+      "Local delivery management and easy ordering for neighborhood marts.",
+    "educational-consultancy":
+      "Study abroad portals with course directories and student lead CRM.",
+    "digital-agency":
+      "Professional portfolios and service showcases with built-in lead generation.",
+  };
+  return (
+    descriptions[slug] ||
+    "Professional solutions built specifically for your industry needs in Nepal."
+  );
+};
+
 export default function IndustriesHubPage() {
-  // Featured industries for quick access
-  const featuredIndustries = industries.slice(0, 6);
-  const moreIndustries = industries.slice(6);
+  const allIndustries = industries;
 
   const industriesSchema = {
     "@context": "https://schema.org",
@@ -159,31 +208,32 @@ export default function IndustriesHubPage() {
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredIndustries.map(slug => {
+            {allIndustries.slice(0, 12).map(slug => {
               const label = INDUSTRY_LABELS[slug] || slug;
               const color = getIndustryColor(slug);
+              const description = getIndustryDescription(slug);
               return (
                 <Link
                   key={slug}
-                  href={`/templates/${slug}`}
-                  className="group -sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-1"
+                  href={`/industries/${slug}`}
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 transition-all hover:-translate-y-1 hover:border-primary/20 hover:-xl hover:-primary/5"
                 >
                   <div
-                    className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${color} -md p-3 text-white`}
+                    className={`mb-5 inline-flex rounded-2xl bg-gradient-to-br ${color} p-3.5 text-white -lg -current/10`}
                   >
                     {getIndustryIcon(slug)}
                   </div>
-                  <h3 className="group- mb-2 text-xl font-bold text-slate-900 transition-colors">
+                  <h3 className="mb-2.5 text-xl font-bold text-slate-900 transition-colors">
                     {label}
                   </h3>
-                  <p className="text-sm leading-relaxed font-medium text-slate-500">
-                    Professional templates and tools designed specifically for{" "}
-                    {label.toLowerCase()} businesses in Nepal.
+                  <p className="text-[15px] leading-relaxed font-medium text-slate-500">
+                    {description}
                   </p>
-                  <div className="text-primary mt-4 flex items-center gap-1 text-sm font-medium opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="mt-5 flex items-center gap-1.5 text-sm font-bold text-primary opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0">
                     Explore Solutions
                     <ChevronRight className="h-4 w-4" />
                   </div>
+                  <div className="absolute top-0 right-0 -mr-8 -mt-8 h-24 w-24 rounded-full bg-slate-50 opacity-0 transition-opacity group-hover:opacity-100" />
                 </Link>
               );
             })}
@@ -191,27 +241,6 @@ export default function IndustriesHubPage() {
         </div>
       </section>
 
-      {/* More Industries */}
-      {moreIndustries.length > 0 && (
-        <section className="border-y border-slate-100 bg-slate-50 py-16">
-          <div className="container mx-auto max-w-6xl px-6">
-            <h2 className="mb-8 text-center text-2xl font-bold text-slate-900">
-              More Industries We Serve
-            </h2>
-            <div className="flex flex-wrap justify-center gap-3">
-              {moreIndustries.map(slug => (
-                <Link
-                  key={slug}
-                  href={`/templates/${slug}`}
-                  className="hover:border-primary rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition-all"
-                >
-                  {INDUSTRY_LABELS[slug] || slug}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Features Section */}
       <section className="py-16">
@@ -304,7 +333,7 @@ export default function IndustriesHubPage() {
                 {MAJOR_CITIES.slice(0, 8).map(city => (
                   <Link
                     key={city}
-                    href={`/restaurant-website/${city.toLowerCase()}`}
+                    href={`/industries/restaurant-website/${city.toLowerCase()}`}
                     className="text-sm font-medium text-slate-600 transition-colors"
                   >
                     Restaurants in <span className="capitalize">{city}</span>
@@ -321,7 +350,7 @@ export default function IndustriesHubPage() {
                 {MAJOR_CITIES.slice(0, 8).map(city => (
                   <Link
                     key={city}
-                    href={`/grocery-website/${city.toLowerCase()}`}
+                    href={`/industries/grocery-website/${city.toLowerCase()}`}
                     className="text-sm font-medium text-slate-600 transition-colors"
                   >
                     Store Builders in <span className="capitalize">{city}</span>

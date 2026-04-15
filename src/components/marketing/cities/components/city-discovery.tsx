@@ -37,7 +37,7 @@ export const CityDiscovery: React.FC<CityDiscoveryProps> = ({
           {otherCities.map(city => (
             <Link
               key={city}
-              href={`/${category}/${city}`}
+              href={`/industries/${category}/${city}`}
               className="group :border-blue-300 :bg-white :-md flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-4 transition-all"
             >
               <div className="flex items-center gap-3">

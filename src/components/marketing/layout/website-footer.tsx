@@ -43,7 +43,7 @@ export const WebsiteFooter = () => {
             {NEPAL_CITIES.slice(0, 500).map(city => (
               <Link
                 key={city}
-                href={`/${activeCategory.slug}/${city.toLowerCase()}`}
+                href={`/industries/${activeCategory.slug}/${city.toLowerCase()}`}
                 className="text-[11px] font-medium text-gray-600 hover:underline"
               >
                 {activeCategory.name} in {city}

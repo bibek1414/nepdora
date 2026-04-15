@@ -63,14 +63,14 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
       label: industryLabel.includes("Store")
         ? industryLabel.replace(" Store", "")
         : industryLabel,
-      href: `/create-${category}-website-in-nepdora`,
+      href: `/industries/${category}`,
     },
   ];
 
   if (cityLower !== "nepal" && cityLower !== "nepdora") {
     defaultBreadcrumbItems.push({
       label: cityName,
-      href: `/create-${category}-website-in-nepdora/${cityLower}`,
+      href: `/industries/${category}/${cityLower}`,
     });
   }
 
