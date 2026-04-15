@@ -120,7 +120,7 @@ export default function SwitchHubPage() {
               <ArrowLeftRight className="h-4 w-4" />
               Migration Center
             </div>
-            <h1 className="mb-6 text-4xl font-bold -tight text-slate-900 md:text-5xl lg:text-6xl">
+            <h1 className="-tight mb-6 text-4xl font-bold text-slate-900 md:text-5xl lg:text-6xl">
               Build your website in Nepal <br />
               <span className="text-primary">From Rs 833/Month</span>
             </h1>
@@ -137,7 +137,7 @@ export default function SwitchHubPage() {
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold -tight text-slate-900 md:text-4xl">
+            <h2 className="-tight mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
               How Much Does It Cost to Build a Website in Nepal?
             </h2>
             <p className="text-lg font-medium text-slate-500">
@@ -153,7 +153,7 @@ export default function SwitchHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="mb-6 text-3xl font-bold -tight text-slate-900 md:text-4xl">
+              <h2 className="-tight mb-6 text-3xl font-bold text-slate-900 md:text-4xl">
                 Seamless migration from any platform.
               </h2>
               <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500">
@@ -240,7 +240,7 @@ export default function SwitchHubPage() {
       <section className="py-20">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold -tight text-slate-900 md:text-4xl">
+            <h2 className="-tight mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
               Why businesses are moving to{" "}
               <span className="text-primary">Nepdora.</span>
             </h2>
@@ -298,7 +298,7 @@ export default function SwitchHubPage() {
       <section className="border-y border-slate-100 py-20">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold -tight text-slate-900 md:text-4xl">
+            <h2 className="-tight mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
               Nepdora vs The Rest
             </h2>
             <p className="text-lg font-medium text-slate-500">
@@ -400,7 +400,7 @@ export default function SwitchHubPage() {
       <section className="py-20">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold -tight text-slate-900 md:text-4xl">
+            <h2 className="-tight mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
               Compare & Switch
             </h2>
             <p className="text-lg font-medium text-slate-500">
@@ -459,7 +459,7 @@ export default function SwitchHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="mb-4 text-3xl font-bold -tight text-slate-900 md:text-4xl">
+              <h2 className="-tight mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
                 How much could you <span className="text-primary">save?</span>
               </h2>
               <p className="mb-6 text-lg font-medium text-slate-500">
@@ -512,7 +512,7 @@ export default function SwitchHubPage() {
       <section className="py-20">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold -tight text-slate-900 md:text-4xl">
+            <h2 className="-tight mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
               Success stories from{" "}
               <span className="text-primary">businesses that switched</span>
             </h2>
@@ -592,7 +592,7 @@ export default function SwitchHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="-sm rounded-3xl border border-slate-200 bg-slate-900 px-8 py-16 text-center text-white">
             <div className="flex flex-col items-center">
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold -tight md:text-4xl">
+              <h2 className="-tight mb-4 max-w-3xl text-3xl font-bold md:text-4xl">
                 Make the switch today
               </h2>
               <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-400">

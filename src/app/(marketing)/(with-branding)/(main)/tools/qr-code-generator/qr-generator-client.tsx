@@ -367,7 +367,7 @@ export default function QRGeneratorClient() {
                         onChange={e =>
                           setPayment({ ...payment, identifier: e.target.value })
                         }
-                        className="h-12 text-base md:text-lg placeholder:text-slate-400"
+                        className="h-12 text-base placeholder:text-slate-400 md:text-lg"
                       />
                       <p className="text-xs font-medium text-slate-500">
                         {payment.provider === "esewa" &&
@@ -396,7 +396,7 @@ export default function QRGeneratorClient() {
                     <div className="space-y-2">
                       <Label>Text Message</Label>
                       <textarea
-                        className="border-input placeholder:text-slate-400 focus-visible:ring-ring flex min-h-[100px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                        className="border-input focus-visible:ring-ring flex min-h-[100px] w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-slate-400 focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                         placeholder="Enter any text or message to encode..."
                         value={textVal}
                         onChange={e => setTextVal(e.target.value)}

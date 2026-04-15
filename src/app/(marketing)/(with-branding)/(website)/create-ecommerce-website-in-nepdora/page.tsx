@@ -61,7 +61,6 @@ const ecommerceSchema = {
   },
 };
 
-
 export default function Page() {
   return (
     <>

@@ -32,7 +32,13 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { Heart, Package, LogOut, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 const EditableItem: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => (
@@ -142,13 +148,18 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
             <div className="flex h-20 items-center justify-between">
               {/* Mobile Menu Toggle */}
               <div className="flex items-center lg:hidden">
-                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <Sheet
+                  open={isMobileMenuOpen}
+                  onOpenChange={setIsMobileMenuOpen}
+                >
                   <SheetTrigger asChild>
                     <Button
                       variant="ghost"
                       size="sm"
                       className="px-2"
-                      onClick={() => !disableClicks && setIsMobileMenuOpen(true)}
+                      onClick={() =>
+                        !disableClicks && setIsMobileMenuOpen(true)
+                      }
                     >
                       <Menu className="h-6 w-6" />
                     </Button>
@@ -162,7 +173,11 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                     }}
                   >
                     <SheetHeader>
-                      <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+                      <SheetTitle
+                        style={{ color: navbarData.textColor || "inherit" }}
+                      >
+                        Menu
+                      </SheetTitle>
                     </SheetHeader>
                     <div className="flex flex-col gap-4 py-4">
                       {links.map(link => (
@@ -181,7 +196,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           {link.text}
                         </Link>
                       ))}
-                      
+
                       {availableSocialLinks.length > 0 && (
                         <div className="flex items-center gap-2 border-t pt-4">
                           {availableSocialLinks.map(social => {

@@ -60,7 +60,9 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
 
   const defaultBreadcrumbItems = [
     {
-      label: industryLabel.includes("Store") ? industryLabel.replace(" Store", "") : industryLabel,
+      label: industryLabel.includes("Store")
+        ? industryLabel.replace(" Store", "")
+        : industryLabel,
       href: `/create-${category}-website-in-nepdora`,
     },
   ];

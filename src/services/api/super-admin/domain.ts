@@ -122,7 +122,10 @@ export async function upgradeDomainPlan(
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(
-      err?.detail || err?.error || err?.message || `Failed to change plan: ${res.statusText}`
+      err?.detail ||
+        err?.error ||
+        err?.message ||
+        `Failed to change plan: ${res.statusText}`
     );
   }
   return res.json();

@@ -52,7 +52,6 @@ export const BlogListItem6: React.FC<BlogListItem6Props> = ({
           className="mb-2 text-2xl leading-tight font-medium transition-colors duration-300"
           style={{
             fontFamily: theme.fonts.heading,
-            color: isHovered ? theme.colors.primary : "#030712",
           }}
         >
           {blog.title}

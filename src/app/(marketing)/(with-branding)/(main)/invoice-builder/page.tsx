@@ -49,8 +49,8 @@ export default function InvoiceBuilderPage() {
 
       <div className="bg-slate-50 py-20 pb-10">
         <InvoiceBuilder />
-        <div className="container mx-auto max-w-6xl px-4 mt-12 text-center">
-          <p className="text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        <div className="container mx-auto mt-12 max-w-6xl px-4 text-center">
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-slate-400">
             This invoice was generated using Nepdora Invoice Builder, a fast and
             modern way to create professional invoices for businesses in Nepal.
           </p>

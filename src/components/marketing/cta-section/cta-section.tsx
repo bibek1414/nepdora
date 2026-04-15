@@ -20,9 +20,9 @@ export const CityCTA: React.FC<CityCTAProps> = ({
   return (
     <section className="relative mb-20 overflow-hidden py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="group relative overflow-hidden rounded-[2rem] bg-primary px-8 py-12 text-center text-white shadow-xl md:px-12 md:py-16">
+        <div className="group bg-primary relative overflow-hidden rounded-[2rem] px-8 py-12 text-center text-white shadow-xl md:px-12 md:py-16">
           {/* Decorative Shapes/Background */}
-          <div className="pointer-events-none absolute inset-0 select-none overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden select-none">
             {/* Main Gradient Overlay */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_50%)]" />
 
@@ -31,7 +31,7 @@ export const CityCTA: React.FC<CityCTAProps> = ({
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 0.1, scale: 1 }}
               transition={{ duration: 1.2 }}
-              className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-secondary blur-2xl"
+              className="bg-secondary absolute -top-20 -right-20 h-64 w-64 rounded-full blur-2xl"
             />
 
             {/* "Cut Pot" / Semi-circle decorative element */}
@@ -53,7 +53,7 @@ export const CityCTA: React.FC<CityCTAProps> = ({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute right-[5%] top-1/4 h-32 w-32 rounded-full bg-white/5 blur-3xl"
+              className="absolute top-1/4 right-[5%] h-32 w-32 rounded-full bg-white/5 blur-3xl"
             />
 
             <motion.div
@@ -74,7 +74,7 @@ export const CityCTA: React.FC<CityCTAProps> = ({
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 0.1, scale: 1 }}
               transition={{ duration: 1.5, delay: 0.5 }}
-              className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-white/10 blur-xl"
+              className="absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-white/10 blur-xl"
             />
           </div>
 
@@ -83,7 +83,7 @@ export const CityCTA: React.FC<CityCTAProps> = ({
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="mb-5 text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-5xl"
+              className="mb-5 text-3xl leading-tight font-bold tracking-tight sm:text-4xl md:text-5xl"
             >
               Ready to launch your{" "}
               <span className="relative inline-block text-white">
@@ -117,7 +117,7 @@ export const CityCTA: React.FC<CityCTAProps> = ({
               <Link href="/admin/signup">
                 <Button
                   size="lg"
-                  className="group relative h-auto rounded-full bg-white px-10 py-4 text-lg font-medium text-primary transition-all hover:bg-neutral-50 hover:shadow-lg active:scale-95"
+                  className="group text-primary relative h-auto rounded-full bg-white px-10 py-4 text-lg font-medium transition-all hover:bg-neutral-50 hover:shadow-lg active:scale-95"
                 >
                   Start Building Free
                   <ChevronRight className="ml-2.5 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />

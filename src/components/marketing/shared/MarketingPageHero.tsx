@@ -23,7 +23,12 @@ export const MarketingPageHero: React.FC<MarketingPageHeroProps> = ({
   className,
 }) => {
   return (
-    <section className={cn("border-b border-slate-100 bg-white py-16 sm:py-24", className)}>
+    <section
+      className={cn(
+        "border-b border-slate-100 bg-white py-16 sm:py-24",
+        className
+      )}
+    >
       <div className="container mx-auto max-w-6xl px-4">
         {breadcrumbs && (
           <div

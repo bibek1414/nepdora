@@ -40,8 +40,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -230,14 +241,18 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="w-[300px] sm:w-[400px] overflow-y-auto"
+                className="w-[300px] overflow-y-auto sm:w-[400px]"
                 style={{
                   backgroundColor: navbarData.backgroundColor || "white",
                   color: navbarData.textColor || "inherit",
                 }}
               >
                 <SheetHeader>
-                  <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+                  <SheetTitle
+                    style={{ color: navbarData.textColor || "inherit" }}
+                  >
+                    Menu
+                  </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-4 py-4">
                   <div className="px-2 pb-4">
@@ -247,7 +262,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                       className="w-full"
                     />
                   </div>
-                  
+
                   {links.map(link => (
                     <Link
                       key={link.id}
@@ -272,20 +287,32 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                       </AccordionTrigger>
                       <AccordionContent className="flex flex-col gap-2 pt-2 pb-0">
                         {categories.map(category => {
-                          const categorySubCategories = getSubCategoriesForCategory(category.id);
-                          
+                          const categorySubCategories =
+                            getSubCategoriesForCategory(category.id);
+
                           if (categorySubCategories.length > 0) {
                             return (
-                              <Accordion type="single" collapsible key={category.id} className="w-full">
-                                <AccordionItem value={`cat-${category.id}`} className="border-none">
+                              <Accordion
+                                type="single"
+                                collapsible
+                                key={category.id}
+                                className="w-full"
+                              >
+                                <AccordionItem
+                                  value={`cat-${category.id}`}
+                                  className="border-none"
+                                >
                                   <AccordionTrigger className="px-4 py-2 text-base font-medium hover:no-underline">
                                     {category.name}
                                   </AccordionTrigger>
-                                  <AccordionContent className="flex flex-col gap-2 pl-4 pt-1 pb-0">
+                                  <AccordionContent className="flex flex-col gap-2 pt-1 pb-0 pl-4">
                                     <button
-                                      className="text-left py-1 text-sm opacity-70 hover:opacity-100"
+                                      className="py-1 text-left text-sm opacity-70 hover:opacity-100"
                                       onClick={() => {
-                                        handleCategoryFilter(category.slug, category.name);
+                                        handleCategoryFilter(
+                                          category.slug,
+                                          category.name
+                                        );
                                         setIsMobileMenuOpen(false);
                                       }}
                                     >
@@ -294,9 +321,12 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                                     {categorySubCategories.map(subCategory => (
                                       <button
                                         key={subCategory.id}
-                                        className="text-left py-1 text-sm opacity-70 hover:opacity-100"
+                                        className="py-1 text-left text-sm opacity-70 hover:opacity-100"
                                         onClick={() => {
-                                          handleSubCategoryFilter(subCategory.slug, subCategory.name);
+                                          handleSubCategoryFilter(
+                                            subCategory.slug,
+                                            subCategory.name
+                                          );
                                           setIsMobileMenuOpen(false);
                                         }}
                                       >
@@ -313,7 +343,10 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                               key={category.id}
                               className="px-4 py-2 text-left text-base font-medium opacity-80 hover:opacity-100"
                               onClick={() => {
-                                handleCategoryFilter(category.slug, category.name);
+                                handleCategoryFilter(
+                                  category.slug,
+                                  category.name
+                                );
                                 setIsMobileMenuOpen(false);
                               }}
                             >
@@ -325,7 +358,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                     </AccordionItem>
                   </Accordion>
 
-                  <div className="border-t pt-4 px-2">
+                  <div className="border-t px-2 pt-4">
                     {buttons.map(button => (
                       <Button
                         key={button.id}
@@ -357,7 +390,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
               </SheetContent>
             </Sheet>
           </div>
-          
+
           <div className={disableClicks ? "pointer-events-auto" : ""}>
             {isEditable && onEditLogo ? (
               <EditableItem>

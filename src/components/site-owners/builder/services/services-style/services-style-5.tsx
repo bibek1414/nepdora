@@ -114,6 +114,7 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
                 service={service}
                 isFirst={index === 0}
                 isLast={index === services.length - 1}
+                siteUser={siteUser}
                 onServiceClick={onServiceClick}
                 isEditable={isEditable}
               />

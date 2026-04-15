@@ -61,7 +61,7 @@ export default function PartnersPage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
       <JsonLd id="partners-program-schema" data={schema} />
-      
+
       <div className="container mx-auto max-w-6xl px-6">
         <Breadcrumbs items={[{ label: "Partners", href: "/partners" }]} />
       </div>

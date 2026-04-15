@@ -22,7 +22,7 @@ const Header: React.FC = () => {
           key={item}
           href="https://docs.nepdora.com"
           target="_blank"
-          className="text-black cursor-pointer text-xs font-normal transition-colors"
+          className="cursor-pointer text-xs font-normal text-black transition-colors"
         >
           {item}
         </a>
@@ -34,7 +34,7 @@ const Header: React.FC = () => {
         <Link
           key={item}
           href={`/`}
-          className="text-black cursor-pointer text-xs font-normal transition-colors"
+          className="cursor-pointer text-xs font-normal text-black transition-colors"
         >
           {item}
         </Link>
@@ -45,7 +45,7 @@ const Header: React.FC = () => {
       <Link
         key={item}
         href={`/${item.toLowerCase()}`}
-        className="text-black cursor-pointer text-xs font-normal transition-colors"
+        className="cursor-pointer text-xs font-normal text-black transition-colors"
       >
         {item}
       </Link>

@@ -166,7 +166,7 @@ export default function LearnHubPage() {
             <h2 className="mt-4 mb-2 text-4xl font-bold tracking-tighter text-slate-900 md:text-5xl">
               Everything you need to succeed online.
             </h2>
-            <p className="text-lg leading-relaxed max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed">
               From choosing your business idea to scaling with SEO and payments,
               we've got you covered with practical, Nepal-focused guides.
             </p>
@@ -232,14 +232,13 @@ export default function LearnHubPage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-5 justify-center">
+          <div className="flex flex-wrap justify-center gap-5">
             {GUIDES.map(guide => (
               <Link
                 key={guide.slug}
                 href={`/learn/${guide.slug}`}
-                className="group max-w-[350px] rounded-3xl bg-white p-8 transition-all hover:-translate-y-1 "
+                className="group max-w-[350px] rounded-3xl bg-white p-8 transition-all hover:-translate-y-1"
               >
-
                 <h3 className="mb-2 text-xl font-semibold text-slate-900 transition-colors">
                   {guide.title}
                 </h3>
@@ -283,19 +282,17 @@ export default function LearnHubPage() {
                 ))}
               </div>
             </div>
-            <div className="relative rounded-3xl bg-secondary p-8">
+            <div className="bg-secondary relative rounded-3xl p-8">
               <div className="text-center">
                 <div className="mb-4 flex justify-center">
                   <div className="bg-primary rounded-full p-3">
-                    <Users className="text-white h-8 w-8" />
+                    <Users className="h-8 w-8 text-white" />
                   </div>
                 </div>
                 <h3 className="mb-2 text-2xl font-bold text-slate-900">
                   Join 5,000+ entrepreneurs
                 </h3>
-                <p>
-                  Who have started their online journey with Nepdora
-                </p>
+                <p>Who have started their online journey with Nepdora</p>
               </div>
             </div>
           </div>

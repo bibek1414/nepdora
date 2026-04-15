@@ -5,12 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {
-  AlertCircle,
-  Eye,
-  EyeOff,
-  Check,
-} from "lucide-react";
+import { AlertCircle, Eye, EyeOff, Check } from "lucide-react";
 import Link from "next/link";
 import { signupSchema, SignupFormValues } from "@/schemas/signup.form";
 import { AuthErrorHandler } from "@/utils/auth/error.utils";
@@ -35,12 +30,12 @@ export function SignupForm({
   const oauthErrorParam = searchParams?.get("error");
   const [formError, setFormError] = useState<FormErrorState | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   // Set E-commerce as default
   const [selectedWebsiteType, setSelectedWebsiteType] = useState<
     "ecommerce" | "service"
   >("ecommerce");
-  
+
   const [isGoogleDialogOpen, setIsGoogleDialogOpen] = useState(false);
 
   const {
@@ -50,12 +45,12 @@ export function SignupForm({
     watch,
     setError,
     clearErrors,
-    setValue
+    setValue,
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      website_type: "ecommerce"
-    }
+      website_type: "ecommerce",
+    },
   });
 
   const password = watch("password");
@@ -82,7 +77,9 @@ export function SignupForm({
           const decoded = decodeURIComponent(result);
           if (decoded === result) break;
           result = decoded;
-        } catch { break; }
+        } catch {
+          break;
+        }
       }
       return result;
     };
@@ -100,7 +97,8 @@ export function SignupForm({
 
     if (oauthErrorParam === "OAuthCallback") {
       setFormError({
-        message: "Google sign-in failed. Please try again or complete your email signup first.",
+        message:
+          "Google sign-in failed. Please try again or complete your email signup first.",
         type: "error",
       });
     }
@@ -115,18 +113,23 @@ export function SignupForm({
       const errorResponse = error as ErrorResponse;
       const parsedError = AuthErrorHandler.parseAuthError(errorResponse);
       setFormError(parsedError);
-      ["email", "store_name", "phone"].forEach((field) => {
-        const msg = AuthErrorHandler.getFieldError(field === "store_name" ? "store_name" : field as any, errorResponse);
+      ["email", "store_name", "phone"].forEach(field => {
+        const msg = AuthErrorHandler.getFieldError(
+          field === "store_name" ? "store_name" : (field as any),
+          errorResponse
+        );
         if (msg) setError(field as any, { type: "manual", message: msg });
       });
     }
   };
 
-  const handleInputChange = (field: keyof SignupFormValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    register(field).onChange(e);
-    if (formError) setFormError(null);
-    if (errors[field]) clearErrors(field);
-  };
+  const handleInputChange =
+    (field: keyof SignupFormValues) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      register(field).onChange(e);
+      if (formError) setFormError(null);
+      if (errors[field]) clearErrors(field);
+    };
 
   const handleGoogleSignup = () => setIsGoogleDialogOpen(true);
 
@@ -134,29 +137,37 @@ export function SignupForm({
     <>
       <div className="flex min-h-screen w-full flex-col items-center justify-start bg-white px-6 pt-12 pb-12 md:pt-20">
         <div className="w-full max-w-[400px] transition-all">
-          
           <div className="mb-8 text-center">
-            <h1 className="text-2xl sm:text-3xl tracking-tight font-bold">Create your account</h1>
-            <p className="mt-2 text-sm">Join our platform to manage your business with ease.</p>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Create your account
+            </h1>
+            <p className="mt-2 text-sm">
+              Join our platform to manage your business with ease.
+            </p>
           </div>
 
           {formError && (
-            <div className={cn("mb-6 flex items-center gap-3 rounded-xl border p-4 text-sm transition-all", 
-              formError.type === "error" ? "border-red-100 bg-red-50 text-red-800" : "border-blue-100 bg-blue-50 text-blue-800")}>
+            <div
+              className={cn(
+                "mb-6 flex items-center gap-3 rounded-xl border p-4 text-sm transition-all",
+                formError.type === "error"
+                  ? "border-red-100 bg-red-50 text-red-800"
+                  : "border-blue-100 bg-blue-50 text-blue-800"
+              )}
+            >
               <AlertCircle className="h-5 w-5 shrink-0" />
               <p>{formError.message}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            
             {/* Website type selection - Row Toggle */}
             <div className="flex gap-2 pb-2">
-              {["ecommerce", "service"].map((type) => (
+              {["ecommerce", "service"].map(type => (
                 <label
                   key={type}
                   className={cn(
-                    "flex flex-1 h-11 cursor-pointer items-center justify-center rounded-xl border text-sm transition-all duration-200",
+                    "flex h-11 flex-1 cursor-pointer items-center justify-center rounded-xl border text-sm transition-all duration-200",
                     selectedWebsiteType === type
                       ? "border-blue-600 bg-blue-50 text-blue-700 shadow-sm shadow-blue-50"
                       : "border-slate-200 bg-white text-slate-500 hover:border-blue-200"
@@ -188,7 +199,11 @@ export function SignupForm({
                   onChange={handleInputChange("store_name")}
                 />
                 <FloatingLabel htmlFor="store_name">Store name</FloatingLabel>
-                {errors.store_name && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.store_name.message}</p>}
+                {errors.store_name && (
+                  <p className="mt-1 px-1 text-[11px] text-red-500">
+                    {errors.store_name.message}
+                  </p>
+                )}
               </div>
 
               <div className="relative">
@@ -200,7 +215,11 @@ export function SignupForm({
                   onChange={handleInputChange("email")}
                 />
                 <FloatingLabel htmlFor="email">Email address</FloatingLabel>
-                {errors.email && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.email.message}</p>}
+                {errors.email && (
+                  <p className="mt-1 px-1 text-[11px] text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               <div className="relative">
@@ -212,7 +231,11 @@ export function SignupForm({
                   onChange={handleInputChange("phone")}
                 />
                 <FloatingLabel htmlFor="phone">Phone number</FloatingLabel>
-                {errors.phone && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.phone.message}</p>}
+                {errors.phone && (
+                  <p className="mt-1 px-1 text-[11px] text-red-500">
+                    {errors.phone.message}
+                  </p>
+                )}
               </div>
 
               <div className="relative">
@@ -226,12 +249,16 @@ export function SignupForm({
                 <FloatingLabel htmlFor="password">Password</FloatingLabel>
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-blue-600"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
-                {errors.password && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.password.message}</p>}
+                {errors.password && (
+                  <p className="mt-1 px-1 text-[11px] text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               <div className="relative">
@@ -242,8 +269,14 @@ export function SignupForm({
                   {...register("confirmPassword")}
                   onChange={handleInputChange("confirmPassword")}
                 />
-                <FloatingLabel htmlFor="confirmPassword">Confirm password</FloatingLabel>
-                {errors.confirmPassword && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.confirmPassword.message}</p>}
+                <FloatingLabel htmlFor="confirmPassword">
+                  Confirm password
+                </FloatingLabel>
+                {errors.confirmPassword && (
+                  <p className="mt-1 px-1 text-[11px] text-red-500">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -254,14 +287,28 @@ export function SignupForm({
                   type="checkbox"
                   id="terms"
                   required
-                  className="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-200 checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition-all"
+                  className="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-200 transition-all checked:border-blue-600 checked:bg-blue-600 focus:outline-none"
                 />
-                <Check className="absolute h-3 w-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none left-0.5" />
+                <Check className="pointer-events-none absolute left-0.5 h-3 w-3 text-white opacity-0 peer-checked:opacity-100" />
               </div>
-              <label htmlFor="terms" className="text-xs text-slate-500 leading-normal cursor-pointer select-none">
+              <label
+                htmlFor="terms"
+                className="cursor-pointer text-xs leading-normal text-slate-500 select-none"
+              >
                 By creating an account, you agree to our{" "}
-                <Link href="/terms" className="text-blue-600 hover:underline underline-offset-2">terms</Link> and{" "}
-                <Link href="/privacy" className="text-blue-600 hover:underline underline-offset-2">privacy policy</Link>
+                <Link
+                  href="/terms"
+                  className="text-blue-600 underline-offset-2 hover:underline"
+                >
+                  terms
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy-policy"
+                  className="text-blue-600 underline-offset-2 hover:underline"
+                >
+                  privacy policy
+                </Link>
               </label>
             </div>
 
@@ -272,16 +319,21 @@ export function SignupForm({
             >
               {isLoading ? "Creating account..." : "Create account"}
             </Button>
-            <p className="text-center text-sm text-slate-500 pt-2">
+            <p className="pt-2 text-center text-sm text-slate-500">
               Already have an account?{" "}
-              <Link href="/admin/login" className="font-medium text-blue-600 hover:text-blue-700">
+              <Link
+                href="/admin/login"
+                className="font-medium text-blue-600 hover:text-blue-700"
+              >
                 Sign in
               </Link>
             </p>
 
             <div className="relative flex items-center py-2">
               <div className="flex-grow border-t border-slate-100"></div>
-              <span className="mx-4 text-[11px] text-slate-400">Or sign up with</span>
+              <span className="mx-4 text-[11px] text-slate-400">
+                Or sign up with
+              </span>
               <div className="flex-grow border-t border-slate-100"></div>
             </div>
 

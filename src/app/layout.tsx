@@ -1,5 +1,5 @@
 import "./globals.css";
-import { DM_Sans  } from 'next/font/google';
+import { DM_Sans } from "next/font/google";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CustomerAuthProvider } from "@/contexts/customer/AuthContext";
 import { TextSelectionProvider } from "@/contexts/text-selection-context";

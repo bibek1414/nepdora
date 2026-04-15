@@ -36,7 +36,13 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { useProductsWithParams } from "@/hooks/owner-site/admin/use-product";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -316,18 +322,23 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                 </SheetTrigger>
                 <SheetContent
                   side="left"
-                  className="w-[300px] sm:w-[400px] overflow-y-auto"
+                  className="w-[300px] overflow-y-auto sm:w-[400px]"
                   style={{
                     backgroundColor: data.backgroundColor || "white",
                     color: data.textColor || "inherit",
                   }}
                 >
                   <SheetHeader>
-                    <SheetTitle style={{ color: data.textColor || "inherit" }}>Menu</SheetTitle>
+                    <SheetTitle style={{ color: data.textColor || "inherit" }}>
+                      Menu
+                    </SheetTitle>
                   </SheetHeader>
                   <div className="flex flex-col gap-4 py-4">
                     <div className="px-2 pb-4">
-                      <form onSubmit={handleSearchSubmit} className="relative w-full">
+                      <form
+                        onSubmit={handleSearchSubmit}
+                        className="relative w-full"
+                      >
                         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 opacity-40" />
                         <input
                           type="text"

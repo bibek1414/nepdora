@@ -59,11 +59,13 @@ export default function PrivacyPolicyPage() {
     <div className="bg-background min-h-screen">
       <JsonLd id="privacy-schema" data={privacySchema} />
       <JsonLd id="privacy-breadcrumb" data={breadcrumbSchema} />
-      
+
       <div className="mx-auto max-w-4xl px-4 pt-4 sm:px-6 lg:px-8">
-        <Breadcrumbs items={[{ label: "Privacy Policy", href: "/privacy-policy" }]} />
+        <Breadcrumbs
+          items={[{ label: "Privacy Policy", href: "/privacy-policy" }]}
+        />
       </div>
-      
+
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">

@@ -15,15 +15,22 @@ export interface WhoisData {
 }
 
 function getMockData(domain: string): WhoisData {
-  const isAvailable = !domain.includes("google") && !domain.includes("facebook") && !domain.includes("amazon");
-  
+  const isAvailable =
+    !domain.includes("google") &&
+    !domain.includes("facebook") &&
+    !domain.includes("amazon");
+
   return {
     domain: domain,
     registrar: isAvailable ? undefined : "SafeNames Ltd.",
     created_date: isAvailable ? undefined : "2000-01-15T00:00:00Z",
     expires_date: isAvailable ? undefined : "2028-01-15T00:00:00Z",
-    status: isAvailable ? [] : ["clientDeleteProhibited", "clientTransferProhibited"],
-    nameservers: isAvailable ? [] : ["ns1.markmonitor.com", "ns2.markmonitor.com"],
+    status: isAvailable
+      ? []
+      : ["clientDeleteProhibited", "clientTransferProhibited"],
+    nameservers: isAvailable
+      ? []
+      : ["ns1.markmonitor.com", "ns2.markmonitor.com"],
     registered: !isAvailable,
     isDemo: true,
   };
@@ -37,7 +44,8 @@ export async function checkDomainAvailability(
   }
 
   // Basic validation to prevent unnecessary API calls
-  const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,9}$/;
+  const domainRegex =
+    /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,9}$/;
   // Handle .com.np etc
   const isNepaliDomain = domain.endsWith(".np");
 
@@ -76,8 +84,10 @@ export async function checkDomainAvailability(
     if (data.status) {
       if (Array.isArray(data.status)) {
         normalizedStatus = data.status.map(String);
-      } else if (typeof data.status === 'string') {
-        normalizedStatus = (data.status as string).split(',').map((s: string) => s.trim());
+      } else if (typeof data.status === "string") {
+        normalizedStatus = (data.status as string)
+          .split(",")
+          .map((s: string) => s.trim());
       }
     }
 
@@ -91,10 +101,8 @@ export async function checkDomainAvailability(
       registered: data.registered ?? !!data.registrar,
       isDemo: false,
     };
-
   } catch (error) {
     console.error("WhoisJSON Error:", error);
     return getMockData(domain);
   }
 }
-

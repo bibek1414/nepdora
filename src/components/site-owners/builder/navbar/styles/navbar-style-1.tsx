@@ -10,7 +10,13 @@ import { Edit, Trash2, ShoppingCart, User, Menu } from "lucide-react";
 import { CartIcon } from "../../cart/cart-icon";
 import { NavbarLogo } from "../navbar-logo";
 import SideCart from "../../cart/side-cart";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -148,7 +154,11 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
               }}
             >
               <SheetHeader>
-                <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>Menu</SheetTitle>
+                <SheetTitle
+                  style={{ color: navbarData.textColor || "inherit" }}
+                >
+                  Menu
+                </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4 py-4">
                 {links.map(link => (

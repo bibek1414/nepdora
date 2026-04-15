@@ -4,7 +4,8 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMarketingMetadata({
-  title: "Create Educational Consultancy Website in Nepdora | Official Platform",
+  title:
+    "Create Educational Consultancy Website in Nepdora | Official Platform",
   description:
     "Build trust with students and parents in Nepdora. Launch your high-converting consultancy website with integrated lead generation and school discovery tools.",
   path: "/create-educational-consultancy-website-in-nepdora",

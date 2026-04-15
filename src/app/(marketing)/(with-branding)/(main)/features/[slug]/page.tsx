@@ -685,7 +685,9 @@ export default async function FeatureProcessPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Service",
     name: `${featureName} Integration`,
-    description: data?.description || `Learn how to easily integrate ${featureName} into your Nepdora website.`,
+    description:
+      data?.description ||
+      `Learn how to easily integrate ${featureName} into your Nepdora website.`,
     provider: {
       "@type": "Organization",
       name: SITE_NAME,
@@ -729,7 +731,7 @@ export default async function FeatureProcessPage({ params }: Props) {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-8">
             {/* The Hard Way */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-8">
               <div className="mb-6 flex items-center gap-3">
                 <AlertCircle className="h-6 w-6 text-rose-500" />
                 <h2 className="text-xl font-semibold text-slate-900">
@@ -765,7 +767,7 @@ export default async function FeatureProcessPage({ params }: Props) {
             </div>
 
             {/* The Nepdora Way */}
-            <div className="border-primary/20 relative rounded-2xl border-2 bg-white p-8 -sm">
+            <div className="border-primary/20 -sm relative rounded-2xl border-2 bg-white p-8">
               <div className="bg-primary absolute -top-3 right-6 rounded-full px-4 py-1 text-xs font-semibold text-white">
                 Integrated by Default
               </div>
@@ -811,7 +813,7 @@ export default async function FeatureProcessPage({ params }: Props) {
               </div>
 
               <div className="mt-8">
-                <div className="bg-primary rounded-xl p-5 text-white -md">
+                <div className="bg-primary -md rounded-xl p-5 text-white">
                   <p className="leading-relaxed font-medium text-white/90">
                     "With Nepdora, {featureName} is ready to use from day one.
                     Focus on your business, not the code."
@@ -830,7 +832,7 @@ export default async function FeatureProcessPage({ params }: Props) {
             {stats.map((stat, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl border border-slate-200 bg-white p-5 text-center -sm transition-all hover:-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all"
               >
                 <div className="text-primary mb-1 text-2xl font-bold">
                   {stat.value}
@@ -860,7 +862,7 @@ export default async function FeatureProcessPage({ params }: Props) {
             {benefits.map((benefit, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 -sm transition-all hover:-md"
+                className="-sm hover:-md flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-all"
               >
                 <CheckCircle2 className="text-primary h-5 w-5 shrink-0" />
                 <span className="text-sm font-medium text-slate-700">
@@ -875,7 +877,7 @@ export default async function FeatureProcessPage({ params }: Props) {
       {/* Testimonial Section */}
       <section className="border-y border-slate-100 bg-slate-50 py-16">
         <div className="container mx-auto max-w-4xl px-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center -sm">
+          <div className="-sm rounded-2xl border border-slate-200 bg-white p-8 text-center">
             <div className="mb-4 flex justify-center">
               <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full">
                 <ThumbsUp className="h-6 w-6" />
@@ -929,9 +931,9 @@ export default async function FeatureProcessPage({ params }: Props) {
             ].map((item, i) => (
               <div
                 key={i}
-                className="relative rounded-2xl border border-slate-200 bg-white p-6 text-center -sm transition-all hover:-md"
+                className="-sm hover:-md relative rounded-2xl border border-slate-200 bg-white p-6 text-center transition-all"
               >
-                <div className="bg-primary absolute -top-3 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full text-sm font-bold text-white -md">
+                <div className="bg-primary -md absolute -top-3 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full text-sm font-bold text-white">
                   {item.step}
                 </div>
                 <div className="mt-4 flex justify-center">
@@ -964,7 +966,7 @@ export default async function FeatureProcessPage({ params }: Props) {
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl border border-slate-200 bg-white p-6 -sm transition-all hover:-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all"
               >
                 <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
                 <p className="text-sm leading-relaxed font-medium text-slate-500">
@@ -979,9 +981,9 @@ export default async function FeatureProcessPage({ params }: Props) {
       {/* CTA Section */}
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
+              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
                 <Layout className="text-primary h-8 w-8" />
               </div>
               <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
@@ -993,7 +995,7 @@ export default async function FeatureProcessPage({ params }: Props) {
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/admin/signup"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105"
+                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
                 >
                   Start Free Trial
                   <ChevronRight className="h-4 w-4" />

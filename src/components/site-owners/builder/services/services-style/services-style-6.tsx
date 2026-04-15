@@ -160,7 +160,6 @@ export const ServicesStyle6: React.FC<ServicesStyle6Props> = ({
                   }}
                   whileHover={{ y: -10 }}
                   className={`${cardClassName} relative`}
-                  onClick={() => !isEditable && onServiceClick?.(service.slug)}
                 >
                   {isEditable && (
                     <div className="absolute inset-0 z-20 cursor-pointer bg-transparent" />
@@ -169,6 +168,8 @@ export const ServicesStyle6: React.FC<ServicesStyle6Props> = ({
                     service={service}
                     siteUser={isEditable ? undefined : siteUser}
                     isFirst={isFirst}
+                    isEditable={isEditable}
+                    onServiceClick={onServiceClick}
                   />
                 </motion.div>
               );

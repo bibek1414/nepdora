@@ -212,7 +212,8 @@ export const BEST_OF_DATA: BestOfItem[] = [
   },
   {
     slug: "website-builders-for-educational-consultancy-nepal",
-    title: "6 Best Website Builders for Educational Consultancies in Nepal (2026)",
+    title:
+      "6 Best Website Builders for Educational Consultancies in Nepal (2026)",
     description:
       "Planning to start an education consultancy? We ranked the best website builders for visa service providers and study abroad consultants in Nepal based on forms and CRM.",
     ranking: [

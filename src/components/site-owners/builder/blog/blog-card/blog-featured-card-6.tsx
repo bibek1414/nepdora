@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { Plus, ChevronRight } from "lucide-react";
 import { BlogPost } from "@/types/owner-site/admin/blog";
 import { usePathname } from "next/navigation";
-import { generateLinkHref } from "@/lib/link-utils";
 
 interface BlogFeaturedCard6Props {
   blog: BlogPost;
@@ -73,7 +72,6 @@ export const BlogFeaturedCard6: React.FC<BlogFeaturedCard6Props> = ({
           className="max-w-md text-3xl leading-tight font-medium transition-colors duration-300 md:text-4xl"
           style={{
             fontFamily: theme.fonts.heading,
-            color: isHovered ? theme.colors.primary : "#030712",
           }}
         >
           {blog.title}

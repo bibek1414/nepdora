@@ -59,7 +59,7 @@ export default function TermsOfServicePage() {
     <div className="bg-background min-h-screen">
       <JsonLd id="terms-schema" data={termsSchema} />
       <JsonLd id="terms-breadcrumb" data={breadcrumbSchema} />
-      
+
       <div className="mx-auto max-w-4xl px-4 pt-4 sm:px-6 lg:px-8">
         <Breadcrumbs items={[{ label: "Terms", href: "/terms" }]} />
       </div>

@@ -102,6 +102,7 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
                 key={service.id}
                 service={service}
                 idx={idx}
+                siteUser={siteUser}
                 isEditable={isEditable}
                 onServiceClick={onServiceClick}
               />

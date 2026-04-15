@@ -103,8 +103,8 @@ const PlanCard = ({
   <Card
     key={plan.id}
     className={cn(
-      "relative flex flex-col transition-all duration-300 hover:shadow-lg",
-      plan.is_popular && "border-primary shadow-md"
+      "hover:-lg relative flex flex-col transition-all duration-300",
+      plan.is_popular && "border-primary -md"
     )}
   >
     {plan.is_popular && (
@@ -246,7 +246,7 @@ const SubscriptionTrigger = ({
 
   return (
     <div className="mt-auto px-4 py-4">
-      <div className="group border-primary/10 hover:border-primary/20 from-primary/5 via-primary/[0.02] relative overflow-hidden rounded-2xl border bg-gradient-to-br to-transparent p-4 transition-all duration-300 hover:shadow-md">
+      <div className="group border-primary/10 hover:border-primary/20 from-primary/5 via-primary/[0.02] hover:-md relative overflow-hidden rounded-2xl border bg-gradient-to-br to-transparent p-4 transition-all duration-300">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
@@ -273,7 +273,7 @@ const SubscriptionTrigger = ({
 
           <Button
             size="sm"
-            className="bg-primary hover:bg-primary/95 h-8 w-full text-xs font-semibold shadow-sm transition-colors"
+            className="bg-primary hover:bg-primary/95 -sm h-8 w-full text-xs font-semibold transition-colors"
             onClick={onClick}
           >
             Upgrade Plan
@@ -457,7 +457,7 @@ export function SidebarSubscriptionWidget({
 
           <div className="space-y-6">
             {/* Selected Plan Summary */}
-            <Card className="border-primary/20 bg-primary/5 border-2 shadow-sm">
+            <Card className="border-primary/20 bg-primary/5 -sm border-2">
               <CardContent className="p-4 md:p-6">
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                   <div>
@@ -492,7 +492,7 @@ export function SidebarSubscriptionWidget({
                     className={cn(
                       "group relative flex items-center justify-between rounded-2xl border-2 p-4 transition-all duration-300",
                       selectedPaymentMethod === method.id
-                        ? "border-primary bg-primary/[0.03] ring-primary/20 shadow-md ring-1"
+                        ? "border-primary bg-primary/[0.03] ring-primary/20 -md ring-1"
                         : "border-border hover:border-primary/30 hover:bg-muted/50"
                     )}
                   >
@@ -526,7 +526,7 @@ export function SidebarSubscriptionWidget({
 
             <div className="space-y-4 pt-4">
               <Button
-                className="bg-primary hover:bg-primary/95 w-full py-6 text-base font-black shadow-lg transition-all duration-300 hover:shadow-xl"
+                className="bg-primary hover:bg-primary/95 -lg hover:-xl w-full py-6 text-base font-black transition-all duration-300"
                 disabled={!selectedPaymentMethod}
                 onClick={handleConfirmPayment}
               >

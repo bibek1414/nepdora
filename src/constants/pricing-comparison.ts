@@ -25,11 +25,13 @@ export const PRICING_COMPARISON_DATA: Record<string, PricingComparisonData> = {
     faqs: [
       {
         question: "Can I keep my Shopify domain?",
-        answer: "Yes, you can easily point your existing .com or .com.np domain to Nepdora servers.",
+        answer:
+          "Yes, you can easily point your existing .com or .com.np domain to Nepdora servers.",
       },
       {
         question: "Is migration from Shopify free?",
-        answer: "We offer free migration support for businesses switching from Shopify. We'll help move your products and layout.",
+        answer:
+          "We offer free migration support for businesses switching from Shopify. We'll help move your products and layout.",
       },
     ],
   },
@@ -46,7 +48,8 @@ export const PRICING_COMPARISON_DATA: Record<string, PricingComparisonData> = {
     faqs: [
       {
         question: "Can I migrate my Wix site to Nepdora?",
-        answer: "Yes, we provide full assistance in migrating your content and design from Wix to our localized platform.",
+        answer:
+          "Yes, we provide full assistance in migrating your content and design from Wix to our localized platform.",
       },
     ],
   },
@@ -63,7 +66,8 @@ export const PRICING_COMPARISON_DATA: Record<string, PricingComparisonData> = {
     faqs: [
       {
         question: "Is Nepdora as flexible as Webflow?",
-        answer: "Nepdora offers a balance of ease-of-use and flexibility, specifically optimized for the Nepali market with built-in localized features.",
+        answer:
+          "Nepdora offers a balance of ease-of-use and flexibility, specifically optimized for the Nepali market with built-in localized features.",
       },
     ],
   },
@@ -80,7 +84,8 @@ export const PRICING_COMPARISON_DATA: Record<string, PricingComparisonData> = {
     faqs: [
       {
         question: "Does Nepdora have templates like Squarespace?",
-        answer: "Yes, we offer beautiful, modern templates that are specifically designed for Nepali businesses and load faster locally.",
+        answer:
+          "Yes, we offer beautiful, modern templates that are specifically designed for Nepali businesses and load faster locally.",
       },
     ],
   },
@@ -97,11 +102,13 @@ export const PRICING_COMPARISON_DATA: Record<string, PricingComparisonData> = {
     faqs: [
       {
         question: "Why choose Nepdora over Blanxer?",
-        answer: "Nepdora offers 0% transaction fees and more design flexibility for different business types beyond just e-commerce stores.",
+        answer:
+          "Nepdora offers 0% transaction fees and more design flexibility for different business types beyond just e-commerce stores.",
       },
       {
         question: "Can I migrate from Blanxer to Nepdora?",
-        answer: "Yes, we help you import your products and content from Blanxer to our more flexible builder.",
+        answer:
+          "Yes, we help you import your products and content from Blanxer to our more flexible builder.",
       },
     ],
   },

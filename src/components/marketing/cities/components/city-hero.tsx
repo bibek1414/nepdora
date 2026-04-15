@@ -42,35 +42,33 @@ export const CityHero: React.FC<CityHeroProps> = ({
           {/* Left - text */}
           <div>
             {breadcrumbItems && (
-              <div className="px-1"><Breadcrumbs items={breadcrumbItems} /></div>
+              <div className="px-1">
+                <Breadcrumbs items={breadcrumbItems} />
+              </div>
             )}
 
             <h1 className="mb-5 text-4xl leading-tight font-bold tracking-tight text-black sm:text-5xl">
               {heading}
             </h1>
 
-            <p className="mb-8 text-lg leading-relaxed">
-              {intro}
-            </p>
+            <p className="mb-8 text-lg leading-relaxed">{intro}</p>
 
             <Link
               href="/admin/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-base font-semibold text-white transition hover:bg-primary/90 hover:-translate-y-1"
+              className="bg-primary hover:bg-primary/90 inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold text-white transition hover:-translate-y-1"
             >
               {ctaText || "Start Building Free"}
               <ChevronRight className="h-4 w-4" />
             </Link>
 
             <p className="mt-3 text-sm">
-              <span className="text-red-500">*</span>  No credit card required
+              <span className="text-red-500">*</span> No credit card required
             </p>
           </div>
 
           {/* Right - checklist card */}
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8">
-            <p className="mb-5 text-xs font-bold">
-              What you get
-            </p>
+            <p className="mb-5 text-xs font-bold">What you get</p>
             <ul className="space-y-3.5">
               {[
                 `Professional ${industryLabel} website`,
@@ -85,9 +83,7 @@ export const CityHero: React.FC<CityHeroProps> = ({
                     className="mt-0.5 h-4 w-4 shrink-0 text-green-500"
                     strokeWidth={2}
                   />
-                  <span className="text-sm leading-relaxed">
-                    {item}
-                  </span>
+                  <span className="text-sm leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>

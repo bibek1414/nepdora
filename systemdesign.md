@@ -630,13 +630,13 @@ Published pages:
 
 ### 12.3 Preview/publish comparison
 
-| Concern | Preview | Publish |
-|---|---|---|
-| Access | authenticated | public |
-| Data source | preview/draft backend state | published backend state |
-| Real-time updates | yes | no |
-| Fetch model | client + hydrated query data | server-side cached fetch |
-| Cache strategy | query cache | Next.js `revalidate` + tags |
+| Concern           | Preview                      | Publish                     |
+| ----------------- | ---------------------------- | --------------------------- |
+| Access            | authenticated                | public                      |
+| Data source       | preview/draft backend state  | published backend state     |
+| Real-time updates | yes                          | no                          |
+| Fetch model       | client + hydrated query data | server-side cached fetch    |
+| Cache strategy    | query cache                  | Next.js `revalidate` + tags |
 
 ### 12.4 Publish cache model
 
@@ -1330,4 +1330,3 @@ That combination makes this repository much more than a website frontend. It is 
 - renders live published sites
 - coordinates third-party integrations
 - and bridges the user-facing product experience to the backend system
-

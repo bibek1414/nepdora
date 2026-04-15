@@ -72,7 +72,9 @@ export function LoginForm({
           const decoded = decodeURIComponent(result);
           if (decoded === result) break;
           result = decoded;
-        } catch { break; }
+        } catch {
+          break;
+        }
       }
       return result;
     };
@@ -87,7 +89,8 @@ export function LoginForm({
 
     if (oauthErrorParam === "OAuthCallback") {
       setFormError({
-        message: "Google sign-in failed. Please try again or complete your email signup first.",
+        message:
+          "Google sign-in failed. Please try again or complete your email signup first.",
         type: "error",
       });
     }
@@ -117,7 +120,10 @@ export function LoginForm({
     try {
       await recoverAccount(userId);
       toast.success("Account recovered successfully.");
-      setFormError({ message: "Account recovered. You can now sign in.", type: "info" });
+      setFormError({
+        message: "Account recovered. You can now sign in.",
+        type: "info",
+      });
     } catch (error: any) {
       toast.error("Failed to recover account.");
     }
@@ -161,27 +167,38 @@ export function LoginForm({
     }
   };
 
-  const handleInputChange = (field: keyof LoginFormValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    register(field).onChange(e);
-    if (formError) setFormError(null);
-    if (errors[field]) clearErrors(field);
-  };
+  const handleInputChange =
+    (field: keyof LoginFormValues) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      register(field).onChange(e);
+      if (formError) setFormError(null);
+      if (errors[field]) clearErrors(field);
+    };
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-start bg-white px-6 pt-16 pb-12 md:pt-24">
       <div className="w-full max-w-[400px] transition-all">
-        
         <div className="mb-8 text-center">
-          <h1 className="text-2xl sm:text-3xl tracking-tight font-bold">Sign in to your account</h1>
-          <p className="mt-2 text-sm">Welcome back, please enter your details.</p>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Sign in to your account
+          </h1>
+          <p className="mt-2 text-sm">
+            Welcome back, please enter your details.
+          </p>
         </div>
 
         {formError && (
-          <div className={cn("mb-6 flex items-start gap-3 rounded-xl border p-4 text-sm transition-all", 
-            formError.type === "error" ? "border-red-100 bg-red-50 text-red-800" : 
-            formError.type === "warning" ? "border-amber-100 bg-amber-50 text-amber-800" :
-            "border-blue-100 bg-blue-50 text-blue-800")}>
-            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+          <div
+            className={cn(
+              "mb-6 flex items-start gap-3 rounded-xl border p-4 text-sm transition-all",
+              formError.type === "error"
+                ? "border-red-100 bg-red-50 text-red-800"
+                : formError.type === "warning"
+                  ? "border-amber-100 bg-amber-50 text-amber-800"
+                  : "border-blue-100 bg-blue-50 text-blue-800"
+            )}
+          >
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
             <div className="flex-1">
               <p>{formError.message}</p>
               {formError.action && (
@@ -190,7 +207,9 @@ export function LoginForm({
                   className="mt-2 text-xs font-medium underline underline-offset-2 hover:opacity-80"
                   onClick={formError.action.onClick}
                 >
-                  {isResendingVerification ? "Sending..." : formError.action.label}
+                  {isResendingVerification
+                    ? "Sending..."
+                    : formError.action.label}
                 </button>
               )}
             </div>
@@ -208,7 +227,11 @@ export function LoginForm({
                 onChange={handleInputChange("email")}
               />
               <FloatingLabel htmlFor="email">Email address</FloatingLabel>
-              {errors.email && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="mt-1 px-1 text-[11px] text-red-500">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             <div className="relative">
@@ -222,17 +245,24 @@ export function LoginForm({
               <FloatingLabel htmlFor="password">Password</FloatingLabel>
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-blue-600"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
-              {errors.password && <p className="mt-1 px-1 text-[11px] text-red-500">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="mt-1 px-1 text-[11px] text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
           </div>
 
           <div className="flex justify-center pt-1">
-            <Link href="/admin/forgot-password"  className="text-xs font-medium text-blue-600 hover:text-blue-700">
+            <Link
+              href="/admin/forgot-password"
+              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+            >
               Forgot password?
             </Link>
           </div>
@@ -244,25 +274,30 @@ export function LoginForm({
           >
             {isLoading ? "Signing in..." : "Sign in"}
           </Button>
-          <div className="text-center text-sm text-slate-500 pt-4">
+          <div className="pt-4 text-center text-sm text-slate-500">
             Don&apos;t have an account?{" "}
-            <Link href="/admin/signup" className="font-medium text-blue-600 hover:text-blue-700">
+            <Link
+              href="/admin/signup"
+              className="font-medium text-blue-600 hover:text-blue-700"
+            >
               Get started
             </Link>
           </div>
 
           <div className="relative flex items-center py-2">
             <div className="flex-grow border-t border-slate-100"></div>
-            <span className="mx-4 text-[11px] text-slate-400">Or continue with</span>
+            <span className="mx-4 text-[11px] text-slate-400">
+              Or continue with
+            </span>
             <div className="flex-grow border-t border-slate-100"></div>
           </div>
 
-          <GoogleLoginButton 
-            onClick={() => signIn("google", { callbackUrl: "/auth/google/callback" })} 
-            isRegister={false} 
+          <GoogleLoginButton
+            onClick={() =>
+              signIn("google", { callbackUrl: "/auth/google/callback" })
+            }
+            isRegister={false}
           />
-
-          
         </form>
       </div>
     </div>

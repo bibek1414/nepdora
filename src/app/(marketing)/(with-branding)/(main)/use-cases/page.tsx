@@ -32,7 +32,8 @@ const useCaseSchema = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "Nepdora Business Use Cases",
-  description: "Explore how different businesses use Nepdora to automate sales and take bookings in Nepal.",
+  description:
+    "Explore how different businesses use Nepdora to automate sales and take bookings in Nepal.",
   itemListElement: USE_CASES.map((useCase, index) => ({
     "@type": "ListItem",
     position: index + 1,

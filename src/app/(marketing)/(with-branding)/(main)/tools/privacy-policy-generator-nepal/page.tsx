@@ -69,7 +69,7 @@ export default function PrivacyPolicyGenerator() {
       {/* Coming Soon Banner */}
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center -sm">
+          <div className="-sm rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center">
             <div className="flex flex-col items-center">
               <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-700">
                 <Clock className="h-8 w-8" />
@@ -121,7 +121,7 @@ export default function PrivacyPolicyGenerator() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 -sm transition-all hover:-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all"
               >
                 <div className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
                   <item.icon className="h-6 w-6" />
@@ -167,7 +167,7 @@ export default function PrivacyPolicyGenerator() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 rounded-xl bg-white p-4 -sm"
+                className="-sm flex items-center gap-3 rounded-xl bg-white p-4"
               >
                 <CheckCircle2 className="text-primary h-5 w-5 shrink-0" />
                 <span className="text-sm font-medium text-slate-700">
@@ -216,7 +216,7 @@ export default function PrivacyPolicyGenerator() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-5 text-center -sm transition-all hover:-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all"
               >
                 <div className="bg-primary/10 text-primary mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg">
                   <item.icon className="h-5 w-5" />
@@ -261,7 +261,7 @@ export default function PrivacyPolicyGenerator() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="bg-primary/10 text-primary mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl">
                 <Award className="h-7 w-7" />
               </div>
@@ -310,9 +310,9 @@ export default function PrivacyPolicyGenerator() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="relative rounded-2xl border border-slate-200 bg-white p-6 text-center -sm"
+                className="-sm relative rounded-2xl border border-slate-200 bg-white p-6 text-center"
               >
-                <div className="bg-primary absolute -top-3 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full text-sm font-bold text-white -md">
+                <div className="bg-primary -md absolute -top-3 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full text-sm font-bold text-white">
                   {item.step}
                 </div>
                 <div className="mt-6">
@@ -363,7 +363,7 @@ export default function PrivacyPolicyGenerator() {
             ].map((faq, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-6 -sm transition-all hover:-md"
+                className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all"
               >
                 <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
                 <p className="text-sm leading-relaxed font-medium text-slate-500">
@@ -378,9 +378,9 @@ export default function PrivacyPolicyGenerator() {
       {/* Final CTA */}
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
+          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
             <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white -sm">
+              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
                 <Heart className="text-primary h-8 w-8" />
               </div>
               <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
@@ -391,7 +391,7 @@ export default function PrivacyPolicyGenerator() {
                 professionally generated privacy policy.
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
-                <button className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white -md transition-all hover:scale-105">
+                <button className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105">
                   Get Notified When Live
                   <ChevronRight className="h-4 w-4" />
                 </button>

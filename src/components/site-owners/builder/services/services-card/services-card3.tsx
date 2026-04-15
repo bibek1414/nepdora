@@ -61,6 +61,17 @@ export const ServicesCard3: React.FC<ServicesCard3Props> = ({
     return generateLinkHref(`${basePath}/${slug}`, siteUser, pathname);
   };
 
+  const handleActivate = (slug: string) => {
+    if (isEditable) return;
+
+    if (onServiceClick) {
+      onServiceClick(slug);
+      return;
+    }
+
+    window.location.href = getDetailsUrl(slug);
+  };
+
   const stripHtml = (html: string) =>
     html
       .replace(/<[^>]*>/g, " ")
@@ -114,7 +125,7 @@ export const ServicesCard3: React.FC<ServicesCard3Props> = ({
                   },
                 }}
                 onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => onServiceClick?.(service.slug)}
+                onClick={() => handleActivate(service.slug)}
                 className={`relative flex cursor-pointer flex-col overflow-hidden ${
                   isActive
                     ? "flex-5 rounded-[40px] p-6 md:rounded-[60px] md:p-10"
@@ -170,11 +181,7 @@ export const ServicesCard3: React.FC<ServicesCard3Props> = ({
                         <button
                           onClick={e => {
                             e.stopPropagation();
-                            if (!isEditable) {
-                              window.location.href = getDetailsUrl(
-                                service.slug
-                              );
-                            }
+                            handleActivate(service.slug);
                           }}
                           className="group flex w-fit items-center gap-2 rounded-full px-8 py-3 font-medium text-white transition-all hover:opacity-90"
                           style={{ backgroundColor: theme.colors.primary }}

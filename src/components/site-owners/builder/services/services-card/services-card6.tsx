@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Plus, ChevronRight } from "lucide-react";
@@ -11,6 +13,8 @@ interface ServicesCard6Props {
   siteUser?: string;
   className?: string;
   isFirst?: boolean;
+  isEditable?: boolean;
+  onServiceClick?: (serviceSlug: string) => void;
 }
 
 export const ServicesCard6: React.FC<ServicesCard6Props> = ({
@@ -18,7 +22,10 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
   siteUser,
   className,
   isFirst,
+  isEditable = false,
+  onServiceClick,
 }) => {
+  const pathname = usePathname();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
   const { title, description, thumbnail_image } = service;
@@ -29,11 +36,31 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
   const imageSrc =
     thumbnail_image || "https://picsum.photos/seed/placeholder/800/600";
 
+  const getDetailsUrl = (): string => {
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/service-details-draft"
+      : "/service-details";
+    return generateLinkHref(`${basePath}/${service.slug}`, siteUser, pathname);
+  };
+
+  const handleActivate = () => {
+    if (isEditable) return;
+
+    if (onServiceClick) {
+      onServiceClick(service.slug);
+      return;
+    }
+
+    window.location.href = getDetailsUrl();
+  };
+
   return (
     <div
+      onClick={handleActivate}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative flex h-full min-h-[400px] cursor-pointer flex-col justify-between overflow-hidden rounded-[2rem] p-8 transition-all duration-500 ${
+      className={`relative flex h-full min-h-[400px] cursor-pointer flex-col justify-between overflow-hidden rounded-4xl p-8 transition-all duration-500 ${
         className || ""
       }`}
       style={{
@@ -59,7 +86,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
       </div>
 
       {/* Content Overlay */}
-      <div className="relative z-10 flex h-full flex-grow flex-col bg-transparent">
+      <div className="relative z-10 flex h-full grow flex-col bg-transparent">
         <div className="mb-4 flex items-start justify-between">
           <h3
             className="text-2xl font-medium transition-colors duration-500"
@@ -72,7 +99,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
           </h3>
 
           <div
-            className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-black/10 bg-transparent transition-all duration-300"
+            className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-black/10 bg-transparent transition-all duration-300"
             style={{
               backgroundColor: isHovered ? "white" : "transparent",
               color: isHovered ? "black" : "inherit",

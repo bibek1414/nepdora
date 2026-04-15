@@ -102,13 +102,13 @@ export default async function IndustryCityLandingPage({ params }: Props) {
     <>
       <JsonLd id="industry-city-schema" data={schema} />
       <JsonLd id="industry-city-breadcrumb" data={breadcrumbSchema} />
-      <CitiesLandingPage 
-        category={industry} 
-        city={city} 
+      <CitiesLandingPage
+        category={industry}
+        city={city}
         breadcrumbItems={[
           { label: industryLabel, href: `/${industry}` },
-          { label: cityName, href: `/${industry}/${city}` }
-        ]} 
+          { label: cityName, href: `/${industry}/${city}` },
+        ]}
       />
     </>
   );

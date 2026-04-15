@@ -20,7 +20,8 @@ export const IndustryDiscovery: React.FC<IndustryDiscoveryProps> = ({
             Website for any kind of business in Nepdora
           </h2>
           <p className="text-base">
-            Nepdora has templates and built in system fro any kind of website as per you need. Try today !
+            Nepdora has templates and built in system fro any kind of website as
+            per you need. Try today !
           </p>
         </div>
 
@@ -29,12 +30,12 @@ export const IndustryDiscovery: React.FC<IndustryDiscoveryProps> = ({
             <Link
               key={industry}
               href={`/${industry}`}
-              className="group flex flex-col justify-start w-fit items-center rounded-xl border border-slate-200 bg-white p-5 transition :border-slate-300 :shadow-sm hover:border-slate-300 hover:shadow-sm"
+              className="group :border-slate-300 :shadow-sm flex w-fit flex-col items-center justify-start rounded-xl border border-slate-200 bg-white p-5 transition hover:border-slate-300 hover:shadow-sm"
             >
-              <h3 className="text-sm font-semibold text-black flex gap-3">
+              <h3 className="flex gap-3 text-sm font-semibold text-black">
                 {INDUSTRY_LABELS[industry] || industry}
 
-                <ChevronRight className="h-3 w-3 mt-1" />
+                <ChevronRight className="mt-1 h-3 w-3" />
               </h3>
             </Link>
           ))}

@@ -171,7 +171,7 @@ export const WebsiteAnalyzer = () => {
             className="space-y-8"
           >
             {/* Score Summary */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <div className="mb-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
                 <div className="flex items-center gap-3">
                   <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-xl">
@@ -245,7 +245,7 @@ export const WebsiteAnalyzer = () => {
             </div>
 
             {/* Key Metrics */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <h3 className="mb-4 text-base font-semibold text-slate-900">
                 Key Metrics
               </h3>
@@ -284,7 +284,7 @@ export const WebsiteAnalyzer = () => {
             </div>
 
             {/* Recommendations */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-6">
               <h3 className="mb-4 text-base font-semibold text-slate-900">
                 Recommendations
               </h3>

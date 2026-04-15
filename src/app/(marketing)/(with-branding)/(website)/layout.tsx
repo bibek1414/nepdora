@@ -10,7 +10,7 @@ export default function WebsiteLayout({ children }: WebsiteLayoutProps) {
     <>
       {children}
       <WebsiteFooter />
-      <Footer  />
+      <Footer />
     </>
   );
 }

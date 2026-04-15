@@ -17,7 +17,8 @@ export default function IntegrationsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Integrations Marketplace | Nepdora",
-    description: "Explore eSewa, Khalti, WhatsApp and 50+ other integrations for your website.",
+    description:
+      "Explore eSewa, Khalti, WhatsApp and 50+ other integrations for your website.",
     url: absoluteUrl("/integrations"),
   };
 

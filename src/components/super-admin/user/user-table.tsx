@@ -182,11 +182,13 @@ export default function UserTable({
                   )}
                 </TableCell>
                 <TableCell className="py-4 text-left">
-                  {user.created_at ? new Date(user.created_at).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                  }) : "N/A"}
+                  {user.created_at
+                    ? new Date(user.created_at).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "N/A"}
                 </TableCell>
                 <TableCell className="py-4 text-left">
                   <Button

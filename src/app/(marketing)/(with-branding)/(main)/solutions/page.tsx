@@ -29,7 +29,6 @@ export const metadata: Metadata = buildMarketingMetadata({
   path: "/solutions",
 });
 
-
 export default function SolutionsHubPage() {
   const schema = {
     "@context": "https://schema.org",

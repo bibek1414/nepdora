@@ -32,6 +32,9 @@ const ServiceCard: React.FC<ServiceCardProps & { pathname: string | null }> = ({
   };
 
   const detailsUrl = getDetailsUrl();
+  const handleActivate = () => {
+    window.location.href = detailsUrl;
+  };
   // Strip HTML from description
   const stripHtml = (html: string) =>
     html
@@ -41,6 +44,7 @@ const ServiceCard: React.FC<ServiceCardProps & { pathname: string | null }> = ({
 
   return (
     <div
+      onClick={handleActivate}
       className="relative flex w-full flex-col items-center rounded-[24px] bg-white p-6 text-center shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md sm:rounded-[28px] sm:p-7 md:rounded-[32px] md:p-8 lg:min-w-[280px] lg:flex-1"
       style={{
         borderColor: "transparent",

@@ -51,7 +51,6 @@ export const WebsiteFooter = () => {
             ))}
           </div>
         </motion.div>
-
       </div>
     </footer>
   );

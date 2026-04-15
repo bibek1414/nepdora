@@ -88,14 +88,14 @@ export default function SpeedTest() {
               <p className="mb-6 text-sm font-medium text-slate-400">
                 Enter your website URL to test performance on Nepali networks
               </p>
-            <div className="flex w-full max-w-md gap-3">
+              <div className="flex w-full max-w-md gap-3">
                 <input
                   type="text"
                   placeholder="https://yourwebsite.com"
                   className="focus:border-primary focus:ring-primary flex-1 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-1 focus:outline-none"
                 />
                 <Link href="/admin/signup">
-                  <button className="bg-primary rounded-full px-6 py-3 text-sm font-semibold text-white transition-all hover:scale-105 whitespace-nowrap">
+                  <button className="bg-primary rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-all hover:scale-105">
                     Test Speed
                   </button>
                 </Link>

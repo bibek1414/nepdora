@@ -297,13 +297,11 @@ export default async function LearnPage({ params }: Props) {
             <span className="mx-2">/</span>
             <span className="font-medium text-slate-900">{title}</span>
           </nav>
-          <h1 className="mb-2 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-5xl mb-4">
+          <h1 className="mb-2 mb-4 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-5xl">
             {title}
           </h1>
 
-          <p className="text-sm leading-relaxed">
-            {content.intro}
-          </p>
+          <p className="text-sm leading-relaxed">{content.intro}</p>
         </div>
       </section>
 
@@ -332,19 +330,15 @@ export default async function LearnPage({ params }: Props) {
                 <h2 className="mb-4 text-2xl font-bold text-slate-900">
                   {i + 1}. {section.title}
                 </h2>
-                <p className="leading-relaxed">
-                  {section.content}
-                </p>
+                <p className="leading-relaxed">{section.content}</p>
               </div>
             ))}
           </div>
 
           {/* Pro Tip Box */}
           {content.proTip && (
-            <div className="mt-12 rounded-2xl bg-secondary p-8">
-              <h3 className="mb-2 text-lg font-bold text-black">
-                Pro Tip
-              </h3>
+            <div className="bg-secondary mt-12 rounded-2xl p-8">
+              <h3 className="mb-2 text-lg font-bold text-black">Pro Tip</h3>
               <p className="leading-relaxed text-black">{content.proTip}</p>
             </div>
           )}

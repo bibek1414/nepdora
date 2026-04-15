@@ -56,7 +56,7 @@ export function DeveloperComparisonMock() {
           </div>
 
           <div className="mt-6 border-t border-slate-100 pt-6 text-center">
-            <span className="text-[10px] font-black tracking-widest text-slate-400 Nepdora Learn">
+            <span className="Nepdora Learn text-[10px] font-black tracking-widest text-slate-400">
               Status: Waiting...
             </span>
           </div>
@@ -112,7 +112,7 @@ export function DeveloperComparisonMock() {
           </div>
 
           <div className="relative z-10 mt-6 border-t border-white/10 pt-6 text-center">
-            <span className="text-primary text-[10px] font-black tracking-widest Nepdora Learn">
+            <span className="text-primary Nepdora Learn text-[10px] font-black tracking-widest">
               Status: Live 🚀
             </span>
           </div>
@@ -129,7 +129,7 @@ export function DeveloperComparisonMock() {
           <Layout className="h-5 w-5" />
         </div>
         <div>
-          <div className="text-[10px] font-black text-slate-400 Nepdora Learn">
+          <div className="Nepdora Learn text-[10px] font-black text-slate-400">
             Efficiency
           </div>
           <div className="text-sm font-black text-slate-900">

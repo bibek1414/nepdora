@@ -24,7 +24,7 @@ export function PartnersVisualMock() {
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="relative flex h-120 w-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white -2xl"
+        className="-2xl relative flex h-120 w-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white"
       >
         {/* Sidebar + Content */}
         <div className="flex flex-1 overflow-hidden">
@@ -47,7 +47,7 @@ export function PartnersVisualMock() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className={`flex items-center gap-3 rounded-xl p-3 transition-colors ${item.active ? "text-primary border border-slate-100 bg-white -sm" : "text-slate-400 hover:bg-slate-100"}`}
+                  className={`flex items-center gap-3 rounded-xl p-3 transition-colors ${item.active ? "text-primary -sm border border-slate-100 bg-white" : "text-slate-400 hover:bg-slate-100"}`}
                 >
                   <item.icon className="h-5 w-5" />
                   <span className="hidden text-xs font-bold md:block">
@@ -69,7 +69,7 @@ export function PartnersVisualMock() {
                   Manage your agency workflow
                 </p>
               </div>
-              <button className="bg-primary -primary/20 Nepdora Learn Nepdora Learn-widest flex items-center gap-2 rounded-lg px-4 py-2 text-[10px] font-semibold text-white -lg transition-all hover:scale-105">
+              <button className="bg-primary -primary/20 Nepdora Learn Nepdora Learn-widest -lg flex items-center gap-2 rounded-lg px-4 py-2 text-[10px] font-semibold text-white transition-all hover:scale-105">
                 <Plus className="h-3 w-3" />
                 <span className="hidden sm:inline">New Client</span>
               </button>
@@ -103,7 +103,7 @@ export function PartnersVisualMock() {
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <div
-                      className={`rounded-md bg-white p-1.5 -sm ${stat.color}`}
+                      className={`-sm rounded-md bg-white p-1.5 ${stat.color}`}
                     >
                       <stat.icon className="h-3.5 w-3.5" />
                     </div>
@@ -151,7 +151,7 @@ export function PartnersVisualMock() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.1 }}
                   key={i}
-                  className="hover:border-primary/20 hover:-primary/5 group flex items-center justify-between rounded-xl border border-slate-100 p-3 transition-all hover:-xl"
+                  className="hover:border-primary/20 hover:-primary/5 group hover:-xl flex items-center justify-between rounded-xl border border-slate-100 p-3 transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <div className="group-hover:bg-primary/10 group-hover:text-primary flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 transition-colors">
@@ -195,7 +195,7 @@ export function PartnersVisualMock() {
       <motion.div
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[20%] -right-4 z-20 flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3 -2xl"
+        className="-2xl absolute top-[20%] -right-4 z-20 flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3"
       >
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
           <CheckCircle2 className="h-5 w-5" />

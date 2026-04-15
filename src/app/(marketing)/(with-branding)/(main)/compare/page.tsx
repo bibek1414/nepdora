@@ -90,7 +90,7 @@ export default function CompareHubPage() {
     <div className="min-h-screen bg-white">
       <JsonLd id="comparison-schema" data={comparisonSchema} />
       <JsonLd id="comparison-breadcrumb" data={breadcrumbSchema} />
-      
+
       <div className="container mx-auto max-w-6xl px-6 pt-4">
         <Breadcrumbs items={[{ label: "Compare", href: "/compare" }]} />
       </div>

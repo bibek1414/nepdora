@@ -48,7 +48,7 @@ export function NepaliBusinessFeatures() {
               className="bg-secondary/60 flex gap-4 rounded-2xl px-7 py-5"
             >
               <div>
-                <div className="shrink-0 pt-0.5 mb-5">
+                <div className="mb-5 shrink-0 pt-0.5">
                   <Icon className="text-primary h-10 w-10" />
                 </div>
                 <h3 className="mb-1.5 text-lg leading-snug font-semibold text-black">

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { hexToRgba } from "@/lib/utils";
@@ -11,6 +13,7 @@ interface ServicesCard5Props {
   service: ServicesPost;
   isFirst?: boolean;
   isLast?: boolean;
+  siteUser?: string;
   onServiceClick?: (serviceSlug: string) => void;
   isEditable?: boolean;
 }
@@ -19,21 +22,43 @@ export const ServicesCard5: React.FC<ServicesCard5Props> = ({
   service,
   isFirst,
   isLast,
+  siteUser,
   onServiceClick,
   isEditable = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const pathname = usePathname();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
 
   const secondaryColor = theme?.colors?.secondary || "#EEF5C8";
   const primaryColor = theme?.colors?.primary || "#3B82F6";
+
+  const getDetailsUrl = (): string => {
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/service-details-draft"
+      : "/service-details";
+    return generateLinkHref(`${basePath}/${service.slug}`, siteUser, pathname);
+  };
+
+  const handleActivate = () => {
+    if (isEditable) return;
+
+    if (onServiceClick) {
+      onServiceClick(service.slug);
+      return;
+    }
+
+    window.location.href = getDetailsUrl();
+  };
+
   return (
     <div
       style={{ position: "relative" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => !isEditable && onServiceClick?.(service.slug)}
+      onClick={handleActivate}
       className="cursor-pointer"
     >
       {/* Background Highlight - bleeds using viewport-wide negative positioning */}

@@ -132,6 +132,7 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
                   <ServicesCard7
                     service={service}
                     idx={index}
+                    siteUser={siteUser}
                     isEditable={isEditable}
                     onServiceClick={onServiceClick}
                   />

@@ -71,7 +71,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/create-clothing-store-website-in-nepdora", priority: 0.9 },
     { path: "/create-dental-website-in-nepdora", priority: 0.9 },
     { path: "/create-ecommerce-website-in-nepdora", priority: 0.9 },
-    { path: "/create-educational-consultancy-website-in-nepdora", priority: 0.9 },
+    {
+      path: "/create-educational-consultancy-website-in-nepdora",
+      priority: 0.9,
+    },
     { path: "/create-grocery-website-in-nepdora", priority: 0.9 },
     { path: "/create-medical-clinic-website-in-nepdora", priority: 0.9 },
     { path: "/create-restaurant-website-in-nepdora", priority: 0.9 },

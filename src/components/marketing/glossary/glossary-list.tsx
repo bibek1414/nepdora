@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { 
-  Search, 
-  ChevronRight, 
-  Server, 
-  ShieldCheck, 
-  Globe, 
-  CreditCard, 
-  TrendingUp, 
-  Layout, 
-  Zap, 
-  MapPin, 
-  HelpCircle, 
-  BookOpen 
+import {
+  Search,
+  ChevronRight,
+  Server,
+  ShieldCheck,
+  Globe,
+  CreditCard,
+  TrendingUp,
+  Layout,
+  Zap,
+  MapPin,
+  HelpCircle,
+  BookOpen,
 } from "lucide-react";
 import { GlossaryTerm } from "@/constants/glossary";
 
@@ -40,14 +40,16 @@ export function GlossaryList({ groupedTerms }: GlossaryListProps) {
     return icons[category] || <BookOpen className="h-5 w-5" />;
   };
 
-  const filteredCategories = Object.entries(groupedTerms).map(([category, terms]) => {
-    const filteredTerms = terms.filter(
-      (term) =>
-        term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        term.definition.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    return { category, filteredTerms };
-  }).filter((cat) => cat.filteredTerms.length > 0);
+  const filteredCategories = Object.entries(groupedTerms)
+    .map(([category, terms]) => {
+      const filteredTerms = terms.filter(
+        term =>
+          term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          term.definition.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      return { category, filteredTerms };
+    })
+    .filter(cat => cat.filteredTerms.length > 0);
 
   return (
     <>
@@ -61,7 +63,7 @@ export function GlossaryList({ groupedTerms }: GlossaryListProps) {
               placeholder="Search for a term... (e.g., SSL, Domain, SEO)"
               className="focus:border-primary focus:ring-primary h-12 w-full rounded-full border border-slate-200 bg-white pr-4 pl-11 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-1 focus:outline-none"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -82,11 +84,11 @@ export function GlossaryList({ groupedTerms }: GlossaryListProps) {
                   </h2>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {filteredTerms.map((term) => (
+                  {filteredTerms.map(term => (
                     <Link
                       key={term.slug}
                       href={`/glossary/${term.slug}`}
-                      className="group rounded-2xl border border-slate-200 bg-white p-5 -sm transition-all hover:-translate-y-1 hover:-md"
+                      className="group -sm hover:-md rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:-translate-y-1"
                     >
                       <div className="mb-3 flex items-center justify-between">
                         <h3 className="group-hover:text-primary text-lg font-semibold text-slate-900 transition-colors">
@@ -107,8 +109,12 @@ export function GlossaryList({ groupedTerms }: GlossaryListProps) {
               <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 text-slate-400">
                 <Search className="h-8 w-8" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900">No terms found</h3>
-              <p className="text-slate-500">Try searching for something else like "SSL" or "Domain"</p>
+              <h3 className="text-lg font-semibold text-slate-900">
+                No terms found
+              </h3>
+              <p className="text-slate-500">
+                Try searching for something else like "SSL" or "Domain"
+              </p>
             </div>
           )}
         </div>

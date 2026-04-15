@@ -54,7 +54,7 @@ export default function DomainTable({
   const templateTokenMutation = useTemplateToken();
   const { data: plansData } = usePricingPlans();
   const upgradeDomainPlan = useUpgradeDomainPlan();
-  
+
   const handlePlanChange = async (tenantId: number, planId: number) => {
     try {
       await upgradeDomainPlan.mutateAsync({ tenantId, planId });
@@ -184,13 +184,30 @@ export default function DomainTable({
           {isLoading ? (
             [...Array(5)].map((_, i) => (
               <TableRow key={i}>
-                <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-[180px]" /></TableCell>
-                <TableCell><Skeleton className="h-8 w-[120px] rounded-md" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                <TableCell><div className="flex justify-end space-x-1"><Skeleton className="h-8 w-8 rounded-md" /><Skeleton className="h-8 w-8 rounded-md" /></div></TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-[150px]" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-[120px]" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-[100px]" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-[180px]" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-8 w-[120px] rounded-md" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-[100px]" />
+                </TableCell>
+                <TableCell>
+                  <div className="flex justify-end space-x-1">
+                    <Skeleton className="h-8 w-8 rounded-md" />
+                    <Skeleton className="h-8 w-8 rounded-md" />
+                  </div>
+                </TableCell>
               </TableRow>
             ))
           ) : domains.length > 0 ? (
@@ -231,17 +248,19 @@ export default function DomainTable({
                   <TableCell className="max-w-[150px] truncate text-gray-600">
                     {domain.tenant.owner.email}
                   </TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
+                  <TableCell onClick={e => e.stopPropagation()}>
                     <Select
                       defaultValue={domain.tenant.pricing_plan?.id?.toString()}
-                      onValueChange={(val) => handlePlanChange(domain.tenant.id, parseInt(val))}
+                      onValueChange={val =>
+                        handlePlanChange(domain.tenant.id, parseInt(val))
+                      }
                       disabled={upgradeDomainPlan.isPending}
                     >
-                      <SelectTrigger className="w-[140px] h-8 text-xs">
+                      <SelectTrigger className="h-8 w-[140px] text-xs">
                         <SelectValue placeholder="Select Plan" />
                       </SelectTrigger>
                       <SelectContent>
-                        {plansData?.map((plan) => (
+                        {plansData?.map(plan => (
                           <SelectItem key={plan.id} value={plan.id.toString()}>
                             {plan.name}
                           </SelectItem>

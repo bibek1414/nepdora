@@ -37,7 +37,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             href={item.href}
             className={`transition-colors duration-200 ${
               index === allItems.length - 1
-                ? "text-slate-900 pointer-events-none"
+                ? "pointer-events-none text-slate-900"
                 : "text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -45,7 +45,9 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
           </Link>
 
           {index < allItems.length - 1 && (
-            <span className="select-none text-slate-300 font-light transition-opacity">/</span>
+            <span className="font-light text-slate-300 transition-opacity select-none">
+              /
+            </span>
           )}
         </div>
       ))}
