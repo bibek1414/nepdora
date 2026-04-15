@@ -3,12 +3,15 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 
 interface PortfolioCard5Props {
   portfolio: Portfolio;
   idx: number;
   isEditable?: boolean;
+  siteUser?: string;
   onPortfolioClick?: (slug: string) => void;
 }
 
@@ -26,19 +29,37 @@ export const PortfolioCard5: React.FC<PortfolioCard5Props> = ({
   portfolio,
   idx,
   isEditable = false,
+  siteUser,
   onPortfolioClick,
 }) => {
+  const pathname = usePathname();
   const plainDescription = stripHtml(
     portfolio.meta_description || portfolio.content || ""
   );
   const portfolioImage =
     portfolio.thumbnail_image || "/fallback/image-not-found.png";
 
+  const getDetailsUrl = (): string => {
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/portfolio-details-draft"
+      : "/portfolio-details";
+    return generateLinkHref(`${basePath}/${portfolio.slug}`, siteUser, pathname);
+  };
+
+  const handleActivate = () => {
+    if (isEditable) return;
+
+    if (onPortfolioClick) {
+      onPortfolioClick(portfolio.slug);
+      return;
+    }
+
+    window.location.href = getDetailsUrl();
+  };
+
   return (
-    <div
-      className="block h-full"
-      onClick={() => !isEditable && onPortfolioClick?.(portfolio.slug)}
-    >
+    <div className="block h-full" onClick={handleActivate}>
       <motion.div
         className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1"
         initial={{ opacity: 0, y: 30 }}

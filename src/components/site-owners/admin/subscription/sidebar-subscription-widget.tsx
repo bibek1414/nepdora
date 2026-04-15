@@ -198,13 +198,26 @@ const SubscriptionTrigger = ({
 
   const planName = status?.plan || "No Plan";
   const statusColor = status?.active ? "text-green-500" : "text-red-500";
-  const expiryDate = status?.expires_on
-    ? new Date(status.expires_on).toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
-    : "N/A";
+  const rawExpiry = status?.expires_on;
+  let expiryDate = "N/A";
+
+  if (rawExpiry) {
+    const expiryString =
+      typeof rawExpiry === "string" ? rawExpiry.trim() : String(rawExpiry);
+
+    if (expiryString.toLowerCase().includes("never")) {
+      expiryDate = "Never";
+    } else {
+      const parsedDate = new Date(rawExpiry);
+      expiryDate = Number.isNaN(parsedDate.getTime())
+        ? expiryString || "N/A"
+        : parsedDate.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          });
+    }
+  }
 
   if (collapsed) {
     return (
@@ -267,7 +280,7 @@ const SubscriptionTrigger = ({
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-muted-foreground flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              Expires {expiryDate}
+              Expires {expiryDate} 
             </span>
           </div>
 

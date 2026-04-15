@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import { Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { generateLinkHref } from "@/lib/link-utils";
 import { Portfolio } from "@/types/owner-site/admin/portfolio";
 
 export interface PortfolioCard4Props {
@@ -8,7 +12,10 @@ export interface PortfolioCard4Props {
   isActive: boolean;
   theme?: any;
   onMouseEnter: () => void;
-  onClick: () => void;
+  onClick?: () => void;
+  siteUser?: string;
+  isEditable?: boolean;
+  onPortfolioClick?: (portfolioSlug: string) => void;
 }
 
 export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
@@ -17,11 +24,41 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
   theme,
   onMouseEnter,
   onClick,
+  siteUser,
+  isEditable = false,
+  onPortfolioClick,
 }) => {
+  const pathname = usePathname();
+
+  const getDetailsUrl = (): string => {
+    const isPreviewMode = pathname?.includes("/preview/");
+    const basePath = isPreviewMode
+      ? "/portfolio-details-draft"
+      : "/portfolio-details";
+    return generateLinkHref(`${basePath}/${portfolio.slug}`, siteUser, pathname);
+  };
+
+  const handleActivate = () => {
+    if (isEditable) return;
+
+    // Always allow parent to update active state first.
+    onClick?.();
+
+    // If already active, treat click as "open details".
+    if (!isActive) return;
+
+    if (onPortfolioClick) {
+      onPortfolioClick(portfolio.slug);
+      return;
+    }
+
+    window.location.href = getDetailsUrl();
+  };
+
   return (
     <div
       onMouseEnter={onMouseEnter}
-      onClick={onClick}
+      onClick={handleActivate}
       className={`cursor-pointer rounded-xl border p-6 transition-opacity duration-300 md:p-8 ${
         isActive
           ? "border-gray-200 bg-white"

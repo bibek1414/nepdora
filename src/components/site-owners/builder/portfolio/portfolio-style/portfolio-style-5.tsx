@@ -132,6 +132,7 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
                     portfolio={portfolio}
                     idx={index}
                     isEditable={isEditable}
+                    siteUser={siteUser}
                     onPortfolioClick={onPortfolioClick}
                   />
                 </div>

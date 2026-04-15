@@ -39,7 +39,7 @@ export const DEFAULT_PORTFOLIO_MAP: Record<
     ...defaultPortfolioData,
     style: "portfolio-4",
     buttonText: "Browse all portfolio",
-    buttonLink: "/portfolio",
+    buttonLink: "#",
   },
   "portfolio-5": { ...defaultPortfolioData, style: "portfolio-5" },
 };

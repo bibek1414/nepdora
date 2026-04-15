@@ -33,7 +33,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
     title = "Selected works",
     subtitle,
     buttonText = "Browse all portfolio",
-    buttonLink = "/portfolio",
+    buttonLink = "#",
   } = data || {};
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -261,13 +261,11 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                     portfolio={project}
                     isActive={isActive}
                     theme={theme}
+                    siteUser={siteUser}
+                    isEditable={isEditable}
+                    onPortfolioClick={onPortfolioClick}
                     onMouseEnter={() => setActiveProjectId(project.id)}
-                    onClick={() => {
-                      setActiveProjectId(project.id);
-                      if (isActive && onPortfolioClick) {
-                        onPortfolioClick(project.slug);
-                      }
-                    }}
+                    onClick={() => setActiveProjectId(project.id)}
                   />
                 );
               })}
