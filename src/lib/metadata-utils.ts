@@ -4,6 +4,7 @@ import { getServerUser } from "@/hooks/use-jwt-server";
 import { capitalizeWords } from "@/lib/string-utils";
 import { extractSubdomain, siteConfig } from "@/config/site";
 import { getServerApiBaseUrl } from "@/config/server-site";
+import { getDynamicOgUrl } from "@/lib/seo";
 import type { ComponentResponse } from "@/types/owner-site/components/components";
 import { EntityMetadata } from "./publish-page-cache";
 
@@ -396,6 +397,14 @@ export async function generatePublishPageMetadata({
   const description =
     metaDescription || pageDescription.replace(/\{storeName\}/g, storeName);
 
+  const finalImage =
+    pageImage ||
+    getDynamicOgUrl({
+      title: title,
+      subtitle: description,
+      label: "User Published Site",
+    });
+
   return {
     title,
     description,
@@ -405,13 +414,13 @@ export async function generatePublishPageMetadata({
       description,
       type: "website",
       siteName: storeName,
-      ...(pageImage ? { images: [{ url: pageImage, alt: title }] } : {}),
+      images: [{ url: finalImage, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      ...(pageImage ? { images: [pageImage] } : {}),
+      images: [finalImage],
     },
     alternates: {
       canonical: subDomain

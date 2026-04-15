@@ -24,9 +24,20 @@ export function getDynamicOgUrl({
   label?: string;
 }) {
   const params = new URLSearchParams();
-  params.set("title", title);
-  if (subtitle) params.set("subtitle", subtitle);
-  if (label) params.set("label", label);
+  
+  // Clean title for URL
+  params.set("title", title.trim());
+  
+  if (subtitle) {
+    params.set("subtitle", subtitle.trim());
+  }
+  
+  if (label) {
+    params.set("label", label.trim());
+  } else {
+    params.set("label", "Nepal's #1 AI Website Builder");
+  }
+
   return `${SITE_URL}/api/og?${params.toString()}`;
 }
 
@@ -56,15 +67,21 @@ export function buildMarketingMetadata({
     description ||
     "Launch your business online quickly with our free website builder, free hosting, and a comprehensive suite of essential business tools. Start now!";
 
+  // Smart OG extraction
+  const displayTitle = ogTitle || title.split(/ [|:-] /)[0].trim();
+  
+  // Subtitle usually works best as a concise version of description
+  const displaySubtitle = 
+    ogSubtitle || 
+    (finalDescription.length > 120 
+      ? finalDescription.slice(0, 117) + "..." 
+      : finalDescription);
+
   const finalImage =
     image ||
     getDynamicOgUrl({
-      title: ogTitle || title.split(/ [|:-] /)[0].trim(),
-      subtitle:
-        ogSubtitle ||
-        (finalDescription.length > 150
-          ? finalDescription.slice(0, 147) + "..."
-          : finalDescription),
+      title: displayTitle,
+      subtitle: displaySubtitle,
       label: ogLabel,
     });
 
@@ -88,8 +105,8 @@ export function buildMarketingMetadata({
       follow: !noIndex,
     },
     openGraph: {
-      title,
-      description: finalDescription,
+      title: displayTitle,
+      description: displaySubtitle,
       url,
       siteName: SITE_NAME,
       images: [
@@ -105,8 +122,8 @@ export function buildMarketingMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description: finalDescription,
+      title: displayTitle,
+      description: displaySubtitle,
       images: [finalImage],
     },
   };
