@@ -262,46 +262,6 @@ export const Footer = () => {
                 <FooterLink href="/switch">Switch to Nepdora</FooterLink>
               </div>
             </FooterSection>
-
-            {/* Cities/Rankings */}
-            <FooterSection delay={0.3}>
-              <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Best in Nepal
-              </h4>
-              <div className="flex flex-col space-y-2">
-                <FooterLink href="/best/website-builders-for-restaurants-nepal">
-                  Best Restaurant Website Builder in Nepal
-                </FooterLink>
-                <FooterLink href="/best/website-builders-for-ecommerce-nepal">
-                  Best E-commerce Website Builder in Nepal
-                </FooterLink>
-                <FooterLink href="/best/website-builders-for-clothing-store-nepal">
-                  Best Clothing Store Builder in Nepal
-                </FooterLink>
-                <FooterLink href="/best/website-builders-for-educational-consultancy-nepal">
-                  Best Educational Consultancy Builder in Nepal
-                </FooterLink>
-              </div>
-            </FooterSection>
-
-            {/* Popular Locations */}
-            <FooterSection delay={0.35}>
-              <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Popular Locations
-              </h4>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                {SEO_LOCATION_CONFIG.map(({ city, industry }) => (
-                  <FooterLink
-                    key={`${city}-${industry}`}
-                    href={`/${industry}/${city.toLowerCase()}`}
-                  >
-                    <span className="capitalize">{city}</span>
-                  </FooterLink>
-                ))}
-              </div>
-            </FooterSection>
-
-            {/* Learn & Resources */}
             <FooterSection delay={0.4}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Learn & Resources
@@ -340,6 +300,24 @@ export const Footer = () => {
                 <FooterLink href="/use-cases">Use Cases</FooterLink>
               </div>
             </FooterSection>
+            {/* Popular Locations */}
+            <FooterSection delay={0.35}>
+              <h4 className="mb-4 text-lg font-bold text-gray-900">
+                Popular Locations
+              </h4>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                {SEO_LOCATION_CONFIG.map(({ city, industry }) => (
+                  <FooterLink
+                    key={`${city}-${industry}`}
+                    href={`/${industry}/${city.toLowerCase()}`}
+                  >
+                    <span className="capitalize">{city}</span>
+                  </FooterLink>
+                ))}
+              </div>
+            </FooterSection>
+
+            {/* Learn & Resources */}
           </div>
         </div>
 

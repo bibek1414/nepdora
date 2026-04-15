@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { KhaltiVisualMock } from "@/components/marketing/khalti/khalti-visual-mock";
 import { JsonLd } from "@/components/shared/json-ld";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title: "Khalti Payment Gateway Integration in Nepal | Nepdora",
@@ -449,29 +450,7 @@ export default function KhaltiPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="pb-32">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="relative overflow-hidden rounded-[64px] bg-white px-8 py-24 text-center text-black">
-            <div className="relative z-10 flex flex-col items-center">
-              <h2 className="mb-8 max-w-4xl text-5xl leading-[0.9] font-semibold tracking-tighter">
-                Ready to accept payments with Khalti?
-              </h2>
-              <p className="mx-auto mb-12 max-w-xl text-xl font-medium text-black/80">
-                Join hundreds of businesses in Nepal who have already simplified
-                their payment processes with Nepdora.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="inline-flex items-center gap-3 rounded-full bg-[#5C2D91] px-12 py-6 text-lg font-bold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
-              >
-                Build Your Website Now
-                <ChevronRight className="h-6 w-6" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

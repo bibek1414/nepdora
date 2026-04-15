@@ -23,6 +23,7 @@ import {
 import { JsonLd } from "@/components/shared/json-ld";
 import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Switch to Nepdora | Migrate Your Website Seamlessly | Nepal",
@@ -587,29 +588,7 @@ export default function SwitchHubPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-900 px-8 py-16 text-center text-white">
-            <div className="flex flex-col items-center">
-              <h2 className="-tight mb-4 max-w-3xl text-3xl font-bold md:text-4xl">
-                Make the switch today
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-400">
-                Take the first step towards a truly local digital presence. Join
-                thousands of Nepali businesses on Nepdora.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-              >
-                Start Free Trial
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

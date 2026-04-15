@@ -4,6 +4,7 @@ import Link from "next/link";
 import { JsonLd } from "@/components/shared/json-ld";
 import { buildMarketingMetadata, absoluteUrl, SITE_NAME } from "@/lib/seo";
 import { SOLUTIONS_LIST } from "@/constants/solutions";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const dynamic = "force-dynamic";
 import {
@@ -472,27 +473,7 @@ export default async function SolutionsSlugPage({ params }: Props) {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl bg-white px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900">
-                Ready to get started?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Join thousands of Nepali businesses already using Nepdora
-              </p>
-              <Link
-                href="/admin/signup"
-                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-              >
-                Start Building for Free <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

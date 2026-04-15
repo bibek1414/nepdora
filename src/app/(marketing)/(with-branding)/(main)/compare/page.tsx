@@ -23,6 +23,7 @@ import {
 import { JsonLd } from "@/components/shared/json-ld";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { absoluteUrl } from "@/lib/seo";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
@@ -461,37 +462,7 @@ export default function CompareHubPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-16">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Still unsure which platform is right for you?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Start with Nepdora and experience the easiest way to build a
-                website in Nepal.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link
-                  href="/admin/signup"
-                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-                >
-                  Start My Better Website
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/templates"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
-                >
-                  Explore Templates
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       {/* SEO Closing Paragraph */}
       <section className="border-t border-slate-100 bg-white py-12">

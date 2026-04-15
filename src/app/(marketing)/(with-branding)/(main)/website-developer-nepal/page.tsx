@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { DeveloperComparisonMock } from "@/components/marketing/comparison/developer-comparison-mock";
 import { JsonLd } from "@/components/shared/json-ld";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 import {
   nepdoraAddress,
   nepdoraEmail,
@@ -528,28 +529,7 @@ export default function WebsiteDeveloperNepalPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="pb-32">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="l">
-            <div className="relative z-10 flex flex-col items-center">
-              <h2 className="mb-8 max-w-4xl text-5xl leading-[0.9] font-semibold tracking-tighter">
-                Ready to build without hiring a developer?
-              </h2>
-              <p className="mx-auto mb-12 max-w-xl text-xl font-medium text-slate-600">
-                Start your website with Nepdora today and go live in minutes.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="bg-primary inline-flex items-center gap-3 rounded-full px-12 py-6 text-lg font-semibold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
-              >
-                Start for Free
-                <ChevronRight className="h-6 w-6" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

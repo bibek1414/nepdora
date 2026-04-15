@@ -6,6 +6,7 @@ import { BookOpen, ChevronRight, Zap, TrendingUp } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 import { GlossaryList } from "@/components/marketing/glossary/glossary-list";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title: "Web Glossary | Website & Tech Terms Explained | Nepdora",
@@ -341,29 +342,7 @@ export default function GlossaryHubPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Ready to build your website?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Now that you understand the terms, put your knowledge into
-                action. Create your website with Nepdora today.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-              >
-                Build My Professional Website
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       {/* SEO Closing Paragraph */}
       <section className="border-t border-slate-100 bg-white py-12">

@@ -21,6 +21,7 @@ import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { ShowcaseVisualMock } from "@/components/marketing/showcase/showcase-visual-mock";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Showcase | Built with Nepdora | Real Success Stories",
@@ -312,31 +313,7 @@ export default function ShowcasePage() {
         </div>
       </section>
 
-      {/* Final CTA - Clean white background */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Your success story{" "}
-                <span className="text-primary">could be next.</span>
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Join hundreds of businesses across Nepal that are already
-                growing with Nepdora. Build your website today and take the
-                first step toward scaling your business.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
-              >
-                Build Your Website
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

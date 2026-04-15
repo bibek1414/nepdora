@@ -4,6 +4,7 @@ import { INTEGRATIONS } from "@/constants/integrations";
 import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 import IntegrationsMarketplace from "@/components/marketing/integrations/integrations-marketplace";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Integrations Marketplace | Connect Your Business with Nepdora",
@@ -43,36 +44,7 @@ export default function IntegrationsPage() {
 
       <IntegrationsMarketplace integrations={INTEGRATIONS} />
 
-      {/* CTA Section - Clean */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center -sm">
-            <div className="mx-auto max-w-3xl">
-              <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Ready to connect?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Can't find the tool you're looking for? We're constantly adding
-                new integrations to help you succeed.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Link
-                  href="/contact"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white -md transition-all hover:scale-105"
-                >
-                  Request Integration
-                </Link>
-                <Link
-                  href="/admin/signup"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50"
-                >
-                  Build your site
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

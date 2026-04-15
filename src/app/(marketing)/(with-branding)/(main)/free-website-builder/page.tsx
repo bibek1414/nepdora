@@ -1,5 +1,6 @@
 import { StandardMarketingHero } from "@/components/marketing/shared/StandardMarketingHero";
 import { StandardMarketingCTA } from "@/components/marketing/shared/StandardMarketingCTA";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 import FeaturesSection from "@/components/marketing/features-section/features-section";
 import { HomePricingSection } from "@/components/marketing/pricing-section/home-pricing-section";
 import { HomeFAQSection } from "@/components/marketing/faq-section/home-faq-section";
@@ -275,39 +276,7 @@ export default function FreeWebsiteBuilder() {
       {/* FAQ Section */}
       <HomeFAQSection />
 
-      {/* Final CTA */}
-      <section className="py-16">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center shadow-sm">
-            <div className="flex flex-col items-center">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <Rocket className="text-primary h-8 w-8" />
-              </div>
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Launch your free site today
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Join thousands of Nepali businesses already online. It's free,
-                forever, until you decide to grow.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link
-                  href="/admin/signup"
-                  className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white shadow-md transition-all hover:scale-105"
-                >
-                  Create my free website
-                </Link>
-                <Link
-                  href="/templates"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
-                >
-                  Browse Templates
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       {/* SEO Closing Paragraph */}
       <section className="border-t border-slate-100 bg-white py-12">

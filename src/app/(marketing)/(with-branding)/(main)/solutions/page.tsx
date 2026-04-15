@@ -20,6 +20,7 @@ import { SOLUTIONS_LIST } from "@/constants/solutions";
 import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title:
@@ -282,29 +283,7 @@ export default function SolutionsHubPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900">
-                Not sure which solution fits?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Talk to our team and we'll help you find the right solution for
-                your business.
-              </p>
-              <Link
-                href="/contact"
-                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-              >
-                Talk to a Strategist
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

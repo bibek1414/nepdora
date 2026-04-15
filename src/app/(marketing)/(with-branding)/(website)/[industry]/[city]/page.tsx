@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
   const cityName = capitalizeWords(city);
 
-  const title = `Best ${industryLabel} in ${cityName} | Launch Your Website Fast | Nepdora`;
+  const title = `Create your ${industryLabel}  in ${cityName} | Launch Your Website Fast | Nepdora`;
   const description = `Need a professional ${industryLabel.toLowerCase()} website in ${cityName}? Nepdora provides localized templates, eSewa/Khalti integration, and expert SEO for the ${cityName} market.`;
 
   return buildMarketingMetadata({

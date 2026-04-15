@@ -28,6 +28,7 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { JsonLd } from "@/components/shared/json-ld";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 import { SITE_NAME } from "@/lib/seo";
 
 interface Props {
@@ -978,39 +979,7 @@ export default async function FeatureProcessPage({ params }: Props) {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-                <Layout className="text-primary h-8 w-8" />
-              </div>
-              <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Ready to integrate {featureName}?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Start your free trial today and see how easy integration can be.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link
-                  href="/admin/signup"
-                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-                >
-                  Start Free Trial
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
-                >
-                  Contact Sales
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 
 import { buildMarketingMetadata } from "@/lib/seo";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title: "Free Website Analyzer | Audit Your Site in Nepal | Nepdora",
@@ -408,32 +409,7 @@ export default function FreeWebsiteAnalyzerPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-                <BarChart className="text-primary h-8 w-8" />
-              </div>
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Ready to fix your site?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Build a high-performance website that ranks in Nepal. Start
-                building for free with Nepdora.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-              >
-                Get started for free
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       {/* SEO Closing Paragraph */}
       <section className="py-12">

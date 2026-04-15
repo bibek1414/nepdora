@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { AiBuilderVisualMock } from "@/components/marketing/ai-builder/ai-builder-visual-mock";
 import { JsonLd } from "@/components/shared/json-ld";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title:
@@ -606,29 +607,7 @@ export default function AiBuilderPage() {
         </div>
       </section>
 
-      {/* Final CTA - Clean version like you showed */}
-      <section className="pb-32">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="py-20">
-            <div className="relative z-10 flex flex-col items-center">
-              <h2 className="mb-8 max-w-4xl text-5xl leading-[0.9] font-semibold tracking-tighter">
-                Ready to build your dream website?
-              </h2>
-              <p className="mx-auto mb-12 max-w-xl text-xl font-medium text-slate-600">
-                Join thousands of creators who are building 10x faster with
-                Nepdora AI.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="inline-flex items-center gap-3 rounded-full bg-blue-500 px-12 py-6 text-lg font-semibold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
-              >
-                Generate My AI Website
-                <ChevronRight className="h-6 w-6" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

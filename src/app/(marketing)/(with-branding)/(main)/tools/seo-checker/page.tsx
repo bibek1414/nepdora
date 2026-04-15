@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { JsonLd } from "@/components/shared/json-ld";
 import { buildMarketingMetadata } from "@/lib/seo";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title:
@@ -575,37 +576,7 @@ export default function SEOChecker() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <h2 className="mb-4 max-w-3xl text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Ready to rank #1 in Nepal?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Build your SEO-optimized website with Nepdora today and start
-                getting found by customers.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link
-                  href="/admin/signup"
-                  className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-                >
-                  Launch SEO Optimized Site
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/showcase"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 transition-all hover:bg-slate-50"
-                >
-                  See SEO Success Stories
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

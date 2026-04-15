@@ -15,6 +15,7 @@ import {
 import { MarketingPageHero } from "@/components/marketing/shared/MarketingPageHero";
 import Link from "next/link";
 import { buildMarketingMetadata } from "@/lib/seo";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title: "Integrated Khalti Payment Gateway for Your Website in Nepal",
@@ -232,33 +233,7 @@ export default function KhaltiPage() {
 
       <FAQSection />
 
-      {/* CTA */}
-      <section className="border-t border-slate-100 py-24">
-        <div className="container mx-auto max-w-5xl px-4">
-          <div className="relative overflow-hidden rounded-[56px] bg-[#5C2D91] px-8 py-20 text-center text-white md:px-16 md:py-24">
-            <div className="absolute inset-0 bg-white/5" />
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-white/10 backdrop-blur-md">
-                <Smartphone className="h-8 w-8 text-white" />
-              </div>
-              <h2 className="mb-6 text-3xl font-bold tracking-tight md:text-6xl">
-                Accept Khalti today.
-              </h2>
-              <p className="mx-auto mb-10 max-w-xl text-lg text-white/80">
-                Join hundreds of businesses in Nepal who have already simplified
-                their payment processes with Nepdora.
-              </p>
-              <Link
-                href="/admin/signup"
-                className="inline-flex items-center gap-3 rounded-[24px] bg-white px-10 py-5 text-base font-bold text-[#5C2D91] shadow-2xl transition-all hover:scale-105 active:scale-95"
-              >
-                Build Your Website
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

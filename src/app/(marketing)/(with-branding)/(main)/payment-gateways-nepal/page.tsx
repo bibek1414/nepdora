@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MarketingPageHero } from "@/components/marketing/shared/MarketingPageHero";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata = buildMarketingMetadata({
   title:
@@ -260,31 +261,7 @@ export default function PaymentGatewaysPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24">
-        <div className="container mx-auto max-w-5xl px-4">
-          <div className="flex flex-col items-center gap-12 rounded-[48px] border border-slate-200 bg-white p-12 shadow-2xl md:flex-row">
-            <div className="bg-primary/10 flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px]">
-              <Zap className="text-primary fill-primary h-10 w-10" />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <h2 className="mb-4 text-3xl font-bold">
-                Ready to accept payments?
-              </h2>
-              <p className="mb-0 text-lg leading-relaxed text-slate-500">
-                Build your online store with Nepdora today and get native eSewa
-                & Khalti integration from day one. Zero coding required.
-              </p>
-            </div>
-            <Link
-              href="/pricing"
-              className="shrink-0 rounded-2xl bg-slate-900 px-10 py-5 font-bold text-white shadow-xl transition-all hover:scale-105 active:scale-95"
-            >
-              Get Started Free
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </div>
   );
 }

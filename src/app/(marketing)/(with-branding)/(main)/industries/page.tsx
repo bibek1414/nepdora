@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+import CTASection from "@/components/marketing/cta-section/cta-section";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "Industry Solutions | Built for Your Business | Nepdora",
@@ -331,33 +332,7 @@ export default function IndustriesHubPage() {
         </div>
       </section>
 
-      {/* Custom Solution CTA */}
-      <section className="py-20">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="-sm rounded-3xl border border-slate-200 bg-slate-50 px-8 py-16 text-center">
-            <div className="flex flex-col items-center">
-              <div className="-sm mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-white">
-                <Sparkles className="text-primary h-8 w-8" />
-              </div>
-              <h2 className="-tight mb-4 max-w-3xl text-3xl font-bold text-slate-900 md:text-4xl">
-                Don't see your industry?
-              </h2>
-              <p className="mx-auto mb-8 max-w-md text-lg font-medium text-slate-500">
-                Our flexible builder can handle any business model. Talk to our
-                experts about creating a custom digital presence for your unique
-                niche.
-              </p>
-              <Link
-                href="/contact"
-                className="bg-primary -md inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105"
-              >
-                Get a Custom Consultation
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       {/* SEO Closing */}
       <section className="border-t border-slate-100 bg-white py-12">

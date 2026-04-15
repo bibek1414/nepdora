@@ -5,13 +5,12 @@ import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
-/* tes */
-interface CityCTAProps {
+interface CTASectionProps {
   cityName?: string;
   category?: string;
 }
 
-export const CityCTA: React.FC<CityCTAProps> = ({
+export const CTASection: React.FC<CTASectionProps> = ({
   cityName = "Nepal",
   category = "online",
 }) => {
@@ -117,7 +116,7 @@ export const CityCTA: React.FC<CityCTAProps> = ({
               <Link href="/admin/signup">
                 <Button
                   size="lg"
-                  className="group text-primary relative h-auto rounded-full bg-white px-10 py-4 text-lg font-medium transition-all hover:bg-neutral-50 hover:shadow-lg active:scale-95"
+                  className="group text-primary relative h-auto rounded-full bg-white px-10! py-4 text-lg font-medium transition-all hover:bg-neutral-50 hover:shadow-lg active:scale-95"
                 >
                   Start Building Free
                   <ChevronRight className="ml-2.5 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
@@ -131,4 +130,5 @@ export const CityCTA: React.FC<CityCTAProps> = ({
   );
 };
 
-export default CityCTA;
+export { CTASection as CityCTA };
+export default CTASection;
