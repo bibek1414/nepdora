@@ -200,12 +200,13 @@ export const HeroTemplate10: React.FC<HeroTemplate10Props> = ({
                   onChange={value =>
                     handleCollectionUpdate(collection.id, "title", value)
                   }
-                  as="h1"
-                  className="z-10 mb-8"
+                  as="h2"
+                  className="z-10 mb-4 text-3xl font-black leading-tight sm:mb-8 sm:text-4xl md:text-5xl"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}
                 />
+
 
                 {/* CTA Button */}
                 <div className="mt-4">

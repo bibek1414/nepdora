@@ -125,7 +125,7 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
           }}
           onAltChange={handleAltUpdate("imageAlt")}
           isEditable={isEditable}
-          className="h-240 object-cover"
+          className="h-full w-full object-cover"
           disableImageChange={true}
         />
         {/* Dark Overlay for text contrast */}
@@ -148,14 +148,14 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
       />
 
       {/* Content Container - Reset to Centered */}
-      <div className="relative z-10 flex w-full flex-col items-center justify-center px-4 text-center text-white sm:px-6">
+      <div className="relative z-10 flex w-full flex-col items-center justify-center px-4 py-20 text-center text-white sm:px-6">
         {/* Title & Subtitle with Fade Up Animation */}
         <div
           className={`transition-all delay-100 duration-1000 ease-out ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
           }`}
         >
-          <p className="mb-3 text-xs font-bold tracking-[0.2em] text-gray-300 uppercase sm:mb-4 sm:text-sm sm:tracking-[0.3em]">
+          <div className="mb-4 text-xs font-bold tracking-[0.2em] text-gray-300 uppercase sm:mb-6 sm:text-sm sm:tracking-[0.3em]">
             <EditableText
               value={data.subtitle || "Exclusive Drop"}
               onChange={handleTextUpdate("subtitle")}
@@ -163,17 +163,19 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
               isEditable={isEditable}
               placeholder="Exclusive Drop"
             />
-          </p>
-          <h2 className="mb-6 text-5xl font-light tracking-tight sm:mb-8 sm:text-6xl md:text-7xl lg:text-8xl">
+          </div>
+          <h2 className="mb-8 text-4xl font-extralight tracking-tight sm:mb-10 sm:text-6xl md:text-7xl lg:text-8xl">
             <EditableText
               value={data.title || "MIDNIGHT SERIES"}
               onChange={handleTextUpdate("title")}
               as="span"
               isEditable={isEditable}
               placeholder="MIDNIGHT SERIES"
+              multiline
             />
           </h2>
         </div>
+
 
         {/* Sliding Button Animation: Slides from Left (-translate-x) to Center (0) */}
         <div

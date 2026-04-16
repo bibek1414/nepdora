@@ -176,7 +176,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
 
   return (
     <motion.section
-      className="group relative h-[880px] w-full overflow-hidden bg-gray-900"
+      className="group relative h-auto min-h-[600px] w-full overflow-hidden bg-gray-900 md:h-[880px]"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -184,7 +184,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
     >
       {/* Background Image with Overlay */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 h-full w-full"
         variants={fadeIn}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
@@ -193,8 +193,8 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           alt={data.imageAlt || "Office meeting background"}
           onImageChange={handleBackgroundUpdate}
           onAltChange={handleAltUpdate("imageAlt")}
-          isEditable={isEditable}
-          className="h-full w-full opacity-60"
+          className="h-full w-full object-cover opacity-60"
+          buttonPosition="top-right"
           width={1920}
           height={1080}
           placeholder={{
@@ -211,12 +211,12 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           isEditable={isEditable}
           label="Change Background"
           folder="hero-backgrounds"
-          className="absolute top-0 right-0 z-20 flex items-center justify-center"
+          className="absolute -0 top-6 left-6 z-20"
         />
       </motion.div>
 
       {/* Content */}
-      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 md:px-6">
+      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-4 py-20 md:px-6">
         <motion.div
           className="max-w-3xl"
           style={{ color: theme.colors.text }}
@@ -227,7 +227,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
             value={titleContent}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mb-6 text-5xl leading-tight font-semibold md:text-7xl"
+            className="mb-6 text-3xl leading-[1.2] font-bold sm:text-4xl md:text-6xl lg:text-7xl"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter hero title..."

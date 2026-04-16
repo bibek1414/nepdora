@@ -72,14 +72,15 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
     >
       <div className="mx-auto max-w-7xl">
         {/* Big Title Section */}
+        {/* Big Title Section */}
         {(data.logoType === "text" || data.logoType === "both") &&
           data.logoText && (
-            <div className="relative mb-12 flex w-full justify-center">
+            <div className="relative mb-12 flex w-full justify-center px-4">
               {/* Subtle glow effect behind the text */}
               <div className="pointer-events-none absolute top-1/2 left-1/2 h-24 w-3/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/5 blur-[80px] transition-colors duration-300 dark:bg-blue-900/10" />
 
               <h1
-                className="bg-linear-to-b bg-clip-text text-center font-serif text-[13.5vw] leading-[0.8] font-medium tracking-tighter text-transparent transition-all duration-300 select-none"
+                className="bg-gradient-to-b bg-clip-text text-center font-serif text-5xl leading-[0.8] font-medium tracking-tighter text-transparent transition-all duration-300 select-none sm:text-[13.5vw]"
                 style={{
                   backgroundImage: `linear-gradient(to bottom, ${footerData.textColor || "#000"}, transparent)`,
                 }}
@@ -96,10 +97,10 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
           )}
 
         {/* Main Content Grid */}
-        <div className="mb-16 grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Info & Address */}
 
-          <div className="flex flex-col items-start space-y-6 pr-0 text-left lg:col-span-4 lg:pr-12">
+          <div className="flex flex-col items-center space-y-6 pr-0 text-center md:items-start md:text-left lg:col-span-4 lg:pr-12">
             {data.logoType === "image" || data.logoType === "both" ? (
               <Image
                 src={getImageUrl(data.logoImage)}
@@ -116,7 +117,7 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
               />
             ) : null}
 
-            <p className="max-w-sm text-sm leading-relaxed opacity-80">
+            <p className="max-w-sm text-sm leading-relaxed opacity-80 sm:text-base">
               {data.description ||
                 "We're committed to delivering exceptional care with compassion, trust, and integrity. From your first visit to long-term support, your health and comfort are always our priority."}
             </p>
@@ -130,10 +131,10 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
               }}
             />
 
-            <div className="flex flex-col items-start space-y-2 text-left">
-              <h3 className="text-base font-semibold">Visit Us</h3>
+            <div className="flex flex-col items-center space-y-2 md:items-start">
+              <h3 className="text-base font-bold uppercase tracking-wider">Visit Us</h3>
 
-              <address className="text-sm leading-relaxed whitespace-pre-line not-italic opacity-80 transition-colors duration-300">
+              <address className="text-sm leading-relaxed whitespace-pre-line not-italic opacity-80 sm:text-base">
                 {data.contactInfo.address ||
                   "123 Wellness Avenue, Suite\n405, New York, NY 10016\nUnited States"}
               </address>
@@ -141,11 +142,11 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
           </div>
 
           {/* Column 2: Main Pages Links */}
-          <div className="lg:col-span-4">
-            <h3 className="mb-6 text-xl font-semibold">
+          <div className="flex flex-col items-center md:items-start lg:col-span-4">
+            <h3 className="mb-6 text-xl font-bold uppercase tracking-wider">
               {mainSection1?.title || "Main Pages"}
             </h3>
-            <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-4 text-center sm:grid-cols-2 md:text-left">
               <div className="flex flex-col space-y-3">
                 {(mainSection1?.links || []).map(link => (
                   <FooterLink
@@ -180,6 +181,7 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
               </div>
             </div>
           </div>
+
 
           {/* Column 3: Newsletter */}
           <div className="pl-0 lg:col-span-4 lg:pl-8">

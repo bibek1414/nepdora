@@ -72,48 +72,51 @@ export function FooterStyle2({
         }}
       >
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
             {/* Company Info - Takes 2 columns on large screens */}
-            <div className="lg:col-span-2">
+            <div className="flex flex-col items-center text-center lg:col-span-2 lg:items-start lg:text-left">
               {/* Logo */}
-              <div className="mb-4">
+              <div className="mb-6">
                 <FooterLogo footerData={data} getImageUrl={getImageUrl} />
               </div>
 
-              <p className="mb-6 max-w-md opacity-80">{data.description}</p>
+              <p className="mb-8 max-w-md text-base leading-relaxed opacity-80">{data.description}</p>
 
               {/* Contact Info */}
-              <div className="mb-6 space-y-2">
+              <div className="mb-8 space-y-3">
                 {data.contactInfo.email && (
-                  <div className="flex items-center opacity-80">
-                    <Mail className="mr-2 h-4 w-4" />
+                  <div className="flex items-center justify-center opacity-80 lg:justify-start">
+                    <Mail className="mr-3 h-4 w-4" />
                     <span className="text-sm">{data.contactInfo.email}</span>
                   </div>
                 )}
                 {data.contactInfo.phone && (
-                  <div className="flex items-center opacity-80">
-                    <Phone className="mr-2 h-4 w-4" />
+                  <div className="flex items-center justify-center opacity-80 lg:justify-start">
+                    <Phone className="mr-3 h-4 w-4" />
                     <span className="text-sm">{data.contactInfo.phone}</span>
                   </div>
                 )}
                 {data.contactInfo.address && (
-                  <div className="flex items-center opacity-80">
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <span className="text-sm">{data.contactInfo.address}</span>
+                  <div className="flex items-start justify-center opacity-80 lg:justify-start">
+                    <MapPin className="mr-3 mt-1 h-4 w-4 shrink-0" />
+                    <span className="text-left text-sm whitespace-pre-line">{data.contactInfo.address}</span>
                   </div>
                 )}
               </div>
 
               {/* Social Links - Horizontal Layout */}
-              <div>
-                <h4 className="mb-3 font-semibold">Follow Us</h4>
+              <div className="mb-8 lg:mb-0">
+                <h4 className="mb-4 text-sm font-bold tracking-wider uppercase">Follow Us</h4>
                 {data.socialLinks.length > 0 ? (
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
                     {data.socialLinks.map(social => (
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 transition-colors hover:bg-white/10 hover:opacity-80"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5 transition-all hover:bg-black/10 hover:scale-110 active:scale-95 dark:bg-white/5 dark:hover:bg-white/10"
+                        style={{
+                          backgroundColor: footerData.textColor ? `${footerData.textColor}10` : undefined
+                        }}
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
                         }
@@ -131,12 +134,13 @@ export function FooterStyle2({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-text-light dark:text-text-dark text-sm opacity-60">
+                  <p className="text-sm opacity-60">
                     No social links available
                   </p>
                 )}
               </div>
             </div>
+
 
             {/* Render the first 3 sections */}
             {sectionsToShow

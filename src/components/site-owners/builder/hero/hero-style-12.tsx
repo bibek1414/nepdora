@@ -141,20 +141,20 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
   return (
     <div
-      className="relative h-[70vh] overflow-hidden"
+      className="relative min-h-[500px] h-screen w-full overflow-hidden md:h-[70vh]"
       data-component-id={componentId}
     >
       {isEditable && (
-        <div className="absolute top-6 right-4 z-30 flex gap-2">
+        <div className="absolute top-6 right-4 z-30 flex flex-wrap justify-end gap-2 px-4">
           <button
             onClick={addSlide}
-            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+            className="rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:px-4 sm:py-2 sm:text-sm"
           >
             Add Slide
           </button>
           <button
             onClick={() => removeSlide(heroIndex)}
-            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+            className="rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:px-4 sm:py-2 sm:text-sm"
           >
             Remove Current Slide
           </button>
@@ -206,29 +206,29 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
               isEditable={isEditable}
               label="Change Background"
               folder="hero-slides"
-              className="absolute top-4 left-4 z-40"
+              className="absolute inset-0 z-40 flex items-center justify-center"
             />
           </div>
 
           {/* Gradient Overlay based on currentSlide.color */}
           <div
-            className={`absolute inset-0 bg-gradient-to-r ${currentSlide.color || "from-black/90"} flex items-center via-transparent to-transparent`}
+            className={`absolute inset-0 bg-gradient-to-b ${currentSlide.color || "from-black/90"} flex items-center md:bg-gradient-to-r md:via-transparent md:to-transparent`}
           >
             <div className="z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="max-w-xl pt-10 text-white"
+                className="max-w-xl pt-10 text-center text-white md:text-left"
               >
-                <div className="mb-6 inline-block w-full">
+                <div className="mb-4 inline-block w-full sm:mb-6">
                   <div className="inline-block w-auto rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-md">
                     <EditableText
                       value={currentSlide.subtitle}
                       onChange={handleSlideUpdate(currentSlide.id, "subtitle")}
                       isEditable={isEditable}
                       as="span"
-                      className="text-xs font-bold tracking-wider text-white uppercase"
+                      className="text-[10px] font-bold tracking-[0.2em] text-white uppercase sm:text-xs"
                       placeholder="Subtitle"
                     />
                   </div>
@@ -240,7 +240,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                   isEditable={isEditable}
                   multiline
                   as="h1"
-                  className="mb-6 text-4xl leading-none font-extrabold tracking-tight shadow-sm md:text-6xl lg:text-7xl"
+                  className="mb-4 text-3xl font-black leading-tight tracking-tight sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl"
                   placeholder="Hero Title"
                 />
 
@@ -250,32 +250,35 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                   isEditable={isEditable}
                   multiline
                   as="p"
-                  className="mb-8 max-w-md text-lg leading-relaxed font-light text-white/90 md:text-xl"
+                  className="mx-auto mb-8 max-w-md text-sm leading-relaxed text-white/90 sm:text-base md:mx-0 md:text-lg lg:text-xl"
                   placeholder="Hero Description"
                 />
 
-                <EditableLink
-                  text={currentSlide.buttonText}
-                  href={currentSlide.buttonHref}
-                  onChange={(text, href) => {
-                    handleSlideUpdate(currentSlide.id, "buttonText")(text);
-                    handleSlideUpdate(currentSlide.id, "buttonHref")(href);
-                  }}
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                  }}
-                  className="inline-flex items-center rounded-full px-8 py-4 font-bold shadow-xl transition-all hover:scale-105"
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Button link..."
-                />
+                <div className="flex justify-center md:justify-start">
+                  <EditableLink
+                    text={currentSlide.buttonText}
+                    href={currentSlide.buttonHref}
+                    onChange={(text, href) => {
+                      handleSlideUpdate(currentSlide.id, "buttonText")(text);
+                      handleSlideUpdate(currentSlide.id, "buttonHref")(href);
+                    }}
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                    }}
+                    className="inline-flex items-center rounded-full px-6 py-3 text-sm font-bold shadow-xl transition-all hover:scale-105 sm:px-10 sm:py-4 sm:text-base"
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Button link..."
+                  />
+                </div>
               </motion.div>
             </div>
           </div>
         </motion.div>
       </AnimatePresence>
+
 
       <div className="absolute right-0 bottom-8 left-0 z-20 flex justify-center gap-3">
         {heroSlides.map((_, i) => (

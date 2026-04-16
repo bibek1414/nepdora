@@ -76,24 +76,24 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
 
   return (
     <section
-      className="min-h-screen"
+      className="min-h-screen w-full overflow-x-hidden"
       style={{ backgroundColor: theme.colors.background }}
     >
-      <div className="relative mx-auto flex min-h-[380px] w-full max-w-7xl items-center overflow-hidden rounded-[16px] px-2 py-4 sm:min-h-[450px] sm:rounded-[24px] sm:px-3 sm:py-6 md:min-h-[500px] md:rounded-[32px] md:px-4 md:py-8 lg:min-h-[600px] lg:rounded-[40px] lg:px-5 lg:py-16 xl:min-h-[720px] xl:rounded-[48px]">
+      <div className="relative mx-auto flex min-h-[500px] w-full max-w-7xl items-center overflow-hidden rounded-[16px] px-3 py-6 sm:min-h-[550px] sm:rounded-[24px] sm:px-4 sm:py-8 md:min-h-[600px] md:rounded-[32px] md:px-6 md:py-10 lg:min-h-[700px] lg:rounded-[40px] lg:px-8 lg:py-12 xl:min-h-[720px] xl:rounded-[48px] xl:px-10 xl:py-16">
         {/* Background decoration: Eiffel Tower outline */}
-        <div className="pointer-events-none absolute bottom-0 left-1 z-0 w-[100px] text-white opacity-[0.08] sm:left-2 sm:w-[150px] md:left-4 md:w-[200px] lg:left-4 lg:w-[250px] xl:left-10 xl:w-[350px] 2xl:w-[450px]">
+        <div className="pointer-events-none absolute bottom-0 left-0 z-0 w-[80px] text-white opacity-[0.06] sm:left-1 sm:w-[120px] md:left-2 md:w-[160px] lg:left-3 lg:w-[200px] xl:left-4 xl:w-[280px] 2xl:w-[350px]">
           <EiffelTowerBg />
         </div>
 
         {/* Accent decorative circle */}
         <div
-          className="absolute -right-[20%] bottom-[-20%] z-0 h-[150px] w-[150px] rounded-full sm:-right-[15%] sm:bottom-[-15%] sm:h-[250px] sm:w-[250px] md:h-[300px] md:w-[300px] lg:h-[400px] lg:w-[400px] xl:h-[500px] xl:w-[500px]"
+          className="absolute -right-[30%] bottom-[-30%] z-0 h-[200px] w-[200px] rounded-full opacity-70 sm:-right-[25%] sm:bottom-[-25%] sm:h-[250px] sm:w-[250px] md:-right-[20%] md:bottom-[-20%] md:h-[300px] md:w-[300px] lg:h-[400px] lg:w-[400px] xl:h-[500px] xl:w-[500px]"
           style={{ backgroundColor: theme.colors.primary }}
         ></div>
 
-        <div className="relative z-10 grid h-full w-full grid-cols-1 items-center gap-3 px-2 py-4 sm:gap-4 sm:px-3 sm:py-6 md:gap-6 md:px-4 md:py-8 lg:gap-8 lg:px-5 lg:py-16 xl:grid-cols-2 xl:gap-20">
+        <div className="relative z-10 grid h-full w-full grid-cols-1 items-center gap-6 px-2 py-4 sm:gap-8 sm:px-3 sm:py-6 md:gap-10 md:px-4 md:py-8 lg:gap-12 lg:px-5 lg:py-10 xl:grid-cols-2 xl:gap-16">
           {/* Left Content */}
-          <div className="relative z-10 max-w-2xl space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6 xl:space-y-10">
+          <div className="relative z-10 w-full space-y-4 text-center sm:space-y-5 sm:text-left md:space-y-6 lg:space-y-8 xl:space-y-10">
             {/* Title */}
             <EditableText
               value={data.title || "Visa Made Easy\nDreams Made\nPossible"}
@@ -107,7 +107,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
             />
 
             {/* Buttons Container */}
-            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 md:gap-4 lg:gap-8">
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-start sm:gap-4 md:gap-5 lg:gap-6 xl:gap-8">
               {/* Primary Button */}
               <EditableLink
                 text={primaryButton.text}
@@ -117,7 +117,7 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="group flex items-center gap-1.5 rounded-full border border-white/40 px-3 py-1.5 text-xs font-semibold text-white transition-all duration-300 hover:shadow-lg sm:gap-2 sm:px-4 sm:py-2 sm:text-sm md:gap-3 md:px-5 md:py-2.5 md:text-base lg:px-6 lg:py-3 xl:px-9 xl:py-4"
+                className="group inline-flex w-full max-w-[200px] items-center justify-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-4 py-2.5 text-xs font-semibold text-white transition-all duration-300 hover:bg-white/20 hover:shadow-lg sm:w-auto sm:px-5 sm:py-2.5 sm:text-sm md:gap-2 md:px-6 md:py-3 md:text-base lg:px-7 lg:py-3.5 xl:px-8 xl:py-4"
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter URL..."
               >
@@ -137,12 +137,12 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
                 }}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="group flex cursor-pointer items-center gap-1.5 text-white sm:gap-2 md:gap-3 lg:gap-4"
+                className="group inline-flex w-full max-w-[220px] items-center justify-center gap-2 text-white transition-all duration-300 hover:opacity-80 sm:w-auto sm:justify-start sm:gap-2 md:gap-3 lg:gap-4"
                 textPlaceholder="Button text..."
                 hrefPlaceholder="Enter URL..."
               >
                 <div
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 shadow-lg transition-all duration-300 group-hover:shadow-lg sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11 xl:h-12 xl:w-12 2xl:h-14 2xl:w-14"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11 xl:h-12 xl:w-12"
                   style={{ backgroundColor: theme.colors.secondary }}
                 >
                   <Play
@@ -159,15 +159,15 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
           </div>
 
           {/* Right Content - Image */}
-          <div className="relative flex h-full w-full items-center justify-center lg:justify-end">
-            <div className="relative z-10 h-full w-full max-w-xs overflow-hidden rounded-lg border-[2px] border-white/10 shadow-2xl sm:max-w-sm sm:rounded-xl sm:border-[3px] md:max-w-md md:rounded-xl md:border-[4px] lg:rounded-2xl lg:border-[5px] xl:max-w-lg xl:border-[6px] 2xl:border-[8px]">
+          <div className="relative flex w-full items-center justify-center px-4 sm:px-6 md:px-8 lg:justify-end lg:px-0">
+            <div className="relative z-10 w-full max-w-[260px] overflow-hidden rounded-lg border-2 border-white/15 shadow-2xl sm:max-w-[300px] sm:rounded-xl sm:border-[3px] md:max-w-[350px] md:rounded-xl md:border-[4px] lg:max-w-[400px] lg:rounded-2xl lg:border-[5px] xl:max-w-[450px] xl:border-[6px] 2xl:max-w-[500px] 2xl:border-[8px]">
               <EditableImage
                 src={getImageUrl(data.imageUrl, { width: 800 }) || imageUrl}
                 alt={data.imageAlt || "Happy traveler in Paris"}
                 onImageChange={handleImageUpdate("imageUrl", "imageAlt")}
                 onAltChange={handleAltUpdate("imageAlt")}
                 isEditable={isEditable}
-                className="h-150 w-full object-cover"
+                className="aspect-[3/4] w-full object-cover sm:aspect-[4/5] md:aspect-auto"
                 width={600}
                 height={750}
                 s3Options={{
@@ -183,9 +183,9 @@ export const HeroTemplate4: React.FC<HeroTemplate4Props> = ({
 
               {/* Overlay gradient */}
               <div
-                className="absolute inset-0 bg-gradient-to-t from-[#013D2F]/40 to-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"
                 style={{
-                  background: `linear-gradient(to top, ${theme.colors.background}66, transparent)`,
+                  background: `linear-gradient(to top, ${theme.colors.background}99, transparent)`,
                 }}
               ></div>
             </div>

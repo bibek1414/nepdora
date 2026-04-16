@@ -134,10 +134,10 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             className="group relative h-auto w-full overflow-hidden"
           >
             {/* Collection Image */}
-            <div className="relative h-full min-h-[600px] w-full">
+            <div className="relative h-full min-h-[400px] w-full sm:min-h-[500px] md:min-h-[600px]">
               {/* Background Image */}
               <div
-                className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
+                className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-105"
                 style={{
                   backgroundImage: `url(${collection.imageUrl})`,
                 }}
@@ -177,7 +177,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
             </div>
 
             {/* Content Overlay */}
-            <div className="bg-opacity-10 absolute inset-0 flex flex-col justify-center bg-black/40 p-8 text-white">
+            <div className="absolute inset-0 flex flex-col justify-center bg-black/40 p-6 text-white sm:p-8">
               {/* Content */}
               <div className="relative z-10">
                 {/* Subtitle */}
@@ -187,7 +187,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                     handleCollectionUpdate(collection.id, "subtitle", value)
                   }
                   as="p"
-                  className="mb-2 tracking-wider"
+                  className="mb-1 text-xs tracking-[0.2em] uppercase opacity-90 sm:mb-2 sm:text-sm"
                   isEditable={isEditable}
                   placeholder="Enter subtitle..."
                 />
@@ -199,31 +199,34 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                     handleCollectionUpdate(collection.id, "title", value)
                   }
                   as="h2"
-                  className="mb-4 font-bold"
+                  className="mb-4 text-2xl font-black leading-tight sm:text-3xl md:text-4xl"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}
                 />
 
                 {/* CTA Button */}
-                <EditableLink
-                  text={collection.buttonText}
-                  href={collection.buttonHref}
-                  onChange={(text, href) =>
-                    handleCollectionButtonUpdate(collection.id, text, href)
-                  }
-                  isEditable={isEditable}
-                  siteUser={siteUser}
-                  className="rounded-sm bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-gray-200"
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                  }}
-                  textPlaceholder="Button text..."
-                  hrefPlaceholder="Enter URL..."
-                />
+                <div className="mt-2 sm:mt-4">
+                  <EditableLink
+                    text={collection.buttonText}
+                    href={collection.buttonHref}
+                    onChange={(text, href) =>
+                      handleCollectionButtonUpdate(collection.id, text, href)
+                    }
+                    isEditable={isEditable}
+                    siteUser={siteUser}
+                    className="inline-block rounded-none border-b-2 border-white bg-transparent px-0 py-2 text-xs font-bold tracking-widest text-white transition-all hover:border-gray-300 hover:text-gray-300 sm:text-sm"
+                    style={{
+                      borderColor: theme.colors.primary,
+                      color: "#fff",
+                    }}
+                    textPlaceholder="Button text..."
+                    hrefPlaceholder="Enter URL..."
+                  />
+                </div>
               </div>
             </div>
+
           </div>
         ))}
       </div>

@@ -59,12 +59,12 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
 
   return (
     <section
-      className="relative mx-auto flex min-h-screen max-w-7xl items-center overflow-hidden px-4 py-12 md:px-12"
+      className="relative mx-auto flex min-h-screen max-w-7xl items-center overflow-hidden px-4 py-20 md:px-12"
       data-component-id={componentId}
     >
       {/* Background decorative shape */}
       <div
-        className="absolute top-0 right-0 -z-10 h-full w-1/2 rounded-l-[200px]"
+        className="absolute right-0 bottom-0 -z-10 h-1/2 w-full rounded-t-[100px] md:top-0 md:h-full md:w-1/2 md:rounded-t-none md:rounded-l-[200px]"
         style={{ backgroundColor: primaryColor }}
       />
 
@@ -76,7 +76,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
           rotate: [0, 15, 0],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute top-32 left-10 h-24 w-24 opacity-20"
+        className="pointer-events-none absolute top-10 left-4 h-16 w-16 opacity-10 sm:top-32 sm:left-10 sm:h-24 sm:w-24 sm:opacity-20"
       >
         <svg
           viewBox="0 0 100 100"
@@ -93,7 +93,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
           rotate: [0, -10, 0],
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute right-1/4 bottom-24 h-16 w-16 opacity-15"
+        className="pointer-events-none absolute right-4 bottom-10 h-12 w-12 opacity-10 sm:right-1/4 sm:bottom-24 sm:h-16 sm:w-16 sm:opacity-15"
       >
         <svg
           viewBox="0 0 100 100"
@@ -106,18 +106,19 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
         </svg>
       </motion.div>
 
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
-        {/* Left Content */}
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 text-center lg:grid-cols-2 lg:text-left">
+        {/* Left Content - Text */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="order-2 lg:order-1"
         >
           <EditableText
             value={data.subtitle || "Savor Every Bite"}
             onChange={handleTextUpdate("subtitle")}
             as="span"
-            className="text-secondary mb-6 block text-sm font-bold tracking-widest"
+            className="mb-4 block text-xs font-bold tracking-[0.3em] uppercase sm:mb-6 sm:text-sm"
             style={{ color: secondaryColor }}
             isEditable={isEditable}
             placeholder="Badge text..."
@@ -137,11 +138,10 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
               handleTextUpdate("title")(currentParts.join("<br />"));
             }}
             as="h1"
-            className="mb-8 text-5xl leading-[0.95] font-black md:text-6xl lg:text-6xl"
+            className="mb-6 text-4xl leading-[1.1] font-black sm:text-5xl md:text-6xl"
             isEditable={isEditable}
             placeholder="First line..."
           />
-          <br />
 
           <EditableText
             value={
@@ -150,19 +150,19 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
             }
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mb-12 max-w-md text-lg leading-relaxed text-[#0D3B2E]/70"
+            className="mx-auto mb-10 max-w-md text-base leading-relaxed text-[#0D3B2E]/70 sm:text-lg lg:mx-0"
             isEditable={isEditable}
             placeholder="Description..."
             multiline
           />
 
-          <div className="flex gap-16">
+          <div className="flex flex-col items-center justify-center gap-8 sm:flex-row sm:gap-16 lg:justify-start">
             <div>
               <EditableText
                 value={data.stat1Value || "23"}
                 onChange={handleTextUpdate("stat1Value")}
                 as="div"
-                className="mb-2 text-5xl font-black"
+                className="mb-1 text-4xl font-black sm:mb-2 sm:text-5xl"
                 isEditable={isEditable}
                 placeholder="Stat value..."
               />
@@ -170,7 +170,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                 value={data.stat1Label || "Daily Orders"}
                 onChange={handleTextUpdate("stat1Label")}
                 as="div"
-                className="text-sm font-bold tracking-wider"
+                className="text-xs font-bold tracking-wider opacity-60 sm:text-sm"
                 isEditable={isEditable}
                 placeholder="Stat label..."
               />
@@ -180,7 +180,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                 value={data.stat2Value || "56+"}
                 onChange={handleTextUpdate("stat2Value")}
                 as="div"
-                className="mb-2 text-5xl font-black"
+                className="mb-1 text-4xl font-black sm:mb-2 sm:text-5xl"
                 isEditable={isEditable}
                 placeholder="Stat value..."
               />
@@ -188,7 +188,7 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
                 value={data.stat2Label || "Items Available"}
                 onChange={handleTextUpdate("stat2Label")}
                 as="div"
-                className="text-sm font-bold tracking-wider"
+                className="text-xs font-bold tracking-wider opacity-60 sm:text-sm"
                 isEditable={isEditable}
                 placeholder="Stat label..."
               />
@@ -228,8 +228,8 @@ export const HeroTemplate7: React.FC<HeroTemplate7Props> = ({
           </div>
         </motion.div>
 
-        {/* Right Content - The animated Plate with Decorative Circles */}
-        <div className="relative flex items-center justify-center">
+        {/* Right Content - Image */}
+        <div className="relative order-1 flex items-center justify-center lg:order-2">
           {/* Decorative Circle Rings */}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <img

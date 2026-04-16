@@ -45,7 +45,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
 
   return (
     <motion.section
-      className="relative flex h-200 w-full items-center justify-center"
+      className="relative flex h-auto min-h-[500px] w-full items-center justify-center py-20"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -53,7 +53,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
       <div className="container mx-auto px-4 text-center">
         <div className="flex flex-col items-center">
           {/* Profile Image */}
-          <div className="mb-8 h-40 w-40 overflow-hidden rounded-full border-4 border-white shadow-xl lg:h-48 lg:w-48">
+          <div className="mb-6 h-32 w-32 overflow-hidden rounded-full border-4 border-white shadow-xl sm:h-40 sm:w-40 lg:h-48 lg:w-48">
             <EditableImage
               src={getImageUrl(data.imageUrl, {
                 width: 400,
@@ -80,7 +80,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mx-auto mb-6 text-4xl leading-tight font-bold tracking-tight"
+            className="mx-auto mb-6 text-2xl font-black leading-tight tracking-tight sm:text-3xl md:text-4xl lg:text-5xl"
             style={{
               fontFamily: theme.fonts.heading,
             }}
@@ -94,7 +94,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={data.description}
             onChange={handleTextUpdate("description")}
             as="p"
-            className="mx-auto max-w-2xl text-lg opacity-70 md:text-xl"
+            className="mx-auto mb-6 max-w-2xl text-base leading-relaxed opacity-80 sm:text-lg md:text-xl"
             style={{
               fontFamily: theme.fonts.body,
             }}
@@ -105,5 +105,6 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
         </div>
       </div>
     </motion.section>
+
   );
 };

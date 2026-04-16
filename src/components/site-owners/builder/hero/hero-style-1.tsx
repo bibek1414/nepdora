@@ -173,18 +173,21 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
   };
 
   return (
-    <div className="relative h-screen w-full" data-component-id={componentId}>
+    <div
+      className="relative h-screen min-h-[500px] w-full"
+      data-component-id={componentId}
+    >
       {isEditable && (
-        <div className="absolute top-6 right-4 z-30 flex gap-2">
+        <div className="absolute top-6 right-4 z-30 flex flex-wrap justify-end gap-2 px-4">
           <button
             onClick={addSlide}
-            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+            className="rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:px-4 sm:py-2 sm:text-sm"
           >
             Add Slide
           </button>
           <button
             onClick={() => removeSlide(current)}
-            className="rounded-lg border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white"
+            className="rounded-lg border border-gray-300 bg-white/90 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur-sm transition hover:bg-white sm:px-4 sm:py-2 sm:text-sm"
           >
             Remove Current Slide
           </button>
@@ -192,9 +195,12 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
       )}
 
       <Carousel opts={{ loop: true }} setApi={setApi} className="h-full w-full">
-        <CarouselContent>
+        <CarouselContent className="h-full">
           {slides.map((slide, index) => (
-            <CarouselItem key={slide.id} className="relative h-screen w-full">
+            <CarouselItem
+              key={slide.id}
+              className="relative h-screen min-h-[500px] w-full"
+            >
               {/* Background image */}
               <div className="absolute inset-0 h-full w-full">
                 {/* Direct image background */}
@@ -213,46 +219,27 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                     isEditable={isEditable && current === index}
                     label="Change Background"
                     folder="hero-slides"
-                    className="absolute top-0 left-0 z-20 flex items-center justify-center"
+                    className="absolute top-6 left-6 z-30"
                   />
                 </div>
 
                 {/* Hidden EditableImage for functionality */}
-                <EditableImage
-                  key={`slide-${componentId}-${index}-${slide.url}`}
-                  src={slide.url}
-                  alt={slide.alt}
-                  onImageChange={(url, alt) =>
-                    handleSliderImageUpdate(url, alt, index)
-                  }
-                  isEditable={isEditable}
-                  className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-                  s3Options={{
-                    folder: "hero-slides",
-                  }}
-                  placeholder={{
-                    width: 1920,
-                    height: 1080,
-                    text: `Slide ${index + 1}`,
-                  }}
-                  disableImageChange={true}
-                />
               </div>
 
               <div className="absolute inset-0 bg-black/50"></div>
 
               {/* Text content with proper container */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <div className="flex items-center justify-center md:justify-start">
-                    <div className="max-w-xl space-y-4 text-center text-white md:space-y-6 md:text-left">
+              <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6">
+                <div className="mx-auto w-full max-w-7xl">
+                  <div className="flex items-center justify-center md:items-start md:justify-start">
+                    <div className="max-w-xl space-y-4 text-center text-white sm:space-y-6 md:text-left">
                       {/* Main Title */}
                       <EditableText
                         key={`title-${componentId}`}
                         value={data.title || "Find your perfect workout attire"}
                         onChange={handleTextUpdate("title")}
                         as="h1"
-                        className="font-black tracking-wider"
+                        className="text-3xl font-black tracking-wider sm:text-4xl md:text-5xl lg:text-7xl"
                         isEditable={isEditable}
                         placeholder="Enter main title..."
                         multiline={true}
@@ -267,6 +254,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                         }
                         onChange={handleTextUpdate("subtitle")}
                         as="p"
+                        className="text-base opacity-90 sm:text-lg md:text-xl"
                         isEditable={isEditable}
                         placeholder="Enter subtitle..."
                         multiline={true}
@@ -278,6 +266,7 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
                         value={data.description || "Exclusively online!"}
                         onChange={handleTextUpdate("description")}
                         as="p"
+                        className="text-sm font-medium tracking-widest uppercase opacity-80 sm:text-base"
                         isEditable={isEditable}
                         placeholder="Enter additional text..."
                         multiline={true}
@@ -285,27 +274,29 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
 
                       {/* CTA Button */}
                       {data.buttons.length > 0 && (
-                        <EditableLink
-                          key={`button-${componentId}`}
-                          text={data.buttons[0]?.text || "SHOP COLLECTION"}
-                          href={data.buttons[0]?.href || "#"}
-                          onChange={(text, href) =>
-                            handleButtonUpdate("buttons")(
-                              data.buttons[0]?.id || "1",
-                              text,
-                              href
-                            )
-                          }
-                          isEditable={isEditable}
-                          siteUser={siteUser}
-                          className="rounded-full bg-white px-6 py-2 text-sm font-bold text-black shadow-lg transition duration-300 hover:bg-gray-200 sm:px-8 sm:py-3 sm:text-base"
-                          style={{
-                            backgroundColor: theme.colors.primary,
-                            color: theme.colors.primaryForeground,
-                          }}
-                          textPlaceholder="Button text..."
-                          hrefPlaceholder="Enter URL..."
-                        />
+                        <div className="flex justify-center pt-2 md:justify-start">
+                          <EditableLink
+                            key={`button-${componentId}`}
+                            text={data.buttons[0]?.text || "SHOP COLLECTION"}
+                            href={data.buttons[0]?.href || "#"}
+                            onChange={(text, href) =>
+                              handleButtonUpdate("buttons")(
+                                data.buttons[0]?.id || "1",
+                                text,
+                                href
+                              )
+                            }
+                            isEditable={isEditable}
+                            siteUser={siteUser}
+                            className="inline-flex rounded-full bg-white px-6 py-2.5 text-sm font-bold text-black shadow-lg transition duration-300 hover:bg-gray-200 sm:px-10 sm:py-4 sm:text-base"
+                            style={{
+                              backgroundColor: theme.colors.primary,
+                              color: theme.colors.primaryForeground,
+                            }}
+                            textPlaceholder="Button text..."
+                            hrefPlaceholder="Enter URL..."
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -316,13 +307,13 @@ export const HeroTemplate1: React.FC<HeroTemplate1Props> = ({
         </CarouselContent>
 
         {/* Dots navigation */}
-        <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 space-x-2 sm:bottom-10 sm:space-x-3">
+        <div className="absolute right-10 bottom-10 z-20 flex -translate-x-1/2 justify-center space-x-2 px-4 sm:space-x-3">
           {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => api?.scrollTo(index)}
               className={cn(
-                "h-2 w-2 rounded-full transition-all sm:h-1 sm:w-20",
+                "h-2 w-2 rounded-full transition-all sm:h-1.5 sm:w-16 md:w-20",
                 current === index ? "bg-white" : "bg-white/50"
               )}
             />

@@ -64,17 +64,17 @@ export function FooterStyle1({
       >
         <div className="mx-auto max-w-7xl">
           {/* Footer links grid */}
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
             {/* Info Section */}
             {mainSections.map((section, index) => (
               <div key={section.id} className="col-span-1">
-                <h3 className="mb-4 text-xl font-semibold">{section.title}</h3>
-                <ul className="space-y-2">
+                <h3 className="mb-4 text-xl font-bold">{section.title}</h3>
+                <ul className="space-y-3">
                   {section.links.map(link => (
                     <li key={link.id}>
                       {isEditable ? (
                         <button
-                          className="text-left opacity-80 transition-colors hover:opacity-100"
+                          className="text-left text-sm opacity-80 transition-colors hover:opacity-100"
                           onClick={
                             isEditable ? e => e.preventDefault() : undefined
                           }
@@ -114,11 +114,11 @@ export function FooterStyle1({
 
             {/* Newsletter Section */}
             {data.newsletter.enabled && (
-              <div className="col-span-2 lg:col-span-2">
-                <h3 className="mb-4 text-xl font-semibold">
+              <div className="col-span-1 sm:col-span-2 lg:col-span-2">
+                <h3 className="mb-4 text-xl font-bold">
                   {data.newsletter.title}
                 </h3>
-                <p className="mb-4 text-sm opacity-80">
+                <p className="mb-4 text-sm leading-relaxed opacity-80">
                   {data.newsletter.description}
                 </p>
 
@@ -128,6 +128,7 @@ export function FooterStyle1({
               </div>
             )}
           </div>
+
 
           {/* Bottom section */}
           <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm opacity-80 md:flex-row">

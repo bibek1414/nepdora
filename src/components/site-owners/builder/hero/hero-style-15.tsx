@@ -88,10 +88,10 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
           className="absolute top-0 right-0 z-20 flex items-center justify-center"
         />
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-linear-to-r from-gray-900/95 via-gray-900/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/80 to-transparent"></div>
       </div>
 
-      <div className="z-10 mx-auto max-w-7xl text-white">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 text-white sm:px-6">
         <motion.div
           className="mt-6 sm:mt-10"
           initial={{ opacity: 0, y: 40 }}
@@ -106,7 +106,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
               onChange={handleTextUpdate("eyebrow")}
               as="div"
               isEditable={isEditable}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold tracking-widest uppercase backdrop-blur-md"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-bold tracking-widest uppercase backdrop-blur-md sm:text-xs"
             />
           </div>
 
@@ -116,7 +116,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
               onChange={handleTextUpdate("title")}
               as="h1"
               isEditable={isEditable}
-              className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl"
+              className="text-3xl font-black leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-7xl"
             />
           </div>
 
@@ -125,11 +125,11 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
             onChange={handleTextUpdate("description")}
             as="p"
             isEditable={isEditable}
-            className="sm:text-md mb-10 max-w-2xl text-sm leading-relaxed text-gray-300 md:text-lg"
+            className="mb-10 max-w-2xl text-base leading-relaxed text-gray-300 sm:text-lg lg:text-xl"
             multiline
           />
 
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             {data.buttons.map(button => (
               <EditableLink
                 key={button.id}
@@ -140,12 +140,11 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
                 onChange={(text, href) =>
                   handleArrayItemUpdate("buttons", button.id)({ text, href })
                 }
-                className="inline-flex h-16! cursor-pointer items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-sm font-bold transition-all sm:text-base"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-8 py-4 text-center text-sm font-bold transition-all sm:text-base"
                 style={{
                   backgroundColor:
                     button.variant === "primary" ? primaryColor : "#FFFFFF",
                   color: button.variant === "primary" ? "#FFFFFF" : "#0F172A",
-                  height: "auto",
                 }}
               >
                 <div className="flex items-center gap-2">
@@ -167,6 +166,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
           </div>
         </motion.div>
       </div>
+
     </section>
   );
 };

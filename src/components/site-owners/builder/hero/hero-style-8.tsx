@@ -107,15 +107,15 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   as="span"
                 />
               </div>
-              <div className="h-6 w-px bg-gray-300"></div>
+              <div className="hidden sm:block h-6 w-px bg-gray-300"></div>
               <div className="flex items-center gap-2">
-                <div className="h-[28px] w-[28px] overflow-hidden">
+                <div className="h-[28px] w-[28px] overflow-hidden shrink-0">
                   <EditableImage
                     src="/certifications/titi.jpg"
                     alt={data.badge2Text || "TITI Certified"}
                     onImageChange={url => onUpdate?.({ badge2Image: url })}
                     isEditable={isEditable}
-                    className="mt-2 h-full w-full object-contain"
+                    className="h-full w-full object-contain"
                   />
                 </div>
                 <EditableText
@@ -134,7 +134,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
               isEditable={isEditable}
               multiline
               as="h1"
-              className="mb-6 text-4xl leading-tight font-bold text-gray-900 md:text-4xl lg:text-5xl"
+              className="mb-6 text-3xl leading-tight font-bold text-gray-900 sm:text-4xl lg:text-5xl"
             />
 
             <EditableText
@@ -144,7 +144,7 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
               }
               onChange={handleTextUpdate("description")}
               as="p"
-              className="max-w-xl text-xl text-gray-500 md:text-3xl"
+              className="max-w-xl text-lg text-gray-500 md:text-xl"
               isEditable={isEditable}
               multiline
             />

@@ -146,7 +146,7 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
                 as="span"
               />
             </div>
-            <div className="text-4xl leading-[1.05] font-bold tracking-tight md:text-6xl">
+            <div className="text-3xl leading-tight font-black tracking-tight sm:text-4xl md:text-6xl lg:text-7xl">
               <EditableText
                 value={slides[current].title}
                 onChange={val =>
@@ -160,6 +160,7 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
                 multiline
               />
             </div>
+
           </div>
 
           {/* Right - description + button */}
@@ -201,7 +202,8 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
       {/* Bottom tabs */}
       <div className="absolute bottom-0 left-0 z-20 w-full">
         {/* Subtle gradient */}
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
 
         <div className="relative mx-auto max-w-7xl px-6 pb-8 sm:px-12 md:px-24">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-8">

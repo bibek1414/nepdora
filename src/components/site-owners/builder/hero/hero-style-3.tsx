@@ -168,14 +168,14 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
       className="relative overflow-hidden bg-white"
       data-component-id={componentId}
     >
-      <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
+      <div className="pt-16 pb-12 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
         <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
-          <div className="relative z-10 sm:max-w-lg">
+          <div className="relative z-10 text-center sm:max-w-lg sm:text-left">
             <EditableText
               value={data.title || "Summer styles are finally here"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
+              className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl"
               isEditable={isEditable}
               placeholder="Enter hero title..."
             />
@@ -186,21 +186,21 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
               }
               onChange={handleTextUpdate("description")}
               as="p"
-              className="mt-4 text-xl text-gray-500"
+              className="mt-4 text-base text-gray-500 sm:text-xl"
               isEditable={isEditable}
               placeholder="Enter description..."
               multiline={true}
             />
           </div>
-          <div>
-            <div className="mt-10">
-              {/* Decorative image grid */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none lg:absolute lg:inset-y-0 lg:mx-auto lg:w-full lg:max-w-7xl"
-              >
-                <div className="absolute transform sm:top-0 sm:left-1/2 sm:translate-x-8 lg:top-1/2 lg:left-1/2 lg:translate-x-8 lg:-translate-y-1/2">
-                  <div className="flex items-center space-x-6 lg:space-x-8">
+          <div className="mt-10">
+            {/* Decorative image grid */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none lg:absolute lg:inset-y-0 lg:mx-auto lg:w-full lg:max-w-7xl"
+            >
+              <div className="absolute top-[120%] left-1/2 -translate-x-1/2 scale-[0.6] sm:top-0 sm:left-1/2 sm:translate-x-8 sm:scale-75 lg:top-1/2 lg:left-1/2 lg:translate-x-8 lg:-translate-y-1/2 lg:scale-100">
+                <div className="flex items-center space-x-6 lg:space-x-8">
+
                     {/* Column 1 - 2 images */}
                     <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
                       <div
@@ -504,6 +504,5 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
           </div>
         </div>
       </div>
-    </div>
   );
 };

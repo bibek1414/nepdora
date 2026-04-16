@@ -24,10 +24,11 @@ interface FooterStyle5Props {
 const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <h3 className="mb-6 text-2xl font-bold tracking-wide uppercase">
+  <h3 className="mb-6 text-xl font-bold tracking-wide uppercase sm:text-2xl">
     {children}
   </h3>
 );
+
 
 // Helper component for list items
 const LinkItem: React.FC<{
@@ -211,7 +212,8 @@ export function FooterStyle5({
             </div>
 
             {/* Decorative bottom graphic hint */}
-            <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-linear-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
+            <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-gradient-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
+
           </div>
         </div>
 

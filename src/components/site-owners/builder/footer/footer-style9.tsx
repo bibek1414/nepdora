@@ -74,20 +74,20 @@ export const FooterStyle9 = ({
     >
       <div className="flex max-w-7xl flex-col gap-20 px-6 md:px-12">
         {/* Top Section */}
-        <div className="flex flex-col items-start justify-between gap-16 lg:flex-row">
+        <div className="flex flex-col items-center justify-between gap-16 lg:flex-row lg:items-start">
           {/* Newsletter */}
-          <div className="flex w-full max-w-lg flex-col gap-8">
-            <h3 className="text-3xl font-bold tracking-wide uppercase md:text-4xl">
+          <div className="flex w-full max-w-lg flex-col gap-8 text-center lg:text-left">
+            <h3 className="text-3xl font-bold tracking-wide uppercase sm:text-4xl md:text-5xl">
               {data.newsletter?.title || "Subscribe to our newsletter"}
             </h3>
             <form
               onSubmit={handleSubscribe}
-              className="flex w-full items-center rounded-full border p-2 transition-colors"
+              className="flex w-full flex-col items-center gap-4 rounded-3xl border p-2 transition-colors sm:flex-row sm:rounded-full"
             >
               <input
                 type="email"
                 placeholder="Enter Your Email..."
-                className="w-full flex-1 bg-transparent px-6 py-3 text-lg outline-none"
+                className="w-full flex-1 bg-transparent px-6 py-4 text-base outline-none sm:text-lg"
                 style={{ color: "inherit" }}
                 value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -97,11 +97,10 @@ export const FooterStyle9 = ({
               <button
                 type="submit"
                 disabled={isEditable || mutation.isPending}
-                className="flex min-w-[140px] items-center justify-center rounded-full bg-[#ccff00] px-8 py-4 text-lg font-bold whitespace-nowrap text-black transition-colors hover:bg-[#b3e600]"
+                className="flex w-full items-center justify-center rounded-2xl bg-primary px-8 py-4 text-base font-bold whitespace-nowrap text-primary-foreground transition-all hover:opacity-90 active:scale-95 sm:w-auto sm:rounded-full sm:text-lg"
                 style={{
                   backgroundColor: theme?.colors?.primary || "#ccff00",
                   color: theme?.colors?.primaryForeground || "black",
-                  borderRadius: "9999px",
                 }}
               >
                 {mutation.isPending ? (
@@ -114,9 +113,9 @@ export const FooterStyle9 = ({
           </div>
 
           {/* Links */}
-          <div className="flex flex-wrap gap-x-20 gap-y-12 md:gap-x-32">
+          <div className="flex flex-col gap-12 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-20 sm:gap-y-12 lg:justify-start lg:gap-x-32">
             {data.sections?.map(section => (
-              <div key={section.id} className="flex flex-col gap-5">
+              <div key={section.id} className="flex flex-col items-center gap-5 sm:items-start">
                 <h4 className="mb-2 text-xl font-bold tracking-wider uppercase">
                   {section.title}
                 </h4>
@@ -138,6 +137,7 @@ export const FooterStyle9 = ({
             ))}
           </div>
         </div>
+
 
         {/* Middle Section */}
         <div
