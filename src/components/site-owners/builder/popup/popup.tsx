@@ -125,7 +125,7 @@ const Popup: React.FC<PopupProps> = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="mx-2 grid max-h-[95vh] w-[95vw] max-w-4xl grid-cols-1 gap-0 overflow-hidden p-0 sm:mx-auto sm:w-full md:max-h-[90vh] md:w-[90vw] md:grid-cols-2">
+      <DialogContent className="grid max-h-[95vh] w-[95vw] max-w-4xl grid-cols-1 gap-0 overflow-hidden p-0 sm:w-full md:max-h-[90vh] md:w-[90vw] md:grid-cols-2">
         {/* Image Section - Only show if image exists */}
         {popupData.image && (
           <div className="relative order-1 h-48 w-full md:order-none md:h-full">

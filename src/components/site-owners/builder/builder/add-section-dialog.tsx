@@ -1969,7 +1969,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       case "2":
         return {
           ...baseData,
-          logoText: "Centered",
           links: [
             { id: "1", text: "Home", href: "#" },
             { id: "2", text: "About", href: "#" },
@@ -1983,18 +1982,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       case "3":
         return {
           ...baseData,
-          logoText: "SearchNav",
           links: [
             { id: "1", text: "Home", href: "#" },
             { id: "2", text: "Products", href: "#" },
             { id: "3", text: "About", href: "#" },
           ],
-          buttons: [{ id: "1", text: "Search", variant: "outline", href: "#" }],
         };
       case "4":
         return {
           ...baseData,
-          logoText: "Store",
           links: [
             { id: "1", text: "Home", href: "#" },
             { id: "2", text: "Categories", href: "#" },
@@ -2016,7 +2012,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
           ],
           buttons: [
             { id: "1", text: "Sign in", variant: "outline", href: "#" },
-            { id: "2", text: "Create account", variant: "primary", href: "#" },
           ],
         };
       case "6":
