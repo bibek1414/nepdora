@@ -124,7 +124,7 @@
     "@types/react-dnd-html5-backend": "^3.0.2",
     "@types/react-dom": "^19.2.3",
     "@types/sanitize-html": "^2.16.1",
-    "baseline-browser-mapping": "^2.10.16",
+    "baseline-browser-mapping": "^2.10.19",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.39.4",

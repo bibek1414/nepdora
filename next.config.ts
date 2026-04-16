@@ -100,6 +100,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Explicitly set the Turbopack root to the project directory
+  // to resolve the workspace root ambiguity and silence the build warning.
+  turbopack: {
+    root: process.cwd(),
+  },
 };
 
 export default nextConfig;

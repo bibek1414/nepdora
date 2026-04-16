@@ -29,7 +29,7 @@ export const IndustryDiscovery: React.FC<IndustryDiscoveryProps> = ({
           {otherIndustries.map(industry => (
             <Link
               key={industry}
-              href={`/industries/${industry}`}
+              href={`/${industry}`}
               className="group :border-slate-300 :shadow-sm flex w-fit flex-col items-center justify-start rounded-xl border border-slate-200 bg-white p-5 transition hover:border-slate-300 hover:shadow-sm"
             >
               <h3 className="flex gap-3 text-sm font-semibold text-black">

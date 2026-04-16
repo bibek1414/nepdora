@@ -31,7 +31,6 @@ export async function generateMetadata({
     pageImage: pageMetadata.image,
     metaTitle: pageData?.metaTitle,
     metaDescription: pageData?.metaDescription,
-    host: `${siteUser}.${process.env.NEXT_PUBLIC_BASE_DOMAIN || "nepdora.com"}`,
   });
 }
 

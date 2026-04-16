@@ -11,9 +11,7 @@ export const apiFetch = async (
   const customHeaders = new Headers(init?.headers);
 
   if (!init?.skipTenantDomain) {
-    const tenantDomain = await getTenantDomain({
-      skipHeaders: !!init?.skipTenantDomain,
-    });
+    const tenantDomain = await getTenantDomain();
     if (tenantDomain) {
       customHeaders.set("X-Tenant-Domain", tenantDomain);
     }

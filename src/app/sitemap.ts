@@ -57,7 +57,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/ecommerce", priority: 0.9 },
     { path: "/showcase", priority: 0.9 },
     { path: "/integrations", priority: 0.9 },
-    { path: "/industries", priority: 0.9 },
     { path: "/solutions", priority: 0.9 },
     { path: "/use-cases", priority: 0.9 },
     { path: "/compare", priority: 0.8 },
@@ -98,13 +97,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // Industry deep-dive pages
-  const industryPages = industries.map(slug => ({
-    url: `${baseUrl}/industries/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+
 
   // Switch pages
   const switchPages = ALL_COMPETITORS.map(c => ({
@@ -290,7 +283,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.8,
     },
-    ...industryPages,
     ...switchPages,
     ...glossaryPages,
   ];

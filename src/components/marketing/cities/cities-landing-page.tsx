@@ -63,14 +63,14 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
       label: industryLabel.includes("Store")
         ? industryLabel.replace(" Store", "")
         : industryLabel,
-      href: `/industries/${category}`,
+      href: `/${category}`,
     },
   ];
 
   if (cityLower !== "nepal" && cityLower !== "nepdora") {
     defaultBreadcrumbItems.push({
       label: cityName,
-      href: `/industries/${category}/${cityLower}`,
+      href: `/${category}/${cityLower}`,
     });
   }
 

@@ -16,6 +16,7 @@ interface Props {
   params: Promise<{ industry: string; city: string }>;
 }
 
+export const dynamic = "force-dynamic";
 export const revalidate = 3600; // Cache for 1 hour
 
 export async function generateStaticParams() {
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMarketingMetadata({
     title,
     description,
-    path: `/industries/${industry}/${city}`,
+    path: `/${industry}/${city}`,
     ogTitle: `${industryLabel} Builder: ${cityName}`,
     ogSubtitle: `Launch your professional website in ${cityName} today. Built-in eSewa, Khalti & Delivery support.`,
     ogLabel: `${cityName} Business Solutions`,
@@ -103,20 +104,14 @@ export default async function IndustryCityLandingPage({ params }: Props) {
       {
         "@type": "ListItem",
         position: 2,
-        name: "Industries",
-        item: absoluteUrl("/industries"),
+        name: industryLabel,
+        item: absoluteUrl(`/${industry}`),
       },
       {
         "@type": "ListItem",
         position: 3,
-        name: industryLabel,
-        item: absoluteUrl(`/industries/${industry}`),
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
         name: cityName,
-        item: absoluteUrl(`/industries/${industry}/${city}`),
+        item: absoluteUrl(`/${industry}/${city}`),
       },
     ],
   };
@@ -129,9 +124,8 @@ export default async function IndustryCityLandingPage({ params }: Props) {
         category={industry}
         city={city}
         breadcrumbItems={[
-          { label: "Industries", href: "/industries" },
-          { label: industryLabel, href: `/industries/${industry}` },
-          { label: cityName, href: `/industries/${industry}/${city}` },
+          { label: industryLabel, href: `/${industry}` },
+          { label: cityName, href: `/${industry}/${city}` },
         ]}
       />
       <WebsiteFooter />

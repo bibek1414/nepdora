@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMarketingMetadata({
     title,
     description,
-    path: `/industries/${industry}`,
+    path: `/${industry}`,
     keywords: [
       `${industry} website Nepal`,
       `${industry} online store Nepal`,
@@ -88,14 +88,8 @@ export default async function IndustryPage({ params }: Props) {
       {
         "@type": "ListItem",
         position: 2,
-        name: "Industries",
-        item: absoluteUrl("/industries"),
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
         name: industryLabel,
-        item: absoluteUrl(`/industries/${industry}`),
+        item: absoluteUrl(`/${industry}`),
       },
     ],
   };
@@ -108,8 +102,7 @@ export default async function IndustryPage({ params }: Props) {
         category={industry}
         city="Nepdora"
         breadcrumbItems={[
-          { label: "Industries", href: "/industries" },
-          { label: industryLabel, href: `/industries/${industry}` },
+          { label: industryLabel, href: `/${industry}` },
         ]}
       />
       <WebsiteFooter />
