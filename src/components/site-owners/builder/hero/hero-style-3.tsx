@@ -200,309 +200,308 @@ export const HeroTemplate3: React.FC<HeroTemplate3Props> = ({
             >
               <div className="absolute top-[120%] left-1/2 -translate-x-1/2 scale-[0.6] sm:top-0 sm:left-1/2 sm:translate-x-8 sm:scale-75 lg:top-1/2 lg:left-1/2 lg:translate-x-8 lg:-translate-y-1/2 lg:scale-100">
                 <div className="flex items-center space-x-6 lg:space-x-8">
-
-                    {/* Column 1 - 2 images */}
-                    <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100 ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-0-${finalGridImages[0].url}`}
-                          src={getImageUrl(finalGridImages[0].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[0].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(0, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              0,
-                              finalGridImages[0].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 1",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-1-${finalGridImages[1].url}`}
-                          src={getImageUrl(finalGridImages[1].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[1].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(1, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              1,
-                              finalGridImages[1].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 2",
-                          }}
-                        />
-                      </div>
+                  {/* Column 1 - 2 images */}
+                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
+                    <div
+                      className={`h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100 ${isEditable ? "pointer-events-auto" : ""}`}
+                    >
+                      <EditableImage
+                        key={`grid-${componentId}-0-${finalGridImages[0].url}`}
+                        src={getImageUrl(finalGridImages[0].url, {
+                          width: 400,
+                          height: 600,
+                          crop: "fill",
+                        })}
+                        alt={finalGridImages[0].alt}
+                        onImageChange={(url, alt) =>
+                          handleGridImageUpdate(0, url, alt)
+                        }
+                        onAltChange={altText => {
+                          handleGridImageUpdate(
+                            0,
+                            finalGridImages[0].url,
+                            altText
+                          );
+                        }}
+                        isEditable={isEditable}
+                        className="size-full object-cover"
+                        width={400}
+                        height={600}
+                        s3Options={{
+                          folder: "hero-grid-images",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 400,
+                          height: 600,
+                          text: "Image 1",
+                        }}
+                      />
                     </div>
-                    {/* Column 2 - 3 images */}
-                    <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-2-${finalGridImages[2].url}`}
-                          src={getImageUrl(finalGridImages[2].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[2].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(2, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              2,
-                              finalGridImages[2].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 3",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-3-${finalGridImages[3].url}`}
-                          src={getImageUrl(finalGridImages[3].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[3].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(3, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              3,
-                              finalGridImages[3].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 4",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-4-${finalGridImages[4].url}`}
-                          src={getImageUrl(finalGridImages[4].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[4].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(4, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              4,
-                              finalGridImages[4].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 5",
-                          }}
-                        />
-                      </div>
+                    <div
+                      className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
+                    >
+                      <EditableImage
+                        key={`grid-${componentId}-1-${finalGridImages[1].url}`}
+                        src={getImageUrl(finalGridImages[1].url, {
+                          width: 400,
+                          height: 600,
+                          crop: "fill",
+                        })}
+                        alt={finalGridImages[1].alt}
+                        onImageChange={(url, alt) =>
+                          handleGridImageUpdate(1, url, alt)
+                        }
+                        onAltChange={altText => {
+                          handleGridImageUpdate(
+                            1,
+                            finalGridImages[1].url,
+                            altText
+                          );
+                        }}
+                        isEditable={isEditable}
+                        className="size-full object-cover"
+                        width={400}
+                        height={600}
+                        s3Options={{
+                          folder: "hero-grid-images",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 400,
+                          height: 600,
+                          text: "Image 2",
+                        }}
+                      />
                     </div>
-                    {/* Column 3 - 2 images */}
-                    <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-5-${finalGridImages[5].url}`}
-                          src={getImageUrl(finalGridImages[5].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[5].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(5, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              5,
-                              finalGridImages[5].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 6",
-                          }}
-                        />
-                      </div>
-                      <div
-                        className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
-                      >
-                        <EditableImage
-                          key={`grid-${componentId}-6-${finalGridImages[6].url}`}
-                          src={getImageUrl(finalGridImages[6].url, {
-                            width: 400,
-                            height: 600,
-                            crop: "fill",
-                          })}
-                          alt={finalGridImages[6].alt}
-                          onImageChange={(url, alt) =>
-                            handleGridImageUpdate(6, url, alt)
-                          }
-                          onAltChange={altText => {
-                            handleGridImageUpdate(
-                              6,
-                              finalGridImages[6].url,
-                              altText
-                            );
-                          }}
-                          isEditable={isEditable}
-                          className="size-full object-cover"
-                          width={400}
-                          height={600}
-                          s3Options={{
-                            folder: "hero-grid-images",
-                          }}
-                          showAltEditor={isEditable}
-                          placeholder={{
-                            width: 400,
-                            height: 600,
-                            text: "Image 7",
-                          }}
-                        />
-                      </div>
+                  </div>
+                  {/* Column 2 - 3 images */}
+                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
+                    <div
+                      className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
+                    >
+                      <EditableImage
+                        key={`grid-${componentId}-2-${finalGridImages[2].url}`}
+                        src={getImageUrl(finalGridImages[2].url, {
+                          width: 400,
+                          height: 600,
+                          crop: "fill",
+                        })}
+                        alt={finalGridImages[2].alt}
+                        onImageChange={(url, alt) =>
+                          handleGridImageUpdate(2, url, alt)
+                        }
+                        onAltChange={altText => {
+                          handleGridImageUpdate(
+                            2,
+                            finalGridImages[2].url,
+                            altText
+                          );
+                        }}
+                        isEditable={isEditable}
+                        className="size-full object-cover"
+                        width={400}
+                        height={600}
+                        s3Options={{
+                          folder: "hero-grid-images",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 400,
+                          height: 600,
+                          text: "Image 3",
+                        }}
+                      />
+                    </div>
+                    <div
+                      className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
+                    >
+                      <EditableImage
+                        key={`grid-${componentId}-3-${finalGridImages[3].url}`}
+                        src={getImageUrl(finalGridImages[3].url, {
+                          width: 400,
+                          height: 600,
+                          crop: "fill",
+                        })}
+                        alt={finalGridImages[3].alt}
+                        onImageChange={(url, alt) =>
+                          handleGridImageUpdate(3, url, alt)
+                        }
+                        onAltChange={altText => {
+                          handleGridImageUpdate(
+                            3,
+                            finalGridImages[3].url,
+                            altText
+                          );
+                        }}
+                        isEditable={isEditable}
+                        className="size-full object-cover"
+                        width={400}
+                        height={600}
+                        s3Options={{
+                          folder: "hero-grid-images",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 400,
+                          height: 600,
+                          text: "Image 4",
+                        }}
+                      />
+                    </div>
+                    <div
+                      className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
+                    >
+                      <EditableImage
+                        key={`grid-${componentId}-4-${finalGridImages[4].url}`}
+                        src={getImageUrl(finalGridImages[4].url, {
+                          width: 400,
+                          height: 600,
+                          crop: "fill",
+                        })}
+                        alt={finalGridImages[4].alt}
+                        onImageChange={(url, alt) =>
+                          handleGridImageUpdate(4, url, alt)
+                        }
+                        onAltChange={altText => {
+                          handleGridImageUpdate(
+                            4,
+                            finalGridImages[4].url,
+                            altText
+                          );
+                        }}
+                        isEditable={isEditable}
+                        className="size-full object-cover"
+                        width={400}
+                        height={600}
+                        s3Options={{
+                          folder: "hero-grid-images",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 400,
+                          height: 600,
+                          text: "Image 5",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {/* Column 3 - 2 images */}
+                  <div className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8">
+                    <div
+                      className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
+                    >
+                      <EditableImage
+                        key={`grid-${componentId}-5-${finalGridImages[5].url}`}
+                        src={getImageUrl(finalGridImages[5].url, {
+                          width: 400,
+                          height: 600,
+                          crop: "fill",
+                        })}
+                        alt={finalGridImages[5].alt}
+                        onImageChange={(url, alt) =>
+                          handleGridImageUpdate(5, url, alt)
+                        }
+                        onAltChange={altText => {
+                          handleGridImageUpdate(
+                            5,
+                            finalGridImages[5].url,
+                            altText
+                          );
+                        }}
+                        isEditable={isEditable}
+                        className="size-full object-cover"
+                        width={400}
+                        height={600}
+                        s3Options={{
+                          folder: "hero-grid-images",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 400,
+                          height: 600,
+                          text: "Image 6",
+                        }}
+                      />
+                    </div>
+                    <div
+                      className={`h-64 w-44 overflow-hidden rounded-lg ${isEditable ? "pointer-events-auto" : ""}`}
+                    >
+                      <EditableImage
+                        key={`grid-${componentId}-6-${finalGridImages[6].url}`}
+                        src={getImageUrl(finalGridImages[6].url, {
+                          width: 400,
+                          height: 600,
+                          crop: "fill",
+                        })}
+                        alt={finalGridImages[6].alt}
+                        onImageChange={(url, alt) =>
+                          handleGridImageUpdate(6, url, alt)
+                        }
+                        onAltChange={altText => {
+                          handleGridImageUpdate(
+                            6,
+                            finalGridImages[6].url,
+                            altText
+                          );
+                        }}
+                        isEditable={isEditable}
+                        className="size-full object-cover"
+                        width={400}
+                        height={600}
+                        s3Options={{
+                          folder: "hero-grid-images",
+                        }}
+                        showAltEditor={isEditable}
+                        placeholder={{
+                          width: 400,
+                          height: 600,
+                          text: "Image 7",
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Button */}
-              <EditableLink
-                text={button.text || "Shop Collection"}
-                href={button.href || "#"}
-                onChange={(text, href) => {
-                  // If button doesn't exist in data.buttons, create it
-                  if (!data.buttons || data.buttons.length === 0) {
-                    const newButton = {
-                      id: "1",
-                      text,
-                      href: href || "#",
-                      variant: "primary" as const,
-                    };
-                    const updatedData = { ...data, buttons: [newButton] };
-                    setData(updatedData);
-                    onUpdate?.({ buttons: [newButton] });
-                  } else {
-                    handleButtonUpdate("buttons")(button.id, text, href);
-                  }
-                }}
-                isEditable={isEditable}
-                siteUser={siteUser}
-                style={{
-                  background: theme.colors.primary ? theme.colors.primary : "",
-                  color: theme.colors.primaryForeground,
-                }}
-                textPlaceholder="Button text..."
-                hrefPlaceholder="Enter URL..."
-              >
-                <span>{button.text}</span>
-                <span className="ml-2">
-                  <ChevronRight />
-                </span>
-              </EditableLink>
             </div>
+
+            {/* Button */}
+            <EditableLink
+              text={button.text || "Shop Collection"}
+              href={button.href || "#"}
+              onChange={(text, href) => {
+                // If button doesn't exist in data.buttons, create it
+                if (!data.buttons || data.buttons.length === 0) {
+                  const newButton = {
+                    id: "1",
+                    text,
+                    href: href || "#",
+                    variant: "primary" as const,
+                  };
+                  const updatedData = { ...data, buttons: [newButton] };
+                  setData(updatedData);
+                  onUpdate?.({ buttons: [newButton] });
+                } else {
+                  handleButtonUpdate("buttons")(button.id, text, href);
+                }
+              }}
+              isEditable={isEditable}
+              siteUser={siteUser}
+              style={{
+                background: theme.colors.primary ? theme.colors.primary : "",
+                color: theme.colors.primaryForeground,
+              }}
+              textPlaceholder="Button text..."
+              hrefPlaceholder="Enter URL..."
+            >
+              <span>{button.text}</span>
+              <span className="ml-2">
+                <ChevronRight />
+              </span>
+            </EditableLink>
           </div>
         </div>
       </div>
+    </div>
   );
 };

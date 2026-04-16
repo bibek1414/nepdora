@@ -13,7 +13,7 @@ export const industries = [
   "grocery-store",
   "educational-consultancy",
   "digital-agency",
-  "ecommerce"
+  "ecommerce",
 ];
 
 // Top 15 major cities for pre-rendering to optimize build size

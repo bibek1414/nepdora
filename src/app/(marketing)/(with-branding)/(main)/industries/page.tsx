@@ -216,10 +216,10 @@ export default function IndustriesHubPage() {
                 <Link
                   key={slug}
                   href={`/industries/${slug}`}
-                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 transition-all hover:-translate-y-1 hover:border-primary/20 hover:-xl hover:-primary/5"
+                  className="group hover:border-primary/20 hover:-xl hover:-primary/5 relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 transition-all hover:-translate-y-1"
                 >
                   <div
-                    className={`mb-5 inline-flex rounded-2xl bg-gradient-to-br ${color} p-3.5 text-white -lg -current/10`}
+                    className={`mb-5 inline-flex rounded-2xl bg-gradient-to-br ${color} -lg -current/10 p-3.5 text-white`}
                   >
                     {getIndustryIcon(slug)}
                   </div>
@@ -229,18 +229,17 @@ export default function IndustriesHubPage() {
                   <p className="text-[15px] leading-relaxed font-medium text-slate-500">
                     {description}
                   </p>
-                  <div className="mt-5 flex items-center gap-1.5 text-sm font-bold text-primary opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0">
+                  <div className="text-primary mt-5 flex -translate-x-2 items-center gap-1.5 text-sm font-bold opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100">
                     Explore Solutions
                     <ChevronRight className="h-4 w-4" />
                   </div>
-                  <div className="absolute top-0 right-0 -mr-8 -mt-8 h-24 w-24 rounded-full bg-slate-50 opacity-0 transition-opacity group-hover:opacity-100" />
+                  <div className="absolute top-0 right-0 -mt-8 -mr-8 h-24 w-24 rounded-full bg-slate-50 opacity-0 transition-opacity group-hover:opacity-100" />
                 </Link>
               );
             })}
           </div>
         </div>
       </section>
-
 
       {/* Features Section */}
       <section className="py-16">

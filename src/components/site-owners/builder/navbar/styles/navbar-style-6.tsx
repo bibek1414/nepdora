@@ -324,143 +324,143 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-      {/* Mobile Menu */}
-      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent
-          side="left"
-          className="w-full max-w-xs overflow-y-auto"
-          style={{
-            backgroundColor: navbarData.backgroundColor || "white",
-            color: navbarData.textColor || "inherit",
-          }}
-        >
-          <SheetHeader>
-            <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>
-              Menu
-            </SheetTitle>
-          </SheetHeader>
+        {/* Mobile Menu */}
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+          <SheetContent
+            side="left"
+            className="w-full max-w-xs overflow-y-auto"
+            style={{
+              backgroundColor: navbarData.backgroundColor || "white",
+              color: navbarData.textColor || "inherit",
+            }}
+          >
+            <SheetHeader>
+              <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>
+                Menu
+              </SheetTitle>
+            </SheetHeader>
 
-          <div className="mt-2">
-            {/* Mobile Links */}
-            <div className="space-y-6 px-4 py-6">
-              {links.map(link =>
-                isEditable && onEditLink && onDeleteLink ? (
-                  <EditableItem key={link.id}>
-                    <div className="flow-root">
+            <div className="mt-2">
+              {/* Mobile Links */}
+              <div className="space-y-6 px-4 py-6">
+                {links.map(link =>
+                  isEditable && onEditLink && onDeleteLink ? (
+                    <EditableItem key={link.id}>
+                      <div className="flow-root">
+                        <Link
+                          href={link.href}
+                          onClick={e => e.preventDefault()}
+                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        >
+                          {link.text}
+                        </Link>
+                      </div>
+                    </EditableItem>
+                  ) : (
+                    <div className="flow-root" key={link.id}>
                       <Link
-                        href={link.href}
-                        onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        target={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "_blank"
+                            : undefined
+                        }
+                        rel={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                        onClick={e => handleLinkClick(e, link.href)}
+                        className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
                       >
                         {link.text}
                       </Link>
                     </div>
-                  </EditableItem>
-                ) : (
-                  <div className="flow-root" key={link.id}>
-                    <Link
-                      href={generateLinkHref(
-                        link.href,
-                        siteUser,
-                        pathname,
-                        isEditable,
-                        disableClicks
-                      )}
-                      target={
-                        link.href?.startsWith("http") ||
-                        link.href?.startsWith("mailto:")
-                          ? "_blank"
-                          : undefined
-                      }
-                      rel={
-                        link.href?.startsWith("http") ||
-                        link.href?.startsWith("mailto:")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                      onClick={e => handleLinkClick(e, link.href)}
-                      className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
-                    >
-                      {link.text}
-                    </Link>
-                  </div>
-                )
-              )}
-            </div>
+                  )
+                )}
+              </div>
 
-            {/* Mobile Buttons */}
-            <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-              {buttons.map(button =>
-                isEditable && onEditButton && onDeleteButton ? (
-                  <EditableItem key={button.id}>
-                    <div className="flow-root">
+              {/* Mobile Buttons */}
+              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                {buttons.map(button =>
+                  isEditable && onEditButton && onDeleteButton ? (
+                    <EditableItem key={button.id}>
+                      <div className="flow-root">
+                        <Link
+                          href={button.href}
+                          onClick={e => e.preventDefault()}
+                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        >
+                          {button.text}
+                        </Link>
+                      </div>
+                    </EditableItem>
+                  ) : (
+                    <div className="flow-root" key={button.id}>
                       <Link
-                        href={button.href}
-                        onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        href={generateLinkHref(
+                          button.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        target={
+                          button.href?.startsWith("http") ||
+                          button.href?.startsWith("mailto:")
+                            ? "_blank"
+                            : undefined
+                        }
+                        rel={
+                          button.href?.startsWith("http") ||
+                          button.href?.startsWith("mailto:")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                        onClick={e => handleLinkClick(e, button.href)}
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-100"
                       >
                         {button.text}
                       </Link>
                     </div>
-                  </EditableItem>
-                ) : (
-                  <div className="flow-root" key={button.id}>
-                    <Link
-                      href={generateLinkHref(
-                        button.href,
-                        siteUser,
-                        pathname,
-                        isEditable,
-                        disableClicks
-                      )}
-                      target={
-                        button.href?.startsWith("http") ||
-                        button.href?.startsWith("mailto:")
-                          ? "_blank"
-                          : undefined
-                      }
-                      rel={
-                        button.href?.startsWith("http") ||
-                        button.href?.startsWith("mailto:")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                      onClick={e => handleLinkClick(e, button.href)}
-                      className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-100"
-                    >
-                      {button.text}
-                    </Link>
-                  </div>
-                )
-              )}
+                  )
+                )}
 
-              {/* Mobile Book Appointment Button */}
-              <div className="flow-root">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <button
-                      className="-m-2 block w-full cursor-pointer p-2 text-left font-medium transition-colors hover:opacity-100"
-                      onClick={() => {
-                        if (disableClicks) return;
-                      }}
-                    >
-                      Book Appointment
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
-                    <AppointmentForm
-                      data={defaultAppointmentData}
-                      siteUser={siteUser}
-                      isPreview={isEditable}
-                      isEditable={false}
-                    />
-                  </DialogContent>
-                </Dialog>
+                {/* Mobile Book Appointment Button */}
+                <div className="flow-root">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button
+                        className="-m-2 block w-full cursor-pointer p-2 text-left font-medium transition-colors hover:opacity-100"
+                        onClick={() => {
+                          if (disableClicks) return;
+                        }}
+                      >
+                        Book Appointment
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+                      <AppointmentForm
+                        data={defaultAppointmentData}
+                        siteUser={siteUser}
+                        isPreview={isEditable}
+                        isEditable={false}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
             </div>
-          </div>
-        </SheetContent>
-      </Sheet>
+          </SheetContent>
+        </Sheet>
 
         {/* User Actions - Desktop */}
         <div className="hidden items-center gap-2 lg:flex">

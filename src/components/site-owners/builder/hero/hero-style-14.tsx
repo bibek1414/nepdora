@@ -112,12 +112,11 @@ export const HeroTemplate14: React.FC<HeroTemplate14Props> = ({
               value={data.title}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+              className="text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
               isEditable={isEditable}
             />
           </div>
         </div>
-
 
         <EditableText
           value={data.description}

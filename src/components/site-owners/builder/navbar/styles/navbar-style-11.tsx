@@ -232,7 +232,9 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
           {/* User Auth */}
           {/* User Auth - Desktop */}
           {enableLogin && (
-            <div className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}>
+            <div
+              className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}
+            >
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

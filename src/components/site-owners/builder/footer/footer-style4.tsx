@@ -73,7 +73,7 @@ export function FooterStyle4({
 
             {data.newsletter?.enabled && (
               <div className="mt-12 w-full max-w-md">
-                <h3 className="mb-6 text-lg font-bold uppercase tracking-wider">
+                <h3 className="mb-6 text-lg font-bold tracking-wider uppercase">
                   {data.newsletter.title}
                 </h3>
                 <p className="mb-6 text-sm leading-relaxed opacity-70">
@@ -88,7 +88,7 @@ export function FooterStyle4({
           <div className="flex w-full flex-col md:flex-row lg:w-[60%]">
             {/* Links Columns */}
             <div
-              className="flex flex-col flex-1 gap-12 border-b p-8 sm:flex-row sm:gap-20 md:border-r md:border-b-0 lg:p-16"
+              className="flex flex-1 flex-col gap-12 border-b p-8 sm:flex-row sm:gap-20 md:border-r md:border-b-0 lg:p-16"
               style={{
                 borderColor: footerData.textColor
                   ? footerData.textColor + "20"
@@ -98,7 +98,9 @@ export function FooterStyle4({
               {/* Quick Links (Section 1) */}
               {section1 && (
                 <div className="flex flex-col items-center gap-6 sm:items-start">
-                  <h3 className="text-lg font-bold uppercase tracking-wider">{section1.title}</h3>
+                  <h3 className="text-lg font-bold tracking-wider uppercase">
+                    {section1.title}
+                  </h3>
                   <ul className="space-y-4 text-center sm:text-left">
                     {section1.links.map(link => (
                       <li key={link.id}>
@@ -140,7 +142,9 @@ export function FooterStyle4({
               {/* Pages (Section 2) */}
               {section2 && (
                 <div className="flex flex-col items-center gap-6 sm:items-start">
-                  <h3 className="text-lg font-bold uppercase tracking-wider">{section2.title}</h3>
+                  <h3 className="text-lg font-bold tracking-wider uppercase">
+                    {section2.title}
+                  </h3>
                   <ul className="space-y-4 text-center sm:text-left">
                     {section2.links.map(link => (
                       <li key={link.id}>
@@ -188,7 +192,7 @@ export function FooterStyle4({
                     <MapPin className="h-5 w-5 stroke-[1.5] sm:h-6 sm:w-6" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base font-medium leading-snug sm:text-lg">
+                    <span className="text-base leading-snug font-medium sm:text-lg">
                       {data.contactInfo.address}
                     </span>
                   </div>

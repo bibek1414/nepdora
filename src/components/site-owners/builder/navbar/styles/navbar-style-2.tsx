@@ -226,24 +226,24 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
         style={{ color: navbarData.textColor || "inherit" }}
       >
         <div className="flex items-center gap-4">
-        <button
-          type="button"
-          onClick={() => {
-            if (!disableClicks && !isEditable) {
-              setIsMobileMenuOpen(true);
-            }
-          }}
-          className={`relative rounded-md bg-transparent p-2 opacity-60 lg:hidden ${
-            disableClicks || isEditable
-              ? "cursor-default opacity-40"
-              : "hover:opacity-100"
-          }`}
-          disabled={disableClicks || isEditable}
-        >
-          <span className="absolute -inset-0.5"></span>
-          <span className="sr-only">Open menu</span>
-          <Menu className="h-6 w-6" />
-        </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!disableClicks && !isEditable) {
+                setIsMobileMenuOpen(true);
+              }
+            }}
+            className={`relative rounded-md bg-transparent p-2 opacity-60 lg:hidden ${
+              disableClicks || isEditable
+                ? "cursor-default opacity-40"
+                : "hover:opacity-100"
+            }`}
+            disabled={disableClicks || isEditable}
+          >
+            <span className="absolute -inset-0.5"></span>
+            <span className="sr-only">Open menu</span>
+            <Menu className="h-6 w-6" />
+          </button>
 
           <div className={disableClicks ? "pointer-events-auto" : ""}>
             {isEditable && onEditLogo ? (

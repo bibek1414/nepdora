@@ -116,7 +116,7 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
               onChange={handleTextUpdate("title")}
               as="h1"
               isEditable={isEditable}
-              className="text-3xl font-black leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-7xl"
+              className="text-3xl leading-tight font-black tracking-tight sm:text-4xl md:text-5xl lg:text-7xl"
             />
           </div>
 
@@ -166,7 +166,6 @@ export const HeroTemplate15: React.FC<HeroTemplate15Props> = ({
           </div>
         </motion.div>
       </div>
-
     </section>
   );
 };

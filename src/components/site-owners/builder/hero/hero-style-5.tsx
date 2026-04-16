@@ -211,7 +211,7 @@ export const HeroTemplate5: React.FC<HeroTemplate5Props> = ({
           isEditable={isEditable}
           label="Change Background"
           folder="hero-backgrounds"
-          className="absolute -0 top-6 left-6 z-20"
+          className="-0 absolute top-6 left-6 z-20"
         />
       </motion.div>
 

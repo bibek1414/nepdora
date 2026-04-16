@@ -129,7 +129,6 @@ export function FooterStyle1({
             )}
           </div>
 
-
           {/* Bottom section */}
           <div className="mt-16 flex flex-col items-center justify-between border-t border-white/20 pt-8 text-sm opacity-80 md:flex-row">
             {/* Logo and Company Name */}

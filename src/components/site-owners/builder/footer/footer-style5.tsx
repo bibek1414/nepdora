@@ -29,7 +29,6 @@ const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
   </h3>
 );
 
-
 // Helper component for list items
 const LinkItem: React.FC<{
   label: string;
@@ -213,7 +212,6 @@ export function FooterStyle5({
 
             {/* Decorative bottom graphic hint */}
             <div className="mt-auto hidden h-32 w-full translate-y-12 rounded-t-full bg-gradient-to-t from-white/5 to-transparent opacity-20 blur-xl lg:block"></div>
-
           </div>
         </div>
 

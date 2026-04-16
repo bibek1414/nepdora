@@ -35,7 +35,11 @@ export const PortfolioCard4: React.FC<PortfolioCard4Props> = ({
     const basePath = isPreviewMode
       ? "/portfolio-details-draft"
       : "/portfolio-details";
-    return generateLinkHref(`${basePath}/${portfolio.slug}`, siteUser, pathname);
+    return generateLinkHref(
+      `${basePath}/${portfolio.slug}`,
+      siteUser,
+      pathname
+    );
   };
 
   const handleActivate = () => {

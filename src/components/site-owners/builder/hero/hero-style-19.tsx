@@ -160,7 +160,6 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
                 multiline
               />
             </div>
-
           </div>
 
           {/* Right - description + button */}
@@ -203,7 +202,6 @@ export const HeroTemplate19: React.FC<HeroTemplate19Props> = ({
       <div className="absolute bottom-0 left-0 z-20 w-full">
         {/* Subtle gradient */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-
 
         <div className="relative mx-auto max-w-7xl px-6 pb-8 sm:px-12 md:px-24">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-8">

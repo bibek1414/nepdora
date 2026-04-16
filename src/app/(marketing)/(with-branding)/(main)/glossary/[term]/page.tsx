@@ -227,7 +227,7 @@ const TermVisual = ({ term, slug }: { term: string; slug: string }) => {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-linear-to-br ${visual.bg} p-8 text-white -lg`}
+      className={`relative overflow-hidden rounded-2xl bg-linear-to-br ${visual.bg} -lg p-8 text-white`}
     >
       <div className="absolute -top-6 -right-6 opacity-10">{visual.icon}</div>
       <div className="relative z-10">
@@ -302,7 +302,7 @@ export default async function GlossaryTermPage({ params }: Props) {
             {/* Main Content - Left (2/3) */}
             <div className="space-y-10 lg:col-span-2">
               {/* Detailed Explanation Card */}
-              <div className="rounded-2xl border border-slate-100 bg-white p-8 -sm">
+              <div className="-sm rounded-2xl border border-slate-100 bg-white p-8">
                 <div className="mb-5 flex items-center gap-3">
                   <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-xl">
                     <Lightbulb className="h-5 w-5" />
@@ -338,7 +338,7 @@ export default async function GlossaryTermPage({ params }: Props) {
               </div>
 
               {/* Key Takeaways */}
-              <div className="rounded-2xl border border-slate-100 bg-white p-8 -sm">
+              <div className="-sm rounded-2xl border border-slate-100 bg-white p-8">
                 <div className="mb-6 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
                     <Sparkles className="h-5 w-5" />
@@ -369,7 +369,7 @@ export default async function GlossaryTermPage({ params }: Props) {
               <TermVisual term={item.term} slug={item.slug} />
 
               {/* Quick Info */}
-              <div className="rounded-2xl border border-slate-100 bg-white p-6 -sm">
+              <div className="-sm rounded-2xl border border-slate-100 bg-white p-6">
                 <h3 className="mb-4 font-semibold text-slate-900">
                   Quick Info
                 </h3>
@@ -392,7 +392,7 @@ export default async function GlossaryTermPage({ params }: Props) {
               </div>
 
               {/* Related Terms */}
-              <div className="rounded-2xl border border-slate-100 bg-white p-6 -sm">
+              <div className="-sm rounded-2xl border border-slate-100 bg-white p-6">
                 <h3 className="mb-4 font-semibold text-slate-900">
                   Related Terms
                 </h3>

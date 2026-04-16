@@ -88,13 +88,12 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
               value={data.title || "Waves Puffer<br />Coat Black"}
               onChange={handleTextUpdate("title")}
               as="h1"
-              className="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl"
+              className="mb-6 text-4xl leading-[1.1] font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl"
               isEditable={isEditable}
               placeholder="Main Headline"
               multiline
               style={{ fontFamily: theme.fonts.heading }}
             />
-
 
             {/* Button */}
             <div className="mt-8">

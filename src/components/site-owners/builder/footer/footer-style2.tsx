@@ -80,7 +80,9 @@ export function FooterStyle2({
                 <FooterLogo footerData={data} getImageUrl={getImageUrl} />
               </div>
 
-              <p className="mb-8 max-w-md text-base leading-relaxed opacity-80">{data.description}</p>
+              <p className="mb-8 max-w-md text-base leading-relaxed opacity-80">
+                {data.description}
+              </p>
 
               {/* Contact Info */}
               <div className="mb-8 space-y-3">
@@ -98,24 +100,30 @@ export function FooterStyle2({
                 )}
                 {data.contactInfo.address && (
                   <div className="flex items-start justify-center opacity-80 lg:justify-start">
-                    <MapPin className="mr-3 mt-1 h-4 w-4 shrink-0" />
-                    <span className="text-left text-sm whitespace-pre-line">{data.contactInfo.address}</span>
+                    <MapPin className="mt-1 mr-3 h-4 w-4 shrink-0" />
+                    <span className="text-left text-sm whitespace-pre-line">
+                      {data.contactInfo.address}
+                    </span>
                   </div>
                 )}
               </div>
 
               {/* Social Links - Horizontal Layout */}
               <div className="mb-8 lg:mb-0">
-                <h4 className="mb-4 text-sm font-bold tracking-wider uppercase">Follow Us</h4>
+                <h4 className="mb-4 text-sm font-bold tracking-wider uppercase">
+                  Follow Us
+                </h4>
                 {data.socialLinks.length > 0 ? (
                   <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
                     {data.socialLinks.map(social => (
                       <Link
                         key={social.id}
                         href={social.href || "#"}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5 transition-all hover:bg-black/10 hover:scale-110 active:scale-95 dark:bg-white/5 dark:hover:bg-white/10"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-black/5 transition-all hover:scale-110 hover:bg-black/10 active:scale-95 dark:bg-white/5 dark:hover:bg-white/10"
                         style={{
-                          backgroundColor: footerData.textColor ? `${footerData.textColor}10` : undefined
+                          backgroundColor: footerData.textColor
+                            ? `${footerData.textColor}10`
+                            : undefined,
                         }}
                         target={
                           social.href?.startsWith("http") ? "_blank" : undefined
@@ -140,7 +148,6 @@ export function FooterStyle2({
                 )}
               </div>
             </div>
-
 
             {/* Render the first 3 sections */}
             {sectionsToShow

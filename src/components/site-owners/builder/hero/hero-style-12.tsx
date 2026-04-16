@@ -141,7 +141,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
 
   return (
     <div
-      className="relative min-h-[500px] h-screen w-full overflow-hidden md:h-[70vh]"
+      className="relative h-screen min-h-[500px] w-full overflow-hidden md:h-[70vh]"
       data-component-id={componentId}
     >
       {isEditable && (
@@ -240,7 +240,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                   isEditable={isEditable}
                   multiline
                   as="h1"
-                  className="mb-4 text-3xl font-black leading-tight tracking-tight sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl"
+                  className="mb-4 text-3xl leading-tight font-black tracking-tight sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl"
                   placeholder="Hero Title"
                 />
 
@@ -278,7 +278,6 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
           </div>
         </motion.div>
       </AnimatePresence>
-
 
       <div className="absolute right-0 bottom-8 left-0 z-20 flex justify-center gap-3">
         {heroSlides.map((_, i) => (

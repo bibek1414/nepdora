@@ -129,7 +129,7 @@ export default async function IntegrationDetailsPage({ params }: Props) {
 
           <div className="grid gap-8 md:grid-cols-2 lg:gap-8">
             {/* The Hard Way */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 -sm">
+            <div className="-sm rounded-2xl border border-slate-200 bg-white p-8">
               <div className="mb-8 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
                   <ShieldCheck className="h-5 w-5" />
@@ -164,7 +164,7 @@ export default async function IntegrationDetailsPage({ params }: Props) {
             </div>
 
             {/* The Nepdora Way */}
-            <div className="border-primary/20 relative rounded-2xl border-2 bg-white p-8 -sm">
+            <div className="border-primary/20 -sm relative rounded-2xl border-2 bg-white p-8">
               <div
                 className="absolute -top-3 right-6 rounded-full px-4 py-1 text-xs font-semibold text-white"
                 style={{ backgroundColor: integration.color }}
@@ -238,7 +238,7 @@ export default async function IntegrationDetailsPage({ params }: Props) {
 
               <div className="mt-8">
                 <div
-                  className="rounded-xl p-5 text-white -md"
+                  className="-md rounded-xl p-5 text-white"
                   style={{ backgroundColor: integration.color }}
                 >
                   <p className="leading-relaxed font-medium text-white/90">
@@ -266,7 +266,7 @@ export default async function IntegrationDetailsPage({ params }: Props) {
                   {integration.benefits.map((benefit, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-4 -sm"
+                      className="-sm flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-4"
                     >
                       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-500">
                         <CheckCircle2 className="h-4 w-4" />
@@ -320,7 +320,7 @@ export default async function IntegrationDetailsPage({ params }: Props) {
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 rounded-2xl border border-slate-200 bg-slate-50 p-6 -sm">
+              <div className="-sm sticky top-24 rounded-2xl border border-slate-200 bg-slate-50 p-6">
                 <h3 className="mb-4 text-xl font-semibold text-slate-900">
                   Trusted by Nepali Sellers
                 </h3>

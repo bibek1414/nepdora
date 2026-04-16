@@ -199,7 +199,7 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                     handleCollectionUpdate(collection.id, "title", value)
                   }
                   as="h2"
-                  className="mb-4 text-2xl font-black leading-tight sm:text-3xl md:text-4xl"
+                  className="mb-4 text-2xl leading-tight font-black sm:text-3xl md:text-4xl"
                   isEditable={isEditable}
                   placeholder="Enter collection title..."
                   multiline={true}
@@ -226,7 +226,6 @@ export const HeroTemplate2: React.FC<HeroTemplate2Props> = ({
                 </div>
               </div>
             </div>
-
           </div>
         ))}
       </div>

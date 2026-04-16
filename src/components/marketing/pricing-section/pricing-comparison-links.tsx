@@ -26,14 +26,14 @@ export default function PricingComparisonLinks() {
               className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-6 transition-all"
             >
               <div>
-                <h3 className="text-lg font-bold text-slate-900 group-:text-blue-600">
+                <h3 className="group-:text-blue-600 text-lg font-bold text-slate-900">
                   Nepdora vs {item.platformName}
                 </h3>
                 <p className="mt-1 text-sm text-slate-500">
                   Detailed cost & feature comparison
                 </p>
               </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400 group-:bg-blue-600 group-:text-white">
+              <div className="group-:bg-blue-600 group-:text-white flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400">
                 <ChevronRight className="h-5 w-5" />
               </div>
             </Link>

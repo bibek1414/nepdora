@@ -3,12 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   useSiteConfig,
   useCreateSiteConfig,
@@ -16,11 +11,7 @@ import {
 } from "@/hooks/owner-site/admin/use-site-config";
 import { toast } from "sonner";
 import { validateUrl, ApiError } from "@/utils/api-error";
-import {
-  Loader2,
-  Save,
-  X,
-} from "lucide-react";
+import { Loader2, Save, X } from "lucide-react";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { useAuth } from "@/hooks/use-auth";
 import Tiptap from "@/components/ui/tip-tap";
@@ -341,8 +332,10 @@ export const SiteConfigForm: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Branding Section */}
         <Card className="-sm overflow-hidden border-none shadow-none ring-1 ring-gray-200">
-          <CardHeader className="pb-4 p-0">
-            <CardTitle className="text-left text-lg font-bold">Branding</CardTitle>
+          <CardHeader className="p-0 pb-4">
+            <CardTitle className="text-left text-lg font-bold">
+              Branding
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Favicon and Logo side by side */}
@@ -404,7 +397,7 @@ export const SiteConfigForm: React.FC = () => {
 
         {/* Business Information Section */}
         <Card className="-sm overflow-hidden border-none ring-1 ring-gray-200">
-          <CardHeader className="pb-4 p-0">
+          <CardHeader className="p-0 pb-4">
             <CardTitle className="text-left text-lg font-bold">
               Business Information
             </CardTitle>
@@ -465,7 +458,7 @@ export const SiteConfigForm: React.FC = () => {
 
         {/* Contact Information Section */}
         <Card className="-sm overflow-hidden border-none ring-1 ring-gray-200">
-          <CardHeader className="pb-4 p-0">
+          <CardHeader className="p-0 pb-4">
             <CardTitle className="text-left text-lg font-bold">
               Contact Information
             </CardTitle>
@@ -546,7 +539,7 @@ export const SiteConfigForm: React.FC = () => {
 
         {/* Social Media Section */}
         <Card className="-sm overflow-hidden border-none ring-1 ring-gray-200">
-          <CardHeader className="pb-4 p-0">
+          <CardHeader className="p-0 pb-4">
             <CardTitle className="text-left text-lg font-bold">
               Social Media Links
             </CardTitle>

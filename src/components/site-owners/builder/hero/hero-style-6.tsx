@@ -176,7 +176,6 @@ export const HeroTemplate6: React.FC<HeroTemplate6Props> = ({
           </h2>
         </div>
 
-
         {/* Sliding Button Animation: Slides from Left (-translate-x) to Center (0) */}
         <div
           className={`transform transition-all delay-300 duration-1000 ease-out ${

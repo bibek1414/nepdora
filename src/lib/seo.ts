@@ -24,14 +24,14 @@ export function getDynamicOgUrl({
   label?: string;
 }) {
   const params = new URLSearchParams();
-  
+
   // Clean title for URL
   params.set("title", title.trim());
-  
+
   if (subtitle) {
     params.set("subtitle", subtitle.trim());
   }
-  
+
   if (label) {
     params.set("label", label.trim());
   } else {
@@ -69,12 +69,12 @@ export function buildMarketingMetadata({
 
   // Smart OG extraction
   const displayTitle = ogTitle || title.split(/ [|:-] /)[0].trim();
-  
+
   // Subtitle usually works best as a concise version of description
-  const displaySubtitle = 
-    ogSubtitle || 
-    (finalDescription.length > 120 
-      ? finalDescription.slice(0, 117) + "..." 
+  const displaySubtitle =
+    ogSubtitle ||
+    (finalDescription.length > 120
+      ? finalDescription.slice(0, 117) + "..."
       : finalDescription);
 
   const finalImage =

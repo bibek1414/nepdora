@@ -80,7 +80,7 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
             value={data.title}
             onChange={handleTextUpdate("title")}
             as="h1"
-            className="mx-auto mb-6 text-2xl font-black leading-tight tracking-tight sm:text-3xl md:text-4xl lg:text-5xl"
+            className="mx-auto mb-6 text-2xl leading-tight font-black tracking-tight sm:text-3xl md:text-4xl lg:text-5xl"
             style={{
               fontFamily: theme.fonts.heading,
             }}
@@ -105,6 +105,5 @@ export const HeroTemplate13: React.FC<HeroTemplate13Props> = ({
         </div>
       </div>
     </motion.section>
-
   );
 };

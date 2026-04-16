@@ -357,7 +357,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
 
             {/* Centered Search */}
             <div
-              className="ml-4 hidden max-w-md flex-1 lg:flex lg:ml-8"
+              className="ml-4 hidden max-w-md flex-1 lg:ml-8 lg:flex"
               ref={searchRef}
             >
               <form onSubmit={handleSearchSubmit} className="relative w-full">

@@ -280,7 +280,7 @@ const SubscriptionTrigger = ({
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-muted-foreground flex items-center gap-1">
               <Calendar className="h-3 w-3" />
-              Expires {expiryDate} 
+              Expires {expiryDate}
             </span>
           </div>
 

@@ -36,7 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "dental",
     "education",
     "ecommerce",
-    
   ].some(s => industry.toLowerCase().includes(s));
   const action = "Create";
   const niche = industryLabel;

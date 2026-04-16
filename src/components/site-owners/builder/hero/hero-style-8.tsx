@@ -107,9 +107,9 @@ export const HeroTemplate8: React.FC<HeroTemplate8Props> = ({
                   as="span"
                 />
               </div>
-              <div className="hidden sm:block h-6 w-px bg-gray-300"></div>
+              <div className="hidden h-6 w-px bg-gray-300 sm:block"></div>
               <div className="flex items-center gap-2">
-                <div className="h-[28px] w-[28px] overflow-hidden shrink-0">
+                <div className="h-[28px] w-[28px] shrink-0 overflow-hidden">
                   <EditableImage
                     src="/certifications/titi.jpg"
                     alt={data.badge2Text || "TITI Certified"}

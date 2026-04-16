@@ -97,7 +97,7 @@ export const FooterStyle9 = ({
               <button
                 type="submit"
                 disabled={isEditable || mutation.isPending}
-                className="flex w-full items-center justify-center rounded-2xl bg-primary px-8 py-4 text-base font-bold whitespace-nowrap text-primary-foreground transition-all hover:opacity-90 active:scale-95 sm:w-auto sm:rounded-full sm:text-lg"
+                className="bg-primary text-primary-foreground flex w-full items-center justify-center rounded-2xl px-8 py-4 text-base font-bold whitespace-nowrap transition-all hover:opacity-90 active:scale-95 sm:w-auto sm:rounded-full sm:text-lg"
                 style={{
                   backgroundColor: theme?.colors?.primary || "#ccff00",
                   color: theme?.colors?.primaryForeground || "black",
@@ -115,7 +115,10 @@ export const FooterStyle9 = ({
           {/* Links */}
           <div className="flex flex-col gap-12 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-20 sm:gap-y-12 lg:justify-start lg:gap-x-32">
             {data.sections?.map(section => (
-              <div key={section.id} className="flex flex-col items-center gap-5 sm:items-start">
+              <div
+                key={section.id}
+                className="flex flex-col items-center gap-5 sm:items-start"
+              >
                 <h4 className="mb-2 text-xl font-bold tracking-wider uppercase">
                   {section.title}
                 </h4>
@@ -137,7 +140,6 @@ export const FooterStyle9 = ({
             ))}
           </div>
         </div>
-
 
         {/* Middle Section */}
         <div
