@@ -73,6 +73,9 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
   onEditLogo,
   onEditLink,
   onDeleteLink,
+  onAddButton,
+  onEditButton,
+  onDeleteButton,
   onEditCart,
   disableClicks = false,
   onUpdateBanner,
@@ -248,7 +251,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
               </EditableLink>
             </div>
             <div className="hidden items-center gap-4 opacity-70 sm:flex">
-              <div className="hidden items-center gap-6 md:flex">
+              <div className="hidden items-center gap-6 lg:flex">
                 {links.slice(0, 3).map((link: NavbarLink) =>
                   isEditable && onEditLink && onDeleteLink ? (
                     <EditableItem key={link.id}>
@@ -308,67 +311,25 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
             style={{ color: data.textColor || "inherit" }}
           >
             {/* Mobile Menu Toggle */}
-            <div className="flex items-center md:hidden">
-              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="px-2"
-                    onClick={() => !disableClicks && setIsMobileMenuOpen(true)}
-                  >
-                    <Menu className="h-6 w-6" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent
-                  side="left"
-                  className="w-[300px] overflow-y-auto sm:w-[400px]"
-                  style={{
-                    backgroundColor: data.backgroundColor || "white",
-                    color: data.textColor || "inherit",
-                  }}
-                >
-                  <SheetHeader>
-                    <SheetTitle style={{ color: data.textColor || "inherit" }}>
-                      Menu
-                    </SheetTitle>
-                  </SheetHeader>
-                  <div className="flex flex-col gap-4 py-4">
-                    <div className="px-2 pb-4">
-                      <form
-                        onSubmit={handleSearchSubmit}
-                        className="relative w-full"
-                      >
-                        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 opacity-40" />
-                        <input
-                          type="text"
-                          placeholder="Search anything..."
-                          value={searchQuery}
-                          onChange={e => setSearchQuery(e.target.value)}
-                          className="w-full rounded-full border border-gray-100 bg-gray-50/50 py-2 pr-4 pl-10 text-sm focus:outline-none"
-                          disabled={disableClicks || isEditable}
-                        />
-                      </form>
-                    </div>
-                    {links.map(link => (
-                      <Link
-                        key={link.id}
-                        href={generateLinkHref(
-                          link.href,
-                          siteUser,
-                          pathname,
-                          isEditable,
-                          disableClicks
-                        )}
-                        className="px-2 text-lg font-medium hover:opacity-80"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {link.text}
-                      </Link>
-                    ))}
-                  </div>
-                </SheetContent>
-              </Sheet>
+            <div className="flex items-center lg:hidden">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!disableClicks && !isEditable) {
+                    setIsMobileMenuOpen(true);
+                  }
+                }}
+                className={`relative rounded-md bg-transparent p-2 opacity-60 ${
+                  disableClicks || isEditable
+                    ? "cursor-default opacity-40"
+                    : "hover:opacity-100"
+                }`}
+                disabled={disableClicks || isEditable}
+              >
+                <span className="absolute -inset-0.5"></span>
+                <span className="sr-only">Open menu</span>
+                <Menu className="h-6 w-6" />
+              </button>
             </div>
 
             {/* Logo */}
@@ -396,7 +357,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
 
             {/* Centered Search */}
             <div
-              className="ml-4 hidden max-w-md flex-1 md:flex lg:ml-8"
+              className="ml-4 hidden max-w-md flex-1 lg:flex lg:ml-8"
               ref={searchRef}
             >
               <form onSubmit={handleSearchSubmit} className="relative w-full">
@@ -477,7 +438,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
               </form>
             </div>
 
-            <div className="hidden flex-1 md:block"></div>
+            <div className="hidden flex-1 lg:block"></div>
 
             {/* Right Side: Links & Cart */}
             <div className="flex items-center gap-6">
@@ -692,6 +653,87 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <SheetContent
+          side="left"
+          className="w-full max-w-xs overflow-y-auto"
+          style={{
+            backgroundColor: data.backgroundColor || "white",
+            color: data.textColor || "inherit",
+          }}
+        >
+          <SheetHeader>
+            <SheetTitle style={{ color: data.textColor || "inherit" }}>
+              Menu
+            </SheetTitle>
+          </SheetHeader>
+
+          <div className="mt-2 text-left">
+            <div className="px-4 py-4">
+              <form onSubmit={handleSearchSubmit} className="relative w-full">
+                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 opacity-40" />
+                <input
+                  type="text"
+                  placeholder="Search anything..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full rounded-full border border-gray-100 bg-gray-50/50 py-2 pr-4 pl-10 text-sm focus:outline-none"
+                  disabled={disableClicks || isEditable}
+                />
+              </form>
+            </div>
+
+            {/* Mobile Links */}
+            <div className="space-y-6 px-4 py-6">
+              {links.map((link: NavbarLink) =>
+                isEditable && onEditLink && onDeleteLink ? (
+                  <EditableItem key={link.id}>
+                    <div className="flow-root">
+                      <Link
+                        href={link.href}
+                        onClick={e => e.preventDefault()}
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                      >
+                        {link.text}
+                      </Link>
+                    </div>
+                  </EditableItem>
+                ) : (
+                  <div className="flow-root" key={link.id}>
+                    <Link
+                      href={generateLinkHref(
+                        link.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
+                    >
+                      {link.text}
+                    </Link>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Only show SideCart in preview mode, not in editable mode */}
       {!isEditable && (

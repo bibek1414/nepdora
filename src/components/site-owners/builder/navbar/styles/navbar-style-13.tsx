@@ -40,7 +40,12 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/navbar/editable-text";
-import { Sheet, SheetContent, SheetHeader } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -66,9 +71,11 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
   onEditLogo,
+  onAddLink,
   onEditLink,
   onDeleteLink,
   siteUser,
+  onAddButton,
   onEditButton,
   onDeleteButton,
   onEditCart,
@@ -219,14 +226,18 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-2 py-3 lg:gap-8">
           {/* Brand Logo & Mobile Trigger */}
-          <div className="flex shrink-0 items-center gap-3">
+          {/* Brand Logo & Mobile Trigger */}
+          <div className="flex items-center gap-3 lg:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="-ml-2 rounded-lg p-2 transition-colors md:hidden"
+              className="-ml-2 rounded-lg p-2 transition-colors"
               style={{ color: navText }}
             >
               <Menu className="h-6 w-6" />
             </button>
+          </div>
+
+          <div className="flex shrink-0 items-center justify-center lg:justify-start">
             {isEditable && onEditLogo ? (
               <EditableItem>
                 <NavbarLogo
@@ -241,7 +252,7 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
           </div>
 
           {/* Desktop Single-Line Flow */}
-          <div className="hidden flex-1 items-center justify-between gap-6 md:flex">
+          <div className="hidden flex-1 items-center justify-between gap-6 lg:flex">
             {/* Search Input (Integrated) */}
             <div className="relative w-full max-w-md flex-1">
               <SearchBar
@@ -459,67 +470,76 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
           </div>
 
           {/* Mobile Right Actions (User icon toggle/Cart) */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             {showCart && <CartIcon onToggleCart={toggleCart} />}
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer (Simplified) */}
+      {/* Mobile Drawer */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent
           side="left"
-          className="flex w-[300px] flex-col p-0"
+          className="w-full max-w-xs overflow-y-auto"
           style={{
             backgroundColor: navBg,
             color: navText,
-            borderColor: navBorder,
           }}
         >
-          <SheetHeader
-            className="shrink-0 border-b p-6 text-left"
-            style={{ borderColor: navBorder }}
-          >
-            <NavbarLogo data={navbarData} siteUser={siteUser} />
+          <SheetHeader>
+            <SheetTitle style={{ color: navText }}>Menu</SheetTitle>
           </SheetHeader>
 
-          <div className="flex-1 space-y-8 overflow-y-auto p-6">
-            <SearchBar
-              siteUser={siteUser}
-              isEditable={isEditable}
-              className="w-full border-none bg-gray-50"
-            />
+          <div className="mt-2 text-left">
+            {/* Search Bar */}
+            <div className="px-4 py-4">
+              <SearchBar siteUser={siteUser} isEditable={isEditable} />
+            </div>
 
-            <nav className="space-y-1">
-              <p className="-widest mb-4 px-2 text-[10px] font-bold uppercase opacity-40">
+            {/* Mobile Links */}
+            <div className="space-y-6 px-4 py-6">
+              <p
+                className="text-[10px] font-bold tracking-[2px] uppercase opacity-50"
+                style={{ color: navText }}
+              >
                 Navigation
               </p>
               {links.map(link => (
-                <Link
-                  key={link.id}
-                  href={generateLinkHref(link.href, siteUser, pathname)}
-                  className="block rounded-xl px-4 py-3.5 text-sm font-bold transition-all"
-                  style={{ color: navText }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.backgroundColor = `${theme.colors.primary}10`;
-                    e.currentTarget.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = navText;
-                  }}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.text}
-                </Link>
+                <div key={link.id} className="flow-root">
+                  {isEditable && onEditLink && onDeleteLink ? (
+                    <EditableItem>
+                      <Link
+                        href={link.href}
+                        onClick={e => e.preventDefault()}
+                        className="-m-2 block cursor-pointer p-2 text-base font-bold transition-all hover:opacity-80"
+                        style={{ color: navText }}
+                      >
+                        {link.text}
+                      </Link>
+                    </EditableItem>
+                  ) : (
+                    <Link
+                      key={link.id}
+                      href={generateLinkHref(link.href, siteUser, pathname)}
+                      className="-m-2 block rounded-xl p-2 text-base font-bold transition-all hover:opacity-80"
+                      style={{ color: navText }}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.text}
+                    </Link>
+                  )}
+                </div>
               ))}
-            </nav>
+            </div>
 
-            <div className="space-y-4 pt-4">
-              <p className="-widest px-2 text-[10px] font-bold uppercase opacity-40 lg:hidden">
-                Shop by Category
+            <div className="space-y-4 border-t border-gray-100 px-4 py-6">
+              <p
+                className="text-[10px] font-bold tracking-[2px] uppercase opacity-50"
+                style={{ color: navText }}
+              >
+                Categories
               </p>
-              <div className="grid grid-cols-2 gap-2 lg:hidden">
+              <div className="grid grid-cols-2 gap-2">
                 {categories.slice(0, 8).map(category => (
                   <button
                     key={category.id}
@@ -527,45 +547,85 @@ export const NavbarStyle13: React.FC<NavbarStyleProps> = ({
                       handleCategoryFilter(category.slug);
                       setIsMobileMenuOpen(false);
                     }}
-                    className="rounded-xl border border-gray-100 px-4 py-3 text-left text-xs font-semibold transition-all"
+                    className="rounded-xl border border-gray-100 px-4 py-3 text-left text-xs font-semibold transition-all hover:opacity-80"
                     style={{ color: navText }}
-                    onMouseEnter={e =>
-                      (e.currentTarget.style.borderColor = theme.colors.primary)
-                    }
-                    onMouseLeave={e =>
-                      (e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)")
-                    }
                   >
                     {category.name}
                   </button>
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Mobile Profile/Auth Actions */}
-          <div
-            className="space-y-4 border-t p-6"
-            style={{ borderColor: navBorder }}
-          >
-            {enableLogin && (
-              <Button
-                className="h-12 w-full rounded-xl text-xs font-bold uppercase"
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                }}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  const path = isAuthenticated ? "/profile" : "/login";
-                  router.push(generateLinkHref(path, siteUser, pathname));
-                }}
-              >
-                {isAuthenticated
-                  ? `Welcome, ${user?.first_name}`
-                  : "Login / Sign Up"}
-              </Button>
-            )}
+            {/* Account & Logout */}
+            <div className="space-y-6 border-t border-gray-100 px-4 py-6">
+              {enableLogin && (
+                <>
+                  <div
+                    onClick={() => {
+                      handleProfileAction("profile");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block cursor-pointer text-sm font-bold opacity-70 hover:opacity-100"
+                  >
+                    My Profile
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleProfileAction("orders");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block cursor-pointer text-sm font-bold opacity-70 hover:opacity-100"
+                  >
+                    My Orders
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleProfileAction("wishlist");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block cursor-pointer text-sm font-bold opacity-70 hover:opacity-100"
+                  >
+                    Wishlist
+                  </div>
+                </>
+              )}
+
+              {buttons.map(btn => (
+                <div key={btn.id}>
+                  {isEditable && onEditButton && onDeleteButton ? (
+                    <EditableItem>
+                      <Link
+                        href={btn.href}
+                        onClick={e => e.preventDefault()}
+                        className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-center text-xs font-bold transition-all hover:opacity-80"
+                        style={{
+                          backgroundColor: theme.colors.primary,
+                          color: theme.colors.primaryForeground,
+                        }}
+                      >
+                        {btn.text}
+                      </Link>
+                    </EditableItem>
+                  ) : (
+                    <Button
+                      className="h-12 w-full rounded-xl text-xs font-bold tracking-wider transition-all"
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                      }}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        router.push(
+                          generateLinkHref(btn.href, siteUser, pathname)
+                        );
+                      }}
+                    >
+                      {btn.text}
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </SheetContent>
       </Sheet>

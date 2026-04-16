@@ -131,8 +131,28 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
       }}
     >
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo - Left Side */}
-        <div className="flex shrink-0 items-center">
+        <div className="flex items-center gap-4 lg:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              if (!disableClicks && !isEditable) {
+                setIsMobileMenuOpen(true);
+              }
+            }}
+            className={`relative rounded-md bg-transparent p-2 opacity-60 ${
+              disableClicks || isEditable
+                ? "cursor-default opacity-40"
+                : "hover:opacity-100"
+            }`}
+            disabled={disableClicks || isEditable}
+          >
+            <span className="sr-only">Open menu</span>
+            <Menu className="h-6 w-6" />
+          </button>
+        </div>
+
+        {/* Logo - Center for mobile, Left for desktop */}
+        <div className="flex shrink-0 items-center justify-center lg:justify-start">
           <div className={disableClicks ? "pointer-events-auto" : ""}>
             {isEditable && onEditLogo ? (
               <EditableItem>
@@ -210,8 +230,9 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
           {/* Desktop Search Placeholder or other tools can go here */}
 
           {/* User Auth */}
+          {/* User Auth - Desktop */}
           {enableLogin && (
-            <div className={disableClicks ? "pointer-events-auto" : ""}>
+            <div className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -231,6 +252,10 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                     className="w-56"
                     align="end"
                     sideOffset={8}
+                    style={{
+                      backgroundColor: navbarData.backgroundColor || "white",
+                      color: navbarData.textColor || "inherit",
+                    }}
                   >
                     {isAuthenticated ? (
                       <>
@@ -292,41 +317,95 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
               </DropdownMenu>
             </div>
           )}
+        </div>
+      </nav>
 
-          {/* Language Switcher */}
+      {/* Mobile Menu */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <SheetContent
+          side="left"
+          className="w-full max-w-xs overflow-y-auto"
+          style={{
+            backgroundColor: navbarData.backgroundColor || "white",
+            color: navbarData.textColor || "inherit",
+          }}
+        >
+          <SheetHeader>
+            <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>
+              Menu
+            </SheetTitle>
+          </SheetHeader>
 
-          {/* Desktop Custom Buttons */}
-          <div className="hidden items-center gap-x-3 lg:flex">
-            {buttons.map(button => (
-              <div key={button.id}>
-                {isEditable && onEditButton && onDeleteButton ? (
-                  <EditableItem>
-                    <Button
-                      size="sm"
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.primaryForeground,
-                      }}
-                      className="rounded-full px-6 transition-colors hover:opacity-90"
-                    >
-                      {button.text}
-                    </Button>
-                  </EditableItem>
-                ) : (
-                  <Button
-                    size="sm"
-                    style={{
-                      backgroundColor: theme.colors.primary,
-                      color: theme.colors.primaryForeground,
-                    }}
-                    className={`rounded-full px-6 transition-colors hover:opacity-90 ${
-                      disableClicks
-                        ? "pointer-events-auto cursor-default opacity-60"
-                        : "cursor-pointer"
-                    }`}
-                    asChild={!disableClicks}
-                  >
-                    {!disableClicks ? (
+          <div className="mt-2 text-left">
+            {/* Mobile Links */}
+            <div className="space-y-6 px-4 py-6">
+              {links.map(link => (
+                <div key={link.id}>
+                  {isEditable && onEditLink ? (
+                    <EditableItem>
+                      <div className="flow-root">
+                        <Link
+                          href={link.href}
+                          onClick={e => e.preventDefault()}
+                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        >
+                          {link.text}
+                        </Link>
+                      </div>
+                    </EditableItem>
+                  ) : (
+                    <div className="flow-root">
+                      <Link
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        target={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "_blank"
+                            : undefined
+                        }
+                        rel={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                        onClick={e => {
+                          handleLinkClick(e);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
+                      >
+                        {link.text}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+              {buttons.map(button => (
+                <div key={button.id}>
+                  {isEditable && onEditButton ? (
+                    <EditableItem>
+                      <div className="flow-root">
+                        <Link
+                          href={button.href}
+                          onClick={e => e.preventDefault()}
+                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        >
+                          {button.text}
+                        </Link>
+                      </div>
+                    </EditableItem>
+                  ) : (
+                    <div className="flow-root">
                       <Link
                         href={generateLinkHref(
                           button.href,
@@ -347,124 +426,40 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                             ? "noopener noreferrer"
                             : undefined
                         }
+                        onClick={e => {
+                          if (disableClicks) e.preventDefault();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-100"
                       >
                         {button.text}
                       </Link>
-                    ) : (
-                      <span>{button.text}</span>
-                    )}
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <div className="lg:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMobileMenu}
-              className="h-10 w-10"
-            >
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-xs">
-          <SheetHeader className="border-b pb-6">
-            <SheetTitle
-              className="text-left text-xl font-bold"
-              style={{ color: navbarData.textColor || "inherit" }}
-            >
-              Menu
-            </SheetTitle>
-          </SheetHeader>
-          <div className="mt-8 flex flex-col gap-y-4">
-            {links.map(link => (
-              <div key={link.id}>
-                {isEditable && onEditLink ? (
-                  <EditableItem>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-lg font-medium"
-                      onClick={e => e.preventDefault()}
-                    >
-                      {link.text}
-                    </Button>
-                  </EditableItem>
-                ) : (
-                  <SheetClose asChild>
-                    <Link
-                      href={generateLinkHref(
-                        link.href,
-                        siteUser,
-                        pathname,
-                        isEditable,
-                        disableClicks
-                      )}
-                      onClick={handleLinkClick}
-                      className="block cursor-pointer px-2 py-3 text-lg font-medium hover:opacity-80"
-                    >
-                      {link.text}
-                    </Link>
-                  </SheetClose>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-auto pt-10">
-            <div className="flex flex-col gap-y-4">
-              {buttons.map(button => (
-                <div key={button.id}>
-                  {isEditable && onEditButton ? (
-                    <EditableItem>
-                      <Button
-                        style={{
-                          backgroundColor: theme.colors.primary,
-                          color: theme.colors.primaryForeground,
-                        }}
-                        className="w-full rounded-full py-6 transition-colors hover:opacity-90"
-                      >
-                        {button.text}
-                      </Button>
-                    </EditableItem>
-                  ) : (
-                    <SheetClose asChild>
-                      <Link
-                        href={generateLinkHref(
-                          button.href,
-                          siteUser,
-                          pathname,
-                          isEditable,
-                          disableClicks
-                        )}
-                        style={{
-                          backgroundColor: theme.colors.primary,
-                          color: theme.colors.primaryForeground,
-                        }}
-                        className="flex h-12 w-full items-center justify-center rounded-full text-base font-semibold transition-colors hover:opacity-90"
-                      >
-                        {button.text}
-                      </Link>
-                    </SheetClose>
+                    </div>
                   )}
                 </div>
               ))}
 
-              {!isAuthenticated && (
-                <Button
-                  variant="outline"
-                  className="w-full rounded-full py-6"
-                  onClick={handleLoginClick}
-                >
-                  Login / Sign Up
-                </Button>
+              {enableLogin && (
+                <div className="space-y-4">
+                  <div
+                    onClick={() => handleProfileAction("profile")}
+                    className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
+                  >
+                    My Profile
+                  </div>
+                  <div
+                    onClick={() => handleProfileAction("orders")}
+                    className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
+                  >
+                    My Orders
+                  </div>
+                  <div
+                    onClick={() => handleProfileAction("wishlist")}
+                    className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
+                  >
+                    Wishlist
+                  </div>
+                </div>
               )}
             </div>
           </div>

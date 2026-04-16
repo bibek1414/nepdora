@@ -133,84 +133,26 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
           color: navbarData.textColor || undefined,
         }}
       >
-        <div className="flex items-center md:hidden">
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="px-2"
-                onClick={() => !disableClicks && setIsMobileMenuOpen(true)}
-              >
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="w-[300px] sm:w-[400px]"
-              style={{
-                backgroundColor: navbarData.backgroundColor || "white",
-                color: navbarData.textColor || "inherit",
-              }}
-            >
-              <SheetHeader>
-                <SheetTitle
-                  style={{ color: navbarData.textColor || "inherit" }}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!disableClicks && !isEditable) {
+                      setIsMobileMenuOpen(true);
+                    }
+                  }}
+                  className={`relative rounded-md bg-transparent p-2 opacity-60 lg:hidden ${
+                    disableClicks || isEditable
+                      ? "cursor-default opacity-40"
+                      : "hover:opacity-100"
+                  }`}
+                  disabled={disableClicks || isEditable}
                 >
-                  Menu
-                </SheetTitle>
-              </SheetHeader>
-              <div className="flex flex-col gap-4 py-4">
-                {links.map(link => (
-                  <Link
-                    key={link.id}
-                    href={generateLinkHref(
-                      link.href,
-                      siteUser,
-                      pathname,
-                      isEditable,
-                      disableClicks
-                    )}
-                    className="text-lg font-medium hover:opacity-80"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.text}
-                  </Link>
-                ))}
-                <div className="border-t pt-4">
-                  {buttons.map(button => (
-                    <Button
-                      key={button.id}
-                      variant={getButtonVariant(button.variant)}
-                      size="sm"
-                      className="mb-2 w-full"
-                      style={{
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.primaryForeground,
-                      }}
-                      asChild
-                    >
-                      <Link
-                        href={generateLinkHref(
-                          button.href,
-                          siteUser,
-                          pathname,
-                          isEditable,
-                          disableClicks
-                        )}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {button.text}
-                      </Link>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
+                  <span className="absolute -inset-0.5"></span>
+                  <span className="sr-only">Open menu</span>
+                  <Menu className="h-6 w-6" />
+                </button>
 
-        <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
+        <div className="hidden flex-1 items-center justify-end gap-4 lg:flex">
           {leftLinks.map(link =>
             isEditable && onEditLink && onDeleteLink ? (
               <EditableItem key={link.id}>
@@ -273,7 +215,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
           )}
         </div>
 
-        <div className="hidden flex-1 items-center justify-start gap-4 md:flex">
+        <div className="hidden flex-1 items-center justify-start gap-4 lg:flex">
           {rightLinks.map(link =>
             isEditable && onEditLink && onDeleteLink ? (
               <EditableItem key={link.id}>
@@ -401,7 +343,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
                     <User className="h-5 w-5" />
                     {isAuthenticated ? (
                       <>
-                        <span className="hidden text-sm font-medium sm:inline-block">
+                        <span className="hidden text-sm font-medium lg:inline-block">
                           {user?.first_name || "Account"}
                         </span>
                         <ChevronDown className="h-4 w-4" />
@@ -500,6 +442,122 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
           )}
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <SheetContent
+          side="left"
+          className="w-full max-w-xs overflow-y-auto"
+          style={{
+            backgroundColor: navbarData.backgroundColor || "white",
+            color: navbarData.textColor || "inherit",
+          }}
+        >
+          <SheetHeader>
+            <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>
+              Menu
+            </SheetTitle>
+          </SheetHeader>
+
+          <div className="mt-2">
+            {/* Mobile Links */}
+            <div className="space-y-6 px-4 py-6">
+              {links.map(link =>
+                isEditable && onEditLink && onDeleteLink ? (
+                  <EditableItem key={link.id}>
+                    <div className="flow-root">
+                      <Link
+                        href={link.href}
+                        onClick={e => e.preventDefault()}
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                      >
+                        {link.text}
+                      </Link>
+                    </div>
+                  </EditableItem>
+                ) : (
+                  <div className="flow-root" key={link.id}>
+                    <Link
+                      href={generateLinkHref(
+                        link.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
+                    >
+                      {link.text}
+                    </Link>
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* Mobile Buttons */}
+            {buttons.length > 0 && (
+              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                {buttons.map(button =>
+                  isEditable && onEditButton && onDeleteButton ? (
+                    <EditableItem key={button.id}>
+                      <div className="flow-root">
+                        <Link
+                          href={button.href}
+                          onClick={e => e.preventDefault()}
+                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        >
+                          {button.text}
+                        </Link>
+                      </div>
+                    </EditableItem>
+                  ) : (
+                    <div className="flow-root" key={button.id}>
+                      <Link
+                        href={generateLinkHref(
+                          button.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        target={
+                          button.href?.startsWith("http") ||
+                          button.href?.startsWith("mailto:")
+                            ? "_blank"
+                            : undefined
+                        }
+                        rel={
+                          button.href?.startsWith("http") ||
+                          button.href?.startsWith("mailto:")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                        onClick={e => handleLinkClick(e, button.href)}
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-100"
+                      >
+                        {button.text}
+                      </Link>
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {!isEditable && (
         <SideCart isOpen={isCartOpen} onClose={closeCart} siteUser={siteUser} />

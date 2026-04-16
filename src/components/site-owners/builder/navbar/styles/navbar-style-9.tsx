@@ -14,6 +14,12 @@ import {
   Package,
   Heart,
 } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 import { useCart } from "@/hooks/owner-site/admin/use-cart";
 import { useAuth } from "@/hooks/customer/use-auth";
@@ -160,15 +166,25 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-4 md:gap-8">
               {/* Mobile Menu Button */}
-              <button
-                className="pointer-events-auto -ml-2 p-2 opacity-70 transition-opacity hover:opacity-100 md:hidden"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                disabled={disableClicks}
-                style={{ color: data.textColor || "inherit" }}
-              >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+              <div className="flex items-center lg:hidden">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!disableClicks && !isEditable) {
+                      setIsMenuOpen(true);
+                    }
+                  }}
+                  className={`relative rounded-md bg-transparent p-2 opacity-60 ${
+                    disableClicks || isEditable
+                      ? "cursor-default opacity-40"
+                      : "hover:opacity-100"
+                  }`}
+                  disabled={disableClicks || isEditable}
+                >
+                  <span className="sr-only">Open menu</span>
+                  <Menu className="h-6 w-6" />
+                </button>
+              </div>
 
               {/* Logo */}
               <div
@@ -194,7 +210,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
               </div>
 
               {/* Search Bar */}
-              <div className="pointer-events-auto hidden max-w-2xl flex-1 md:flex">
+              <div className="pointer-events-auto hidden max-w-2xl flex-1 lg:flex">
                 <SearchBar
                   siteUser={siteUser}
                   isEditable={isEditable}
@@ -334,7 +350,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
 
             {/* Mobile Search */}
             <div
-              className={`mt-4 md:hidden ${disableClicks ? "pointer-events-auto" : ""}`}
+              className={`mt-4 lg:hidden ${disableClicks ? "pointer-events-auto" : ""}`}
             >
               <SearchBar
                 siteUser={siteUser}
@@ -347,7 +363,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
 
         {/* Category & Builder Links Navigation Bar */}
         <div
-          className="hidden border-t border-gray-100 md:block"
+          className="hidden border-t border-gray-100 lg:block"
           style={{ backgroundColor: "transparent" }}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -441,143 +457,131 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
-        {isMenuOpen && !disableClicks && !isEditable && (
-          <div
-            className="pointer-events-auto fixed inset-0 z-40 overflow-y-auto md:hidden"
+        {/* Mobile Menu */}
+        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <SheetContent
+            side="left"
+            className="w-full max-w-xs overflow-y-auto"
             style={{
               backgroundColor: data.backgroundColor || "white",
               color: data.textColor || "inherit",
             }}
           >
-            <div
-              className="flex items-center justify-between border-b border-gray-100 p-4"
-              style={{ backgroundColor: data.backgroundColor || "white" }}
-            >
-              <span className="text-lg font-bold">Menu</span>
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="Close menu"
-                style={{ color: data.textColor || "inherit" }}
-              >
-                <X size={24} />
-              </button>
-            </div>
+            <SheetHeader>
+              <SheetTitle style={{ color: data.textColor || "inherit" }}>
+                Menu
+              </SheetTitle>
+            </SheetHeader>
 
-            <div className="space-y-4 p-4">
-              <div className="mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
-                Builder Links
+            <div className="mt-2 text-left">
+              <div className="px-4 py-4">
+                <SearchBar
+                  siteUser={siteUser}
+                  isEditable={isEditable}
+                  className="w-full"
+                />
               </div>
-              {links.map(link => (
-                <Link
-                  key={link.id}
-                  href={generateLinkHref(
-                    link.href,
-                    siteUser,
-                    pathname,
-                    isEditable,
-                    disableClicks
-                  )}
-                  target={
-                    link.href?.startsWith("http") ||
-                    link.href?.startsWith("mailto:")
-                      ? "_blank"
-                      : undefined
-                  }
-                  rel={
-                    link.href?.startsWith("http") ||
-                    link.href?.startsWith("mailto:")
-                      ? "noopener noreferrer"
-                      : undefined
-                  }
-                  onClick={e => {
-                    handleLinkClick(e, link.href);
-                    setIsMenuOpen(false);
-                  }}
-                  className="block border-b border-gray-50 py-2 text-sm font-medium transition-colors hover:opacity-70"
-                >
-                  {link.text}
-                </Link>
-              ))}
 
-              <div className="mt-4 mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
-                Categories
+              {/* Mobile Links */}
+              <div className="space-y-6 px-4 py-6">
+                <div className="mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
+                  Builder Links
+                </div>
+                {links.map((link: NavbarLink) =>
+                  isEditable && onEditLink && onDeleteLink ? (
+                    <EditableItem key={link.id}>
+                      <div className="flow-root">
+                        <Link
+                          href={link.href}
+                          onClick={e => e.preventDefault()}
+                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                        >
+                          {link.text}
+                        </Link>
+                      </div>
+                    </EditableItem>
+                  ) : (
+                    <div className="flow-root" key={link.id}>
+                      <Link
+                        href={generateLinkHref(
+                          link.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        target={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "_blank"
+                            : undefined
+                        }
+                        rel={
+                          link.href?.startsWith("http") ||
+                          link.href?.startsWith("mailto:")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                        onClick={e => {
+                          handleLinkClick(e, link.href);
+                          setIsMenuOpen(false);
+                        }}
+                        className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
+                      >
+                        {link.text}
+                      </Link>
+                    </div>
+                  )
+                )}
+
+                <div className="mt-8 mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
+                  Categories
+                </div>
+                {categories.map(category => (
+                  <div className="flow-root" key={category.id}>
+                    <Link
+                      href={generateLinkHref(
+                        `/collections?category=${category.slug}`,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      className="-m-2 block cursor-pointer p-2 text-sm font-medium transition-colors hover:opacity-80"
+                      onClick={e => {
+                        handleLinkClick(e);
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      {category.name}
+                    </Link>
+                  </div>
+                ))}
               </div>
-              {categories.map(category => (
-                <Link
-                  key={category.id}
-                  href={generateLinkHref(
-                    `/category/${formatCategoryUrl(category.slug)}`,
-                    siteUser,
-                    pathname,
-                    isEditable,
-                    disableClicks
-                  )}
-                  className="block border-b border-gray-50 py-2 text-sm font-medium text-gray-900"
-                  onClick={e => {
-                    handleLinkClick(e);
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  {category.name}
-                </Link>
-              ))}
 
-              <div className="space-y-3 pt-4">
+              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                 <div
-                  onClick={() => {
-                    handleProfileAction("profile");
-                    setIsMenuOpen(false);
-                  }}
-                  className="block cursor-pointer text-sm opacity-70 hover:opacity-100"
+                  onClick={() => handleProfileAction("profile")}
+                  className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
                 >
-                  My Account
+                  My Profile
                 </div>
                 <div
-                  onClick={() => {
-                    handleProfileAction("orders");
-                    setIsMenuOpen(false);
-                  }}
-                  className="block cursor-pointer text-sm opacity-70 hover:opacity-100"
+                  onClick={() => handleProfileAction("orders")}
+                  className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
                 >
-                  Orders
+                  My Orders
                 </div>
-                <Link
-                  href={generateLinkHref(
-                    "/compare",
-                    siteUser,
-                    pathname,
-                    isEditable,
-                    disableClicks
-                  )}
-                  onClick={e => {
-                    handleLinkClick(e);
-                    setIsMenuOpen(false);
-                  }}
-                  className="block text-sm opacity-70 hover:opacity-100"
+                <div
+                  onClick={() => handleProfileAction("wishlist")}
+                  className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
                 >
-                  Compare Products
-                </Link>
-                <Link
-                  href={generateLinkHref(
-                    "/faq",
-                    siteUser,
-                    pathname,
-                    isEditable,
-                    disableClicks
-                  )}
-                  onClick={e => {
-                    handleLinkClick(e);
-                    setIsMenuOpen(false);
-                  }}
-                  className="block text-sm opacity-70 hover:opacity-100"
-                >
-                  Help Center
-                </Link>
+                  Wishlist
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          </SheetContent>
+        </Sheet>
       </header>
 
       {/* Only show SideCart in preview mode, not in editable mode */}

@@ -132,8 +132,29 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
         } ${disableClicks ? "pointer-events-none" : ""}`}
         style={{ backgroundColor: "transparent" }}
       >
-        {/* Logo - Left side */}
-        <div className="flex min-w-0 flex-1 items-center lg:gap-6">
+        <div className="flex items-center gap-4 lg:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              if (!disableClicks && !isEditable) {
+                setIsMobileMenuOpen(true);
+              }
+            }}
+            className={`relative rounded-md bg-transparent p-2 opacity-60 ${
+              disableClicks || isEditable
+                ? "cursor-default opacity-40"
+                : "hover:opacity-100"
+            }`}
+            disabled={disableClicks || isEditable}
+          >
+            <span className="absolute -inset-0.5"></span>
+            <span className="sr-only">Open menu</span>
+            <Menu className="h-6 w-6" />
+          </button>
+        </div>
+
+        {/* Logo - Center for mobile, Left for desktop */}
+        <div className="flex min-w-0 flex-1 items-center justify-center lg:justify-start lg:gap-6">
           <div
             className={`shrink-0 ${disableClicks ? "pointer-events-auto" : ""}`}
           >
@@ -300,115 +321,243 @@ export const NavbarStyle6: React.FC<NavbarStyleProps> = ({
                 />
               </DialogContent>
             </Dialog>
-
-            {enableLogin && (
-              <div className={disableClicks ? "pointer-events-auto" : ""}>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={`flex items-center gap-1 p-2 transition-colors hover:opacity-80 ${
-                        disableClicks || isEditable
-                          ? "cursor-default opacity-60"
-                          : "cursor-pointer"
-                      }`}
-                      onClick={
-                        disableClicks ? e => e.preventDefault() : undefined
-                      }
-                    >
-                      <User className="h-5 w-5" />
-                      {isAuthenticated ? (
-                        <>
-                          <span className="hidden text-sm font-medium lg:inline-block">
-                            {user?.first_name || "Account"}
-                          </span>
-                          <ChevronDown className="h-4 w-4" />
-                        </>
-                      ) : null}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  {!disableClicks && !isEditable && (
-                    <DropdownMenuContent
-                      className="w-48"
-                      align="end"
-                      style={{
-                        backgroundColor: navbarData.backgroundColor || "white",
-                        color: navbarData.textColor || "inherit",
-                      }}
-                    >
-                      {isAuthenticated ? (
-                        <>
-                          <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => handleProfileAction("profile")}
-                          >
-                            <User className="mr-2 h-4 w-4" />
-                            My Profile
-                          </DropdownMenuItem>
-                          {(!user?.website_type ||
-                            user.website_type === "ecommerce") && (
-                            <>
-                              <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => handleProfileAction("wishlist")}
-                              >
-                                <Heart className="mr-2 h-4 w-4" />
-                                <div className="flex w-full items-center justify-between">
-                                  <span>Wishlist</span>
-                                  {wishlistCount > 0 && (
-                                    <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
-                                      {wishlistCount}
-                                    </span>
-                                  )}
-                                </div>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => handleProfileAction("orders")}
-                              >
-                                <Package className="mr-2 h-4 w-4" />
-                                My Orders
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="cursor-pointer text-red-600 focus:text-red-600"
-                            onClick={() => handleProfileAction("logout")}
-                          >
-                            <LogOut className="mr-2 h-4 w-4" />
-                            Logout
-                          </DropdownMenuItem>
-                        </>
-                      ) : (
-                        <DropdownMenuItem
-                          className="cursor-pointer"
-                          onClick={handleLoginClick}
-                        >
-                          <User className="mr-2 h-4 w-4" />
-                          Login / Register
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  )}
-                </DropdownMenu>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Mobile Header Right Side - Menu Button & Cart */}
-        <div className="flex items-center gap-2 lg:hidden">
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleMobileMenu}
-            className="h-10 w-10"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
+      {/* Mobile Menu */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <SheetContent
+          side="left"
+          className="w-full max-w-xs overflow-y-auto"
+          style={{
+            backgroundColor: navbarData.backgroundColor || "white",
+            color: navbarData.textColor || "inherit",
+          }}
+        >
+          <SheetHeader>
+            <SheetTitle style={{ color: navbarData.textColor || "inherit" }}>
+              Menu
+            </SheetTitle>
+          </SheetHeader>
+
+          <div className="mt-2">
+            {/* Mobile Links */}
+            <div className="space-y-6 px-4 py-6">
+              {links.map(link =>
+                isEditable && onEditLink && onDeleteLink ? (
+                  <EditableItem key={link.id}>
+                    <div className="flow-root">
+                      <Link
+                        href={link.href}
+                        onClick={e => e.preventDefault()}
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                      >
+                        {link.text}
+                      </Link>
+                    </div>
+                  </EditableItem>
+                ) : (
+                  <div className="flow-root" key={link.id}>
+                    <Link
+                      href={generateLinkHref(
+                        link.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e => handleLinkClick(e, link.href)}
+                      className="-m-2 block cursor-pointer p-2 font-medium opacity-80 hover:opacity-100"
+                    >
+                      {link.text}
+                    </Link>
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* Mobile Buttons */}
+            <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+              {buttons.map(button =>
+                isEditable && onEditButton && onDeleteButton ? (
+                  <EditableItem key={button.id}>
+                    <div className="flow-root">
+                      <Link
+                        href={button.href}
+                        onClick={e => e.preventDefault()}
+                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
+                      >
+                        {button.text}
+                      </Link>
+                    </div>
+                  </EditableItem>
+                ) : (
+                  <div className="flow-root" key={button.id}>
+                    <Link
+                      href={generateLinkHref(
+                        button.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      target={
+                        button.href?.startsWith("http") ||
+                        button.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        button.href?.startsWith("http") ||
+                        button.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={e => handleLinkClick(e, button.href)}
+                      className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-100"
+                    >
+                      {button.text}
+                    </Link>
+                  </div>
+                )
+              )}
+
+              {/* Mobile Book Appointment Button */}
+              <div className="flow-root">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button
+                      className="-m-2 block w-full cursor-pointer p-2 text-left font-medium transition-colors hover:opacity-100"
+                      onClick={() => {
+                        if (disableClicks) return;
+                      }}
+                    >
+                      Book Appointment
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+                    <AppointmentForm
+                      data={defaultAppointmentData}
+                      siteUser={siteUser}
+                      isPreview={isEditable}
+                      isEditable={false}
+                    />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+        {/* User Actions - Desktop */}
+        <div className="hidden items-center gap-2 lg:flex">
+          {enableLogin && (
+            <div className={disableClicks ? "pointer-events-auto" : ""}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`flex items-center gap-1 p-2 transition-colors hover:opacity-80 ${
+                      disableClicks || isEditable
+                        ? "cursor-default opacity-60"
+                        : "cursor-pointer"
+                    }`}
+                    onClick={
+                      disableClicks ? e => e.preventDefault() : undefined
+                    }
+                  >
+                    <User className="h-5 w-5" />
+                    {isAuthenticated ? (
+                      <>
+                        <span className="hidden text-sm font-medium lg:inline-block">
+                          {user?.first_name || "Account"}
+                        </span>
+                        <ChevronDown className="h-4 w-4" />
+                      </>
+                    ) : null}
+                  </Button>
+                </DropdownMenuTrigger>
+                {!disableClicks && !isEditable && (
+                  <DropdownMenuContent
+                    className="w-48"
+                    align="end"
+                    style={{
+                      backgroundColor: navbarData.backgroundColor || "white",
+                      color: navbarData.textColor || "inherit",
+                    }}
+                  >
+                    {isAuthenticated ? (
+                      <>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => handleProfileAction("profile")}
+                        >
+                          <User className="mr-2 h-4 w-4" />
+                          My Profile
+                        </DropdownMenuItem>
+                        {(!user?.website_type ||
+                          user.website_type === "ecommerce") && (
+                          <>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => handleProfileAction("wishlist")}
+                            >
+                              <Heart className="mr-2 h-4 w-4" />
+                              <div className="flex w-full items-center justify-between">
+                                <span>Wishlist</span>
+                                {wishlistCount > 0 && (
+                                  <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">
+                                    {wishlistCount}
+                                  </span>
+                                )}
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => handleProfileAction("orders")}
+                            >
+                              <Package className="mr-2 h-4 w-4" />
+                              My Orders
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-600 focus:text-red-600"
+                          onClick={() => handleProfileAction("logout")}
+                        >
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Logout
+                        </DropdownMenuItem>
+                      </>
+                    ) : (
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={handleLoginClick}
+                      >
+                        <User className="mr-2 h-4 w-4" />
+                        Login / Register
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                )}
+              </DropdownMenu>
+            </div>
+          )}
         </div>
       </nav>
 

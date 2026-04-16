@@ -39,7 +39,12 @@ import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { EditableText } from "@/components/ui/navbar/editable-text";
-import { Sheet, SheetContent, SheetHeader } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -65,9 +70,11 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
   onEditLogo,
+  onAddLink,
   onEditLink,
   onDeleteLink,
   siteUser,
+  onAddButton,
   onEditButton,
   onDeleteButton,
   onEditCart,
@@ -224,14 +231,17 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
           style={{ borderColor: navBorder }}
         >
           {/* Logo Section */}
-          <div className="flex shrink-0 items-center gap-4">
+          <div className="flex items-center gap-4 lg:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="-ml-2 rounded-lg p-2 transition-colors lg:hidden"
+              className="-ml-2 rounded-lg p-2 transition-colors"
               style={{ color: navText }}
             >
               <Menu className="h-6 w-6" />
             </button>
+          </div>
+
+          <div className="flex shrink-0 items-center justify-center lg:justify-start">
             {isEditable && onEditLogo ? (
               <EditableItem>
                 <NavbarLogo
@@ -246,7 +256,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
           </div>
 
           {/* Search Bar Section */}
-          <div className="hidden flex-1 items-center justify-center px-4 md:flex">
+          <div className="hidden flex-1 items-center justify-center px-4 lg:flex">
             <div className="w-full max-w-xl">
               <SearchBar siteUser={siteUser} isEditable={isEditable} />
             </div>
@@ -536,69 +546,65 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent
           side="left"
-          className="flex w-full max-w-[320px] flex-col p-0"
+          className="w-full max-w-xs overflow-y-auto"
           style={{
             backgroundColor: navBg,
             color: navText,
-            borderColor: navBorder,
           }}
         >
-          <SheetHeader
-            className="shrink-0 border-b p-6"
-            style={{ borderColor: navBorder }}
-          >
-            <NavbarLogo data={navbarData} siteUser={siteUser} />
+          <SheetHeader>
+            <SheetTitle style={{ color: navText }}>Menu</SheetTitle>
           </SheetHeader>
 
-          <div className="scrollbar-hide flex-1 space-y-8 overflow-y-auto p-6">
+          <div className="mt-2 text-left">
             {/* Search Bar */}
-            <div className="rounded-2xl bg-gray-100/50 p-1">
-              <SearchBar
-                siteUser={siteUser}
-                isEditable={isEditable}
-                className="-none w-full border-none bg-transparent"
-              />
+            <div className="px-4 py-4">
+              <SearchBar siteUser={siteUser} isEditable={isEditable} />
             </div>
 
-            {/* Quick Access Links */}
-            <div className="space-y-4">
+            {/* Mobile Links */}
+            <div className="space-y-6 px-4 py-6">
               <p
-                className="text-[10px] font-bold tracking-[2px] opacity-50"
+                className="text-[10px] font-bold tracking-[2px] uppercase opacity-50"
                 style={{ color: navText }}
               >
-                Quick Access
+                Navigation
               </p>
-              <nav className="flex flex-col gap-1">
-                {links.map(link => (
-                  <Link
-                    key={link.id}
-                    href={generateLinkHref(link.href, siteUser, pathname)}
-                    className="block rounded-xl border border-transparent px-4 py-3 text-base font-bold transition-all"
-                    style={{ color: navText }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.backgroundColor = `${theme.colors.primary}10`;
-                      e.currentTarget.style.color = theme.colors.primary;
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.backgroundColor = "transparent";
-                      e.currentTarget.style.color = navText;
-                    }}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.text}
-                  </Link>
-                ))}
-              </nav>
+              {links.map(link => (
+                <div key={link.id} className="flow-root">
+                  {isEditable && onEditLink && onDeleteLink ? (
+                    <EditableItem>
+                      <Link
+                        href={link.href}
+                        onClick={e => e.preventDefault()}
+                        className="-m-2 block cursor-pointer p-2 text-base font-bold transition-all hover:opacity-80"
+                        style={{ color: navText }}
+                      >
+                        {link.text}
+                      </Link>
+                    </EditableItem>
+                  ) : (
+                    <Link
+                      href={generateLinkHref(link.href, siteUser, pathname)}
+                      className="-m-2 block rounded-xl p-2 text-base font-bold transition-all hover:opacity-80"
+                      style={{ color: navText }}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.text}
+                    </Link>
+                  )}
+                </div>
+              ))}
             </div>
 
             {/* Shop Categories Preview */}
-            <div className="space-y-4">
+            <div className="space-y-4 border-t border-gray-100 px-4 py-6">
               <div className="flex items-center justify-between">
                 <p
-                  className="text-[10px] font-bold tracking-[2px] opacity-50"
+                  className="text-[10px] font-bold tracking-[2px] uppercase opacity-50"
                   style={{ color: navText }}
                 >
-                  Shop Categories
+                  Categories
                 </p>
                 <Link
                   href={generateLinkHref("/collections", siteUser, pathname)}
@@ -627,29 +633,77 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Bottom CTA Actions */}
-          <div
-            className="shrink-0 space-y-3 border-t bg-gray-50/50 p-6"
-            style={{ borderColor: navBorder }}
-          >
-            {buttons.map(btn => (
-              <Button
-                key={btn.id}
-                className="h-12 w-full rounded-xl text-xs font-bold tracking-wider transition-all"
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  color: theme.colors.primaryForeground,
-                }}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  router.push(generateLinkHref(btn.href, siteUser, pathname));
-                }}
-              >
-                {btn.text}
-              </Button>
-            ))}
+            {/* Account & Logout */}
+            <div className="space-y-6 border-t border-gray-100 px-4 py-6">
+              {enableLogin && (
+                <>
+                  <div
+                    onClick={() => {
+                      handleProfileAction("profile");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block cursor-pointer text-sm font-bold opacity-70 hover:opacity-100"
+                  >
+                    My Profile
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleProfileAction("orders");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block cursor-pointer text-sm font-bold opacity-70 hover:opacity-100"
+                  >
+                    My Orders
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleProfileAction("wishlist");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block cursor-pointer text-sm font-bold opacity-70 hover:opacity-100"
+                  >
+                    Wishlist
+                  </div>
+                </>
+              )}
+
+              {buttons.map(btn => (
+                <div key={btn.id}>
+                  {isEditable && onEditButton && onDeleteButton ? (
+                    <EditableItem>
+                      <Link
+                        href={btn.href}
+                        onClick={e => e.preventDefault()}
+                        className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-center text-xs font-bold transition-all hover:opacity-80"
+                        style={{
+                          backgroundColor: theme.colors.primary,
+                          color: theme.colors.primaryForeground,
+                        }}
+                      >
+                        {btn.text}
+                      </Link>
+                    </EditableItem>
+                  ) : (
+                    <Button
+                      className="h-12 w-full rounded-xl text-xs font-bold tracking-wider transition-all"
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                      }}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        router.push(
+                          generateLinkHref(btn.href, siteUser, pathname)
+                        );
+                      }}
+                    >
+                      {btn.text}
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </SheetContent>
       </Sheet>
