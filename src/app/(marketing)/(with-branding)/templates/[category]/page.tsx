@@ -19,6 +19,8 @@ export const dynamicParams = true;
 const TEMPLATE_CATEGORIES = [
   "restaurant-website",
   "ecommerce-store",
+  "ecommerce",
+  "restaurant",
   "clothing-brand",
   "school-college",
   "medical-clinic",
