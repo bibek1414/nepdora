@@ -12,6 +12,8 @@ import { JsonLd } from "@/components/shared/json-ld";
 import Blogs from "@/components/marketing/blog/blogs";
 import { marketingBlogApi } from "@/services/api/marketing/blog";
 
+import { Suspense } from "react";
+
 // Lazy load non-critical components to reduce initial load
 const TestimonialsSection = dynamic(
   () => import("@/components/marketing/testimonials/testimonials"),
@@ -23,7 +25,50 @@ const TemplatesPage = dynamic(
   { loading: () => <div className="py-20" /> }
 );
 
-const blogData = await marketingBlogApi.getBlogs({ page_size: 12 });
+async function BlogSection() {
+  const blogData = await marketingBlogApi.getBlogs({ page_size: 12 });
+
+  const blogListSchema =
+    blogData?.results?.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Nepdora Blog - Website Building Tips for Nepal",
+          url: absoluteUrl("/blog"),
+          numberOfItems: blogData.results.length,
+          itemListElement: blogData.results.map((post, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "BlogPosting",
+              headline: post.title,
+              url: absoluteUrl(`/blog/${post.slug}`),
+              datePublished: post.created_at,
+              dateModified: post.updated_at,
+              author: post.author
+                ? {
+                    "@type": "Person",
+                    name:
+                      `${post.author.first_name} ${post.author.last_name}`.trim() ||
+                      post.author.username,
+                  }
+                : { "@type": "Organization", name: SITE_NAME },
+              ...(post.thumbnail_image && { image: post.thumbnail_image }),
+              ...(post.meta_description && {
+                description: post.meta_description,
+              }),
+            },
+          })),
+        }
+      : null;
+
+  return (
+    <>
+      {blogListSchema && <JsonLd id="schema-blog-list" data={blogListSchema} />}
+      <Blogs initialData={blogData} />
+    </>
+  );
+}
 
 export const metadata = buildMarketingMetadata({
   title:
@@ -104,39 +149,6 @@ export default function Marketing() {
     },
   };
 
-  const blogListSchema =
-    blogData?.results?.length > 0
-      ? {
-          "@context": "https://schema.org",
-          "@type": "ItemList",
-          name: "Nepdora Blog - Website Building Tips for Nepal",
-          url: absoluteUrl("/blog"),
-          numberOfItems: blogData.results.length,
-          itemListElement: blogData.results.map((post, i) => ({
-            "@type": "ListItem",
-            position: i + 1,
-            item: {
-              "@type": "BlogPosting",
-              headline: post.title,
-              url: absoluteUrl(`/blog/${post.slug}`),
-              datePublished: post.created_at,
-              dateModified: post.updated_at,
-              author: post.author
-                ? {
-                    "@type": "Person",
-                    name:
-                      `${post.author.first_name} ${post.author.last_name}`.trim() ||
-                      post.author.username,
-                  }
-                : { "@type": "Organization", name: SITE_NAME },
-              ...(post.thumbnail_image && { image: post.thumbnail_image }),
-              ...(post.meta_description && {
-                description: post.meta_description,
-              }),
-            },
-          })),
-        }
-      : null;
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -232,7 +244,6 @@ export default function Marketing() {
       <JsonLd id="schema-corporation" data={corporationSchema} />
       <JsonLd id="schema-software" data={softwareAppSchema} />
       <JsonLd id="schema-faq" data={faqSchema} />
-      {blogListSchema && <JsonLd id="schema-blog-list" data={blogListSchema} />}
 
       <HeroSection />
       <NepaliBusinessFeatures />
@@ -245,7 +256,9 @@ export default function Marketing() {
       <HomeFAQSection />
       <Comparison />
       <div className="mx-auto max-w-6xl py-10 md:py-20">
-        <Blogs initialData={blogData} />
+        <Suspense fallback={<div className="h-96 w-full animate-pulse rounded-xl bg-slate-50" />}>
+          <BlogSection />
+        </Suspense>
       </div>
 
       {/* 10. Contact + CTA */}

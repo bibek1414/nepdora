@@ -1,4 +1,3 @@
-import { apiFetch } from "@/lib/api-client";
 import { getApiBaseUrl } from "@/config/site";
 import { createHeaders } from "@/utils/headers";
 import { handleApiError } from "@/utils/api-error";
@@ -33,9 +32,10 @@ export const marketingBlogApi = {
     }
 
     const url = `${API_BASE_URL}/api/nepdora-blogs/${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
-    const response = await apiFetch(url, {
+    const response = await fetch(url, {
       method: "GET",
       headers: createHeaders(false), // No auth needed for public blogs
+      next: { revalidate: 3600 },
     });
 
     await handleApiError(response);
@@ -44,13 +44,11 @@ export const marketingBlogApi = {
 
   getRecentBlogs: async (): Promise<BlogPost[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(
-      `${API_BASE_URL}/api/nepdora-recent-blogs/`,
-      {
-        method: "GET",
-        headers: createHeaders(false),
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/api/nepdora-recent-blogs/`, {
+      method: "GET",
+      headers: createHeaders(false),
+      next: { revalidate: 3600 },
+    });
 
     await handleApiError(response);
     const data = await response.json();
@@ -59,13 +57,10 @@ export const marketingBlogApi = {
 
   getBlogBySlug: async (slug: string): Promise<BlogPost> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(
-      `${API_BASE_URL}/api/nepdora-blogs/${slug}/`,
-      {
-        method: "GET",
-        headers: createHeaders(false),
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/api/nepdora-blogs/${slug}/`, {
+      method: "GET",
+      headers: createHeaders(false),
+    });
 
     await handleApiError(response);
     return response.json();
@@ -73,7 +68,7 @@ export const marketingBlogApi = {
 
   getTags: async (): Promise<BlogTag[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/nepdora-tags/`, {
+    const response = await fetch(`${API_BASE_URL}/api/nepdora-tags/`, {
       method: "GET",
       headers: createHeaders(false),
     });
@@ -86,7 +81,7 @@ export const marketingBlogApi = {
 
   getCategories: async (): Promise<BlogCategory[]> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(
+    const response = await fetch(
       `${API_BASE_URL}/api/nepdora-blog-categories/`,
       {
         method: "GET",

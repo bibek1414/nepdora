@@ -1,7 +1,12 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/shared/json-ld";
-import { industries, INDUSTRY_LABELS, cities } from "@/lib/seo-data";
+import {
+  industries,
+  INDUSTRY_LABELS,
+  cities,
+  MAJOR_CITIES,
+} from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
@@ -11,11 +16,19 @@ interface Props {
   params: Promise<{ industry: string; city: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Cache for 1 hour
 
 export async function generateStaticParams() {
-  // Static params are currently pre-rendered on-demand or via specific industry logic
-  return [];
+  const params = [];
+
+  // Pre-render top industry/city combinations for better initial performance
+  for (const industry of industries.slice(0, 5)) {
+    for (const city of MAJOR_CITIES) {
+      params.push({ industry, city });
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

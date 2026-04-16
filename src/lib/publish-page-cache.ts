@@ -12,6 +12,7 @@ import {
   GetFooterResponse,
 } from "@/types/owner-site/components/footer";
 import { GetThemeResponse, Theme } from "@/types/owner-site/components/theme";
+import { cache } from "react";
 
 const PAGE_REVALIDATE_SECONDS = 300;
 const LAYOUT_REVALIDATE_SECONDS = 300;
@@ -270,11 +271,12 @@ function resolveHomePageSlug(pages: Page[]) {
   return homePage?.slug || "home";
 }
 
-export async function getPublishedPagePayload(
-  siteUser: string,
-  currentPageSlug: string,
-  contentSlug?: string
-): Promise<PublishPagePayload> {
+export const getPublishedPagePayload = cache(
+  async (
+    siteUser: string,
+    currentPageSlug: string,
+    contentSlug?: string
+  ): Promise<PublishPagePayload> => {
   const pages = await getPublishedPages(siteUser);
   const targetSlug = resolveTargetSlug(pages, currentPageSlug);
   const currentPage =
@@ -310,11 +312,10 @@ export async function getPublishedPagePayload(
     metaTitle: currentPage?.meta_title,
     metaDescription: currentPage?.meta_description,
   };
-}
+});
 
-export async function getPublishedHomePagePayload(
-  siteUser: string
-): Promise<PublishPagePayload> {
+export const getPublishedHomePagePayload = cache(
+  async (siteUser: string): Promise<PublishPagePayload> => {
   const pages = await getPublishedPages(siteUser);
   const targetSlug = resolveHomePageSlug(pages);
   const homePage = pages.find(page => page.slug === targetSlug);
@@ -328,7 +329,7 @@ export async function getPublishedHomePagePayload(
     metaTitle: homePage?.meta_title,
     metaDescription: homePage?.meta_description,
   };
-}
+});
 
 export async function getPublishedLayoutPayload(
   siteUser: string

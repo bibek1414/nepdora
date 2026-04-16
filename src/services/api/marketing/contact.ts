@@ -1,4 +1,3 @@
-import { apiFetch } from "@/lib/api-client";
 import { siteConfig } from "@/config/site";
 import { ContactFormData } from "@/types/marketing/contact";
 
@@ -8,7 +7,7 @@ export const marketingContactApi = {
   submit: async (
     data: ContactFormData
   ): Promise<{ success: boolean; message: string }> => {
-    const response = await apiFetch(
+    const response = await fetch(
       `${API_BASE_URL}/api/support/nepdora-contact/`,
       {
         method: "POST",

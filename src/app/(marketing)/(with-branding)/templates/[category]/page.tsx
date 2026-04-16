@@ -7,7 +7,8 @@ import { TemplateSection } from "@/components/marketing/templates/template-secti
 import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
 import { buildMarketingMetadata } from "@/lib/seo";
-export const dynamic = "force-dynamic";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
+export const revalidate = 3600; // Cache for 1 hour
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -125,7 +126,6 @@ const getCategoryDescription = (category: string): string => {
   );
 };
 
-import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export default async function TemplateCategoryPage({ params }: Props) {
   const { category: rawCategory } = await params;

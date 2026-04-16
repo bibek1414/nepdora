@@ -35,7 +35,7 @@ export const subscriptionApi = {
   // Get available pricing plans - using your existing API
   getPlans: async (): Promise<PlansResponse> => {
     try {
-      const response = await apiFetch(`${API_BASE_URL}/api/plans/`, {
+      const response = await fetch(`${API_BASE_URL}/api/plans/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

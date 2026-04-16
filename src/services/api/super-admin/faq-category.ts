@@ -26,7 +26,8 @@ export const faqCategoryApi = {
     const url = `${API_BASE_URL}/api/support/faq-category/`;
     const response = await apiFetch(url, {
       method: "GET",
-    });
+      skipTenantDomain: true,
+    } as any);
     await handleApiError(response);
     return response.json();
   },
@@ -102,7 +103,8 @@ export const faqApi = {
     const url = `${API_BASE_URL}/api/support/faq/`;
     const response = await apiFetch(url, {
       method: "GET",
-    });
+      skipTenantDomain: true,
+    } as any);
     await handleApiError(response);
     return response.json();
   },

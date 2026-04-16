@@ -6,17 +6,24 @@ import { getTenantDomain } from "@/config/site";
  */
 export const apiFetch = async (
   input: RequestInfo | URL,
-  init?: RequestInit
+  init?: RequestInit & { skipTenantDomain?: boolean }
 ): Promise<Response> => {
   const customHeaders = new Headers(init?.headers);
-  const tenantDomain = await getTenantDomain();
 
-  if (tenantDomain) {
-    customHeaders.set("X-Tenant-Domain", tenantDomain);
+  if (!init?.skipTenantDomain) {
+    const tenantDomain = await getTenantDomain({
+      skipHeaders: !!init?.skipTenantDomain,
+    });
+    if (tenantDomain) {
+      customHeaders.set("X-Tenant-Domain", tenantDomain);
+    }
   }
 
+  // Clean up the custom property before passing to standard fetch
+  const { skipTenantDomain, ...fetchInit } = init || {};
+
   return fetch(input, {
-    ...init,
+    ...fetchInit,
     headers: customHeaders,
   });
 };

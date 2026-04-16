@@ -33,7 +33,8 @@ export const testimonialsApi = {
       {
         method: "GET",
         headers: createHeaders(),
-      }
+        skipTenantDomain: true,
+      } as any
     );
 
     await handleApiError(response);

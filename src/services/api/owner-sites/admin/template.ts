@@ -29,6 +29,7 @@ export const templateAPI = {
     const response = await apiFetch(url.toString(), {
       method: "GET",
       headers: createHeaders(),
+      skipTenantDomain: true,
     });
 
     await handleApiError(response);

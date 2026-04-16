@@ -14,7 +14,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Cache for 1 hour
 
 interface Props {
   params: Promise<{ industry: string; city: string }>;
