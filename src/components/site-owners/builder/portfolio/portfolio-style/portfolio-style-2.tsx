@@ -34,11 +34,9 @@ export const PortfolioStyle2: React.FC<PortfolioStyleProps> = ({
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const {
-    data: portfoliosData,
+  const { data: portfoliosData,
     isLoading,
-    error,
-  } = usePortfolios({
+    error, refetch } = usePortfolios({
     page: 1,
     page_size: 6,
   });
@@ -165,14 +163,16 @@ export const PortfolioStyle2: React.FC<PortfolioStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && portfolios.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Briefcase}
             title="No Portfolio Items Available"
             description="Showcase your best work. Add portfolio items from the admin dashboard."
-            actionLabel="Manage Portfolio"
+            actionLabel="Add New Portfolio"
             actionLink="/admin/portfolio"
             isEditable={isEditable}
+            isEmpty={portfolios.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

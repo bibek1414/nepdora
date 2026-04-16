@@ -19,7 +19,7 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
   onUpdate,
   isEditable = true,
 }) => {
-  const { data: skills = [], isLoading } = useSkills();
+  const { data: skills = [], isLoading , refetch } = useSkills();
 
   return (
     <section className="bg-white px-6 py-20 md:px-8">
@@ -77,10 +77,12 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
                   icon={Hammer}
                   title="No Skills Added Yet"
                   description="Showcase your expertise to your visitors. Manage your skills in the admin panel to display them here."
-                  actionLabel="Manage Skills"
+                  actionLabel="Add New Skills"
                   actionLink="/admin/portfolio/skills"
                   isEditable={isEditable}
-                />
+            isEmpty={skills.length === 0}
+                onRefresh={refetch}
+          />
               </div>
             )}
           </div>

@@ -47,11 +47,9 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
     subtitle = "Explore our premium range of professional services tailored to your needs.",
   } = data || {};
 
-  const {
-    data: servicesData,
+  const { data: servicesData,
     isLoading,
-    error,
-  } = useServices({
+    error, refetch } = useServices({
     page,
     page_size: pageSize,
   });
@@ -154,14 +152,16 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
         )}
 
         {/* Empty State */}
-        {!isLoading && !error && services.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Briefcase}
             title="No Services Found"
             description="List your services to attract clients. Add services from the admin dashboard."
-            actionLabel="Manage Services"
+            actionLabel="Add New Services"
             actionLink="/admin/services"
             isEditable={isEditable}
+          isEmpty={services.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

@@ -26,7 +26,7 @@ export const FAQStyle12: React.FC<FAQStyleProps> = ({
     buttonText,
     buttonLink,
   } = data || {};
-  const { data: faqs = [], isLoading, error } = useFAQs();
+  const { data: faqs = [], isLoading, error , refetch } = useFAQs();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -88,16 +88,19 @@ export const FAQStyle12: React.FC<FAQStyleProps> = ({
         />
       )}
 
-      {!isLoading && !error && faqs.length === 0 && (
+      {!isLoading && !error && (
         <BuilderEmptyState
           icon={HelpCircle}
           title="No FAQs Available"
           description="Answer common questions from your visitors. Add FAQs from the admin dashboard."
-          actionLabel="Manage FAQs"
+          actionLabel="Add New FAQ"
           actionLink="/admin/faqs"
           isEditable={isEditable}
-        />
+          isEmpty={faqs.length === 0}
+        onRefresh={refetch}
+          />
       )}
+
     </div>
   );
 };

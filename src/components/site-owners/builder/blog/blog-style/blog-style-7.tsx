@@ -46,11 +46,9 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
     subtitle = "Stay updated with our newest articles and insights from our team of experts.",
   } = data || {};
 
-  const {
-    data: blogsData,
+  const { data: blogsData,
     isLoading,
-    error,
-  } = useBlogs({
+    error, refetch } = useBlogs({
     page,
     page_size: pageSize,
   });
@@ -153,17 +151,20 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
           </>
         )}
 
-        {/* Empty State */}
-        {!isLoading && !error && blogs.length === 0 && (
+        {/* Empty State / Bottom Action */}
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Rss}
             title="No Blog Posts Available"
             description="Share your insights and updates. Add blog posts from the admin dashboard."
-            actionLabel="Manage Blogs"
+            actionLabel="Add New Blog"
             actionLink="/admin/blogs"
             isEditable={isEditable}
+            isEmpty={blogs.length === 0}
+          onRefresh={refetch}
           />
         )}
+
       </div>
     </section>
   );

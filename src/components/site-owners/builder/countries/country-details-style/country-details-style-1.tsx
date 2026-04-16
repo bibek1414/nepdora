@@ -64,8 +64,7 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
   };
 
   // Fetch country data. If no slug (e.g. in builder), fetch all and take the first one AS A SAMPLE.
-  const { data: countriesResponse, isLoading: isCountryLoading } =
-    useCollectionData("countries", slug ? { slug } : { page_size: "1" });
+  const { data: countriesResponse, isLoading: isCountryLoading , refetch } = useCollectionData("countries", slug ? { slug } : { page_size: "1" });
 
   const country = countriesResponse?.results?.[0]?.data;
 
@@ -97,10 +96,12 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
           icon={Globe}
           title="Select a Country"
           description="This page will display details for the selected study destination. Add some countries to your collection to see them here."
-          actionLabel="Manage Collections"
+          actionLabel="Add New Country"
           actionLink="/admin/collections"
           isEditable={isEditable}
-        />
+        isEmpty={true}
+        onRefresh={refetch}
+          />
       </div>
     );
   }

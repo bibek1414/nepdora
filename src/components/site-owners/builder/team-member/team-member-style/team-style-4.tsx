@@ -115,14 +115,15 @@ export const TeamStyle4: React.FC<TeamStyleProps> = ({
           </motion.div>
         )}
 
-        {!isLoading && !error && members.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Users}
             title="No Team Members"
             description="Introduce your team to your visitors. Add team members from the admin dashboard."
-            actionLabel="Manage Team"
+            actionLabel="Add New Team"
             actionLink="/admin/team-member"
             isEditable={isEditable}
+          isEmpty={members.length === 0}
           />
         )}
       </div>

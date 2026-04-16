@@ -65,11 +65,9 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
     onUpdate
   );
 
-  const {
-    data: collectionResponse,
+  const { data: collectionResponse,
     isLoading,
-    error,
-  } = useCollectionData(toursData.collectionSlug || "tours");
+    error, refetch } = useCollectionData(toursData.collectionSlug || "tours");
 
   const tours = collectionResponse?.results || [];
 
@@ -148,10 +146,12 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
                 icon={Compass}
                 title="No Tours Found"
                 description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
-                actionLabel="Manage Tours"
+                actionLabel="Add New Tours"
                 actionLink="/admin/collections"
                 isEditable={isEditable}
-              />
+            isEmpty={tours.length === 0}
+              onRefresh={refetch}
+          />
             </div>
           ) : currentTour ? (
             <AnimatePresence

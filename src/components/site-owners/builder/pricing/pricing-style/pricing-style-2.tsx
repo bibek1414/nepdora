@@ -30,7 +30,7 @@ export const PricingStyle2: React.FC<PricingStyle2Props> = ({
     italicWord = "Pricing",
   } = data || {};
 
-  const { data: pricingsData, isLoading, error } = usePricings();
+  const { data: pricingsData, isLoading, error , refetch } = usePricings();
   const { data: themeResponse } = useThemeQuery();
 
   const theme =
@@ -100,9 +100,10 @@ export const PricingStyle2: React.FC<PricingStyle2Props> = ({
           </div>
         </motion.div>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="py-20 text-center">Loading plans...</div>
-        ) : pricings.length > 0 ? (
+        )}
+        {!isLoading && pricings.length > 0 && (
           <div className="mx-auto max-w-7xl">
             <motion.div
               className="grid grid-cols-1 gap-8 md:grid-cols-3"
@@ -216,14 +217,16 @@ export const PricingStyle2: React.FC<PricingStyle2Props> = ({
               })}
             </motion.div>
           </div>
-        ) : (
+        )}
+        {!isLoading && (
           <BuilderEmptyState
             icon={DollarSign}
             title="No Pricing Plans Found"
             description="Create your pricing tables and plans in the admin dashboard."
-            actionLabel="Manage Pricing"
+            actionLabel="Add New Pricing"
             actionLink="/admin/pricing"
             isEditable={isEditable}
+           isEmpty={pricings.length === 0} onRefresh={refetch}
           />
         )}
       </div>

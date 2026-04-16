@@ -28,7 +28,7 @@ export const FAQStyle5: React.FC<FAQStyle5Props> = ({
     },
   };
 
-  const { data: faqsResponse, isLoading } = useFAQs();
+  const { data: faqsResponse, isLoading , refetch } = useFAQs();
 
   const faqs =
     (Array.isArray(faqsResponse)
@@ -61,7 +61,7 @@ export const FAQStyle5: React.FC<FAQStyle5Props> = ({
           />
         </div>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="space-y-4">
             {[...Array(4)].map((_, i) => (
               <div
@@ -70,18 +70,23 @@ export const FAQStyle5: React.FC<FAQStyle5Props> = ({
               />
             ))}
           </div>
-        ) : faqs.length > 0 ? (
+        )}
+        {!isLoading && faqs.length > 0 && (
           <FAQCard11 faqs={faqs} theme={theme} />
-        ) : (
+        )}
+        {!isLoading && (
           <BuilderEmptyState
             icon={HelpCircle}
             title="No FAQs Available"
             description="Answer common questions from your visitors. Add FAQs from the admin dashboard."
-            actionLabel="Manage FAQs"
+            actionLabel="Add New FAQ"
             actionLink="/admin/faqs"
             isEditable={isEditable}
+            isEmpty={faqs.length === 0}
+          onRefresh={refetch}
           />
         )}
+
       </div>
     </section>
   );

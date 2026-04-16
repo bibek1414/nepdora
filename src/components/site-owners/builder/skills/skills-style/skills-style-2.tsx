@@ -18,7 +18,7 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
   onUpdate,
   isEditable = true,
 }) => {
-  const { data: skills = [], isLoading } = useSkills();
+  const { data: skills = [], isLoading , refetch } = useSkills();
 
   return (
     <section className="relative mx-auto max-w-7xl overflow-hidden px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:px-8">
@@ -37,7 +37,7 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
 
           {/* Right Column: Skills List */}
           <div className="space-y-12 md:col-span-8 lg:col-span-9">
-            {isLoading ? (
+            {isLoading && (
               <div className="flex w-full flex-col gap-12">
                 {[1, 2, 3].map(i => (
                   <div
@@ -50,7 +50,8 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
                   </div>
                 ))}
               </div>
-            ) : skills.length > 0 ? (
+            )}
+        {!isLoading && skills.length > 0 && (
               skills.map(skill => (
                 <div
                   key={skill.id}
@@ -64,16 +65,18 @@ const SkillsStyle2: React.FC<SkillsStyle2Props> = ({
                   </p>
                 </div>
               ))
-            ) : (
-              <BuilderEmptyState
+            )}
+        {!isLoading && (
+          <BuilderEmptyState
                 icon={Hammer}
                 title="No Skills Added Yet"
                 description="Showcase your expertise to your visitors. Manage your skills in the admin panel to display them here."
-                actionLabel="Manage Skills"
+                actionLabel="Add New Skills"
                 actionLink="/admin/portfolio/skills"
                 isEditable={isEditable}
-              />
-            )}
+               isEmpty={skills.length === 0} onRefresh={refetch}
+          />
+        )}
           </div>
         </div>
       </div>

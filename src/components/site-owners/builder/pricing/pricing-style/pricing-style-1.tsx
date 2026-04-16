@@ -19,7 +19,7 @@ export const PricingStyle1: React.FC<PricingStyleProps> = ({
   isEditable = false,
   onPricingClick,
 }) => {
-  const { data: pricingsData, isLoading, error } = usePricings();
+  const { data: pricingsData, isLoading, error , refetch } = usePricings();
   const pricings = React.useMemo(() => {
     return [...(pricingsData?.results || [])].sort(
       (a, b) => parseFloat(String(a.price)) - parseFloat(String(b.price))
@@ -66,14 +66,16 @@ export const PricingStyle1: React.FC<PricingStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && pricings.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={DollarSign}
             title="No Pricing Plans Found"
             description="Create your pricing tables and plans in the admin dashboard."
-            actionLabel="Manage Pricing"
+            actionLabel="Add New Pricing"
             actionLink="/admin/pricing"
             isEditable={isEditable}
+            isEmpty={pricings.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

@@ -40,11 +40,9 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
 
   const { data, handleTextUpdate } = useBuilderLogic(experienceData, onUpdate);
 
-  const {
-    data: collectionResponse,
+  const { data: collectionResponse,
     isLoading,
-    error,
-  } = useCollectionData(experienceData.collectionSlug || "experience");
+    error, refetch } = useCollectionData(experienceData.collectionSlug || "experience");
 
   const experiences = collectionResponse?.results || [];
 
@@ -74,41 +72,47 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
           <div className="bg-border absolute top-0 bottom-0 left-0 w-px md:left-1/2 md:-translate-x-px" />
 
           <div className="space-y-12">
-            {isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`relative flex flex-col gap-6 md:flex-row ${i % 2 === 0 ? "md:flex-row-reverse" : ""}`}
-                >
+            {isLoading && (
+              <>
+                {Array.from({ length: 3 }).map((_, i) => (
                   <div
-                    className="bg-primary absolute top-1 left-0 h-3 w-3 -translate-x-[5px] rounded-full shadow-[0_0_12px_hsl(210,100%,60%,0.6)] md:left-1/2 md:-translate-x-[6px]"
-                    style={{ backgroundColor: theme.colors.primary }}
-                  />
-                  <div
-                    className={`md:w-1/2 ${i % 2 === 0 ? "md:pl-10" : "md:pr-10 md:text-right"} pl-6 md:pl-0`}
+                    key={i}
+                    className={`relative flex flex-col gap-6 md:flex-row ${i % 2 === 0 ? "md:flex-row-reverse" : ""}`}
                   >
-                    <Skeleton className="mb-2 h-4 w-24" />
-                    <Skeleton className="mb-1 h-6 w-3/4" />
-                    <Skeleton className="mb-4 h-4 w-1/2" />
-                    <Skeleton className="h-16 w-full" />
+                    <div
+                      className="bg-primary absolute top-1 left-0 h-3 w-3 -translate-x-[5px] rounded-full shadow-[0_0_12px_hsl(210,100%,60%,0.6)] md:left-1/2 md:-translate-x-[6px]"
+                      style={{ backgroundColor: theme.colors.primary }}
+                    />
+                    <div
+                      className={`md:w-1/2 ${i % 2 === 0 ? "md:pl-10" : "md:pr-10 md:text-right"} pl-6 md:pl-0`}
+                    >
+                      <Skeleton className="mb-2 h-4 w-24" />
+                      <Skeleton className="mb-1 h-6 w-3/4" />
+                      <Skeleton className="mb-4 h-4 w-1/2" />
+                      <Skeleton className="h-16 w-full" />
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : error ? (
+                ))}
+              </>
+            )}
+            {error && (
               <div className="text-center text-red-500">
-                Failed to load experience data.
-              </div>
-            ) : experiences.length === 0 ? (
-              <BuilderEmptyState
-                icon={Briefcase}
-                title="No Experience Items"
-                description="List your professional history or major milestones. Add items from the admin dashboard."
-                actionLabel="Manage Experience"
-                actionLink="/admin/collections"
-                isEditable={isEditable}
-              />
-            ) : (
-              experiences.map((exp: any, i: number) => (
+            Failed to load experience data.
+          </div>
+        )}
+        {!isLoading && !error && (
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="No Experience Items"
+            description="List your professional history or major milestones. Add items from the admin dashboard."
+            actionLabel="Add New Experience"
+            actionLink="/admin/collections"
+            isEditable={isEditable}
+            isEmpty={experiences.length === 0}
+          onRefresh={refetch}
+          />
+        )}
+        {!isLoading && !error && experiences.map((exp: any, i: number) => (
                 <div
                   key={exp.id || i}
                   className={`relative flex flex-col gap-6 md:flex-row ${i % 2 === 0 ? "md:flex-row-reverse" : ""}`}
@@ -143,8 +147,7 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
                     />
                   </div>
                 </div>
-              ))
-            )}
+              ))}
           </div>
         </div>
       </div>

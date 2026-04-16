@@ -197,11 +197,9 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
 
   const { data, handleTextUpdate } = useBuilderLogic(toursData, onUpdate);
 
-  const {
-    data: collectionResponse,
+  const { data: collectionResponse,
     isLoading,
-    error,
-  } = useCollectionData(toursData.collectionSlug || "tours");
+    error, refetch } = useCollectionData(toursData.collectionSlug || "tours");
 
   const tours = collectionResponse?.results || [];
 
@@ -225,26 +223,30 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
           />
         </div>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {[1, 2].map(i => (
               <Skeleton key={i} className="h-[380px] w-full rounded-2xl" />
             ))}
           </div>
-        ) : error ? (
+        )}
+        {error && (
           <div className="flex h-40 items-center justify-center text-red-500">
             Failed to load tours.
           </div>
-        ) : tours.length === 0 ? (
+        )}
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Compass}
             title="No Tours Found"
             description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
-            actionLabel="Manage Tours"
+            actionLabel="Add New Tours"
             actionLink="/admin/collections"
             isEditable={isEditable}
+           isEmpty={tours.length === 0} onRefresh={refetch}
           />
-        ) : (
+        )}
+        {!isLoading && !error && tours.length > 0 && (
           <div className="flex flex-col gap-6">
             {/* Top row: first 2 tours as horizontal cards */}
             {tours.slice(0, 2).length > 0 && (

@@ -25,7 +25,7 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
   onTestimonialClick,
 }) => {
   const { title = "What Our Clients Say", subtitle } = data || {};
-  const { data: testimonials = [], isLoading, error } = useTestimonials();
+  const { data: testimonials = [], isLoading, error , refetch } = useTestimonials();
   const pageSize = 6;
 
   const handleTitleChange = (newTitle: string) => {
@@ -97,14 +97,16 @@ export const TestimonialStyle7: React.FC<TestimonialStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && testimonials.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={MessageSquareQuote}
             title="No Testimonials Available"
             description="Share what your clients think about you. Add testimonials from the admin dashboard."
-            actionLabel="Manage Testimonials"
+            actionLabel="Add New Testimonials"
             actionLink="/admin/testimonials"
             isEditable={isEditable}
+          isEmpty={testimonials.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

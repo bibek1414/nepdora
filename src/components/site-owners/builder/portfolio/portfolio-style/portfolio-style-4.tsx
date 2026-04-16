@@ -49,11 +49,9 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
 
   const [activeProjectId, setActiveProjectId] = useState<number | null>(null);
 
-  const {
-    data: portfoliosData,
+  const { data: portfoliosData,
     isLoading,
-    error,
-  } = usePortfolios({
+    error, refetch } = usePortfolios({
     page: 1,
     page_size: 4,
   });
@@ -273,14 +271,16 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && portfolios.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Briefcase}
             title="No Works Available"
             description="Showcase your best work. Add portfolio items from the admin dashboard."
-            actionLabel="Manage Portfolio"
+            actionLabel="Add New Portfolio"
             actionLink="/admin/portfolio"
             isEditable={isEditable}
+            isEmpty={portfolios.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

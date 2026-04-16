@@ -46,11 +46,9 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
     subtitle = "A curated selection of our most impactful professional work and achievements.",
   } = data || {};
 
-  const {
-    data: portfoliosData,
+  const { data: portfoliosData,
     isLoading,
-    error,
-  } = usePortfolios({
+    error, refetch } = usePortfolios({
     page,
     page_size: pageSize,
   });
@@ -152,14 +150,16 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
           </>
         )}
 
-        {!isLoading && !error && portfolios.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Briefcase}
             title="No Projects Found"
             description="Showcase your best work. Add portfolio items from the admin dashboard."
-            actionLabel="Manage Portfolio"
+            actionLabel="Add New Portfolio"
             actionLink="/admin/portfolio"
             isEditable={isEditable}
+            isEmpty={portfolios.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

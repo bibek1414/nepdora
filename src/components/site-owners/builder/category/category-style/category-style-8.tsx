@@ -37,7 +37,7 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
       { label: "Satisfaction Rate", value: "96%" },
     ],
   } = data || {};
-  const { data: categoriesData, isLoading } = useCategories();
+  const { data: categoriesData, isLoading , refetch } = useCategories();
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -204,29 +204,35 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
                   style={{ color: colors.primary }}
                 />
               </div>
-            ) : steps.length > 0 ? (
-              <div className="space-y-4">
-                {steps.map((step, index) => (
-                  <CategoryCard8
-                    key={step.id}
-                    category={step as any}
-                    stepNumber={step.step}
-                    isEditable={isEditable}
-                    siteUser={siteUser}
-                    onClick={onCategoryClick}
-                  />
-                ))}
-              </div>
             ) : (
-              <BuilderEmptyState
-                icon={FolderOpen}
-                title="No Categories Found"
-                description="Organize your content by adding categories from the admin dashboard."
-                actionLabel="Manage Categories"
-                actionLink="/admin/categories"
-                isEditable={isEditable}
-              />
+              <>
+                {steps.length > 0 && (
+                  <div className="space-y-4">
+                    {steps.map((step, index) => (
+                      <CategoryCard8
+                        key={step.id}
+                        category={step as any}
+                        stepNumber={step.step}
+                        isEditable={isEditable}
+                        siteUser={siteUser}
+                        onClick={onCategoryClick}
+                      />
+                    ))}
+                  </div>
+                )}
+                <BuilderEmptyState
+                  icon={FolderOpen}
+                  title="No Categories Found"
+                  description="Organize your content by adding categories from the admin dashboard."
+                  actionLabel="Add New Category"
+                  actionLink="/admin/categories"
+                  isEditable={isEditable}
+                  isEmpty={steps.length === 0}
+                onRefresh={refetch}
+          />
+              </>
             )}
+
           </motion.div>
         </div>
       </div>

@@ -25,7 +25,7 @@ export const CategoryStyle1: React.FC<CategoryStyleProps> = ({
   onCategoryClick,
 }) => {
   const { title = "Our Categories", subtitle } = data || {};
-  const { data: categoriesData, isLoading, error } = useCategories();
+  const { data: categoriesData, isLoading, error , refetch } = useCategories();
   const categories = categoriesData?.results || [];
 
   const handleTitleChange = (newTitle: string) => {
@@ -98,16 +98,19 @@ export const CategoryStyle1: React.FC<CategoryStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && categories.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={FolderOpen}
             title="No Categories Found"
             description="Organize your content by adding categories from the admin dashboard."
-            actionLabel="Manage Categories"
+            actionLabel="Add New Category"
             actionLink="/admin/categories"
             isEditable={isEditable}
+            isEmpty={categories.length === 0}
+          onRefresh={refetch}
           />
         )}
+
       </div>
     </section>
   );

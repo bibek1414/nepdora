@@ -29,7 +29,7 @@ export const CategoryStyle5: React.FC<CategoryStyleProps> = ({
   onCategoryClick,
 }) => {
   const { title = "CubeX Collection", subtitle } = data || {};
-  const { data: categoriesData, isLoading, error } = useCategories();
+  const { data: categoriesData, isLoading, error , refetch } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -251,16 +251,19 @@ export const CategoryStyle5: React.FC<CategoryStyleProps> = ({
           </>
         )}
 
-        {!isLoading && !error && categories.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={FolderOpen}
             title="No Categories Found"
             description="Organize your content by adding categories from the admin dashboard."
-            actionLabel="Manage Categories"
+            actionLabel="Add New Category"
             actionLink="/admin/categories"
             isEditable={isEditable}
+            isEmpty={categories.length === 0}
+          onRefresh={refetch}
           />
         )}
+
       </div>
     </section>
   );

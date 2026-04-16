@@ -33,11 +33,9 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
 
   const { title = "", trustBadge = "Trust", trustText = "" } = data || {};
 
-  const {
-    data: servicesData,
+  const { data: servicesData,
     isLoading,
-    error,
-  } = useServices({
+    error, refetch } = useServices({
     page: 1,
     page_size: 4,
   });
@@ -73,13 +71,14 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
           />
         </motion.div>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
               <Skeleton key={i} className="h-24 w-full rounded-2xl" />
             ))}
           </div>
-        ) : error ? (
+        )}
+        {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading Services</AlertTitle>
@@ -89,16 +88,19 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
                 : "Failed to load services."}
             </AlertDescription>
           </Alert>
-        ) : services.length === 0 ? (
+        )}
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Briefcase}
             title="No Services Available"
             description="List your services to attract clients. Add services from the admin dashboard."
-            actionLabel="Manage Services"
+            actionLabel="Add New Services"
             actionLink="/admin/services"
             isEditable={isEditable}
+           isEmpty={services.length === 0} onRefresh={refetch}
           />
-        ) : (
+        )}
+        {!isLoading && !error && services.length > 0 && (
           /* White card - overflow visible so image escapes */
           <div
             style={{

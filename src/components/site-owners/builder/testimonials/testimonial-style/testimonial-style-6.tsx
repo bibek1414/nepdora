@@ -35,7 +35,7 @@ export const TestimonialStyle6: React.FC<TestimonialStyleProps> = ({
   onTestimonialClick,
 }) => {
   const { title = "Students Who Made It" } = data || {};
-  const { data: testimonials = [], isLoading, error } = useTestimonials();
+  const { data: testimonials = [], isLoading, error , refetch } = useTestimonials();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -89,10 +89,12 @@ export const TestimonialStyle6: React.FC<TestimonialStyleProps> = ({
           icon={MessageSquareQuote}
           title="No Testimonials Available"
           description="Share what your clients think about you. Add testimonials from the admin dashboard."
-          actionLabel="Manage Testimonials"
+          actionLabel="Add New Testimonials"
           actionLink="/admin/testimonials"
           isEditable={isEditable}
-        />
+            isEmpty={true}
+        onRefresh={refetch}
+          />
       </section>
     );
   }

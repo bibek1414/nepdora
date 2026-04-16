@@ -41,11 +41,9 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
     buttonLink = "/products",
   } = editableData || {};
 
-  const {
-    data: productsData,
+  const { data: productsData,
     isLoading,
-    error,
-  } = useProducts({
+    error, refetch } = useProducts({
     category_id: categoryId,
     page_size: 4,
     is_popular: true,
@@ -98,11 +96,12 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
         </motion.div>
 
         {/* Products Grid */}
-        {isLoading ? (
+        {isLoading && (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="text-primary h-8 w-8 animate-spin" />
           </div>
-        ) : error ? (
+        )}
+        {error && (
           <div className="py-8">
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
@@ -112,7 +111,8 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
               </AlertDescription>
             </Alert>
           </div>
-        ) : products.length > 0 ? (
+        )}
+        {!isLoading && !error && products.length > 0 && (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
             {products.map((product, index) => (
               <ProductCard6
@@ -124,14 +124,16 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
               />
             ))}
           </div>
-        ) : (
+        )}
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={ShoppingBag}
             title="No Trending Products"
             description="Showcase your popular products to your customers. Add products from the admin dashboard."
-            actionLabel="Manage Products"
+            actionLabel="Add New Products"
             actionLink="/admin/product"
             isEditable={isEditable}
+           isEmpty={products.length === 0} onRefresh={refetch}
           />
         )}
       </div>

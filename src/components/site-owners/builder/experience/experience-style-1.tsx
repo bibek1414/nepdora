@@ -41,11 +41,9 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
 
   const { data, handleTextUpdate } = useBuilderLogic(experienceData, onUpdate);
 
-  const {
-    data: collectionResponse,
+  const { data: collectionResponse,
     isLoading,
-    error,
-  } = useCollectionData(experienceData.collectionSlug || "experience");
+    error, refetch } = useCollectionData(experienceData.collectionSlug || "experience");
 
   const experiences = collectionResponse?.results || [];
 
@@ -69,33 +67,39 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
 
           {/* Right Column: Experience List */}
           <div className="space-y-12 md:col-span-8 lg:col-span-9">
-            {isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="space-y-4 border-b pb-12 last:border-0">
-                  <div className="flex items-center gap-4">
-                    <Skeleton className="h-4 w-24" />
-                    <div className="h-px w-8 bg-gray-300" />
-                    <Skeleton className="h-4 w-32" />
+            {isLoading && (
+              <>
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="space-y-4 border-b pb-12 last:border-0">
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-4 w-24" />
+                      <div className="h-px w-8 bg-gray-300" />
+                      <Skeleton className="h-4 w-32" />
+                    </div>
+                    <Skeleton className="h-8 w-2/3" />
+                    <Skeleton className="h-20 w-full" />
                   </div>
-                  <Skeleton className="h-8 w-2/3" />
-                  <Skeleton className="h-20 w-full" />
-                </div>
-              ))
-            ) : error ? (
+                ))}
+              </>
+            )}
+            {error && (
               <div className="text-red-500">
                 Failed to load experience data.
               </div>
-            ) : experiences.length === 0 ? (
+            )}
+            {!isLoading && !error && (
               <BuilderEmptyState
                 icon={Briefcase}
                 title="No Experience Items"
                 description="List your professional history or major milestones. Add items from the admin dashboard."
-                actionLabel="Manage Experience"
+                actionLabel="Add New Experience"
                 actionLink="/admin/collections"
                 isEditable={isEditable}
-              />
-            ) : (
-              experiences.map((exp: any, index: number) => (
+                isEmpty={experiences.length === 0}
+              onRefresh={refetch}
+          />
+            )}
+            {!isLoading && !error && experiences.map((exp: any, index: number) => (
                 <div
                   key={exp.id || index}
                   className="space-y-6 border-b border-gray-100 pb-12 last:border-0"
@@ -120,8 +124,7 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
                     dangerouslySetInnerHTML={{ __html: exp.data.description }}
                   />
                 </div>
-              ))
-            )}
+              ))}
           </div>
         </div>
       </div>

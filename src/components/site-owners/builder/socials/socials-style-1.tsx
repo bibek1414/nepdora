@@ -22,7 +22,7 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const { data: siteConfig } = useSiteConfig();
+  const { data: siteConfig , refetch } = useSiteConfig();
 
   const socials = [
     { platform: "facebook", href: siteConfig?.facebook_url, label: "Facebook" },
@@ -112,9 +112,11 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
             icon={Share2}
             title="No Social Links Configured"
             description="Connect with your audience by adding your social media profiles in the site configuration."
-            actionLabel="Manage Socials"
+            actionLabel="Add New Socials"
             actionLink="/admin/settings/site-config"
             isEditable={isEditable}
+            isEmpty={socials.length === 0}
+          onRefresh={refetch}
           />
         ) : (
           <div className="flex flex-wrap items-center justify-center gap-4 lg:gap-6">

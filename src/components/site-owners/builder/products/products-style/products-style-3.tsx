@@ -46,11 +46,9 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
     },
   };
 
-  const {
-    data: productsData,
+  const { data: productsData,
     isLoading,
-    error,
-  } = useProducts({
+    error, refetch } = useProducts({
     is_popular: true,
     category_id: categoryId,
     page_size: 12,
@@ -153,14 +151,16 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && products.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={ShoppingBag}
             title="No Best Sellers Found"
             description="Showcase your popular products to your customers. Add products from the admin dashboard."
-            actionLabel="Manage Products"
+            actionLabel="Add New Products"
             actionLink="/admin/product"
             isEditable={isEditable}
+          isEmpty={products.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

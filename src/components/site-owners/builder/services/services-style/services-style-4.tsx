@@ -29,7 +29,7 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
     tag = "[What We Offer]",
     italicWord = "Business",
   } = data || {};
-  const { data: servicesData, isLoading } = useServices({
+  const { data: servicesData, isLoading , refetch } = useServices({
     page: 1,
     page_size: 6,
   });
@@ -91,11 +91,12 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
           </div>
         </motion.div>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="py-10 text-center text-gray-500">
             Loading services...
           </div>
-        ) : services.length > 0 ? (
+        )}
+        {!isLoading && services.length > 0 && (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {services.map((service, idx) => (
               <ServicesCard4
@@ -108,14 +109,16 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
               />
             ))}
           </div>
-        ) : (
+        )}
+        {!isLoading && (
           <BuilderEmptyState
             icon={Briefcase}
             title="No Services Found"
             description="List your services to attract clients. Add services from the admin dashboard."
-            actionLabel="Manage Services"
+            actionLabel="Add New Services"
             actionLink="/admin/services"
             isEditable={isEditable}
+           isEmpty={services.length === 0} onRefresh={refetch}
           />
         )}
       </div>

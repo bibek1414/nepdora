@@ -26,11 +26,9 @@ export const BlogStyle2: React.FC<BlogStyleProps> = ({
 }) => {
   const { title = "Latest Blog Posts", subtitle } = data || {};
   const pageSize = 6;
-  const {
-    data: blogsData,
+  const { data: blogsData,
     isLoading,
-    error,
-  } = useBlogs({
+    error, refetch } = useBlogs({
     page: 1,
     page_size: pageSize,
   });
@@ -109,14 +107,16 @@ export const BlogStyle2: React.FC<BlogStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && blogs.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Rss}
             title="No Blog Posts Found"
             description="Share your insights and updates. Add blog posts from the admin dashboard."
-            actionLabel="Manage Blogs"
+            actionLabel="Add New Blog"
             actionLink="/admin/blogs"
             isEditable={isEditable}
+            isEmpty={blogs.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

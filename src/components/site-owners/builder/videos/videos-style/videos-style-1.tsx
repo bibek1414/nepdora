@@ -21,7 +21,7 @@ export const VideosStyle1: React.FC<VideosStyleProps> = ({
   onUpdate,
 }) => {
   const { title = "Our Videos", subtitle } = data || {};
-  const { data: videos = [], isLoading, error } = useVideos();
+  const { data: videos = [], isLoading, error , refetch } = useVideos();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -88,16 +88,18 @@ export const VideosStyle1: React.FC<VideosStyleProps> = ({
             </div>
           )}
 
-          {!isLoading && !error && videos.length === 0 && (
-            <BuilderEmptyState
+          {!isLoading && !error && (
+          <BuilderEmptyState
               icon={Play}
               title="No Videos Available"
               description="Share your story with videos. Add your first video from the admin dashboard."
-              actionLabel="Manage Videos"
+              actionLabel="Add New Videos"
               actionLink="/admin/videos"
               isEditable={isEditable}
-            />
-          )}
+            isEmpty={videos.length === 0}
+          onRefresh={refetch}
+          />
+        )}
         </div>
       </div>
     </section>

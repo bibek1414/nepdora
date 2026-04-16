@@ -35,7 +35,7 @@ export const TeamStyle2: React.FC<TeamStyleProps> = ({
   const title = rawTitle ?? "Meet Our Team";
   const subtitle = rawSubtitle;
 
-  const { data: members = [], isLoading, error } = useTeamMembers();
+  const { data: members = [], isLoading, error , refetch } = useTeamMembers();
 
   const shouldUseCard2TitleFallback =
     rawTitle === undefined ||
@@ -127,14 +127,16 @@ export const TeamStyle2: React.FC<TeamStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && members.length === 0 && (
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={Users}
             title="No Team Members"
             description="Introduce your team to your visitors. Add team members from the admin dashboard."
-            actionLabel="Manage Team"
+            actionLabel="Add New Team"
             actionLink="/admin/team-member"
             isEditable={isEditable}
+          isEmpty={members.length === 0}
+          onRefresh={refetch}
           />
         )}
       </div>

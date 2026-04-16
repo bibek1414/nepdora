@@ -26,7 +26,7 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
   onCategoryClick,
 }) => {
   const { title = "Browse Categories" } = data || {};
-  const { data: categoriesData, isLoading } = useCategories();
+  const { data: categoriesData, isLoading , refetch } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
 
   const { data: themeResponse } = useThemeQuery();
@@ -63,23 +63,6 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
     );
   }
 
-  if (!isLoading && (!categories || categories.length === 0)) {
-    return (
-      <section className="bg-white py-16 lg:py-24">
-        <div className="container mx-auto max-w-7xl px-4">
-          <BuilderEmptyState
-            icon={FolderOpen}
-            title="No Categories Found"
-            description="Organize your content by adding categories from the admin dashboard."
-            actionLabel="Manage Categories"
-            actionLink="/admin/categories"
-            isEditable={isEditable}
-          />
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="mb-16 bg-white py-16 lg:py-24">
       <div className="container mx-auto max-w-7xl px-4">
@@ -92,21 +75,37 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
           />
         </h2>
 
-        <div className="grid grid-cols-3 gap-6 sm:grid-cols-6">
-          {categories.map(cat => {
-            return (
-              <CategoryCard7
-                key={cat.id}
-                category={cat}
-                theme={theme}
-                isEditable={isEditable}
-                siteUser={siteUser}
-                onCategoryClick={onCategoryClick}
-              />
-            );
-          })}
-        </div>
+        {categories && categories.length > 0 && (
+          <div className="grid grid-cols-3 gap-6 sm:grid-cols-6">
+            {categories.map(cat => {
+              return (
+                <CategoryCard7
+                  key={cat.id}
+                  category={cat}
+                  theme={theme}
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  onCategoryClick={onCategoryClick}
+                />
+              );
+            })}
+          </div>
+        )}
+
+        {!isLoading && (
+          <BuilderEmptyState
+            icon={FolderOpen}
+            title="No Categories Found"
+            description="Organize your content by adding categories from the admin dashboard."
+            actionLabel="Add New Category"
+            actionLink="/admin/categories"
+            isEditable={isEditable}
+            isEmpty={!categories || categories.length === 0}
+          onRefresh={refetch}
+          />
+        )}
       </div>
     </section>
   );
+
 };

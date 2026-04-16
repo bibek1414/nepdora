@@ -50,11 +50,9 @@ export const ProductsStyle7: React.FC<ProductsStyleProps> = ({
 
   const currentFilters = !isEditable ? productFilters : {};
 
-  const {
-    data: productsData,
+  const { data: productsData,
     isLoading,
-    error,
-  } = useProducts({
+    error, refetch } = useProducts({
     page: currentPage,
     category_id: categoryId,
     sub_category_id: subCategoryId,
@@ -186,8 +184,8 @@ export const ProductsStyle7: React.FC<ProductsStyleProps> = ({
               </>
             )}
 
-            {!isLoading && !error && products.length === 0 && (
-              <BuilderEmptyState
+            {!isLoading && !error && (
+          <BuilderEmptyState
                 icon={ShoppingBag}
                 title="No Products Found"
                 description={
@@ -198,8 +196,10 @@ export const ProductsStyle7: React.FC<ProductsStyleProps> = ({
                 actionLabel={isEditable ? "Manage Products" : undefined}
                 actionLink={isEditable ? "/admin/product" : undefined}
                 isEditable={isEditable}
-              />
-            )}
+              isEmpty={products.length === 0}
+          onRefresh={refetch}
+          />
+        )}
           </div>
         </div>
       </div>

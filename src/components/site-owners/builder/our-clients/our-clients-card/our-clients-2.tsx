@@ -15,7 +15,7 @@ export const OurClients2: React.FC<OurClients2Props> = ({
   data,
   isEditable = false,
 }) => {
-  const { data: clientsData, isLoading } = useGetOurClients({});
+  const { data: clientsData, isLoading , refetch } = useGetOurClients({});
 
   if (isLoading) {
     return (
@@ -29,50 +29,52 @@ export const OurClients2: React.FC<OurClients2Props> = ({
 
   const clients = clientsData || [];
 
-  if (clients.length === 0) {
-    return (
+  return (
+    <>
+      {clients.length > 0 && (
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+          {clients.map(client => (
+            <Card
+              key={client.id}
+              className="flex items-center justify-center border-none shadow-sm transition-shadow hover:shadow-md"
+            >
+              <CardContent className="flex h-32 items-center justify-center p-6">
+                {client.url ? (
+                  <a
+                    href={client.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-full w-full items-center justify-center"
+                  >
+                    <img
+                      src={client.logo}
+                      alt={client.name}
+                      className="max-h-16 max-w-full object-contain"
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={client.logo}
+                    alt={client.name}
+                    className="max-h-16 max-w-full object-contain"
+                  />
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
       <BuilderEmptyState
         icon={Handshake}
         title="No Clients Added"
         description="Display your clients or partners. Add client logos in the admin dashboard."
-        actionLabel="Manage Clients"
+        actionLabel="Add New Client"
         actionLink="/admin/our-clients"
         isEditable={isEditable}
-      />
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
-      {clients.map(client => (
-        <Card
-          key={client.id}
-          className="flex items-center justify-center border-none shadow-sm transition-shadow hover:shadow-md"
-        >
-          <CardContent className="flex h-32 items-center justify-center p-6">
-            {client.url ? (
-              <a
-                href={client.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-full w-full items-center justify-center"
-              >
-                <img
-                  src={client.logo}
-                  alt={client.name}
-                  className="max-h-16 max-w-full object-contain"
-                />
-              </a>
-            ) : (
-              <img
-                src={client.logo}
-                alt={client.name}
-                className="max-h-16 max-w-full object-contain"
-              />
-            )}
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+        isEmpty={clients.length === 0}
+      onRefresh={refetch}
+          />
+    </>
   );
+
 };

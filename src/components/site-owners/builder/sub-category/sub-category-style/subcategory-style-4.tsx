@@ -26,7 +26,7 @@ export const SubCategoryStyle4: React.FC<SubCategoryStyleProps> = ({
   onSubCategoryClick,
 }) => {
   const { title = "Browse Subcategories" } = data || {};
-  const { data: subcategoriesData, isLoading } = useSubCategories();
+  const { data: subcategoriesData, isLoading , refetch } = useSubCategories();
   const subcategories = (subcategoriesData?.results || []) as SubCategory[];
 
   const { data: themeResponse } = useThemeQuery();
@@ -71,9 +71,11 @@ export const SubCategoryStyle4: React.FC<SubCategoryStyleProps> = ({
             icon={FolderOpen}
             title="No SubCategories Found"
             description="Organize your categories further by adding subcategories in the admin dashboard."
-            actionLabel="Manage SubCategories"
+            actionLabel="Add New SubCategories"
             actionLink="/admin/sub-category"
             isEditable={isEditable}
+            isEmpty={true}
+          onRefresh={refetch}
           />
         </div>
       </section>

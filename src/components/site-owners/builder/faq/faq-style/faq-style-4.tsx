@@ -15,7 +15,7 @@ interface FAQStyleProps {
 }
 
 export const FAQStyle4: React.FC<FAQStyleProps> = ({ isEditable = false }) => {
-  const { data: faqs = [], isLoading, error } = useFAQs();
+  const { data: faqs = [], isLoading, error , refetch } = useFAQs();
 
   return (
     <section className="bg-background py-16 md:py-24">
@@ -43,16 +43,19 @@ export const FAQStyle4: React.FC<FAQStyleProps> = ({ isEditable = false }) => {
 
           {!isLoading && !error && faqs.length > 0 && <FAQCard10 faqs={faqs} />}
 
-          {!isLoading && !error && faqs.length === 0 && (
+          {!isLoading && !error && (
             <BuilderEmptyState
               icon={HelpCircle}
               title="No FAQs Available"
               description="Answer common questions from your visitors. Add FAQs from the admin dashboard."
-              actionLabel="Manage FAQs"
+              actionLabel="Add New FAQ"
               actionLink="/admin/faqs"
               isEditable={isEditable}
-            />
+              isEmpty={faqs.length === 0}
+            onRefresh={refetch}
+          />
           )}
+
         </div>
       </div>
     </section>

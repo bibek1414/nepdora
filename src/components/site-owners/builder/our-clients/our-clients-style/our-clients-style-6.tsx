@@ -22,7 +22,7 @@ export const OurClientsStyle6: React.FC<OurClientsStyleProps> = ({
   onUpdate,
 }) => {
   const { title = "Some of the brands we work with", subtitle } = data || {};
-  const { data: clientsData, isLoading } = useGetOurClients({});
+  const { data: clientsData, isLoading , refetch } = useGetOurClients({});
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -84,7 +84,7 @@ export const OurClientsStyle6: React.FC<OurClientsStyleProps> = ({
           </div>
         )}
 
-        {isLoading ? (
+        {isLoading && (
           <div className="flex flex-wrap justify-center gap-6 md:gap-10">
             {[...Array(4)].map((_, i) => (
               <Skeleton
@@ -93,18 +93,23 @@ export const OurClientsStyle6: React.FC<OurClientsStyleProps> = ({
               />
             ))}
           </div>
-        ) : clientsData && clientsData.length > 0 ? (
+        )}
+        {!isLoading && clientsData && clientsData.length > 0 && (
           <OurClientsCard6 clients={clientsData} data={data} />
-        ) : (
+        )}
+        {!isLoading && (
           <BuilderEmptyState
             icon={Handshake}
             title="No Clients Added"
             description="Display your clients or partners. Add client logos in the admin dashboard."
-            actionLabel="Manage Clients"
+            actionLabel="Add New Client"
             actionLink="/admin/our-clients"
             isEditable={isEditable}
+            isEmpty={!clientsData || clientsData.length === 0}
+          onRefresh={refetch}
           />
         )}
+
       </div>
     </section>
   );

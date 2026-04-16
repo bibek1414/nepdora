@@ -39,11 +39,9 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
   const primaryColor = theme?.colors?.primary || "#4f46e5";
 
   const pageSize = 4;
-  const {
-    data: blogsData,
+  const { data: blogsData,
     isLoading,
-    error,
-  } = useBlogs({
+    error, refetch } = useBlogs({
     page: 1,
     page_size: pageSize,
   });
@@ -127,40 +125,46 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
               {error instanceof Error ? error.message : "Failed to load blogs."}
             </AlertDescription>
           </Alert>
-        ) : featuredBlogs.length === 0 ? (
-          <BuilderEmptyState
-            icon={Rss}
-            title="No Blog Posts Found"
-            description="Share your insights and updates. Add blog posts from the admin dashboard."
-            actionLabel="Manage Blogs"
-            actionLink="/admin/blogs"
-            isEditable={isEditable}
-          />
         ) : (
-          <motion.div
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:gap-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-          >
-            {featuredBlogs.map(blog => (
-              <div
-                key={blog.slug}
-                className="relative z-10 transition-transform duration-200"
+          <>
+            {featuredBlogs.length > 0 && (
+              <motion.div
+                className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:gap-8"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
               >
-                {isEditable && (
-                  <div className="absolute inset-0 z-20 bg-transparent" />
-                )}
-                <BlogCard8
-                  blog={blog}
-                  siteUser={siteUser}
-                  onClick={() => onBlogClick?.(blog.slug)}
-                />
-              </div>
-            ))}
-          </motion.div>
+                {featuredBlogs.map(blog => (
+                  <div
+                    key={blog.slug}
+                    className="relative z-10 transition-transform duration-200"
+                  >
+                    {isEditable && (
+                      <div className="absolute inset-0 z-20 bg-transparent" />
+                    )}
+                    <BlogCard8
+                      blog={blog}
+                      siteUser={siteUser}
+                      onClick={() => onBlogClick?.(blog.slug)}
+                    />
+                  </div>
+                ))}
+              </motion.div>
+            )}
+            <BuilderEmptyState
+              icon={Rss}
+              title="No Blog Posts Found"
+              description="Share your insights and updates. Add blog posts from the admin dashboard."
+              actionLabel="Add New Blog"
+              actionLink="/admin/blogs"
+              isEditable={isEditable}
+              isEmpty={featuredBlogs.length === 0}
+            onRefresh={refetch}
+          />
+          </>
         )}
+
       </div>
     </section>
   );

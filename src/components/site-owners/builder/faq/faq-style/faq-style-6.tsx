@@ -28,7 +28,7 @@ export const FAQStyle6: React.FC<FAQStyleProps> = ({
     },
   };
 
-  const { data: faqs = [], isLoading, error } = useFAQs();
+  const { data: faqs = [], isLoading, error , refetch } = useFAQs();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -65,7 +65,7 @@ export const FAQStyle6: React.FC<FAQStyleProps> = ({
           </div>
         </div>
 
-        {isLoading ? (
+        {isLoading && (
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-24">
             <div className="space-y-4 lg:col-span-5">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -76,7 +76,8 @@ export const FAQStyle6: React.FC<FAQStyleProps> = ({
               <Skeleton className="h-full w-full rounded-lg" />
             </div>
           </div>
-        ) : error ? (
+        )}
+        {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error Loading FAQs</AlertTitle>
@@ -84,16 +85,20 @@ export const FAQStyle6: React.FC<FAQStyleProps> = ({
               {error instanceof Error ? error.message : "Failed to load FAQs."}
             </AlertDescription>
           </Alert>
-        ) : faqs.length === 0 ? (
+        )}
+        {!isLoading && !error && (
           <BuilderEmptyState
             icon={HelpCircle}
             title="No FAQs Available"
             description="Answer common questions from your visitors. Add FAQs from the admin dashboard."
-            actionLabel="Manage FAQs"
+            actionLabel="Add New FAQ"
             actionLink="/admin/faqs"
             isEditable={isEditable}
+            isEmpty={faqs.length === 0}
+          onRefresh={refetch}
           />
-        ) : (
+        )}
+        {!isLoading && !error && faqs.length > 0 && (
           <FaqCard6 faqs={faqs} accentColor={accentColor} />
         )}
       </div>

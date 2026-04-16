@@ -14,7 +14,7 @@ export const OurClients3: React.FC<OurClients3Props> = ({
   data,
   isEditable = false,
 }) => {
-  const { data: clientsData, isLoading } = useGetOurClients({});
+  const { data: clientsData, isLoading , refetch } = useGetOurClients({});
 
   if (isLoading) {
     return (
@@ -28,85 +28,84 @@ export const OurClients3: React.FC<OurClients3Props> = ({
 
   const clients = clientsData || [];
 
-  if (clients.length === 0) {
-    return (
+  return (
+    <>
+      {clients.length > 0 && (
+        <div className="relative mx-auto w-full max-w-7xl overflow-hidden select-none">
+          {/* Left Gradient Overlay - Faded Edge */}
+          <div className="from-background pointer-events-none absolute top-0 left-0 z-10 h-full w-20 bg-linear-to-r to-transparent"></div>
+
+          {/* Marquee Container */}
+          <div className="marquee-inner flex min-w-[200%] will-change-transform">
+            <div className="flex items-center">
+              {[...clients, ...clients].map((client, index) => (
+                <div
+                  key={`${client.id}-${index}`}
+                  className="mx-6 h-12 w-32 shrink-0 cursor-pointer overflow-hidden opacity-60 transition-all duration-300 hover:opacity-100 md:mx-10 md:h-16 md:w-40"
+                >
+                  {client.url ? (
+                    <a
+                      href={client.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-full w-full items-center justify-center"
+                    >
+                      <img
+                        src={client.logo}
+                        alt={client.name}
+                        className="h-full w-auto object-contain"
+                        draggable="false"
+                      />
+                    </a>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <img
+                        src={client.logo}
+                        alt={client.name}
+                        className="h-full w-auto object-contain"
+                        draggable="false"
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Gradient Overlay - Faded Edge */}
+          <div className="from-background pointer-events-none absolute top-0 right-0 z-10 h-full w-20 bg-linear-to-l to-transparent md:w-40"></div>
+
+          {/* Animation Styles */}
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+              @keyframes marqueeScroll {
+                0% {
+                  transform: translateX(0%);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+              .marquee-inner {
+                animation: marqueeScroll 30s linear infinite;
+              }
+            `,
+            }}
+          />
+        </div>
+      )}
       <BuilderEmptyState
         icon={Handshake}
         title="No Clients Added"
         description="Display your clients or partners. Add client logos in the admin dashboard."
-        actionLabel="Manage Clients"
+        actionLabel="Add New Client"
         actionLink="/admin/our-clients"
         isEditable={isEditable}
-      />
-    );
-  }
-
-  // Duplicate the list once to create two identical sets for a perfect loop
-  const marqueeItems = [...clients, ...clients];
-
-  return (
-    <div className="relative mx-auto w-full max-w-7xl overflow-hidden select-none">
-      {/* Left Gradient Overlay - Faded Edge */}
-      <div className="from-background pointer-events-none absolute top-0 left-0 z-10 h-full w-20 bg-linear-to-r to-transparent"></div>
-
-      {/* Marquee Container */}
-      <div className="marquee-inner flex min-w-[200%] will-change-transform">
-        <div className="flex items-center">
-          {marqueeItems.map((client, index) => (
-            <div
-              key={`${client.id}-${index}`}
-              className="mx-6 h-12 w-32 shrink-0 cursor-pointer overflow-hidden opacity-60 transition-all duration-300 hover:opacity-100 md:mx-10 md:h-16 md:w-40"
-            >
-              {client.url ? (
-                <a
-                  href={client.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-full w-full items-center justify-center"
-                >
-                  <img
-                    src={client.logo}
-                    alt={client.name}
-                    className="h-full w-auto object-contain"
-                    draggable="false"
-                  />
-                </a>
-              ) : (
-                <div className="flex h-full w-full items-center justify-center">
-                  <img
-                    src={client.logo}
-                    alt={client.name}
-                    className="h-full w-auto object-contain"
-                    draggable="false"
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Right Gradient Overlay - Faded Edge */}
-      <div className="from-background pointer-events-none absolute top-0 right-0 z-10 h-full w-20 bg-linear-to-l to-transparent md:w-40"></div>
-
-      {/* Animation Styles */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          @keyframes marqueeScroll {
-            0% {
-              transform: translateX(0%);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-          .marquee-inner {
-            animation: marqueeScroll 30s linear infinite;
-          }
-        `,
-        }}
-      />
-    </div>
+        isEmpty={clients.length === 0}
+      onRefresh={refetch}
+          />
+    </>
   );
+
 };

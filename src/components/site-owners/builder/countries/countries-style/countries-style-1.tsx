@@ -23,7 +23,7 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
   siteUser,
   onUpdate,
 }) => {
-  const { data: countriesResponse, isLoading } = useCollectionData(
+  const { data: countriesResponse, isLoading , refetch } = useCollectionData(
     "countries",
     {
       page_size: data.itemsToShow?.toString() || "12",
@@ -119,18 +119,21 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                 </Link>
               );
             })
-          ) : (
+          ) : (!isLoading && countries.length === 0) && (
             <div className="col-span-full">
               <BuilderEmptyState
                 icon={Globe}
                 title="No Countries Found"
                 description="Showcase study destinations to your students. Add countries to your collection in the admin dashboard."
-                actionLabel="Manage Collections"
+                actionLabel="Add New Country"
                 actionLink="/admin/collections"
                 isEditable={isEditable}
-              />
+                isEmpty={countries.length === 0}
+              onRefresh={refetch}
+          />
             </div>
           )}
+
         </div>
       </div>
     </section>

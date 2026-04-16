@@ -24,7 +24,7 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
   isEditable,
   onUpdate,
 }) => {
-  const { data: collectionItems, isLoading: isDataLoading } = useCollectionData(
+  const { data: collectionItems, isLoading: isDataLoading , refetch } = useCollectionData(
     data.collectionSlug || ""
   );
   const { data: collectionDef, isLoading: isDefLoading } = useCollection(
@@ -142,16 +142,19 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
               );
             })}
           </div>
-        ) : (
+        ) : (!isLoading && items.length === 0) && (
           <BuilderEmptyState
             icon={Database}
             title="No Items Found"
             description="Manage your dynamic collections. Add items from the admin dashboard."
-            actionLabel="Manage Collections"
+            actionLabel="Add New Collection"
             actionLink="/admin/collections"
             isEditable={isEditable}
+            isEmpty={items.length === 0}
+          onRefresh={refetch}
           />
         )}
+
       </div>
     </section>
   );
