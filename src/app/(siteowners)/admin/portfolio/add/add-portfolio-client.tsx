@@ -14,6 +14,7 @@ interface PortfolioFormData {
   content: string;
   category: number;
   thumbnail_image?: File | null;
+  images?: (File | string)[];
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;
@@ -32,6 +33,7 @@ export default function AddPortfolioClient() {
       content: data.content,
       category: data.category,
       thumbnail_image: data.thumbnail_image,
+      images: data.images,
       thumbnail_image_alt_description: data.thumbnail_image_alt_description,
       meta_title: data.meta_title,
       meta_description: data.meta_description,

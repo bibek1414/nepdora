@@ -32,6 +32,17 @@ const buildPortfolioFormData = (
 
     if (key === "tags" && Array.isArray(value)) {
       value.forEach((id: number) => formData.append("tags", id.toString()));
+    } else if (key === "images" && Array.isArray(value)) {
+      value.forEach((img: any) => {
+        if (img instanceof File) {
+          formData.append("images", img);
+        } else if (typeof img === "string") {
+          // If the backend needs existing images to be sent back, handle here
+          // Often for gallery updates, we send IDs of existing images
+          // or just new files. For now, we'll follow standard multi-part file append.
+          formData.append("images", img);
+        }
+      });
     } else if (value instanceof File || value instanceof Blob) {
       formData.append(key, value);
     } else if (typeof value === "boolean") {

@@ -17,6 +17,7 @@ interface PortfolioFormData {
   content: string;
   category: number;
   thumbnail_image?: File | null;
+  images?: (File | string)[];
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;
@@ -65,6 +66,13 @@ export default function EditPortfolioClient() {
       portfolio.thumbnail_image !== null
     ) {
       portfolioData.thumbnail_image = null;
+    }
+    
+    if (data.images) {
+      // Comparison of images is a bit more complex. 
+      // For now, if images are present in form data, we'll send the whole array.
+      // This matches the pattern in other components like product-form.
+      portfolioData.images = data.images;
     }
 
     if (

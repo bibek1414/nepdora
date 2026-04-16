@@ -10,13 +10,13 @@ import {
 import { capitalizeWords } from "@/lib/string-utils";
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { buildMarketingMetadata, absoluteUrl } from "@/lib/seo";
-import WebsiteFooter from "@/components/marketing/layout/website-footer";
 
 interface Props {
   params: Promise<{ industry: string; city: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
+export const dynamicParams = true;
 export const revalidate = 3600; // Cache for 1 hour
 
 export async function generateStaticParams() {
@@ -128,7 +128,6 @@ export default async function IndustryCityLandingPage({ params }: Props) {
           { label: cityName, href: `/${industry}/${city}` },
         ]}
       />
-      <WebsiteFooter />
     </>
   );
 }

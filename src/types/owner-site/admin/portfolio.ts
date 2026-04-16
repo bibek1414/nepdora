@@ -23,6 +23,7 @@ export interface Portfolio {
   github_url: string | null;
   meta_title: string | null;
   meta_description: string | null;
+  images: { id: number; image: string }[];
   created_at: string;
   updated_at: string;
 }
@@ -47,6 +48,7 @@ export interface CreatePortfolio {
   title: string;
   content: string;
   thumbnail_image?: File | null;
+  images?: (File | string)[];
   thumbnail_image_alt_description?: string;
   category: number;
   tags?: number[];

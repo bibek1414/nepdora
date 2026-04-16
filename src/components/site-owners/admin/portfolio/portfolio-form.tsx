@@ -109,6 +109,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
       thumbnail_image: null,
       thumbnail_image_alt_description: "",
       tags: [],
+      images: [],
       project_url: "",
       github_url: "",
     },
@@ -128,6 +129,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
         thumbnail_image_alt_description:
           portfolio.thumbnail_image_alt_description || "",
         tags: portfolioTags.map(tag => tag.id),
+        images: portfolio.images?.map(img => img.image) || [],
         project_url: portfolio.project_url || "",
         github_url: portfolio.github_url || "",
       });
@@ -526,6 +528,27 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Portfolio Gallery (Multiple Images)</FormLabel>
+                  <FormControl>
+                    <ImageUploader
+                      value={field.value}
+                      onChange={field.onChange}
+                      multiple={true}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    {isEditMode &&
+                      "Add or remove images from the portfolio gallery."}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

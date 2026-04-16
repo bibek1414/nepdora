@@ -11,7 +11,7 @@ import { compressImage } from "@/utils/image-compression";
 
 interface ImageUploaderProps {
   value: File[] | string[] | File | string | null | undefined;
-  onChange: (files: File[] | File | null) => void;
+  onChange: (value: any) => void;
   disabled?: boolean;
   multiple?: boolean;
   maxFileSize?: number; // in bytes
@@ -32,14 +32,14 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     []
   );
   const [error, setError] = useState<string | null>(null);
-  const [currentFiles, setCurrentFiles] = useState<File[]>([]);
+  const [currentItems, setCurrentItems] = useState<(File | string)[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
 
   // Initialize previews from existing value
   useEffect(() => {
     if (!value) {
       setPreviews([]);
-      setCurrentFiles([]);
+      setCurrentItems([]);
       return;
     }
 
@@ -49,16 +49,15 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           url: typeof v === "string" ? v : URL.createObjectURL(v),
           isFile: typeof v !== "string",
         }));
-        const files = value.filter(v => typeof v !== "string") as File[];
         setPreviews(newPreviews);
-        setCurrentFiles(files);
+        setCurrentItems(value as (File | string)[]);
       } else if (value) {
         const preview = {
           url: typeof value === "string" ? value : URL.createObjectURL(value),
           isFile: typeof value !== "string",
         };
         setPreviews([preview]);
-        setCurrentFiles(typeof value === "string" ? [] : [value]);
+        setCurrentItems([value as File | string]);
       }
     };
 
@@ -98,9 +97,9 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     });
 
     // Check total file count
-    const totalFiles = currentFiles.length + validFiles.length;
+    const totalFiles = currentItems.length + validFiles.length;
     if (totalFiles > maxFiles) {
-      const allowedCount = maxFiles - currentFiles.length;
+      const allowedCount = maxFiles - currentItems.length;
       errors.push(
         `Too many files. You can only upload ${allowedCount} more file(s)`
       );
@@ -170,15 +169,21 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       );
       setIsCompressing(false);
 
-      let newFiles: File[];
+      const currentValue = Array.isArray(value)
+        ? (value as (File | string)[])
+        : value
+          ? [value as File | string]
+          : [];
+
+      let newItems: (File | string)[];
       if (multiple) {
-        newFiles = [...currentFiles, ...processedFiles];
+        newItems = [...currentValue, ...processedFiles];
       } else {
         // Single file mode - replace existing
-        newFiles = processedFiles.slice(0, 1);
+        newItems = processedFiles.slice(0, 1);
       }
 
-      setCurrentFiles(newFiles);
+      setCurrentItems(newItems);
 
       // Create new previews for added files
       const newPreviews = processedFiles.map(file => ({
@@ -188,7 +193,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
       if (multiple) {
         setPreviews(prev => [...prev, ...newPreviews]);
-        onChange(newFiles);
+        onChange(newItems as any);
       } else {
         // Clean up old preview URLs
         previews.forEach(preview => {
@@ -197,10 +202,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           }
         });
         setPreviews(newPreviews);
-        onChange(newFiles[0] || null);
+        onChange(newItems[0] || null);
       }
     },
-    [currentFiles, multiple, onChange, previews, maxFileSize, maxFiles]
+    [value, multiple, onChange, previews, maxFileSize, maxFiles]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -229,18 +234,20 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     newPreviews.splice(index, 1);
     setPreviews(newPreviews);
 
-    const newFiles = [...currentFiles];
-    // Find the corresponding file to remove
-    const fileIndex = newFiles.findIndex((_, i) => i === index);
-    if (fileIndex >= 0) {
-      newFiles.splice(fileIndex, 1);
-    }
-    setCurrentFiles(newFiles);
+    const currentValue = Array.isArray(value)
+      ? (value as (File | string)[])
+      : value
+        ? [value as File | string]
+        : [];
+
+    const newItems = [...currentValue];
+    newItems.splice(index, 1);
+    setCurrentItems(newItems);
 
     if (multiple) {
-      onChange(newFiles);
+      onChange(newItems as any);
     } else {
-      onChange(newFiles[0] || null);
+      onChange(newItems[0] || null);
     }
 
     // Clear error if files are now valid

@@ -4,14 +4,15 @@ import { industries, INDUSTRY_LABELS } from "@/lib/seo-data";
 import { capitalizeWords } from "@/lib/string-utils";
 import { CitiesLandingPage } from "@/components/marketing/cities/cities-landing-page";
 import { JsonLd } from "@/components/shared/json-ld";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
-import WebsiteFooter from "@/components/marketing/layout/website-footer";
+import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ industry: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   return industries.map(industry => ({ industry }));
@@ -105,7 +106,6 @@ export default async function IndustryPage({ params }: Props) {
           { label: industryLabel, href: `/${industry}` },
         ]}
       />
-      <WebsiteFooter />
     </>
   );
 }
