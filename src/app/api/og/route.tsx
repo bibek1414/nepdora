@@ -13,19 +13,34 @@ let fontCache: Promise<Record<string, ArrayBuffer>> | null = null;
 function loadFonts() {
   if (!fontCache) {
     fontCache = (async () => {
-      const [r, b] = await Promise.all([
+      const [r, m, s, b, e] = await Promise.all([
         fetch(
           "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf"
         ).then(r => r.arrayBuffer()),
 
         fetch(
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-500-normal.ttf"
+        ).then(r => r.arrayBuffer()),
+
+        fetch(
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.ttf"
+        ).then(r => r.arrayBuffer()),
+
+        fetch(
           "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf"
+        ).then(r => r.arrayBuffer()),
+
+        fetch(
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-800-normal.ttf"
         ).then(r => r.arrayBuffer()),
       ]);
 
       return {
         regular: r,
+        medium: m,
+        semiBold: s,
         bold: b,
+        extraBold: e,
       };
     })();
   }
@@ -330,7 +345,10 @@ export async function GET(req: NextRequest) {
         height: 630,
         fonts: [
           { name: "Inter", data: fonts.regular, weight: 400 },
+          { name: "Inter", data: fonts.medium, weight: 500 },
+          { name: "Inter", data: fonts.semiBold, weight: 600 },
           { name: "Inter", data: fonts.bold, weight: 700 },
+          { name: "Inter", data: fonts.extraBold, weight: 800 },
         ],
         headers: {
           "Cache-Control":
