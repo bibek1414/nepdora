@@ -27,31 +27,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
 
-  // SEO Blueprint Logic
-  const isBooking = [
-    "booking",
-    "travel",
-    "tours",
-    "medical",
-    "clinic",
-    "dental",
-    "education",
-    "ecommerce",
-  ].some(s => industry.toLowerCase().includes(s));
-  const action = "Create";
-  const niche = industryLabel;
-  const valueProp = isBooking ? "(Fast Setup)" : "(Start Selling Today)";
-
-  const title = `${action} your ${niche} Website in Nepal ${valueProp} | Nepdora`;
-  const description = `Launch your professional ${niche.toLowerCase()} website in Nepal in under 10 minutes. Integrated payments, local support, and easy-to-use tools from Nepdora.`;
+  const title = `Create ${industryLabel} Website in Nepal | Nepdora`;
+  const description = `Launch your professional ${industryLabel.toLowerCase()} website in Nepal in under 10 minutes. Integrated payments (eSewa, Khalti), local support, and easy-to-use tools from Nepdora.`;
 
   return buildMarketingMetadata({
     title,
     description,
     path: `/${industry}`,
     keywords: [
-      `${industry} website Nepal`,
-      `${industry} online store Nepal`,
+      `${industryLabel} website Nepal`,
+      `${industryLabel} online store Nepal`,
+      `create ${industryLabel.toLowerCase()} website`,
       `Nepdora ${industry}`,
     ],
   });

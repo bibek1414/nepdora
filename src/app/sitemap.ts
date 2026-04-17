@@ -7,6 +7,7 @@ import { INTEGRATIONS } from "@/constants/integrations";
 import { GLOSSARY_TERMS } from "@/constants/glossary";
 import { SOLUTIONS_LIST } from "@/constants/solutions";
 import { USE_CASES } from "@/constants/use-cases";
+import { TEMPLATE_CATEGORIES } from "@/constants/templates";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL;
@@ -36,9 +37,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/faq", priority: 0.7 },
     { path: "/support", priority: 0.7 },
     { path: "/website-developer-nepal", priority: 0.9 },
-    { path: "/free-website-analyzer", priority: 0.8 },
+    { path: "/tools/free-website-analyzer", priority: 0.8 },
     { path: "/free-website-builder", priority: 0.9 },
-    { path: "/invoice-builder", priority: 0.8 },
+    { path: "/tools/invoice-maker", priority: 0.8 },
     { path: "/tools/business-name-generator-nepal", priority: 0.8 },
     { path: "/tools/domain-name-checker-nepal", priority: 0.8 },
     { path: "/tools/qr-code-generator", priority: 0.8 },
@@ -48,13 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/privacy-policy", priority: 0.5 },
     { path: "/terms", priority: 0.5 },
     { path: "/data-delete", priority: 0.3 },
-    { path: "/khalti-payment-gateway-nepal", priority: 0.9 },
-    { path: "/esewa-integration-guide-nepal", priority: 0.9 },
-    { path: "/website-registration-nepal", priority: 0.8 },
-    { path: "/how-to-register-business-nepal", priority: 0.8 },
-    { path: "/payment-gateways-nepal", priority: 0.8 },
     { path: "/partners", priority: 0.8 },
-    { path: "/ecommerce", priority: 0.9 },
     { path: "/showcase", priority: 0.9 },
     { path: "/integrations", priority: 0.9 },
     { path: "/solutions", priority: 0.9 },
@@ -63,23 +58,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/glossary", priority: 0.8 },
     { path: "/switch", priority: 0.8 },
     { path: "/website-builder-nepal", priority: 0.9 },
-    { path: "/create-agency-website-in-nepdora", priority: 0.9 },
-    { path: "/create-booking-website-in-nepdora", priority: 0.9 },
-    { path: "/create-clinic-website-in-nepdora", priority: 0.9 },
-    { path: "/create-clothing-store-website-in-nepdora", priority: 0.9 },
-    { path: "/create-dental-website-in-nepdora", priority: 0.9 },
-    { path: "/create-ecommerce-website-in-nepdora", priority: 0.9 },
-    {
-      path: "/create-educational-consultancy-website-in-nepdora",
-      priority: 0.9,
-    },
-    { path: "/create-grocery-website-in-nepdora", priority: 0.9 },
-    { path: "/create-medical-clinic-website-in-nepdora", priority: 0.9 },
-    { path: "/create-restaurant-website-in-nepdora", priority: 0.9 },
-    { path: "/create-travel-tours-website-in-nepdora", priority: 0.9 },
-    { path: "/ai-website-builder-in-nepdora", priority: 0.9 },
-    { path: "/esewa-integration-guide-in-nepdora", priority: 0.9 },
-    { path: "/khalti-payment-gateway-in-nepdora", priority: 0.9 },
+    { path: "/insights", priority: 0.8 },
+    { path: "/experts", priority: 0.8 },
   ];
 
   const basePages = baseRoutes.map(route => ({
@@ -97,8 +77,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-
-
   // Switch pages
   const switchPages = ALL_COMPETITORS.map(c => ({
     url: `${baseUrl}/switch/from-${c.slug}-to-nepdora`,
@@ -115,7 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  // Industry root pages (Old style, keeping for SEO)
+  // Industry root pages
   const industryRootPages = industries.map(industry => ({
     url: `${baseUrl}/${industry}`,
     lastModified: new Date(),
@@ -137,14 +115,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
-  }));
-
-  // Category pages (Hubs)
-  const categoryPages = SERVICE_CATEGORIES.map(category => ({
-    url: `${baseUrl}/${category.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.9,
   }));
 
   // Feature pages
@@ -191,37 +161,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Learn pages
-  const learnPages = [
+  // Insights pages
+  const insightPages = [
     "how-to-start-online-business-in-nepal",
     "register-company-in-nepal-online",
     "pan-vs-vat-for-online-shops-nepal",
     "best-payment-gateways-nepal",
     "seo-guide-for-nepali-businesses",
   ].map(slug => ({
-    url: `${baseUrl}/learn/${slug}`,
+    url: `${baseUrl}/insights/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
   // Template categories
-  const templateCategories = [
-    "restaurant",
-    "ecommerce",
-    "portfolio",
-    "agency",
-    "business",
-    "educational",
-    "travel",
-    "grocery",
-    "medical",
-  ].map(slug => ({
+  const templateCategories = TEMPLATE_CATEGORIES.map(slug => ({
     url: `${baseUrl}/templates/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
+
 
   // Programmatic Industry & City pages
   const dynamicIndustryCities: MetadataRoute.Sitemap = [];
@@ -234,25 +195,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly" as const,
         priority: 0.5, // Lowered priority for programmatic pages
       });
-      dynamicIndustryCities.push({
-        url: `${baseUrl}/admin/signup-for/${industry}/${citySlug}`,
-        lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.4,
-      });
-    });
-  });
-
-  // Original City pages
-  const cityPages: MetadataRoute.Sitemap = [];
-  SERVICE_CATEGORIES.forEach(category => {
-    TOP_CITIES.forEach(city => {
-      cityPages.push({
-        url: `${baseUrl}/${category.slug}/${city.toLowerCase()}`,
-        lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.5,
-      });
     });
   });
 
@@ -260,29 +202,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...basePages,
     ...solutionPages,
     ...useCasePages,
-    ...categoryPages,
     ...features,
     ...comparePages,
     ...alternativePages,
     ...dedicatedAlternativePages,
-    ...learnPages,
+    ...insightPages,
     ...templateCategories,
     ...industryRootPages,
     ...dynamicIndustryCities,
-    ...cityPages,
     ...integrationPages,
-    {
-      url: `${baseUrl}/experts`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/learn`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    },
     ...switchPages,
     ...glossaryPages,
   ];

@@ -4,6 +4,7 @@ export interface Testimonial {
   designation: string;
   image: string | null;
   comment: string;
+  video_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -15,6 +16,7 @@ export interface CreateTestimonialData {
   comment: string;
   designation?: string;
   image?: File | null;
+  video_url?: string;
 }
 
 export interface UpdateTestimonialData {
@@ -22,6 +24,7 @@ export interface UpdateTestimonialData {
   comment?: string;
   designation?: string;
   image?: File;
+  video_url?: string;
 }
 
 export interface ApiResponse<T> {

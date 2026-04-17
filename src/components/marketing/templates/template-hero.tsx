@@ -68,7 +68,7 @@ function AnimatedTemplateMockup() {
             <div className="flex w-2/3 max-w-xs items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-1.5">
               <Search className="h-3 w-3 text-slate-400" />
               <div className="mb-2 h-2 w-24 rounded-full text-[10px] text-slate-400">
-                nepdora.com/templates/category
+                nepdora.com/templates
               </div>
             </div>
           </div>

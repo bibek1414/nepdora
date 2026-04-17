@@ -44,20 +44,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const industryLabel = INDUSTRY_LABELS[industry] || capitalizeWords(industry);
   const cityName = capitalizeWords(city);
 
-  const title = `Create your ${industryLabel} in ${cityName} | Launch Your Website Fast | Nepdora`;
-  const description = `Need a professional ${industryLabel.toLowerCase()} website in ${cityName}? Nepdora provides localized templates, eSewa/Khalti integration, and expert SEO for the ${cityName} market.`;
+  const title = `Create ${industryLabel} Website in ${cityName}, Nepal | Nepdora`;
+  const description = `Need a professional ${industryLabel.toLowerCase()} website in ${cityName}? Nepdora provides localized templates, eSewa/Khalti integration, and expert SEO optimized for the ${cityName} market.`;
 
   return buildMarketingMetadata({
     title,
     description,
     path: `/${industry}/${city}`,
-    ogTitle: `${industryLabel} Builder: ${cityName}`,
-    ogSubtitle: `Launch your professional website in ${cityName} today. Built-in eSewa, Khalti & Delivery support.`,
-    ogLabel: `${cityName} Business Solutions`,
+    ogTitle: `${industryLabel} Website Builder in ${cityName}`,
+    ogSubtitle: `Launch your professional ${industryLabel.toLowerCase()} website in ${cityName} today. Built-in eSewa, Khalti & local support.`,
     keywords: [
-      `${industry} website ${city}`,
-      `${industryLabel} ${cityName}`,
-      `website builder ${cityName}`,
+      `${industryLabel} website ${cityName}`,
+      `create ${industryLabel.toLowerCase()} website in ${cityName}`,
+      `best website builder ${cityName}`,
     ],
   });
 }

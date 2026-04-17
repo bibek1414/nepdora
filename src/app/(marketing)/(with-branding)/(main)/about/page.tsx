@@ -64,19 +64,17 @@ const breadcrumbSchema = {
 
 export default function AboutPage() {
   return (
-    <div className="bg-white">
+    <>
       <JsonLd id="about-schema" data={aboutSchema} />
       <JsonLd id="about-breadcrumb" data={breadcrumbSchema} />
 
       <AboutHero />
       <AboutStory />
-      <div className="space-y-24 pb-24 sm:space-y-32 sm:pb-32 lg:space-y-48 lg:pb-48">
-        <AboutSecurity />
-        <AboutValues />
-        <AboutTeam />
-        <Testimonials />
-        <CTA />
-      </div>
-    </div>
+      <AboutSecurity />
+      <AboutValues />
+      <AboutTeam />
+      <Testimonials />
+      <CTA />
+    </>
   );
 }

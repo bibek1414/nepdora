@@ -4,11 +4,20 @@ import {
   nepdoraEmail,
   nepdoraPhone,
 } from "@/constants/contact";
-import { MAJOR_CITIES, SEO_LOCATION_CONFIG } from "@/lib/seo-data";
+import {
+  MAJOR_CITIES,
+  SEO_LOCATION_CONFIG,
+  industries,
+  INDUSTRY_LABELS,
+} from "@/lib/seo-data";
 import Image from "next/image";
 import Link from "next/link";
 import { NewsletterForm } from "./newsletter-form";
 import { FooterSection } from "./footer-animations";
+import {
+  TEMPLATE_CATEGORIES,
+  TEMPLATE_CATEGORY_DATA,
+} from "@/constants/templates";
 
 export const Footer = () => {
   return (
@@ -97,45 +106,17 @@ export const Footer = () => {
         {/* New Resources Section - Linked Features */}
         <div className="mb-12 border-t border-gray-200 pt-10">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            {/* Solutions / Industries */}
+            {/* Build with Nepdora / Industries */}
             <FooterSection delay={0.05}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Build with Nepdora
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/create-ecommerce-website-in-nepdora">
-                  Create eCommerce Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-restaurant-website-in-nepdora">
-                  Create Restaurant Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-booking-website-in-nepdora">
-                  Create Booking Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-clinic-website-in-nepdora">
-                  Create Clinic Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-dental-website-in-nepdora">
-                  Create Dental Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-clothing-store-website-in-nepdora">
-                  Create Clothing Store Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-educational-consultancy-website-in-nepdora">
-                  Create Education Consultancy Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-travel-tours-website-in-nepdora">
-                  Create Travel & Tour Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-agency-website-in-nepdora">
-                  Create Agency Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-grocery-website-in-nepdora">
-                  Create Grocery Website in Nepdora
-                </FooterLink>
-                <FooterLink href="/create-medical-clinic-website-in-nepdora">
-                  Create Medical Clinic Website in Nepdora
-                </FooterLink>
+                {industries.map(slug => (
+                  <FooterLink key={slug} href={`/${slug}`}>
+                    Create {INDUSTRY_LABELS[slug] || slug} Website in Nepdora
+                  </FooterLink>
+                ))}
               </div>
             </FooterSection>
 
@@ -155,7 +136,7 @@ export const Footer = () => {
                   SMS Notifications in Nepdora
                 </FooterLink>
                 <FooterLink href="/ai-website-builder-in-nepdora">
-                  AI Builder in Nepdora
+                  AI Website Builder in Nepdora
                 </FooterLink>
                 <FooterLink href="/features/facebook-pixel-integration-in-nepdora">
                   Facebook Pixel in Nepdora
@@ -163,7 +144,6 @@ export const Footer = () => {
                 <FooterLink href="/features/logistics-pathao-dash-in-nepdora">
                   Logistics (Pathao, YDM & Dash) in Nepdora
                 </FooterLink>
-
                 <FooterLink href="/features/pos-system-in-nepdora">
                   POS System in Nepdora
                 </FooterLink>
@@ -211,30 +191,11 @@ export const Footer = () => {
                 Nepdora Templates
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/templates/ecommerce">
-                  E-commerce Templates
-                </FooterLink>
-                <FooterLink href="/templates/restaurant">
-                  Restaurant Templates
-                </FooterLink>
-                <FooterLink href="/templates/portfolio">
-                  Portfolio & CV Templates
-                </FooterLink>
-                <FooterLink href="/templates/agency">
-                  Digital Agency Templates
-                </FooterLink>
-                <FooterLink href="/templates/medical-clinic">
-                  Medical & Clinic Templates
-                </FooterLink>
-                <FooterLink href="/templates/grocery-store">
-                  Grocery Store Templates
-                </FooterLink>
-                <FooterLink href="/templates/clothing-store">
-                  Clothing Store Templates
-                </FooterLink>
-                <FooterLink href="/templates/educational-consultancy">
-                  Educational Consultancy Templates
-                </FooterLink>
+                {TEMPLATE_CATEGORIES.map(slug => (
+                  <FooterLink key={slug} href={`/templates/${slug}`}>
+                    {TEMPLATE_CATEGORY_DATA[slug]?.name || slug} Templates
+                  </FooterLink>
+                ))}
               </div>
             </FooterSection>
 
@@ -262,35 +223,29 @@ export const Footer = () => {
                 <FooterLink href="/switch">Switch to Nepdora</FooterLink>
               </div>
             </FooterSection>
+
             <FooterSection delay={0.4}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
                 Learn & Resources
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/learn/how-to-start-online-business-in-nepal">
+                <FooterLink href="/insights/how-to-start-online-business-in-nepal">
                   Start Online Business in Nepal
                 </FooterLink>
-
-                <FooterLink href="/learn/register-company-in-nepal-online">
+                <FooterLink href="/insights/register-company-in-nepal-online">
                   Company Registration in Nepal
                 </FooterLink>
-
                 <FooterLink href="/use-cases/sell-products-online-nepal">
                   Sell Products Online in Nepal
                 </FooterLink>
-
                 <FooterLink href="/website-developer-nepal">
                   Website Developer Nepal
                 </FooterLink>
-
-                <FooterLink href="/learn">Nepdora Learn</FooterLink>
-
+                <FooterLink href="/insights">Nepdora Insights</FooterLink>
                 <FooterLink href="/partners">Partner Program Nepal</FooterLink>
-
                 <FooterLink href="/experts">
                   Hire Website Experts Nepal
                 </FooterLink>
-
                 <FooterLink href="/website-builder-nepal">
                   Website Builder Nepal
                 </FooterLink>
@@ -300,6 +255,7 @@ export const Footer = () => {
                 <FooterLink href="/use-cases">Use Cases</FooterLink>
               </div>
             </FooterSection>
+
             {/* Popular Locations */}
             <FooterSection delay={0.35}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
@@ -316,8 +272,6 @@ export const Footer = () => {
                 ))}
               </div>
             </FooterSection>
-
-            {/* Learn & Resources */}
           </div>
         </div>
 

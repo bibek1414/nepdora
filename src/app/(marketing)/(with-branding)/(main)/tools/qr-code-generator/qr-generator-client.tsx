@@ -36,8 +36,7 @@ import {
 } from "@/components/ui/select";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type TabType = "payment" | "url" | "text" | "email" | "wifi";
-type PaymentProvider = "esewa" | "khalti" | "fonepay";
+type TabType = "url" | "text" | "email" | "wifi";
 type SizeKey = "S" | "M" | "L";
 type ECLevel = "L" | "M" | "Q" | "H";
 
@@ -52,21 +51,16 @@ interface EmailConfig {
   subject: string;
 }
 
-interface PaymentConfig {
-  provider: PaymentProvider;
-  identifier: string;
-}
-
 // ─── Constants ────────────────────────────────────────────────────────────────
 const SIZES: Record<SizeKey, number> = { S: 160, M: 220, L: 280 };
 
 const PRESETS = [
   { name: "Nepdora Navy", hex: "#0f172a" },
   { name: "Nepdora Primary", hex: "#0284c7" },
-  { name: "eSewa Green", hex: "#60bb46" },
-  { name: "Khalti Purple", hex: "#5c2d91" },
-  { name: "Fonepay Pink", hex: "#ed1c24" },
   { name: "Modern Black", hex: "#000000" },
+  { name: "Slate Grey", hex: "#64748b" },
+  { name: "Indigo Night", hex: "#312e81" },
+  { name: "Emerald", hex: "#059669" },
 ];
 
 // ─── QRCode Loader Hook ────────────────────────────────────────────────────────
@@ -89,11 +83,7 @@ function useQRCodeLib() {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function QRGeneratorClient() {
-  const [tab, setTab] = useState<TabType>("payment");
-  const [payment, setPayment] = useState<PaymentConfig>({
-    provider: "esewa",
-    identifier: "",
-  });
+  const [tab, setTab] = useState<TabType>("url");
   const [urlVal, setUrlVal] = useState("");
   const [textVal, setTextVal] = useState("");
   const [email, setEmail] = useState<EmailConfig>({ address: "", subject: "" });
@@ -116,21 +106,6 @@ export default function QRGeneratorClient() {
 
   const getContent = useCallback((): string => {
     switch (tab) {
-      case "payment": {
-        const { provider, identifier } = payment;
-        if (!identifier) return "";
-        if (provider === "esewa") {
-          return identifier.startsWith("http")
-            ? identifier
-            : `https://esewa.com.np/#/pay?merchantId=${identifier}`;
-        }
-        if (provider === "khalti") {
-          return identifier.startsWith("http")
-            ? identifier
-            : `https://khalti.com/payment/pay/${identifier}`;
-        }
-        return identifier;
-      }
       case "url":
         return urlVal.trim();
       case "text":
@@ -148,7 +123,7 @@ export default function QRGeneratorClient() {
       default:
         return "";
     }
-  }, [tab, payment, urlVal, textVal, email, wifi]);
+  }, [tab, urlVal, textVal, email, wifi]);
 
   const generateQR = useCallback(() => {
     if (!qrReady) return;
@@ -287,10 +262,7 @@ export default function QRGeneratorClient() {
                 onValueChange={v => setTab(v as TabType)}
                 className="w-full"
               >
-                <TabsList className="mb-8 grid h-auto w-full grid-cols-3 gap-2 overflow-x-auto bg-slate-100 p-1 md:grid-cols-5">
-                  <TabsTrigger value="payment" className="gap-2 py-3">
-                    <CreditCard className="h-4 w-4" /> Pay
-                  </TabsTrigger>
+                <TabsList className="mb-8 grid h-auto w-full grid-cols-2 gap-2 overflow-x-auto bg-slate-100 p-1 md:grid-cols-4">
                   <TabsTrigger value="url" className="gap-2 py-3">
                     <Globe className="h-4 w-4" /> URL
                   </TabsTrigger>
@@ -306,79 +278,6 @@ export default function QRGeneratorClient() {
                 </TabsList>
 
                 <div className="space-y-6">
-                  <TabsContent value="payment" className="space-y-4">
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                      {(
-                        ["esewa", "khalti", "fonepay"] as PaymentProvider[]
-                      ).map(p => (
-                        <button
-                          key={p}
-                          onClick={() =>
-                            setPayment({ ...payment, provider: p })
-                          }
-                          className={cn(
-                            "relative flex flex-col items-center gap-3 rounded-2xl border-2 p-4 transition-all",
-                            payment.provider === p
-                              ? "border-primary bg-primary/5"
-                              : "border-slate-100 hover:border-slate-200"
-                          )}
-                        >
-                          <div
-                            className={cn(
-                              "flex h-12 w-12 items-center justify-center rounded-xl",
-                              p === "esewa"
-                                ? "bg-green-100"
-                                : p === "khalti"
-                                  ? "bg-purple-100"
-                                  : "bg-red-100"
-                            )}
-                          >
-                            <Smartphone
-                              className={cn(
-                                "h-6 w-6",
-                                p === "esewa"
-                                  ? "text-green-600"
-                                  : p === "khalti"
-                                    ? "text-purple-600"
-                                    : "text-red-600"
-                              )}
-                            />
-                          </div>
-                          <span className="text-sm font-bold capitalize">
-                            {p}
-                          </span>
-                          {payment.provider === p && (
-                            <div className="bg-primary absolute top-2 right-2 rounded-full p-0.5">
-                              <Check className="h-3 w-3 text-white" />
-                            </div>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Merchant ID / Phone / Link</Label>
-                      <Input
-                        placeholder={
-                          payment.provider === "esewa"
-                            ? "e.g. 9841XXXXXX or Merchant ID"
-                            : "e.g. SHOP-NAME or link"
-                        }
-                        value={payment.identifier}
-                        onChange={e =>
-                          setPayment({ ...payment, identifier: e.target.value })
-                        }
-                        className="h-12 text-base placeholder:text-slate-400 md:text-lg"
-                      />
-                      <p className="text-xs font-medium text-slate-500">
-                        {payment.provider === "esewa" &&
-                          "Enter your eSewa ID (mobile) or merchant ID for the payment URL."}
-                        {payment.provider === "khalti" &&
-                          "Enter your Khalti Merchant Code or direct payment link."}
-                        {payment.provider === "fonepay" &&
-                          "Enter your Fonepay static QR data or merchant identifier."}
-                      </p>
-                    </div>
-                  </TabsContent>
 
                   <TabsContent value="url" className="space-y-4">
                     <div className="space-y-2">
