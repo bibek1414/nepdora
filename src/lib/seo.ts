@@ -14,32 +14,32 @@ export function absoluteUrl(path = "") {
   return `${SITE_URL}${normalizedPath}`;
 }
 
-export function getDynamicOgUrl({
-  title,
-  subtitle,
-  label,
-}: {
-  title: string;
-  subtitle?: string;
-  label?: string;
-}) {
-  const params = new URLSearchParams();
+// export function getDynamicOgUrl({
+//   title,
+//   subtitle,
+//   label,
+// }: {
+//   title: string;
+//   subtitle?: string;
+//   label?: string;
+// }) {
+//   const params = new URLSearchParams();
 
-  // Clean title for URL
-  params.set("title", title.trim());
+//   // Clean title for URL
+//   params.set("title", title.trim());
 
-  if (subtitle) {
-    params.set("subtitle", subtitle.trim());
-  }
+//   if (subtitle) {
+//     params.set("subtitle", subtitle.trim());
+//   }
 
-  if (label) {
-    params.set("label", label.trim());
-  } else {
-    params.set("label", "Nepal's #1 AI Website Builder");
-  }
+//   if (label) {
+//     params.set("label", label.trim());
+//   } else {
+//     params.set("label", "Nepal's #1 AI Website Builder");
+//   }
 
-  return `${SITE_URL}/api/og?${params.toString()}`;
-}
+//   return `${SITE_URL}/api/og?${params.toString()}`;
+// }
 
 export function buildMarketingMetadata({
   title,
@@ -79,11 +79,13 @@ export function buildMarketingMetadata({
 
   const finalImage =
     image ||
-    getDynamicOgUrl({
-      title: displayTitle,
-      subtitle: displaySubtitle,
-      label: ogLabel,
-    });
+    DEFAULT_OG_IMAGE 
+    // ||
+    // getDynamicOgUrl({
+    //   title: displayTitle,
+    //   subtitle: displaySubtitle,
+    //   label: ogLabel,
+    // });
 
   return {
     title,
