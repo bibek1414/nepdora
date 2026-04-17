@@ -8,7 +8,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 import Link from "next/link";
 import { buildMarketingMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
-export const revalidate = 3600; // Cache for 1 hour
+export const revalidate = 86400; // Cache for 1 hour
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -127,7 +127,6 @@ const getCategoryDescription = (category: string): string => {
     ).toLowerCase()} website templates designed for Nepali businesses.`
   );
 };
-
 
 export default async function TemplateCategoryPage({ params }: Props) {
   const { category: rawCategory } = await params;

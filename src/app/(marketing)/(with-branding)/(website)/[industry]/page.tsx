@@ -12,7 +12,7 @@ interface Props {
 
 export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   return industries.map(industry => ({ industry }));
@@ -102,9 +102,7 @@ export default async function IndustryPage({ params }: Props) {
       <CitiesLandingPage
         category={industry}
         city="Nepdora"
-        breadcrumbItems={[
-          { label: industryLabel, href: `/${industry}` },
-        ]}
+        breadcrumbItems={[{ label: industryLabel, href: `/${industry}` }]}
       />
     </>
   );

@@ -17,7 +17,7 @@ interface Props {
 
 export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = 3600; // Cache for 1 hour
+export const revalidate = 86400; // Cache for 1 hour
 
 export async function generateStaticParams() {
   const params = [];
