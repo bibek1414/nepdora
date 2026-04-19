@@ -8,8 +8,9 @@ import Pagination from "@/components/ui/pagination";
 import { History, LayoutGrid, CreditCard, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-export function SubscriptionHistoryList() {
+export function SubscriptionHistoryList({ showTitle = true }: { showTitle?: boolean }) {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useUserSubscriptions(page);
 
@@ -42,13 +43,18 @@ export function SubscriptionHistoryList() {
 
   return (
     <div className="bg-white">
-      <div className="mx-auto mt-12 mb-40 max-w-7xl px-6 md:px-8">
+      <div className={cn(
+        "mx-auto mb-40",
+        showTitle ? "mt-12 max-w-7xl px-6 md:px-8" : "mt-0 w-full"
+      )}>
         {/* Header */}
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <h1 className="px-5 text-xl font-bold text-[#003d79]">
-            Subscription History
-          </h1>
-        </div>
+        {showTitle && (
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <h1 className="px-5 text-xl font-bold text-[#003d79]">
+              Subscription History
+            </h1>
+          </div>
+        )}
 
         <SubscriptionHistoryTable subscriptions={subscriptions} />
 

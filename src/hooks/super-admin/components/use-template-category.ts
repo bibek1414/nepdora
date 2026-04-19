@@ -65,6 +65,59 @@ export const useCreateTemplateSubcategory = () => {
   });
 };
 
+export const useUpdateTemplateCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ slug, name }: { slug: string; name: string }) =>
+      useTemplateCategoryApi.updateCategory(slug, { name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["template-categories"] });
+    },
+  });
+};
+
+export const useDeleteTemplateCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (slug: string) => useTemplateCategoryApi.deleteCategory(slug),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["template-categories"] });
+    },
+  });
+};
+
+export const useUpdateTemplateSubcategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      slug,
+      name,
+      category_id,
+    }: {
+      slug: string;
+      name: string;
+      category_id?: number;
+    }) => useTemplateCategoryApi.updateSubcategory(slug, { name, category_id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["template-subcategories"] });
+    },
+  });
+};
+
+export const useDeleteTemplateSubcategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (slug: string) => useTemplateCategoryApi.deleteSubcategory(slug),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["template-subcategories"] });
+    },
+  });
+};
+
 // Search across both categories and subcategories
 export const useTemplateSearch = (search: string) => {
   const categoriesQuery = useTemplateCategories(search);

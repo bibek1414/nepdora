@@ -11,6 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
+import { redirect } from "next/navigation";
+
 export default function SubscriptionHistoryPage() {
-  return <SubscriptionHistoryList />;
+  redirect("/admin/payments");
 }

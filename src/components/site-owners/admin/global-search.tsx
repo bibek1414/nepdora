@@ -220,7 +220,7 @@ export function AdminGlobalSearch({ user }: AdminGlobalSearchProps) {
         {
           id: "esewa",
           title: "eSewa",
-          url: "/admin/plugins/payment-gateway/esewa",
+          url: "/admin/payment-gateway/esewa",
           group: "Payment Gateway",
           icon: Zap,
           keywords: ["esewa", "payment", "gateway", "digital wallet"],
@@ -228,7 +228,7 @@ export function AdminGlobalSearch({ user }: AdminGlobalSearchProps) {
         {
           id: "khalti",
           title: "Khalti",
-          url: "/admin/plugins/payment-gateway/khalti",
+          url: "/admin/payment-gateway/khalti",
           group: "Payment Gateway",
           icon: Zap,
           keywords: ["khalti", "payment", "gateway", "digital wallet"],

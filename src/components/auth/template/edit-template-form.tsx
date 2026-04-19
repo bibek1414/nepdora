@@ -18,7 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, Upload, X, Plus } from "lucide-react";
+import { Loader2, Upload, X, Plus, Folder, FolderTree } from "lucide-react";
+import Link from "next/link";
 import { useUpdateTemplate } from "@/hooks/super-admin/components/use-templates";
 import {
   useTemplateCategories,
@@ -53,6 +54,7 @@ export function EditTemplateForm({
   const [previewUrlLink, setPreviewUrlLink] = useState<string>(
     template.preview_url || ""
   );
+  const [name, setName] = useState<string>(template.name || "");
   const [description, setDescription] = useState<string>(
     template.description || ""
   );
@@ -162,6 +164,7 @@ export function EditTemplateForm({
       await updateTemplateMutation.mutateAsync({
         ownerId: template.owner_id,
         payload: {
+          name: name,
           template_image: selectedImage || undefined,
           template_category_id: selectedCategory,
           template_subcategory_id: selectedSubcategory,
@@ -191,218 +194,267 @@ export function EditTemplateForm({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="h-150 space-y-6 overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Template</DialogTitle>
-        </DialogHeader>
+      <form
+        onSubmit={handleSubmit}
+        className="flex h-[80vh] flex-col overflow-hidden sm:h-[600px]"
+      >
+        <div className="border-b px-6 py-4">
+          <DialogHeader>
+            <DialogTitle>Edit Template</DialogTitle>
+          </DialogHeader>
+        </div>
 
-        <div className="space-y-4">
-          {/* Category Selection */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label>Category (Optional)</Label>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsCategoryDialogOpen(true)}
-              >
-                <Plus className="mr-1 h-3 w-3" />
-                Create Category
-              </Button>
-            </div>
-            <div className="flex gap-2">
-              <Select
-                value={selectedCategory?.toString() || undefined}
-                onValueChange={value =>
-                  setSelectedCategory(value ? Number(value) : null)
-                }
-                disabled={isLoadingCategories}
-              >
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories?.map(category => (
-                    <SelectItem
-                      key={category.id}
-                      value={category.id.toString()}
-                    >
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {selectedCategory && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedCategory(null);
-                    setSelectedSubcategory(null);
-                  }}
-                >
-                  Clear
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Subcategory Selection */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label>Subcategory (Optional)</Label>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsSubcategoryDialogOpen(true)}
-                disabled={!selectedCategory}
-              >
-                <Plus className="mr-1 h-3 w-3" />
-                Create Subcategory
-              </Button>
-            </div>
-            <div className="flex gap-2">
-              <Select
-                value={selectedSubcategory?.toString() || undefined}
-                onValueChange={value =>
-                  setSelectedSubcategory(value ? Number(value) : null)
-                }
-                disabled={!selectedCategory || isLoadingSubcategories}
-              >
-                <SelectTrigger className="flex-1">
-                  <SelectValue
-                    placeholder={
-                      selectedCategory
-                        ? "Select a subcategory"
-                        : "Select a category first"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {subcategories?.map(subcategory => (
-                    <SelectItem
-                      key={subcategory.id}
-                      value={subcategory.id.toString()}
-                    >
-                      {subcategory.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {selectedSubcategory && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setSelectedSubcategory(null)}
-                >
-                  Clear
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Image Upload */}
-          <div>
-            <Label htmlFor="template-image">Thumbnail Image</Label>
-            <p className="mb-3 text-sm text-gray-500">
-              Upload a new image for this template
-            </p>
-
-            {thumbnailPreviewUrl && (
-              <div className="relative mb-4 inline-block">
-                <div className="group relative">
-                  <img
-                    src={thumbnailPreviewUrl}
-                    alt={`${template.name} preview`}
-                    className="h-32 w-32 rounded-lg border-2 border-gray-200 object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center gap-4">
-              <Label
-                htmlFor="template-image"
-                className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-4 text-center transition-colors hover:border-gray-400"
-              >
-                <Upload className="mx-auto mb-2 h-6 w-6 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">
-                  {selectedImage ? "Change Image" : "Upload Image"}
-                </span>
-                <p className="mt-1 text-xs text-gray-500">
-                  PNG, JPG, JPEG up to 5MB
-                </p>
-              </Label>
+        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-200">
+          <div className="space-y-6">
+            {/* Name field */}
+            <div className="space-y-2">
+              <Label htmlFor="template-name">Template Name</Label>
               <Input
-                id="template-image"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
+                id="template-name"
+                placeholder="Enter template name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
               />
             </div>
 
-            {selectedImage && (
-              <p className="mt-2 text-sm text-green-600">
-                Selected: {selectedImage.name}
+            {/* Category Selection */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Category (Optional)</Label>
+                <div className="flex items-center gap-2">
+                  <Link href="/superadmin/template/categories">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs text-black/60 hover:text-black"
+                    >
+                      <Folder className="mr-1 h-3 w-3" />
+                      Manage
+                    </Button>
+                  </Link>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-8 text-xs"
+                    onClick={() => setIsCategoryDialogOpen(true)}
+                  >
+                    <Plus className="mr-1 h-3 w-3" />
+                    Create
+                  </Button>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Select
+                  value={selectedCategory?.toString() || undefined}
+                  onValueChange={value =>
+                    setSelectedCategory(value ? Number(value) : null)
+                  }
+                  disabled={isLoadingCategories}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories?.map(category => (
+                      <SelectItem
+                        key={category.id}
+                        value={category.id.toString()}
+                      >
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedCategory && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      setSelectedSubcategory(null);
+                    }}
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Subcategory Selection */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Subcategory (Optional)</Label>
+                <div className="flex items-center gap-2">
+                  <Link href="/superadmin/template/subcategories">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs text-black/60 hover:text-black"
+                    >
+                      <FolderTree className="mr-1 h-3 w-3" />
+                      Manage
+                    </Button>
+                  </Link>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-8 text-xs"
+                    onClick={() => setIsSubcategoryDialogOpen(true)}
+                    disabled={!selectedCategory}
+                  >
+                    <Plus className="mr-1 h-3 w-3" />
+                    Create
+                  </Button>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Select
+                  value={selectedSubcategory?.toString() || undefined}
+                  onValueChange={value =>
+                    setSelectedSubcategory(value ? Number(value) : null)
+                  }
+                  disabled={!selectedCategory || isLoadingSubcategories}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue
+                      placeholder={
+                        selectedCategory
+                          ? "Select a subcategory"
+                          : "Select a category first"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {subcategories?.map(subcategory => (
+                      <SelectItem
+                        key={subcategory.id}
+                        value={subcategory.id.toString()}
+                      >
+                        {subcategory.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedSubcategory && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedSubcategory(null)}
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <Label htmlFor="template-image">Thumbnail Image</Label>
+              <p className="mb-3 text-sm text-gray-500">
+                Upload a new image for this template
               </p>
-            )}
-          </div>
 
-          {/* Preview URL */}
-          <div className="space-y-2">
-            <Label htmlFor="preview-url">Preview URL</Label>
-            <Input
-              id="preview-url"
-              placeholder="https://example.com"
-              value={previewUrlLink}
-              onChange={e => setPreviewUrlLink(e.target.value)}
-            />
-          </div>
+              {thumbnailPreviewUrl && (
+                <div className="relative mb-4 inline-block">
+                  <div className="group relative">
+                    <img
+                      src={thumbnailPreviewUrl}
+                      alt={`${template.name} preview`}
+                      className="h-32 w-32 rounded-lg border-2 border-gray-200 object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+              )}
 
-          {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <textarea
-              id="description"
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder="Enter template description"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-            />
+              <div className="flex items-center gap-4">
+                <Label
+                  htmlFor="template-image"
+                  className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-4 text-center transition-colors hover:border-gray-400"
+                >
+                  <Upload className="mx-auto mb-2 h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-600">
+                    {selectedImage ? "Change Image" : "Upload Image"}
+                  </span>
+                  <p className="mt-1 text-xs text-gray-500">
+                    PNG, JPG, JPEG up to 5MB
+                  </p>
+                </Label>
+                <Input
+                  id="template-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </div>
+
+              {selectedImage && (
+                <p className="mt-2 text-sm text-green-600">
+                  Selected: {selectedImage.name}
+                </p>
+              )}
+            </div>
+
+            {/* Preview URL */}
+            <div className="space-y-2">
+              <Label htmlFor="preview-url">Preview URL</Label>
+              <Input
+                id="preview-url"
+                placeholder="https://example.com"
+                value={previewUrlLink}
+                onChange={e => setPreviewUrlLink(e.target.value)}
+              />
+            </div>
+
+            {/* Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <textarea
+                id="description"
+                className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[120px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="Enter template description"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={updateTemplateMutation.isPending}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={updateTemplateMutation.isPending}>
-            {updateTemplateMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating...
-              </>
-            ) : (
-              "Update Template"
-            )}
-          </Button>
+        <div className="border-t bg-white px-6 py-4">
+          <div className="flex justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={updateTemplateMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={updateTemplateMutation.isPending}>
+              {updateTemplateMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                "Update Template"
+              )}
+            </Button>
+          </div>
         </div>
       </form>
 

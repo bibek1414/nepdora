@@ -105,6 +105,9 @@ export const useTemplateApi = {
     const API_BASE_URL = getApiBaseUrl();
 
     const formData = new FormData();
+    if (payload.name) {
+      formData.append("name", payload.name);
+    }
     if (payload.template_image) {
       formData.append("template_image", payload.template_image);
     }

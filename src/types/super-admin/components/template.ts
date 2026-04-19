@@ -21,6 +21,7 @@ export interface CreateTemplateRequest {
 }
 
 export interface UpdateTemplateRequest {
+  name?: string;
   template_image?: File;
   template_category_id?: number | null;
   template_subcategory_id?: number | null;

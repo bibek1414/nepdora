@@ -135,4 +135,68 @@ export const useTemplateCategoryApi = {
     const json = await response.json();
     return (json as TemplateSubcategoryResponse)?.data || json;
   },
+
+  // Update category
+  updateCategory: async (
+    slug: string,
+    payload: { name: string }
+  ): Promise<TemplateCategory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/template-categories/${slug}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(payload),
+      }
+    );
+    await handleApiError(response);
+    const json = await response.json();
+    return (json as TemplateCategoryResponse)?.data || json;
+  },
+
+  // Delete category
+  deleteCategory: async (slug: string): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/template-categories/${slug}/`,
+      {
+        method: "DELETE",
+        headers: createHeaders(),
+      }
+    );
+    await handleApiError(response);
+  },
+
+  // Update subcategory
+  updateSubcategory: async (
+    slug: string,
+    payload: { name: string; category_id?: number }
+  ): Promise<TemplateSubcategory> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/template-subcategories/${slug}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(payload),
+      }
+    );
+    await handleApiError(response);
+    const json = await response.json();
+    return (json as TemplateSubcategoryResponse)?.data || json;
+  },
+
+  // Delete subcategory
+  deleteSubcategory: async (slug: string): Promise<void> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/template-subcategories/${slug}/`,
+      {
+        method: "DELETE",
+        headers: createHeaders(),
+      }
+    );
+    await handleApiError(response);
+  },
 };

@@ -19,9 +19,18 @@ export interface CreateTemplateCategoryRequest {
   name: string;
 }
 
+export interface UpdateTemplateCategoryRequest {
+  name: string;
+}
+
 export interface CreateTemplateSubcategoryRequest {
   name: string;
   category_id: number;
+}
+
+export interface UpdateTemplateSubcategoryRequest {
+  name: string;
+  category_id?: number;
 }
 
 export interface TemplateCategoryResponse {

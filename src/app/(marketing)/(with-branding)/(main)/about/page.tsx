@@ -1,45 +1,44 @@
 import { Metadata } from "next";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo";
+import { SITE_NAME, absoluteUrl, buildMarketingMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import AboutHero from "@/components/marketing/about-us/about-hero";
 import AboutStory from "@/components/marketing/about-us/about-story";
-import AboutSecurity from "@/components/marketing/about-us/about-security";
+import AboutStats from "@/components/marketing/about-us/about-stats";
 import AboutValues from "@/components/marketing/about-us/about-values";
+import AboutLocal from "@/components/marketing/about-us/about-local";
+import AboutDifference from "@/components/marketing/about-us/about-difference";
+import AboutPhilosophy from "@/components/marketing/about-us/about-philosophy";
+import AboutEcosystem from "@/components/marketing/about-us/about-ecosystem";
+import AboutVision from "@/components/marketing/about-us/about-vision";
+import AboutSecurity from "@/components/marketing/about-us/about-security";
 import AboutTeam from "@/components/marketing/about-us/about-team";
 import CTA from "@/components/marketing/cta-section/cta-section";
-import Testimonials from "@/components/marketing/testimonials/testimonials";
 
-import { buildMarketingMetadata } from "@/lib/seo";
-
-export const metadata = buildMarketingMetadata({
-  title: "About Nepdora – Made in Nepal Website Builder for Businesses",
+export const metadata: Metadata = buildMarketingMetadata({
+  title: "About Nepdora | Website Builder Built for Nepal",
   description:
-    "Learn about Nepdora, a made-in-Nepal website builder designed for businesses. Create websites, online stores, and manage your digital presence with local payments and powerful tools.",
+    "Nepdora is a modern website platform built to help 2,000+ Nepali businesses launch and scale online. Discover our story, expert ecosystem, and mission to empower local entrepreneurs.",
   path: "/about",
   keywords: [
-    "About Nepdora",
-    "Nepdora Nepal",
-    "website builder Nepal",
-    "made in Nepal software",
-    "ecommerce platform Nepal",
-    "Nepal startup website builder",
-    "business software Nepal",
+    "nepdora",
+    "website builder nepal",
+    "nepali business website",
+    "nepdora experts",
+    "local payment integration",
+    "esewa khalti",
   ],
 });
-
-import { JsonLd } from "@/components/shared/json-ld";
-import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 const aboutSchema = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   name: "About Nepdora",
   description:
-    "Learn about Nepdora, the all-in-one platform for Website Development, E-commerce, and Social Media Management in Nepal.",
-  mainEntity: {
+    "Nepdora is a modern website platform built to help Nepali businesses launch, grow, and scale online—without complexity.",
+  publisher: {
     "@type": "Organization",
     name: SITE_NAME,
     url: absoluteUrl(),
-    logo: DEFAULT_OG_IMAGE,
   },
 };
 
@@ -70,10 +69,15 @@ export default function AboutPage() {
 
       <AboutHero />
       <AboutStory />
-      <AboutSecurity />
+      <AboutStats />
+      <AboutDifference />
+      <AboutLocal />
+      <AboutPhilosophy />
+      <AboutEcosystem />
       <AboutValues />
+      <AboutSecurity />
+      <AboutVision />
       <AboutTeam />
-      <Testimonials />
       <CTA />
     </>
   );

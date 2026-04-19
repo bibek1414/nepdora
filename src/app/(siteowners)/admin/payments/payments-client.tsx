@@ -39,8 +39,18 @@ import { useUnreadCounts } from "@/hooks/owner-site/admin/use-stats";
 const ITEMS_PER_PAGE = 20;
 type PaymentViewType = "nepdora" | "own";
 
-export default function PaymentsClient() {
-  const [selectedView, setSelectedView] = useState<PaymentViewType>("nepdora");
+interface PaymentsClientProps {
+  showTitle?: boolean;
+  initialView?: PaymentViewType;
+  hideTabs?: boolean;
+}
+
+export default function PaymentsClient({
+  showTitle = true,
+  initialView = "nepdora",
+  hideTabs = false,
+}: PaymentsClientProps) {
+  const [selectedView, setSelectedView] = useState<PaymentViewType>(initialView);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -251,15 +261,20 @@ export default function PaymentsClient() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto mt-12 mb-40 max-w-6xl px-6 md:px-8">
+    <div className={cn("bg-white", showTitle && "min-h-screen")}>
+      <div className={cn(
+        "mx-auto mb-40",
+        showTitle ? "mt-12 max-w-6xl px-6 md:px-8" : "mt-0 w-full"
+      )}>
         {/* Page Title */}
-        <div className="mb-5">
-          <h1 className="text-xl font-bold text-[#003d79]">Payment History</h1>
-          <p className="text-xs text-black/50">
-            View and track all your transactions.
-          </p>
-        </div>
+        {showTitle && (
+          <div className="mb-5">
+            <h1 className="text-xl font-bold text-[#003d79]">Payment History</h1>
+            <p className="text-xs text-black/50">
+              View and track all your transactions.
+            </p>
+          </div>
+        )}
 
         <PaymentStatsCards
           totalReceived={summary?.total_received || 0}
@@ -270,47 +285,49 @@ export default function PaymentsClient() {
 
         <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           {/* Tabs */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-black/5 p-1.5">
-            {tabs.map(tab => {
-              const isActive = selectedView === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setSelectedView(tab.id);
-                  }}
-                  className={cn(
-                    "group relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
-                    isActive
-                      ? "bg-white text-[#003d79]"
-                      : "text-black/60 hover:bg-white/50 hover:text-black"
-                  )}
-                >
-                  <tab.icon
+          {!hideTabs && (
+            <div className="inline-flex items-center gap-2 rounded-full bg-black/5 p-1.5">
+              {tabs.map(tab => {
+                const isActive = selectedView === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setSelectedView(tab.id);
+                    }}
                     className={cn(
-                      "h-4 w-4 transition-colors duration-200",
+                      "group relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
                       isActive
-                        ? "text-[#003d79]"
-                        : "text-black/50 group-hover:text-black/70"
+                        ? "bg-white text-[#003d79]"
+                        : "text-black/60 hover:bg-white/50 hover:text-black"
                     )}
-                  />
-                  <span className="whitespace-nowrap">{tab.label}</span>
-                  {tab.count > 0 && (
-                    <span
+                  >
+                    <tab.icon
                       className={cn(
-                        "flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-medium transition-colors duration-200",
+                        "h-4 w-4 transition-colors duration-200",
                         isActive
-                          ? "bg-[#003d79]/10 text-[#003d79]"
-                          : "bg-black/10 text-black/60 group-hover:bg-black/15"
+                          ? "text-[#003d79]"
+                          : "text-black/50 group-hover:text-black/70"
                       )}
-                    >
-                      {tab.count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+                    />
+                    <span className="whitespace-nowrap">{tab.label}</span>
+                    {tab.count > 0 && (
+                      <span
+                        className={cn(
+                          "flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-medium transition-colors duration-200",
+                          isActive
+                            ? "bg-[#003d79]/10 text-[#003d79]"
+                            : "bg-black/10 text-black/60 group-hover:bg-black/15"
+                        )}
+                      >
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <div className="relative w-full sm:w-72">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input

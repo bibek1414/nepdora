@@ -18,7 +18,8 @@ import { useTemplateToken } from "@/hooks/super-admin/components/use-template-to
 import { CreateTemplateAccountForm } from "@/components/auth/template/create-template-form";
 import { EditTemplateForm } from "@/components/auth/template/edit-template-form";
 import { toast } from "sonner";
-import { Loader2, Edit, Github, ExternalLink } from "lucide-react";
+import { Loader2, Edit, Github, ExternalLink, Folder, FolderTree } from "lucide-react";
+import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import Pagination from "@/components/ui/pagination";
 import { Template } from "@/types/super-admin/components/template";
@@ -221,9 +222,35 @@ export default function CreateTemplateDialog() {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900">Templates</h1>
-        <Button onClick={() => setOpen(true)}>Create Template</Button>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-xl font-bold text-[#003d79]">Templates</h1>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/superadmin/template/categories">
+            <Button
+              variant="ghost"
+              className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
+            >
+              <Folder className="mr-2 h-4 w-4" />
+              Manage Categories
+            </Button>
+          </Link>
+          <Link href="/superadmin/template/subcategories">
+            <Button
+              variant="ghost"
+              className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
+            >
+              <FolderTree className="mr-2 h-4 w-4" />
+              Manage Subcategories
+            </Button>
+          </Link>
+          <Button
+            onClick={() => setOpen(true)}
+            className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+          >
+            Create Template
+          </Button>
+        </div>
       </div>
 
       {/* Templates List */}

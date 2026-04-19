@@ -15,13 +15,13 @@ const paymentItems: PaymentGateway[] = [
     id: "Esewa",
     title: "Esewa Setup",
     description: "Manage your domain settings and configurations",
-    path: "/admin/plugins/payment-gateway/esewa",
+    path: "/admin/payment-gateway/esewa",
   },
   {
     id: "Khalti",
     title: "Khalti Setup",
     description: "Configure Khalti gateways and billing settings",
-    path: "/admin/plugins/payment-gateway/khalti",
+    path: "/admin/payment-gateway/khalti",
   },
 ];
 

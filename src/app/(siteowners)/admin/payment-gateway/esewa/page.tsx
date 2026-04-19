@@ -7,10 +7,12 @@ export async function generateMetadata(): Promise<Metadata> {
     pageName: "Esewa Payment Settings",
     pageDescription:
       "Manage Esewa payment gateway settings for {storeName}. Configure, enable, and manage payments securely from the admin dashboard.",
-    pageRoute: "/admin/plugins/payment-gateway/esewa",
+    pageRoute: "/admin/payment-gateway/esewa",
   });
 }
 
+import { redirect } from "next/navigation";
+
 export default function EsewaPaymentPage() {
-  return <EsewaPage />;
+  redirect("/admin/payments");
 }

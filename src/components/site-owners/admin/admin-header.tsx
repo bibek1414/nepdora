@@ -13,15 +13,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
-  Menu,
   LogOut,
-  User as UserIcon,
   Settings,
   ExternalLink,
   Pencil,
-  FileText,
-  HelpCircle,
-  Share,
   FileCheck,
   LayoutGrid,
 } from "lucide-react";
@@ -33,7 +28,6 @@ import { User } from "@/types/auth/auth";
 import { getUserInitials } from "@/lib/user-utils";
 import { useState } from "react";
 import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
-import { toast } from "sonner";
 import { AdminGlobalSearch } from "./global-search";
 
 interface AdminHeaderProps {
@@ -133,20 +127,7 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link
-                href={`/preview/${currentUser.sub_domain}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full border-none bg-[#E8EDF2] text-[#074685] hover:bg-[#E8EDF2] hover:text-[#074685]"
-                >
-                  Preview
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+
               <Link
                 href={`/builder/${currentUser.sub_domain}`}
                 target="_blank"

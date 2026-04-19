@@ -7,10 +7,12 @@ export async function generateMetadata(): Promise<Metadata> {
     pageName: "Khalti Payment Settings",
     pageDescription:
       "Manage Khalti payment gateway settings for {storeName}. Configure, enable, and manage payments securely from the admin dashboard.",
-    pageRoute: "/admin/plugins/payment-gateway/khalti",
+    pageRoute: "/admin/payment-gateway/khalti",
   });
 }
 
+import { redirect } from "next/navigation";
+
 export default function KhaltiPaymentPage() {
-  return <KhaltiPage />;
+  redirect("/admin/payments");
 }

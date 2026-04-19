@@ -140,34 +140,15 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     {
       items: [
         {
-          name: "Payment Gateway",
-          href: "/admin/plugins/payment-gateway/esewa",
-          icon: Wallet,
-        },
-      ],
-      hideForService: true,
-    },
-    {
-      items: [
-        {
-          name: "Payment History",
+          name: "Payment System",
           href: "/admin/payments",
-          icon: History,
+          icon: Wallet,
           unreadCount:
             (unreadCounts?.unread_own_payment || 0) +
             (unreadCounts?.unread_tenant_payments || 0),
         },
       ],
       hideForService: true,
-    },
-    {
-      items: [
-        {
-          name: "Subscription History",
-          href: "/admin/subscriptions/history",
-          icon: History,
-        },
-      ],
     },
     {
       items: [{ name: "Analytics", href: "/admin/analytics", icon: BarChart3 }],
