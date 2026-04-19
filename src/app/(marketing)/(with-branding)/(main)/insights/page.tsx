@@ -19,13 +19,14 @@ import {
 import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 import CityCTA from "@/components/marketing/cta-section/cta-section";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora Learn | Startup & Online Business Guides for Nepal",
+  title: "Nepdora Insights | Startup & Online Business Guides for Nepal",
   description:
-    "Free step-by-step guides to start and grow your online business in Nepal. Learn website building, SEO, payment gateways, company registration, and digital growth strategies.",
-  path: "/learn",
-  ogLabel: "Nepdora Growth Academy",
+    "Free step-by-step guides to start and grow your online business in Nepal. Master website building, SEO, payment gateways, company registration, and digital growth strategies.",
+  path: "/insights",
+  ogLabel: "Nepdora Insights Academy",
 });
 
 const GUIDES = [
@@ -76,10 +77,10 @@ const GUIDES = [
   },
 ];
 
-const learnSchema = {
+const insightsSchema = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: "Nepdora Learn Guides",
+  name: "Nepdora Insights Guides",
   description:
     "Free guides and tutorials to help you start and grow an online business in Nepal.",
   itemListElement: GUIDES.map((guide, index) => ({
@@ -89,7 +90,7 @@ const learnSchema = {
       "@type": "HowTo",
       name: guide.title,
       description: guide.description,
-      url: `${absoluteUrl()}/learn/${guide.slug}`,
+      url: `${absoluteUrl()}/insights/${guide.slug}`,
     },
   })),
 };
@@ -103,10 +104,10 @@ const organizationSchema = {
   description: "The easiest way to start an online business in Nepal.",
 };
 
-export default function LearnHubPage() {
+export default function InsightsHubPage() {
   return (
     <div className="selection:bg-primary/10 selection:text-primary min-h-screen bg-white font-sans">
-      <JsonLd id="learn-item-list" data={learnSchema} />
+      <JsonLd id="insights-item-list" data={insightsSchema} />
       <JsonLd id="nepdora-org" data={organizationSchema} />
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32">
@@ -116,7 +117,7 @@ export default function LearnHubPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="mb-8 text-5xl font-bold tracking-tight md:text-7xl">
-              Learn to start & grow your online business.
+              Insights to start & grow your online business.
             </h1>
             <p className="mx-auto mb-10 max-w-xl text-lg leading-relaxed">
               Free guides, tutorials, and resources to help Nepali entrepreneurs
@@ -159,7 +160,7 @@ export default function LearnHubPage() {
         </div>
       </section>
 
-      {/* What You'll Learn Section */}
+      {/* Key Insights Section */}
       <section className="py-10">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-20 text-center">
@@ -236,7 +237,7 @@ export default function LearnHubPage() {
             {GUIDES.map(guide => (
               <Link
                 key={guide.slug}
-                href={`/learn/${guide.slug}`}
+                href={`/insights/${guide.slug}`}
                 className="group max-w-[350px] rounded-3xl bg-white p-8 transition-all hover:-translate-y-1"
               >
                 <h3 className="mb-2 text-xl font-semibold text-slate-900 transition-colors">
@@ -255,13 +256,13 @@ export default function LearnHubPage() {
         </div>
       </section>
 
-      {/* Why Learn with Nepdora */}
+      {/* Why Insights with Nepdora */}
       <section className="py-24 md:py-32">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             <div>
               <h2 className="mb-2 text-4xl font-bold tracking-tight md:text-2xl">
-                Learn from experts who understand Nepal.
+                Insights from experts who understand Nepal.
               </h2>
               <p className="mb-8 text-sm">
                 Our guides are written specifically for the Nepali market,

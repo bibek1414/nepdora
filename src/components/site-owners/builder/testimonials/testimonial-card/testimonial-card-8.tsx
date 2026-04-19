@@ -77,7 +77,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
           value={subtitle || "People are praising us"}
           onChange={value => onSubtitleChange?.(value)}
           as="p"
-          className="mb-4 text-lg font-semibold text-indigo-600"
+          className="text-primary mb-4 text-lg font-semibold"
           placeholder="Enter subtitle..."
           isEditable={isEditable}
         />
@@ -87,7 +87,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
     if (!subtitle) return null;
     return (
       <p
-        className="mb-4 text-lg font-semibold text-indigo-600"
+        className="text-primary mb-4 text-lg font-semibold"
         dangerouslySetInnerHTML={{ __html: subtitle }}
       />
     );
@@ -183,7 +183,7 @@ export const TestimonialCard8: React.FC<TestimonialCard8Props> = ({
                                   onTestimonialClick?.(testimonial)
                                 }
                               >
-                                <div className="mb-6 font-serif text-6xl leading-none text-indigo-600 md:text-7xl">
+                                <div className="text-primary mb-6 font-serif text-6xl leading-none md:text-7xl">
                                   ❝
                                 </div>
                                 <p className="mb-8 text-lg leading-relaxed text-gray-600 md:text-xl">

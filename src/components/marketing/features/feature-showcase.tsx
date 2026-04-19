@@ -30,7 +30,7 @@ function WebsiteBuilderMockup() {
           <p className="text-sm font-semibold text-slate-800">
             Choose a template
           </p>
-          <div className="text-[10px] font-medium text-indigo-600">
+          <div className="text-primary text-[10px] font-medium">
             100+ available
           </div>
         </div>
@@ -55,7 +55,7 @@ function WebsiteBuilderMockup() {
           ))}
         </div>
         <div className="mt-4 flex items-center gap-2">
-          <div className="flex h-8 flex-1 items-center justify-center rounded-lg bg-indigo-600">
+          <div className="bg-primary flex h-8 flex-1 items-center justify-center rounded-lg">
             <span className="text-[11px] font-semibold text-white">
               Customise this template
             </span>
@@ -101,7 +101,7 @@ function PaymentsMockup() {
           ))}
           <div className="mt-1 flex items-center justify-between pt-3">
             <span className="text-xs font-bold text-slate-900">Total</span>
-            <span className="text-sm font-bold text-indigo-600">NPR 6,700</span>
+            <span className="text-primary text-sm font-bold">NPR 6,700</span>
           </div>
         </div>
         {/* payment options */}
@@ -133,7 +133,7 @@ function PaymentsMockup() {
             </div>
           ))}
         </div>
-        <div className="rounded-xl bg-indigo-600 py-2.5 text-center">
+        <div className="bg-primary rounded-xl py-2.5 text-center">
           <span className="text-sm font-semibold text-white">Pay Now</span>
         </div>
       </div>
@@ -171,7 +171,7 @@ function SEOMockup() {
             {
               label: "Organic Visits",
               value: "3,240/mo",
-              color: "text-indigo-600",
+              color: "text-primary",
             },
           ].map(s => (
             <div key={s.label} className="rounded-xl bg-slate-50 p-3">
@@ -197,7 +197,7 @@ function SEOMockup() {
                   <span className="text-[10px] font-semibold text-emerald-600">
                     {k.change}
                   </span>
-                  <span className="text-[11px] font-bold text-indigo-600">
+                  <span className="text-primary text-[11px] font-bold">
                     #{k.pos}
                   </span>
                 </div>
@@ -260,7 +260,7 @@ function EcommerceMockup() {
       <div className="space-y-3 p-5">
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-slate-800">Recent Orders</p>
-          <div className="rounded-md bg-indigo-600 px-2.5 py-1 text-[10px] font-semibold text-white">
+          <div className="bg-primary rounded-md px-2.5 py-1 text-[10px] font-semibold text-white">
             + New Order
           </div>
         </div>
@@ -461,7 +461,7 @@ function BusinessOpsMockup() {
           <p className="text-[11px] font-semibold text-indigo-800">
             3 new bookings today
           </p>
-          <p className="mt-0.5 text-[10px] text-indigo-600">
+          <p className="text-primary mt-0.5 text-[10px]">
             Appointment system · Calendar sync
           </p>
         </div>
@@ -596,10 +596,7 @@ function ShowcaseSection({
               {bullets.map(b => (
                 <li key={b} className="flex items-start gap-3">
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-50">
-                    <Check
-                      className="h-3 w-3 text-indigo-600"
-                      strokeWidth={2.5}
-                    />
+                    <Check className="text-primary h-3 w-3" strokeWidth={2.5} />
                   </span>
                   <span className="text-sm leading-relaxed text-slate-700">
                     {b}

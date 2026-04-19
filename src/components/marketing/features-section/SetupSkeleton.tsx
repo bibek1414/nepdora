@@ -6,7 +6,7 @@ const SetupSkeleton = () => (
   <div className="flex h-full items-center justify-center bg-white">
     <div className="relative flex h-20 w-20 items-center justify-center">
       <div className="text-center">
-        <div className="text-2xl font-bold text-indigo-600">5</div>
+        <div className="text-primary text-2xl font-bold">5</div>
         <div className="text-[8px] font-bold text-slate-400 uppercase">
           Minutes
         </div>

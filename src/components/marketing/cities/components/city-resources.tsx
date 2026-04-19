@@ -49,7 +49,7 @@ export const CityResources: React.FC = () => {
                 />
               </div>
               <div className="p-6">
-                <h3 className="mb-2 text-sm font-semibold text-slate-900 transition-colors group-hover:text-indigo-600">
+                <h3 className="group-hover:text-primary mb-2 text-sm font-semibold text-slate-900 transition-colors">
                   {r.title}
                 </h3>
                 <p className="text-sm leading-relaxed text-slate-500">

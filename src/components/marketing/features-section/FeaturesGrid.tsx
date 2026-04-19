@@ -124,7 +124,7 @@ const FeaturesGrid: React.FC = () => {
               </div>
               <div className="relative z-10 border-t border-slate-100 bg-white p-4">
                 <div className="flex items-center gap-2">
-                  <feature.icon size={16} className="text-indigo-600" />
+                  <feature.icon size={16} className="text-primary" />
                   <h3 className="text-sm font-semibold text-slate-900 md:text-sm">
                     {feature.title}
                   </h3>

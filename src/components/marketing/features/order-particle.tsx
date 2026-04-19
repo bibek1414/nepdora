@@ -68,7 +68,7 @@ export const OrderParticle: React.FC<OrderParticleProps> = ({
   return (
     <motion.div
       className={`absolute z-20 flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-sm shadow-sm ring-1 ring-white ${
-        route === "express" ? "bg-indigo-600" : "bg-orange-500"
+        route === "express" ? "bg-primary" : "bg-orange-500"
       }`}
       initial={{ left: "10%", top: "50%", opacity: 0 }}
       animate={route === "express" ? expressKeyframes : standardKeyframes}

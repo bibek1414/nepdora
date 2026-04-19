@@ -24,7 +24,7 @@ export function QrVisualMock() {
             <div className="h-2 w-2 rounded-full bg-emerald-400" />
           </div>
           <div className="font- -widest text-[10px] text-slate-400">
-            nepdora.qr
+            nepdora.com/tools/qr-code-generator
           </div>
         </div>
 
@@ -47,7 +47,7 @@ export function QrVisualMock() {
             <div className="flex gap-2">
               <div className="bg-primary -sm h-6 w-6 rounded-full border-2 border-white" />
               <div className="-sm h-6 w-6 rounded-full border-2 border-white bg-gray-900" />
-              <div className="-sm h-6 w-6 rounded-full border-2 border-white bg-indigo-600" />
+              <div className="-sm bg-primary h-6 w-6 rounded-full border-2 border-white" />
             </div>
           </div>
           <div className="h-2 w-full rounded bg-slate-50" />
@@ -55,7 +55,7 @@ export function QrVisualMock() {
         </div>
 
         {/* Bottom Accent */}
-        <div className="from-primary absolute top-0 left-0 h-1.5 w-full bg-linear-to-r via-blue-500 to-indigo-600" />
+        <div className="from-primary to-primary absolute top-0 left-0 h-1.5 w-full bg-linear-to-r via-blue-500" />
       </motion.div>
 
       {/* Floating Badges */}

@@ -34,27 +34,32 @@ const AboutTeam: React.FC = () => {
               Real people. Real support.
             </h2>
             <p className="max-w-lg text-lg text-slate-500">
-              We don't hide behind chatbots. Our team works right here in 
+              We don't hide behind chatbots. Our team works right here in
               Kathmandu to help you scale.
             </p>
           </div>
-          <Button variant="outline" className="rounded-xl border-slate-200 px-8 py-6 text-base font-semibold transition hover:bg-slate-50">
+          <Button
+            variant="outline"
+            className="rounded-xl border-slate-200 px-8 py-6 text-base font-semibold transition hover:bg-slate-50"
+          >
             Join our team
           </Button>
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {teamMembers.map((member) => (
+          {teamMembers.map(member => (
             <div key={member.name} className="group">
               <div className="mb-4 overflow-hidden rounded-2xl bg-slate-100">
-                <img 
-                  src={member.img} 
+                <img
+                  src={member.img}
                   alt={member.name}
                   className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">{member.name}</h3>
-              <p className="text-sm font-medium text-indigo-600">{member.role}</p>
+              <h3 className="text-lg font-bold text-slate-900">
+                {member.name}
+              </h3>
+              <p className="text-primary text-sm font-medium">{member.role}</p>
             </div>
           ))}
         </div>

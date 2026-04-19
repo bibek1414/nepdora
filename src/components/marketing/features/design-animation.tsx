@@ -119,7 +119,7 @@
 //         >
 //           <div>
 //             <span
-//               className={`mb-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium uppercase ${isDark ? "bg-slate-800 text-indigo-400" : "bg-indigo-50 text-indigo-600"}`}
+//               className={`mb-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium uppercase ${isDark ? "bg-slate-800 text-indigo-400" : "bg-indigo-50 text-primary"}`}
 //             >
 //               New Season
 //             </span>
@@ -187,7 +187,7 @@
 //       </div>
 
 //       {config.plugins.chat && (
-//         <div className="absolute right-4 bottom-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg">
+//         <div className="absolute right-4 bottom-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-lg">
 //           <MessageCircle size={20} />
 //         </div>
 //       )}
@@ -391,17 +391,17 @@
 //             </div>
 //             <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
 //               <div
-//                 className={`rounded p-1 transition-all ${config.viewport === "mobile" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}
+//                 className={`rounded p-1 transition-all ${config.viewport === "mobile" ? "bg-white text-primary shadow-sm" : "text-slate-400"}`}
 //               >
 //                 <Smartphone size={14} />
 //               </div>
 //               <div
-//                 className={`rounded p-1 transition-all ${config.viewport === "tablet" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}
+//                 className={`rounded p-1 transition-all ${config.viewport === "tablet" ? "bg-white text-primary shadow-sm" : "text-slate-400"}`}
 //               >
 //                 <Tablet size={14} />
 //               </div>
 //               <div
-//                 className={`rounded p-1 transition-all ${config.viewport === "desktop" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400"}`}
+//                 className={`rounded p-1 transition-all ${config.viewport === "desktop" ? "bg-white text-primary shadow-sm" : "text-slate-400"}`}
 //               >
 //                 <Monitor size={14} />
 //               </div>

@@ -4,13 +4,10 @@ import { JsonLd } from "@/components/shared/json-ld";
 import AboutHero from "@/components/marketing/about-us/about-hero";
 import AboutStory from "@/components/marketing/about-us/about-story";
 import AboutStats from "@/components/marketing/about-us/about-stats";
-import AboutValues from "@/components/marketing/about-us/about-values";
+
 import AboutLocal from "@/components/marketing/about-us/about-local";
 import AboutDifference from "@/components/marketing/about-us/about-difference";
 import AboutPhilosophy from "@/components/marketing/about-us/about-philosophy";
-import AboutEcosystem from "@/components/marketing/about-us/about-ecosystem";
-import AboutVision from "@/components/marketing/about-us/about-vision";
-import AboutSecurity from "@/components/marketing/about-us/about-security";
 import AboutTeam from "@/components/marketing/about-us/about-team";
 import CTA from "@/components/marketing/cta-section/cta-section";
 
@@ -73,10 +70,6 @@ export default function AboutPage() {
       <AboutDifference />
       <AboutLocal />
       <AboutPhilosophy />
-      <AboutEcosystem />
-      <AboutValues />
-      <AboutSecurity />
-      <AboutVision />
       <AboutTeam />
       <CTA />
     </>

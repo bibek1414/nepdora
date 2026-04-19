@@ -184,7 +184,7 @@ const TermVisual = ({ term, slug }: { term: string; slug: string }) => {
     },
     hosting: {
       icon: <Server className="h-8 w-8" />,
-      bg: "from-indigo-500 to-indigo-600",
+      bg: "from-indigo-500 to-primary",
       text: "Store Your Site",
     },
     seo: {

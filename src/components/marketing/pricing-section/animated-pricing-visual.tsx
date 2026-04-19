@@ -21,9 +21,9 @@ const plans = [
   {
     name: "Business",
     price: "10,000",
-    color: "bg-indigo-600",
+    color: "bg-primary",
     features: ["Custom Domain", "eSewa/Khalti", "SEO"],
-    icon: <CreditCard className="h-4 w-4 text-indigo-600" />,
+    icon: <CreditCard className="text-primary h-4 w-4" />,
   },
   {
     name: "Pro",
@@ -196,7 +196,7 @@ export function AnimatedPricingDashboard() {
         className="absolute -bottom-6 -left-6 flex items-center gap-2.5 rounded-xl border border-slate-100 bg-white p-3 shadow-xl"
       >
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-50">
-          <CreditCard className="h-4 w-4 text-indigo-600" />
+          <CreditCard className="text-primary h-4 w-4" />
         </div>
         <div>
           <p className="text-[10px] font-bold text-slate-900">Local Payments</p>

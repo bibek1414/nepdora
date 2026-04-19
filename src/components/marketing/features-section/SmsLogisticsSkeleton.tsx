@@ -77,14 +77,14 @@ const SmsLogisticsSkeleton = () => {
 
           {/* Dash */}
           <div className="flex items-center gap-2 rounded border border-slate-100 bg-white px-2 py-1.5 shadow-sm">
-            <div className="flex h-4 w-4 items-center justify-center rounded-full bg-indigo-100 text-[8px] font-bold text-indigo-600">
+            <div className="text-primary flex h-4 w-4 items-center justify-center rounded-full bg-indigo-100 text-[8px] font-bold">
               D
             </div>
             <div className="flex-1">
               <div className="mb-0.5 h-1.5 w-12 rounded bg-slate-200" />
               <div className="h-1 w-16 rounded bg-slate-100" />
             </div>
-            <div className="flex h-2 w-8 items-center justify-center rounded bg-indigo-50 text-[6px] font-bold text-indigo-600">
+            <div className="text-primary flex h-2 w-8 items-center justify-center rounded bg-indigo-50 text-[6px] font-bold">
               Dash
             </div>
           </div>

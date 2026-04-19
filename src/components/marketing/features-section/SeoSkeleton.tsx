@@ -8,7 +8,7 @@ const SeoSkeleton = () => {
   return (
     <div className="flex h-full w-full flex-col overflow-hidden bg-white p-4">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-sm font-bold text-indigo-600">
+        <div className="text-primary flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-sm font-bold">
           98
         </div>
         <div>
@@ -55,7 +55,7 @@ const SeoSkeleton = () => {
           initial={{ width: 0 }}
           animate={{ width: "98%" }}
           transition={{ duration: 2 }}
-          className="h-full bg-indigo-600"
+          className="bg-primary h-full"
         />
       </div>
     </div>

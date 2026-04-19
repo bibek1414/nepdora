@@ -6,7 +6,6 @@ import {
   Download,
   Upload,
   Globe,
-  Wifi,
   Mail,
   MessageSquare,
   Check,
@@ -34,15 +33,9 @@ import {
 import { QrVisualMock } from "@/components/marketing/tools/qr-visual-mock";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type TabType = "url" | "text" | "email" | "wifi";
+type TabType = "url" | "text" | "email";
 type SizeKey = "S" | "M" | "L";
 type ECLevel = "L" | "M" | "Q" | "H";
-
-interface WifiConfig {
-  ssid: string;
-  password: string;
-  security: "WPA" | "WEP" | "nopass";
-}
 
 interface EmailConfig {
   address: string;
@@ -85,11 +78,7 @@ export default function QRGeneratorClient() {
   const [urlVal, setUrlVal] = useState("");
   const [textVal, setTextVal] = useState("");
   const [email, setEmail] = useState<EmailConfig>({ address: "", subject: "" });
-  const [wifi, setWifi] = useState<WifiConfig>({
-    ssid: "",
-    password: "",
-    security: "WPA",
-  });
+
   const [color, setColor] = useState(PRESETS[1].hex);
   const [size, setSize] = useState<SizeKey>("M");
   const [ecl, setEcl] = useState<ECLevel>("M");
@@ -114,14 +103,11 @@ export default function QRGeneratorClient() {
           ? `mailto:${address}${subject ? "?subject=" + encodeURIComponent(subject) : ""}`
           : "";
       }
-      case "wifi": {
-        const { ssid, password, security } = wifi;
-        return ssid ? `WIFI:T:${security};S:${ssid};P:${password};;` : "";
-      }
+
       default:
         return "";
     }
-  }, [tab, urlVal, textVal, email, wifi]);
+  }, [tab, urlVal, textVal, email]);
 
   const generateQR = useCallback(() => {
     if (!qrReady) return;
@@ -247,20 +233,15 @@ export default function QRGeneratorClient() {
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
             {/* Left Content */}
             <div className="max-w-2xl">
-              <div className="border-primary/10 bg-primary/5 text-primary mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold">
-                <Zap className="h-4 w-4" />
-                Free Universal QR Tools
-              </div>
-
-              <h1 className="mb-6 text-4xl leading-[1.1] font-extrabold -tight text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl">
+              <h1 className="-tight mb-6 text-4xl font-extrabold text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl">
                 Universal <br />
                 <span className="text-primary">QR generator.</span>
               </h1>
 
               <p className="mb-8 text-lg leading-relaxed font-medium text-slate-500 sm:text-xl">
-                Create professional, high-quality QR codes for URLs, WiFi,
-                emails, and Nepali payments instantly. Customize with logos and
-                brand colors—no signup required.
+                Create professional, high-quality QR codes for URLs, emails, and
+                texts instantly. Customize with logos and brand colors—no signup
+                required.
               </p>
 
               <div className="flex flex-col gap-4 sm:flex-row">
@@ -271,11 +252,6 @@ export default function QRGeneratorClient() {
                   Create My QR Code
                   <ChevronRight className="h-5 w-5" />
                 </Link>
-                <div className="flex items-center gap-3 px-2">
-                  <div className="text-xs font-bold -wider text-slate-400 ">
-                    Trusted by 10,000+ businesses
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -309,28 +285,22 @@ export default function QRGeneratorClient() {
                   onValueChange={v => setTab(v as TabType)}
                   className="w-full"
                 >
-                  <TabsList className="mb-8 grid h-auto w-full grid-cols-2 gap-2 bg-slate-100 p-1 md:grid-cols-4">
+                  <TabsList className="mb-8 grid h-auto w-full grid-cols-3 gap-2 bg-slate-100 p-1">
                     <TabsTrigger
                       value="url"
-                      className="data-[state=active]:-sm gap-2 py-3 data-[state=active]:bg-white"
+                      className="data-[state=active]:-sm cursor-pointer gap-2 py-3 data-[state=active]:bg-white"
                     >
                       <Globe className="h-4 w-4" /> URL
                     </TabsTrigger>
                     <TabsTrigger
                       value="text"
-                      className="data-[state=active]:-sm gap-2 py-3 data-[state=active]:bg-white"
+                      className="data-[state=active]:-sm cursor-pointer gap-2 py-3 data-[state=active]:bg-white"
                     >
                       <MessageSquare className="h-4 w-4" /> Text
                     </TabsTrigger>
                     <TabsTrigger
-                      value="wifi"
-                      className="data-[state=active]:-sm gap-2 py-3 data-[state=active]:bg-white"
-                    >
-                      <Wifi className="h-4 w-4" /> WiFi
-                    </TabsTrigger>
-                    <TabsTrigger
                       value="email"
-                      className="data-[state=active]:-sm gap-2 py-3 data-[state=active]:bg-white"
+                      className="data-[state=active]:-sm cursor-pointer gap-2 py-3 data-[state=active]:bg-white"
                     >
                       <Mail className="h-4 w-4" /> Email
                     </TabsTrigger>
@@ -361,60 +331,6 @@ export default function QRGeneratorClient() {
                           placeholder="Enter any text or message to encode..."
                           value={textVal}
                           onChange={e => setTextVal(e.target.value)}
-                        />
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="wifi" className="space-y-6">
-                      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-bold text-slate-700">
-                            Network SSID
-                          </Label>
-                          <Input
-                            placeholder="My WiFi Network"
-                            value={wifi.ssid}
-                            onChange={e =>
-                              setWifi({ ...wifi, ssid: e.target.value })
-                            }
-                            className="h-12 border-slate-200"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="text-sm font-bold text-slate-700">
-                            Security Type
-                          </Label>
-                          <Select
-                            value={wifi.security}
-                            onValueChange={v =>
-                              setWifi({ ...wifi, security: v as any })
-                            }
-                          >
-                            <SelectTrigger className="h-12 border-slate-200">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="WPA">WPA/WPA2</SelectItem>
-                              <SelectItem value="WEP">WEP</SelectItem>
-                              <SelectItem value="nopass">
-                                No Password
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm font-bold text-slate-700">
-                          WiFi Password
-                        </Label>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          value={wifi.password}
-                          onChange={e =>
-                            setWifi({ ...wifi, password: e.target.value })
-                          }
-                          className="h-12 border-slate-200"
                         />
                       </div>
                     </TabsContent>
@@ -468,7 +384,7 @@ export default function QRGeneratorClient() {
                 <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
                   {/* Color Picker */}
                   <div className="space-y-6">
-                    <div className="flex items-center gap-2 text-sm font-bold -wider text-slate-800 ">
+                    <div className="-wider flex items-center gap-2 text-sm font-bold text-slate-800">
                       <Palette className="text-primary h-4 w-4" /> Pick Your
                       Color
                     </div>
@@ -478,7 +394,7 @@ export default function QRGeneratorClient() {
                           key={p.hex}
                           onClick={() => setColor(p.hex)}
                           className={cn(
-                            "h-10 w-10 rounded-full border-4 transition-all hover:scale-115 active:scale-95",
+                            "h-10 w-10 cursor-pointer rounded-full border-4 transition-all hover:scale-115 active:scale-95",
                             color === p.hex
                               ? "-lg scale-110 border-slate-800"
                               : "-sm border-white"
@@ -502,7 +418,7 @@ export default function QRGeneratorClient() {
 
                   {/* Logo Upload */}
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-sm font-bold -wider text-slate-800 ">
+                    <div className="-wider flex items-center gap-2 text-sm font-bold text-slate-800">
                       <Upload className="text-primary h-4 w-4" /> Center Logo
                     </div>
                     <div
@@ -555,7 +471,7 @@ export default function QRGeneratorClient() {
 
                 <div className="mt-10 grid grid-cols-1 gap-8 border-t border-slate-100 pt-10 md:grid-cols-2">
                   <div className="space-y-3">
-                    <Label className="text-xs font-bold -widest text-slate-500 ">
+                    <Label className="-widest text-xs font-bold text-slate-500">
                       Resolution
                     </Label>
                     <div className="grid grid-cols-3 gap-2 rounded-xl bg-slate-100 p-1">
@@ -564,7 +480,7 @@ export default function QRGeneratorClient() {
                           key={s}
                           onClick={() => setSize(s)}
                           className={cn(
-                            "rounded-lg py-2 text-xs font-bold transition-all",
+                            "cursor-pointer rounded-lg py-2 text-xs font-bold transition-all",
                             size === s
                               ? "text-primary -sm bg-white"
                               : "text-slate-500 hover:text-slate-800"
@@ -576,7 +492,7 @@ export default function QRGeneratorClient() {
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <Label className="text-xs font-bold -widest text-slate-500 ">
+                    <Label className="-widest text-xs font-bold text-slate-500">
                       Error Correction
                     </Label>
                     <Select
@@ -607,7 +523,7 @@ export default function QRGeneratorClient() {
                     <h3 className="text-lg font-bold text-slate-900">
                       QR Preview
                     </h3>
-                    <div className="mt-1 flex items-center justify-center gap-1.5 text-[10px] font-bold -widest text-emerald-500 ">
+                    <div className="-widest mt-1 flex items-center justify-center gap-1.5 text-[10px] font-bold text-emerald-500">
                       <Check className="h-3 w-3" /> Live Generating
                     </div>
                   </div>
@@ -640,9 +556,9 @@ export default function QRGeneratorClient() {
                       <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
-                        className="-xl absolute -bottom-4 rounded-full bg-slate-900 px-4 py-1.5 text-[10px] font-black -widest text-white  ring-4 ring-white"
+                        className="-xl -widest absolute -bottom-4 rounded-full bg-slate-900 px-4 py-1.5 text-[10px] font-semibold text-white ring-4 ring-white"
                       >
-                        Nepdora.com
+                        nepdora.com
                       </motion.div>
                     )}
                   </div>
@@ -666,7 +582,7 @@ export default function QRGeneratorClient() {
                       <Maximize className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                       Download SVG
                     </Button>
-                    <div className="pt-2 text-center text-[10px] font-bold -widest text-slate-400 ">
+                    <div className="-widest pt-2 text-center text-[10px] font-bold text-slate-400">
                       100% Free • High Quality • Secure
                     </div>
                   </div>

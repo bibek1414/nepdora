@@ -223,7 +223,7 @@ export const Footer = () => {
 
             <FooterSection delay={0.4}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Learn & Resources
+                Insights & Resources
               </h4>
               <div className="flex flex-col space-y-2">
                 <FooterLink href="/insights/how-to-start-online-business-in-nepal">

@@ -44,7 +44,7 @@ export function AnimatedPricing() {
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-slate-900">{plan.name}</p>
             {plan.highlight && (
-              <span className="rounded-md bg-indigo-600 px-2 py-1 text-[10px] font-semibold text-white">
+              <span className="bg-primary rounded-md px-2 py-1 text-[10px] font-semibold text-white">
                 Popular
               </span>
             )}

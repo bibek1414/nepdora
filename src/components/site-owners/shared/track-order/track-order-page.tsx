@@ -103,7 +103,7 @@ export default function TrackOrderPage() {
       <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
         <div className="flex flex-col items-center gap-4">
           <div
-            className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"
+            className="border-primary h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"
             style={{
               borderColor: theme.colors.primary,
               borderTopColor: "transparent",
@@ -193,7 +193,7 @@ export default function TrackOrderPage() {
             <span className="text-xl font-bold tracking-tight text-slate-900">
               Track
               <span
-                className="text-indigo-600"
+                className="text-primary"
                 style={{ color: theme.colors.primary }}
               >
                 Order
@@ -271,7 +271,7 @@ export default function TrackOrderPage() {
                       width: `${Math.max(0, currentStatusIndex / (timelineSteps.length - 1)) * 100}%`,
                     }}
                     transition={{ duration: 1, ease: "easeOut" }}
-                    className="absolute top-5 left-0 hidden h-1 rounded-full bg-indigo-600 sm:block"
+                    className="bg-primary absolute top-5 left-0 hidden h-1 rounded-full sm:block"
                     style={{ backgroundColor: theme.colors.primary }}
                   ></motion.div>
 
@@ -312,7 +312,7 @@ export default function TrackOrderPage() {
                             {/* Vertical Line for Mobile */}
                             {index < timelineSteps.length - 1 && (
                               <div
-                                className={`absolute top-10 left-1/2 h-8 w-0.5 -translate-x-1/2 sm:hidden ${isCompleted ? "bg-indigo-600" : "bg-slate-100"}`}
+                                className={`absolute top-10 left-1/2 h-8 w-0.5 -translate-x-1/2 sm:hidden ${isCompleted ? "bg-primary" : "bg-slate-100"}`}
                                 style={
                                   isCompleted
                                     ? { backgroundColor: theme.colors.primary }
@@ -351,7 +351,7 @@ export default function TrackOrderPage() {
               <div className="flex items-center justify-between border-b border-slate-50 p-6 sm:p-8">
                 <h2 className="flex items-center gap-2 text-xl font-bold text-slate-900">
                   <Package
-                    className="h-5 w-5 text-indigo-600"
+                    className="text-primary h-5 w-5"
                     style={{ color: theme.colors.primary }}
                   />
                   Items Ordered
@@ -453,7 +453,7 @@ export default function TrackOrderPage() {
                 <div className="border-b border-slate-50 p-6 sm:p-8">
                   <h2 className="flex items-center gap-2 text-xl font-bold text-slate-900">
                     <MapPin
-                      className="h-5 w-5 text-indigo-600"
+                      className="text-primary h-5 w-5"
                       style={{ color: theme.colors.primary }}
                     />
                     Delivery Location
@@ -473,7 +473,7 @@ export default function TrackOrderPage() {
                     </p>
                   </div>
                   <div
-                    className="pointer-events-none absolute inset-0 bg-indigo-600/5"
+                    className="bg-primary/5 pointer-events-none absolute inset-0"
                     style={{ backgroundColor: `${theme.colors.primary}0D` }}
                   ></div>
                 </div>
@@ -492,7 +492,7 @@ export default function TrackOrderPage() {
               <div className="border-b border-slate-50 p-6">
                 <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-900">
                   <User
-                    className="h-4 w-4 text-indigo-600"
+                    className="text-primary h-4 w-4"
                     style={{ color: theme.colors.primary }}
                   />
                   Customer Details
@@ -544,7 +544,7 @@ export default function TrackOrderPage() {
                 <div className="border-t border-slate-50 pt-6">
                   <h3 className="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest text-slate-900">
                     <Truck
-                      className="h-3.5 w-3.5 text-indigo-600"
+                      className="text-primary h-3.5 w-3.5"
                       style={{ color: theme.colors.primary }}
                     />
                     Shipping Address
@@ -578,7 +578,7 @@ export default function TrackOrderPage() {
               <div className="border-b border-slate-50 p-6">
                 <h2 className="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-900">
                   <FileText
-                    className="h-4 w-4 text-indigo-600"
+                    className="text-primary h-4 w-4"
                     style={{ color: theme.colors.primary }}
                   />
                   Order Summary
@@ -602,7 +602,7 @@ export default function TrackOrderPage() {
                 <div className="flex items-center justify-between border-t border-slate-50 pt-4">
                   <span className="font-bold text-slate-900">Total Amount</span>
                   <span
-                    className="text-xl font-black text-indigo-600"
+                    className="text-primary text-xl font-black"
                     style={{ color: theme.colors.primary }}
                   >
                     Rs. {Number(order.total_amount).toLocaleString()}

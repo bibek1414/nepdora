@@ -110,7 +110,7 @@ export function InvoiceVisualMock() {
         </div>
 
         {/* Modern Accent Bar */}
-        <div className="from-primary absolute top-0 left-0 h-1 w-full bg-linear-to-r via-blue-500 to-indigo-600" />
+        <div className="from-primary to-primary absolute top-0 left-0 h-1 w-full bg-linear-to-r via-blue-500" />
       </motion.div>
 
       {/* Floating Interactive Badges */}

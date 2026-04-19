@@ -10,8 +10,7 @@ export default function FeaturesHero() {
           {/* Left - text */}
           <div>
             <h1 className="mb-6 text-5xl leading-[1.08] font-bold tracking-tight text-slate-900 sm:text-6xl">
-              Everything you need to{" "}
-              <span className="text-indigo-600">scale</span>
+              Everything you need to <span className="text-primary">scale</span>
             </h1>
 
             <p className="mb-8 max-w-lg text-lg leading-relaxed text-slate-500">
@@ -22,7 +21,7 @@ export default function FeaturesHero() {
 
             <Link
               href="admin/signup"
-              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+              className="bg-primary inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-700"
             >
               Start Building Free
               <ChevronRight className="h-4 w-4" />

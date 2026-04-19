@@ -87,9 +87,9 @@ export const USE_CASES: UseCase[] = [
     description:
       "Establish your brand online with a professional website that builds trust and attracts customers.",
     icon: Store,
-    color: "from-indigo-500 to-indigo-600",
+    color: "from-indigo-500 to-primary",
     bgColor: "bg-indigo-50",
-    textColor: "text-indigo-600",
+    textColor: "text-primary",
     slug: "website-for-small-business",
   },
   {

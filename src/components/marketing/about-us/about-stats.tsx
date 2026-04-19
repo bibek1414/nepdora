@@ -4,15 +4,15 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const stats = [
-  { label: "Active stores", value: "2k+", suffix: "businesses" },
-  { label: "Uptime guarantee", value: "99.9%", suffix: "reliability" },
-  { label: "Nepali support", value: "100%", suffix: "local help" },
-  { label: "Ready to launch", value: "5min", suffix: "setup time" },
+  { label: "Active stores", value: "2k+", suffix: "Businesses" },
+  { label: "Uptime guarantee", value: "99.9%", suffix: "Reliability" },
+  { label: "Nepali support", value: "100%", suffix: "Local help" },
+  { label: "Ready to launch", value: "5min", suffix: "Setup time" },
 ];
 
 export default function AboutStats() {
   return (
-    <section className="bg-white py-12 sm:py-20 border-t border-slate-100">
+    <section className="border-t border-slate-100 bg-white py-12 sm:py-20">
       <div className="mx-auto max-w-5xl px-6">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {stats.map((stat, idx) => (
@@ -24,13 +24,13 @@ export default function AboutStats() {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="text-3xl font-bold tracking-tight text-indigo-600 sm:text-4xl md:text-5xl">
+              <div className="text-primary text-2xl font-semibold sm:text-4xl md:text-5xl">
                 {stat.value}
               </div>
-              <div className="mt-2 text-xs font-bold uppercase tracking-widest text-slate-400">
+              <div className="mt-2 text-xs font-bold text-slate-900">
                 {stat.label}
               </div>
-              <div className="mt-1 text-[10px] font-medium text-slate-300 uppercase italic whitespace-nowrap">
+              <div className="mt-1 text-xs font-medium whitespace-nowrap text-slate-600">
                 {stat.suffix}
               </div>
             </motion.div>

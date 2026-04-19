@@ -15,12 +15,12 @@ const PosSkeleton = () => {
     <div className="flex h-full w-full flex-col overflow-hidden bg-slate-50 p-4">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Calculator size={14} className="text-indigo-600" />
+          <Calculator size={14} className="text-primary" />
           <span className="text-[10px] font-bold text-slate-700">
             POS System
           </span>
         </div>
-        <div className="flex h-4 w-12 items-center justify-center rounded-full bg-indigo-100 text-[8px] font-bold text-indigo-600">
+        <div className="text-primary flex h-4 w-12 items-center justify-center rounded-full bg-indigo-100 text-[8px] font-bold">
           Terminal 01
         </div>
       </div>
@@ -49,7 +49,7 @@ const PosSkeleton = () => {
         ))}
       </div>
 
-      <div className="mt-4 rounded-xl bg-indigo-600 p-3 text-white">
+      <div className="bg-primary mt-4 rounded-xl p-3 text-white">
         <div className="mb-1 flex items-center justify-between">
           <span className="text-[10px] opacity-80">Total Amount</span>
           <span className="text-xs font-bold">Rs. 1,050</span>

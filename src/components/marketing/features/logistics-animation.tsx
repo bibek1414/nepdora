@@ -165,9 +165,9 @@ export const LogisticsAnimation: React.FC = () => {
         <div className="absolute top-[23%] left-[65%] z-10 -translate-x-1/2 -translate-y-1/2">
           <div className="flex flex-col items-center gap-1">
             <div className="flex h-10 w-10 items-center justify-center rounded-full border border-indigo-100 bg-indigo-50 shadow-sm">
-              <Plane size={18} className="text-indigo-600" />
+              <Plane size={18} className="text-primary" />
             </div>
-            <div className="rounded border border-slate-100 bg-white px-1.5 py-0.5 text-[8px] font-bold whitespace-nowrap text-indigo-600 shadow-sm">
+            <div className="text-primary rounded border border-slate-100 bg-white px-1.5 py-0.5 text-[8px] font-bold whitespace-nowrap shadow-sm">
               Int'l Air Hub
             </div>
           </div>

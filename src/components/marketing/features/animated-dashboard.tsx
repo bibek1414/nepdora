@@ -61,7 +61,7 @@ export function AnimatedDashboard() {
               </p>
               <p className="text-[11px] text-slate-400">Last 30 days</p>
             </div>
-            <span className="rounded-lg bg-indigo-600 px-3 py-1.5 text-[11px] font-semibold text-white">
+            <span className="bg-primary rounded-lg px-3 py-1.5 text-[11px] font-semibold text-white">
               + Add Product
             </span>
           </div>

@@ -4,49 +4,62 @@ import { StoryVisual } from "./story-visual";
 
 export default function AboutStory() {
   const points = [
-    "Born from the struggle of local founders",
-    "Zero technical barriers or server setup",
-    "Seamless local payment integrations",
-    "Built-in tools for real Nepali commerce",
+    "Built from real struggles of Nepali founders",
+    "No coding, no servers, no confusion",
+    "Local payments that actually work",
+    "Tools designed for Nepali businesses",
   ];
 
   return (
-    <section className="border-t border-slate-100 bg-white py-20 sm:py-28">
-      <div className="mx-auto max-w-5xl px-6">
-        <div className="grid items-center gap-14 lg:grid-cols-2">
+    <section className="relative border-slate-100 bg-gradient-to-b from-white to-slate-50 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid items-center gap-16 lg:grid-cols-2">
           {/* visual */}
-          <div className="order-2 lg:order-1">
+          <div className="order-2 lg:order-1 pb-16">
             <StoryVisual />
           </div>
 
           {/* text */}
           <div className="order-1 lg:order-2">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
+            {/* badge */}
+            <div className="text-primary mb-5 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-1.5 text-xs font-semibold">
               <Globe className="h-4 w-4" />
-              the story
+              Our story
             </div>
-            
-            <h2 className="mb-5 text-3xl leading-snug font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Why is it so hard to get online in Nepal?
+
+            {/* heading */}
+            <h2 className="mb-6 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Getting online in Nepal{" "}
+              <span className="text-primary">shouldn’t be this hard.</span>
             </h2>
-            <p className="mb-4 text-base leading-relaxed text-slate-500">
-              That was the question that started it all. In 2023, we watched 
-              brilliant local entrepreneurs struggle. They had amazing 
-              products—but their digital presence was broken.
+
+            {/* paragraphs */}
+            <p className="mb-4 text-base leading-relaxed text-slate-600">
+              In 2023, we saw something frustrating. Talented Nepali founders
+              with great products were stuck offline—not because of lack of
+              vision, but because the system wasn’t built for them.
             </p>
-            <p className="mb-4 text-base leading-relaxed text-slate-500">
-              They were held hostage by agencies charging Rs 50,000 for a 
-              static page. They were stuck with platforms like Wix that billed 
-              in Dollars. They were confused by servers, SSLs, and DNS records.
+
+            <p className="mb-4 text-base leading-relaxed text-slate-600">
+              Agencies were charging Rs 50,000+ for simple websites. Global
+              platforms billed in dollars. And setting up domains, hosting, and
+              SSL felt overwhelming.
             </p>
-            <p className="mb-7 text-base font-medium text-slate-900 leading-relaxed">
-              We took it personally. We built Nepdora to be the bridge.
+
+            <p className="mb-8 text-base leading-relaxed font-semibold text-slate-900">
+              So we built Nepdora—to remove every barrier between Nepali
+              businesses and the internet.
             </p>
-            <ul className="space-y-3">
-              {points.map((p) => (
+
+            {/* points */}
+            <ul className="space-y-4">
+              {points.map(p => (
                 <li key={p} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-50">
-                    <Check className="h-3 w-3 text-indigo-600" strokeWidth={2.5} />
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100">
+                    <Check
+                      className="text-primary h-3.5 w-3.5"
+                      strokeWidth={3}
+                    />
                   </span>
                   <span className="text-sm leading-relaxed text-slate-700">
                     {p}
@@ -57,6 +70,9 @@ export default function AboutStory() {
           </div>
         </div>
       </div>
+
+      {/* subtle background glow */}
+      <div className="pointer-events-none absolute -top-20 right-0 h-72 w-72 rounded-full bg-indigo-100 opacity-30 blur-3xl" />
     </section>
   );
 }

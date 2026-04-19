@@ -38,7 +38,7 @@ export default function TrackOrderLanding() {
           style={{ backgroundColor: `${theme.colors.primary}1A` }}
         >
           <Package
-            className="h-10 w-10 text-indigo-600"
+            className="text-primary h-10 w-10"
             style={{ color: theme.colors.primary }}
           />
         </div>
@@ -60,7 +60,7 @@ export default function TrackOrderLanding() {
           />
           <button
             type="submit"
-            className="mt-4 w-full rounded-2xl bg-indigo-600 py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-[0.98]"
+            className="bg-primary mt-4 w-full rounded-2xl py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 active:scale-[0.98]"
             style={{ backgroundColor: theme.colors.primary }}
           >
             Track Order

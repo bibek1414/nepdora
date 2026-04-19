@@ -7,6 +7,7 @@ import { SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { CheckCircle2, ChevronRight, Clock, BookOpen } from "lucide-react";
 import { buildMarketingMetadata } from "@/lib/seo";
 import CityCTA from "@/components/marketing/cta-section/cta-section";
+import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-const LEARN_GUIDES = [
+const INSIGHT_GUIDES = [
   "how-to-start-online-business-in-nepal",
   "register-company-in-nepal-online",
   "pan-vs-vat-for-online-shops-nepal",
@@ -23,7 +24,7 @@ const LEARN_GUIDES = [
 ];
 
 export async function generateStaticParams() {
-  return LEARN_GUIDES.map(slug => ({ slug }));
+  return INSIGHT_GUIDES.map(slug => ({ slug }));
 }
 
 // Guide content mapping
@@ -32,7 +33,7 @@ const GUIDE_CONTENT: Record<
   {
     intro: string;
     sections: Array<{ title: string; content: string }>;
-    whatYouLearn: string[];
+    keyInsights: string[];
     proTip?: string;
   }
 > = {
@@ -71,7 +72,7 @@ const GUIDE_CONTENT: Record<
           "Finally, focus on consistency and long-term growth. Many businesses fail because they expect quick results. Instead, you should continuously improve your products, listen to customer feedback, and optimize your operations. Over time, small improvements can lead to significant growth and a sustainable online business.",
       },
     ],
-    whatYouLearn: [
+    keyInsights: [
       "Steps to launch your online business",
       "Legal requirements in Nepal",
       "Payment integration basics",
@@ -105,7 +106,7 @@ const GUIDE_CONTENT: Record<
           "You will also need to open a company bank account and deposit the initial capital. This step officially activates your company operations. From there, you can start building your online presence, integrating payment gateways, and launching your services.",
       },
     ],
-    whatYouLearn: [
+    keyInsights: [
       "Company registration process",
       "Required documents",
       "PAN/VAT setup",
@@ -134,7 +135,7 @@ const GUIDE_CONTENT: Record<
           "For most online shops, the decision depends on scale. If you are testing your idea or running a small operation, starting with PAN is the simplest option. As your business grows and revenue increases, transitioning to VAT becomes necessary and beneficial.",
       },
     ],
-    whatYouLearn: [
+    keyInsights: [
       "PAN vs VAT differences",
       "When to choose each",
       "Legal implications",
@@ -163,7 +164,7 @@ const GUIDE_CONTENT: Record<
           "When choosing a payment gateway, you should consider factors like ease of integration, transaction fees, settlement time, and user experience. Some platforms require complex setup processes, while others provide simple, ready-to-use integrations that can be activated quickly.",
       },
     ],
-    whatYouLearn: [
+    keyInsights: [
       "Popular gateways in Nepal",
       "Wallet vs bank payments",
       "Integration factors",
@@ -197,7 +198,7 @@ const GUIDE_CONTENT: Record<
           "Finally, consistency is key. SEO is not a one-time task but an ongoing process. By regularly publishing valuable content, improving your website, and building trust, you can achieve long-term visibility and steady growth without depending entirely on advertisements.",
       },
     ],
-    whatYouLearn: [
+    keyInsights: [
       "Keyword research basics",
       "On-page SEO",
       "Technical SEO essentials",
@@ -210,7 +211,7 @@ const GUIDE_CONTENT: Record<
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  if (!LEARN_GUIDES.includes(slug)) {
+  if (!INSIGHT_GUIDES.includes(slug)) {
     notFound();
   }
   const title = `${capitalizeWords(slug.replace(/-/g, " "))} | Guide for Nepal`;
@@ -219,18 +220,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMarketingMetadata({
     title,
     description,
-    path: `/learn/${slug}`,
+    path: `/insights/${slug}`,
   });
 }
 
-export default async function LearnPage({ params }: Props) {
+export default async function InsightPage({ params }: Props) {
   const { slug } = await params;
-  if (!LEARN_GUIDES.includes(slug)) {
+  if (!INSIGHT_GUIDES.includes(slug)) {
     notFound();
   }
 
   const title = capitalizeWords(slug.replace(/-/g, " "));
-  const url = absoluteUrl(`/learn/${slug}`);
+  const url = absoluteUrl(`/insights/${slug}`);
   const content = GUIDE_CONTENT[slug];
 
   const schema = {
@@ -250,53 +251,21 @@ export default async function LearnPage({ params }: Props) {
     },
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: absoluteUrl(),
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Learn",
-        item: absoluteUrl("/learn"),
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: title,
-        item: url,
-      },
-    ],
-  };
+  const breadcrumbItems = [
+    { label: "Insights", href: "/insights" },
+    { label: title, href: `/insights/${slug}` },
+  ];
 
   return (
     <main className="bg-white">
-      <JsonLd id="learn-article-schema" data={schema} />
-      <JsonLd id="learn-breadcrumb-schema" data={breadcrumbSchema} />
+      <JsonLd id="insight-article-schema" data={schema} />
 
       {/* Hero Section */}
       <section className="bg-secondary pt-16 pb-12 md:pt-24 md:pb-16">
         <div className="container mx-auto max-w-5xl px-6">
-          <nav className="mb-8 text-sm text-slate-500">
-            <Link href="/" className="hover:text-primary transition-colors">
-              Home
-            </Link>
-            <span className="mx-2">/</span>
-            <Link
-              href="/learn"
-              className="hover:text-primary transition-colors"
-            >
-              Learn
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="font-medium text-slate-900">{title}</span>
-          </nav>
+          <div className="mb-8">
+            <Breadcrumbs items={breadcrumbItems} />
+          </div>
           <h1 className="mb-2 mb-4 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-5xl">
             {title}
           </h1>
@@ -308,13 +277,13 @@ export default async function LearnPage({ params }: Props) {
       {/* Content Section */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto max-w-5xl px-6">
-          {/* What You'll Learn */}
+          {/* Key Insights */}
           <div className="mb-12 rounded-2xl border p-8">
             <h2 className="mb-4 text-2xl font-bold text-slate-900">
-              What You'll Learn
+              Key Insights
             </h2>
             <ul className="grid gap-3">
-              {content.whatYouLearn.map((item, i) => (
+              {content.keyInsights.map((item, i) => (
                 <li key={i} className="flex items-center gap-3">
                   <CheckCircle2 className="text-primary h-5 w-5" />
                   <span className="font-medium text-slate-600">{item}</span>

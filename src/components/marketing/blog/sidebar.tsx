@@ -47,7 +47,7 @@ export const SearchBar = () => {
     <div className="group relative">
       <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
         <svg
-          className="h-5 w-5 text-gray-400 transition-colors group-focus-within:text-indigo-600"
+          className="group-focus-within:text-primary h-5 w-5 text-gray-400 transition-colors"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -153,7 +153,7 @@ export const TagList = ({ initialData }: { initialData?: BlogTag[] }) => {
               onClick={() => handleTagClick(tag.slug)}
               className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-semibold transition-all ${
                 isActive
-                  ? "border-indigo-600 bg-indigo-600 text-white"
+                  ? "border-primary bg-primary text-white"
                   : "border-transparent bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -194,7 +194,7 @@ export const RecentPosts = ({ initialData }: { initialData?: BlogPost[] }) => {
               />
             </div>
             <div className="flex min-w-0 flex-col justify-center">
-              <h5 className="line-clamp-2 text-sm leading-snug font-bold text-gray-900 transition-colors group-hover:text-indigo-600">
+              <h5 className="group-hover:text-primary line-clamp-2 text-sm leading-snug font-bold text-gray-900 transition-colors">
                 {post.title}
               </h5>
               <div className="mt-1 flex items-center gap-2 text-[11px] font-medium text-gray-400">
