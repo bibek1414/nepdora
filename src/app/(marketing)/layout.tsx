@@ -5,6 +5,7 @@ type MarketingLayoutProps = {
 };
 
 import { buildMarketingMetadata } from "@/lib/seo";
+import { NepdoraPopup } from "@/components/marketing/layout/nepdora-popup";
 
 // ✅ Metadata for SEO
 export const metadata = buildMarketingMetadata({
@@ -32,6 +33,7 @@ export default function MarketingLayout({ children }: MarketingLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col bg-white text-gray-900">
       <main className="flex-1">{children}</main>
+      <NepdoraPopup />
     </div>
   );
 }
