@@ -70,12 +70,10 @@ export const Footer = () => {
                 <FooterLink href="/about">About Us</FooterLink>
                 <FooterLink href="/blog">Blog</FooterLink>
                 <FooterLink href="/pricing">Pricing</FooterLink>
-                <FooterLink href="/showcase">Showcase</FooterLink>
                 <FooterLink href="/compare">Compare</FooterLink>
               </div>
               <div className="flex flex-col space-y-3">
                 <FooterLink href="/contact">Contact Us</FooterLink>
-                <FooterLink href="/partners">Partners</FooterLink>
                 <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
                 <FooterLink href="/terms">Terms and Conditions</FooterLink>
                 <FooterLink href="/data-delete">Data Delete</FooterLink>
@@ -126,8 +124,8 @@ export const Footer = () => {
                 Marketplace & Features
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/ai-website-builder-in-nepdora">
-                  AI Website Builder
+                <FooterLink href="/ai-website-builder">
+                  AI Website Builder in Nepdora
                 </FooterLink>
                 <FooterLink href="/integrations/esewa-payment">
                   eSewa Payment Integration in Nepdora
@@ -229,7 +227,7 @@ export const Footer = () => {
                 <FooterLink href="/insights/how-to-start-online-business-in-nepal">
                   Start Online Business in Nepal
                 </FooterLink>
-                <FooterLink href="/insights/register-company-in-nepal-online">
+                <FooterLink href="/how-to-register-business-nepal">
                   Company Registration in Nepal
                 </FooterLink>
                 <FooterLink href="/use-cases/sell-products-online-nepal">

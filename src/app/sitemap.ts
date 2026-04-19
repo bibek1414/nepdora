@@ -58,8 +58,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/glossary", priority: 0.8 },
     { path: "/switch", priority: 0.8 },
     { path: "/website-builder-nepal", priority: 0.9 },
+    { path: "/ai-website-builder", priority: 0.9 },
+    { path: "/how-to-register-business-nepal", priority: 0.8 },
+    { path: "/payment-gateways-nepal", priority: 0.8 },
     { path: "/insights", priority: 0.8 },
     { path: "/experts", priority: 0.8 },
+    { path: "/user-stories", priority: 0.8 },
   ];
 
   const basePages = baseRoutes.map(route => ({
@@ -138,19 +142,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const dedicatedAlternativePages = [
-    {
-      url: `${baseUrl}/alternative/blanxer-nepal`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-  ];
-
-  // Insights pages
+  // insight pages
   const insightPages = [
     "how-to-start-online-business-in-nepal",
-    "register-company-in-nepal-online",
     "pan-vs-vat-for-online-shops-nepal",
     "best-payment-gateways-nepal",
     "seo-guide-for-nepali-businesses",
@@ -167,6 +161,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
+  }));
+
+  // User Stories
+  const userStoryPages = [
+    "brainstorm-education-consultancy",
+    "xinfin-consultants",
+    "bato-ma-tours",
+  ].map(slug => ({
+    url: `${baseUrl}/user-stories/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
 
 
@@ -190,7 +196,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...useCasePages,
     ...comparePages,
     ...alternativePages,
-    ...dedicatedAlternativePages,
     ...insightPages,
     ...templateCategories,
     ...industryRootPages,
@@ -198,5 +203,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...integrationPages,
     ...switchPages,
     ...glossaryPages,
+    ...userStoryPages,
   ];
 }

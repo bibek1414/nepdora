@@ -26,7 +26,7 @@ export const metadata = buildMarketingMetadata({
     "AI Website Builder in Nepal | Create Websites in Minutes Without Coding | Nepdora",
   description:
     "Create a professional website instantly using AI. Nepdora's AI website builder lets you generate, customize, and launch responsive websites in minutes—no coding required.",
-  path: "/ai-website-builder-in-nepdora",
+  path: "/ai-website-builder",
   keywords: [
     "AI website builder Nepal",
     "build website with AI",
@@ -70,23 +70,20 @@ export default function AiBuilderPage() {
         <div className="container mx-auto max-w-6xl px-6">
           <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-24">
             <div className="max-w-2xl">
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-500/10 bg-blue-500/5 px-4 py-2 text-xs font-medium text-blue-600">
-                AI-Powered Platform
-              </div>
-              <h1 className="mb-8 text-5xl leading-[0.95] font-bold tracking-tighter text-slate-900 md:text-7xl">
-                Build websites <br />
-                with <span className="text-blue-500">AI.</span>{" "}
-                <span className="text-slate-400">Instantly.</span>
+              <h1 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-black sm:text-4xl md:text-6xl">
+                Build websites with AI. Instantly
               </h1>
-              <p className="mb-10 max-w-lg text-lg leading-relaxed font-medium text-slate-500 md:text-xl">
+
+              <p className="mb-7 text-base leading-relaxed text-black sm:text-lg">
                 Nepdora's AI Website Builder turns your ideas into stunning,
                 high-performance websites in minutes. No coding, no stress, just
                 pure creativity.
               </p>
+
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/admin/signup"
-                  className="inline-flex items-center justify-center gap-3 rounded-full bg-blue-500 px-10 py-5 text-base font-semibold text-white shadow-2xl shadow-blue-500/20 transition-all hover:scale-105 hover:shadow-blue-500/40 active:scale-95"
+                  className="-2xl -blue-500/20 hover:-blue-500/40 inline-flex items-center justify-center gap-3 rounded-full bg-blue-500 px-10 py-5 text-base font-semibold text-white transition-all hover:scale-105 active:scale-95"
                 >
                   Generate My AI Website
                   <ChevronRight className="h-5 w-5" />
@@ -152,12 +149,12 @@ export default function AiBuilderPage() {
                     AI Prompt Example
                   </div>
                 </div>
-                <div className="rounded-2xl bg-white p-6 text-lg font-medium text-slate-600 italic shadow-sm">
+                <div className="-sm rounded-2xl bg-white p-6 text-lg font-medium text-slate-600 italic">
                   "Add a pricing section with three tiers and a FAQ section
                   below it."
                 </div>
                 <div className="mt-4 flex justify-end">
-                  <div className="rounded-2xl bg-blue-500 px-6 py-3 text-sm font-medium text-white shadow-lg">
+                  <div className="-lg rounded-2xl bg-blue-500 px-6 py-3 text-sm font-medium text-white">
                     Generating sections...
                   </div>
                 </div>
@@ -173,7 +170,7 @@ export default function AiBuilderPage() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:shadow-md"
+                  className="hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all"
                 >
                   <h4 className="mb-1 text-lg font-semibold text-slate-900">
                     {item.title}
@@ -225,7 +222,7 @@ export default function AiBuilderPage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="group rounded-[40px] border border-slate-200 bg-white p-10 shadow-sm transition-all hover:shadow-xl"
+                className="group -sm hover:-xl rounded-[40px] border border-slate-200 bg-white p-10 transition-all"
               >
                 <div
                   className={`h-16 w-16 rounded-2xl ${item.color} mb-8 flex items-center justify-center transition-transform group-hover:rotate-6`}
@@ -295,7 +292,7 @@ export default function AiBuilderPage() {
               </div>
             </div>
 
-            <div className="relative rounded-[48px] border border-slate-200 bg-white p-8 shadow-2xl">
+            <div className="-2xl relative rounded-[48px] border border-slate-200 bg-white p-8">
               <div className="mb-6 flex items-center justify-between">
                 <div className="text-sm font-medium text-slate-400">
                   Performance Audit
@@ -353,10 +350,7 @@ export default function AiBuilderPage() {
           <div className="grid items-center gap-20 lg:grid-cols-2">
             <div className="order-2 lg:order-1">
               <div className="space-y-6">
-                <div className="group relative overflow-hidden rounded-[32px] border border-slate-200 bg-white p-8 shadow-2xl">
-                  <div className="absolute top-0 right-0 p-4 opacity-5 transition-opacity group-hover:opacity-10">
-                    <Rocket className="h-24 w-24" />
-                  </div>
+                <div className="group -2xl relative overflow-hidden rounded-[32px] border border-slate-200 bg-white p-8">
                   <div className="mb-6 flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 font-bold text-white">
                       01
@@ -386,7 +380,7 @@ export default function AiBuilderPage() {
                   </ul>
                 </div>
 
-                <div className="group relative overflow-hidden rounded-[32px] bg-blue-500 p-8 text-white shadow-2xl shadow-blue-500/30">
+                <div className="group -2xl -blue-500/30 relative overflow-hidden rounded-[32px] bg-blue-500 p-8 text-white">
                   <div className="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">
                     <Zap className="h-24 w-24 fill-white" />
                   </div>
@@ -533,7 +527,7 @@ export default function AiBuilderPage() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-500/30 hover:shadow-lg"
+                className="group hover:-lg rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-500/30"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 text-slate-400 transition-colors group-hover:bg-blue-500/10 group-hover:text-blue-500">
                   <item.icon className="h-6 w-6" />

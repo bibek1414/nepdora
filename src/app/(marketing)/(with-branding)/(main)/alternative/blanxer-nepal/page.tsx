@@ -273,7 +273,7 @@ export default function BlanxerAlternativePage() {
     { label: "Khalti Integration", href: "/integrations/khalti-payment" },
     { label: "Logistics (Pathao Parcel)", href: "/integrations/pathao-parcel" },
     { label: "POS System", href: "/integrations/pos-system" },
-    { label: "AI Website Builder", href: "/ai-website-builder-in-nepdora" },
+    { label: "AI Website Builder", href: "/ai-website-builder" },
     { label: "SMS Notifications", href: "/integrations/sms-notifications" },
   ];
 
