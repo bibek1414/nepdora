@@ -39,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/website-developer-nepal", priority: 0.9 },
     { path: "/tools/free-website-analyzer", priority: 0.8 },
     { path: "/free-website-builder", priority: 0.9 },
-    { path: "/tools/invoice-maker", priority: 0.8 },
+    { path: "/invoice-builder", priority: 0.8 },
     { path: "/tools/business-name-generator-nepal", priority: 0.8 },
     { path: "/tools/domain-name-checker-nepal", priority: 0.8 },
     { path: "/tools/qr-code-generator", priority: 0.8 },
@@ -58,12 +58,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/glossary", priority: 0.8 },
     { path: "/switch", priority: 0.8 },
     { path: "/website-builder-nepal", priority: 0.9 },
-    { path: "/ai-website-builder", priority: 0.9 },
-    { path: "/how-to-register-business-nepal", priority: 0.8 },
-    { path: "/payment-gateways-nepal", priority: 0.8 },
     { path: "/insights", priority: 0.8 },
     { path: "/experts", priority: 0.8 },
-    { path: "/user-stories", priority: 0.8 },
   ];
 
   const basePages = baseRoutes.map(route => ({
@@ -121,7 +117,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-
   // Compare pages (Direct Comparisons & Pricing)
   const comparePages = ALL_COMPETITORS.map(
     ({ slug }) => `${slug}-and-nepdora`
@@ -142,9 +137,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // insight pages
+  const dedicatedAlternativePages = [
+    {
+      url: `${baseUrl}/alternative/blanxer-nepal`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+  ];
+
+  // Insights pages
   const insightPages = [
     "how-to-start-online-business-in-nepal",
+    "register-company-in-nepal-online",
     "pan-vs-vat-for-online-shops-nepal",
     "best-payment-gateways-nepal",
     "seo-guide-for-nepali-businesses",
@@ -162,19 +167,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
-
-  // User Stories
-  const userStoryPages = [
-    "brainstorm-education-consultancy",
-    "xinfin-consultants",
-    "bato-ma-tours",
-  ].map(slug => ({
-    url: `${baseUrl}/user-stories/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
-
 
   // Programmatic Industry & City pages
   const dynamicIndustryCities: MetadataRoute.Sitemap = [];
@@ -196,6 +188,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...useCasePages,
     ...comparePages,
     ...alternativePages,
+    ...dedicatedAlternativePages,
     ...insightPages,
     ...templateCategories,
     ...industryRootPages,
@@ -203,6 +196,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...integrationPages,
     ...switchPages,
     ...glossaryPages,
-    ...userStoryPages,
   ];
 }
