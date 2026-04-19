@@ -118,8 +118,7 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
             ) : null}
 
             <p className="max-w-sm text-sm leading-relaxed opacity-80 sm:text-base">
-              {data.description ||
-                "We're committed to delivering exceptional care with compassion, trust, and integrity. From your first visit to long-term support, your health and comfort are always our priority."}
+              {data.description || ""}
             </p>
 
             <hr

@@ -41,9 +41,12 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
 
   const { data, handleTextUpdate } = useBuilderLogic(experienceData, onUpdate);
 
-  const { data: collectionResponse,
+  const {
+    data: collectionResponse,
     isLoading,
-    error, refetch } = useCollectionData(experienceData.collectionSlug || "experience");
+    error,
+    refetch,
+  } = useCollectionData(experienceData.collectionSlug || "experience");
 
   const experiences = collectionResponse?.results || [];
 
@@ -70,7 +73,10 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
             {isLoading && (
               <>
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="space-y-4 border-b pb-12 last:border-0">
+                  <div
+                    key={i}
+                    className="space-y-4 border-b pb-12 last:border-0"
+                  >
                     <div className="flex items-center gap-4">
                       <Skeleton className="h-4 w-24" />
                       <div className="h-px w-8 bg-gray-300" />
@@ -87,19 +93,10 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
                 Failed to load experience data.
               </div>
             )}
-            {!isLoading && !error && (
-              <BuilderEmptyState
-                icon={Briefcase}
-                title="No Experience Items"
-                description="List your professional history or major milestones. Add items from the admin dashboard."
-                actionLabel="Add New Experience"
-                actionLink="/admin/collections"
-                isEditable={isEditable}
-                isEmpty={experiences.length === 0}
-              onRefresh={refetch}
-          />
-            )}
-            {!isLoading && !error && experiences.map((exp: any, index: number) => (
+
+            {!isLoading &&
+              !error &&
+              experiences.map((exp: any, index: number) => (
                 <div
                   key={exp.id || index}
                   className="space-y-6 border-b border-gray-100 pb-12 last:border-0"
@@ -128,6 +125,18 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
           </div>
         </div>
       </div>
+      {!isLoading && !error && (
+        <BuilderEmptyState
+          icon={Briefcase}
+          title="No Experience Items"
+          description="List your professional history or major milestones. Add items from the admin dashboard."
+          actionLabel="Add New Experience"
+          actionLink="/admin/collections/experience"
+          isEditable={isEditable}
+          isEmpty={experiences.length === 0}
+          onRefresh={refetch}
+        />
+      )}
     </section>
   );
 };

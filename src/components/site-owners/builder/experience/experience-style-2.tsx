@@ -40,9 +40,12 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
 
   const { data, handleTextUpdate } = useBuilderLogic(experienceData, onUpdate);
 
-  const { data: collectionResponse,
+  const {
+    data: collectionResponse,
     isLoading,
-    error, refetch } = useCollectionData(experienceData.collectionSlug || "experience");
+    error,
+    refetch,
+  } = useCollectionData(experienceData.collectionSlug || "experience");
 
   const experiences = collectionResponse?.results || [];
 
@@ -97,22 +100,13 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
             )}
             {error && (
               <div className="text-center text-red-500">
-            Failed to load experience data.
-          </div>
-        )}
-        {!isLoading && !error && (
-          <BuilderEmptyState
-            icon={Briefcase}
-            title="No Experience Items"
-            description="List your professional history or major milestones. Add items from the admin dashboard."
-            actionLabel="Add New Experience"
-            actionLink="/admin/collections"
-            isEditable={isEditable}
-            isEmpty={experiences.length === 0}
-          onRefresh={refetch}
-          />
-        )}
-        {!isLoading && !error && experiences.map((exp: any, i: number) => (
+                Failed to load experience data.
+              </div>
+            )}
+
+            {!isLoading &&
+              !error &&
+              experiences.map((exp: any, i: number) => (
                 <div
                   key={exp.id || i}
                   className={`relative flex flex-col gap-6 md:flex-row ${i % 2 === 0 ? "md:flex-row-reverse" : ""}`}
@@ -151,6 +145,18 @@ export const ExperienceStyle2: React.FC<ExperienceStyle2Props> = ({
           </div>
         </div>
       </div>
+      {!isLoading && !error && (
+        <BuilderEmptyState
+          icon={Briefcase}
+          title="No Experience Items"
+          description="List your professional history or major milestones. Add items from the admin dashboard."
+          actionLabel="Add New Experience"
+          actionLink="/admin/collections/experience"
+          isEditable={isEditable}
+          isEmpty={experiences.length === 0}
+          onRefresh={refetch}
+        />
+      )}
     </section>
   );
 };

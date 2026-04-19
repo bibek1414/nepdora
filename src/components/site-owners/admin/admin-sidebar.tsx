@@ -143,9 +143,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       ],
       hideForService: true,
     },
-    {
-      items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
-    },
+    // {
+    //   items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
+    // },
 
     {
       items: [

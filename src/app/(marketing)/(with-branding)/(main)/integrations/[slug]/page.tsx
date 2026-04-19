@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Rocket,
   Globe,
+  ThumbsUp,
 } from "lucide-react";
 import { INTEGRATIONS } from "@/constants/integrations";
 import { buildMarketingMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
@@ -114,8 +115,39 @@ export default async function IntegrationDetailsPage({ params }: Props) {
         />
       ))}
 
+      {/* Stats Section */}
+      {integration.stats && integration.stats.length > 0 && (
+        <section className="border-y border-slate-100 bg-slate-50 py-16">
+          <div className="container mx-auto max-w-6xl px-6">
+            <div
+              className={`grid grid-cols-2 gap-6 md:grid-cols-${Math.min(
+                integration.stats.length,
+                4
+              )}`}
+            >
+              {integration.stats.map((stat, idx) => (
+                <div
+                  key={idx}
+                  className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-5 text-center transition-all"
+                >
+                  <div
+                    className="mb-1 text-2xl font-bold"
+                    style={{ color: integration.color }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div className="text-xs font-medium text-slate-500">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Comparison Section */}
-      <section className="border-y border-slate-100 bg-slate-50 py-24">
+      <section className="border-b border-slate-100 bg-white py-24">
         <div className="container mx-auto max-w-6xl px-6">
           <div className="mx-auto mb-16 max-w-3xl text-center">
             <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
@@ -252,6 +284,38 @@ export default async function IntegrationDetailsPage({ params }: Props) {
         </div>
       </section>
 
+      {/* Testimonial Section */}
+      {integration.testimonial && (
+        <section className="border-b border-slate-100 bg-white py-16">
+          <div className="container mx-auto max-w-4xl px-6">
+            <div className="-sm rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center md:p-12">
+              <div className="mb-6 flex justify-center">
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-full"
+                  style={{
+                    backgroundColor: `${integration.color}15`,
+                    color: integration.color,
+                  }}
+                >
+                  <ThumbsUp className="h-6 w-6" />
+                </div>
+              </div>
+              <p className="mb-8 text-xl leading-relaxed font-medium text-slate-700 italic md:text-2xl">
+                "{integration.testimonial.quote}"
+              </p>
+              <div>
+                <p className="font-bold text-slate-900">
+                  {integration.testimonial.author}
+                </p>
+                <p className="text-sm font-medium text-slate-500">
+                  {integration.testimonial.business}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Benefits & Resources */}
       <section className="py-24">
         <div className="container mx-auto max-w-6xl px-6">
@@ -340,6 +404,37 @@ export default async function IntegrationDetailsPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      {integration.faqs && integration.faqs.length > 0 && (
+        <section className="border-y border-slate-100 bg-slate-50 py-24">
+          <div className="container mx-auto max-w-4xl px-6">
+            <div className="mx-auto mb-16 text-center">
+              <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Frequently Asked{" "}
+                <span style={{ color: integration.color }}>Questions</span>
+              </h2>
+              <p className="text-lg font-medium text-slate-500">
+                Everything you need to know about {integration.name} on Nepdora.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {integration.faqs.map((faq, idx) => (
+                <div
+                  key={idx}
+                  className="-sm hover:-md rounded-2xl border border-slate-200 bg-white p-6 transition-all"
+                >
+                  <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
+                  <p className="text-sm leading-relaxed font-medium text-slate-500">
+                    {faq.a}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
