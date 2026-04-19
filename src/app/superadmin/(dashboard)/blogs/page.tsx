@@ -2,14 +2,10 @@ import BlogsManagement from "@/components/super-admin/blogs/blog-management";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return generateAdminPageMetadata({
-    pageName: "Blog Management",
-    pageDescription:
-      "Manage Nepdora blog posts. Create, edit, organize, and publish blogs directly from the superadmin dashboard.",
-    pageRoute: "/superadmin/blogs",
-  });
-}
+export const metadata: Metadata = {
+  title: "Blog Management | Nepdora Superadmin",
+  description: "Create, edit, and publish platform-wide blog posts.",
+};
 
 export default function BlogsManagementPage() {
   return <BlogsManagement />;

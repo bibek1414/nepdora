@@ -1,14 +1,11 @@
-"use client";
+import TemplateCategoriesClient from "./template-categories-client";
+import type { Metadata } from "next";
 
-import React from "react";
-import TemplateCategoryManagement from "@/components/super-admin/builder/template/template-category-management";
+export const metadata: Metadata = {
+  title: "Template Categories | Nepdora Superadmin",
+  description: "Manage industry-specific template categories.",
+};
 
 export default function TemplateCategoriesPage() {
-  return (
-    <div className="bg-white">
-      <div className="mx-auto mt-12 mb-40 max-w-7xl px-6 md:px-8">
-        <TemplateCategoryManagement initialTab="categories" />
-      </div>
-    </div>
-  );
+  return <TemplateCategoriesClient />;
 }

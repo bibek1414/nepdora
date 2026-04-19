@@ -3,13 +3,10 @@ import NewsletterManagement from "@/components/super-admin/newsletter/newsletter
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return generateAdminPageMetadata({
-    pageName: "Newsletter Management",
-    pageDescription: "Manage Nepdora newsletter subscriptions.",
-    pageRoute: "/superadmin/newsletter",
-  });
-}
+export const metadata: Metadata = {
+  title: "Newsletter Management | Nepdora Superadmin",
+  description: "Manage and send newsletters to your platform subscribers.",
+};
 
 export default function NewsletterManagementPage() {
   return (

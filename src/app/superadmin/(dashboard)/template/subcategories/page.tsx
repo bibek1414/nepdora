@@ -1,14 +1,11 @@
-"use client";
+import TemplateSubcategoriesClient from "./template-subcategories-client";
+import type { Metadata } from "next";
 
-import React from "react";
-import TemplateCategoryManagement from "@/components/super-admin/builder/template/template-category-management";
+export const metadata: Metadata = {
+  title: "Template Subcategories | Nepdora Superadmin",
+  description: "Organize templates into subcategories for better navigation.",
+};
 
 export default function TemplateSubcategoriesPage() {
-  return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto mt-12 mb-40 max-w-7xl px-6 md:px-8">
-        <TemplateCategoryManagement initialTab="subcategories" />
-      </div>
-    </div>
-  );
+  return <TemplateSubcategoriesClient />;
 }

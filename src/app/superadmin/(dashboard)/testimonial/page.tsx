@@ -2,14 +2,10 @@ import TestimonialList from "@/components/super-admin/testimonials/testimonial-l
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return generateAdminPageMetadata({
-    pageName: "Testimonials Management",
-    pageDescription:
-      "Manage customer testimonials for {storeName}. Add, edit, and organize testimonials to build trust and showcase positive feedback on your site.",
-    pageRoute: "/admin/testimonials",
-  });
-}
+export const metadata: Metadata = {
+  title: "Testimonials Management | Nepdora Superadmin",
+  description: "Manage customer testimonials for the platform.",
+};
 
 export default function TestimonialsManagementPage() {
   return <TestimonialList />;
