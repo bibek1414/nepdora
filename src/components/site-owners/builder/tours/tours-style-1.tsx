@@ -140,19 +140,6 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
             <div className="flex h-full w-full items-center justify-center text-red-500">
               Failed to load tours data.
             </div>
-          ) : tours.length === 0 ? (
-            <div className="relative z-10 flex h-full w-full items-center justify-center p-12">
-              <BuilderEmptyState
-                icon={Compass}
-                title="No Tours Found"
-                description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
-                actionLabel="Add New Tours"
-                actionLink="/admin/collections"
-                isEditable={isEditable}
-            isEmpty={tours.length === 0}
-              onRefresh={refetch}
-          />
-            </div>
           ) : currentTour ? (
             <AnimatePresence
               initial={false}
@@ -301,6 +288,19 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
             </AnimatePresence>
           ) : null}
         </div>
+
+        {!isLoading && !error && (
+          <BuilderEmptyState
+            icon={Compass}
+            title="No Tours Found"
+            description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
+            actionLabel={tours.length > 0 ? "Manage Tours" : "Add New Tours"}
+            actionLink="/admin/collections/tours"
+            isEditable={isEditable}
+            isEmpty={tours.length === 0}
+            onRefresh={refetch}
+          />
+        )}
       </div>
     </section>
   );

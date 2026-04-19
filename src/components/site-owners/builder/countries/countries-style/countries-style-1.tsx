@@ -119,22 +119,21 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                 </Link>
               );
             })
-          ) : (!isLoading && countries.length === 0) && (
-            <div className="col-span-full">
-              <BuilderEmptyState
-                icon={Globe}
-                title="No Countries Found"
-                description="Showcase study destinations to your students. Add countries to your collection in the admin dashboard."
-                actionLabel="Add New Country"
-                actionLink="/admin/collections"
-                isEditable={isEditable}
-                isEmpty={countries.length === 0}
-              onRefresh={refetch}
-          />
-            </div>
-          )}
-
+          ) : null}
         </div>
+
+        {!isLoading && (
+          <BuilderEmptyState
+            icon={Globe}
+            title="No Countries Found"
+            description="Showcase study destinations to your students. Add countries to your collection in the admin dashboard."
+            actionLabel={countries.length > 0 ? "Manage Countries" : "Add New Country"}
+            actionLink="/admin/collections/countries"
+            isEditable={isEditable}
+            isEmpty={countries.length === 0}
+            onRefresh={refetch}
+          />
+        )}
       </div>
     </section>
   );

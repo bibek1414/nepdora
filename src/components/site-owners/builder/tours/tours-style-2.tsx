@@ -240,10 +240,11 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
             icon={Compass}
             title="No Tours Found"
             description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
-            actionLabel="Add New Tours"
-            actionLink="/admin/collections"
+            actionLabel={tours.length > 0 ? "Manage Tours" : "Add New Tours"}
+            actionLink="/admin/collections/tours"
             isEditable={isEditable}
-           isEmpty={tours.length === 0} onRefresh={refetch}
+            isEmpty={tours.length === 0}
+            onRefresh={refetch}
           />
         )}
         {!isLoading && !error && tours.length > 0 && (

@@ -96,12 +96,12 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
           icon={Globe}
           title="Select a Country"
           description="This page will display details for the selected study destination. Add some countries to your collection to see them here."
-          actionLabel="Add New Country"
-          actionLink="/admin/collections"
+          actionLabel={country ? "Manage Countries" : "Add New Country"}
+          actionLink="/admin/collections/countries"
           isEditable={isEditable}
-        isEmpty={true}
-        onRefresh={refetch}
-          />
+          isEmpty={!country}
+          onRefresh={refetch}
+        />
       </div>
     );
   }
@@ -359,10 +359,16 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
                 </div>
               ))
             ) : (
-              <div className="col-span-full py-12 text-center">
-                <p className="text-muted-foreground italic">
-                  Experience the best of {country.name} education.
-                </p>
+              <div className="col-span-full">
+                <BuilderEmptyState
+                  icon={BookOpen}
+                  title="No Universities Found"
+                  description="We are currently expanding our partner university list for this country."
+                  actionLabel={universities.length > 0 ? "Manage Universities" : "Add New University"}
+                  actionLink="/admin/collections/universities"
+                  isEditable={isEditable}
+                  isEmpty={universities.length === 0}
+                />
               </div>
             )}
           </div>

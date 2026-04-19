@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { CountriesData } from "@/types/owner-site/components/countries";
 import {
   useDeleteComponentMutation,
@@ -15,7 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Trash2, RefreshCw } from "lucide-react";
+import { Trash2, RefreshCw, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CountriesStyle1 } from "./countries-style/countries-style-1";
 import { ComponentResponse } from "@/types/owner-site/components/components";
@@ -99,6 +100,17 @@ export const CountriesComponent: React.FC<CountriesComponentProps> = ({
     <div className="group relative">
       {isEditable && (
         <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Link href="/admin/collections/countries" target="_blank" rel="noopener">
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 w-fit justify-start bg-white px-3"
+            >
+              <Settings className="mr-1 h-4 w-4" />
+              Manage Data
+            </Button>
+          </Link>
+
           <Button
             size="sm"
             variant="outline"
