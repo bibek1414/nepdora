@@ -34,7 +34,9 @@ export const IndustryTemplates: React.FC<IndustryTemplatesProps> = ({
       <div className="mx-auto max-w-6xl px-6 md:px-0">
         <div className="mb-14">
           <h2 className="mb-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Templates for {INDUSTRY_LABELS[category] || category.replace(/-/g, " ")} businesses
+            Templates for{" "}
+            {INDUSTRY_LABELS[category] || category.replace(/-/g, " ")}{" "}
+            businesses
           </h2>
           <p className="text-base leading-relaxed text-slate-500">
             Professional, ready-to-use designs. Go live in minutes.

@@ -50,7 +50,8 @@ export default function PaymentsClient({
   initialView = "nepdora",
   hideTabs = false,
 }: PaymentsClientProps) {
-  const [selectedView, setSelectedView] = useState<PaymentViewType>(initialView);
+  const [selectedView, setSelectedView] =
+    useState<PaymentViewType>(initialView);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -262,14 +263,18 @@ export default function PaymentsClient({
 
   return (
     <div className={cn("bg-white", showTitle && "min-h-screen")}>
-      <div className={cn(
-        "mx-auto mb-40",
-        showTitle ? "mt-12 max-w-6xl px-6 md:px-8" : "mt-0 w-full"
-      )}>
+      <div
+        className={cn(
+          "mx-auto mb-40",
+          showTitle ? "mt-12 max-w-6xl px-6 md:px-8" : "mt-0 w-full"
+        )}
+      >
         {/* Page Title */}
         {showTitle && (
           <div className="mb-5">
-            <h1 className="text-xl font-bold text-[#003d79]">Payment History</h1>
+            <h1 className="text-xl font-bold text-[#003d79]">
+              Payment History
+            </h1>
             <p className="text-xs text-black/50">
               View and track all your transactions.
             </p>

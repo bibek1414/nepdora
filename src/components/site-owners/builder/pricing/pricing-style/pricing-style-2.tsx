@@ -30,7 +30,7 @@ export const PricingStyle2: React.FC<PricingStyle2Props> = ({
     italicWord = "Pricing",
   } = data || {};
 
-  const { data: pricingsData, isLoading, error , refetch } = usePricings();
+  const { data: pricingsData, isLoading, error, refetch } = usePricings();
   const { data: themeResponse } = useThemeQuery();
 
   const theme =
@@ -100,9 +100,7 @@ export const PricingStyle2: React.FC<PricingStyle2Props> = ({
           </div>
         </motion.div>
 
-        {isLoading && (
-          <div className="py-20 text-center">Loading plans...</div>
-        )}
+        {isLoading && <div className="py-20 text-center">Loading plans...</div>}
         {!isLoading && pricings.length > 0 && (
           <div className="mx-auto max-w-7xl">
             <motion.div
@@ -226,7 +224,8 @@ export const PricingStyle2: React.FC<PricingStyle2Props> = ({
             actionLabel="Add New Pricing"
             actionLink="/admin/pricing"
             isEditable={isEditable}
-           isEmpty={pricings.length === 0} onRefresh={refetch}
+            isEmpty={pricings.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

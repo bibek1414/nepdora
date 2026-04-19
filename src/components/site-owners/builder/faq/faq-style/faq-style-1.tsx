@@ -21,7 +21,7 @@ export const FAQStyle1: React.FC<FAQStyleProps> = ({
   onUpdate,
 }) => {
   const { title = "Frequently Asked Questions", subtitle } = data || {};
-  const { data: faqs = [], isLoading, error , refetch } = useFAQs();
+  const { data: faqs = [], isLoading, error, refetch } = useFAQs();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -86,10 +86,9 @@ export const FAQStyle1: React.FC<FAQStyleProps> = ({
               actionLink="/admin/faqs"
               isEditable={isEditable}
               isEmpty={faqs.length === 0}
-            onRefresh={refetch}
-          />
+              onRefresh={refetch}
+            />
           )}
-
         </div>
       </div>
     </section>

@@ -22,7 +22,7 @@ export const OurClientsStyle6: React.FC<OurClientsStyleProps> = ({
   onUpdate,
 }) => {
   const { title = "Some of the brands we work with", subtitle } = data || {};
-  const { data: clientsData, isLoading , refetch } = useGetOurClients({});
+  const { data: clientsData, isLoading, refetch } = useGetOurClients({});
   const { data: themeResponse } = useThemeQuery();
 
   // Get theme colors with fallback to defaults
@@ -106,10 +106,9 @@ export const OurClientsStyle6: React.FC<OurClientsStyleProps> = ({
             actionLink="/admin/our-clients"
             isEditable={isEditable}
             isEmpty={!clientsData || clientsData.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

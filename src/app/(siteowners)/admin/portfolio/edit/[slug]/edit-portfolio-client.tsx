@@ -67,9 +67,9 @@ export default function EditPortfolioClient() {
     ) {
       portfolioData.thumbnail_image = null;
     }
-    
+
     if (data.images) {
-      // Comparison of images is a bit more complex. 
+      // Comparison of images is a bit more complex.
       // For now, if images are present in form data, we'll send the whole array.
       // This matches the pattern in other components like product-form.
       portfolioData.images = data.images;

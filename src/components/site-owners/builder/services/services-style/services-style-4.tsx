@@ -29,7 +29,11 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
     tag = "[What We Offer]",
     italicWord = "Business",
   } = data || {};
-  const { data: servicesData, isLoading , refetch } = useServices({
+  const {
+    data: servicesData,
+    isLoading,
+    refetch,
+  } = useServices({
     page: 1,
     page_size: 6,
   });
@@ -118,7 +122,8 @@ export const ServicesStyle4: React.FC<ServicesStyle4Props> = ({
             actionLabel="Add New Services"
             actionLink="/admin/services"
             isEditable={isEditable}
-           isEmpty={services.length === 0} onRefresh={refetch}
+            isEmpty={services.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

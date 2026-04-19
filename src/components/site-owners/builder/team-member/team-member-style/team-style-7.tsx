@@ -29,7 +29,7 @@ export const TeamStyle7: React.FC<TeamStyleProps> = ({
     title = "Dedicated volunteers driving our mission for change",
     subtitle = "Our Team",
   } = data || {};
-  const { data: members = [], isLoading, error , refetch } = useTeamMembers();
+  const { data: members = [], isLoading, error, refetch } = useTeamMembers();
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -108,8 +108,8 @@ export const TeamStyle7: React.FC<TeamStyleProps> = ({
             actionLabel="Add New Team"
             actionLink="/admin/team-member"
             isEditable={isEditable}
-          isEmpty={displayMembers.length === 0}
-          onRefresh={refetch}
+            isEmpty={displayMembers.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

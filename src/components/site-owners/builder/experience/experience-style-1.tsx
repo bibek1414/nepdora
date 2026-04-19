@@ -130,7 +130,9 @@ export const ExperienceStyle1: React.FC<ExperienceStyle1Props> = ({
           icon={Briefcase}
           title="No Experience Items"
           description="List your professional history or major milestones. Add items from the admin dashboard."
-          actionLabel={experiences.length > 0 ? "Manage Experience" : "Add New Experience"}
+          actionLabel={
+            experiences.length > 0 ? "Manage Experience" : "Add New Experience"
+          }
           actionLink="/admin/collections/experience"
           isEditable={isEditable}
           isEmpty={experiences.length === 0}

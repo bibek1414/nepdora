@@ -25,7 +25,7 @@ export const FAQStyle3: React.FC<FAQStyleProps> = ({
     contactDescription,
     buttonText,
   } = data || {};
-  const { data: faqs = [], isLoading, error , refetch } = useFAQs();
+  const { data: faqs = [], isLoading, error, refetch } = useFAQs();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -86,10 +86,9 @@ export const FAQStyle3: React.FC<FAQStyleProps> = ({
             actionLink="/admin/faqs"
             isEditable={isEditable}
             isEmpty={faqs.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

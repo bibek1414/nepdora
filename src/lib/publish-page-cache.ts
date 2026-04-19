@@ -277,59 +277,67 @@ export const getPublishedPagePayload = cache(
     currentPageSlug: string,
     contentSlug?: string
   ): Promise<PublishPagePayload> => {
-  const pages = await getPublishedPages(siteUser);
-  const targetSlug = resolveTargetSlug(pages, currentPageSlug);
-  const currentPage =
-    pages.find(page => page.slug === targetSlug) ??
-    pages.find(page => page.slug === currentPageSlug);
-  const pageComponents = await getPublishedPageComponents(siteUser, targetSlug);
+    const pages = await getPublishedPages(siteUser);
+    const targetSlug = resolveTargetSlug(pages, currentPageSlug);
+    const currentPage =
+      pages.find(page => page.slug === targetSlug) ??
+      pages.find(page => page.slug === currentPageSlug);
+    const pageComponents = await getPublishedPageComponents(
+      siteUser,
+      targetSlug
+    );
 
-  let entityMetadata: EntityMetadata | undefined;
+    let entityMetadata: EntityMetadata | undefined;
 
-  if (contentSlug) {
-    if (currentPageSlug === "product-details") {
-      entityMetadata =
-        (await getPublishedProduct(siteUser, contentSlug)) || undefined;
-    } else if (currentPageSlug === "blog-details") {
-      entityMetadata =
-        (await getPublishedBlog(siteUser, contentSlug)) || undefined;
-    } else if (currentPageSlug === "service-details") {
-      entityMetadata =
-        (await getPublishedService(siteUser, contentSlug)) || undefined;
-    } else if (currentPageSlug === "portfolio-details") {
-      entityMetadata =
-        (await getPublishedPortfolio(siteUser, contentSlug)) || undefined;
+    if (contentSlug) {
+      if (currentPageSlug === "product-details") {
+        entityMetadata =
+          (await getPublishedProduct(siteUser, contentSlug)) || undefined;
+      } else if (currentPageSlug === "blog-details") {
+        entityMetadata =
+          (await getPublishedBlog(siteUser, contentSlug)) || undefined;
+      } else if (currentPageSlug === "service-details") {
+        entityMetadata =
+          (await getPublishedService(siteUser, contentSlug)) || undefined;
+      } else if (currentPageSlug === "portfolio-details") {
+        entityMetadata =
+          (await getPublishedPortfolio(siteUser, contentSlug)) || undefined;
+      }
     }
-  }
 
-  return {
-    currentPageSlug,
-    targetSlug,
-    pageTitle: currentPage?.title || currentPageSlug,
-    contentSlug,
-    pageComponents,
-    entityMetadata,
-    metaTitle: currentPage?.meta_title,
-    metaDescription: currentPage?.meta_description,
-  };
-});
+    return {
+      currentPageSlug,
+      targetSlug,
+      pageTitle: currentPage?.title || currentPageSlug,
+      contentSlug,
+      pageComponents,
+      entityMetadata,
+      metaTitle: currentPage?.meta_title,
+      metaDescription: currentPage?.meta_description,
+    };
+  }
+);
 
 export const getPublishedHomePagePayload = cache(
   async (siteUser: string): Promise<PublishPagePayload> => {
-  const pages = await getPublishedPages(siteUser);
-  const targetSlug = resolveHomePageSlug(pages);
-  const homePage = pages.find(page => page.slug === targetSlug);
-  const pageComponents = await getPublishedPageComponents(siteUser, targetSlug);
+    const pages = await getPublishedPages(siteUser);
+    const targetSlug = resolveHomePageSlug(pages);
+    const homePage = pages.find(page => page.slug === targetSlug);
+    const pageComponents = await getPublishedPageComponents(
+      siteUser,
+      targetSlug
+    );
 
-  return {
-    currentPageSlug: targetSlug,
-    targetSlug,
-    pageTitle: homePage?.title || "Home",
-    pageComponents,
-    metaTitle: homePage?.meta_title,
-    metaDescription: homePage?.meta_description,
-  };
-});
+    return {
+      currentPageSlug: targetSlug,
+      targetSlug,
+      pageTitle: homePage?.title || "Home",
+      pageComponents,
+      metaTitle: homePage?.meta_title,
+      metaDescription: homePage?.meta_description,
+    };
+  }
+);
 
 export async function getPublishedLayoutPayload(
   siteUser: string

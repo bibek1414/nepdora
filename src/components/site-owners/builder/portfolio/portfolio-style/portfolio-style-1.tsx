@@ -34,9 +34,12 @@ export const PortfolioStyle1: React.FC<PortfolioStyleProps> = ({
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const { data: portfoliosData,
+  const {
+    data: portfoliosData,
     isLoading,
-    error, refetch } = usePortfolios({
+    error,
+    refetch,
+  } = usePortfolios({
     page: 1,
     page_size: 6,
   });
@@ -172,7 +175,7 @@ export const PortfolioStyle1: React.FC<PortfolioStyleProps> = ({
             actionLink="/admin/portfolio"
             isEditable={isEditable}
             isEmpty={portfolios.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
       </div>

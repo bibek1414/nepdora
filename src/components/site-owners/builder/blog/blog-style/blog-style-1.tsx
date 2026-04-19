@@ -26,9 +26,12 @@ export const BlogStyle1: React.FC<BlogStyleProps> = ({
 }) => {
   const { title = "Latest Blog Posts", subtitle } = data || {};
   const pageSize = 6;
-  const { data: blogsData,
+  const {
+    data: blogsData,
     isLoading,
-    error, refetch } = useBlogs({
+    error,
+    refetch,
+  } = useBlogs({
     page: 1,
     page_size: pageSize,
   });
@@ -116,7 +119,7 @@ export const BlogStyle1: React.FC<BlogStyleProps> = ({
             actionLink="/admin/blogs"
             isEditable={isEditable}
             isEmpty={blogs.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
       </div>

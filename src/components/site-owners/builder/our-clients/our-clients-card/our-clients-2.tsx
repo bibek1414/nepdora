@@ -15,7 +15,7 @@ export const OurClients2: React.FC<OurClients2Props> = ({
   data,
   isEditable = false,
 }) => {
-  const { data: clientsData, isLoading , refetch } = useGetOurClients({});
+  const { data: clientsData, isLoading, refetch } = useGetOurClients({});
 
   if (isLoading) {
     return (
@@ -72,9 +72,8 @@ export const OurClients2: React.FC<OurClients2Props> = ({
         actionLink="/admin/our-clients"
         isEditable={isEditable}
         isEmpty={clients.length === 0}
-      onRefresh={refetch}
-          />
+        onRefresh={refetch}
+      />
     </>
   );
-
 };

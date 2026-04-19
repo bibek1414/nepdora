@@ -33,9 +33,12 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
 
   const { title = "", trustBadge = "Trust", trustText = "" } = data || {};
 
-  const { data: servicesData,
+  const {
+    data: servicesData,
     isLoading,
-    error, refetch } = useServices({
+    error,
+    refetch,
+  } = useServices({
     page: 1,
     page_size: 4,
   });
@@ -97,7 +100,8 @@ export const ServicesStyle5: React.FC<ServicesStyleProps> = ({
             actionLabel="Add New Services"
             actionLink="/admin/services"
             isEditable={isEditable}
-           isEmpty={services.length === 0} onRefresh={refetch}
+            isEmpty={services.length === 0}
+            onRefresh={refetch}
           />
         )}
         {!isLoading && !error && services.length > 0 && (

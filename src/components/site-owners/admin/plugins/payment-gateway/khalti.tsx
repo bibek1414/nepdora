@@ -156,7 +156,7 @@ function KhaltiPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <Card className="border-none p-0 -none">
+      <Card className="-none border-none p-0">
         <CardContent className="p-0">
           <div className="grid min-h-[400px] max-w-2xl grid-cols-1 px-2 lg:grid-cols-2">
             <div className="mt-5 space-y-6">

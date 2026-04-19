@@ -40,7 +40,7 @@ export function TeamStyle8({
 
   const { data, handleTextUpdate } = useBuilderLogic(teamData, onUpdate);
 
-  const { data: members = [], isLoading, error , refetch } = useTeamMembers();
+  const { data: members = [], isLoading, error, refetch } = useTeamMembers();
   const [selectedMember, setSelectedMember] = useState<TEAM | null>(null);
 
   return (
@@ -112,8 +112,8 @@ export function TeamStyle8({
             actionLabel="Add New Team"
             actionLink="/admin/team-member"
             isEditable={isEditable}
-          isEmpty={members.length === 0}
-          onRefresh={refetch}
+            isEmpty={members.length === 0}
+            onRefresh={refetch}
           />
         )}
 

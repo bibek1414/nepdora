@@ -15,7 +15,7 @@ export default function AboutStory() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid items-center gap-16 lg:grid-cols-2">
           {/* visual */}
-          <div className="order-2 lg:order-1 pb-16">
+          <div className="order-2 pb-16 lg:order-1">
             <StoryVisual />
           </div>
 

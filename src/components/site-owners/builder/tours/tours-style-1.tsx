@@ -65,9 +65,12 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
     onUpdate
   );
 
-  const { data: collectionResponse,
+  const {
+    data: collectionResponse,
     isLoading,
-    error, refetch } = useCollectionData(toursData.collectionSlug || "tours");
+    error,
+    refetch,
+  } = useCollectionData(toursData.collectionSlug || "tours");
 
   const tours = collectionResponse?.results || [];
 

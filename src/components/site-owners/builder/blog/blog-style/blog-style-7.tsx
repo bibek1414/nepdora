@@ -46,9 +46,12 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
     subtitle = "Stay updated with our newest articles and insights from our team of experts.",
   } = data || {};
 
-  const { data: blogsData,
+  const {
+    data: blogsData,
     isLoading,
-    error, refetch } = useBlogs({
+    error,
+    refetch,
+  } = useBlogs({
     page,
     page_size: pageSize,
   });
@@ -161,10 +164,9 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
             actionLink="/admin/blogs"
             isEditable={isEditable}
             isEmpty={blogs.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

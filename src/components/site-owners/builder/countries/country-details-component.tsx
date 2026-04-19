@@ -104,7 +104,9 @@ export const CountryDetailsComponent: React.FC<
           <Button
             size="sm"
             variant="outline"
-            onClick={() => onReplace?.(component.component_id, "country-details-sections")}
+            onClick={() =>
+              onReplace?.(component.component_id, "country-details-sections")
+            }
             className="h-8 w-fit justify-start bg-white px-3"
           >
             <RefreshCw className="mr-1 h-4 w-4" />

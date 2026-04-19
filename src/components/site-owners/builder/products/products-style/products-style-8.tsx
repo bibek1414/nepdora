@@ -38,9 +38,12 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
       body: "Inter",
     },
   };
-  const { data: productsData,
+  const {
+    data: productsData,
     isLoading,
-    error, refetch } = useProducts({
+    error,
+    refetch,
+  } = useProducts({
     category_id: categoryId,
     sub_category_id: subCategoryId,
     page_size: 6,
@@ -136,8 +139,8 @@ export const ProductsStyle8: React.FC<ProductsStyleProps> = ({
             actionLabel="Add New Products"
             actionLink="/admin/product"
             isEditable={isEditable}
-          isEmpty={products.length === 0}
-          onRefresh={refetch}
+            isEmpty={products.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

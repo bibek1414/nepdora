@@ -7,7 +7,7 @@ import { getServerApiBaseUrl } from "@/config/server-site";
 // import { getDynamicOgUrl } from "@/lib/seo";
 import type { ComponentResponse } from "@/types/owner-site/components/components";
 import { EntityMetadata } from "./publish-page-cache";
-import {DEFAULT_OG_IMAGE} from "@/lib/seo"
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 interface AdminPageMetadataOptions {
   pageName: string;
   pageDescription: string;
@@ -397,15 +397,13 @@ export async function generatePublishPageMetadata({
   const description =
     metaDescription || pageDescription.replace(/\{storeName\}/g, storeName);
 
-  const finalImage =
-    pageImage ||
-    DEFAULT_OG_IMAGE 
-    // ||
-    // getDynamicOgUrl({
-    //   title: title,
-    //   subtitle: description,
-    //   label: "User Published Site",
-    // });
+  const finalImage = pageImage || DEFAULT_OG_IMAGE;
+  // ||
+  // getDynamicOgUrl({
+  //   title: title,
+  //   subtitle: description,
+  //   label: "User Published Site",
+  // });
 
   return {
     title,

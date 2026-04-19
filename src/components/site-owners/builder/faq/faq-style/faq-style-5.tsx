@@ -28,7 +28,7 @@ export const FAQStyle5: React.FC<FAQStyle5Props> = ({
     },
   };
 
-  const { data: faqsResponse, isLoading , refetch } = useFAQs();
+  const { data: faqsResponse, isLoading, refetch } = useFAQs();
 
   const faqs =
     (Array.isArray(faqsResponse)
@@ -83,10 +83,9 @@ export const FAQStyle5: React.FC<FAQStyle5Props> = ({
             actionLink="/admin/faqs"
             isEditable={isEditable}
             isEmpty={faqs.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

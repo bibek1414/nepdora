@@ -64,7 +64,11 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
   };
 
   // Fetch country data. If no slug (e.g. in builder), fetch all and take the first one AS A SAMPLE.
-  const { data: countriesResponse, isLoading: isCountryLoading , refetch } = useCollectionData("countries", slug ? { slug } : { page_size: "1" });
+  const {
+    data: countriesResponse,
+    isLoading: isCountryLoading,
+    refetch,
+  } = useCollectionData("countries", slug ? { slug } : { page_size: "1" });
 
   const country = countriesResponse?.results?.[0]?.data;
 
@@ -364,7 +368,11 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
                   icon={BookOpen}
                   title="No Universities Found"
                   description="We are currently expanding our partner university list for this country."
-                  actionLabel={universities.length > 0 ? "Manage Universities" : "Add New University"}
+                  actionLabel={
+                    universities.length > 0
+                      ? "Manage Universities"
+                      : "Add New University"
+                  }
                   actionLink="/admin/collections/universities"
                   isEditable={isEditable}
                   isEmpty={universities.length === 0}

@@ -63,7 +63,8 @@ export default function ShowcasePage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Nepdora Customer Showcase",
-    description: "Discover real success stories from businesses across Nepal built with Nepdora.",
+    description:
+      "Discover real success stories from businesses across Nepal built with Nepdora.",
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
@@ -89,7 +90,8 @@ export default function ShowcasePage() {
             </h1>
             <p className="mx-auto max-w-2xl text-base leading-relaxed font-medium text-slate-500 sm:text-lg">
               Discover success stories from Kathmandu to Pokhara. See how local
-              brands are transforming their digital presence and reaching more customers.
+              brands are transforming their digital presence and reaching more
+              customers.
             </p>
           </div>
         </div>
@@ -106,11 +108,22 @@ export default function ShowcasePage() {
             </div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {videoTestimonials.map(v => (
-                <div key={v.id} className="group overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-slate-200/50">
+                <div
+                  key={v.id}
+                  className="group overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-slate-200/50"
+                >
                   <div className="relative aspect-video overflow-hidden bg-slate-100">
-                    <img src={v.image || "/images/placeholder.jpg"} alt={v.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                    <img
+                      src={v.image || "/images/placeholder.jpg"}
+                      alt={v.name}
+                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                      <Link href={v.video_url || "#"} target="_blank" className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-primary shadow-2xl transition-transform hover:scale-110">
+                      <Link
+                        href={v.video_url || "#"}
+                        target="_blank"
+                        className="text-primary flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-2xl transition-transform hover:scale-110"
+                      >
                         <Play className="h-6 w-6 fill-current" />
                       </Link>
                     </div>
@@ -134,7 +147,8 @@ export default function ShowcasePage() {
               Success <span className="text-primary">Stories.</span>
             </h2>
             <p className="text-lg font-medium text-slate-500">
-              In-depth looks at how we've helped businesses across various industries.
+              In-depth looks at how we've helped businesses across various
+              industries.
             </p>
           </div>
 
@@ -190,7 +204,7 @@ export default function ShowcasePage() {
                     <Link
                       href={study.link}
                       target="_blank"
-                      className="text-slate-400 hover:text-primary flex items-center gap-1 text-sm font-semibold transition-colors"
+                      className="hover:text-primary flex items-center gap-1 text-sm font-semibold text-slate-400 transition-colors"
                     >
                       Visit Site <ExternalLink className="h-3 w-3" />
                     </Link>

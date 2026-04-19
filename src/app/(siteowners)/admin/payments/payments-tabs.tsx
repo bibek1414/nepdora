@@ -65,7 +65,14 @@ export default function PaymentsTabs() {
               )}
               aria-current={isActive ? "page" : undefined}
             >
-              <item.icon className={cn("h-4 w-4", isActive ? "text-[#003d79]" : "text-black/40 group-hover:text-black/60")} />
+              <item.icon
+                className={cn(
+                  "h-4 w-4",
+                  isActive
+                    ? "text-[#003d79]"
+                    : "text-black/40 group-hover:text-black/60"
+                )}
+              />
               {item.title}
             </button>
           );

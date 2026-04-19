@@ -174,7 +174,7 @@ export default async function UserStoryPage({ params }: Props) {
               ))}
             </div>
 
-            <div className="mt-20 rounded-3xl bg-white p-8 text-center text-slate-900 border">
+            <div className="mt-20 rounded-3xl border bg-white p-8 text-center text-slate-900">
               <h3 className="mb-4 text-xl font-bold">
                 Experience {story.company} live
               </h3>
@@ -184,7 +184,7 @@ export default async function UserStoryPage({ params }: Props) {
               <Link
                 href={story.website}
                 target="_blank"
-                className="bg-primary text-white inline-flex items-center gap-2 rounded-full px-8 py-3 font-bold transition-transform hover:scale-105"
+                className="bg-primary inline-flex items-center gap-2 rounded-full px-8 py-3 font-bold text-white transition-transform hover:scale-105"
               >
                 Visit Website <ExternalLink className="h-4 w-4" />
               </Link>

@@ -38,7 +38,12 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
     buttonLink = defaults.buttonLink || "",
   } = data || {};
 
-  const { data: testimonials = [], isLoading, error , refetch } = useTestimonials();
+  const {
+    data: testimonials = [],
+    isLoading,
+    error,
+    refetch,
+  } = useTestimonials();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme || {
     colors: {
@@ -117,9 +122,9 @@ export const TestimonialStyle8: React.FC<TestimonialStyleProps> = ({
           actionLabel="Add New Testimonials"
           actionLink="/admin/testimonials"
           isEditable={isEditable}
-            isEmpty={true}
-        onRefresh={refetch}
-          />
+          isEmpty={true}
+          onRefresh={refetch}
+        />
       </section>
     );
   }

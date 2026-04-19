@@ -47,9 +47,12 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
     subtitle = "Explore our premium range of professional services tailored to your needs.",
   } = data || {};
 
-  const { data: servicesData,
+  const {
+    data: servicesData,
     isLoading,
-    error, refetch } = useServices({
+    error,
+    refetch,
+  } = useServices({
     page,
     page_size: pageSize,
   });
@@ -160,8 +163,8 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
             actionLabel="Add New Services"
             actionLink="/admin/services"
             isEditable={isEditable}
-          isEmpty={services.length === 0}
-          onRefresh={refetch}
+            isEmpty={services.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

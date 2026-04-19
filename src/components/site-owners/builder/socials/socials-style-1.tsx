@@ -22,7 +22,7 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
   onUpdate,
   siteUser,
 }) => {
-  const { data: siteConfig , refetch } = useSiteConfig();
+  const { data: siteConfig, refetch } = useSiteConfig();
 
   const socials = [
     { platform: "facebook", href: siteConfig?.facebook_url, label: "Facebook" },
@@ -116,7 +116,7 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
             actionLink="/admin/settings/site-config"
             isEditable={isEditable}
             isEmpty={socials.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         ) : (
           <div className="flex flex-wrap items-center justify-center gap-4 lg:gap-6">

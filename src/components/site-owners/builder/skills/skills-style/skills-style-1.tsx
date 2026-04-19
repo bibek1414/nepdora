@@ -19,7 +19,7 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
   onUpdate,
   isEditable = true,
 }) => {
-  const { data: skills = [], isLoading , refetch } = useSkills();
+  const { data: skills = [], isLoading, refetch } = useSkills();
 
   return (
     <section className="bg-white px-6 py-20 md:px-8">
@@ -80,9 +80,9 @@ const SkillsStyle1: React.FC<SkillsStyle1Props> = ({
                   actionLabel="Add New Skills"
                   actionLink="/admin/portfolio/skills"
                   isEditable={isEditable}
-            isEmpty={skills.length === 0}
-                onRefresh={refetch}
-          />
+                  isEmpty={skills.length === 0}
+                  onRefresh={refetch}
+                />
               </div>
             )}
           </div>

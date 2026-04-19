@@ -14,7 +14,7 @@ export const OurClients4: React.FC<OurClients4Props> = ({
   data,
   isEditable = false,
 }) => {
-  const { data: clientsData, isLoading , refetch } = useGetOurClients({});
+  const { data: clientsData, isLoading, refetch } = useGetOurClients({});
 
   if (isLoading) {
     return (
@@ -63,7 +63,11 @@ export const OurClients4: React.FC<OurClients4Props> = ({
           </div>
         </div>
       )}
-      <div className={clients.length === 0 ? "w-full border-y border-gray-100 py-8" : ""}>
+      <div
+        className={
+          clients.length === 0 ? "w-full border-y border-gray-100 py-8" : ""
+        }
+      >
         <BuilderEmptyState
           icon={Handshake}
           title="No Clients Added"
@@ -72,10 +76,9 @@ export const OurClients4: React.FC<OurClients4Props> = ({
           actionLink="/admin/our-clients"
           isEditable={isEditable}
           isEmpty={clients.length === 0}
-        onRefresh={refetch}
-          />
+          onRefresh={refetch}
+        />
       </div>
     </>
   );
-
 };

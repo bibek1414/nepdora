@@ -6,7 +6,13 @@ export interface IntegrationStep {
 export interface Integration {
   slug: string;
   name: string;
-  category: "Payment" | "Logistics" | "Marketing" | "Communication" | "Social" | "Operations";
+  category:
+    | "Payment"
+    | "Logistics"
+    | "Marketing"
+    | "Communication"
+    | "Social"
+    | "Operations";
   description: string;
   longDescription: string;
   heroTitle?: string;

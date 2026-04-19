@@ -77,15 +77,13 @@ export function buildMarketingMetadata({
       ? finalDescription.slice(0, 117) + "..."
       : finalDescription);
 
-  const finalImage =
-    image ||
-    DEFAULT_OG_IMAGE 
-    // ||
-    // getDynamicOgUrl({
-    //   title: displayTitle,
-    //   subtitle: displaySubtitle,
-    //   label: ogLabel,
-    // });
+  const finalImage = image || DEFAULT_OG_IMAGE;
+  // ||
+  // getDynamicOgUrl({
+  //   title: displayTitle,
+  //   subtitle: displaySubtitle,
+  //   label: ogLabel,
+  // });
 
   return {
     title,

@@ -111,7 +111,8 @@ export const useDeleteTemplateSubcategory = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (slug: string) => useTemplateCategoryApi.deleteSubcategory(slug),
+    mutationFn: (slug: string) =>
+      useTemplateCategoryApi.deleteSubcategory(slug),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["template-subcategories"] });
     },

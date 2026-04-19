@@ -100,7 +100,11 @@ export const CountriesComponent: React.FC<CountriesComponentProps> = ({
     <div className="group relative">
       {isEditable && (
         <div className="absolute -right-5 z-30 flex translate-x-full flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-          <Link href="/admin/collections/countries" target="_blank" rel="noopener">
+          <Link
+            href="/admin/collections/countries"
+            target="_blank"
+            rel="noopener"
+          >
             <Button
               size="sm"
               variant="outline"
@@ -114,7 +118,9 @@ export const CountriesComponent: React.FC<CountriesComponentProps> = ({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => onReplace?.(component.component_id, "countries-sections")}
+            onClick={() =>
+              onReplace?.(component.component_id, "countries-sections")
+            }
             className="h-8 w-fit justify-start bg-white px-3"
           >
             <RefreshCw className="mr-1 h-4 w-4" />

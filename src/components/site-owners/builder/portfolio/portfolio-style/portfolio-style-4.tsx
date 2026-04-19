@@ -49,9 +49,12 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
 
   const [activeProjectId, setActiveProjectId] = useState<number | null>(null);
 
-  const { data: portfoliosData,
+  const {
+    data: portfoliosData,
     isLoading,
-    error, refetch } = usePortfolios({
+    error,
+    refetch,
+  } = usePortfolios({
     page: 1,
     page_size: 4,
   });
@@ -280,7 +283,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
             actionLink="/admin/portfolio"
             isEditable={isEditable}
             isEmpty={portfolios.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
       </div>

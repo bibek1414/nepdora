@@ -67,7 +67,9 @@ export const BuilderEmptyState: React.FC<BuilderEmptyStateProps> = ({
                 disabled={isRefreshing}
                 title="Refresh Data"
               >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+                <RefreshCw
+                  className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+                />
               </Button>
             )}
           </div>
@@ -79,25 +81,27 @@ export const BuilderEmptyState: React.FC<BuilderEmptyStateProps> = ({
   if (isEditable && actionLabel && actionLink) {
     return (
       <div className="mt-8 flex justify-center">
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Button asChild variant="default" className="gap-2">
-              <Link href={actionLink} target="_blank" rel="noopener noreferrer">
-                <Plus className="h-4 w-4" />
-                {actionLabel}
-              </Link>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Button asChild variant="default" className="gap-2">
+            <Link href={actionLink} target="_blank" rel="noopener noreferrer">
+              <Plus className="h-4 w-4" />
+              {actionLabel}
+            </Link>
+          </Button>
+          {onRefresh && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              title="Refresh Data"
+            >
+              <RefreshCw
+                className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+              />
             </Button>
-            {onRefresh && (
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                title="Refresh Data"
-              >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
-              </Button>
-            )}
-          </div>
+          )}
+        </div>
       </div>
     );
   }

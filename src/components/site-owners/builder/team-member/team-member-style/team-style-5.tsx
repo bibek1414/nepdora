@@ -25,7 +25,7 @@ export const TeamStyle5: React.FC<TeamStyleProps> = ({
   onMemberClick,
 }) => {
   const { title = "Meet Our Team", subtitle } = data || {};
-  const { data: members = [], isLoading, error , refetch } = useTeamMembers();
+  const { data: members = [], isLoading, error, refetch } = useTeamMembers();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -109,8 +109,8 @@ export const TeamStyle5: React.FC<TeamStyleProps> = ({
             actionLabel="Add New Team"
             actionLink="/admin/team-member"
             isEditable={isEditable}
-          isEmpty={members.length === 0}
-          onRefresh={refetch}
+            isEmpty={members.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

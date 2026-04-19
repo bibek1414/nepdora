@@ -26,7 +26,7 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
   onCategoryClick,
 }) => {
   const { title = "Browse Categories" } = data || {};
-  const { data: categoriesData, isLoading , refetch } = useCategories();
+  const { data: categoriesData, isLoading, refetch } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
 
   const { data: themeResponse } = useThemeQuery();
@@ -101,11 +101,10 @@ export const CategoryStyle7: React.FC<CategoryStyleProps> = ({
             actionLink="/admin/categories"
             isEditable={isEditable}
             isEmpty={!categories || categories.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
       </div>
     </section>
   );
-
 };

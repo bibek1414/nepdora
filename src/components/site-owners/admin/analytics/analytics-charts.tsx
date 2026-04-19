@@ -40,7 +40,7 @@ export default function AnalyticsCharts({
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       {/* Sales Trend - full-width left column */}
-      <div className="overflow-hidden rounded-xl border border-black/7 bg-white -[0_1px_3px_rgba(0,0,0,0.04)] lg:col-span-2">
+      <div className="-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden rounded-xl border border-black/7 bg-white lg:col-span-2">
         <div className="flex items-center justify-between border-b border-black/6 px-6 py-4">
           <div>
             <p className="text-[15px] font-semibold text-gray-900">
@@ -74,7 +74,7 @@ export default function AnalyticsCharts({
       {/* Right column: Channel + Status */}
       <div className="flex flex-col gap-6">
         {/* Channel Distribution */}
-        <div className="rounded-xl border border-black/7 bg-white p-5 -[0_1px_3px_rgba(0,0,0,0.04)]">
+        <div className="-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl border border-black/7 bg-white p-5">
           <p className="mb-4 text-[15px] font-semibold text-gray-900">
             Order Channels
           </p>
@@ -120,7 +120,7 @@ export default function AnalyticsCharts({
         </div>
 
         {/* Order Status Distribution */}
-        <div className="rounded-xl border border-black/7 bg-white p-5 -[0_1px_3px_rgba(0,0,0,0.04)]">
+        <div className="-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl border border-black/7 bg-white p-5">
           <p className="mb-4 text-[15px] font-semibold text-gray-900">
             Order Status
           </p>
@@ -163,7 +163,7 @@ export default function AnalyticsCharts({
 
         {/* Top Cities */}
         {data?.top_cities && data.top_cities.length > 0 && (
-          <div className="rounded-xl border border-black/7 bg-white p-5 -[0_1px_3px_rgba(0,0,0,0.04)]">
+          <div className="-[0_1px_3px_rgba(0,0,0,0.04)] rounded-xl border border-black/7 bg-white p-5">
             <p className="mb-4 text-[15px] font-semibold text-gray-900">
               Top Cities
             </p>

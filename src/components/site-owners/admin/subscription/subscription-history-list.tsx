@@ -10,7 +10,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export function SubscriptionHistoryList({ showTitle = true }: { showTitle?: boolean }) {
+export function SubscriptionHistoryList({
+  showTitle = true,
+}: {
+  showTitle?: boolean;
+}) {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useUserSubscriptions(page);
 
@@ -43,10 +47,12 @@ export function SubscriptionHistoryList({ showTitle = true }: { showTitle?: bool
 
   return (
     <div className="bg-white">
-      <div className={cn(
-        "mx-auto mb-40",
-        showTitle ? "mt-12 max-w-7xl px-6 md:px-8" : "mt-0 w-full"
-      )}>
+      <div
+        className={cn(
+          "mx-auto mb-40",
+          showTitle ? "mt-12 max-w-7xl px-6 md:px-8" : "mt-0 w-full"
+        )}
+      >
         {/* Header */}
         {showTitle && (
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">

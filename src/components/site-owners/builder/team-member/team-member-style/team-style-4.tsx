@@ -123,7 +123,7 @@ export const TeamStyle4: React.FC<TeamStyleProps> = ({
             actionLabel="Add New Team"
             actionLink="/admin/team-member"
             isEditable={isEditable}
-          isEmpty={members.length === 0}
+            isEmpty={members.length === 0}
           />
         )}
       </div>

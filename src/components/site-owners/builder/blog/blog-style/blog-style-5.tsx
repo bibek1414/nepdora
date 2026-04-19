@@ -41,9 +41,12 @@ export const BlogStyle5: React.FC<BlogStyle5Props> = ({
   } = data || {};
 
   const pageSize = 4;
-  const { data: blogsData,
+  const {
+    data: blogsData,
     isLoading,
-    error, refetch } = useBlogs({
+    error,
+    refetch,
+  } = useBlogs({
     page: 1,
     page_size: pageSize,
   });
@@ -148,10 +151,9 @@ export const BlogStyle5: React.FC<BlogStyle5Props> = ({
             actionLink="/admin/blogs"
             isEditable={isEditable}
             isEmpty={blogs.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

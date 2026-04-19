@@ -77,7 +77,7 @@ export default async function TemplateCategoryPage({ params }: Props) {
   }
 
   const displayName = getCategoryDisplayName(category);
-  const categorySlug=TEMPLATE_CATEGORY_DATA[category].slug;
+  const categorySlug = TEMPLATE_CATEGORY_DATA[category].slug;
   const description = getCategoryDescription(category);
 
   const schema = {

@@ -29,7 +29,12 @@ export const SubCategoryStyle3: React.FC<SubCategoryStyleProps> = ({
   onSubCategoryClick,
 }) => {
   const { title = "CubeX Collection", subtitle } = data || {};
-  const { data: subcategoriesData, isLoading, error , refetch } = useSubCategories();
+  const {
+    data: subcategoriesData,
+    isLoading,
+    error,
+    refetch,
+  } = useSubCategories();
   const subcategories = (subcategoriesData?.results || []) as SubCategory[];
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -265,8 +270,8 @@ export const SubCategoryStyle3: React.FC<SubCategoryStyleProps> = ({
             actionLabel="Add New SubCategories"
             actionLink="/admin/sub-category"
             isEditable={isEditable}
-          isEmpty={subcategories.length === 0}
-          onRefresh={refetch}
+            isEmpty={subcategories.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

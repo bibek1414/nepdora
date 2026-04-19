@@ -25,9 +25,12 @@ export const ServicesStyle3: React.FC<ServicesStyleProps> = ({
   onServiceClick,
 }) => {
   const pageSize = 6;
-  const { data: servicesData,
+  const {
+    data: servicesData,
     isLoading,
-    error, refetch } = useServices({
+    error,
+    refetch,
+  } = useServices({
     page: 1,
     page_size: pageSize,
   });
@@ -72,17 +75,17 @@ export const ServicesStyle3: React.FC<ServicesStyleProps> = ({
       )}
 
       {!isLoading && !error && (
-          <BuilderEmptyState
+        <BuilderEmptyState
           icon={Briefcase}
           title="No Services Available"
           description="List your services to attract clients. Add services from the admin dashboard."
           actionLabel="Add New Services"
           actionLink="/admin/services"
           isEditable={isEditable}
-        isEmpty={services.length === 0}
+          isEmpty={services.length === 0}
           onRefresh={refetch}
-          />
-        )}
+        />
+      )}
     </div>
   );
 };

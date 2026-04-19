@@ -39,9 +39,12 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
   const primaryColor = theme?.colors?.primary || "#4f46e5";
 
   const pageSize = 4;
-  const { data: blogsData,
+  const {
+    data: blogsData,
     isLoading,
-    error, refetch } = useBlogs({
+    error,
+    refetch,
+  } = useBlogs({
     page: 1,
     page_size: pageSize,
   });
@@ -160,11 +163,10 @@ export const BlogStyle4: React.FC<BlogStyleProps> = ({
               actionLink="/admin/blogs"
               isEditable={isEditable}
               isEmpty={featuredBlogs.length === 0}
-            onRefresh={refetch}
-          />
+              onRefresh={refetch}
+            />
           </>
         )}
-
       </div>
     </section>
   );

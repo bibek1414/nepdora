@@ -45,9 +45,12 @@ export const BlogStyle6: React.FC<BlogStyle6Props> = ({
   } = data || {};
 
   const pageSize = 4;
-  const { data: blogsData,
+  const {
+    data: blogsData,
     isLoading,
-    error, refetch } = useBlogs({
+    error,
+    refetch,
+  } = useBlogs({
     page: 1,
     page_size: pageSize,
   });
@@ -166,10 +169,9 @@ export const BlogStyle6: React.FC<BlogStyle6Props> = ({
             actionLink="/admin/blogs"
             isEditable={isEditable}
             isEmpty={blogs.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

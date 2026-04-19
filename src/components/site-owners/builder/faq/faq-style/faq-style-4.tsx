@@ -15,7 +15,7 @@ interface FAQStyleProps {
 }
 
 export const FAQStyle4: React.FC<FAQStyleProps> = ({ isEditable = false }) => {
-  const { data: faqs = [], isLoading, error , refetch } = useFAQs();
+  const { data: faqs = [], isLoading, error, refetch } = useFAQs();
 
   return (
     <section className="bg-background py-16 md:py-24">
@@ -52,10 +52,9 @@ export const FAQStyle4: React.FC<FAQStyleProps> = ({ isEditable = false }) => {
               actionLink="/admin/faqs"
               isEditable={isEditable}
               isEmpty={faqs.length === 0}
-            onRefresh={refetch}
-          />
+              onRefresh={refetch}
+            />
           )}
-
         </div>
       </div>
     </section>

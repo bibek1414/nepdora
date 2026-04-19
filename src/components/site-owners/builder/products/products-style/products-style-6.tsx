@@ -41,9 +41,12 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
     buttonLink = "/products",
   } = editableData || {};
 
-  const { data: productsData,
+  const {
+    data: productsData,
     isLoading,
-    error, refetch } = useProducts({
+    error,
+    refetch,
+  } = useProducts({
     category_id: categoryId,
     page_size: 4,
     is_popular: true,
@@ -133,7 +136,8 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
             actionLabel="Add New Products"
             actionLink="/admin/product"
             isEditable={isEditable}
-           isEmpty={products.length === 0} onRefresh={refetch}
+            isEmpty={products.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

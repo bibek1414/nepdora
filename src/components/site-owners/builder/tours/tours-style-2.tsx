@@ -197,9 +197,12 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
 
   const { data, handleTextUpdate } = useBuilderLogic(toursData, onUpdate);
 
-  const { data: collectionResponse,
+  const {
+    data: collectionResponse,
     isLoading,
-    error, refetch } = useCollectionData(toursData.collectionSlug || "tours");
+    error,
+    refetch,
+  } = useCollectionData(toursData.collectionSlug || "tours");
 
   const tours = collectionResponse?.results || [];
 

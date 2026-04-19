@@ -38,9 +38,12 @@ export const ProductsStyle2: React.FC<ProductsStyleProps> = ({
       body: "Inter",
     },
   };
-  const { data: productsData,
+  const {
+    data: productsData,
     isLoading,
-    error, refetch } = useProducts({
+    error,
+    refetch,
+  } = useProducts({
     category_id: categoryId,
     sub_category_id: subCategoryId,
   });
@@ -118,17 +121,17 @@ export const ProductsStyle2: React.FC<ProductsStyleProps> = ({
       )}
 
       {!isLoading && !error && (
-          <BuilderEmptyState
+        <BuilderEmptyState
           icon={ShoppingBag}
           title="No Products Found"
           description="Showcase your products to your customers. Add products from the admin dashboard."
           actionLabel="Add New Products"
           actionLink="/admin/product"
           isEditable={isEditable}
-        isEmpty={products.length === 0}
+          isEmpty={products.length === 0}
           onRefresh={refetch}
-          />
-        )}
+        />
+      )}
     </div>
   );
 };

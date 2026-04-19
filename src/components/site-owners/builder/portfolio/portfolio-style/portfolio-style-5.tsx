@@ -46,9 +46,12 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
     subtitle = "A curated selection of our most impactful professional work and achievements.",
   } = data || {};
 
-  const { data: portfoliosData,
+  const {
+    data: portfoliosData,
     isLoading,
-    error, refetch } = usePortfolios({
+    error,
+    refetch,
+  } = usePortfolios({
     page,
     page_size: pageSize,
   });
@@ -159,7 +162,7 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
             actionLink="/admin/portfolio"
             isEditable={isEditable}
             isEmpty={portfolios.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
       </div>

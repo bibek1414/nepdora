@@ -29,7 +29,7 @@ export const CategoryStyle5: React.FC<CategoryStyleProps> = ({
   onCategoryClick,
 }) => {
   const { title = "CubeX Collection", subtitle } = data || {};
-  const { data: categoriesData, isLoading, error , refetch } = useCategories();
+  const { data: categoriesData, isLoading, error, refetch } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -260,10 +260,9 @@ export const CategoryStyle5: React.FC<CategoryStyleProps> = ({
             actionLink="/admin/categories"
             isEditable={isEditable}
             isEmpty={categories.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

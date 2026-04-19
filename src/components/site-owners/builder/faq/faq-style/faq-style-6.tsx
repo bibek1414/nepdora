@@ -28,7 +28,7 @@ export const FAQStyle6: React.FC<FAQStyleProps> = ({
     },
   };
 
-  const { data: faqs = [], isLoading, error , refetch } = useFAQs();
+  const { data: faqs = [], isLoading, error, refetch } = useFAQs();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -95,7 +95,7 @@ export const FAQStyle6: React.FC<FAQStyleProps> = ({
             actionLink="/admin/faqs"
             isEditable={isEditable}
             isEmpty={faqs.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
         {!isLoading && !error && faqs.length > 0 && (

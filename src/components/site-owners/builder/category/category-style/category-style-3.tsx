@@ -25,7 +25,7 @@ export const CategoryStyle3: React.FC<CategoryStyleProps> = ({
   onCategoryClick,
 }) => {
   const { title = "Our Categories", subtitle } = data || {};
-  const { data: categoriesData, isLoading, error , refetch } = useCategories();
+  const { data: categoriesData, isLoading, error, refetch } = useCategories();
   const categories = categoriesData?.results || [];
 
   const handleTitleChange = (newTitle: string) => {
@@ -111,10 +111,9 @@ export const CategoryStyle3: React.FC<CategoryStyleProps> = ({
             actionLink="/admin/categories"
             isEditable={isEditable}
             isEmpty={categories.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

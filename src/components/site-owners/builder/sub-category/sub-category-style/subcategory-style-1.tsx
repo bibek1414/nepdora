@@ -25,7 +25,12 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
   onSubCategoryClick,
 }) => {
   const { title = "Our SubCategories", subtitle } = data || {};
-  const { data: subcategoriesData, isLoading, error , refetch } = useSubCategories();
+  const {
+    data: subcategoriesData,
+    isLoading,
+    error,
+    refetch,
+  } = useSubCategories();
   const subcategories = subcategoriesData?.results || [];
 
   const handleTitleChange = (newTitle: string) => {
@@ -111,8 +116,8 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
             actionLabel="Add New SubCategories"
             actionLink="/admin/sub-category"
             isEditable={isEditable}
-          isEmpty={subcategories.length === 0}
-          onRefresh={refetch}
+            isEmpty={subcategories.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

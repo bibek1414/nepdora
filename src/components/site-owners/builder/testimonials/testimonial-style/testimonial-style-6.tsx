@@ -35,7 +35,12 @@ export const TestimonialStyle6: React.FC<TestimonialStyleProps> = ({
   onTestimonialClick,
 }) => {
   const { title = "Students Who Made It" } = data || {};
-  const { data: testimonials = [], isLoading, error , refetch } = useTestimonials();
+  const {
+    data: testimonials = [],
+    isLoading,
+    error,
+    refetch,
+  } = useTestimonials();
 
   const handleTitleChange = (newTitle: string) => {
     onUpdate?.({ title: newTitle });
@@ -92,9 +97,9 @@ export const TestimonialStyle6: React.FC<TestimonialStyleProps> = ({
           actionLabel="Add New Testimonials"
           actionLink="/admin/testimonials"
           isEditable={isEditable}
-            isEmpty={true}
-        onRefresh={refetch}
-          />
+          isEmpty={true}
+          onRefresh={refetch}
+        />
       </section>
     );
   }

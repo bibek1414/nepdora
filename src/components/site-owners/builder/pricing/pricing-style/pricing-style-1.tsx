@@ -19,7 +19,7 @@ export const PricingStyle1: React.FC<PricingStyleProps> = ({
   isEditable = false,
   onPricingClick,
 }) => {
-  const { data: pricingsData, isLoading, error , refetch } = usePricings();
+  const { data: pricingsData, isLoading, error, refetch } = usePricings();
   const pricings = React.useMemo(() => {
     return [...(pricingsData?.results || [])].sort(
       (a, b) => parseFloat(String(a.price)) - parseFloat(String(b.price))
@@ -75,7 +75,7 @@ export const PricingStyle1: React.FC<PricingStyleProps> = ({
             actionLink="/admin/pricing"
             isEditable={isEditable}
             isEmpty={pricings.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
       </div>

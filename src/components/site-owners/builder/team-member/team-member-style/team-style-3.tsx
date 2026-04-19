@@ -36,7 +36,7 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
   const { title = "Meet Our Team", subtitle = "OUR TEAM" } = data || {};
   const [activeMemberId, setActiveMemberId] = useState<number | null>(null);
 
-  const { data: members = [], isLoading, error , refetch } = useTeamMembers();
+  const { data: members = [], isLoading, error, refetch } = useTeamMembers();
   const activeMember = members.find(m => m.id === activeMemberId) || members[0];
 
   const { data: themeResponse } = useThemeQuery();
@@ -93,7 +93,7 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
             actionLink="/admin/team-member"
             isEditable={isEditable}
             isEmpty={members.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         ) : (
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">

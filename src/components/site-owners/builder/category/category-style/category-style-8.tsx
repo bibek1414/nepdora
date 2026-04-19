@@ -37,7 +37,7 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
       { label: "Satisfaction Rate", value: "96%" },
     ],
   } = data || {};
-  const { data: categoriesData, isLoading , refetch } = useCategories();
+  const { data: categoriesData, isLoading, refetch } = useCategories();
   const { data: themeResponse } = useThemeQuery();
 
   const theme = themeResponse?.data?.[0]?.data?.theme || {
@@ -228,11 +228,10 @@ export const CategoryStyle8: React.FC<CategoryStyleProps> = ({
                   actionLink="/admin/categories"
                   isEditable={isEditable}
                   isEmpty={steps.length === 0}
-                onRefresh={refetch}
-          />
+                  onRefresh={refetch}
+                />
               </>
             )}
-
           </motion.div>
         </div>
       </div>

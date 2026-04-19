@@ -10,6 +10,7 @@ import AboutDifference from "@/components/marketing/about-us/about-difference";
 import AboutPhilosophy from "@/components/marketing/about-us/about-philosophy";
 import AboutTeam from "@/components/marketing/about-us/about-team";
 import CTA from "@/components/marketing/cta-section/cta-section";
+import ContactSection from "@/components/marketing/contact-us/contact-us";
 
 export const metadata: Metadata = buildMarketingMetadata({
   title: "About Nepdora | Website Builder Built for Nepal",
@@ -71,6 +72,7 @@ export default function AboutPage() {
       <AboutLocal />
       <AboutPhilosophy />
       <AboutTeam />
+      <ContactSection />
       <CTA />
     </>
   );

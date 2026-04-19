@@ -26,7 +26,7 @@ export const CategoryStyle6: React.FC<CategoryStyleProps> = ({
   onCategoryClick,
 }) => {
   const { title = "Shop by Category" } = data || {};
-  const { data: categoriesData, isLoading, error , refetch } = useCategories();
+  const { data: categoriesData, isLoading, error, refetch } = useCategories();
   const categories = (categoriesData?.results || []) as Category[];
 
   const { data: themeResponse } = useThemeQuery();
@@ -105,10 +105,9 @@ export const CategoryStyle6: React.FC<CategoryStyleProps> = ({
             actionLink="/admin/categories"
             isEditable={isEditable}
             isEmpty={categories.length === 0}
-          onRefresh={refetch}
+            onRefresh={refetch}
           />
         )}
-
       </div>
     </section>
   );

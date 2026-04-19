@@ -35,7 +35,12 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
 }) => {
   const { title = "What People Are Saying", subtitle = "Testimonials" } =
     data || {};
-  const { data: testimonials = [], isLoading, error , refetch } = useTestimonials();
+  const {
+    data: testimonials = [],
+    isLoading,
+    error,
+    refetch,
+  } = useTestimonials();
 
   const { data: themeResponse } = useThemeQuery();
 
@@ -168,8 +173,8 @@ export const TestimonialStyle5: React.FC<TestimonialStyleProps> = ({
             actionLabel="Add New Testimonials"
             actionLink="/admin/testimonials"
             isEditable={isEditable}
-          isEmpty={testimonials.length === 0}
-          onRefresh={refetch}
+            isEmpty={testimonials.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

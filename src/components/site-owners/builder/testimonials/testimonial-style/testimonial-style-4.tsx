@@ -25,7 +25,12 @@ export const TestimonialStyle4: React.FC<TestimonialStyleProps> = ({
   onTestimonialClick,
 }) => {
   const { title = "What Our Clients Say", subtitle } = data || {};
-  const { data: testimonials = [], isLoading, error , refetch } = useTestimonials();
+  const {
+    data: testimonials = [],
+    isLoading,
+    error,
+    refetch,
+  } = useTestimonials();
   const pageSize = 6;
 
   const handleTitleChange = (newTitle: string) => {
@@ -110,8 +115,8 @@ export const TestimonialStyle4: React.FC<TestimonialStyleProps> = ({
             actionLabel="Add New Testimonials"
             actionLink="/admin/testimonials"
             isEditable={isEditable}
-          isEmpty={testimonials.length === 0}
-          onRefresh={refetch}
+            isEmpty={testimonials.length === 0}
+            onRefresh={refetch}
           />
         )}
       </div>

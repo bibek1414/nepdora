@@ -1,7 +1,6 @@
 import { INDUSTRY_LABELS } from "@/lib/seo-data";
 
 interface Step {
-
   title: string;
   desc: string;
 }
@@ -14,7 +13,8 @@ interface HowItWorksProps {
 export const HowItWorks: React.FC<HowItWorksProps> = ({ steps, category }) => {
   if (!steps || steps.length === 0) return null;
 
-  const industryLabel = INDUSTRY_LABELS[category] || category.replace(/-/g, " ");
+  const industryLabel =
+    INDUSTRY_LABELS[category] || category.replace(/-/g, " ");
 
   return (
     <section className="border-t border-slate-100 bg-white py-20 sm:py-24">

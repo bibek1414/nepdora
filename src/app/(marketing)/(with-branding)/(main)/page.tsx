@@ -149,7 +149,6 @@ export default function Marketing() {
     },
   };
 
-
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -256,7 +255,11 @@ export default function Marketing() {
       <HomeFAQSection />
       <Comparison />
       <div className="mx-auto max-w-6xl py-10 md:py-20">
-        <Suspense fallback={<div className="h-96 w-full animate-pulse rounded-xl bg-slate-50" />}>
+        <Suspense
+          fallback={
+            <div className="h-96 w-full animate-pulse rounded-xl bg-slate-50" />
+          }
+        >
           <BlogSection />
         </Suspense>
       </div>

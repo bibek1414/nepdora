@@ -3,7 +3,6 @@ import { ChevronRight, Check } from "lucide-react";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 import { INDUSTRY_LABELS } from "@/lib/seo-data";
 
-
 interface CityHeroProps {
   cityName: string;
   category: string;
@@ -26,10 +25,10 @@ export const CityHero: React.FC<CityHeroProps> = ({
   ctaText,
   breadcrumbItems,
 }) => {
-  const industryLabel = INDUSTRY_LABELS[category] || category.replace(/-/g, " ");
+  const industryLabel =
+    INDUSTRY_LABELS[category] || category.replace(/-/g, " ");
 
-  const heading =
-    customH1 || `Create your ${industryLabel} in ${cityName}`;
+  const heading = customH1 || `Create your ${industryLabel} in ${cityName}`;
 
   const intro =
     subHeadline ||
