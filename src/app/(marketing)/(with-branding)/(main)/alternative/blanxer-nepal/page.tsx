@@ -269,12 +269,12 @@ export default function BlanxerAlternativePage() {
   ];
 
   const featureLinks = [
-    { label: "eSewa Integration", href: "/features/esewa-integration" },
-    { label: "Khalti Integration", href: "/features/khalti" },
-    { label: "Logistics (Pathao, YDM)", href: "/features/logistics" },
-    { label: "POS System", href: "/features/pos-system" },
-    { label: "AI Website Builder", href: "/ai-website-builder" },
-    { label: "SMS Notifications", href: "/features/sms" },
+    { label: "eSewa Integration", href: "/integrations/esewa-payment" },
+    { label: "Khalti Integration", href: "/integrations/khalti-payment" },
+    { label: "Logistics (Pathao Parcel)", href: "/integrations/pathao-parcel" },
+    { label: "POS System", href: "/integrations/pos-system" },
+    { label: "AI Website Builder", href: "/ai-website-builder-in-nepdora" },
+    { label: "SMS Notifications", href: "/integrations/sms-notifications" },
   ];
 
   const testimonials = [

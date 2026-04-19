@@ -117,20 +117,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  // Feature pages
-  const features = [
-    "esewa-integration",
-    "khalti",
-    "sms",
-    "facebook-pixel",
-    "dash",
-    "pathao-parcel",
-  ].map(slug => ({
-    url: `${baseUrl}/features/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
 
   // Compare pages (Direct Comparisons & Pricing)
   const comparePages = ALL_COMPETITORS.map(
@@ -202,7 +188,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...basePages,
     ...solutionPages,
     ...useCasePages,
-    ...features,
     ...comparePages,
     ...alternativePages,
     ...dedicatedAlternativePages,

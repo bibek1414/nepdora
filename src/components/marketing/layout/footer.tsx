@@ -123,35 +123,32 @@ export const Footer = () => {
             {/* Platform Features */}
             <FooterSection delay={0.1}>
               <h4 className="mb-4 text-lg font-bold text-gray-900">
-                Platform Features
+                Marketplace & Features
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/features/esewa-integration-in-nepdora">
-                  eSewa Integration in Nepdora
-                </FooterLink>
-                <FooterLink href="/features/khalti-integration-in-nepdora">
-                  Khalti Integration in Nepdora
-                </FooterLink>
-                <FooterLink href="/features/sms-notifications-in-nepdora">
-                  SMS Notifications in Nepdora
-                </FooterLink>
                 <FooterLink href="/ai-website-builder-in-nepdora">
-                  AI Website Builder in Nepdora
+                  AI Website Builder
                 </FooterLink>
-                <FooterLink href="/features/facebook-pixel-integration-in-nepdora">
-                  Facebook Pixel in Nepdora
+                <FooterLink href="/integrations/esewa-payment">
+                  eSewa Payment Integration in Nepdora
                 </FooterLink>
-                <FooterLink href="/features/logistics-pathao-dash-in-nepdora">
-                  Logistics (Pathao, YDM & Dash) in Nepdora
+                <FooterLink href="/integrations/khalti-payment">
+                  Khalti Payment Integration in Nepdora
                 </FooterLink>
-                <FooterLink href="/features/pos-system-in-nepdora">
-                  POS System in Nepdora
+                <FooterLink href="/integrations/sms-notifications">
+                  SMS Notifications Integration in Nepdora
                 </FooterLink>
-                <FooterLink href="/esewa-integration-guide-in-nepdora">
-                  eSewa Setup Guide in Nepdora
+                <FooterLink href="/integrations/facebook-pixel">
+                  Facebook Pixel Integration in Nepdora
                 </FooterLink>
-                <FooterLink href="/khalti-payment-gateway-in-nepdora">
-                  Khalti Setup Guide in Nepdora
+                <FooterLink href="/integrations/pathao-parcel">
+                  Pathao Parcel Integration in Nepdora
+                </FooterLink>
+                <FooterLink href="/integrations/pos-system">
+                  POS System Integration in Nepdora
+                </FooterLink>
+                <FooterLink href="/integrations/dash-logistics">
+                  Dash Logistics Integration in Nepdora
                 </FooterLink>
               </div>
             </FooterSection>
