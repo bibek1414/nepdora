@@ -1,4 +1,6 @@
 import { Check } from "lucide-react";
+import { INDUSTRY_LABELS } from "@/lib/seo-data";
+
 
 interface Feature {
   title: string;
@@ -19,7 +21,8 @@ export const IndustryFeaturesGrid: React.FC<IndustryFeaturesGridProps> = ({
 }) => {
   if (!features || features.length === 0) return null;
 
-  const industryLabel = category.replace(/-/g, " ");
+  const industryLabel = INDUSTRY_LABELS[category] || category.replace(/-/g, " ");
+
 
   return (
     <section className="border-t border-slate-100 bg-white py-20 sm:py-24">

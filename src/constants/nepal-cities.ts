@@ -358,18 +358,21 @@ export const NEPAL_CITIES = [
 
 export const SERVICE_CATEGORIES = [
   { slug: "restaurant-website", name: "Create Restaurant Website" },
-  { slug: "ecommerce-store", name: "Create Ecommerce Store" },
-  { slug: "clothing-brand", name: "Create Clothing Brand" },
-  { slug: "school-college", name: "Create School & College Website" },
-  { slug: "medical-clinic", name: "Create Medical Clinic Website" },
-  { slug: "travel-agency", name: "Create Travel Agency Website" },
-  { slug: "gym-fitness", name: "Create Gym & Fitness Website" },
-  { slug: "real-estate", name: "Create Real Estate Website" },
-  { slug: "beauty-salon", name: "Create Beauty Salon Website" },
-  { slug: "grocery-store", name: "Create Grocery Store Website" },
+  { slug: "ecommerce-website", name: "Create Ecommerce Website" },
+  { slug: "clothing-website", name: "Create Clothing Website" },
+
+  { slug: "school-college-website", name: "Create School & College Website" },
+  { slug: "medical-clinic-website", name: "Create Medical Clinic Website" },
+  { slug: "travel-tours-website", name: "Create Travel & Tours Website" },
+  { slug: "gym-fitness-website", name: "Create Gym & Fitness Website" },
+  { slug: "real-estate-website", name: "Create Real Estate Website" },
+  { slug: "beauty-salon-website", name: "Create Beauty Salon Website" },
+  { slug: "grocery-website", name: "Create Grocery  Website" },
   {
-    slug: "educational-consultancy",
+    slug: "educational-consultancy-website",
     name: "Create Educational Consultancy Website",
   },
-  { slug: "digital-agency", name: "Create Digital Agency Website" },
+  { slug: "digital-agency-website", name: "Create Digital Agency Website" },
+  { slug: "dental-clinic-website", name: "Create Dental Clinic Website" },
+  { slug: "booking-service-website", name: "Create Booking & Service Website" },
 ];

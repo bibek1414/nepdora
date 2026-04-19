@@ -51,11 +51,6 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
     { enabled: isServiceSite }
   );
 
-  const { data: analyticsData, isLoading: isAnalyticsLoading } =
-    useAnalyticsStats(undefined, {
-      enabled: !isServiceSite,
-    });
-
   return (
     <div>
       <SessionProvider>
@@ -73,12 +68,14 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
               Here&apos;s what&apos;s happening with your store today.
             </p>
           </div>
-          <Link href="/admin/analytics">
-            <Button className="flex items-center gap-2">
-              <BarChart3 className="h-4 w-4" />
-              View Full Analytics
-            </Button>
-          </Link>
+          {user?.website_type === "ecommerce" && (
+            <Link href="/admin/analytics">
+              <Button className="flex items-center gap-2">
+                <BarChart3 className="h-4 w-4" />
+                View Full Analytics
+              </Button>
+            </Link>
+          )}
         </div>
 
         {isServiceSite ? (

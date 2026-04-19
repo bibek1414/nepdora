@@ -55,7 +55,7 @@ export const CitiesLandingPage: React.FC<CitiesLandingPageProps> = ({
     const hasWebsiteWord = industryLabel.toLowerCase().includes("website");
     content.customH1 = `Create your ${industryLabel}${
       hasWebsiteWord ? "" : " website"
-    } in Nepdora`;
+    } in Nepal`;
   }
 
   const defaultBreadcrumbItems = [
