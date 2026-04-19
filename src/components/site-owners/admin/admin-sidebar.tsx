@@ -67,19 +67,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     },
     {
       items: [
-        { name: "Template", href: "/admin/template", icon: LayoutPanelTop },
-      ],
-    },
-    {
-      items: [{ name: "Products", href: "/admin/products", icon: Package }],
-      hideForService: true,
-    },
-    {
-      items: [{ name: "Services", href: "/admin/services", icon: LayoutGrid }],
-      hideForEccomerce: true,
-    },
-    {
-      items: [
         {
           name: "Order Management",
           href: "/admin/orders",
@@ -89,6 +76,15 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       ],
       hideForService: true,
     },
+    {
+      items: [{ name: "Products", href: "/admin/products", icon: Package }],
+      hideForService: true,
+    },
+    {
+      items: [{ name: "Services", href: "/admin/services", icon: LayoutGrid }],
+      hideForEccomerce: true,
+    },
+
     {
       items: [
         {
@@ -133,9 +129,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       ],
       showForBatoma: true,
     },
-    {
-      items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
-    },
 
     {
       items: [
@@ -151,10 +144,18 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       hideForService: true,
     },
     {
+      items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],
+    },
+
+    {
       items: [{ name: "Analytics", href: "/admin/analytics", icon: BarChart3 }],
       hideForService: true,
     },
-
+    {
+      items: [
+        { name: "Template", href: "/admin/template", icon: LayoutPanelTop },
+      ],
+    },
     {
       items: [
         {

@@ -12,6 +12,11 @@ import RecentAppointments from "../appointments/recent-appointments";
 import { StatsCards } from "./stats-cards";
 import { useGetContacts } from "@/hooks/owner-site/admin/use-contact";
 import { useGetAppointments } from "@/hooks/owner-site/admin/use-appointment";
+import Link from "next/link";
+import { BarChart3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import AnalyticsSummaryCards from "../analytics/analytics-summary-cards";
+import { useAnalyticsStats } from "@/hooks/owner-site/admin/use-analytics-stats";
 
 interface AdminDashboardProps {
   user?: User;
@@ -46,6 +51,11 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
     { enabled: isServiceSite }
   );
 
+  const { data: analyticsData, isLoading: isAnalyticsLoading } =
+    useAnalyticsStats(undefined, {
+      enabled: !isServiceSite,
+    });
+
   return (
     <div>
       <SessionProvider>
@@ -53,6 +63,24 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       </SessionProvider>
 
       <div className="mx-auto mt-12 mb-40 max-w-7xl px-6 md:px-8">
+        {/* Dashboard Header */}
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Welcome back, {user?.name || user?.store_name || "Admin"}
+            </h1>
+            <p className="text-sm text-gray-500">
+              Here&apos;s what&apos;s happening with your store today.
+            </p>
+          </div>
+          <Link href="/admin/analytics">
+            <Button className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              View Full Analytics
+            </Button>
+          </Link>
+        </div>
+
         {isServiceSite ? (
           <div className="space-y-12">
             <StatsCards
@@ -72,7 +100,9 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
             </div>
           </div>
         ) : (
-          <div>
+          <div className="space-y-10">
+            {/* Simple Analytics Summary */}
+
             <Dashboard
               data={data}
               isLoading={isLoading}

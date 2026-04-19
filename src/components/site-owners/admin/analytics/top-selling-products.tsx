@@ -45,7 +45,7 @@ export default function TopSellingProducts({
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-black/7 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="rounded-xl border border-black/7 bg-white -[0_1px_3px_rgba(0,0,0,0.04)]">
         <div className="border-b border-black/6 px-6 py-4">
           <Skeleton className="h-5 w-48" />
         </div>
@@ -69,7 +69,7 @@ export default function TopSellingProducts({
   }
 
   return (
-    <div className="rounded-xl border border-black/7 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+    <div className="rounded-xl border border-black/7 bg-white -[0_1px_3px_rgba(0,0,0,0.04)]">
       {/* Card Header */}
       <div className="flex items-center justify-between border-b border-black/6 px-6 py-4">
         <p className="text-[15px] font-semibold text-gray-900">{title}</p>

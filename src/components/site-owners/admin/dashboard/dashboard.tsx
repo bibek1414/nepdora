@@ -88,24 +88,8 @@ export default function Dashboard({
   ];
 
   return (
-    <div className="p-6">
+    <div className="">
       <div className="mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-          {refetch && (
-            <button
-              onClick={handleRefresh}
-              className="flex items-center rounded border border-gray-200 bg-white px-4 py-2 font-semibold text-gray-800 hover:bg-gray-100 disabled:opacity-50"
-              disabled={isLoading}
-            >
-              <TrendingUp
-                className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-              />
-              Refresh
-            </button>
-          )}
-        </div>
-
         {isError && (
           <div className="mb-6 rounded-lg border border-red-200 bg-red-100 p-4 text-red-700">
             <p className="font-medium">Error loading dashboard data</p>

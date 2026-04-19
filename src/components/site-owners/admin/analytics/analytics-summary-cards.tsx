@@ -87,7 +87,7 @@ export default function AnalyticsSummaryCards({
       {cards(data).map((card, i) => (
         <div
           key={i}
-          className={`flex flex-col gap-3 rounded-xl border border-black/[0.07] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.07)]`}
+          className={`flex flex-col gap-3 rounded-xl border border-black/[0.07] bg-white p-4 -[0_1px_3px_rgba(0,0,0,0.04)] transition- hover:-[0_4px_12px_rgba(0,0,0,0.07)]`}
         >
           {/* Icon */}
           <div

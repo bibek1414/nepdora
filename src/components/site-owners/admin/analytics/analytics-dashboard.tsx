@@ -41,7 +41,7 @@ export default function AnalyticsDashboard() {
   const { data, isLoading } = useAnalyticsStats(apiParams);
 
   return (
-    <div className="flex flex-col gap-8 px-6 py-7">
+    <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-7">
       {/* Header */}
       <div className="flex flex-col gap-5 border-b border-black/6 pb-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex flex-col gap-1">

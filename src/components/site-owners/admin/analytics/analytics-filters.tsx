@@ -46,7 +46,7 @@ export default function AnalyticsFilters({
             key={opt.value}
             onClick={() => setTimeframe(opt.value)}
             className={cn(
-              "rounded-md px-3 py-1.5 text-[13px] font-medium transition-all duration-150",
+              "cursor-pointer rounded-md px-3 py-1.5 text-[13px] font-medium transition-all duration-150",
               timeframe === opt.value
                 ? "bg-white text-gray-900 shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
                 : "text-gray-500 hover:text-gray-700"
@@ -62,7 +62,7 @@ export default function AnalyticsFilters({
         <PopoverTrigger asChild>
           <button
             className={cn(
-              "flex h-[38px] items-center gap-2 rounded-lg border border-black/8 bg-white px-3 text-[13px] font-medium transition-colors hover:bg-gray-50",
+              "flex h-[38px] cursor-pointer items-center gap-2 rounded-lg border border-black/8 bg-white px-3 text-[13px] font-medium transition-colors hover:bg-gray-50",
               dateRange ? "text-gray-900" : "text-gray-400"
             )}
           >
