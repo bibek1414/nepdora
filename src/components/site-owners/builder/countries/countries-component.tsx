@@ -30,7 +30,7 @@ interface CountriesComponentProps {
     componentId: string,
     newData: ComponentResponse<"countries">
   ) => void;
-  onReplace?: (componentId: string) => void;
+  onReplace?: (componentId: string, category?: string) => void;
 }
 
 export const CountriesComponent: React.FC<CountriesComponentProps> = ({
@@ -114,7 +114,7 @@ export const CountriesComponent: React.FC<CountriesComponentProps> = ({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => onReplace?.(component.component_id)}
+            onClick={() => onReplace?.(component.component_id, "countries-sections")}
             className="h-8 w-fit justify-start bg-white px-3"
           >
             <RefreshCw className="mr-1 h-4 w-4" />
