@@ -196,18 +196,18 @@ export function EditTemplateForm({
     <>
       <form
         onSubmit={handleSubmit}
-        className="flex h-[80vh] flex-col overflow-hidden sm:h-[600px]"
+        className="flex h-[80vh] max-w-4xl! flex-col overflow-hidden sm:h-[600px]"
       >
-        <div className="border-b px-6 py-4">
+        <div className="border-b pb-2">
           <DialogHeader>
             <DialogTitle>Edit Template</DialogTitle>
           </DialogHeader>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-200">
+        <div className="scrollbar-hide flex-1 overflow-y-auto py-6">
           <div className="space-y-6">
             {/* Name field */}
-            <div className="space-y-2">
+            <div className="">
               <Label htmlFor="template-name">Template Name</Label>
               <Input
                 id="template-name"
@@ -221,19 +221,9 @@ export function EditTemplateForm({
             {/* Category Selection */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Category (Optional)</Label>
+                <Label>Category </Label>
                 <div className="flex items-center gap-2">
-                  <Link href="/superadmin/template/categories">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 text-xs text-black/60 hover:text-black"
-                    >
-                      <Folder className="mr-1 h-3 w-3" />
-                      Manage
-                    </Button>
-                  </Link>
+                  <Link href="/superadmin/template/categories"></Link>
                   <Button
                     type="button"
                     variant="outline"
@@ -289,17 +279,6 @@ export function EditTemplateForm({
               <div className="flex items-center justify-between">
                 <Label>Subcategory (Optional)</Label>
                 <div className="flex items-center gap-2">
-                  <Link href="/superadmin/template/subcategories">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 text-xs text-black/60 hover:text-black"
-                    >
-                      <FolderTree className="mr-1 h-3 w-3" />
-                      Manage
-                    </Button>
-                  </Link>
                   <Button
                     type="button"
                     variant="outline"

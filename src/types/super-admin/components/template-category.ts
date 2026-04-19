@@ -10,7 +10,7 @@ export interface TemplateSubcategory {
   id: number;
   name: string;
   slug: string;
-  category: number;
+  category: number | TemplateCategory;
   created_at?: string;
   updated_at?: string;
 }

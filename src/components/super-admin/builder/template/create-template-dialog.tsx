@@ -18,7 +18,15 @@ import { useTemplateToken } from "@/hooks/super-admin/components/use-template-to
 import { CreateTemplateAccountForm } from "@/components/auth/template/create-template-form";
 import { EditTemplateForm } from "@/components/auth/template/edit-template-form";
 import { toast } from "sonner";
-import { Loader2, Edit, Github, ExternalLink, Folder, FolderTree } from "lucide-react";
+import {
+  Loader2,
+  Edit,
+  Github,
+  ExternalLink,
+  Folder,
+  FolderTree,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import Pagination from "@/components/ui/pagination";
@@ -41,7 +49,7 @@ export default function CreateTemplateDialog() {
     number | string | null
   >(null);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(20);
 
   // TanStack Query hooks
   const {
@@ -316,37 +324,20 @@ export default function CreateTemplateDialog() {
                       <div className="truncate text-sm font-medium text-gray-900">
                         {t.name}
                       </div>
-                      {t.slug && (
+                      {t.schema_name && (
                         <div className="text-xs text-gray-500">
-                          Slug: {t.slug}
+                          Tenant: {t.schema_name}
                         </div>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {t.repo_url && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        asChild
-                        className="hidden md:flex"
-                      >
-                        <a
-                          href={t.repo_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Github className="mr-1 h-3 w-3" />
-                          GitHub
-                        </a>
-                      </Button>
-                    )}
                     {t.preview_url && (
                       <Button
                         variant="outline"
                         size="sm"
                         asChild
-                        className="hidden md:flex"
+                        className="hidden border-black text-gray-600 md:flex"
                       >
                         <a
                           href={t.preview_url}
@@ -358,18 +349,12 @@ export default function CreateTemplateDialog() {
                         </a>
                       </Button>
                     )}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEdit(t)}
-                    >
-                      <Edit className="mr-1 h-3 w-3" />
-                      Edit
-                    </Button>
+
                     <Button
                       variant="default"
                       size="sm"
                       onClick={() => handleTemplateLogin(t)}
+                      className="bg-black"
                       disabled={loggingInTemplateId !== null}
                     >
                       {loggingInTemplateId === t.id ? (
@@ -382,6 +367,14 @@ export default function CreateTemplateDialog() {
                       )}
                     </Button>
                     <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-black text-gray-600"
+                      onClick={() => handleEdit(t)}
+                    >
+                      <Edit className="mr-1 h-3 w-3" />
+                    </Button>
+                    <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => openDelete(t)}
@@ -390,10 +383,7 @@ export default function CreateTemplateDialog() {
                         deletingOwnerId === t.owner_id
                       }
                     >
-                      {deleteTemplateMutation.isPending &&
-                      deletingOwnerId === t.owner_id
-                        ? "Deleting..."
-                        : "Delete"}
+                      <Trash2 className="mr-1 h-3 w-3" />
                     </Button>
                   </div>
                 </li>
@@ -430,7 +420,7 @@ export default function CreateTemplateDialog() {
 
       {/* Edit Template Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-xl">
           {editingTemplate && (
             <EditTemplateForm
               template={editingTemplate}

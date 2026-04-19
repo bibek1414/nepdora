@@ -11,7 +11,15 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Loader2,
+  ArrowLeft,
+  ChevronLeft,
+} from "lucide-react";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -49,24 +57,38 @@ import {
   useDeleteTemplateSubcategory,
 } from "@/hooks/super-admin/components/use-template-category";
 import { toast } from "sonner";
-import { TemplateCategory, TemplateSubcategory } from "@/types/super-admin/components/template-category";
+import {
+  TemplateCategory,
+  TemplateSubcategory,
+} from "@/types/super-admin/components/template-category";
 
 interface TemplateCategoryManagementProps {
   initialTab?: string;
 }
 
-export default function TemplateCategoryManagement({ initialTab = "categories" }: TemplateCategoryManagementProps) {
+export default function TemplateCategoryManagement({
+  initialTab = "categories",
+}: TemplateCategoryManagementProps) {
   const [activeTab, setActiveTab] = useState(initialTab);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
+          <div className="mb-4 flex items-center gap-2">
+            <Link
+              href="/superadmin/template"
+              className="flex items-center text-sm text-gray-500 hover:text-gray-900"
+            >
+              <ChevronLeft className="mr-1 h-4 w-4" />
+            </Link>
+          </div>
           <h2 className="text-2xl font-bold tracking-tight">
             Template Categories & Subcategories
           </h2>
           <p className="text-muted-foreground">
-            Manage how templates are organized into categories and subcategories.
+            Manage how templates are organized into categories and
+            subcategories.
           </p>
         </div>
       </div>
@@ -78,10 +100,14 @@ export default function TemplateCategoryManagement({ initialTab = "categories" }
         className="w-full"
       >
         <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-          <TabsTrigger value="categories">Categories</TabsTrigger>
-          <TabsTrigger value="subcategories">Subcategories</TabsTrigger>
+          <TabsTrigger value="categories" className="cursor-pointer">
+            Categories
+          </TabsTrigger>
+          <TabsTrigger value="subcategories" className="cursor-pointer">
+            Subcategories
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="categories" className="mt-6">
+        <TabsContent value="categories" className="mt-6 cursor-pointer">
           <CategoriesManager />
         </TabsContent>
         <TabsContent value="subcategories" className="mt-6">
@@ -100,7 +126,9 @@ function CategoriesManager() {
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<TemplateCategory | null>(null);
-  const [deletingItem, setDeletingItem] = useState<TemplateCategory | null>(null);
+  const [deletingItem, setDeletingItem] = useState<TemplateCategory | null>(
+    null
+  );
   const [newName, setNewName] = useState("");
 
   const handleCreate = async () => {
@@ -118,7 +146,10 @@ function CategoriesManager() {
   const handleUpdate = async () => {
     if (!editingItem || !newName.trim()) return;
     try {
-      await updateMutation.mutateAsync({ slug: editingItem.slug, name: newName });
+      await updateMutation.mutateAsync({
+        slug: editingItem.slug,
+        name: newName,
+      });
       toast.success("Category updated successfully");
       setEditingItem(null);
       setNewName("");
@@ -138,7 +169,12 @@ function CategoriesManager() {
     }
   };
 
-  if (isLoading) return <div className="flex h-32 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-gray-400" /></div>;
+  if (isLoading)
+    return (
+      <div className="flex h-32 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    );
 
   return (
     <Card className="shadow-none">
@@ -149,7 +185,10 @@ function CategoriesManager() {
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
+            <Button
+              size="sm"
+              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            >
               <Plus className="mr-2 h-4 w-4" /> Add Category
             </Button>
           </DialogTrigger>
@@ -164,11 +203,15 @@ function CategoriesManager() {
               <Input
                 placeholder="Category Name"
                 value={newName}
-                onChange={(e) => setNewName(e.target.value)}
+                onChange={e => setNewName(e.target.value)}
               />
             </div>
             <DialogFooter>
-              <Button onClick={handleCreate} disabled={createMutation.isPending} className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
+              <Button
+                onClick={handleCreate}
+                disabled={createMutation.isPending}
+                className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+              >
                 {createMutation.isPending ? "Creating..." : "Create"}
               </Button>
             </DialogFooter>
@@ -177,9 +220,14 @@ function CategoriesManager() {
       </CardHeader>
       <CardContent>
         <div className="divide-y rounded-md border">
-          {categories?.map((category) => (
-            <div key={category.id} className="flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors">
-              <div className="flex-1 font-medium text-gray-900">{category.name}</div>
+          {categories?.map(category => (
+            <div
+              key={category.id}
+              className="flex items-center justify-between bg-white p-4 transition-colors hover:bg-gray-50"
+            >
+              <div className="flex-1 font-medium text-gray-900">
+                {category.name}
+              </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
@@ -211,7 +259,10 @@ function CategoriesManager() {
         </div>
       </CardContent>
 
-      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
+      <Dialog
+        open={!!editingItem}
+        onOpenChange={open => !open && setEditingItem(null)}
+      >
         <DialogContent className="w-[400px]">
           <DialogHeader>
             <DialogTitle>Edit Category</DialogTitle>
@@ -220,28 +271,40 @@ function CategoriesManager() {
             <Input
               placeholder="Category Name"
               value={newName}
-              onChange={(e) => setNewName(e.target.value)}
+              onChange={e => setNewName(e.target.value)}
             />
           </div>
           <DialogFooter>
-            <Button onClick={handleUpdate} disabled={updateMutation.isPending} className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
+            <Button
+              onClick={handleUpdate}
+              disabled={updateMutation.isPending}
+              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            >
               {updateMutation.isPending ? "Updating..." : "Update"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!deletingItem} onOpenChange={(open) => !open && setDeletingItem(null)}>
+      <AlertDialog
+        open={!!deletingItem}
+        onOpenChange={open => !open && setDeletingItem(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the category "{deletingItem?.name}".
+              This action cannot be undone. This will permanently delete the
+              category "{deletingItem?.name}".
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleDelete} disabled={deleteMutation.isPending}>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+            >
               {deleteMutation.isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -259,17 +322,21 @@ function SubcategoriesManager() {
   const deleteMutation = useDeleteTemplateSubcategory();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<TemplateSubcategory | null>(null);
-  const [deletingItem, setDeletingItem] = useState<TemplateSubcategory | null>(null);
+  const [editingItem, setEditingItem] = useState<TemplateSubcategory | null>(
+    null
+  );
+  const [deletingItem, setDeletingItem] = useState<TemplateSubcategory | null>(
+    null
+  );
   const [newName, setNewName] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
 
   const handleCreate = async () => {
     if (!newName.trim() || !selectedCategoryId) return;
     try {
-      await createMutation.mutateAsync({ 
-        name: newName, 
-        category_id: Number(selectedCategoryId) 
+      await createMutation.mutateAsync({
+        name: newName,
+        category_id: Number(selectedCategoryId),
       });
       toast.success("Subcategory created successfully");
       setIsCreateOpen(false);
@@ -283,10 +350,12 @@ function SubcategoriesManager() {
   const handleUpdate = async () => {
     if (!editingItem || !newName.trim()) return;
     try {
-      await updateMutation.mutateAsync({ 
-        slug: editingItem.slug, 
+      await updateMutation.mutateAsync({
+        slug: editingItem.slug,
         name: newName,
-        category_id: selectedCategoryId ? Number(selectedCategoryId) : undefined
+        category_id: selectedCategoryId
+          ? Number(selectedCategoryId)
+          : undefined,
       });
       toast.success("Subcategory updated successfully");
       setEditingItem(null);
@@ -308,7 +377,12 @@ function SubcategoriesManager() {
     }
   };
 
-  if (isLoading) return <div className="flex h-32 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-gray-400" /></div>;
+  if (isLoading)
+    return (
+      <div className="flex h-32 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    );
 
   return (
     <Card className="shadow-none">
@@ -319,7 +393,10 @@ function SubcategoriesManager() {
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
+            <Button
+              size="sm"
+              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            >
               <Plus className="mr-2 h-4 w-4" /> Add Subcategory
             </Button>
           </DialogTrigger>
@@ -333,12 +410,15 @@ function SubcategoriesManager() {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Category</label>
-                <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
+                <Select
+                  value={selectedCategoryId}
+                  onValueChange={setSelectedCategoryId}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories?.map((cat) => (
+                    {categories?.map(cat => (
                       <SelectItem key={cat.id} value={cat.id.toString()}>
                         {cat.name}
                       </SelectItem>
@@ -351,12 +431,16 @@ function SubcategoriesManager() {
                 <Input
                   placeholder="Subcategory Name"
                   value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
+                  onChange={e => setNewName(e.target.value)}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleCreate} disabled={createMutation.isPending || !selectedCategoryId} className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
+              <Button
+                onClick={handleCreate}
+                disabled={createMutation.isPending || !selectedCategoryId}
+                className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+              >
                 {createMutation.isPending ? "Creating..." : "Create"}
               </Button>
             </DialogFooter>
@@ -365,10 +449,19 @@ function SubcategoriesManager() {
       </CardHeader>
       <CardContent>
         <div className="divide-y rounded-md border">
-          {subcategories?.map((sub) => {
-            const category = categories?.find(c => c.id === sub.category);
+          {subcategories?.map(sub => {
+            const categoryObj =
+              typeof sub.category === "object" ? sub.category : null;
+            const categoryId =
+              typeof sub.category === "number" ? sub.category : sub.category.id;
+            const category =
+              categoryObj || categories?.find(c => c.id === categoryId);
+
             return (
-              <div key={sub.id} className="flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors">
+              <div
+                key={sub.id}
+                className="flex items-center justify-between bg-white p-4 transition-colors hover:bg-gray-50"
+              >
                 <div className="flex-1">
                   <div className="font-medium text-gray-900">{sub.name}</div>
                   <div className="text-xs text-gray-500">
@@ -383,7 +476,11 @@ function SubcategoriesManager() {
                     onClick={() => {
                       setEditingItem(sub);
                       setNewName(sub.name);
-                      setSelectedCategoryId(sub.category.toString());
+                      const catId =
+                        typeof sub.category === "object"
+                          ? sub.category.id
+                          : sub.category;
+                      setSelectedCategoryId(catId.toString());
                     }}
                   >
                     <Pencil className="h-4 w-4" />
@@ -408,7 +505,10 @@ function SubcategoriesManager() {
         </div>
       </CardContent>
 
-      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
+      <Dialog
+        open={!!editingItem}
+        onOpenChange={open => !open && setEditingItem(null)}
+      >
         <DialogContent className="w-[400px]">
           <DialogHeader>
             <DialogTitle>Edit Subcategory</DialogTitle>
@@ -416,12 +516,15 @@ function SubcategoriesManager() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
-              <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
+              <Select
+                value={selectedCategoryId}
+                onValueChange={setSelectedCategoryId}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories?.map((cat) => (
+                  {categories?.map(cat => (
                     <SelectItem key={cat.id} value={cat.id.toString()}>
                       {cat.name}
                     </SelectItem>
@@ -434,29 +537,41 @@ function SubcategoriesManager() {
               <Input
                 placeholder="Subcategory Name"
                 value={newName}
-                onChange={(e) => setNewName(e.target.value)}
+                onChange={e => setNewName(e.target.value)}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleUpdate} disabled={updateMutation.isPending} className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800">
+            <Button
+              onClick={handleUpdate}
+              disabled={updateMutation.isPending}
+              className="h-9 rounded-lg bg-slate-900 px-4 font-semibold text-white transition-all hover:bg-slate-800"
+            >
               {updateMutation.isPending ? "Updating..." : "Update"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!deletingItem} onOpenChange={(open) => !open && setDeletingItem(null)}>
+      <AlertDialog
+        open={!!deletingItem}
+        onOpenChange={open => !open && setDeletingItem(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the subcategory "{deletingItem?.name}".
+              This action cannot be undone. This will permanently delete the
+              subcategory "{deletingItem?.name}".
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleDelete} disabled={deleteMutation.isPending}>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+            >
               {deleteMutation.isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
