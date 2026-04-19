@@ -123,10 +123,7 @@ export const subscriptionApi = {
 
     const response = await apiFetch(url, {
       method: "GET",
-      headers: {
-        ...createHeaders(),
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+
       cache: "no-store",
     });
 

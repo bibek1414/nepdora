@@ -86,7 +86,7 @@ const Pagination: React.FC<PaginationProps> = ({
     }`;
 
   return (
-    <div className="mt-20 flex flex-col items-center gap-4">
+    <div className="mt-12 flex flex-col items-center gap-4">
       {/* Pagination controls */}
       <div className="flex items-center gap-2">
         {/* First page button */}

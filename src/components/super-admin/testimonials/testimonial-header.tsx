@@ -1,6 +1,7 @@
 import { TestimonialsHeaderProps } from "@/types/owner-site/admin/testimonial";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Video } from "lucide-react";
+import Link from "next/link";
 
 export const TestimonialsHeader = ({
   onAdd,
@@ -13,13 +14,24 @@ export const TestimonialsHeader = ({
           Testimonials
         </h1>
       </div>
-      <Button
-        onClick={onAdd}
-        className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
-      >
-        <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
-        <span>Add Testimonial</span>
-      </Button>
+      <div className="flex items-center gap-3">
+        <Link href="/superadmin/video-testimonial">
+          <Button
+            variant="outline"
+            className="border-gray-300 text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+          >
+            <Video className="h-4 w-4" />
+            <span>Manage Video Testimonials</span>
+          </Button>
+        </Link>
+        <Button
+          onClick={onAdd}
+          className="bg-gray-200 text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+        >
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span>Add Testimonial</span>
+        </Button>
+      </div>
     </div>
   );
 };

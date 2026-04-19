@@ -45,7 +45,7 @@ export function SubscriptionsOverview() {
       <SubscriptionsTable subscriptions={subscriptions} isLoading={isLoading} />
 
       {data && data.count > 10 && (
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-end">
           <Pagination
             currentPage={page}
             totalPages={Math.ceil(data.count / 10)}
