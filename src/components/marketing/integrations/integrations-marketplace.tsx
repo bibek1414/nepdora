@@ -254,6 +254,90 @@ export default function IntegrationsMarketplace({
           )}
         </div>
       </section>
+      <section className="bg-slate-50 py-16">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="mb-12 text-center">
+            <h2 className="mb-3 text-3xl font-bold text-slate-900">
+              Why connect your tools with{" "}
+              <span className="text-primary">Nepdora?</span>
+            </h2>
+            <p className="mx-auto max-w-2xl text-slate-500">
+              Streamline your operations, save time, and grow faster with
+              seamless integrations
+            </p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="p-6 text-center">
+              <div className="bg-primary/10 text-primary mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                <Clock className="h-6 w-6" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold">
+                Save hours of manual work
+              </h3>
+              <p className="text-sm text-slate-500">
+                Automate order processing, payments, and delivery coordination
+              </p>
+            </div>
+            <div className="p-6 text-center">
+              <div className="bg-primary/10 text-primary mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                <TrendingUp className="h-6 w-6" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold">
+                Increase conversions
+              </h3>
+              <p className="text-sm text-slate-500">
+                Offer local payments that customers trust and prefer
+              </p>
+            </div>
+            <div className="p-6 text-center">
+              <div className="bg-primary/10 text-primary mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                <Shield className="h-6 w-6" />
+              </div>
+              <h3 className="mb-2 text-lg font-semibold">One-click setup</h3>
+              <p className="text-sm text-slate-500">
+                No coding required. Just connect and go live in minutes
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="border-t border-slate-100 py-16">
+        <div className="container mx-auto max-w-4xl px-6">
+          <div className="mb-10 text-center">
+            <h2 className="mb-3 text-3xl font-bold text-slate-900">
+              Frequently asked questions
+            </h2>
+          </div>
+          <div className="space-y-4">
+            {[
+              {
+                q: "How do I install an integration?",
+                a: "Simply click on any integration card, then click 'Connect' from your dashboard. No coding required.",
+              },
+              {
+                q: "Are there any hidden fees?",
+                a: "No. Integration setup is included in your Nepdora plan. Third-party services may have their own fees.",
+              },
+              {
+                q: "Can I use multiple integrations at once?",
+                a: "Yes! You can connect as many integrations as your business needs.",
+              },
+              {
+                q: "What if I need help setting up?",
+                a: "Our support team is available 24/7 to help you with any integration setup.",
+              },
+            ].map((faq, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-slate-200 bg-white p-6"
+              >
+                <h3 className="mb-2 font-semibold text-slate-900">{faq.q}</h3>
+                <p className="text-sm text-slate-500">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Featured Integrations Section */}
       {filteredIntegrations.length > 0 && (

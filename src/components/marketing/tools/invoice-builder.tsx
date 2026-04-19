@@ -240,7 +240,7 @@ export const InvoiceBuilder = () => {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Main Editor (2/3) */}
         <div className="space-y-8 lg:col-span-2">
-          <Card className="relative overflow-hidden border-slate-200 bg-white p-8 shadow-sm">
+          <Card className="-sm relative overflow-hidden border-slate-200 bg-white px-8">
             <div className="bg-primary absolute top-0 left-0 h-full w-2" />
 
             {/* Header info */}
@@ -254,18 +254,18 @@ export const InvoiceBuilder = () => {
                   placeholder="Your Business Name"
                   value={businessName}
                   onChange={e => setBusinessName(e.target.value)}
-                  className={`border bg-transparent px-2 text-2xl font-black shadow-none focus-visible:ring-0 ${placeholderStyle}`}
+                  className={`-none border bg-transparent px-2 text-2xl focus-visible:ring-0 ${placeholderStyle}`}
                 />
                 <Input
                   placeholder="Street Address, City, Phone"
                   value={businessAddress}
                   onChange={e => setBusinessAddress(e.target.value)}
-                  className={`border bg-transparent px-2 text-slate-500 shadow-none focus-visible:ring-0 ${placeholderStyle}`}
+                  className={`-none border bg-transparent px-2 text-slate-500 focus-visible:ring-0 ${placeholderStyle}`}
                 />
               </div>
 
-              <div className="min-w-[180px] space-y-4 text-right">
-                <div className="space-y-1">
+              <div className="mt-5 min-w-[180px] space-y-4 text-right">
+                <div className="space-y-2">
                   <Label className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
                     Invoice #
                   </Label>
@@ -273,7 +273,7 @@ export const InvoiceBuilder = () => {
                     placeholder="INV-001"
                     value={invoiceNumber}
                     onChange={e => setInvoiceNumber(e.target.value)}
-                    className={`focus-visible:ring-primary border-slate-200 text-right shadow-none ${placeholderStyle}`}
+                    className={`focus-visible:ring-primary -none border-slate-200 text-right ${placeholderStyle}`}
                   />
                 </div>
                 <div className="space-y-1">
@@ -284,7 +284,7 @@ export const InvoiceBuilder = () => {
                     type="date"
                     value={invoiceDate}
                     onChange={e => setInvoiceDate(e.target.value)}
-                    className={`focus-visible:ring-primary border-slate-200 text-right shadow-none ${placeholderStyle}`}
+                    className={`focus-visible:ring-primary -none border-slate-200 text-right ${placeholderStyle}`}
                   />
                 </div>
               </div>
@@ -294,22 +294,20 @@ export const InvoiceBuilder = () => {
             <div className="mb-12">
               <div className="mb-6 flex items-center gap-2">
                 <User className="text-primary h-5 w-5" />
-                <h3 className="text-md border-b-2 border-slate-100 pb-1 font-bold text-slate-900">
-                  Bill To
-                </h3>
+                <h3 className="text-md font-bold text-slate-900">Bill To</h3>
               </div>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Input
                   placeholder="Client Name"
                   value={clientName}
                   onChange={e => setClientName(e.target.value)}
-                  className={`h-10 border-slate-200 shadow-none ${placeholderStyle}`}
+                  className={`-none h-10 border-slate-200 ${placeholderStyle}`}
                 />
                 <Input
                   placeholder="Client Address"
                   value={clientAddress}
                   onChange={e => setClientAddress(e.target.value)}
-                  className={`h-10 border-slate-200 shadow-none ${placeholderStyle}`}
+                  className={`-none h-10 border-slate-200 ${placeholderStyle}`}
                 />
               </div>
             </div>
@@ -340,7 +338,7 @@ export const InvoiceBuilder = () => {
                         onChange={e =>
                           updateItem(item.id, "description", e.target.value)
                         }
-                        className={`h-10 border-slate-100 bg-white shadow-none ${placeholderStyle}`}
+                        className={`-none h-10 border-slate-100 bg-white ${placeholderStyle}`}
                       />
                     </div>
                     <div className="col-span-2">
@@ -354,7 +352,7 @@ export const InvoiceBuilder = () => {
                             parseFloat(e.target.value) || 0
                           )
                         }
-                        className="h-10 border-slate-100 bg-white text-right shadow-none"
+                        className="-none h-10 border-slate-100 bg-white text-right"
                       />
                     </div>
                     <div className="col-span-3">
@@ -368,7 +366,7 @@ export const InvoiceBuilder = () => {
                             parseFloat(e.target.value) || 0
                           )
                         }
-                        className="h-10 border-slate-100 bg-white text-right shadow-none"
+                        className="-none h-10 border-slate-100 bg-white text-right"
                       />
                     </div>
                     <div className="col-span-1 flex justify-end">
@@ -402,7 +400,7 @@ export const InvoiceBuilder = () => {
                   <span>Subtotal</span>
                   <span>Rs. {total.toLocaleString()}</span>
                 </div>
-                <div className="flex items-center justify-between text-2xl font-black text-slate-900">
+                <div className="flex items-center justify-between text-2xl text-slate-900">
                   <span>Total Due</span>
                   <span className="text-primary">
                     Rs. {total.toLocaleString()}
@@ -415,7 +413,7 @@ export const InvoiceBuilder = () => {
 
         {/* Sidebar Actions (1/3) */}
         <div className="space-y-6">
-          <Card className="sticky top-24 border-slate-200 bg-white p-8 shadow-sm">
+          <Card className="-sm sticky top-24 border-slate-200 bg-white">
             <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
               <Download className="text-primary h-5 w-5" />
               Get PDF
@@ -436,7 +434,7 @@ export const InvoiceBuilder = () => {
                     placeholder="name@business.com"
                     value={clientEmail}
                     onChange={e => setClientEmail(e.target.value)}
-                    className={`focus-visible:ring-primary h-11 border-slate-200 pl-10 shadow-none ${placeholderStyle}`}
+                    className={`focus-visible:ring-primary -none h-11 border-slate-200 pl-10 ${placeholderStyle}`}
                   />
                 </div>
               </div>
@@ -450,14 +448,14 @@ export const InvoiceBuilder = () => {
                     placeholder="98XXXXXXXX"
                     value={clientPhone}
                     onChange={e => setClientPhone(e.target.value)}
-                    className={`focus-visible:ring-primary h-11 border-slate-200 pl-10 shadow-none ${placeholderStyle}`}
+                    className={`focus-visible:ring-primary -none h-11 border-slate-200 pl-10 ${placeholderStyle}`}
                   />
                 </div>
               </div>
             </div>
 
             <Button
-              className="bg-primary hover:bg-primary/90 shadow-primary/10 h-12 w-full rounded-xl font-bold text-white shadow-lg transition-all hover:translate-y-[-2px] disabled:opacity-50"
+              className="bg-primary hover:bg-primary/90 -primary/10 -lg h-12 w-full rounded-xl font-bold text-white transition-all hover:translate-y-[-2px] disabled:opacity-50"
               disabled={!clientEmail || !clientPhone || isGenerating}
               onClick={handleDownloadPDF}
             >
@@ -468,10 +466,6 @@ export const InvoiceBuilder = () => {
               )}
               {isGenerating ? "Exporting..." : "Download Invoice"}
             </Button>
-
-            <p className="mt-4 text-center text-[10px] font-medium text-slate-400">
-              Free to use. No credit card required.
-            </p>
           </Card>
         </div>
       </div>

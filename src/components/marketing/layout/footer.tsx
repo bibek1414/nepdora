@@ -178,7 +178,7 @@ export const Footer = () => {
                 <FooterLink href="/tools/free-website-analyzer">
                   Website Analyzer
                 </FooterLink>
-                <FooterLink href="/invoice-builder">Invoice Maker</FooterLink>
+                <FooterLink href="/invoice-builder">Invoice Builder</FooterLink>
               </div>
             </FooterSection>
 
