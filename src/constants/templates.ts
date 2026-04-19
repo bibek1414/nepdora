@@ -5,8 +5,8 @@ export interface TemplateCategory {
 }
 
 export const TEMPLATE_CATEGORY_DATA: Record<string, TemplateCategory> = {
-  "restaurant-website": {
-    slug: "restaurant-website",
+  "restaurant-cafe": {
+    slug: "restaurant-cafe",
     name: "Restaurant & Cafe",
     description: "Showcase your menu, accept online orders, and manage reservations with our beautiful restaurant templates.",
   },

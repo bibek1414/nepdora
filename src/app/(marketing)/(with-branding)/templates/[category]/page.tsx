@@ -77,6 +77,7 @@ export default async function TemplateCategoryPage({ params }: Props) {
   }
 
   const displayName = getCategoryDisplayName(category);
+  const categorySlug=TEMPLATE_CATEGORY_DATA[category].slug;
   const description = getCategoryDescription(category);
 
   const schema = {
@@ -97,12 +98,12 @@ export default async function TemplateCategoryPage({ params }: Props) {
             { label: displayName, href: `/templates/${category}` },
           ]}
         />
+        <TemplateCategoryHero
+          categoryName={displayName}
+          categorySlug={categorySlug}
+          categoryDescription={description}
+        />
       </div>
-
-      <TemplateCategoryHero 
-        categoryName={displayName} 
-        categoryDescription={description} 
-      />
 
       {/* Templates Grid - Passing category filter */}
       <div className="container mx-auto max-w-6xl px-6">
