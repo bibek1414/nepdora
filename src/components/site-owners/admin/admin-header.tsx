@@ -29,6 +29,8 @@ import { getUserInitials } from "@/lib/user-utils";
 import { useState } from "react";
 import OnboardingModal from "@/components/on-boarding/admin/on-boarding-component";
 import { AdminGlobalSearch } from "./global-search";
+import { rootDomain } from "@/config/site";
+
 
 interface AdminHeaderProps {
   user: User;
@@ -65,8 +67,20 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
   };
 
   const handleFeedback = () => {
-    router.push("/support");
+    const protocol =
+      typeof window !== "undefined" && window.location.protocol === "https:"
+        ? "https"
+        : "http";
+    const mainSupportUrl = `${protocol}://${rootDomain}/support`;
+    window.open(mainSupportUrl, "_blank");
   };
+
+  const protocol =
+    typeof window !== "undefined" && window.location.protocol === "https:"
+      ? "https"
+      : "http";
+  const mainSupportUrl = `${protocol}://${rootDomain}/support`;
+
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-gray-100 bg-white">
@@ -153,16 +167,24 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
                 </Button>
               </a>
 
-              <Link href="/support">
+              <a
+                href={mainSupportUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button variant="ghost" size="sm">
                   Help
                 </Button>
-              </Link>
-              <Link href="/support">
-                <Button variant="ghost" size="sm" onClick={handleFeedback}>
+              </a>
+              <a
+                href={mainSupportUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="ghost" size="sm">
                   Share Feedback
                 </Button>
-              </Link>
+              </a>
 
               {/* Profile dropdown */}
               <DropdownMenu>

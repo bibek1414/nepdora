@@ -1,15 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  X,
-  MousePointerClick,
-  Send,
-  Sparkles,
-  ArrowRight,
-  CheckCircle,
-  ChevronRight
-} from "lucide-react";
+import { CheckCircle, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";

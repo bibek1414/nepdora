@@ -385,7 +385,6 @@ export async function proxy(request: NextRequest) {
   const allowedPaths = [
     "/admin",
     "/builder",
-    "/support",
     "/payment",
     "/logout",
     "/preview",
