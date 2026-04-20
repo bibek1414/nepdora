@@ -237,9 +237,7 @@ export default function IntegrationsMarketplace({
               <h3 className="text-xl font-semibold text-slate-900">
                 No integrations found
               </h3>
-              <p className="mt-2 text-slate-500">
-                Try adjusting your search or filters.
-              </p>
+
               <button
                 onClick={() => {
                   setSearchQuery("");

@@ -353,9 +353,7 @@ export default function OrdersPage({ isPOS = false }: { isPOS?: boolean }) {
             <h3 className="mb-1 text-sm font-medium text-gray-900">
               No orders found
             </h3>
-            <p className="text-xs text-gray-500">
-              Try adjusting your search or filters.
-            </p>
+
             <Button
               variant="link"
               onClick={handleClearFilters}

@@ -146,9 +146,6 @@ export default function PaymentsClient({
           <h3 className="mb-1 text-sm font-medium text-black">
             No payment records found
           </h3>
-          <p className="text-xs text-black/40">
-            Try adjusting your search or filters
-          </p>
         </div>
       );
     }

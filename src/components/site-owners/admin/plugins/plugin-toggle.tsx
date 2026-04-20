@@ -41,7 +41,7 @@ export function PluginToggle({
         checked={isEnabled}
         onCheckedChange={handleToggle}
         disabled={isLoading}
-        className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-200"
+        className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-200 cursor-pointer"
       />
     </div>
   );

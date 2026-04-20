@@ -1,4 +1,4 @@
-export type PluginType = "whatsapp" | "dash" | "ydm" | "google-analytics";
+export type PluginType = "whatsapp" | "dash" | "ydm" | "google-analytics" | "sms";
 
 export interface Plugin {
   id: string;
@@ -10,6 +10,7 @@ export interface Plugin {
   status?: "beta" | "active";
   is_enabled: boolean;
   hideForService?: boolean;
+  extraInfo?: string;
 }
 
 export interface PluginConfig {

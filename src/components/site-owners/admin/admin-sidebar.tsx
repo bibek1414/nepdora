@@ -176,6 +176,15 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
     {
       items: [
         {
+          name: "SMS Management",
+          href: "/admin/sms",
+          icon: MessageCircle,
+        },
+      ],
+    },
+    {
+      items: [
+        {
           name: "Settings",
           href: "/admin/settings/site-config",
           icon: Settings,
@@ -246,6 +255,8 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       </div>
 
       <div className="scrollbar-hide flex-1 overflow-y-auto py-4">
+        {/* SMS Balance Widget at the top */}
+
         <nav className="grid gap-1 px-2">
           {filteredNavigationGroups.map((group, groupIndex) => (
             <div key={groupIndex}>

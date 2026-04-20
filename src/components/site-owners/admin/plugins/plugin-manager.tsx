@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,10 @@ import {
   useGoogleAnalytics,
   useUpdateGoogleAnalytics,
 } from "@/hooks/owner-site/admin/use-google-analytics";
+import {
+  useSMSSettings,
+  usePatchSMSSettings,
+} from "@/hooks/owner-site/admin/use-sms-setting";
 import { toast } from "sonner";
 
 /* ----------------------------- Modal ----------------------------- */
@@ -43,7 +47,7 @@ const Modal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-2xl rounded-lg border border-slate-200 bg-white shadow-lg">
+      <div className="usePatchSMSSettings-lg relative w-full max-w-2xl rounded-lg border border-slate-200 bg-white">
         <div className="flex items-center justify-between border-b border-slate-200 px-3 py-3 sm:px-6 sm:py-4">
           <h2 className="truncate pr-2 text-base font-semibold text-slate-900 sm:text-lg">
             {title}
@@ -67,20 +71,22 @@ const Modal = ({
 
 /* ----------------------------- Hooks ------------------------------ */
 const usePlugins = (websiteType?: string) => {
-  const { data: whatsapps = [], isLoading: l1, refetch: r1 } = useWhatsApps();
-  const { data: dash = [], isLoading: l2, refetch: r2 } = useLogisticsDash();
-  const { data: ydm = [], isLoading: l3, refetch: r3 } = useLogisticsYDM();
-  const {
-    data: analytics = [],
-    isLoading: l4,
-    refetch: r4,
-  } = useGoogleAnalytics();
+  const { data: whatsapps = [], isLoading: l1 } = useWhatsApps();
+  const { data: dash = [], isLoading: l2 } = useLogisticsDash();
+  const { data: ydm = [], isLoading: l3 } = useLogisticsYDM();
+  const { data: analytics = [], isLoading: l4 } = useGoogleAnalytics();
+  const { data: smsSettings = [], isLoading: l5 } = useSMSSettings();
 
   const u1 = useUpdateWhatsApp();
   const u2 = useUpdateLogistics();
   const u3 = useUpdateGoogleAnalytics();
+  const u4 = usePatchSMSSettings();
 
   const [plugins, setPlugins] = useState<Plugin[]>([]);
+
+  const smsData = Array.isArray(smsSettings) ? smsSettings[0] : smsSettings;
+  const isSmsEnabled = !!(smsData as any)?.sms_enabled;
+  const smsCredits = (smsData as any)?.sms_credit;
 
   useEffect(() => {
     const list: Plugin[] = [
@@ -122,61 +128,81 @@ const usePlugins = (websiteType?: string) => {
         type: "google-analytics",
         is_enabled: analytics?.[0]?.is_enabled || false,
       },
+      {
+        id: "sms",
+        name: "SMS Service",
+        description: "Send automated SMS notifications to customers",
+        category: "COMMUNICATION",
+        icon: "/images/icons/sms-icon.png",
+        type: "sms",
+        is_enabled: isSmsEnabled,
+        extraInfo:
+          smsCredits !== undefined ? `Credits: ${smsCredits}` : undefined,
+      },
     ];
 
     setPlugins(
       list.filter(p => !(websiteType === "service" && p.hideForService))
     );
-  }, [whatsapps, dash, ydm, analytics, websiteType]);
+  }, [whatsapps, dash, ydm, analytics, isSmsEnabled, smsCredits, websiteType]);
 
-  const togglePlugin = async (id: string, type: string, enabled: boolean) => {
-    try {
-      let configExists = false;
+  const togglePlugin = useCallback(
+    async (id: string, type: string, enabled: boolean) => {
+      try {
+        let configExists = false;
 
-      if (type === "whatsapp") {
-        if (whatsapps[0]) {
-          await u1.mutateAsync({
-            id: whatsapps[0].id,
-            data: { ...whatsapps[0], is_enabled: enabled },
+        if (type === "whatsapp") {
+          if (whatsapps[0]) {
+            await u1.mutateAsync({
+              id: whatsapps[0].id,
+              data: { ...whatsapps[0], is_enabled: enabled },
+            });
+            configExists = true;
+          }
+        } else if (type === "dash" || type === "ydm") {
+          const cfg = type === "dash" ? dash[0] : ydm[0];
+          if (cfg) {
+            await u2.mutateAsync({
+              id: cfg.id,
+              data: { ...cfg, is_enabled: enabled },
+            });
+            configExists = true;
+          }
+        } else if (type === "google-analytics") {
+          if (analytics[0]) {
+            await u3.mutateAsync({
+              id: analytics[0].id,
+              data: { ...analytics[0], is_enabled: enabled },
+            });
+            configExists = true;
+          }
+        } else if (type === "sms") {
+          await u4.mutateAsync({
+            sms_enabled: enabled,
           });
-          await r1();
           configExists = true;
         }
-      } else if (type === "dash" || type === "ydm") {
-        const cfg = type === "dash" ? dash[0] : ydm[0];
-        if (cfg) {
-          await u2.mutateAsync({
-            id: cfg.id,
-            data: { ...cfg, is_enabled: enabled },
-          });
-          type === "dash" ? await r2() : await r3();
-          configExists = true;
-        }
-      } else if (type === "google-analytics") {
-        if (analytics[0]) {
-          await u3.mutateAsync({
-            id: analytics[0].id,
-            data: { ...analytics[0], is_enabled: enabled },
-          });
-          await r4();
-          configExists = true;
-        }
-      }
 
-      if (configExists) {
-        toast.success(`Plugin ${enabled ? "enabled" : "disabled"}`);
-        return { success: true, needsConfig: false };
-      } else {
-        toast.error("Configuration not found. Please configure first.");
+        if (configExists) {
+          toast.success(`Plugin ${enabled ? "enabled" : "disabled"}`);
+          return { success: true, needsConfig: false };
+        } else {
+          toast.error("Configuration not found. Please configure first.");
+          return { success: false, needsConfig: true };
+        }
+      } catch {
+        toast.error("Failed to update plugin");
         return { success: false, needsConfig: true };
       }
-    } catch {
-      toast.error("Failed to update plugin");
-      return { success: false, needsConfig: true };
-    }
-  };
+    },
+    [whatsapps, dash, ydm, analytics, u1, u2, u3, u4]
+  );
 
-  return { plugins, isLoading: l1 || l2 || l3 || l4, togglePlugin };
+  return {
+    plugins,
+    isLoading: l1 || l2 || l3 || l4 || l5,
+    togglePlugin,
+  };
 };
 
 /* --------------------------- Component ---------------------------- */
@@ -190,13 +216,16 @@ export default function PluginManager({
   const [tab, setTab] = useState("ALL");
   const [active, setActive] = useState<Plugin | null>(null);
 
-  const handleToggle = async (id: string, type: string, enabled: boolean) => {
-    const result = await togglePlugin(id, type, enabled);
-    if (!result.success && result.needsConfig) {
-      const p = plugins.find(pl => pl.id === id);
-      if (p) setActive(p);
-    }
-  };
+  const handleToggle = useCallback(
+    async (id: string, type: string, enabled: boolean) => {
+      const result = await togglePlugin(id, type, enabled);
+      if (!result.success && result.needsConfig) {
+        const p = plugins.find(pl => pl.id === id);
+        if (p) setActive(p);
+      }
+    },
+    [togglePlugin, plugins]
+  );
 
   const filtered = useMemo(() => {
     return plugins.filter(p => {
@@ -259,25 +288,25 @@ export default function PluginManager({
             <TabsList className="inline-flex h-9 gap-0.5 rounded-lg bg-slate-50 p-0.5 sm:h-10 sm:gap-1 sm:p-1">
               <TabsTrigger
                 value="ALL"
-                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
+                className="data-[state=active]:usePatchSMSSettings-sm cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 All
               </TabsTrigger>
               <TabsTrigger
                 value="COMMUNICATION"
-                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
+                className="data-[state=active]:usePatchSMSSettings-sm cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 Communication
               </TabsTrigger>
               <TabsTrigger
                 value="SHIPPING"
-                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
+                className="data-[state=active]:usePatchSMSSettings-sm cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 Shipping
               </TabsTrigger>
               <TabsTrigger
                 value="ANALYTICS"
-                className="rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm sm:px-4 sm:py-1.5 sm:text-sm"
+                className="data-[state=active]:usePatchSMSSettings-sm cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-slate-900 sm:px-4 sm:py-1.5 sm:text-sm"
               >
                 Analytics
               </TabsTrigger>
@@ -291,7 +320,7 @@ export default function PluginManager({
             return (
               <Card
                 key={p.id}
-                className="group border-slate-200 bg-white p-2 transition-shadow hover:shadow-md"
+                className="group transition-usePatchSMSSettings hover:usePatchSMSSettings-md border-slate-200 bg-white p-2"
               >
                 <CardContent className="p-4 py-0 sm:p-6">
                   <div className="flex h-full flex-col gap-3 sm:gap-4">
@@ -309,6 +338,11 @@ export default function PluginManager({
                           <p className="text-[10px] text-slate-500 sm:text-xs">
                             {p.category}
                           </p>
+                          {p.extraInfo && (
+                            <span className="mt-1 w-fit rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-600">
+                              {p.extraInfo}
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="shrink-0">
@@ -340,16 +374,18 @@ export default function PluginManager({
                           {p.is_enabled ? "Active" : "Inactive"}
                         </span>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setActive(p)}
-                        className="h-7 rounded-md px-2 text-[10px] hover:bg-slate-50 sm:h-8 sm:px-3 sm:text-xs"
-                      >
-                        <Settings className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
-                        <span className="hidden sm:inline">Configure</span>
-                        <span className="sm:hidden">Config</span>
-                      </Button>
+                      {p.type !== "sms" && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setActive(p)}
+                          className="h-7 rounded-md px-2 text-[10px] hover:bg-slate-50 sm:h-8 sm:px-3 sm:text-xs"
+                        >
+                          <Settings className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
+                          <span className="hidden sm:inline">Configure</span>
+                          <span className="sm:hidden">Config</span>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -361,27 +397,9 @@ export default function PluginManager({
         {/* Empty State */}
         {filtered.length === 0 && (
           <div className="rounded-lg border border-slate-200 bg-white py-12 text-center sm:py-16">
-            <div className="mb-3 flex justify-center sm:mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 sm:h-12 sm:w-12">
-                <Search className="h-5 w-5 text-slate-400 sm:h-6 sm:w-6" />
-              </div>
-            </div>
             <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
               No plugins found
             </h3>
-            <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-              Try adjusting your search or filters
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setSearch("");
-                setTab("ALL");
-              }}
-              className="mt-4 h-8 rounded-lg text-xs sm:mt-6 sm:h-9 sm:text-sm"
-            >
-              Clear Filters
-            </Button>
           </div>
         )}
       </div>
