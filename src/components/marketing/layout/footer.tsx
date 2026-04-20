@@ -126,7 +126,7 @@ export const Footer = () => {
                 Marketplace & Features
               </h4>
               <div className="flex flex-col space-y-2">
-                <FooterLink href="/ai-website-builder-in-nepdora">
+                <FooterLink href="/ai-website-builder">
                   AI Website Builder
                 </FooterLink>
                 <FooterLink href="/integrations/esewa-payment">

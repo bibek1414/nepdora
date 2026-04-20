@@ -5,7 +5,7 @@ const rawSiteUrl =
   `https://${process.env.NEXT_PUBLIC_BASE_DOMAIN || "www.nepdora.com"}`;
 
 export const SITE_URL = rawSiteUrl.replace(/\/$/, "");
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/nepdora-logooo.svg`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/nepdora.jpg`;
 export const SITE_NAME = "Nepdora";
 
 export function absoluteUrl(path = "") {
@@ -13,33 +13,6 @@ export function absoluteUrl(path = "") {
     path.startsWith("/") || path === "" ? path : `/${path}`;
   return `${SITE_URL}${normalizedPath}`;
 }
-
-// export function getDynamicOgUrl({
-//   title,
-//   subtitle,
-//   label,
-// }: {
-//   title: string;
-//   subtitle?: string;
-//   label?: string;
-// }) {
-//   const params = new URLSearchParams();
-
-//   // Clean title for URL
-//   params.set("title", title.trim());
-
-//   if (subtitle) {
-//     params.set("subtitle", subtitle.trim());
-//   }
-
-//   if (label) {
-//     params.set("label", label.trim());
-//   } else {
-//     params.set("label", "Nepal's #1 AI Website Builder");
-//   }
-
-//   return `${SITE_URL}/api/og?${params.toString()}`;
-// }
 
 export function buildMarketingMetadata({
   title,
