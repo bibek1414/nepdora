@@ -8,6 +8,7 @@ import {
   SMSHistory,
   CreateSMSPurchaseRequest,
   UpdateSMSPurchaseRequest,
+  PaginatedResponse,
 } from "@/types/owner-site/admin/sms";
 
 export const smsApi = {
@@ -23,9 +24,9 @@ export const smsApi = {
   },
 
   // List SMS credit purchases
-  getPurchases: async (): Promise<SMSPurchaseHistory[]> => {
+  getPurchases: async (page: number = 1): Promise<PaginatedResponse<SMSPurchaseHistory>> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sms/purchases/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/sms/purchases/?page=${page}`, {
       method: "GET",
       // User specified no authentication for GET/list, but we'll include headers for X-Tenant
       headers: createHeaders(),
@@ -75,9 +76,9 @@ export const smsApi = {
   },
 
   // List SMS sending history
-  getHistory: async (): Promise<SMSHistory[]> => {
+  getHistory: async (page: number = 1): Promise<PaginatedResponse<SMSHistory>> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sms/history/`, {
+    const response = await apiFetch(`${API_BASE_URL}/api/sms/history/?page=${page}`, {
       method: "GET",
       headers: createHeaders(),
     });

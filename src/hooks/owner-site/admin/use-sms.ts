@@ -7,9 +7,9 @@ import { toast } from "sonner";
 export const smsKeys = {
   all: ["sms"] as const,
   balance: () => [...smsKeys.all, "balance"] as const,
-  purchases: () => [...smsKeys.all, "purchases"] as const,
-  purchase: (id: number | string) => [...smsKeys.purchases(), id] as const,
-  history: () => [...smsKeys.all, "history"] as const,
+  purchases: (page: number = 1) => [...smsKeys.all, "purchases", page] as const,
+  purchase: (id: number | string) => [...smsKeys.all, "purchases", "detail", id] as const,
+  history: (page: number = 1) => [...smsKeys.all, "history", page] as const,
 };
 
 // Hook to get SMS balance
@@ -23,10 +23,10 @@ export const useSMSBalance = () => {
 };
 
 // Hook to list SMS purchases
-export const useSMSPurchases = () => {
+export const useSMSPurchases = (page: number = 1) => {
   return useQuery({
-    queryKey: smsKeys.purchases(),
-    queryFn: smsApi.getPurchases,
+    queryKey: smsKeys.purchases(page),
+    queryFn: () => smsApi.getPurchases(page),
   });
 };
 
@@ -71,9 +71,9 @@ export const usePatchSMSPurchase = () => {
 };
 
 // Hook to list SMS sending history
-export const useSMSHistory = () => {
+export const useSMSHistory = (page: number = 1) => {
   return useQuery({
-    queryKey: smsKeys.history(),
-    queryFn: smsApi.getHistory,
+    queryKey: smsKeys.history(page),
+    queryFn: () => smsApi.getHistory(page),
   });
 };
