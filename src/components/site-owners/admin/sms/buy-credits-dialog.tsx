@@ -137,7 +137,7 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
                 >
                   <span className="text-lg font-bold text-slate-900">{pkg.amount}</span>
                   <span className="text-xs text-slate-500 font-medium">Credits</span>
-                  <div className="mt-1 text-sm font-bold text-blue-600">Rs. {pkg.price}</div>
+                  <div className="mt-1 text-sm font-bold text-blue-600">Rs. {pkg.price.toLocaleString("en-IN")}</div>
                   {pkg.discount && (
                     <span className="absolute -top-2 -right-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
                       {pkg.discount}
@@ -220,7 +220,7 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
                 Processing...
               </>
             ) : (
-              `Pay Rs. ${activePrice}`
+              `Pay Rs. ${activePrice.toLocaleString("en-IN")}`
             )}
           </Button>
         </DialogFooter>

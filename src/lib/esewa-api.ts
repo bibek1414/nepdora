@@ -128,6 +128,14 @@ class EsewaAPIService {
     try {
       this.validateInitialized();
 
+      if (!verificationData.data) {
+        return {
+          success: false,
+          error: "Missing verification data from eSewa",
+          status_code: 400,
+        };
+      }
+
       console.log(
         "Verifying eSewa payment with data:",
         verificationData.data.substring(0, 100) + "..."

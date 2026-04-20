@@ -18,16 +18,23 @@ async function fetchNepdoraCentralCredentials(
   paymentType: "esewa" | "khalti"
 ): Promise<{ secret_key: string; merchant_code: string | null }> {
   try {
-    const centralApiUrl = "https://nepdora.baliyoventures.com/api/nepdora-payments/";
-    const response = await fetch(`${centralApiUrl}?payment_type=${paymentType}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+    const centralApiUrl =
+      "https://nepdora.baliyoventures.com/api/nepdora-payments/";
+    const response = await fetch(
+      `${centralApiUrl}?payment_type=${paymentType}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     if (!response.ok) throw new Error(`Failed to fetch central credentials`);
     const data = await response.json();
-    const centralGateway = data.find((g: any) => g.payment_type === paymentType);
-    if (!centralGateway) throw new Error(`Central credentials for ${paymentType} not found`);
+    const centralGateway = data.find(
+      (g: any) => g.payment_type === paymentType
+    );
+    if (!centralGateway)
+      throw new Error(`Central credentials for ${paymentType} not found`);
 
     return {
       secret_key: centralGateway.secret_key,
@@ -65,10 +72,14 @@ async function recordSmsPurchase(data: {
   amount: number;
   transaction_id: string;
   price: string;
+  payment_type: string;
+  payment_method?: string;
 }) {
   const API_BASE_URL = getApiBaseUrl();
   const cookieStore = await cookies();
-  const token = cookieStore.get("authToken")?.value || cookieStore.get("google_auth_token")?.value;
+  const token =
+    cookieStore.get("authToken")?.value ||
+    cookieStore.get("google_auth_token")?.value;
   const tenantDomain = await getTenantDomain();
 
   const response = await fetch(`${API_BASE_URL}/api/sms/purchases/`, {
@@ -96,7 +107,11 @@ export async function POST(req: Request) {
     const { method, amount, transaction_id } = requestData;
 
     if (!method || !["esewa", "khalti"].includes(method)) {
-      return NextResponse.json({ success: false, error: "Invalid payment method" }, { status: 400 });
+      console.warn("Invalid payment method attempted:", method);
+      return NextResponse.json(
+        { success: false, error: "Invalid payment method" },
+        { status: 400 }
+      );
     }
 
     const creds = await getCredentials(method as "esewa" | "khalti");
@@ -112,7 +127,11 @@ export async function POST(req: Request) {
 
       const response = await esewaAPI_instance.verifyPayment({ data });
       if (!response.success) {
-        return NextResponse.json({ success: false, error: response.error }, { status: 500 });
+        console.error("eSewa Verification Failed:", response.error);
+        return NextResponse.json(
+          { success: false, error: response.error },
+          { status: 500 }
+        );
       }
       verificationResult = response.data;
     } else {
@@ -123,30 +142,62 @@ export async function POST(req: Request) {
 
       const response = await khaltiAPI_instance.verifyPayment(pidx);
       if (!response.success) {
-        return NextResponse.json({ success: false, error: response.error }, { status: 500 });
+        console.error("Khalti Verification Failed:", response.error);
+        return NextResponse.json(
+          { success: false, error: response.error },
+          { status: 500 }
+        );
       }
-      
-      const status = khaltiAPI_instance.validatePaymentStatus(response.data.status);
+
+      const status = khaltiAPI_instance.validatePaymentStatus(
+        response.data.status
+      );
       if (!status.isSuccess) {
-        return NextResponse.json({ success: false, error: status.message }, { status: 400 });
+        console.warn("Khalti Payment Incomplete:", status.message);
+        return NextResponse.json(
+          { success: false, error: status.message },
+          { status: 400 }
+        );
       }
       verificationResult = response.data;
     }
 
     // Payment verified, now record in backend
-    // transaction_id should be unique and passed from client
+    // transaction_id should be the gateway's transaction code/id
+    const gatewayTransactionId =
+      method === "esewa"
+        ? verificationResult.transaction_code
+        : verificationResult.transaction_id || verificationResult.pidx;
+
+    // If Khalti, amount is in paisa, so divide by 100
+    const finalPrice =
+      method === "khalti"
+        ? (Number(verificationResult.total_amount) / 100).toString()
+        : (verificationResult.total_amount || amount).toString();
+
     await recordSmsPurchase({
       amount: Number(amount),
-      transaction_id: transaction_id,
-      price: verificationResult.total_amount || amount.toString(),
+      transaction_id: gatewayTransactionId,
+      price: finalPrice,
+      payment_type: method,
+      payment_method: method, // Alias for backend compatibility
     });
 
     return NextResponse.json({
       success: true,
       message: "Payment verified and SMS credits added",
+      data: {
+        price: finalPrice,
+        transaction_id: gatewayTransactionId,
+        amount: amount,
+        payment_type: method,
+      },
     });
   } catch (err: any) {
     console.error("SMS Payment Verification Error:", err);
-    return NextResponse.json({ success: false, error: err.message || "Verification failed" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: err.message || "Verification failed" },
+      { status: 500 }
+    );
   }
 }

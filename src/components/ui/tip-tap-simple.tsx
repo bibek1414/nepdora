@@ -124,16 +124,22 @@ const TipTapSimple = forwardRef<TipTapSimpleRef, TipTapSimpleProps>(
         variant={isActive ? "default" : "ghost"}
         size="sm"
         onClick={onClick}
+        onMouseDown={e => {
+          // Prevent the button from taking focus away from the editor
+          e.preventDefault();
+        }}
         disabled={disabled}
         title={title}
-        className={`h-8 w-8 p-0 ${isActive ? "bg-slate-100 text-slate-900" : "text-slate-500"}`}
+        className={`h-8 w-8 p-0 ${isActive ? "bg-slate-100 text-slate-900" : "text-slate-500 hover:text-slate-900"}`}
       >
         {children}
       </Button>
     );
 
     return (
-      <div className={`flex flex-col border border-slate-200 rounded-lg overflow-hidden bg-white ${className}`}>
+      <div
+        className={`flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white ${className}`}
+      >
         {!readOnly && editor && (
           <div className="flex flex-wrap gap-1 border-b border-slate-100 bg-slate-50/50 p-1.5">
             <ToolbarButton
@@ -150,8 +156,8 @@ const TipTapSimple = forwardRef<TipTapSimpleRef, TipTapSimpleProps>(
             >
               <Redo className="h-4 w-4" />
             </ToolbarButton>
-            
-            <div className="w-px h-4 bg-slate-200 mx-1 self-center" />
+
+            <div className="mx-1 h-4 w-px self-center bg-slate-200" />
 
             <ToolbarButton
               onClick={() => editor.chain().focus().toggleBold().run()}
@@ -174,8 +180,8 @@ const TipTapSimple = forwardRef<TipTapSimpleRef, TipTapSimpleProps>(
             >
               <UnderlineIcon className="h-4 w-4" />
             </ToolbarButton>
-            
-            <div className="w-px h-4 bg-slate-200 mx-1 self-center" />
+
+            <div className="mx-1 h-4 w-px self-center bg-slate-200" />
 
             <ToolbarButton
               onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -190,17 +196,6 @@ const TipTapSimple = forwardRef<TipTapSimpleRef, TipTapSimpleProps>(
               title="Ordered List"
             >
               <ListOrdered className="h-4 w-4" />
-            </ToolbarButton>
-
-            <ToolbarButton
-              onClick={() => {
-                const url = window.prompt("Enter URL");
-                if (url) editor.chain().focus().setLink({ href: url }).run();
-              }}
-              isActive={editor.isActive("link")}
-              title="Link"
-            >
-              <LinkIcon className="h-4 w-4" />
             </ToolbarButton>
           </div>
         )}

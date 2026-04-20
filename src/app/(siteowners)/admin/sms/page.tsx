@@ -28,31 +28,34 @@ import { SMSDetailsDialog } from "@/components/site-owners/admin/sms/sms-details
 import { format } from "date-fns";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import { htmlToPlainText } from "@/utils/html-sanitizer";
+import Image from "next/image";
+
+const PAYMENT_LOGOS: Record<string, string> = {
+  esewa: "/images/payment-gateway/esewa.png",
+  khalti: "/images/payment-gateway/khalti.png",
+};
 
 export default function SMSManagementPage() {
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [selectedSMS, setSelectedSMS] = useState<any | null>(null);
-  
+
   const { data: balance, isLoading: isBalanceLoading } = useSMSBalance();
   const { data: purchases, isLoading: isPurchasesLoading } = useSMSPurchases();
   const { data: history, isLoading: isHistoryLoading } = useSMSHistory();
 
   return (
-    <div className="container mx-auto h-screen space-y-8 overflow-y-auto p-4 md:p-8 lg:p-12">
+    <div className="container mx-auto h-screen space-y-8 -y-auto p-4 md:p-8 lg:p-12">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-bold -tight text-slate-900">
             SMS Management
           </h1>
           <p className="text-slate-500">
             Track your SMS usage, check balance, and top up credits.
           </p>
         </div>
-        <Button
-          onClick={() => setShowBuyModal(true)}
-          className="bg-blue-600 text-white shadow-md transition-all hover:bg-blue-700 active:scale-[0.98]"
-        >
+        <Button onClick={() => setShowBuyModal(true)} variant="default">
           <Plus className="mr-2 h-4 w-4 text-white" />
           Buy Credits
         </Button>
@@ -60,8 +63,8 @@ export default function SMSManagementPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="border-blue-100 bg-blue-50/20 shadow-sm transition-shadow hover:shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="-sm transition- hover:-md border-blue-100 bg-blue-50/20">
+          <CardHeader className="flex flex-row items-center justify-between px-1 pb-2">
             <CardTitle className="text-sm font-semibold text-blue-900">
               Current Balance
             </CardTitle>
@@ -75,14 +78,14 @@ export default function SMSManagementPage() {
                 {balance?.sms_credit ?? 0}
               </div>
             )}
-            <p className="mt-1 text-[11px] font-medium tracking-wider text-slate-500 uppercase">
+            <p className="mt-1 text-[11px] font-medium -wider text-slate-500 ">
               Credits Available
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="-sm transition- hover:-md border-slate-200 bg-white">
+          <CardHeader className="flex flex-row items-center justify-between px-1 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-700">
               Service Status
             </CardTitle>
@@ -103,14 +106,14 @@ export default function SMSManagementPage() {
                 {balance?.sms_enabled ? "Active" : "Disabled"}
               </Badge>
             )}
-            <p className="mt-1 text-[11px] font-medium tracking-wider text-slate-500 uppercase">
+            <p className="mt-1 text-[11px] font-medium -wider text-slate-500 ">
               SMS System Status
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md sm:col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="-sm transition- hover:-md border-slate-200 bg-white sm:col-span-2 lg:col-span-1">
+          <CardHeader className="flex flex-row items-center justify-between px-1 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-700">
               Total Spent
             </CardTitle>
@@ -124,10 +127,10 @@ export default function SMSManagementPage() {
                 Rs.{" "}
                 {purchases
                   ?.reduce((acc, p) => acc + parseFloat(p.price), 0)
-                  .toLocaleString()}
+                  .toLocaleString("en-IN")}
               </div>
             )}
-            <p className="mt-1 text-[11px] font-medium tracking-wider text-slate-500 uppercase">
+            <p className="mt-1 text-[11px] font-medium -wider text-slate-500 ">
               Lifetime Investment
             </p>
           </CardContent>
@@ -139,13 +142,13 @@ export default function SMSManagementPage() {
         <TabsList className="mb-6 h-11 w-full justify-start rounded-lg bg-slate-100/50 p-1 md:w-auto">
           <TabsTrigger
             value="purchases"
-            className="rounded-md px-6 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            className="data-[state=active]:-sm rounded-md px-6 text-sm font-medium transition-all data-[state=active]:bg-white"
           >
             Purchase History
           </TabsTrigger>
           <TabsTrigger
             value="history"
-            className="rounded-md px-6 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            className="data-[state=active]:-sm rounded-md px-6 text-sm font-medium transition-all data-[state=active]:bg-white"
           >
             Sending History
           </TabsTrigger>
@@ -155,24 +158,27 @@ export default function SMSManagementPage() {
           value="purchases"
           className="animate-in fade-in-50 duration-500"
         >
-          <Card className="overflow-hidden border-slate-200 shadow-sm">
-            <div className="overflow-x-auto">
+          <Card className="- border-slate-200">
+            <div className="">
               <table className="w-full text-left">
                 <thead className="border-b border-slate-200 bg-slate-50">
                   <tr>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Purchase ID
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Credits
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Amount Paid
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
+                      Method
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Transaction ID
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Date
                     </th>
                   </tr>
@@ -199,7 +205,29 @@ export default function SMSManagementPage() {
                           {purchase.amount}
                         </td>
                         <td className="px-6 py-4 text-sm font-medium text-slate-700">
-                          Rs. {parseFloat(purchase.price).toLocaleString()}
+                          Rs. {Number(purchase.price).toLocaleString("en-IN")}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          {purchase.payment_type ? (
+                            <div className="flex items-center gap-2">
+                              <div className="relative h-5 w-5 shrink-0 rounded">
+                                <img
+                                  src={
+                                    PAYMENT_LOGOS[
+                                      purchase.payment_type.toLowerCase()
+                                    ] || ""
+                                  }
+                                  alt={purchase.payment_type}
+                                  className="object-contain"
+                                />
+                              </div>
+                              <span className="font-medium text-slate-600 capitalize">
+                                {purchase.payment_type}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-slate-400">—</span>
+                          )}
                         </td>
                         <td className="px-6 py-4 font-mono text-sm text-slate-500">
                           {purchase.transaction_id}
@@ -234,24 +262,24 @@ export default function SMSManagementPage() {
           value="history"
           className="animate-in fade-in-50 duration-500"
         >
-          <Card className="overflow-hidden border-slate-200 text-balance shadow-sm">
-            <div className="overflow-x-auto">
+          <Card className="-sm -hidden border-slate-200 text-balance">
+            <div className="-x-auto">
               <table className="w-full text-left">
                 <thead className="border-b border-slate-200 bg-slate-50">
                   <tr>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Receiver
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Message
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Credits
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Status
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold tracking-wider text-slate-500 uppercase">
+                    <th className="px-6 py-4 text-xs font-bold -wider text-slate-500 ">
                       Sent At
                     </th>
                   </tr>
@@ -269,7 +297,7 @@ export default function SMSManagementPage() {
                     history.map(item => (
                       <tr
                         key={item.id}
-                        className="transition-colors hover:bg-slate-50/50 cursor-pointer"
+                        className="cursor-pointer transition-colors hover:bg-slate-50/50"
                         onClick={() => setSelectedSMS(item)}
                       >
                         <td className="flex items-center gap-2 px-6 py-4 text-sm font-medium whitespace-nowrap text-slate-900">
@@ -327,10 +355,10 @@ export default function SMSManagementPage() {
 
       {/* Modals */}
       <SMSBuyCreditsDialog open={showBuyModal} onOpenChange={setShowBuyModal} />
-      <SMSDetailsDialog 
-        item={selectedSMS} 
-        isOpen={!!selectedSMS} 
-        onClose={() => setSelectedSMS(null)} 
+      <SMSDetailsDialog
+        item={selectedSMS}
+        isOpen={!!selectedSMS}
+        onClose={() => setSelectedSMS(null)}
       />
     </div>
   );

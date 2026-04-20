@@ -9,6 +9,7 @@ export interface SMSPurchaseHistory {
   amount: number;
   price: string;
   transaction_id: string;
+  payment_type?: string;
   purchased_at: string;
 }
 
@@ -30,6 +31,8 @@ export interface CreateSMSPurchaseRequest {
   amount: number;
   transaction_id: string;
   price?: string;
+  payment_type?: string;
+  payment_method?: string;
 }
 
 export interface UpdateSMSPurchaseRequest {

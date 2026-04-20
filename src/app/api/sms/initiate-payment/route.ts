@@ -73,7 +73,7 @@ async function fetchNepdoraCentralCredentials(
   try {
     const centralApiUrl =
       "https://nepdora.baliyoventures.com/api/nepdora-payments/";
-    
+
     const response = await fetch(
       `${centralApiUrl}?payment_type=${paymentType}`,
       {
@@ -134,15 +134,21 @@ export async function POST(req: Request) {
   try {
     const subdomain = extractSubdomainFromRequest(req);
     const rawData = await req.json();
-    
+
     const { amount, productName, transactionId, method } = rawData;
 
     if (!amount || isNaN(parseFloat(amount))) {
-      return NextResponse.json({ success: false, error: "Valid amount is required" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Valid amount is required" },
+        { status: 400 }
+      );
     }
 
     if (!method || !["esewa", "khalti"].includes(method)) {
-      return NextResponse.json({ success: false, error: "Valid payment method is required" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Valid payment method is required" },
+        { status: 400 }
+      );
     }
 
     const { successUrl, failureUrl } = buildRedirectUrls(req, subdomain);
@@ -161,14 +167,17 @@ export async function POST(req: Request) {
           total_amount: parseFloat(amount),
           product_service_charge: 0,
           product_delivery_charge: 0,
-          success_url: `${successUrl}esewa&`,
+          success_url: `${successUrl}esewa`,
           failure_url: `${failureUrl}esewa`,
         };
 
         const response = await esewaAPI_instance.initiatePayment(esewaRequest);
 
         if (!response.success) {
-          return NextResponse.json({ success: false, error: response.error }, { status: 500 });
+          return NextResponse.json(
+            { success: false, error: response.error },
+            { status: 500 }
+          );
         }
 
         return NextResponse.json({
@@ -192,14 +201,31 @@ export async function POST(req: Request) {
           amount: khaltiAPI_instance.formatAmount(amount),
           purchase_order_id: transactionId,
           purchase_order_name: productName,
-          amount_breakdown: [{ label: productName, amount: khaltiAPI_instance.formatAmount(amount) }],
-          product_details: [{ identity: transactionId, name: productName, total_price: khaltiAPI_instance.formatAmount(amount), quantity: 1, unit_price: khaltiAPI_instance.formatAmount(amount) }],
+          amount_breakdown: [
+            {
+              label: productName,
+              amount: khaltiAPI_instance.formatAmount(amount),
+            },
+          ],
+          product_details: [
+            {
+              identity: transactionId,
+              name: productName,
+              total_price: khaltiAPI_instance.formatAmount(amount),
+              quantity: 1,
+              unit_price: khaltiAPI_instance.formatAmount(amount),
+            },
+          ],
         };
 
-        const response = await khaltiAPI_instance.initiatePayment(khaltiRequest);
+        const response =
+          await khaltiAPI_instance.initiatePayment(khaltiRequest);
 
         if (!response.success) {
-          return NextResponse.json({ success: false, error: response.error }, { status: 500 });
+          return NextResponse.json(
+            { success: false, error: response.error },
+            { status: 500 }
+          );
         }
 
         return NextResponse.json({
@@ -212,10 +238,16 @@ export async function POST(req: Request) {
       }
 
       default:
-        return NextResponse.json({ success: false, error: "Invalid payment method" }, { status: 400 });
+        return NextResponse.json(
+          { success: false, error: "Invalid payment method" },
+          { status: 400 }
+        );
     }
   } catch (err: any) {
     console.error("SMS Payment Initiation Error:", err);
-    return NextResponse.json({ success: false, error: err.message || "Failed to initiate payment" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: err.message || "Failed to initiate payment" },
+      { status: 500 }
+    );
   }
 }
