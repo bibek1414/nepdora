@@ -24,11 +24,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SMSBuyCreditsDialog } from "@/components/site-owners/admin/sms/buy-credits-dialog";
+import { SMSDetailsDialog } from "@/components/site-owners/admin/sms/sms-details-dialog";
 import { format } from "date-fns";
 import { generateAdminPageMetadata } from "@/lib/metadata-utils";
+import { htmlToPlainText } from "@/utils/html-sanitizer";
 
 export default function SMSManagementPage() {
   const [showBuyModal, setShowBuyModal] = useState(false);
+  const [selectedSMS, setSelectedSMS] = useState<any | null>(null);
+  
   const { data: balance, isLoading: isBalanceLoading } = useSMSBalance();
   const { data: purchases, isLoading: isPurchasesLoading } = useSMSPurchases();
   const { data: history, isLoading: isHistoryLoading } = useSMSHistory();
@@ -265,7 +269,8 @@ export default function SMSManagementPage() {
                     history.map(item => (
                       <tr
                         key={item.id}
-                        className="transition-colors hover:bg-slate-50/50"
+                        className="transition-colors hover:bg-slate-50/50 cursor-pointer"
+                        onClick={() => setSelectedSMS(item)}
                       >
                         <td className="flex items-center gap-2 px-6 py-4 text-sm font-medium whitespace-nowrap text-slate-900">
                           <Phone className="h-3 w-3 font-bold text-slate-400" />
@@ -273,7 +278,7 @@ export default function SMSManagementPage() {
                         </td>
                         <td className="max-w-[400px] min-w-[200px] px-6 py-4 text-sm text-slate-600">
                           <p className="line-clamp-2 leading-relaxed">
-                            {item.message}
+                            {htmlToPlainText(item.message)}
                           </p>
                         </td>
                         <td className="px-6 py-4 text-sm font-bold text-slate-900">
@@ -322,6 +327,11 @@ export default function SMSManagementPage() {
 
       {/* Modals */}
       <SMSBuyCreditsDialog open={showBuyModal} onOpenChange={setShowBuyModal} />
+      <SMSDetailsDialog 
+        item={selectedSMS} 
+        isOpen={!!selectedSMS} 
+        onClose={() => setSelectedSMS(null)} 
+      />
     </div>
   );
 }

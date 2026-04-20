@@ -377,15 +377,43 @@ export function sanitizeProductDescription(productDescription: string): string {
 }
 
 /**
- * Basic sanitization for user-generated content
- * @param userContent - The user content to sanitize
- * @returns Sanitized user content
+ * Converts HTML content to plain text for SMS or other text-only platforms
+ * @param html - The HTML string to convert
+ * @returns Plain text representation
  */
-export function sanitizeUserContent(userContent: string): string {
-  return sanitizeHtmlContent(userContent, {
-    allowedTags: ["p", "br", "strong", "em", "b", "i"],
-    allowedAttributes: [],
-    enableListStyling: false,
-    enableSpacingPreservation: true,
-  });
+export function htmlToPlainText(html: string | null | undefined): string {
+  if (!html) return "";
+
+  // 1. Replace block elements and line breaks with newlines
+  let text = html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n")
+    .replace(/<\/div>/gi, "\n")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<\/h[1-6]>/gi, "\n");
+
+  // 2. Strip all remaining HTML tags
+  text = text.replace(/<[^>]+>/g, "");
+
+  // 3. Decode common HTML entities
+  text = text
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&middot;/g, "·")
+    .replace(/&bull;/g, "•")
+    .replace(/&#8203;/g, ""); // Zero-width space
+
+  // 4. Normalize whitespace
+  text = text
+    .split("\n")
+    .map(line => line.trim())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n") // Max 2 consecutive newlines
+    .trim();
+
+  return text;
 }
