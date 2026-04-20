@@ -111,7 +111,7 @@ export function NepdoraPopup() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="relative overflow-hidden rounded-2xl bg-white shadow-xl"
+              className="relative overflow-hidden rounded-2xl bg-white"
             >
               {/* Close button */}
 
@@ -207,7 +207,7 @@ export function NepdoraPopup() {
                   <Button
                     type="submit"
                     disabled={submitMutation.isPending}
-                    className="bg-primary hover:bg-primary/90 mt-2 h-12 w-full rounded-xl font-semibold text-white shadow-md transition-all active:scale-[0.98]"
+                    className="bg-primary hover:bg-primary/90 mt-2 h-12 w-full rounded-xl font-semibold text-white transition-all active:scale-[0.98]"
                   >
                     {submitMutation.isPending ? (
                       <span className="flex items-center gap-2">
@@ -235,7 +235,7 @@ export function NepdoraPopup() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className="relative overflow-hidden rounded-2xl bg-white p-8 text-center shadow-xl"
+              className="relative overflow-hidden rounded-2xl bg-white p-8 text-center"
             >
               <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-300" />
 

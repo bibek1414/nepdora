@@ -22,6 +22,7 @@ import {
   Wallet,
   History,
   MousePointerClick,
+  MessageSquare,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuthContext } from "@/components/super-admin/auth-wrapper";
@@ -59,6 +60,7 @@ const navigationGroups = [
       },
       { name: "Blogs", href: "/superadmin/blogs", icon: FileText },
       { name: "Newsletter", href: "/superadmin/newsletter", icon: Newspaper },
+      { name: "SMS Management", href: "/superadmin/sms", icon: MessageSquare },
     ],
   },
   {
