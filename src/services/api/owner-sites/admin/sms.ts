@@ -9,6 +9,8 @@ import {
   CreateSMSPurchaseRequest,
   UpdateSMSPurchaseRequest,
   PaginatedResponse,
+  SendSMSRequest,
+  SendSMSResponse,
 } from "@/types/owner-site/admin/sms";
 
 export const smsApi = {
@@ -83,6 +85,34 @@ export const smsApi = {
       headers: createHeaders(),
     });
     await handleApiError(response);
+    return response.json();
+  },
+
+  // Send SMS
+  sendSMS: async (data: SendSMSRequest): Promise<SendSMSResponse> => {
+    const API_BASE_URL = getApiBaseUrl();
+    const response = await apiFetch(`${API_BASE_URL}/api/sms/send-sms/`, {
+      method: "POST",
+      headers: createHeaders(),
+      body: JSON.stringify(data),
+    });
+    // For send-sms, we might want to handle common error codes gracefully in the UI
+    // so we don't always call handleApiError which might throw and trigger global error handling
+    if (!response.ok) {
+      try {
+        const errorData = await response.json();
+        return {
+          success: false,
+          message: errorData.error || errorData.message || "Failed to send SMS",
+          error: errorData.error,
+        };
+      } catch {
+        return {
+          success: false,
+          message: "An unexpected error occurred",
+        };
+      }
+    }
     return response.json();
   },
 };

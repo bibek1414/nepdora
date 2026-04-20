@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { smsApi } from "@/services/api/owner-sites/admin/sms";
-import { CreateSMSPurchaseRequest, UpdateSMSPurchaseRequest } from "@/types/owner-site/admin/sms";
+import { CreateSMSPurchaseRequest, UpdateSMSPurchaseRequest, SendSMSRequest } from "@/types/owner-site/admin/sms";
 import { toast } from "sonner";
 
 // Query Keys
@@ -75,5 +75,26 @@ export const useSMSHistory = (page: number = 1) => {
   return useQuery({
     queryKey: smsKeys.history(page),
     queryFn: () => smsApi.getHistory(page),
+  });
+};
+
+// Hook to send an SMS
+export const useSendSMS = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: SendSMSRequest) => smsApi.sendSMS(data),
+    onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: smsKeys.balance() });
+        queryClient.invalidateQueries({ queryKey: smsKeys.history() });
+        toast.success(data.message || "SMS sent successfully");
+      } else {
+        toast.error(data.message || "Failed to send SMS");
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to send SMS");
+    },
   });
 };

@@ -45,3 +45,22 @@ export interface CreateSMSPurchaseRequest {
 export interface UpdateSMSPurchaseRequest {
   price?: string;
 }
+
+export interface SendSMSRequest {
+  order_id?: number | string;
+  phone_number?: string;
+  message: string;
+}
+
+export interface SendSMSResponse {
+  success: boolean;
+  message: string;
+  details?: {
+    success?: boolean;
+    response?: any;
+    credits_used: number;
+    remaining_credits: number;
+    [key: string]: any;
+  };
+  error?: string;
+}

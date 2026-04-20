@@ -467,8 +467,10 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                     <SMSOrderButton
                       order={currentOrder}
                       size="sm"
+                      onSuccess={onClose}
                       className="cursor-pointer rounded-full border-0 bg-gray-900 px-4 text-[12px] text-white hover:bg-black"
                     />
+
                   </div>
                 </div>
 
