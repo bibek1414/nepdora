@@ -8,6 +8,8 @@ export default function LogoutPage() {
     const authLocalStorageKeys = [
       "authTokens",
       "authUser",
+      "authToken",
+      "refreshToken",
       "verificationEmail",
       "nepdora-subscription-status",
     ];
