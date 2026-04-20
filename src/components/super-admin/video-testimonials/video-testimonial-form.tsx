@@ -73,14 +73,23 @@ export function VideoTestimonialModal({
   // Reset form when editing or adding
   const mode = testimonial ? "edit" : "create";
 
-  if (isOpen && testimonial && form.getValues("name") === "" && form.getValues("video_url") === "") {
+  if (
+    isOpen &&
+    testimonial &&
+    form.getValues("name") === "" &&
+    form.getValues("video_url") === ""
+  ) {
     form.reset({
       name: testimonial.name,
       video_url: testimonial.video_url,
     });
-  } else if (isOpen && !testimonial && (form.getValues("name") !== "" || form.getValues("video_url") !== "")) {
-     // This is a bit hacky to prevent re-renders, but ensures clean form for "Add"
-     // A better way is usually with useEffect but let's keep it simple for now
+  } else if (
+    isOpen &&
+    !testimonial &&
+    (form.getValues("name") !== "" || form.getValues("video_url") !== "")
+  ) {
+    // This is a bit hacky to prevent re-renders, but ensures clean form for "Add"
+    // A better way is usually with useEffect but let's keep it simple for now
   }
 
   const handleSubmit = async (data: VideoFormData) => {
@@ -118,7 +127,10 @@ export function VideoTestimonialModal({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5 py-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-5 py-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -164,7 +176,11 @@ export function VideoTestimonialModal({
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading} className="bg-slate-900 hover:bg-slate-800">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="bg-slate-900 hover:bg-slate-800"
+              >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {mode === "create" ? "Add Testimonial" : "Save Changes"}
               </Button>

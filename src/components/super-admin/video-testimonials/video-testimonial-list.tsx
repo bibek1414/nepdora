@@ -20,8 +20,10 @@ import { Search, X } from "lucide-react";
 
 export default function VideoTestimonialList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTestimonial, setEditingTestimonial] = useState<VideoTestimonial | null>(null);
-  const [testimonialToDelete, setTestimonialToDelete] = useState<VideoTestimonial | null>(null);
+  const [editingTestimonial, setEditingTestimonial] =
+    useState<VideoTestimonial | null>(null);
+  const [testimonialToDelete, setTestimonialToDelete] =
+    useState<VideoTestimonial | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -30,9 +32,10 @@ export default function VideoTestimonialList() {
   const updateMutation = useUpdateVideoTestimonial();
   const deleteMutation = useDeleteVideoTestimonial();
 
-  const filteredTestimonials = testimonials.filter(t =>
-    t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    t.video_url.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTestimonials = testimonials.filter(
+    t =>
+      t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.video_url.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleAdd = () => {
@@ -59,7 +62,10 @@ export default function VideoTestimonialList() {
 
   const handleSubmit = async (formData: CreateVideoTestimonialData) => {
     if (editingTestimonial) {
-      await updateMutation.mutateAsync({ id: editingTestimonial.id, data: formData });
+      await updateMutation.mutateAsync({
+        id: editingTestimonial.id,
+        data: formData,
+      });
     } else {
       await createMutation.mutateAsync(formData);
     }
@@ -71,13 +77,13 @@ export default function VideoTestimonialList() {
     <div className="container mx-auto max-w-7xl px-6 py-10">
       <VideoTestimonialHeader onAdd={handleAdd} count={testimonials.length} />
 
-      <div className="mt-8 mb-6 relative max-w-sm">
+      <div className="relative mt-8 mb-6 max-w-sm">
         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
         <Input
           placeholder="Search by name or URL..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 h-10 border-slate-200 bg-white placeholder:text-slate-400 focus:border-slate-300 focus:ring-0 rounded-lg"
+          onChange={e => setSearchTerm(e.target.value)}
+          className="h-10 rounded-lg border-slate-200 bg-white pl-10 placeholder:text-slate-400 focus:border-slate-300 focus:ring-0"
         />
         {searchTerm && (
           <button

@@ -124,47 +124,58 @@ export default function SmsPaymentSuccessPage() {
           </p>
 
           {isSuccess && paymentData && (
-            <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-6 text-left space-y-4">
+            <div className="space-y-4 rounded-2xl border border-slate-100 bg-slate-50/50 p-6 text-left">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span className="text-sm font-medium text-slate-500">Credits Added</span>
-                <span className="text-lg font-bold text-slate-900">{paymentData.amount}</span>
+                <span className="text-sm font-medium text-slate-500">
+                  Credits Added
+                </span>
+                <span className="text-lg font-bold text-slate-900">
+                  {paymentData.amount}
+                </span>
               </div>
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span className="text-sm font-medium text-slate-500">Amount Paid</span>
+                <span className="text-sm font-medium text-slate-500">
+                  Amount Paid
+                </span>
                 <span className="text-lg font-bold text-blue-600">
                   Rs. {Number(paymentData.price).toLocaleString("en-IN")}
                 </span>
               </div>
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span className="text-sm font-medium text-slate-500">Payment Method</span>
+                <span className="text-sm font-medium text-slate-500">
+                  Payment Method
+                </span>
                 <div className="flex items-center gap-2">
                   <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded bg-white p-0.5 shadow-sm">
                     <img
-                      src={PAYMENT_LOGOS[paymentData.payment_type.toLowerCase()] || ""}
+                      src={
+                        PAYMENT_LOGOS[paymentData.payment_type.toLowerCase()] ||
+                        ""
+                      }
                       alt={paymentData.payment_type}
-                      className="object-contain h-full w-full"
+                      className="h-full w-full object-contain"
                     />
                   </div>
-                  <span className="text-sm font-bold capitalize text-slate-900">
+                  <span className="text-sm font-bold text-slate-900 capitalize">
                     {paymentData.payment_type}
                   </span>
                 </div>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <span className="text-xs font-medium tracking-wider text-slate-500 uppercase">
                   Transaction ID
                 </span>
-                <span className="font-mono text-xs font-semibold text-slate-600 break-all bg-white p-2 rounded-lg border border-slate-100">
+                <span className="rounded-lg border border-slate-100 bg-white p-2 font-mono text-xs font-semibold break-all text-slate-600">
                   {paymentData.transaction_id}
                 </span>
               </div>
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex flex-col gap-3 pb-8 px-8">
+        <CardFooter className="flex flex-col gap-3 px-8 pb-8">
           <Button
             onClick={() => router.push("/admin/sms")}
-            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-base font-bold shadow-md transition-all active:scale-[0.98]"
+            className="h-12 w-full bg-blue-600 text-base font-bold shadow-md transition-all hover:bg-blue-700 active:scale-[0.98]"
             disabled={isVerifying}
           >
             Go to SMS Dashboard
@@ -174,7 +185,7 @@ export default function SmsPaymentSuccessPage() {
             <Button
               variant="outline"
               onClick={() => router.push("/admin/sms")}
-              className="w-full h-12 border-slate-200 text-slate-600 hover:bg-slate-50"
+              className="h-12 w-full border-slate-200 text-slate-600 hover:bg-slate-50"
             >
               Contact Support
             </Button>

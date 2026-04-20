@@ -13,7 +13,13 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
-import { AlertCircle, CreditCard, Calendar, Hash, Banknote } from "lucide-react";
+import {
+  AlertCircle,
+  CreditCard,
+  Calendar,
+  Hash,
+  Banknote,
+} from "lucide-react";
 import { SimplePagination } from "@/components/ui/simple-pagination";
 
 const PAYMENT_LOGOS: Record<string, string> = {
@@ -25,7 +31,9 @@ interface SMSPurchaseHistoryProps {
   showTitle?: boolean;
 }
 
-export function SMSPurchaseHistory({ showTitle = true }: SMSPurchaseHistoryProps) {
+export function SMSPurchaseHistory({
+  showTitle = true,
+}: SMSPurchaseHistoryProps) {
   const [page, setPage] = useState(1);
   const { data: purchases, isLoading } = useSMSPurchases(page);
 
@@ -51,7 +59,7 @@ export function SMSPurchaseHistory({ showTitle = true }: SMSPurchaseHistoryProps
         </div>
       )}
 
-      <div className="rounded-lg bg-white overflow-hidden border border-black/5">
+      <div className="overflow-hidden rounded-lg border border-black/5 bg-white">
         <Table>
           <TableHeader>
             <TableRow className="border-b border-black/5 bg-slate-50/50">
@@ -74,7 +82,7 @@ export function SMSPurchaseHistory({ showTitle = true }: SMSPurchaseHistoryProps
           </TableHeader>
           <TableBody>
             {purchaseItems.length > 0 ? (
-              purchaseItems.map((purchase) => (
+              purchaseItems.map(purchase => (
                 <TableRow
                   key={purchase.id}
                   className="group border-b border-black/5 transition-colors hover:bg-black/2"
@@ -102,7 +110,11 @@ export function SMSPurchaseHistory({ showTitle = true }: SMSPurchaseHistoryProps
                       <div className="flex items-center gap-2">
                         <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded">
                           <img
-                            src={PAYMENT_LOGOS[purchase.payment_type.toLowerCase()] || ""}
+                            src={
+                              PAYMENT_LOGOS[
+                                purchase.payment_type.toLowerCase()
+                              ] || ""
+                            }
                             alt={purchase.payment_type}
                             className="object-contain"
                           />
@@ -118,7 +130,10 @@ export function SMSPurchaseHistory({ showTitle = true }: SMSPurchaseHistoryProps
                   <TableCell className="px-6 py-4">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Calendar className="h-4 w-4 text-black/20" />
-                      {format(new Date(purchase.purchased_at), "MMM d, yyyy · p")}
+                      {format(
+                        new Date(purchase.purchased_at),
+                        "MMM d, yyyy · p"
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -128,7 +143,9 @@ export function SMSPurchaseHistory({ showTitle = true }: SMSPurchaseHistoryProps
                 <TableCell colSpan={5} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center gap-2">
                     <AlertCircle className="h-8 w-8 text-slate-300" />
-                    <p className="font-medium text-slate-500">No purchase history found.</p>
+                    <p className="font-medium text-slate-500">
+                      No purchase history found.
+                    </p>
                   </div>
                 </TableCell>
               </TableRow>

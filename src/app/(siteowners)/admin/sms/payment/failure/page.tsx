@@ -3,7 +3,13 @@
 import { useRouter } from "next/navigation";
 import { XCircle, ArrowLeft, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function SmsPaymentFailurePage() {
   const router = useRouter();
@@ -15,14 +21,18 @@ export default function SmsPaymentFailurePage() {
           <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
             <XCircle className="h-10 w-10 text-red-600" />
           </div>
-          <CardTitle className="text-2xl font-bold text-red-600">Payment Failed</CardTitle>
+          <CardTitle className="text-2xl font-bold text-red-600">
+            Payment Failed
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-slate-600">
-            Something went wrong during your transaction. Your payment was not successful, and no credits have been added.
+            Something went wrong during your transaction. Your payment was not
+            successful, and no credits have been added.
           </p>
           <p className="mt-2 text-sm text-slate-500">
-            If any amount was deducted from your account, it will be refunded according to your payment provider's policy.
+            If any amount was deducted from your account, it will be refunded
+            according to your payment provider's policy.
           </p>
         </CardContent>
         <CardFooter className="flex flex-col gap-3">

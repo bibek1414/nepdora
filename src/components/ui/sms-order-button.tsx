@@ -21,7 +21,6 @@ interface SMSOrderButtonProps {
   onSuccess?: () => void;
 }
 
-
 export const SMSOrderButton: React.FC<SMSOrderButtonProps> = ({
   order,
   size = "sm",
@@ -65,4 +64,3 @@ export const SMSOrderButton: React.FC<SMSOrderButtonProps> = ({
     </>
   );
 };
-

@@ -43,7 +43,9 @@ export const videoTestimonialsApi = {
   },
 
   // Create new video testimonial
-  create: async (data: CreateVideoTestimonialData): Promise<VideoTestimonial> => {
+  create: async (
+    data: CreateVideoTestimonialData
+  ): Promise<VideoTestimonial> => {
     const response = await apiFetch(
       `${API_BASE_URL}/api/support/video-testimonial/`,
       {

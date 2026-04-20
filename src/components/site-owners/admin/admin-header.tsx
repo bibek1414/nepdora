@@ -31,7 +31,6 @@ import OnboardingModal from "@/components/on-boarding/admin/on-boarding-componen
 import { AdminGlobalSearch } from "./global-search";
 import { rootDomain } from "@/config/site";
 
-
 interface AdminHeaderProps {
   user: User;
 }
@@ -80,7 +79,6 @@ export default function AdminHeader({ user }: AdminHeaderProps) {
       ? "https"
       : "http";
   const mainSupportUrl = `${protocol}://${rootDomain}/support`;
-
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-gray-100 bg-white">

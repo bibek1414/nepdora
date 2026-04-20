@@ -18,7 +18,7 @@ export const TestimonialsHeader = ({
         <Link href="/superadmin/video-testimonial">
           <Button
             variant="outline"
-            className="border-gray-300 text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+            className="flex items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
           >
             <Video className="h-4 w-4" />
             <span>Manage Video Testimonials</span>

@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { smsApi } from "@/services/api/owner-sites/admin/sms";
-import { CreateSMSPurchaseRequest, UpdateSMSPurchaseRequest, SendSMSRequest } from "@/types/owner-site/admin/sms";
+import {
+  CreateSMSPurchaseRequest,
+  UpdateSMSPurchaseRequest,
+  SendSMSRequest,
+} from "@/types/owner-site/admin/sms";
 import { toast } from "sonner";
 
 // Query Keys
@@ -8,7 +12,8 @@ export const smsKeys = {
   all: ["sms"] as const,
   balance: () => [...smsKeys.all, "balance"] as const,
   purchases: (page: number = 1) => [...smsKeys.all, "purchases", page] as const,
-  purchase: (id: number | string) => [...smsKeys.all, "purchases", "detail", id] as const,
+  purchase: (id: number | string) =>
+    [...smsKeys.all, "purchases", "detail", id] as const,
   history: (page: number = 1) => [...smsKeys.all, "history", page] as const,
 };
 
@@ -61,9 +66,14 @@ export const usePatchSMSPurchase = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number | string; data: UpdateSMSPurchaseRequest }) =>
-      smsApi.patchPurchase(id, data),
-    onSuccess: (data) => {
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number | string;
+      data: UpdateSMSPurchaseRequest;
+    }) => smsApi.patchPurchase(id, data),
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: smsKeys.purchases() });
       queryClient.invalidateQueries({ queryKey: smsKeys.purchase(data.id) });
     },
@@ -84,7 +94,7 @@ export const useSendSMS = () => {
 
   return useMutation({
     mutationFn: (data: SendSMSRequest) => smsApi.sendSMS(data),
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.success) {
         queryClient.invalidateQueries({ queryKey: smsKeys.balance() });
         queryClient.invalidateQueries({ queryKey: smsKeys.history() });

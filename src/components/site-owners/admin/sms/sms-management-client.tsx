@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSMSBalance, useSMSPurchases } from "@/hooks/owner-site/admin/use-sms";
+import {
+  useSMSBalance,
+  useSMSPurchases,
+} from "@/hooks/owner-site/admin/use-sms";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  MessageSquare,
-  CreditCard,
-  Plus,
-  CheckCircle2,
-} from "lucide-react";
+import { MessageSquare, CreditCard, Plus, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SMSBuyCreditsDialog } from "@/components/site-owners/admin/sms/buy-credits-dialog";
@@ -45,7 +43,7 @@ export function SMSManagementClient() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="-sm transition-all hover:-md border-blue-100 bg-blue-50/20">
+        <Card className="-sm hover:-md border-blue-100 bg-blue-50/20 transition-all">
           <CardHeader className="flex flex-row items-center justify-between px-4 pb-2">
             <CardTitle className="text-sm font-semibold text-blue-900">
               Current Balance
@@ -60,13 +58,13 @@ export function SMSManagementClient() {
                 {balance?.sms_credit ?? 0}
               </div>
             )}
-            <p className="mt-1 text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+            <p className="mt-1 text-[11px] font-medium tracking-wider text-slate-500 uppercase">
               Credits Available
             </p>
           </CardContent>
         </Card>
 
-        <Card className="-sm transition-all hover:-md border-slate-200 bg-white">
+        <Card className="-sm hover:-md border-slate-200 bg-white transition-all">
           <CardHeader className="flex flex-row items-center justify-between px-4 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-700">
               Service Status
@@ -81,20 +79,20 @@ export function SMSManagementClient() {
                 variant={balance?.sms_enabled ? "default" : "secondary"}
                 className={
                   balance?.sms_enabled
-                    ? "bg-green-100 text-green-700 hover:bg-green-100 border-none -none"
+                    ? "-none border-none bg-green-100 text-green-700 hover:bg-green-100"
                     : ""
                 }
               >
                 {balance?.sms_enabled ? "Active" : "Disabled"}
               </Badge>
             )}
-            <p className="mt-1 text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+            <p className="mt-1 text-[11px] font-medium tracking-wider text-slate-500 uppercase">
               SMS System Status
             </p>
           </CardContent>
         </Card>
 
-        <Card className="-sm transition-all hover:-md border-slate-200 bg-white sm:col-span-2 lg:col-span-1">
+        <Card className="-sm hover:-md border-slate-200 bg-white transition-all sm:col-span-2 lg:col-span-1">
           <CardHeader className="flex flex-row items-center justify-between px-4 pb-2">
             <CardTitle className="text-sm font-semibold text-slate-700">
               Total Spent
@@ -112,7 +110,7 @@ export function SMSManagementClient() {
                   .toLocaleString("en-IN")}
               </div>
             )}
-            <p className="mt-1 text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+            <p className="mt-1 text-[11px] font-medium tracking-wider text-slate-500 uppercase">
               Lifetime Investment
             </p>
           </CardContent>
@@ -121,7 +119,7 @@ export function SMSManagementClient() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="purchases" className="w-full">
-        <TabsList className="mb-6 h-11 w-full justify-start rounded-lg bg-slate-100/50 p-1 md:w-auto border border-black/5">
+        <TabsList className="mb-6 h-11 w-full justify-start rounded-lg border border-black/5 bg-slate-100/50 p-1 md:w-auto">
           <TabsTrigger
             value="purchases"
             className="data-[state=active]:-sm cursor-pointer rounded-md px-6 text-sm font-medium transition-all data-[state=active]:bg-white"

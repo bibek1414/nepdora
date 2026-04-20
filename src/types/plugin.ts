@@ -1,4 +1,9 @@
-export type PluginType = "whatsapp" | "dash" | "ydm" | "google-analytics" | "sms";
+export type PluginType =
+  | "whatsapp"
+  | "dash"
+  | "ydm"
+  | "google-analytics"
+  | "sms";
 
 export interface Plugin {
   id: string;

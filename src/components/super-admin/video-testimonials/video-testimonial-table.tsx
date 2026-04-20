@@ -9,7 +9,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, ExternalLink, Youtube, Loader2, Play } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  ExternalLink,
+  Youtube,
+  Loader2,
+  Play,
+} from "lucide-react";
 import { VideoTestimonial } from "@/types/super-admin/video-testimonial";
 import { extractVideoInfo, getVideoThumbnail } from "@/lib/video-utils";
 
@@ -36,7 +43,7 @@ export function VideoTestimonialTable({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 gap-3">
+      <div className="flex flex-col items-center justify-center gap-3 p-12">
         <Loader2 className="h-8 w-8 animate-spin text-slate-300" />
         <p className="text-sm text-slate-500">Loading testimonials...</p>
       </div>
@@ -46,11 +53,13 @@ export function VideoTestimonialTable({
   if (testimonials.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
-        <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center mb-4">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-50">
           <Play className="h-6 w-6 text-slate-200" />
         </div>
-        <h3 className="text-sm font-medium text-slate-900">No video testimonials found</h3>
-        <p className="text-sm text-slate-500 mt-1">
+        <h3 className="text-sm font-medium text-slate-900">
+          No video testimonials found
+        </h3>
+        <p className="mt-1 text-sm text-slate-500">
           Get started by adding your first video testimonial.
         </p>
       </div>
@@ -58,7 +67,7 @@ export function VideoTestimonialTable({
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 overflow-hidden bg-white">
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
       <Table>
         <TableHeader className="bg-slate-50/50">
           <TableRow>
@@ -74,10 +83,13 @@ export function VideoTestimonialTable({
             const thumbnail = getVideoThumbnail(platform, id);
 
             return (
-              <TableRow key={testimonial.id} className="group hover:bg-slate-50/50 transition-colors">
+              <TableRow
+                key={testimonial.id}
+                className="group transition-colors hover:bg-slate-50/50"
+              >
                 <TableCell>
                   <div className="flex items-center gap-4">
-                    <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100 border border-slate-200 group-hover:border-slate-300 transition-colors">
+                    <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100 transition-colors group-hover:border-slate-300">
                       {thumbnail ? (
                         <img
                           src={thumbnail}
@@ -89,22 +101,22 @@ export function VideoTestimonialTable({
                           <Youtube className="h-6 w-6 text-slate-300" />
                         </div>
                       )}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                         <Play className="h-5 w-5 text-white fill-white" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 transition-opacity group-hover:opacity-100">
+                        <Play className="h-5 w-5 fill-white text-white" />
                       </div>
                     </div>
                     <div>
-                      <div className="font-medium text-slate-900 line-clamp-1">
+                      <div className="line-clamp-1 font-medium text-slate-900">
                         {testimonial.name}
                       </div>
-                      <div className="text-xs text-slate-500 uppercase tracking-tight font-medium mt-0.5">
+                      <div className="mt-0.5 text-xs font-medium tracking-tight text-slate-500 uppercase">
                         {platform}
                       </div>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 group/link">
+                  <div className="group/link flex items-center gap-2">
                     <p className="max-w-[200px] truncate text-sm text-slate-600">
                       {testimonial.video_url}
                     </p>
@@ -112,7 +124,7 @@ export function VideoTestimonialTable({
                       href={testimonial.video_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-slate-400 hover:text-red-600 transition-colors"
+                      className="text-slate-400 transition-colors hover:text-red-600"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
@@ -127,7 +139,7 @@ export function VideoTestimonialTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(testimonial)}
-                      className="h-8 w-8 text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                      className="h-8 w-8 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -135,7 +147,7 @@ export function VideoTestimonialTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onDelete(testimonial)}
-                      className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50"
+                      className="h-8 w-8 text-slate-400 hover:bg-red-50 hover:text-red-600"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

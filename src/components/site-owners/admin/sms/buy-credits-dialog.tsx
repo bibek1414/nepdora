@@ -34,14 +34,25 @@ const PAYMENT_METHODS = [
   { id: "khalti", name: "Khalti", image: "/images/payment-gateway/khalti.png" },
 ];
 
-export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogProps) {
-  const [selectedPackage, setSelectedPackage] = useState<number | "custom">(100);
+export function SMSBuyCreditsDialog({
+  open,
+  onOpenChange,
+}: SMSBuyCreditsDialogProps) {
+  const [selectedPackage, setSelectedPackage] = useState<number | "custom">(
+    100
+  );
   const [customAmount, setCustomAmount] = useState<string>("");
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const activeAmount = selectedPackage === "custom" ? parseInt(customAmount) || 0 : selectedPackage;
-  const activePrice = selectedPackage === "custom" ? activeAmount : SMS_PACKAGES.find(p => p.amount === selectedPackage)?.price || 0;
+  const activeAmount =
+    selectedPackage === "custom"
+      ? parseInt(customAmount) || 0
+      : selectedPackage;
+  const activePrice =
+    selectedPackage === "custom"
+      ? activeAmount
+      : SMS_PACKAGES.find(p => p.amount === selectedPackage)?.price || 0;
 
   const handleInitiatePayment = async () => {
     if (!activeAmount || activeAmount < 10) {
@@ -75,12 +86,15 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
       }
 
       // Store pending payment info for verification
-      sessionStorage.setItem("sms_payment_pending", JSON.stringify({
-        amount: activeAmount,
-        price: activePrice,
-        transaction_id: transactionId,
-        method: selectedMethod,
-      }));
+      sessionStorage.setItem(
+        "sms_payment_pending",
+        JSON.stringify({
+          amount: activeAmount,
+          price: activePrice,
+          transaction_id: transactionId,
+          method: selectedMethod,
+        })
+      );
 
       // Redirect or submit form
       if (selectedMethod === "khalti") {
@@ -113,7 +127,9 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[500px] p-6 lg:p-8">
         <DialogHeader className="mb-6">
-          <DialogTitle className="text-2xl font-bold text-slate-900">Buy SMS Credits</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-slate-900">
+            Buy SMS Credits
+          </DialogTitle>
           <DialogDescription>
             Top up your account to continue sending automated notifications.
           </DialogDescription>
@@ -122,7 +138,9 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
         <div className="space-y-6">
           {/* Step 1: Select Amount */}
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-slate-700">Select Package</Label>
+            <Label className="text-sm font-semibold text-slate-700">
+              Select Package
+            </Label>
             <div className="grid grid-cols-2 gap-3">
               {SMS_PACKAGES.map(pkg => (
                 <button
@@ -135,9 +153,15 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
                       : "border-slate-100 hover:border-blue-200"
                   )}
                 >
-                  <span className="text-lg font-bold text-slate-900">{pkg.amount}</span>
-                  <span className="text-xs text-slate-500 font-medium">Credits</span>
-                  <div className="mt-1 text-sm font-bold text-blue-600">Rs. {pkg.price.toLocaleString("en-IN")}</div>
+                  <span className="text-lg font-bold text-slate-900">
+                    {pkg.amount}
+                  </span>
+                  <span className="text-xs font-medium text-slate-500">
+                    Credits
+                  </span>
+                  <div className="mt-1 text-sm font-bold text-blue-600">
+                    Rs. {pkg.price.toLocaleString("en-IN")}
+                  </div>
                   {pkg.discount && (
                     <span className="absolute -top-2 -right-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
                       {pkg.discount}
@@ -146,7 +170,7 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
                 </button>
               ))}
             </div>
-            
+
             <button
               onClick={() => setSelectedPackage("custom")}
               className={cn(
@@ -160,7 +184,7 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
             </button>
 
             {selectedPackage === "custom" && (
-              <div className="animate-in fade-in slide-in-from-top-2 duration-300 mt-3">
+              <div className="animate-in fade-in slide-in-from-top-2 mt-3 duration-300">
                 <div className="relative">
                   <Input
                     type="number"
@@ -169,9 +193,11 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
                     onChange={e => setCustomAmount(e.target.value)}
                     className="pl-8"
                   />
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">#</span>
+                  <span className="absolute top-1/2 left-3 -translate-y-1/2 text-sm font-bold text-slate-400">
+                    #
+                  </span>
                 </div>
-                <p className="mt-1.5 text-[11px] text-slate-500 flex items-center gap-1">
+                <p className="mt-1.5 flex items-center gap-1 text-[11px] text-slate-500">
                   <Info className="h-3 w-3" /> 1 Credit = Rs. 1.00
                 </p>
               </div>
@@ -180,7 +206,9 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
 
           {/* Step 2: Select Method */}
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-slate-700">Payment Method</Label>
+            <Label className="text-sm font-semibold text-slate-700">
+              Payment Method
+            </Label>
             <div className="grid grid-cols-2 gap-3">
               {PAYMENT_METHODS.map(method => (
                 <button
@@ -194,9 +222,15 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
                   )}
                 >
                   <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md grayscale transition-all group-hover:grayscale-0">
-                    <img src={method.image} alt={method.name} className="object-contain" />
+                    <img
+                      src={method.image}
+                      alt={method.name}
+                      className="object-contain"
+                    />
                   </div>
-                  <span className="text-sm font-bold text-slate-900">{method.name}</span>
+                  <span className="text-sm font-bold text-slate-900">
+                    {method.name}
+                  </span>
                   {selectedMethod === method.id && (
                     <div className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-blue-600">
                       <Check className="h-3 w-3 text-white" />
@@ -210,7 +244,7 @@ export function SMSBuyCreditsDialog({ open, onOpenChange }: SMSBuyCreditsDialogP
 
         <DialogFooter className="mt-8">
           <Button
-            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-base font-bold shadow-md transition-all active:scale-[0.98]"
+            className="h-12 w-full bg-blue-600 text-base font-bold shadow-md transition-all hover:bg-blue-700 active:scale-[0.98]"
             disabled={!activeAmount || !selectedMethod || isLoading}
             onClick={handleInitiatePayment}
           >

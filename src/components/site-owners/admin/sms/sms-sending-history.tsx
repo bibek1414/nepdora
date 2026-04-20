@@ -13,7 +13,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { Phone, History as HistoryIcon, MessageSquare, Clock, CreditCard } from "lucide-react";
+import {
+  Phone,
+  History as HistoryIcon,
+  MessageSquare,
+  Clock,
+  CreditCard,
+} from "lucide-react";
 import { SimplePagination } from "@/components/ui/simple-pagination";
 import { SMSDetailsDialog } from "@/components/site-owners/admin/sms/sms-details-dialog";
 import { htmlToPlainText } from "@/utils/html-sanitizer";
@@ -22,10 +28,12 @@ interface SMSSendingHistoryProps {
   showTitle?: boolean;
 }
 
-export function SMSSendingHistory({ showTitle = true }: SMSSendingHistoryProps) {
+export function SMSSendingHistory({
+  showTitle = true,
+}: SMSSendingHistoryProps) {
   const [page, setPage] = useState(1);
   const [selectedSMS, setSelectedSMS] = useState<any | null>(null);
-  
+
   const { data: history, isLoading } = useSMSHistory(page);
 
   const historyItems = history?.results || [];
@@ -50,7 +58,7 @@ export function SMSSendingHistory({ showTitle = true }: SMSSendingHistoryProps) 
         </div>
       )}
 
-      <div className="rounded-lg bg-white overflow-hidden border border-black/5">
+      <div className="overflow-hidden rounded-lg border border-black/5 bg-white">
         <Table>
           <TableHeader>
             <TableRow className="border-b border-black/5 bg-slate-50/50">
@@ -73,7 +81,7 @@ export function SMSSendingHistory({ showTitle = true }: SMSSendingHistoryProps) 
           </TableHeader>
           <TableBody>
             {historyItems.length > 0 ? (
-              historyItems.map((item) => (
+              historyItems.map(item => (
                 <TableRow
                   key={item.id}
                   className="group cursor-pointer border-b border-black/5 transition-colors hover:bg-black/2"
@@ -85,9 +93,9 @@ export function SMSSendingHistory({ showTitle = true }: SMSSendingHistoryProps) 
                       {item.receiver_number}
                     </div>
                   </TableCell>
-                  <TableCell className="px-6 py-4 max-w-[400px]">
+                  <TableCell className="max-w-[400px] px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <MessageSquare className="h-4 w-4 text-black/20 shrink-0" />
+                      <MessageSquare className="h-4 w-4 shrink-0 text-black/20" />
                       <p className="line-clamp-1 text-sm text-gray-600">
                         {htmlToPlainText(item.message)}
                       </p>
@@ -101,10 +109,12 @@ export function SMSSendingHistory({ showTitle = true }: SMSSendingHistoryProps) 
                   </TableCell>
                   <TableCell className="px-6 py-4">
                     <Badge
-                      variant={item.status === "200" ? "default" : "destructive"}
+                      variant={
+                        item.status === "200" ? "default" : "destructive"
+                      }
                       className={
                         item.status === "200"
-                          ? "bg-green-100 text-green-700 hover:bg-green-100 border-none shadow-none text-[10px]"
+                          ? "border-none bg-green-100 text-[10px] text-green-700 shadow-none hover:bg-green-100"
                           : "text-[10px]"
                       }
                     >
@@ -124,7 +134,9 @@ export function SMSSendingHistory({ showTitle = true }: SMSSendingHistoryProps) 
                 <TableCell colSpan={5} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center gap-2">
                     <HistoryIcon className="h-8 w-8 text-slate-300" />
-                    <p className="font-medium text-slate-500">No sending history found.</p>
+                    <p className="font-medium text-slate-500">
+                      No sending history found.
+                    </p>
                   </div>
                 </TableCell>
               </TableRow>

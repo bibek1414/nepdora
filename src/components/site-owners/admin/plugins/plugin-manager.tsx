@@ -375,16 +375,16 @@ export default function PluginManager({
                           {p.is_enabled ? "Active" : "Inactive"}
                         </span>
                       </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setActive(p)}
-                          className="h-7 rounded-md px-2 text-[10px] hover:bg-slate-50 sm:h-8 sm:px-3 sm:text-xs"
-                        >
-                          <Settings className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
-                          <span className="hidden sm:inline">Configure</span>
-                          <span className="sm:hidden">Config</span>
-                        </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setActive(p)}
+                        className="h-7 rounded-md px-2 text-[10px] hover:bg-slate-50 sm:h-8 sm:px-3 sm:text-xs"
+                      >
+                        <Settings className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
+                        <span className="hidden sm:inline">Configure</span>
+                        <span className="sm:hidden">Config</span>
+                      </Button>
                     </div>
                   </div>
                 </CardContent>

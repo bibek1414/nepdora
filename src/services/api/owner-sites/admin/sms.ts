@@ -26,13 +26,18 @@ export const smsApi = {
   },
 
   // List SMS credit purchases
-  getPurchases: async (page: number = 1): Promise<PaginatedResponse<SMSPurchaseHistory>> => {
+  getPurchases: async (
+    page: number = 1
+  ): Promise<PaginatedResponse<SMSPurchaseHistory>> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sms/purchases/?page=${page}`, {
-      method: "GET",
-      // User specified no authentication for GET/list, but we'll include headers for X-Tenant
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/sms/purchases/?page=${page}`,
+      {
+        method: "GET",
+        // User specified no authentication for GET/list, but we'll include headers for X-Tenant
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -54,10 +59,13 @@ export const smsApi = {
   // Get single purchase detail
   getPurchase: async (id: number | string): Promise<SMSPurchaseHistory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sms/purchases/${id}/`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/sms/purchases/${id}/`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
@@ -68,22 +76,30 @@ export const smsApi = {
     data: UpdateSMSPurchaseRequest
   ): Promise<SMSPurchaseHistory> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sms/purchases/${id}/`, {
-      method: "PATCH",
-      headers: createHeaders(),
-      body: JSON.stringify(data),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/sms/purchases/${id}/`,
+      {
+        method: "PATCH",
+        headers: createHeaders(),
+        body: JSON.stringify(data),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
 
   // List SMS sending history
-  getHistory: async (page: number = 1): Promise<PaginatedResponse<SMSHistory>> => {
+  getHistory: async (
+    page: number = 1
+  ): Promise<PaginatedResponse<SMSHistory>> => {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await apiFetch(`${API_BASE_URL}/api/sms/history/?page=${page}`, {
-      method: "GET",
-      headers: createHeaders(),
-    });
+    const response = await apiFetch(
+      `${API_BASE_URL}/api/sms/history/?page=${page}`,
+      {
+        method: "GET",
+        headers: createHeaders(),
+      }
+    );
     await handleApiError(response);
     return response.json();
   },
