@@ -10,6 +10,7 @@ import { Plugin } from "@/types/plugin";
 import { WhatsAppConfig } from "./config/whatsapp-config";
 import { LogisticsConfig } from "./config/logistics-config";
 import { GoogleAnalyticsConfig } from "./config/google-analytics-config";
+import { SMSConfig } from "./config/sms-config";
 import { PluginToggle } from "./plugin-toggle";
 import {
   useWhatsApps,
@@ -374,7 +375,6 @@ export default function PluginManager({
                           {p.is_enabled ? "Active" : "Inactive"}
                         </span>
                       </div>
-                      {p.type !== "sms" && (
                         <Button
                           variant="ghost"
                           size="sm"
@@ -385,7 +385,6 @@ export default function PluginManager({
                           <span className="hidden sm:inline">Configure</span>
                           <span className="sm:hidden">Config</span>
                         </Button>
-                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -426,6 +425,13 @@ export default function PluginManager({
         )}
         {active?.type === "google-analytics" && (
           <GoogleAnalyticsConfig
+            plugin={active}
+            onClose={() => setActive(null)}
+            onSave={() => setActive(null)}
+          />
+        )}
+        {active?.type === "sms" && (
+          <SMSConfig
             plugin={active}
             onClose={() => setActive(null)}
             onSave={() => setActive(null)}
