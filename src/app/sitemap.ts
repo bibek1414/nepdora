@@ -39,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/website-developer-nepal", priority: 0.9 },
     { path: "/tools/free-website-analyzer", priority: 0.8 },
     { path: "/free-website-builder", priority: 0.9 },
+    { path: "/ai-website-builder", priority: 0.9 },
     { path: "/invoice-builder", priority: 0.8 },
     { path: "/tools/business-name-generator-nepal", priority: 0.8 },
     { path: "/tools/domain-name-checker-nepal", priority: 0.8 },
