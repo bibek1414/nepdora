@@ -575,7 +575,7 @@ export function CollectionDataDialog({
                       key={index}
                       className="relative aspect-square w-full overflow-hidden rounded-md border"
                     >
-                      <Image
+                      <Image unoptimized
                         src={imageUrl}
                         alt={`${field.name} ${index + 1}`}
                         fill

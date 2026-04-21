@@ -52,7 +52,7 @@ export const SubCategoryCard1: React.FC<SubCategoryCard1Props> = ({
     <CardWrapper>
       <div className="bg-background-light dark:bg-background-dark">
         <div className="bg-card-light dark:bg-card-dark relative mb-4 aspect-square overflow-hidden rounded-lg transition-transform hover:scale-105">
-          <Image
+          <Image unoptimized
             src={subcategoryImage}
             alt={subcategory.name}
             height={400}

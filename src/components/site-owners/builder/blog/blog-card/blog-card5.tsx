@@ -83,7 +83,7 @@ export const BlogCard5: React.FC<BlogCard5Props> = ({
       <div className="group">
         {/* Image */}
         <div className="relative mb-6 h-64 overflow-hidden rounded-3xl bg-gray-200">
-          <Image
+          <Image unoptimized
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
             fill

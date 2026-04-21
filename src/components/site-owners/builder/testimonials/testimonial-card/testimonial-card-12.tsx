@@ -54,7 +54,7 @@ export const TestimonialCard12: React.FC<TestimonialCard12Props> = ({
       {/* Left Column: Huge Image */}
       <div className="w-full flex-shrink-0 md:w-2/5 lg:w-[45%]">
         <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-gray-100 md:aspect-[5/6]">
-          <Image
+          <Image unoptimized
             src={testimonial.image || "/images/default-avatar.png"}
             alt={testimonial.name}
             fill

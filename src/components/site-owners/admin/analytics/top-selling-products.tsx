@@ -139,7 +139,7 @@ export default function TopSellingProducts({
                     <TableCell className="py-3">
                       <div className="flex items-center gap-3">
                         <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md border border-black/6 bg-gray-50">
-                          <Image
+                          <Image unoptimized
                             src={
                               product.product__thumbnail_image ||
                               "/fallback/image-not-found.png"

@@ -46,7 +46,7 @@ export function ConnectionMockup({
                 className="mb-2 flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg border bg-white p-2"
                 style={{ borderColor: `${color}20` }}
               >
-                <Image
+                <Image unoptimized
                   src={activeLogo}
                   alt={activeName}
                   width={48}
@@ -76,7 +76,7 @@ export function ConnectionMockup({
                 className="flex flex-col items-center rounded-xl border border-slate-100 bg-white p-4 opacity-50"
               >
                 <div className="mb-2 flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg border border-slate-100 bg-white p-2">
-                  <Image
+                  <Image unoptimized
                     src={app.logo}
                     alt={app.name}
                     width={40}
@@ -179,7 +179,7 @@ export function IntegrationHero({
 
           <div className="shrink-0">
             <div className="-md flex h-40 w-40 items-center justify-center rounded-2xl border border-slate-100 bg-white p-6 lg:h-56 lg:w-56">
-              <Image
+              <Image unoptimized
                 src={logo}
                 alt={name}
                 width={200}
@@ -259,7 +259,7 @@ export function IntegrationShowcaseSection({
               visual
             ) : image ? (
               <div className="-sm overflow-hidden rounded-xl border border-slate-100 bg-white">
-                <Image
+                <Image unoptimized
                   src={image}
                   alt={title}
                   width={600}

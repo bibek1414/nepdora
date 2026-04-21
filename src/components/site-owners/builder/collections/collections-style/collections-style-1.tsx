@@ -103,7 +103,7 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
                 >
                   {image && (
                     <div className="relative h-48 w-full">
-                      <Image
+                      <Image unoptimized
                         src={image}
                         alt={String(name)}
                         fill

@@ -147,7 +147,7 @@ export const CategoryStyle5: React.FC<CategoryStyleProps> = ({
     return (
       <CardWrapper>
         <div className="relative h-[340px] w-[260px] overflow-hidden bg-gray-100 sm:h-[400px] sm:w-[300px]">
-          <Image
+          <Image unoptimized
             src={categoryImage}
             alt={category.name}
             fill

@@ -237,7 +237,7 @@ const CategoryManagement = () => {
                   <TableCell>
                     <div className="h-10 w-10 overflow-hidden rounded-md border bg-slate-100">
                       {category.thumbnail_image ? (
-                        <Image
+                        <Image unoptimized
                           src={category.thumbnail_image}
                           alt={
                             category.thumbnail_image_alt_description ||
@@ -352,7 +352,7 @@ const CategoryManagement = () => {
                       <p className="mb-1 text-[10px] text-slate-500">
                         Current:
                       </p>
-                      <Image
+                      <Image unoptimized
                         src={editingCategory.thumbnail_image}
                         alt="Current thumbnail"
                         width={60}

@@ -107,7 +107,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
               className="group relative h-[400px] w-56 grow overflow-hidden rounded-lg transition-all duration-500 hover:w-full"
             >
               {!isEditable ? (
-                <Image
+                <Image unoptimized
                   className="h-full w-full object-cover object-center"
                   src={getImageUrl(image.image)}
                   alt={image.image_alt_description || "Gallery image"}
@@ -126,7 +126,7 @@ export const GalleryTemplate3: React.FC<GalleryTemplateProps> = ({
                     label="Change Image"
                   />
                   <div className="relative h-full w-full">
-                    <Image
+                    <Image unoptimized
                       src={getImageUrl(image.image)}
                       alt={image.image_alt_description || "Gallery image"}
                       fill

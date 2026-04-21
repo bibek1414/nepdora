@@ -65,7 +65,7 @@ export const TestimonialCard13: React.FC<TestimonialCard13Props> = ({
           className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full border-2"
           style={{ borderColor: secondaryColor }}
         >
-          <Image
+          <Image unoptimized
             src={testimonial.image || "/images/default-avatar.png"}
             alt={testimonial.name}
             fill

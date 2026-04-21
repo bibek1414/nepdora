@@ -331,7 +331,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                           >
                             <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                               {product.thumbnail_image && (
-                                <Image
+                                <Image unoptimized
                                   src={product.thumbnail_image}
                                   alt={product.name}
                                   width={48}
@@ -433,7 +433,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                                 >
                                   <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                                     {product.thumbnail_image && (
-                                      <Image
+                                      <Image unoptimized
                                         src={product.thumbnail_image}
                                         alt={product.name}
                                         width={48}

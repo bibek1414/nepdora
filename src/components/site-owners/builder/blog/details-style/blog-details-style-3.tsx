@@ -68,7 +68,7 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
     <div className="bg-muted/10 min-h-screen pt-0 pb-0">
       {/* Immersive Hero Header */}
       <div className="relative flex h-[70vh] min-h-[500px] w-full items-center justify-center pt-20">
-        <Image
+        <Image unoptimized
           src={blogImage}
           alt={blog.title}
           fill
@@ -92,7 +92,7 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
             {blog.author && (
               <div className="flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
                 <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/50">
-                  <Image
+                  <Image unoptimized
                     src={`https://ui-avatars.com/api/?name=${blog.author.username}&background=random&color=fff`}
                     alt={blog.author.username}
                     fill

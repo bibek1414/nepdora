@@ -166,7 +166,7 @@ export const ServicesCard3: React.FC<ServicesCard3Props> = ({
                         </h2>
 
                         <div className="mb-6">
-                          <Image
+                          <Image unoptimized
                             src={serviceImage}
                             alt={service.title}
                             height={600}

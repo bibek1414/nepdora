@@ -66,7 +66,7 @@ export const ServiceDetail3: React.FC<{ slug: string; siteUser?: string }> = ({
     <div className="bg-muted/10 min-h-screen pt-0 pb-0">
       {/* Immersive Hero Header */}
       <div className="relative flex h-[70vh] min-h-[500px] w-full items-center justify-center pt-20">
-        <Image
+        <Image unoptimized
           src={serviceImage}
           alt={service.title}
           fill

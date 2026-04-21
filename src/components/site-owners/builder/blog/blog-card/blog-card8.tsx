@@ -86,7 +86,7 @@ export const BlogCard8: React.FC<BlogCard8Props> = ({
               hover: { scale: 1.02 },
             }}
           >
-            <Image
+            <Image unoptimized
               src={blogImage}
               alt={blog.thumbnail_image_alt_description || blog.title}
               fill

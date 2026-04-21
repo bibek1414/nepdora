@@ -57,7 +57,7 @@ const ServiceCard: React.FC<ServiceCardProps & { pathname: string | null }> = ({
       >
         {service.thumbnail_image ? (
           <div className="relative h-full w-full">
-            <Image
+            <Image unoptimized
               src={service.thumbnail_image}
               alt={service.title}
               fill

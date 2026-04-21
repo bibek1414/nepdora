@@ -409,7 +409,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           {/* Left Column: Traditional Image Gallery */}
           <div className="flex flex-col gap-6 md:col-span-6 lg:col-span-7">
             <div className="bg-card relative aspect-square max-h-[600px] w-full overflow-hidden rounded-2xl border">
-              <Image
+              <Image unoptimized
                 src={selectedImage || defaultImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
@@ -447,7 +447,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                           }`}
                           onClick={() => setSelectedImage(img)}
                         >
-                          <Image
+                          <Image unoptimized
                             src={img}
                             alt={`${product.name} view ${idx + 1}`}
                             fill

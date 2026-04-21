@@ -83,7 +83,7 @@ export const CategoryCard5: React.FC<CategoryCard5Props> = ({
           {category.name}
         </h3>
         <div className="relative h-20 w-20">
-          <Image
+          <Image unoptimized
             src={categoryImage}
             alt={category.name}
             fill

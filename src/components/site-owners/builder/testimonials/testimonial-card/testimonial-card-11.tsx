@@ -20,7 +20,7 @@ export const TestimonialCard11: React.FC<TestimonialCard11Props> = ({
       <CardContent className="text-center">
         <div className="mb-6 flex justify-center">
           <div className="relative h-100 w-100 overflow-hidden rounded-xl">
-            <Image
+            <Image unoptimized
               src={testimonial.image || "/images/default-avatar.png"}
               alt={testimonial.name}
               fill

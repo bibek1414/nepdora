@@ -402,7 +402,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                             onClick={() => setIsSearchFocused(false)}
                           >
                             {product.thumbnail_image ? (
-                              <Image
+                              <Image unoptimized
                                 src={product.thumbnail_image}
                                 alt={product.name}
                                 width={40}
@@ -526,7 +526,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                       <CartIcon
                         onToggleCart={() => {}}
                         customIcon={
-                          <Image
+                          <Image unoptimized
                             src="/images/site-owners/bag.webp"
                             alt="Cart"
                             width={24}
@@ -540,7 +540,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                     <CartIcon
                       onToggleCart={toggleCart}
                       customIcon={
-                        <Image
+                        <Image unoptimized
                           src="/images/site-owners/bag.webp"
                           alt="Cart"
                           width={24}

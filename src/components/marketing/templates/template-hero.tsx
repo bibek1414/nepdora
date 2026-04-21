@@ -125,7 +125,7 @@ function AnimatedTemplateMockup() {
                     >
                       <div className="relative mb-3 aspect-4/3 w-full overflow-hidden rounded-lg bg-slate-100">
                         {tpl.template_image ? (
-                          <Image
+                          <Image unoptimized
                             src={tpl.template_image}
                             alt={tpl.name}
                             fill

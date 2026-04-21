@@ -53,7 +53,7 @@ export const CategoryCard1: React.FC<CategoryCard1Props> = ({
     <CardWrapper>
       <div className="bg-background-light dark:bg-background-dark">
         <div className="bg-card-light dark:bg-card-dark relative mb-4 aspect-square overflow-hidden rounded-lg transition-transform hover:scale-105">
-          <Image
+          <Image unoptimized
             src={categoryImage}
             alt={category.name}
             height={400}

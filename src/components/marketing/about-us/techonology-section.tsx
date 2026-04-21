@@ -11,7 +11,7 @@ export default function Technology() {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="relative order-1">
             <div className="relative z-10">
-              <Image
+              <Image unoptimized
                 src="/images/about4.avif"
                 alt="Innovation illustration"
                 width={500}
@@ -66,7 +66,7 @@ export default function Technology() {
             </div>
             <div className="relative order-2">
               <div className="relative z-10">
-                <Image
+                <Image unoptimized
                   src="/images/about5.avif"
                   alt="Team collaboration"
                   width={500}
@@ -85,7 +85,7 @@ export default function Technology() {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div className="relative order-1">
               <div className="relative z-10">
-                <Image
+                <Image unoptimized
                   src="/images/about6.avif"
                   alt="Customer listening illustration"
                   width={500}

@@ -212,7 +212,7 @@ export const SubCategoryList: React.FC = () => {
                           >
                             <TableCell className="px-6 py-4">
                               {subCategory.image ? (
-                                <Image
+                                <Image unoptimized
                                   src={subCategory.image}
                                   alt={subCategory.name}
                                   width={48}

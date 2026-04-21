@@ -24,7 +24,7 @@ export const TeamCard9: React.FC<TeamCard9Props> = ({
       onClick={onClick}
     >
       {member.photo ? (
-        <Image
+        <Image unoptimized
           src={member.photo}
           alt={member.name}
           width={400}

@@ -128,7 +128,7 @@ export const AboutUsTemplate18: React.FC<AboutUsTemplate18Props> = ({
                   exit={{ opacity: 0, scale: 0.8, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Image
+                  <Image unoptimized
                     src={data.items[hoveredIndex]?.image}
                     alt={data.items[hoveredIndex]?.title}
                     width={64}

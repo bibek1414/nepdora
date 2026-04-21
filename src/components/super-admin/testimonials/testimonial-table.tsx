@@ -100,7 +100,7 @@ export const TestimonialsTable = ({
               <TableCell>
                 <div className="mb-2 flex-shrink-0">
                   {testimonial.image ? (
-                    <Image
+                    <Image unoptimized
                       src={testimonial.image}
                       alt={testimonial.name}
                       width={60}

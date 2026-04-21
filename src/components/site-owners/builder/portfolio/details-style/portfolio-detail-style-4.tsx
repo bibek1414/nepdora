@@ -151,7 +151,7 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
         {/* Main Image */}
         {portfolio.thumbnail_image && (
           <div className="relative mb-16 aspect-video w-full overflow-hidden rounded-3xl border border-gray-100 shadow-sm">
-            <Image
+            <Image unoptimized
               src={portfolio.thumbnail_image}
               alt={portfolio.thumbnail_image_alt_description || portfolio.title}
               fill

@@ -182,7 +182,7 @@ export default function EsewaPayment() {
         {/* Product/Variant Image */}
         {displayImage && (
           <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border">
-            <Image
+            <Image unoptimized
               src={displayImage}
               alt={displayName}
               fill

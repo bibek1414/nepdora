@@ -57,7 +57,7 @@ export const CategoryCard7: React.FC<CategoryCard7Props> = ({
           e.currentTarget.style.borderColor = "transparent";
         }}
       >
-        <Image
+        <Image unoptimized
           src={category.image || "/fallback/image-not-found.png"}
           alt={category.name}
           fill

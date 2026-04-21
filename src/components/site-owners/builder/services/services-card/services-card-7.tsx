@@ -77,7 +77,7 @@ export const ServicesCard7: React.FC<ServicesCard7Props> = ({
         }}
       >
         <div className="relative aspect-video w-full overflow-hidden">
-          <Image
+          <Image unoptimized
             src={serviceImage}
             alt={service.thumbnail_image_alt_description || service.title}
             fill

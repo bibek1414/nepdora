@@ -78,7 +78,7 @@ export const CountriesStyle1: React.FC<CountriesStyle1Props> = ({
                             }`}
                           >
                             {country.data.Image ? (
-                              <Image
+                              <Image unoptimized
                                 src={country.data.Image}
                                 alt={`Study in ${country.data.name}`}
                                 fill

@@ -56,7 +56,7 @@ export const SubCategoryCard2: React.FC<SubCategoryCard2Props> = ({
   return (
     <CardWrapper>
       <div className="group relative h-72 cursor-pointer overflow-hidden rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl sm:h-80 md:h-96">
-        <Image
+        <Image unoptimized
           src={subcategoryImage}
           alt={subcategory.name}
           fill

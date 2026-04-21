@@ -477,7 +477,7 @@ export function SubscriptionBlocker() {
                           >
                             <div className="relative z-10 flex items-center gap-3 md:gap-4">
                               <div className="relative h-8 w-8 shrink-0 md:h-12 md:w-12">
-                                <Image
+                                <Image unoptimized
                                   src={method.image}
                                   alt={method.name}
                                   fill

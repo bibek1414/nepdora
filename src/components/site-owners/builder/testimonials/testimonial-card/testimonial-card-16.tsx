@@ -26,7 +26,7 @@ export const TestimonialCard16: React.FC<TestimonialCard16Props> = ({
       <div className="mb-6 flex items-center gap-4">
         <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-gray-100">
           {testimonial.image ? (
-            <Image
+            <Image unoptimized
               src={testimonial.image}
               alt={testimonial.name}
               fill

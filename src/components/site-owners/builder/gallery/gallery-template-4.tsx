@@ -258,7 +258,7 @@ export const GalleryTemplate4: React.FC<GalleryTemplateProps> = ({
                       label="Change Image"
                     />
                     <div className="relative h-full w-full">
-                      <Image
+                      <Image unoptimized
                         src={getImageUrl(image.image)}
                         alt={image.image_alt_description || "Gallery image"}
                         fill

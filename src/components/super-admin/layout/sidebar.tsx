@@ -93,7 +93,7 @@ export default function SuperAdminSidebar() {
           {!collapsed && (
             <div className="flex flex-col">
               <div className="flex items-center space-x-2">
-                <Image
+                <Image unoptimized
                   src="/nepdora-logooo.svg"
                   alt="Logo"
                   width={120}

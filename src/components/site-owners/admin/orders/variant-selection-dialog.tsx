@@ -164,7 +164,7 @@ export function VariantSelectionDialog({
           {/* Product Images */}
           <div>
             <div className="border-border relative aspect-square w-full overflow-hidden rounded-lg border">
-              <Image
+              <Image unoptimized
                 src={
                   selectedVariant?.image ||
                   productDetails?.thumbnail_image ||
@@ -184,7 +184,7 @@ export function VariantSelectionDialog({
             {selectedVariant?.image && (
               <div className="mt-4 flex gap-2">
                 <div className="relative h-20 w-20 overflow-hidden rounded-md border">
-                  <Image
+                  <Image unoptimized
                     src={selectedVariant.image}
                     alt="Selected variant"
                     fill

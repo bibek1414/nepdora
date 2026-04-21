@@ -76,7 +76,7 @@ export const PortfolioCard5: React.FC<PortfolioCard5Props> = ({
         }}
       >
         <div className="relative aspect-video w-full overflow-hidden">
-          <Image
+          <Image unoptimized
             src={portfolioImage}
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
             fill

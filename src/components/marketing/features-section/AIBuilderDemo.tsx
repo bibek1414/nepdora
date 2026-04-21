@@ -164,7 +164,7 @@ const AIBuilderDemo: React.FC = () => {
         {/* Header */}
         <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
           <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-lg">
-            <Image src="/icon.svg" alt="Nepdora" width={20} height={20} />
+            <Image unoptimized src="/icon.svg" alt="Nepdora" width={20} height={20} />
           </div>
           <div>
             <h3 className="text-sm font-bold text-slate-900">Nepdora AI</h3>

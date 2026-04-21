@@ -169,7 +169,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                     className="absolute inset-0"
                   >
                     {activeProject?.thumbnail_image ? (
-                      <Image
+                      <Image unoptimized
                         src={activeProject.thumbnail_image}
                         alt={
                           activeProject.thumbnail_image_alt_description ||
@@ -180,7 +180,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-gray-200">
-                        <Image
+                        <Image unoptimized
                           src="/fallback/image-not-found.png"
                           alt="No Image"
                           fill
@@ -236,7 +236,7 @@ export const PortfolioStyle4: React.FC<PortfolioStyleProps> = ({
                             : {}
                         }
                       >
-                        <Image
+                        <Image unoptimized
                           src={
                             p.thumbnail_image || "/fallback/image-not-found.png"
                           }

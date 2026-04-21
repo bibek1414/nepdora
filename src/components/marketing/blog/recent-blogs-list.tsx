@@ -32,7 +32,7 @@ export const RecentBlogsList: React.FC<RecentBlogsListProps> = ({ blogs }) => {
           className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white transition-all hover:shadow-md"
         >
           <div className="relative h-56 overflow-hidden">
-            <Image
+            <Image unoptimized
               src={blog.thumbnail_image || "/fallback/image-not-found.png"}
               alt={
                 blog.thumbnail_image

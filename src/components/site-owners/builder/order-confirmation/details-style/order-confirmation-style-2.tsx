@@ -221,7 +221,7 @@ const OrderConfirmationStyle2 = ({
                       style={{ borderColor: `${theme.colors.primary}05` }}
                     >
                       <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-stone-100 shadow-sm">
-                        <Image
+                        <Image unoptimized
                           src={displayImage || "/fallback/image-not-found.png"}
                           alt={displayName}
                           fill

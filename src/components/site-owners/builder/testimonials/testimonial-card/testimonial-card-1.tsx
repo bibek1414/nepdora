@@ -49,7 +49,7 @@ export const TestimonialCard1: React.FC<TestimonialCard1Props> = ({
 
         <div className="flex items-center justify-center">
           <div className="relative mr-3 h-12 w-12 overflow-hidden rounded-full">
-            <Image
+            <Image unoptimized
               src={testimonial.image || "/images/default-avatar.png"}
               alt={testimonial.name}
               fill

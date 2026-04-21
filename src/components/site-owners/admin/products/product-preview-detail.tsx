@@ -216,7 +216,7 @@ export const ProductPreviewDetail: React.FC<ProductPreviewDetailProps> = ({
         <div className="grid gap-8 md:grid-cols-2 lg:gap-16">
           <div>
             <div className="border-border relative aspect-square w-full overflow-hidden rounded-lg border">
-              <Image
+              <Image unoptimized
                 src={selectedImage || defaultImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
@@ -243,7 +243,7 @@ export const ProductPreviewDetail: React.FC<ProductPreviewDetailProps> = ({
                   }
                   onClick={() => setSelectedImage(img)}
                 >
-                  <Image
+                  <Image unoptimized
                     src={img}
                     alt={`${product.name} view ${idx + 1}`}
                     fill

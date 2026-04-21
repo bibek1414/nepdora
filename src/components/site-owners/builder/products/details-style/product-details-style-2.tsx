@@ -324,7 +324,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           {/* Left Side - Images */}
           <div className="flex flex-col gap-6">
             <div className="border-border relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-[#F6F6F6]">
-              <Image
+              <Image unoptimized
                 src={selectedImage || defaultImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill
@@ -355,7 +355,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                         onClick={() => setSelectedImage(img)}
                       >
                         <div className="absolute inset-0 -z-10 bg-[#F6F6F6]" />
-                        <Image
+                        <Image unoptimized
                           src={img}
                           alt={`${product.name} view ${idx + 1}`}
                           fill

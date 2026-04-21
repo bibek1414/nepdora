@@ -90,7 +90,7 @@ export const ProductCard11: React.FC<ProductCard11Props> = ({
       {/* Image Container */}
       <div className="relative mb-5 aspect-4/3 w-full overflow-hidden rounded-[1.25rem]">
         <div className="relative h-full w-full">
-          <Image
+          <Image unoptimized
             src={productImage}
             alt={product.thumbnail_alt_description || product.name}
             fill

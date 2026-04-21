@@ -118,7 +118,7 @@ export const ProductCard9: React.FC<ProductCard9Props> = ({
       <Card className="overflow-hidden border-0 bg-transparent shadow-none">
         <CardContent className="p-0">
           <div className="relative mb-4 aspect-square overflow-hidden rounded-2xl bg-[#F6F6F6]">
-            <Image
+            <Image unoptimized
               src={productImage}
               alt={product.thumbnail_alt_description || product.name}
               fill

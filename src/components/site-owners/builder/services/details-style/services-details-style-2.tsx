@@ -109,7 +109,7 @@ export const ServiceDetail2: React.FC<{ slug: string; siteUser?: string }> = ({
 
         {/* Big Hero Image */}
         <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm md:h-[550px] lg:mb-20">
-          <Image
+          <Image unoptimized
             src={serviceImage}
             alt={service.title}
             fill

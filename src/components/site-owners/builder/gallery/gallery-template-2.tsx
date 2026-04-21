@@ -348,7 +348,7 @@ const MotionImage = motion(
     props: ImageProps,
     ref: Ref<HTMLImageElement>
   ) {
-    return <Image ref={ref} {...props} />;
+    return <Image unoptimized ref={ref} {...props} />;
   })
 );
 
@@ -414,7 +414,7 @@ const PhotoCard = ({
           />
         )}
         <div className="relative h-full w-full">
-          <Image
+          <Image unoptimized
             src={getImageUrl(image.image)}
             alt={image.image_alt_description || "Gallery image"}
             fill

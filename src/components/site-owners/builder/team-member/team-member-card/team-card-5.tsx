@@ -112,7 +112,7 @@ export const TeamCard5: React.FC<TeamCard5Props> = ({
             backgroundColor: cardBackgroundColor,
           }}
         >
-          <Image
+          <Image unoptimized
             src={member.photo}
             alt={member.name}
             fill

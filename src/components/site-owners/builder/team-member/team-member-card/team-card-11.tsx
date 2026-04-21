@@ -35,7 +35,7 @@ export const TeamCard11: React.FC<TeamCard11Props> = ({
       onClick={onClick}
     >
       {/* Photo */}
-      <Image
+      <Image unoptimized
         src={member.photo}
         alt={member.name}
         fill

@@ -179,7 +179,7 @@ export const ProductCard4: React.FC<ProductCard4Props> = ({
           {/* Image Section */}
           <div className="relative overflow-hidden">
             <div className="relative aspect-square">
-              <Image
+              <Image unoptimized
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill

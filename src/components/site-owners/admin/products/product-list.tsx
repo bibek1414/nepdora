@@ -269,7 +269,7 @@ const ProductList = () => {
                     >
                       <TableCell className="px-6 py-4">
                         {product.thumbnail_image ? (
-                          <Image
+                          <Image unoptimized
                             src={product.thumbnail_image}
                             alt={
                               product.thumbnail_alt_description || product.name

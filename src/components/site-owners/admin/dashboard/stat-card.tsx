@@ -39,7 +39,7 @@ const StatCard: React.FC<StatCardProps> = ({
             {/* Icon on the left */}
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/60">
               {typeof Icon === "string" ? (
-                <Image
+                <Image unoptimized
                   src={Icon}
                   alt={`${title} icon`}
                   width={24}

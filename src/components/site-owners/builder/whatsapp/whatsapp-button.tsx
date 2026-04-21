@@ -34,7 +34,7 @@ export function WhatsAppButton({
 
   // Default WhatsApp icon using your uploaded image
   const defaultWhatsAppIcon = (
-    <Image
+    <Image unoptimized
       src="/images/site-owners/whatsapp-icon/whatsapp-icon.png"
       alt="WhatsApp"
       width={50}

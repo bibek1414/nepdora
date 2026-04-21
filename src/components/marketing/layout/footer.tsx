@@ -30,7 +30,7 @@ export const Footer = () => {
             className="flex flex-col space-y-5 pr-0 sm:space-y-6 lg:col-span-4 lg:pr-12"
             direction="-x"
           >
-            <Image
+            <Image unoptimized
               src="/nepdora-logooo.svg"
               alt="Logo"
               width={200}

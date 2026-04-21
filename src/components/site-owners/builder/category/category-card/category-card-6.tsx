@@ -49,7 +49,7 @@ export const CategoryCard6: React.FC<CategoryCard6Props> = ({
         }
       }}
     >
-      <Image
+      <Image unoptimized
         width={800}
         height={600}
         src={category.image || "/fallback/image-not-found.png"}

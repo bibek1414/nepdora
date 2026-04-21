@@ -94,7 +94,7 @@ export const CollectionsStyle3: React.FC<CollectionsStyleProps> = ({
                   className="group relative aspect-3/4 cursor-pointer overflow-hidden rounded-3xl bg-neutral-900"
                 >
                   {image ? (
-                    <Image
+                    <Image unoptimized
                       src={String(image)}
                       alt={String(name)}
                       fill

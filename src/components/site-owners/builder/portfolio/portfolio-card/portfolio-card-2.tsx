@@ -76,7 +76,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
       <article className="group border-border hover:border-primary/50 flex flex-col gap-3 border-b pb-4 transition-all duration-300 sm:gap-4 sm:pb-5 md:flex-row md:gap-6 md:pb-6">
         {/* Image */}
         <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-lg sm:h-56 md:h-48 md:w-80 lg:h-56">
-          <Image
+          <Image unoptimized
             src={portfolioImage}
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
             fill

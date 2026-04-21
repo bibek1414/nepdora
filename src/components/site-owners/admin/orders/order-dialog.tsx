@@ -492,7 +492,7 @@ export const OrderDialog: React.FC<OrderDialogProps> = ({
                           <div className="flex items-center gap-4">
                             <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
                               {displayImage ? (
-                                <Image
+                                <Image unoptimized
                                   src={displayImage}
                                   alt={displayName}
                                   width={48}

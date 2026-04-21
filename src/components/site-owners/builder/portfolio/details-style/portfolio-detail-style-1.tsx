@@ -157,7 +157,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
         </div>
 
         <div className="mx-auto mb-12 aspect-[16/9] h-[300px] overflow-hidden rounded-2xl shadow-xl md:h-[500px]">
-          <Image
+          <Image unoptimized
             src={portfolioImage}
             alt={portfolio.title}
             width={1200}

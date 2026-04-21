@@ -92,7 +92,7 @@ export const BlogCard3: React.FC<BlogCard3Props> = ({
         {/* Image */}
         <div className="md:w-1/3">
           <div className="relative aspect-6/5 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-            <Image
+            <Image unoptimized
               src={blogImage}
               alt={blog.thumbnail_image_alt_description || blog.title}
               fill

@@ -641,7 +641,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="relative h-6 w-6 shrink-0">
-                            <Image
+                            <Image unoptimized
                               src={getPaymentImage(type)}
                               alt={getPaymentLabel(type)}
                               fill
@@ -712,7 +712,7 @@ const CheckoutStyle2 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                   return (
                     <div key={cartItemKey} className="flex items-center gap-4">
                       <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-stone-100">
-                        <Image
+                        <Image unoptimized
                           src={item.product.thumbnail_image || ""}
                           alt={item.product.name}
                           fill

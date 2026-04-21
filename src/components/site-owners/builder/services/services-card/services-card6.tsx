@@ -73,7 +73,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
         className="absolute inset-0 z-0 transition-opacity duration-700"
         style={{ opacity: isHovered ? 1 : 0 }}
       >
-        <Image
+        <Image unoptimized
           src={imageSrc}
           alt={title || "Service"}
           fill
@@ -137,7 +137,7 @@ export const ServicesCard6: React.FC<ServicesCard6Props> = ({
 
         {/* Static Image for mobile/non-hover when it's just the card bg */}
         <div className="relative mt-auto block min-h-[200px] w-full overflow-hidden rounded-2xl pt-8 md:hidden">
-          <Image
+          <Image unoptimized
             src={imageSrc}
             alt={title || "Service"}
             fill

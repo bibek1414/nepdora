@@ -326,7 +326,7 @@ export function SubscriptionPlansGrid() {
                   >
                     <div className="flex items-center gap-4">
                       <div className="relative h-12 w-12 grayscale transition-all duration-300 group-hover:grayscale-0">
-                        <Image
+                        <Image unoptimized
                           src={method.image}
                           alt={method.name}
                           fill

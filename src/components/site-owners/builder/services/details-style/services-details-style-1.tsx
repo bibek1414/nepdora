@@ -104,7 +104,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
         </div>
 
         <div className="mx-auto mb-10 aspect-[16/9] h-[300px] overflow-hidden rounded-xl shadow-lg md:h-[450px]">
-          <Image
+          <Image unoptimized
             src={serviceImage}
             alt={service.title}
             width={1200}
