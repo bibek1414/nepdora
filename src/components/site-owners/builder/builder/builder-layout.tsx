@@ -11,6 +11,7 @@ import { AddSectionDialog } from "@/components/site-owners/builder/builder/add-s
 import {
   useNavbarQuery,
   useCreateNavbarMutation,
+  useUpdateNavbarMutation,
   useReplaceNavbarMutation,
 } from "@/hooks/owner-site/components/use-navbar";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -24,6 +25,7 @@ import { Page } from "@/types/owner-site/components/page";
 import {
   useFooterQuery,
   useCreateFooterMutation,
+  useUpdateFooterMutation,
   useReplaceFooterMutation,
 } from "@/hooks/owner-site/components/use-footer";
 import { FooterData } from "@/types/owner-site/components/footer";
@@ -160,8 +162,10 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   // Queries and Mutations
   const { data: navbarResponse, isLoading: isNavbarLoading } = useNavbarQuery();
   const createNavbarMutation = useCreateNavbarMutation();
+  const updateNavbarMutation = useUpdateNavbarMutation();
   const replaceNavbarMutation = useReplaceNavbarMutation();
   const createFooterMutation = useCreateFooterMutation();
+  const updateFooterMutation = useUpdateFooterMutation();
   const replaceFooterMutation = useReplaceFooterMutation();
   const { data: footerResponse, isLoading: isFooterLoading } = useFooterQuery();
 
@@ -968,14 +972,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       finalData = {
         ...navbarData, // Start with new template's base structure
         // Preserve user's content and settings
-        links:
-          currentData.links && currentData.links.length > 0
-            ? currentData.links
-            : navbarData.links,
-        buttons:
-          currentData.buttons && currentData.buttons.length > 0
-            ? currentData.buttons
-            : navbarData.buttons,
+        links: currentData.links ?? navbarData.links,
+        buttons: currentData.buttons ?? navbarData.buttons,
         logoText: currentData.logoText || navbarData.logoText,
         logoType: currentData.logoType || navbarData.logoType,
         logoImage:
@@ -985,10 +983,9 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         showCart: currentData.showCart ?? navbarData.showCart,
         enableLogin: currentData.enableLogin ?? navbarData.enableLogin,
         bannerText: currentData.bannerText || navbarData.bannerText,
-        topBarItems:
-          currentData.topBarItems && currentData.topBarItems.length > 0
-            ? currentData.topBarItems
-            : navbarData.topBarItems,
+        topBarItems: currentData.topBarItems ?? navbarData.topBarItems,
+        backgroundColor: currentData.backgroundColor || navbarData.backgroundColor,
+        textColor: currentData.textColor || navbarData.textColor,
       };
     }
 
@@ -998,9 +995,32 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       component_id: `nav-${Date.now()}`,
     };
 
-    const toastId = "navbar-create";
+    const toastId = "navbar-update";
 
-    if (pendingCategoryFilter === "navbar-sections") {
+    if (isReplacing && currentData?.id) {
+      // Use PATCH mutation for existing navbar
+      updateNavbarMutation.mutate(
+        {
+          id: currentData.id,
+          data: finalData,
+          component_id: `nav-${Date.now()}`,
+        },
+        {
+          onSuccess: () => {
+            setHasChanges(true);
+            setPendingCategoryFilter(undefined);
+            setPendingReplaceId(null);
+            if (finalData.style === "style-14") {
+              ensureServiceDetailsPageExists();
+            }
+          },
+          onError: error => {
+            toast.error("Failed to update navbar", { id: toastId });
+          },
+        }
+      );
+    } else if (isReplacing) {
+      // Fallback to replace if no ID found
       replaceNavbarMutation.mutate(payload, {
         onSuccess: () => {
           setHasChanges(true);
@@ -1059,21 +1079,74 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
   ]);
 
   const handleFooterSelectFromDialog = (footerData: FooterData) => {
+    const isReplacing = pendingCategoryFilter === "footer-sections";
+    const currentData = footerResponse?.data?.data;
+
+    let finalData = footerData;
+    if (isReplacing && currentData) {
+      finalData = {
+        ...footerData, // Start with new template's base structure
+        // Preserve user's content and settings
+        companyName: currentData.companyName || footerData.companyName,
+        description: currentData.description || footerData.description,
+        sections: currentData.sections ?? footerData.sections,
+        socialLinks: currentData.socialLinks ?? footerData.socialLinks,
+        contactInfo: {
+          ...footerData.contactInfo,
+          ...currentData.contactInfo,
+        },
+        logoImage: currentData.logoImage || footerData.logoImage,
+        logoType: currentData.logoType || footerData.logoType,
+        logoText: currentData.logoText || footerData.logoText,
+        newsletter: {
+          ...footerData.newsletter,
+          ...currentData.newsletter,
+        },
+        copyright: currentData.copyright || footerData.copyright,
+        backgroundColor: currentData.backgroundColor || footerData.backgroundColor,
+        textColor: currentData.textColor || footerData.textColor,
+        policyLinks: currentData.policyLinks ?? footerData.policyLinks,
+      };
+    }
+
     const payload = {
       content: "footer content",
-      data: footerData,
+      data: finalData,
       component_id: `footer-${Date.now()}`,
     };
 
-    const toastId = "footer-replace";
+    const toastId = "footer-update";
 
-    if (pendingCategoryFilter === "footer-sections") {
+    if (isReplacing && currentData?.id) {
+      // Use PATCH mutation for existing footer
+      updateFooterMutation.mutate(
+        {
+          id: currentData.id,
+          data: finalData,
+          component_id: `footer-${Date.now()}`,
+        },
+        {
+          onSuccess: () => {
+            setHasChanges(true);
+            setPendingCategoryFilter(undefined);
+            setPendingReplaceId(null);
+            if (finalData.style === "style-12") {
+              ensureServiceDetailsPageExists();
+            }
+          },
+          onError: error => {
+            toast.error("Failed to update footer", { id: toastId });
+          },
+        }
+      );
+    } else if (isReplacing) {
+      // Fallback to replace if no ID found
       replaceFooterMutation.mutate(payload, {
         onSuccess: () => {
           setHasChanges(true);
           setPendingCategoryFilter(undefined);
           setPendingReplaceId(null);
-          if (footerData.style === "style-12") {
+          if (finalData.style === "style-12") {
             ensureServiceDetailsPageExists();
           }
         },
@@ -1086,7 +1159,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         onSuccess: () => {
           setHasChanges(true);
           // Auto-create service details page if Navbar Style 14 is selected
-          if (footerData.style === "style-12") {
+          if (finalData.style === "style-12") {
             ensureServiceDetailsPageExists();
           }
           toast.success("Footer added successfully!", { id: toastId });

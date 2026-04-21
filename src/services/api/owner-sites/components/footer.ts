@@ -93,6 +93,7 @@ export const useFooterApi = {
       body: JSON.stringify({
         data: data.data,
         ...(data.content && { content: data.content }),
+        ...(data.component_id && { component_id: data.component_id }),
       }),
     });
 

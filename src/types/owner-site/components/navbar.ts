@@ -59,6 +59,7 @@ export interface UpdateNavbarRequest {
   id: string;
   content?: string;
   data?: Partial<NavbarData>;
+  component_id?: string;
 }
 
 export interface UpdateNavbarResponse {

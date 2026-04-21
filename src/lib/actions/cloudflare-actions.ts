@@ -57,66 +57,11 @@ export async function verifyDomainDNS(domainName: string) {
 }
 
 export async function getAccountNameservers() {
-  try {
-    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-    let accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-
-    if (!apiToken || !accountId) {
-      console.error("Cloudflare Configuration Missing:", {
-        hasToken: !!apiToken,
-        hasAccountId: !!accountId,
-      });
-      return {
-        success: false,
-        error: "Cloudflare API Token or Account ID is not configured.",
-      };
-    }
-
-    // Strip any surrounding quotes that might be in the .env file
-    accountId = accountId.replace(/^["']|["']$/g, "");
-
-    console.log("Fetching account nameservers for account:", accountId);
-
-    const response = await fetch(
-      `https://api.cloudflare.com/client/v4/zones?account.id=${accountId}&per_page=1`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      return {
-        success: false,
-        error: data.errors?.[0]?.message || "Failed to fetch zones.",
-      };
-    }
-
-    if (data.result && data.result.length > 0) {
-      const zone = data.result[0];
-      const nameservers = zone.name_servers || zone.nameservers;
-      if (nameservers && nameservers.length > 0) {
-        return { success: true, nameservers };
-      }
-    }
-
-    // Fallback if no zones or nameservers are available in the account yet
-    return {
-      success: true,
-      nameservers: ["cleo.ns.cloudflare.com", "vivienne.ns.cloudflare.com"],
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: error.message || "Failed to fetch account nameservers.",
-    };
-  }
+  // User confirmed these are consistent for their account
+  return {
+    success: true,
+    nameservers: ["cleo.ns.cloudflare.com", "vivienne.ns.cloudflare.com"],
+  };
 }
 
 export async function addDomainToCloudflare(domainName: string) {
@@ -184,38 +129,11 @@ export async function addDomainToCloudflare(domainName: string) {
 
     const zoneId = createZoneData.result.id;
 
-    // Step 2: Get nameservers
-    const getZoneResponse = await fetch(
-      `https://api.cloudflare.com/client/v4/zones/${zoneId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
-    );
-
-    const getZoneData = await getZoneResponse.json();
-
-    if (!getZoneResponse.ok || !getZoneData.success) {
-      console.error("Cloudflare Get Zone Error:", getZoneData.errors);
-      return {
-        success: false,
-        error:
-          getZoneData.errors?.[0]?.message ||
-          "Failed to retrieve nameservers for the domain.",
-      };
-    }
-
-    const nameServers =
-      getZoneData.result.name_servers || getZoneData.result.nameservers;
-
+    // Step 2: Use hardcoded nameservers (as requested by user)
     return {
       success: true,
-      nameservers: nameServers,
       zoneId,
+      nameservers: ["cleo.ns.cloudflare.com", "vivienne.ns.cloudflare.com"],
     };
   } catch (error: any) {
     console.error("Cloudflare API Exception:", error);

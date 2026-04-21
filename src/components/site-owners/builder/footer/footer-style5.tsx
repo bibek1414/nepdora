@@ -127,7 +127,7 @@ export function FooterStyle5({
         <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Student Services (Span 4) */}
           <div className="lg:col-span-4">
-            {studentServices && (
+            {studentServices && studentServices.links.length > 0 && (
               <>
                 <ColumnHeader>{studentServices.title}</ColumnHeader>
                 <ul className="space-y-1">
@@ -147,7 +147,7 @@ export function FooterStyle5({
 
           {/* Column 2: About (Span 2) */}
           <div className="lg:col-span-2">
-            {aboutLinks && (
+            {aboutLinks && aboutLinks.links.length > 0 && (
               <>
                 <ColumnHeader>{aboutLinks.title}</ColumnHeader>
                 <ul className="space-y-1">
@@ -167,7 +167,7 @@ export function FooterStyle5({
 
           {/* Column 3: Quick Links (Span 3) */}
           <div className="lg:col-span-3">
-            {quickLinks && (
+            {quickLinks && quickLinks.links.length > 0 && (
               <>
                 <ColumnHeader>{quickLinks.title}</ColumnHeader>
                 <ul className="space-y-1">

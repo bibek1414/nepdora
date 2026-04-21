@@ -77,6 +77,7 @@ export interface UpdateFooterRequest {
   id: string;
   content?: string;
   data?: Partial<FooterData>;
+  component_id?: string;
 }
 
 export interface UpdateFooterResponse {

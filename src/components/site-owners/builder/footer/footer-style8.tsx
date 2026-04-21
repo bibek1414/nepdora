@@ -127,16 +127,18 @@ export const FooterStyle8 = ({
           )}
 
           {/* Column 3+: Static Sections from footer data */}
-          {data.sections?.map(section => (
-            <ServicesSection
-              key={section.id}
-              title={section.title}
-              services={section.links}
-              isEditable={isEditable}
-              siteUser={siteUser}
-              pathname={pathname}
-            />
-          ))}
+          {data.sections
+            ?.filter(section => section.links.length > 0)
+            .map(section => (
+              <ServicesSection
+                key={section.id}
+                title={section.title}
+                services={section.links}
+                isEditable={isEditable}
+                siteUser={siteUser}
+                pathname={pathname}
+              />
+            ))}
 
           {/* Column 3: Contact Info */}
           <motion.div

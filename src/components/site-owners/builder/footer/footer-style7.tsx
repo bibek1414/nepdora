@@ -86,16 +86,17 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
           <div className="flex flex-col space-y-6 lg:col-span-4 lg:pr-12">
             <FooterLogo footerData={data} getImageUrl={getImageUrl} />
 
-            <p className="max-w-[280px] text-base opacity-70">
-              {data.newsletter.description ||
-                "Sign up today and get $20 off your first order."}
-            </p>
-
-            {/* Newsletter */}
             {data.newsletter.enabled && (
-              <div className="mt-2 w-full max-w-[320px]">
-                <NewsletterForm isEditable={isEditable} theme={theme} />
-              </div>
+              <>
+                <p className="max-w-[280px] text-base opacity-70">
+                  {data.newsletter.description ||
+                    "Sign up today and get $20 off your first order."}
+                </p>
+
+                <div className="mt-2 w-full max-w-[320px]">
+                  <NewsletterForm isEditable={isEditable} theme={theme} />
+                </div>
+              </>
             )}
 
             {/* Social Links */}
@@ -147,50 +148,58 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 
           {/* Column 3: Company */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold">
-              {companySection?.title || "Company"}
-            </h3>
-            <ul className="flex flex-col space-y-4">
-              {(companySection?.links || []).map((link: any) => (
-                <li key={link.id}>
-                  <FooterLink
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    isEditable={isEditable}
-                  >
-                    {link.text}
-                  </FooterLink>
-                </li>
-              ))}
-            </ul>
+            {companySection && companySection.links.length > 0 && (
+              <>
+                <h3 className="mb-6 text-base font-semibold">
+                  {companySection.title}
+                </h3>
+                <ul className="flex flex-col space-y-4">
+                  {companySection.links.map((link: any) => (
+                    <li key={link.id}>
+                      <FooterLink
+                        href={generateLinkHref(
+                          link.href || "",
+                          siteUser,
+                          pathname,
+                          isEditable
+                        )}
+                        isEditable={isEditable}
+                      >
+                        {link.text}
+                      </FooterLink>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
 
           {/* Column 4: Need Help */}
           <div className="lg:col-span-2">
-            <h3 className="mb-6 text-base font-semibold">
-              {helpSection?.title || "Need Help"}
-            </h3>
-            <ul className="flex flex-col space-y-4">
-              {(helpSection?.links || []).map((link: any) => (
-                <li key={link.id}>
-                  <FooterLink
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    isEditable={isEditable}
-                  >
-                    {link.text}
-                  </FooterLink>
-                </li>
-              ))}
-            </ul>
+            {helpSection && helpSection.links.length > 0 && (
+              <>
+                <h3 className="mb-6 text-base font-semibold">
+                  {helpSection.title}
+                </h3>
+                <ul className="flex flex-col space-y-4">
+                  {helpSection.links.map((link: any) => (
+                    <li key={link.id}>
+                      <FooterLink
+                        href={generateLinkHref(
+                          link.href || "",
+                          siteUser,
+                          pathname,
+                          isEditable
+                        )}
+                        isEditable={isEditable}
+                      >
+                        {link.text}
+                      </FooterLink>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
 
           {/* Column 5: Exclusive Services */}

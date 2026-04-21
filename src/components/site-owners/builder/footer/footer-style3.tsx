@@ -229,110 +229,113 @@ export function FooterStyle3({
           </div>
 
           {/* Services Links */}
-          <div>
-            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
-              {servicesSection?.title || "Services"}
-            </h4>
-            <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
-              {(servicesSection?.links || []).map(link => (
-                <li
-                  key={link.id}
-                  className="flex cursor-pointer items-center gap-2 opacity-80 transition-colors hover:opacity-100"
-                >
-                  <span style={{ color: primaryColor }}>✓</span>
-                  <Link
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    className="transition-colors hover:text-inherit"
-                    style={
-                      {
-                        "--hover-color": primaryColor,
-                      } as React.CSSProperties
-                    }
-                    target={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
+          {servicesSection && servicesSection.links.length > 0 && (
+            <div>
+              <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
+                {servicesSection.title}
+              </h4>
+              <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
+                {servicesSection.links.map(link => (
+                  <li
+                    key={link.id}
+                    className="flex cursor-pointer items-center gap-2 opacity-80 transition-colors hover:opacity-100"
                   >
-                    {link.text}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+                    <span style={{ color: primaryColor }}>✓</span>
+                    <Link
+                      href={generateLinkHref(
+                        link.href || "",
+                        siteUser,
+                        pathname,
+                        isEditable
+                      )}
+                      className="transition-colors hover:text-inherit"
+                      style={
+                        {
+                          "--hover-color": primaryColor,
+                        } as React.CSSProperties
+                      }
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={isEditable ? e => e.preventDefault() : undefined}
+                    >
+                      {link.text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Resources */}
-          <div>
-            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
-              {usefulLinksSection?.title || "Resources"}
-            </h4>
-            <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
-              {(usefulLinksSection?.links || []).map(link => (
-                <li
-                  key={link.id}
-                  className="flex cursor-pointer items-center gap-2 opacity-80 transition-colors hover:opacity-100"
-                >
-                  <span style={{ color: primaryColor }}>&gt;</span>
-                  <Link
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    className="transition-colors hover:text-inherit"
-                    style={
-                      {
-                        "--hover-color": primaryColor,
-                      } as React.CSSProperties
-                    }
-                    target={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      link.href?.startsWith("http") ||
-                      link.href?.startsWith("mailto:")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
+          {usefulLinksSection && usefulLinksSection.links.length > 0 && (
+            <div>
+              <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
+                {usefulLinksSection.title}
+              </h4>
+              <ul className="space-y-2 text-xs sm:space-y-2.5 sm:text-sm md:space-y-3">
+                {usefulLinksSection.links.map(link => (
+                  <li
+                    key={link.id}
+                    className="flex cursor-pointer items-center gap-2 opacity-80 transition-colors hover:opacity-100"
                   >
-                    {link.text}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+                    <span style={{ color: primaryColor }}>&gt;</span>
+                    <Link
+                      href={generateLinkHref(
+                        link.href || "",
+                        siteUser,
+                        pathname,
+                        isEditable
+                      )}
+                      className="transition-colors hover:text-inherit"
+                      style={
+                        {
+                          "--hover-color": primaryColor,
+                        } as React.CSSProperties
+                      }
+                      target={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        link.href?.startsWith("http") ||
+                        link.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={isEditable ? e => e.preventDefault() : undefined}
+                    >
+                      {link.text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Newsletter */}
-          <div>
-            <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
-              {data.newsletter.title}
-            </h4>
-            <p className="mb-3 text-xs leading-relaxed opacity-80 sm:mb-4 sm:text-sm">
-              {data.newsletter.description}
-            </p>
-
-            {data.newsletter.enabled && (
+          {data.newsletter.enabled && (
+            <div>
+              <h4 className="mb-4 text-base font-bold sm:mb-5 sm:text-lg md:mb-6">
+                {data.newsletter.title}
+              </h4>
+              <p className="mb-3 text-xs leading-relaxed opacity-80 sm:mb-4 sm:text-sm">
+                {data.newsletter.description}
+              </p>
               <NewsletterForm isEditable={isEditable} theme={theme} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div

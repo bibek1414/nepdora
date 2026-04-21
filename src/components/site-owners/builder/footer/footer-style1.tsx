@@ -66,51 +66,53 @@ export function FooterStyle1({
           {/* Footer links grid */}
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
             {/* Info Section */}
-            {mainSections.map((section, index) => (
-              <div key={section.id} className="col-span-1">
-                <h3 className="mb-4 text-xl font-bold">{section.title}</h3>
-                <ul className="space-y-3">
-                  {section.links.map(link => (
-                    <li key={link.id}>
-                      {isEditable ? (
-                        <button
-                          className="text-left text-sm opacity-80 transition-colors hover:opacity-100"
-                          onClick={
-                            isEditable ? e => e.preventDefault() : undefined
-                          }
-                        >
-                          {link.text}
-                        </button>
-                      ) : (
-                        <Link
-                          href={generateLinkHref(
-                            link.href || "",
-                            siteUser,
-                            pathname,
-                            isEditable
-                          )}
-                          target={
-                            link.href?.startsWith("http") ||
-                            link.href?.startsWith("mailto:")
-                              ? "_blank"
-                              : undefined
-                          }
-                          rel={
-                            link.href?.startsWith("http") ||
-                            link.href?.startsWith("mailto:")
-                              ? "noopener noreferrer"
-                              : undefined
-                          }
-                          className="block text-sm opacity-80 transition-colors hover:opacity-100"
-                        >
-                          {link.text}
-                        </Link>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {mainSections
+              .filter(section => section.links.length > 0)
+              .map((section, index) => (
+                <div key={section.id} className="col-span-1">
+                  <h3 className="mb-4 text-xl font-bold">{section.title}</h3>
+                  <ul className="space-y-3">
+                    {section.links.map(link => (
+                      <li key={link.id}>
+                        {isEditable ? (
+                          <button
+                            className="text-left text-sm opacity-80 transition-colors hover:opacity-100"
+                            onClick={
+                              isEditable ? e => e.preventDefault() : undefined
+                            }
+                          >
+                            {link.text}
+                          </button>
+                        ) : (
+                          <Link
+                            href={generateLinkHref(
+                              link.href || "",
+                              siteUser,
+                              pathname,
+                              isEditable
+                            )}
+                            target={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              link.href?.startsWith("http") ||
+                              link.href?.startsWith("mailto:")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
+                            className="block text-sm opacity-80 transition-colors hover:opacity-100"
+                          >
+                            {link.text}
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
 
             {/* Newsletter Section */}
             {data.newsletter.enabled && (

@@ -83,6 +83,7 @@ export const useNavbarApi = {
       headers: createHeaders(),
       body: JSON.stringify({
         data: data.data,
+        ...(data.component_id && { component_id: data.component_id }),
       }),
     });
 

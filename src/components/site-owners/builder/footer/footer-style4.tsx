@@ -96,7 +96,7 @@ export function FooterStyle4({
               }}
             >
               {/* Quick Links (Section 1) */}
-              {section1 && (
+              {section1 && section1.links.length > 0 && (
                 <div className="flex flex-col items-center gap-6 sm:items-start">
                   <h3 className="text-lg font-bold tracking-wider uppercase">
                     {section1.title}
@@ -140,7 +140,7 @@ export function FooterStyle4({
               )}
 
               {/* Pages (Section 2) */}
-              {section2 && (
+              {section2 && section2.links.length > 0 && (
                 <div className="flex flex-col items-center gap-6 sm:items-start">
                   <h3 className="text-lg font-bold tracking-wider uppercase">
                     {section2.title}

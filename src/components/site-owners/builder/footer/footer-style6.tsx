@@ -143,60 +143,62 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
           </div>
 
           {/* Column 2: Main Pages Links */}
-          <div className="flex flex-col items-center md:items-start lg:col-span-4">
-            <h3 className="mb-6 text-xl font-bold tracking-wider uppercase">
-              {mainSection1?.title || "Main Pages"}
-            </h3>
-            <div className="grid grid-cols-1 gap-x-8 gap-y-4 text-center sm:grid-cols-2 md:text-left">
-              <div className="flex flex-col space-y-3">
-                {(mainSection1?.links || []).map(link => (
-                  <FooterLink
-                    key={link.id}
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    isEditable={isEditable}
-                  >
-                    {link.text}
-                  </FooterLink>
-                ))}
-              </div>
-              <div className="flex flex-col space-y-3">
-                {(mainSection2?.links || []).map(link => (
-                  <FooterLink
-                    key={link.id}
-                    href={generateLinkHref(
-                      link.href || "",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    isEditable={isEditable}
-                  >
-                    {link.text}
-                  </FooterLink>
-                ))}
+          {((mainSection1 && mainSection1.links.length > 0) ||
+            (mainSection2 && mainSection2.links.length > 0)) && (
+            <div className="flex flex-col items-center md:items-start lg:col-span-4">
+              <h3 className="mb-6 text-xl font-bold tracking-wider uppercase">
+                {mainSection1?.title || "Main Pages"}
+              </h3>
+              <div className="grid grid-cols-1 gap-x-8 gap-y-4 text-center sm:grid-cols-2 md:text-left">
+                <div className="flex flex-col space-y-3">
+                  {(mainSection1?.links || []).map(link => (
+                    <FooterLink
+                      key={link.id}
+                      href={generateLinkHref(
+                        link.href || "",
+                        siteUser,
+                        pathname,
+                        isEditable
+                      )}
+                      isEditable={isEditable}
+                    >
+                      {link.text}
+                    </FooterLink>
+                  ))}
+                </div>
+                <div className="flex flex-col space-y-3">
+                  {(mainSection2?.links || []).map(link => (
+                    <FooterLink
+                      key={link.id}
+                      href={generateLinkHref(
+                        link.href || "",
+                        siteUser,
+                        pathname,
+                        isEditable
+                      )}
+                      isEditable={isEditable}
+                    >
+                      {link.text}
+                    </FooterLink>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Column 3: Newsletter */}
-          <div className="pl-0 lg:col-span-4 lg:pl-8">
-            <h3 className="mb-4 text-xl font-semibold">
-              {data.newsletter.title || "Newsletter"}
-            </h3>
-            <p className="mb-6 max-w-xs text-sm opacity-80">
-              {data.newsletter.description ||
-                "Let's transform your vision into results and discuss your vision with us."}
-            </p>
-
-            {data.newsletter.enabled && (
+          {data.newsletter.enabled && (
+            <div className="pl-0 lg:col-span-4 lg:pl-8">
+              <h3 className="mb-4 text-xl font-semibold">
+                {data.newsletter.title || "Newsletter"}
+              </h3>
+              <p className="mb-6 max-w-xs text-sm opacity-80">
+                {data.newsletter.description ||
+                  "Let's transform your vision into results and discuss your vision with us."}
+              </p>
               <NewsletterForm isEditable={isEditable} theme={theme} />
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom Bar */}

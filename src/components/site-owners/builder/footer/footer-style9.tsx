@@ -76,68 +76,72 @@ export const FooterStyle9 = ({
         {/* Top Section */}
         <div className="flex flex-col items-center justify-between gap-16 lg:flex-row lg:items-start">
           {/* Newsletter */}
-          <div className="flex w-full max-w-lg flex-col gap-8 text-center lg:text-left">
-            <h3 className="text-3xl font-bold tracking-wide uppercase sm:text-4xl md:text-5xl">
-              {data.newsletter?.title || "Subscribe to our newsletter"}
-            </h3>
-            <form
-              onSubmit={handleSubscribe}
-              className="flex w-full flex-col items-center gap-4 rounded-3xl border p-2 transition-colors sm:flex-row sm:rounded-full"
-            >
-              <input
-                type="email"
-                placeholder="Enter Your Email..."
-                className="w-full flex-1 bg-transparent px-6 py-4 text-base outline-none sm:text-lg"
-                style={{ color: "inherit" }}
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                disabled={isEditable || mutation.isPending}
-              />
-              <button
-                type="submit"
-                disabled={isEditable || mutation.isPending}
-                className="bg-primary text-primary-foreground flex w-full items-center justify-center rounded-2xl px-8 py-4 text-base font-bold whitespace-nowrap transition-all hover:opacity-90 active:scale-95 sm:w-auto sm:rounded-full sm:text-lg"
-                style={{
-                  backgroundColor: theme?.colors?.primary || "#ccff00",
-                  color: theme?.colors?.primaryForeground || "black",
-                }}
+          {data.newsletter?.enabled && (
+            <div className="flex w-full max-w-lg flex-col gap-8 text-center lg:text-left">
+              <h3 className="text-3xl font-bold tracking-wide uppercase sm:text-4xl md:text-5xl">
+                {data.newsletter.title || "Subscribe to our newsletter"}
+              </h3>
+              <form
+                onSubmit={handleSubscribe}
+                className="flex w-full flex-col items-center gap-4 rounded-3xl border p-2 transition-colors sm:flex-row sm:rounded-full"
               >
-                {mutation.isPending ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  "Get Started"
-                )}
-              </button>
-            </form>
-          </div>
+                <input
+                  type="email"
+                  placeholder="Enter Your Email..."
+                  className="w-full flex-1 bg-transparent px-6 py-4 text-base outline-none sm:text-lg"
+                  style={{ color: "inherit" }}
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  disabled={isEditable || mutation.isPending}
+                />
+                <button
+                  type="submit"
+                  disabled={isEditable || mutation.isPending}
+                  className="bg-primary text-primary-foreground flex w-full items-center justify-center rounded-2xl px-8 py-4 text-base font-bold whitespace-nowrap transition-all hover:opacity-90 active:scale-95 sm:w-auto sm:rounded-full sm:text-lg"
+                  style={{
+                    backgroundColor: theme?.colors?.primary || "#ccff00",
+                    color: theme?.colors?.primaryForeground || "black",
+                  }}
+                >
+                  {mutation.isPending ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    "Get Started"
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
 
           {/* Links */}
           <div className="flex flex-col gap-12 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-20 sm:gap-y-12 lg:justify-start lg:gap-x-32">
-            {data.sections?.map(section => (
-              <div
-                key={section.id}
-                className="flex flex-col items-center gap-5 sm:items-start"
-              >
-                <h4 className="mb-2 text-xl font-bold tracking-wider uppercase">
-                  {section.title}
-                </h4>
-                {section.links.map(link => (
-                  <Link
-                    key={link.id}
-                    href={generateLinkHref(
-                      link.href || "#",
-                      siteUser,
-                      pathname,
-                      isEditable
-                    )}
-                    className="text-lg opacity-70 transition-colors hover:opacity-100"
-                  >
-                    {link.text}
-                  </Link>
-                ))}
-              </div>
-            ))}
+            {data.sections
+              ?.filter(section => section.links.length > 0)
+              .map(section => (
+                <div
+                  key={section.id}
+                  className="flex flex-col items-center gap-5 sm:items-start"
+                >
+                  <h4 className="mb-2 text-xl font-bold tracking-wider uppercase">
+                    {section.title}
+                  </h4>
+                  {section.links.map(link => (
+                    <Link
+                      key={link.id}
+                      href={generateLinkHref(
+                        link.href || "#",
+                        siteUser,
+                        pathname,
+                        isEditable
+                      )}
+                      className="text-lg opacity-70 transition-colors hover:opacity-100"
+                    >
+                      {link.text}
+                    </Link>
+                  ))}
+                </div>
+              ))}
           </div>
         </div>
 
