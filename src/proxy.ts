@@ -43,12 +43,22 @@ function safeDecodeJWT(token: string): any | null {
 // ─────────────────────────────────────────────
 
 /**
+ * Returns the hostname from the request headers, fallback to "host" if "x-forwarded-host" is missing.
+ */
+function getHostname(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-host") ||
+    request.headers.get("host") ||
+    ""
+  ).split(":")[0];
+}
+
+/**
  * Returns the subdomain if the request is on *.nepdora.com (or *.localhost),
  * or null if it is on a custom domain / root domain.
  */
 function extractSubdomain(request: NextRequest): string | null {
-  const host = request.headers.get("host") || "";
-  const hostname = host.split(":")[0];
+  const hostname = getHostname(request);
 
   // Local development
   if (hostname === "localhost" || hostname === "127.0.0.1") return null;
@@ -84,8 +94,7 @@ function extractSubdomain(request: NextRequest): string | null {
  * Returns true when the visitor is on the root domain (nepdora.com / www / localhost).
  */
 function isRootDomain(request: NextRequest): boolean {
-  const host = request.headers.get("host") || "";
-  const hostname = host.split(":")[0];
+  const hostname = getHostname(request);
   if (hostname === "localhost" || hostname === "127.0.0.1") return true;
   const rootDomainFormatted = rootDomain.split(":")[0];
   return (
@@ -287,6 +296,10 @@ function setCached(key: string, entry: Omit<DomainCacheEntry, "timestamp">) {
 // ─────────────────────────────────────────────
 
 export async function proxy(request: NextRequest) {
+  const hostHeader = request.headers.get("host");
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  console.log(`[Proxy Log] Host: ${hostHeader}, X-Forwarded-Host: ${forwardedHost}`);
+
   if (!siteConfig.apiBaseUrl) {
     console.error("[Proxy] API base URL is not configured");
     return NextResponse.next();
@@ -450,8 +463,7 @@ export async function proxy(request: NextRequest) {
   // ── 4. Request on a fully custom domain (e.g. yachuindia.com) ─────────────
   if (isCustomDomain(request)) {
     if (siteConfig.isDev) return NextResponse.next();
-    const host = request.headers.get("host") || "";
-    const hostname = host.split(":")[0];
+    const hostname = getHostname(request);
 
     // Look up which tenant owns this custom domain
     let cacheEntry = getCached(hostname);
@@ -514,12 +526,15 @@ export async function proxy(request: NextRequest) {
           pathname.startsWith("/builder") ||
           pathname.startsWith("/preview"))
       ) {
-        const host = request.headers.get("host") || "";
+        const hostname = getHostname(request);
         const protocol = request.url.includes("localhost") ? "http" : "https";
         const rootDomainFormatted = rootDomain.split(":")[0];
         let subdomainUrl: string;
-        if (host.includes("localhost")) {
-          const port = host.split(":")[1] || "3000";
+        if (hostname.includes("localhost")) {
+          const port =
+            request.headers.get("host")?.split(":")[1] ||
+            request.headers.get("x-forwarded-host")?.split(":")[1] ||
+            "3000";
           subdomainUrl = `${protocol}://${userSubdomain}.localhost:${port}${pathname}`;
         } else {
           subdomainUrl = `${protocol}://${userSubdomain}.${rootDomainFormatted}${pathname}`;

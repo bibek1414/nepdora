@@ -217,7 +217,8 @@ async function getPaymentGateway(
  * Build redirect URLs with subdomain
  */
 function buildRedirectUrls(req: Request, subdomain: string | null) {
-  const hostHeader = req.headers.get("host") || "";
+  const hostHeader =
+    req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
   const isLocalhost = hostHeader.includes("localhost");
   const protocol = isLocalhost
     ? "http"
@@ -247,7 +248,8 @@ function buildRedirectUrls(req: Request, subdomain: string | null) {
  * Extract subdomain from request host header
  */
 function extractSubdomainFromRequest(req: Request): string | null {
-  const host = req.headers.get("host") || "";
+  const host =
+    req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
 
   if (host.includes("localhost")) {
     const match = host.match(/^([^.]+)\.localhost/);

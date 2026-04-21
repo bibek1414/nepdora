@@ -13,7 +13,8 @@ interface PaymentGatewayBackend {
 
 // Helper function to extract subdomain
 function extractSubdomainFromRequest(req: Request): string | null {
-  const host = req.headers.get("host") || "";
+  const host =
+    req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
 
   if (host.includes("localhost")) {
     const match = host.match(/^([^.]+)\.localhost/);
