@@ -3,16 +3,12 @@
 import { useState } from "react";
 import { OnboardingStepOne } from "./on-boarding-step-one";
 import { OnboardingStepTwo } from "./on-boarding-step-two";
-import { OnboardingStepThree } from "./on-boarding-step-three";
-import { OnboardingStepFour } from "./on-boarding-step-four";
 import { User } from "@/types/auth/auth";
 
-type OnboardingStep = 1 | 2 | 3 | 4;
+type OnboardingStep = 1 | 2;
 
 interface WebsiteData {
-  type: string;
-  categoryId?: number;
-  subcategoryId?: number;
+  type: "ecoomerce" | "services" | "";
   selectedOption?: "template" | "ai" | "scratch";
 }
 
@@ -21,87 +17,45 @@ interface OnboardingPageProps {
 }
 
 export default function OnboardingPage({ user }: OnboardingPageProps) {
+  // Initialize based on user's existing website_type if available
+  // The API uses "ecommerce" and "service", but internal slugs are "ecoomerce" and "services"
+  const initialType = 
+    user.website_type === "ecommerce" ? "ecoomerce" as const : 
+    user.website_type === "service" ? "services" as const : "";
+    
   const [currentStep, setCurrentStep] = useState<OnboardingStep>(1);
   const [websiteData, setWebsiteData] = useState<WebsiteData>({
-    type: "",
+    type: initialType,
   });
 
-  // Step 1: Method selection (template, ai, scratch)
-  const handleStepOneSelect = (option: "template" | "ai" | "scratch") => {
-    setWebsiteData(prev => ({ ...prev, selectedOption: option }));
-
-    if (option === "scratch") {
-      return;
-    }
+  // Step 1: Website type selection
+  const handleStepOneSelect = (type: "ecoomerce" | "services") => {
+    setWebsiteData(prev => ({ ...prev, type }));
     setCurrentStep(2);
   };
 
-  // Step 2: Categories selection
-  const handleStepTwoContinue = (categoryId?: number) => {
-    setWebsiteData(prev => ({ ...prev, categoryId }));
-    setCurrentStep(3);
-  };
-
+  // Step 2: Templates selection
   const handleStepTwoBack = () => {
     setCurrentStep(1);
-  };
-
-  // Step 3: Subcategories selection
-  const handleStepThreeContinue = (subcategoryId?: number, type?: string) => {
-    setWebsiteData(prev => ({
-      ...prev,
-      subcategoryId,
-      type: type || prev.type,
-    }));
-    setCurrentStep(4);
-  };
-
-  const handleStepThreeBack = () => {
-    setCurrentStep(2);
-  };
-
-  // Step 4: Templates selection
-  const handleStepFourBack = () => {
-    setCurrentStep(3);
   };
 
   return (
     <>
       {currentStep === 1 && (
         <OnboardingStepOne
-          onSelectOption={handleStepOneSelect}
+          onSelectType={handleStepOneSelect}
           currentStep={currentStep}
-          totalSteps={4}
+          totalSteps={2}
           user={user}
+          
         />
       )}
       {currentStep === 2 && (
         <OnboardingStepTwo
-          onContinue={handleStepTwoContinue}
+          websiteType={websiteData.type}
           onBack={handleStepTwoBack}
           currentStep={currentStep}
-          totalSteps={4}
-          user={user}
-        />
-      )}
-      {currentStep === 3 && (
-        <OnboardingStepThree
-          categoryId={websiteData.categoryId}
-          onContinue={handleStepThreeContinue}
-          onBack={handleStepThreeBack}
-          currentStep={currentStep}
-          totalSteps={4}
-          user={user}
-        />
-      )}
-      {currentStep === 4 && (
-        <OnboardingStepFour
-          websiteType={websiteData.type}
-          categoryId={websiteData.categoryId}
-          subcategoryId={websiteData.subcategoryId}
-          onBack={handleStepFourBack}
-          currentStep={currentStep}
-          totalSteps={4}
+          totalSteps={2}
           user={user}
         />
       )}

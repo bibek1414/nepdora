@@ -141,7 +141,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
             (unreadCounts?.unread_tenant_payments || 0),
         },
       ],
-      hideForService: true,
     },
     // {
     //   items: [{ name: "Issues Tracking", href: "/admin/issues", icon: Bug }],

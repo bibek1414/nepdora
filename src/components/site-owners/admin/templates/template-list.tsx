@@ -11,6 +11,7 @@ import { TemplateCard } from "./template-card";
 import { Search, X, Layout } from "lucide-react";
 import useDebouncer from "@/hooks/use-debouncer";
 import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const TemplateList = () => {
   const [filters, setFilters] = useState({
@@ -18,6 +19,9 @@ const TemplateList = () => {
     page_size: 12,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedType, setSelectedType] = useState<
+    "all" | "ecoomerce" | "services"
+  >("all");
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const debouncedSearchTerm = useDebouncer(searchTerm, 300);
 
@@ -34,7 +38,20 @@ const TemplateList = () => {
     isLoading,
     isFetching,
     error,
-  } = useGetTemplates(filters);
+  } = useGetTemplates({
+    ...filters,
+    page_size: 100, // Fetch more to allow frontend filtering
+  });
+
+  const filteredTemplates = (templatesData?.results || []).filter(template => {
+    if (selectedType === "ecoomerce") {
+      return template.template_category?.slug === "ecoomerce";
+    }
+    if (selectedType === "services") {
+      return template.template_category?.slug !== "ecoomerce";
+    }
+    return true;
+  });
 
   const handlePageChange = useCallback((newPage: number) => {
     setFilters(prev => ({ ...prev, page: newPage }));
@@ -78,9 +95,9 @@ const TemplateList = () => {
           <h1 className="text-3xl font-bold tracking-tight">Templates</h1>
         </div>
 
-        {/* Search Bar */}
-        <div className="mt-5 mb-8 max-w-md">
-          <div className="relative">
+        {/* Search Bar and Type Filter */}
+        <div className="mt-5 mb-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative max-w-md flex-1">
             <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
             <Input
               type="text"
@@ -98,6 +115,18 @@ const TemplateList = () => {
               </button>
             )}
           </div>
+
+          <Tabs
+            value={selectedType}
+            onValueChange={v => setSelectedType(v as any)}
+            className="w-full sm:w-auto"
+          >
+            <TabsList className="grid w-full grid-cols-3 sm:w-[400px]">
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="ecoomerce">Ecommerce</TabsTrigger>
+              <TabsTrigger value="services">Services</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
         {/* Content Area */}
@@ -109,31 +138,35 @@ const TemplateList = () => {
           </Alert>
         ) : isLoading ? (
           <LoadingSkeleton />
-        ) : !templatesData ||
-          !templatesData.results ||
-          templatesData.results.length === 0 ? (
+        ) : !filteredTemplates || filteredTemplates.length === 0 ? (
           <div className="py-16 text-center">
             <div className="mb-4 text-6xl">📋</div>
             <h2 className="mb-2 text-2xl font-semibold text-gray-900">
-              {searchTerm
+              {searchTerm || selectedType !== "all"
                 ? "No matching templates found"
                 : "No templates available"}
             </h2>
             <p className="mb-6 text-gray-600">
-              {searchTerm
-                ? "Try adjusting your search criteria."
+              {searchTerm || selectedType !== "all"
+                ? "Try adjusting your filters or search."
                 : "Templates will appear here when available."}
             </p>
-            {searchTerm && (
-              <Button onClick={clearSearch} variant="outline">
-                Clear Search
+            {(searchTerm || selectedType !== "all") && (
+              <Button
+                onClick={() => {
+                  clearSearch();
+                  setSelectedType("all");
+                }}
+                variant="outline"
+              >
+                Clear Filters
               </Button>
             )}
           </div>
         ) : (
           <>
             <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {templatesData.results.map(template => (
+              {filteredTemplates.map(template => (
                 <TemplateCard
                   key={template.id}
                   template={template}

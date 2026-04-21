@@ -195,12 +195,12 @@ export function NepdoraPopup() {
                     <FloatingLabelTextarea
                       id="popup-message"
                       label="Tell us about your requirements..."
-                      value={formData.message}
+                      value={formData.message || ""}
                       onChange={e =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      className="focus:border-primary rounded-xl border-slate-200 transition-all"
                       rows={3}
+                      className="focus:border-primary/5 focus-visible:ring-0 focus-visible:outline-none shadow-none"
                     />
                   </div>
 
