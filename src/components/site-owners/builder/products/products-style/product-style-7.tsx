@@ -14,6 +14,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import Pagination from "@/components/ui/site-owners/pagination";
 import ProductFilterSidebar from "../products-filter/product-filter-sidebar";
+import { FeaturedProductsButton } from "../featured-products-button";
 import { Button } from "@/components/ui/button";
 
 interface ProductsStyleProps {
@@ -197,12 +198,14 @@ export const ProductsStyle7: React.FC<ProductsStyleProps> = ({
                     : "No products match your current filters."
                 }
                 actionLabel={isEditable ? "Manage Products" : undefined}
-                actionLink={isEditable ? "/admin/product" : undefined}
+                actionLink={isEditable ? "/admin/products" : undefined}
                 isEditable={isEditable}
                 isEmpty={products.length === 0}
                 onRefresh={refetch}
               />
             )}
+
+            <FeaturedProductsButton isEditable={isEditable} productsCount={products.length} />
           </div>
         </div>
       </div>

@@ -114,7 +114,7 @@ export const SubCategoryStyle1: React.FC<SubCategoryStyleProps> = ({
             title="No SubCategories Found"
             description="Organize your categories further by adding subcategories in the admin dashboard."
             actionLabel="Add New SubCategories"
-            actionLink="/admin/sub-category"
+            actionLink="/admin/subcategories"
             isEditable={isEditable}
             isEmpty={subcategories.length === 0}
             onRefresh={refetch}

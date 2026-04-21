@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
+import { FeaturedProductsButton } from "../featured-products-button";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
@@ -134,12 +135,14 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
             title="No Trending Products"
             description="Showcase your popular products to your customers. Add products from the admin dashboard."
             actionLabel="Add New Products"
-            actionLink="/admin/product"
+            actionLink="/admin/products"
             isEditable={isEditable}
             isEmpty={products.length === 0}
             onRefresh={refetch}
           />
         )}
+
+        <FeaturedProductsButton isEditable={isEditable} productsCount={products.length} />
       </div>
     </section>
   );

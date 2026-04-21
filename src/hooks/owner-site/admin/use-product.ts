@@ -137,11 +137,14 @@ export const useUpdateProduct = () => {
     }: {
       slug: string;
       data: UpdateProductRequest;
+      skipInvalidate?: boolean;
     }) => useProductApi.updateProduct(slug, data),
     onSuccess: (response, variables) => {
       // Invalidate all product queries and specific product
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["product", variables.slug] });
+      if (!variables.skipInvalidate) {
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+        queryClient.invalidateQueries({ queryKey: ["product", variables.slug] });
+      }
       toast.success(response.message);
     },
     onError: (error: unknown) => {

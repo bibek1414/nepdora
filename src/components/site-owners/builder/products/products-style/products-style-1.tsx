@@ -9,6 +9,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
+import { FeaturedProductsButton } from "../featured-products-button";
 import {
   Carousel,
   CarouselContent,
@@ -151,12 +152,17 @@ export const ProductsStyle1: React.FC<ProductsStyleProps> = ({
             title="No Products Found"
             description="Showcase your products to your customers. Add products from the admin dashboard."
             actionLabel="Add New Products"
-            actionLink="/admin/product"
+            actionLink="/admin/products"
             isEditable={isEditable}
             isEmpty={products.length === 0}
             onRefresh={refetch}
           />
         )}
+
+        <FeaturedProductsButton
+          isEditable={isEditable}
+          productsCount={products.length}
+        />
       </div>
     </section>
   );
