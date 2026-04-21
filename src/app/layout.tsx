@@ -8,7 +8,6 @@ import SmartTopLoader from "@/components/smart-top-loader";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/contexts/CartContext";
-import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalyticsStatic } from "@/components/site-owners/admin/google-analytics/google-analytics-static";
 import { SchemaOrg } from "@/components/shared/schema-org";
 import type { Metadata } from "next";
@@ -77,7 +76,6 @@ export default function RootLayout({
                       <SmartTopLoader />
                     </Suspense>
                     {children}
-                    <Analytics />
                     <Toaster
                       position="bottom-right"
                       richColors

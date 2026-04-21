@@ -355,7 +355,11 @@ export async function checkDnsAndAddToCloudflare(domainName: string) {
   }
 }
 
-export async function addVercelDnsRecords(zoneId: string, domainName: string) {
+export async function addCoolifyDnsRecords(
+  zoneId: string,
+  domainName: string,
+  schemaName: string
+) {
   try {
     const apiToken = process.env.CLOUDFLARE_API_TOKEN;
     if (!apiToken) {
@@ -363,8 +367,8 @@ export async function addVercelDnsRecords(zoneId: string, domainName: string) {
       return { success: false, error: "Cloudflare API Token not configured." };
     }
 
-    console.log(`[DNS] Adding records for ${domainName} in zone ${zoneId}`);
-
+    console.log(`[DNS] Adding A record for ${domainName} in zone ${zoneId} pointing to 172.188.98.151`);
+    
     // root domain A record
     const aRecordRes = await fetch(
       `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`,
@@ -377,7 +381,7 @@ export async function addVercelDnsRecords(zoneId: string, domainName: string) {
         body: JSON.stringify({
           type: "A",
           name: "@",
-          content: "76.76.21.21", // Vercel IP
+          content: "172.188.98.151", // Coolify IP
           ttl: 1,
           proxied: false,
         }),
@@ -385,6 +389,7 @@ export async function addVercelDnsRecords(zoneId: string, domainName: string) {
     );
 
     const aRecordData = await aRecordRes.json();
+    console.log(`[DNS] Cloudflare A record API response status: ${aRecordRes.status}`);
 
     if (!aRecordData.success) {
       // 81058: The record already exists.
@@ -402,49 +407,6 @@ export async function addVercelDnsRecords(zoneId: string, domainName: string) {
       }
     } else {
       console.log(`[DNS] Successfully added A record (@) for ${domainName}.`);
-    }
-
-    // www CNAME record
-    const cnameRes = await fetch(
-      `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "CNAME",
-          name: "www",
-          content: "cname.vercel-dns.com",
-          ttl: 1,
-          proxied: false,
-        }),
-      }
-    );
-
-    const cnameData = await cnameRes.json();
-
-    if (!cnameData.success) {
-      // 81058: The record already exists.
-      if (cnameData.errors?.[0]?.code === 81058) {
-        console.log(
-          `[DNS] CNAME record (www) already exists for ${domainName}.`
-        );
-      } else {
-        console.error(
-          `[DNS] Failed to add CNAME record:`,
-          JSON.stringify(cnameData.errors)
-        );
-        return {
-          success: false,
-          error: cnameData.errors?.[0]?.message || "Failed to add CNAME record",
-        };
-      }
-    } else {
-      console.log(
-        `[DNS] Successfully added CNAME record (www) for ${domainName}.`
-      );
     }
 
     return {
@@ -493,6 +455,7 @@ export async function deleteDomainFromCloudflare(domainName: string) {
     );
 
     const data = await response.json();
+    console.log(`[DNS] Cloudflare Delete Zone API status: ${response.status}`);
 
     if (!response.ok || !data.success) {
       console.error("Cloudflare Delete Zone Error:", data.errors);

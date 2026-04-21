@@ -5,16 +5,16 @@ import {
   addDomainToCloudflare,
   checkDomainVerificationStatus,
   checkDnsAndAddToCloudflare,
-  addVercelDnsRecords,
+  addCoolifyDnsRecords,
   verifyDomainDNS,
 } from "@/lib/actions/cloudflare-actions";
+import { addDomainToCoolify } from "@/lib/actions/coolify-actions";
 import {
   saveCustomDomain,
   updateCustomDomain,
   deleteCustomDomain,
   CustomDomain,
 } from "@/lib/actions/custom-domain-actions";
-import { addDomainToVercel } from "@/lib/actions/vercel-actions";
 import {
   provisionDomain,
   deprovisionDomain,
@@ -57,6 +57,7 @@ function DomainStatusItem({
   const [isVerifying, setIsVerifying] = useState(false);
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Edit State
   const [isEditing, setIsEditing] = useState(false);
@@ -104,10 +105,17 @@ function DomainStatusItem({
       setStatus("active");
       // PROACTIVE: Trigger provisioning automatically once DNS is verified
       setIsProvisioning(true);
-      const provisionResult = await provisionDomain(domainItem.domain);
-      if (!provisionResult.success) {
+      const provisionResult = await provisionDomain(
+        domainItem.domain,
+        domainItem.tenant.schema_name
+      );
+      if (provisionResult.success) {
+        if (provisionResult.message) {
+          setSuccessMessage(provisionResult.message);
+        }
+      } else {
         setError(
-          `DNS Verified, but automatic setup failed: ${provisionResult.error}. You may need to manually add it to Vercel.`
+          `DNS Verified, but automatic setup failed: ${provisionResult.error}. You may need to manually add it to Coolify.`
         );
       }
       setIsProvisioning(false);
@@ -314,6 +322,13 @@ function DomainStatusItem({
         <div className="mt-2 text-sm font-medium text-red-600">{error}</div>
       )}
 
+      {/* Display Success/Warning Message */}
+      {successMessage && (
+        <div className="mt-2 rounded-md bg-yellow-50 p-2 text-xs font-medium text-yellow-800 border border-yellow-200">
+          {successMessage}
+        </div>
+      )}
+
       {/* Instruction block for domains not yet added to Cloudflare OR pending in Cloudflare */}
       {(status === "pending" ||
         status === "initializing" ||
@@ -383,6 +398,7 @@ export default function CloudflareDomainForm({
   const [domain, setDomain] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
   const [newDomainAdded, setNewDomainAdded] = useState(false);
   const [localDomains, setLocalDomains] = useState<CustomDomain[]>(
     existingDomains.filter(d => !isInternalDomain(d.domain))
@@ -409,7 +425,7 @@ export default function CloudflareDomainForm({
 
     // 2. Only proceed if DNS is verified
     console.log(
-      `Domain ${domain} verified successfully. Proceeding with Cloudflare and Vercel setup.`
+      `Domain ${domain} verified successfully. Proceeding with Cloudflare and Coolify setup.`
     );
 
     const saveResult = await saveCustomDomain(domain);
@@ -420,13 +436,20 @@ export default function CloudflareDomainForm({
       // PROACTIVE: Add DNS records immediately if we have a zoneId
       if (cfRes.success && cfRes.zoneId) {
         console.log(`Proactively adding DNS records for ${domain}...`);
-        await addVercelDnsRecords(cfRes.zoneId, domain);
+        await addCoolifyDnsRecords(
+          cfRes.zoneId,
+          domain,
+          saveResult.domain.tenant.schema_name
+        );
       }
 
-      // PROACTIVE: Add to Vercel immediately so it's visible in Vercel console right away
-      const vercelRes = await addDomainToVercel(domain);
-      if (!vercelRes.success) {
-        console.error("Proactive Vercel addition failed:", vercelRes.error);
+      // PROACTIVE: Add to Coolify immediately
+      console.log(`Proactively adding ${domain} to Coolify...`);
+      const coolifyRes = await addDomainToCoolify(domain);
+      if (!coolifyRes.success) {
+        console.error("Proactive Coolify addition failed:", coolifyRes.error);
+      } else if (coolifyRes.message) {
+        setWarning(coolifyRes.message);
       }
 
       setNewDomainAdded(true);
@@ -524,6 +547,11 @@ export default function CloudflareDomainForm({
                 Domain Successfully Saved! Follow the instructions in the Saved
                 Domains list above to complete verification.
               </h3>
+              {warning && (
+                <p className="mt-2 text-xs font-medium text-orange-700 bg-orange-50 p-2 border border-orange-100 rounded">
+                  {warning}
+                </p>
+              )}
             </div>
           )}
 

@@ -4,11 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 
 const businessTypes = [
-  { label: "Restaurant", href: "/templates/restaurant" },
-  { label: "Hotel", href: "/templates/hotel" },
-  { label: "Salon", href: "/templates/salon" },
-  { label: "Shop", href: "/templates/ecommerce" },
-  { label: "Service", href: "/templates/service" },
+  { label: "Restaurant & Cafe", href: "/templates/restaurant-cafe" },
+  { label: "Travel Agency", href: "/templates/travel-agency" },
+  { label: "School/College", href: "/templates/school-college" },
+  { label: "Ecommerce Store", href: "/templates/ecommerce-store" },
+  { label: "Medical Clinic", href: "/templates/medical-clinic" },
 ];
 
 export function BusinessTypeSelector() {

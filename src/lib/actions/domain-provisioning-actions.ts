@@ -2,15 +2,19 @@
 
 import {
   checkDomainVerificationStatus,
-  addVercelDnsRecords,
+  addCoolifyDnsRecords,
 } from "./cloudflare-actions";
-import { addDomainToVercel } from "./vercel-actions";
+import {
+  addDomainToCoolify,
+  removeDomainFromCoolify,
+} from "./coolify-actions";
 
-export async function provisionDomain(domainName: string) {
+export async function provisionDomain(domainName: string, schemaName: string) {
   try {
     console.log(`Starting automated provisioning for domain: ${domainName}`);
 
     // 1. Check Cloudflare status
+    console.log(`[Provisioning] Step 1: Checking Cloudflare verification status for ${domainName}...`);
     const cfStatus = await checkDomainVerificationStatus(domainName);
 
     if (!cfStatus.success) {
@@ -34,30 +38,32 @@ export async function provisionDomain(domainName: string) {
 
     if (cfStatus.status !== "active") {
       console.log(
-        `Domain ${domainName} zone is found in Cloudflare but not yet active (Status: ${cfStatus.status}). Proceeding with Vercel and DNS setup anyway.`
+        `Domain ${domainName} zone is found in Cloudflare but not yet active (Status: ${cfStatus.status}). Proceeding with Coolify and DNS setup anyway.`
       );
     } else {
       console.log(
-        `Domain ${domainName} is active in Cloudflare. Proceeding with Vercel and DNS setup...`
+        `Domain ${domainName} is active in Cloudflare. Proceeding with Coolify and DNS setup...`
       );
     }
-
-    // 2. Add to Vercel
-    const vercelResult = await addDomainToVercel(domainName);
-    if (!vercelResult.success) {
+    
+    // 2. Add to Coolify
+    console.log(`[Provisioning] Step 2: Registering ${domainName} with Coolify...`);
+    const coolifyResult = await addDomainToCoolify(domainName);
+    if (!coolifyResult.success) {
       console.error(
-        `Vercel addition failed for ${domainName}:`,
-        vercelResult.error
+        `Coolify registration failed for ${domainName}:`,
+        coolifyResult.error
       );
       return {
         success: false,
-        error: `Vercel addition failed: ${vercelResult.error}`,
+        error: `Coolify registration failed: ${coolifyResult.error}`,
       };
     }
-    console.log(`Successfully added ${domainName} to Vercel.`);
-
+    console.log(`Successfully added ${domainName} to Coolify.`);
+    
     // 3. Add DNS Records to Cloudflare
-    const dnsResult = await addVercelDnsRecords(zoneId, domainName);
+    console.log(`[Provisioning] Step 3: Provisioning DNS A record in Cloudflare for ${domainName}...`);
+    const dnsResult = await addCoolifyDnsRecords(zoneId, domainName, schemaName);
     if (!dnsResult.success) {
       console.error(
         `Cloudflare DNS record creation failed for ${domainName}:`,
@@ -74,7 +80,7 @@ export async function provisionDomain(domainName: string) {
 
     return {
       success: true,
-      message: `Domain ${domainName} successfully provisioned on Vercel and Cloudflare.`,
+      message: coolifyResult.message || `Domain ${domainName} successfully provisioned on Coolify and Cloudflare.`,
     };
   } catch (error: any) {
     console.error(`Provisioning exception for ${domainName}:`, error);
@@ -88,7 +94,6 @@ export async function provisionDomain(domainName: string) {
 }
 
 import { deleteDomainFromCloudflare } from "./cloudflare-actions";
-import { removeDomainFromVercel } from "./vercel-actions";
 import { deleteCustomDomain } from "./custom-domain-actions";
 
 export async function deprovisionDomain(id: number, domainName: string) {
@@ -97,15 +102,17 @@ export async function deprovisionDomain(id: number, domainName: string) {
       `Starting deprovisioning for domain: ${domainName} (ID: ${id})`
     );
 
-    // 1. Remove from Vercel
-    const vercelRes = await removeDomainFromVercel(domainName);
-    if (!vercelRes.success) {
+    // 1. Remove from Coolify
+    console.log(`[Deprovisioning] Step 1: Removing ${domainName} from Coolify config...`);
+    const coolifyRes = await removeDomainFromCoolify(domainName);
+    if (!coolifyRes.success) {
       console.warn(
-        `Vercel removal failed for ${domainName}: ${vercelRes.error}`
+        `Coolify removal failed for ${domainName}: ${coolifyRes.error}`
       );
     }
 
-    // 2. Remove from Cloudflare (Optional, but user requested)
+    // 2. Remove from Cloudflare
+    console.log(`[Deprovisioning] Step 2: Deleting Cloudflare zone for ${domainName}...`);
     const cfRes = await deleteDomainFromCloudflare(domainName);
     if (!cfRes.success) {
       console.warn(
@@ -114,6 +121,7 @@ export async function deprovisionDomain(id: number, domainName: string) {
     }
 
     // 3. Remove from Backend
+    console.log(`[Deprovisioning] Step 3: Deleting custom domain entry ${id} from database...`);
     const backendRes = await deleteCustomDomain(id);
     if (!backendRes.success) {
       console.error(
