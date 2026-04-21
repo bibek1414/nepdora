@@ -203,6 +203,7 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
                     alt="Preview"
                     width={80}
                     height={80}
+                    unoptimized
                     className="mx-auto h-20 w-20 rounded-full border border-black/5 object-cover"
                   />
                 </div>

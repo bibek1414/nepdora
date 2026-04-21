@@ -336,6 +336,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
                     src={preview.url}
                     alt={`Preview ${index + 1}`}
                     fill
+                    unoptimized
                     className="object-cover transition-transform duration-200 group-hover:scale-105"
                     sizes={multiple ? "120px" : "120px"}
                   />

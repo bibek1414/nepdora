@@ -2,7 +2,7 @@
 FROM node:20-alpine AS base
 
 # Install dependencies needed for some node packages (like sharp)
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat gcompat
 WORKDIR /app
 
 # Enable pnpm via Corepack

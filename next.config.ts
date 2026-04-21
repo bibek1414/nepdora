@@ -15,24 +15,15 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.nepdora.baliyoventures.com",
+        hostname: "**.digitaloceanspaces.com",
+      },
+      {
+        protocol: "http",
+        hostname: "**.digitaloceanspaces.com",
       },
       {
         protocol: "https",
-        hostname: "sgp1.digitaloceanspaces.com",
-      },
-      {
-        protocol: "https",
-        hostname: "i.pravatar.cc",
-      },
-      {
-        protocol: "https",
-        hostname: "himalayancrm.sgp1.cdn.digitaloceanspaces.com",
-      },
-
-      {
-        protocol: "https",
-        hostname: "himalayancrm.sgp1.cdn.digitaloceanspaces.com",
+        hostname: "**.cdn.digitaloceanspaces.com",
       },
       {
         protocol: "https",
