@@ -1,0 +1,39 @@
+version: "3.8"
+
+networks:
+  coolify:
+    external: true
+
+services:
+  app:
+    build: .
+    container_name: nepdora-app
+    restart: unless-stopped
+    networks:
+      - coolify
+    expose:
+      - "3000"
+
+    labels:
+      - traefik.enable=true
+
+      # -------------------------
+      # HTTPS WILDCARD ROUTE
+      # -------------------------
+      - traefik.http.routers.nepdora.rule=HostRegexp(`^.+\.nepdora\.com$`)
+      - traefik.http.routers.nepdora.entrypoints=https
+      - traefik.http.routers.nepdora.tls=true
+      - traefik.http.routers.nepdora.tls.certresolver=letsencrypt
+      - traefik.http.routers.nepdora.middlewares=gzip
+
+      # -------------------------
+      # HTTP → HTTPS redirect
+      # -------------------------
+      - traefik.http.routers.nepdora-http.rule=HostRegexp(`^.+\.nepdora\.com$`)
+      - traefik.http.routers.nepdora-http.entrypoints=http
+      - traefik.http.routers.nepdora-http.middlewares=redirect-to-https
+
+      # -------------------------
+      # Service port
+      # -------------------------
+      - traefik.http.services.nepdora.loadbalancer.server.port=3000
