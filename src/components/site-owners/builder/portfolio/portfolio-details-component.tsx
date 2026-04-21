@@ -5,6 +5,7 @@ import { PortfolioDetail as Style1 } from "./details-style/portfolio-detail-styl
 import { PortfolioDetail2 as Style2 } from "./details-style/portfolio-detail-style-2";
 import { PortfolioDetail3 as Style3 } from "./details-style/portfolio-detail-style-3";
 import { PortfolioDetail4 as Style4 } from "./details-style/portfolio-detail-style-4";
+import { PortfolioDetail5 as Style5 } from "./details-style/portfolio-detail-style-5";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Trash2, RefreshCw } from "lucide-react";
@@ -82,15 +83,17 @@ export const PortfolioDetailsComponent: React.FC<
 
   const renderContent = () => {
     switch (style) {
+      case "style-5":
+        return <Style5 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
       case "style-4":
-        return <Style4 slug={slug} siteUser={siteUser} />;
+        return <Style4 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
       case "style-3":
-        return <Style3 slug={slug} siteUser={siteUser} />;
+        return <Style3 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
       case "style-2":
-        return <Style2 slug={slug} siteUser={siteUser} />;
+        return <Style2 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
       case "style-1":
       default:
-        return <Style1 slug={slug} siteUser={siteUser} />;
+        return <Style1 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
     }
   };
 

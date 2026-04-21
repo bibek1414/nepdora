@@ -10,13 +10,20 @@ import { AlertCircle, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils/date";
 import { sanitizeContent } from "@/utils/html-sanitizer";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
+import { FileText } from "lucide-react";
 
 interface BlogDetailProps {
   slug: string;
   siteUser?: string;
+  isEditable?: boolean;
 }
 
-export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
+export const BlogDetail: React.FC<BlogDetailProps> = ({
+  slug,
+  siteUser,
+  isEditable = false,
+}) => {
   const pathname = usePathname();
   const { data: blog, isLoading, error } = useBlog(slug);
 
@@ -46,16 +53,27 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({ slug, siteUser }) => {
 
   if (error || !blog) {
     return (
-      <div className="bg-background pt-20 pb-0">
+      <div className="bg-background py-0 pt-20">
         <div className="container mx-auto px-4 py-8">
-          <Alert variant="destructive" className="mx-auto max-w-2xl">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              {error?.message ||
-                "Could not load blog post details. Please try again."}
-            </AlertDescription>
-          </Alert>
+          <BuilderEmptyState
+            icon={FileText}
+            title="Blog Post Not Found"
+            description="We couldn't find the blog post you're looking for. It may have been deleted or the link is incorrect."
+            actionLabel="Go to Admin Dashboard"
+            actionLink="/admin/blogs"
+            isEditable={isEditable}
+            isEmpty={!isLoading && !blog}
+          />
+          {!isEditable && (
+            <Alert variant="destructive" className="mx-auto max-w-2xl">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {error?.message ||
+                  "Could not load blog post details. Please try again."}
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       </div>
     );

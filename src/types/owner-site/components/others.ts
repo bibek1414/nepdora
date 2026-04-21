@@ -155,7 +155,8 @@ export type OthersData =
   | OthersTemplate19Data
   | OthersTemplate20Data
   | OthersTemplate21Data
-  | OthersTemplate22Data;
+  | OthersTemplate22Data
+  | OthersTemplate23Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -336,6 +337,20 @@ export interface OthersTemplate22Data {
   heading: string;
   description: string;
   steps: OthersTemplate22Step[];
+}
+
+export interface OthersTemplate23Item {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface OthersTemplate23Data {
+  template: "others-23";
+  eyebrow: string;
+  title: string;
+  items: OthersTemplate23Item[];
 }
 
 // Component and API interfaces
@@ -1352,6 +1367,35 @@ export const defaultOthersTemplate22Data: OthersTemplate22Data = {
   ],
 };
 
+export const defaultOthersTemplate23Data: OthersTemplate23Data = {
+  template: "others-23",
+  eyebrow: "How I work",
+  title: "Three habits, repeated carefully.",
+  items: [
+    {
+      id: "1",
+      number: "01",
+      title: "Listen first.",
+      description:
+        "Most projects don't need a new idea. They need someone to listen long enough to find the one that's already there.",
+    },
+    {
+      id: "2",
+      number: "02",
+      title: "Make it small.",
+      description:
+        "I prefer small surfaces, short docs, and short meetings. The work gets clearer when the container does.",
+    },
+    {
+      id: "3",
+      number: "03",
+      title: "Ship, then refine.",
+      description:
+        "Real software in real hands beats a perfect prototype. I plan for the second draft from day one.",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -1376,6 +1420,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-20": defaultOthersTemplate20Data,
   "others-21": defaultOthersTemplate21Data,
   "others-22": defaultOthersTemplate22Data,
+  "others-23": defaultOthersTemplate23Data,
 };
 
 // Type guards
@@ -1445,3 +1490,7 @@ export const isOthersTemplate21 = (
 export const isOthersTemplate22 = (
   data: OthersData
 ): data is OthersTemplate22Data => data.template === "others-22";
+
+export const isOthersTemplate23 = (
+  data: OthersData
+): data is OthersTemplate23Data => data.template === "others-23";

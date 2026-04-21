@@ -4,6 +4,7 @@ import { BlogDetailsData } from "@/types/owner-site/components/blog-details";
 import { BlogDetail as Style1 } from "./details-style/blog-details-style-1";
 import { BlogDetail2 as Style2 } from "./details-style/blog-details-style-2";
 import { BlogDetail3 as Style3 } from "./details-style/blog-details-style-3";
+import { BlogDetail4 as Style4 } from "./details-style/blog-details-style-4";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Trash2, RefreshCw } from "lucide-react";
@@ -74,12 +75,14 @@ export const BlogDetailsComponent: React.FC<BlogDetailsComponentProps> = ({
   const renderContent = () => {
     switch (style) {
       case "style-3":
-        return <Style3 slug={slug} siteUser={siteUser} />;
+        return <Style3 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
       case "style-2":
-        return <Style2 slug={slug} siteUser={siteUser} />;
+        return <Style2 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
+      case "style-4":
+        return <Style4 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
       case "style-1":
       default:
-        return <Style1 slug={slug} siteUser={siteUser} />;
+        return <Style1 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
     }
   };
 

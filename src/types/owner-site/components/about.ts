@@ -748,7 +748,6 @@ export const defaultAboutUs20Data: AboutUs20Data = {
   template: "about-20",
   badge: "OUR MISSION",
   title: "Designing spaces that inspire, perform, and stand the test of time",
-
   items: [
     {
       id: "1",
@@ -805,6 +804,17 @@ export interface AboutUs21Data {
   features: AboutUs21Feature[];
 }
 
+export interface AboutUs22Data {
+  template: "about-22";
+  eyebrow: string;
+  title: string;
+  description1: string;
+  description2: string;
+  description3: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
 export const defaultAboutUs21Data: AboutUs21Data = {
   template: "about-21",
   features: [
@@ -841,6 +851,20 @@ export const defaultAboutUs21Data: AboutUs21Data = {
   ],
 };
 
+export const defaultAboutUs22Data: AboutUs22Data = {
+  template: "about-22",
+  eyebrow: "About me",
+  title: "I'm Daniel — an independent designer and engineer.",
+  description1:
+    "I work with small teams from first sketch to shipped product, mostly in fintech, health, and tools for thinking.",
+  description2:
+    "I believe that the best work comes from small, focused teams who care deeply about the details. I help those teams find clarity in their vision and bring it to life through calm, considered design and engineering.",
+  description3:
+    "Currently living in Lisbon, Portugal, but working with people all over the world.",
+  imageUrl: "/images/site-owners/placeholder.png",
+  imageAlt: "Daniel Hart",
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -863,7 +887,8 @@ export type AboutUsData =
   | AboutUs18Data
   | AboutUs19Data
   | AboutUs20Data
-  | AboutUs21Data;
+  | AboutUs21Data
+  | AboutUs22Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -916,7 +941,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs18Data>
     | Partial<AboutUs19Data>
     | Partial<AboutUs20Data>
-    | Partial<AboutUs21Data>;
+    | Partial<AboutUs21Data>
+    | Partial<AboutUs22Data>;
   order?: number;
 }
 
@@ -961,6 +987,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-19": defaultAboutUs19Data,
   "about-20": defaultAboutUs20Data,
   "about-21": defaultAboutUs21Data,
+  "about-22": defaultAboutUs22Data,
 };
 
 // Type guards for each template
@@ -1026,3 +1053,6 @@ export const isAboutUsTemplate20 = (data: AboutUsData): data is AboutUs20Data =>
 
 export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
   data.template === "about-21";
+
+export const isAboutUsTemplate22 = (data: AboutUsData): data is AboutUs22Data =>
+  data.template === "about-22";

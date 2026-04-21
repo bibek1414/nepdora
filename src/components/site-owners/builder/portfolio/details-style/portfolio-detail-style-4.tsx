@@ -3,13 +3,14 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Clock, Tag, Home } from "lucide-react";
+import { ArrowLeft, Clock, Tag, Home, Briefcase } from "lucide-react";
 import { usePortfolio } from "@/hooks/owner-site/admin/use-portfolio";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,11 +23,13 @@ import {
 interface PortfolioDetailProps {
   slug: string;
   siteUser: string;
+  isEditable?: boolean;
 }
 
 export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
   slug,
   siteUser,
+  isEditable = false,
 }) => {
   const pathname = usePathname();
   const { data: portfolio, isLoading, error } = usePortfolio(slug as string);
@@ -63,23 +66,38 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
 
   if (error || !portfolio) {
     return (
-      <div className="container mx-auto px-4 py-24 text-center">
-        <h2
-          className="mb-4 text-2xl font-bold"
-          style={{ fontFamily: theme?.fonts?.heading }}
-        >
-          Project Not Found
-        </h2>
-        <p
-          className="mb-8 text-gray-500"
-          style={{ fontFamily: theme?.fonts?.body }}
-        >
-          The portfolio project you are looking for does not exist or has been
-          removed.
-        </p>
-        <Link href="/portfolio">
-          <Button variant="outline">Return to Portfolio</Button>
-        </Link>
+      <div className="bg-background py-0 pt-20">
+        <div className="container mx-auto max-w-7xl px-4 py-8">
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="Project Not Found"
+            description="The portfolio project you are looking for does not exist or has been removed."
+            actionLabel="Add New Project"
+            actionLink="/admin/portfolio"
+            isEditable={isEditable}
+            isEmpty={!isLoading && !portfolio}
+          />
+          {!isEditable && (
+            <div className="container mx-auto px-4 py-24 text-center">
+              <h2
+                className="mb-4 text-2xl font-bold"
+                style={{ fontFamily: theme?.fonts?.heading }}
+              >
+                Project Not Found
+              </h2>
+              <p
+                className="mb-8 text-gray-500"
+                style={{ fontFamily: theme?.fonts?.body }}
+              >
+                The portfolio project you are looking for does not exist or has
+                been removed.
+              </p>
+              <Link href="/portfolio">
+                <Button variant="outline">Return to Portfolio</Button>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     );
   }

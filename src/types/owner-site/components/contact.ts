@@ -14,7 +14,7 @@ export interface ContactLocationGalleryItem {
 export interface ContactData {
   component_id?: string;
   component_type: "contact";
-  style: "contact-1" | "contact-2" | "contact-3" | "contact-4";
+  style: "contact-1" | "contact-2" | "contact-3" | "contact-4" | "contact-5";
   title: string;
   subtitle?: string;
   description?: string;
@@ -151,9 +151,31 @@ export const defaultContactData4: ContactData = {
   button_label: "Send Message",
 };
 
+export const defaultContactData5: ContactData = {
+  component_type: "contact",
+  style: "contact-5",
+  title: "Get in touch.",
+  subtitle: "Let's talk about your project.",
+  description:
+    "Have a project in mind? We'd love to hear about it. Send a note and we'll get back to you as soon as we can.",
+  required_fields: {
+    name: true,
+    email: true,
+    phone: false,
+    message: true,
+  },
+  contact_info: {
+    email: "hello@danielhart.co",
+    phone: "",
+    address: "Lisbon, Portugal",
+  },
+  button_label: "Send message",
+};
+
 export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
   "contact-1": defaultContactData1,
   "contact-2": defaultContactData2,
   "contact-3": defaultContactData3,
   "contact-4": defaultContactData4,
+  "contact-5": defaultContactData5,
 };

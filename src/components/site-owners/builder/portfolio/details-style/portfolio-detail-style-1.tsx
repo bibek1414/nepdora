@@ -22,20 +22,24 @@ import {
   Github,
   Calendar,
   Folder,
+  Briefcase,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/utils/date";
 import { sanitizeContent } from "@/utils/html-sanitizer";
+import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 
 interface PortfolioDetailProps {
   slug: string;
   siteUser?: string;
+  isEditable?: boolean;
 }
 
 export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
   slug,
   siteUser,
+  isEditable = false,
 }) => {
   const pathname = usePathname();
   const { data: portfolio, isLoading, error } = usePortfolio(slug);
@@ -65,16 +69,27 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
 
   if (error || !portfolio) {
     return (
-      <div className="bg-background pt-20 pb-0">
+      <div className="bg-background py-0 pt-20">
         <div className="container mx-auto px-4 py-8">
-          <Alert variant="destructive" className="mx-auto max-w-2xl">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              {error?.message ||
-                "Could not load portfolio details. Please try again."}
-            </AlertDescription>
-          </Alert>
+          <BuilderEmptyState
+            icon={Briefcase}
+            title="Project Not Found"
+            description="We couldn't find the project you're looking for. It may have been deleted or the link is incorrect."
+            actionLabel="Add New Project"
+            actionLink="/admin/portfolio"
+            isEditable={isEditable}
+            isEmpty={!isLoading && !portfolio}
+          />
+          {!isEditable && (
+            <Alert variant="destructive" className="mx-auto max-w-2xl">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {error?.message ||
+                  "Could not load portfolio details. Please try again."}
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       </div>
     );

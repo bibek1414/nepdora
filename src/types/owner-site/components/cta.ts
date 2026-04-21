@@ -75,13 +75,21 @@ export interface CTATemplate5Data {
   imageAlt?: string;
 }
 
+export interface CTATemplate6Data {
+  template: "cta-6";
+  eyebrow: string;
+  title: string;
+  buttons: CTAButton[];
+}
+
 // Union type for all CTA templates
 export type CTAData =
   | CTATemplate1Data
   | CTATemplate2Data
   | CTATemplate3Data
   | CTATemplate4Data
-  | CTATemplate5Data;
+  | CTATemplate5Data
+  | CTATemplate6Data;
 
 // Component and API interfaces
 export interface CTAComponentData {
@@ -137,7 +145,7 @@ export const defaultCTATemplate2Data: CTATemplate2Data = {
 export const defaultCTATemplate3Data: CTATemplate3Data = {
   template: "cta-3",
   badge: "Free Consultation",
-  title: "Ready to Start Your\nStudy Abroad Journey?",
+  title: "Ready to Start Your Study Abroad Journey?",
   description:
     "Get personalized guidance from our expert counselors. We've helped 2,000+ students achieve their dreams.",
   button1Text: "Book Free Consultation",
@@ -176,6 +184,16 @@ export const defaultCTATemplate5Data: CTATemplate5Data = {
   imageAlt: "Modern architectural workspace",
 };
 
+export const defaultCTATemplate6Data: CTATemplate6Data = {
+  template: "cta-6",
+  eyebrow: "Let's talk",
+  title: "Have a project in mind? I'd love to hear about it.",
+  buttons: [
+    { id: "1", text: "Send a note", variant: "primary", href: "#" },
+    { id: "2", text: "View resume", variant: "outline", href: "#" },
+  ],
+};
+
 // Default data map for all CTA templates
 export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-1": defaultCTATemplate1Data,
@@ -183,6 +201,7 @@ export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-3": defaultCTATemplate3Data,
   "cta-4": defaultCTATemplate4Data,
   "cta-5": defaultCTATemplate5Data,
+  "cta-6": defaultCTATemplate6Data,
 };
 
 // Type guards for each template
@@ -200,3 +219,6 @@ export const isCTATemplate4 = (data: CTAData): data is CTATemplate4Data =>
 
 export const isCTATemplate5 = (data: CTAData): data is CTATemplate5Data =>
   data.template === "cta-5";
+
+export const isCTATemplate6 = (data: CTAData): data is CTATemplate6Data =>
+  data.template === "cta-6";

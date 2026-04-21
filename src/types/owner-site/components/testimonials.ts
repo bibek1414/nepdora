@@ -9,7 +9,8 @@ export interface TestimonialsData {
     | "testimonial-5"
     | "testimonial-6"
     | "testimonial-7"
-    | "testimonial-8";
+    | "testimonial-8"
+    | "testimonial-9";
   title: string;
   subtitle?: string;
   page_size: number;
@@ -58,5 +59,11 @@ export const DEFAULT_TESTIMONIALS_MAP: Record<
       "They understood our vision perfectly and delivered a design beyond our expectations - efficient, elegant, and inspiring.",
     buttonText: "Get in touch",
     buttonLink: "#",
+  },
+  "testimonial-9": {
+    ...defaultTestimonialsData,
+    style: "testimonial-9",
+    title: "Kind words",
+    subtitle: "From the people I've worked with.",
   },
 };

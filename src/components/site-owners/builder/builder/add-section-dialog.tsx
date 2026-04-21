@@ -210,6 +210,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Hero Style 20 (Editorial Gallery)",
         image: "/images/site-owners/hero/hero20.png",
       },
+      {
+        id: "hero-21",
+        name: "Hero Style 21 (Minimalist Portrait)",
+        image: "/images/site-owners/hero/hero21.png",
+        description: "Premium minimalist hero with portrait reveal",
+      },
     ],
     tours: [
       {
@@ -350,6 +356,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Others Style 22 (Premium Process)",
         image: "/images/site-owners/others/others22.png",
       },
+      {
+        id: "others-23",
+        name: "Others Style 23 (Minimalist Journal)",
+        image: "/images/site-owners/others/others23.png",
+        description: "Premium minimalist editorial list",
+      },
     ],
     experience: [
       {
@@ -394,6 +406,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Our Clients Style 6",
         image: "/images/site-owners/our-clients/ourclients6.png",
       },
+      {
+        id: "our-clients-7",
+        name: "Our Clients Style 7 (Immersive Slider)",
+        image: "/images/site-owners/our-clients/ourclients7.png",
+        description: "Full-width immersive logo slider",
+      },
     ],
 
     cta: [
@@ -426,6 +444,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "CTA Style 5 (Firm Section)",
         image: "/images/site-owners/cta/cta5.png",
         description: "Large rounded image CTA with animated hover state",
+      },
+      {
+        id: "cta-6",
+        name: "CTA Style 6 (Minimalist)",
+        image: "/images/site-owners/cta/cta6.png",
+        description: "Ultra-minimalist typography-focused CTA",
       },
     ],
     appointment: [
@@ -546,6 +570,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "About Style 21 (Feature Section)",
         image: "/images/site-owners/about/about21.png",
       },
+      {
+        id: "about-22",
+        name: "About Style 22 (Editorial)",
+        image: "/images/site-owners/about/about22.png",
+        description: "Premium editorial layout with portrait",
+      },
     ],
     products: [
       {
@@ -643,6 +673,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Blog Details Style 3",
         image: "/images/site-owners/blog-details/blog-details-3.png",
       },
+      {
+        id: "blog-details-style-4",
+        name: "Blog Details Style 4 (Editorial)",
+        image: "/images/site-owners/blog-details/blog-details-4.png",
+        description: "Premium editorial layout for articles",
+      },
     ],
     portfolio_details: [
       {
@@ -664,6 +700,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "portfolio-details-style-4",
         name: "Portfolio Details Style 4 (Clean)",
         image: "/images/site-owners/portfolio-details/portfolio-details-4.png",
+      },
+      {
+        id: "portfolio-details-style-5",
+        name: "Portfolio Details Style 5 (Immersive)",
+        image: "/images/site-owners/portfolio-details/portfolio-details-5.png",
+        description: "Full-screen immersive project experience",
       },
     ],
     service_details: [
@@ -806,6 +848,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Contact Form 4",
         image: "/images/site-owners/contact/contact4.png",
       },
+      {
+        id: "contact-5",
+        name: "Contact Form 5 (Premium)",
+        image: "/images/site-owners/contact/contact5.png",
+        description: "Premium detailed contact layout",
+      },
     ],
     testimonials: [
       {
@@ -847,6 +895,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "testimonial-8",
         name: "Testimonials Style 8 (Premium Scrolling)",
         image: "/images/site-owners/testimonials/testimonial8.png",
+      },
+      {
+        id: "testimonial-9",
+        name: "Testimonials Style 9 (Full-screen)",
+        image: "/images/site-owners/testimonials/testimonial9.png",
+        description: "Immersive full-screen testimonial experience",
       },
     ],
     team: [
@@ -980,6 +1034,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         description:
           "Standard paginated grid with 3 columns and clean article cards",
       },
+      {
+        id: "blog-8",
+        name: "Blog Style 8 (Editorial List)",
+        image: "/images/site-owners/blogs/blog8.png",
+        description: "Premium minimalist editorial list interface",
+      },
     ],
     faq: [
       {
@@ -1046,6 +1106,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Portfolio Style 5 (Paginated Grid)",
         image: "/images/site-owners/portfolio/portfolio-5.png",
         description: "Modern paginated grid with 4 columns and premium cards",
+      },
+      {
+        id: "portfolio-6",
+        name: "Portfolio Style 6 (Minimalist Grid)",
+        image: "/images/site-owners/portfolio/portfolio-6.png",
+        description: "Clean, high-end minimalist project grid",
       },
     ],
     newsletter: [

@@ -5,9 +5,11 @@ export interface PortfolioData {
     | "portfolio-2"
     | "portfolio-3"
     | "portfolio-4"
-    | "portfolio-5";
+    | "portfolio-5"
+    | "portfolio-6";
   title: string;
   subtitle?: string;
+  heading?: string;
   buttonText?: string;
   buttonLink?: string;
   order?: number;
@@ -25,6 +27,7 @@ export interface PortfolioComponentData {
 export const defaultPortfolioData: PortfolioData = {
   style: "portfolio-1",
   title: "Our Portfolio",
+  heading: "Our Portfolio",
   subtitle: "Check out our latest projects",
 };
 
@@ -42,4 +45,13 @@ export const DEFAULT_PORTFOLIO_MAP: Record<
     buttonLink: "#",
   },
   "portfolio-5": { ...defaultPortfolioData, style: "portfolio-5" },
+  "portfolio-6": {
+    style: "portfolio-6",
+    title: "Selected work",
+    heading: "A small, focused portfolio.",
+    subtitle:
+      "Four recent projects I'm proud of. Each one started with a long conversation and ended with something quietly useful.",
+    buttonText: "All work",
+    buttonLink: "#",
+  },
 };
