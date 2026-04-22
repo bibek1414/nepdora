@@ -6,7 +6,7 @@ import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 interface CTATemplate6Props {
   ctaData: CTATemplate6Data;
@@ -28,11 +28,14 @@ export const CTATemplate6: React.FC<CTATemplate6Props> = ({
     {
       ...ctaData,
       eyebrow: ctaData.eyebrow || "Let's talk",
-      title: ctaData.title || "Have a project in mind? I'd love to hear about it.",
-      buttons: ctaData.buttons?.length ? ctaData.buttons : [
-        { id: "1", text: "Send a note", variant: "primary", href: "#" },
-        { id: "2", text: "View resume", variant: "outline", href: "#" }
-      ]
+      title:
+        ctaData.title || "Have a project in mind? I'd love to hear about it.",
+      buttons: ctaData.buttons?.length
+        ? ctaData.buttons
+        : [
+            { id: "1", text: "Send a note", variant: "primary", href: "#" },
+            { id: "2", text: "View resume", variant: "outline", href: "#" },
+          ],
     },
     onUpdate
   );
@@ -40,21 +43,23 @@ export const CTATemplate6: React.FC<CTATemplate6Props> = ({
   return (
     <section className="bg-background py-24 md:py-32">
       <div className="container mx-auto max-w-6xl px-6">
-        <div className="rounded-2xl bg-foreground p-10 text-background md:p-16 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+        <div className="bg-foreground text-background animate-in fade-in slide-in-from-bottom-8 rounded-2xl p-10 duration-1000 md:p-16">
           <EditableText
             value={data.eyebrow}
             onChange={(val: string) => handleTextUpdate("eyebrow")(val)}
             isEditable={isEditable}
-            className="text-xs uppercase tracking-[0.2em] text-background/60"
+            as="h2"
+            multiline
             style={{ fontFamily: theme?.fonts?.body }}
           />
 
           <EditableText
             value={data.title}
             onChange={(val: string) => handleTextUpdate("title")(val)}
+            as="title"
+            multiline
             isEditable={isEditable}
-            className="mt-4 max-w-2xl font-serif text-4xl leading-tight sm:text-5xl"
-            style={{ fontFamily: "Georgia, serif" }}
+            className="mt-4"
           />
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -70,8 +75,8 @@ export const CTATemplate6: React.FC<CTATemplate6Props> = ({
                 siteUser={siteUser}
                 className={
                   index === 0
-                    ? "group inline-flex items-center gap-2 rounded-full bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-background/90 h-auto"
-                    : "inline-flex items-center gap-2 rounded-full border border-background/30 px-5 py-2.5 text-sm text-background transition-colors hover:border-background h-auto"
+                    ? "group bg-background text-foreground hover:bg-background/90 inline-flex h-auto items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
+                    : "border-background/30 text-background hover:border-background inline-flex h-auto items-center gap-2 rounded-full border px-5 py-2.5 text-sm transition-colors"
                 }
                 style={{ fontFamily: theme?.fonts?.body }}
               >

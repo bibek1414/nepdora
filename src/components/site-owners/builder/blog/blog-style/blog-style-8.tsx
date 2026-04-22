@@ -116,7 +116,7 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
 
   return (
     <section className="bg-background py-16 md:py-32">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-8">
         <div className="mb-16 md:mb-24">
           <EditableText
             value={title}

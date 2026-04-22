@@ -36,7 +36,7 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
             value={eyebrow}
             onChange={(val: string) => onUpdate?.({ title: val })}
             isEditable={isEditable}
-            as="h1"
+            as="title"
             className="text-xs"
             style={{ fontFamily: theme?.fonts?.body }}
           />

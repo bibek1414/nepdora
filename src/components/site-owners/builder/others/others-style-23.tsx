@@ -31,7 +31,7 @@ export const OthersTemplate23: React.FC<OthersTemplate23Props> = ({
 
   return (
     <section className="py-16 md:py-32">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-8">
         <div className="max-w-2xl">
           <EditableText
             as="p"

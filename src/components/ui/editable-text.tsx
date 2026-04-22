@@ -8,7 +8,7 @@ interface EditableTextProps {
   value: string;
   onChange: (value: string) => void;
   onStyleChange?: (style: TextStyle) => void;
-  as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span";
+  as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span"|"title";
   className?: string;
   style?: React.CSSProperties;
   isEditable?: boolean;
@@ -31,6 +31,8 @@ const cn = (...classes: any[]) => classes.filter(Boolean).join(" ");
 // Default font sizes for different heading levels
 const getDefaultFontSize = (tag: string): string => {
   switch (tag) {
+    case "title":
+      return "3rem"; // ~40px
     case "h1":
       return "2.5rem"; // ~40px
     case "h2":
@@ -57,6 +59,8 @@ const getDefaultFontSize = (tag: string): string => {
 // Default line heights for different heading levels
 const getDefaultLineHeight = (tag: string): string => {
   switch (tag) {
+    case "title":
+      return "1.1";
     case "h1":
       return "1.1";
     case "h2":
@@ -79,6 +83,8 @@ const getDefaultLineHeight = (tag: string): string => {
 // Default font weights for different heading levels
 const getDefaultFontWeight = (tag: string): string => {
   switch (tag) {
+    case "title":
+      return "normal";
     case "h1":
       return "bold";
     case "h2":
@@ -119,7 +125,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const { setSelection } = useTextSelection();
 
   // Determine which font to use based on component type
-  const isHeading = ["h1", "h2", "h3", "h4", "h5", "h6"].includes(Tag);
+  const isHeading = ["h1", "h2", "h3", "h4", "h5", "h6", "title"].includes(Tag);
   const defaultFont = useHeadingFont || isHeading ? headingFont : bodyFont;
 
   const [selectedFont, setSelectedFont] = useState(
@@ -300,6 +306,8 @@ export const EditableText: React.FC<EditableTextProps> = ({
     },
   };
   const Wrapper = Tag === "p" || Tag === "span" ? "span" : "div";
+  // Map "title" to a valid HTML tag for rendering in the body
+  const RenderTag = Tag === "title" ? "h1" : Tag;
 
   return (
     <Wrapper
@@ -308,7 +316,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         Tag === "span" || Tag === "p" ? "block" : "block"
       )}
     >
-      {React.createElement(Tag, commonProps)}
+      {React.createElement(RenderTag, commonProps)}
     </Wrapper>
   );
 };

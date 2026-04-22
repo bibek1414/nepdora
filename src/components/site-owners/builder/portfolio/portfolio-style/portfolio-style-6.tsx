@@ -40,8 +40,8 @@ export const PortfolioStyle6: React.FC<PortfolioStyleProps> = ({
   const portfolios = portfoliosData?.results || [];
 
   return (
-    <section className="bg-background py-16 md:py-32">
-      <div className="container mx-auto max-w-6xl px-6">
+    <section className="py-16 md:py-32">
+      <div className="mx-auto max-w-7xl px-8">
         <EditableText
           value={title}
           onChange={(val: string) => onUpdate?.({ title: val })}
