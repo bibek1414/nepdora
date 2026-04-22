@@ -158,9 +158,8 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
                         link.href || "",
                         siteUser,
                         pathname,
-                        isEditable
+                        false
                       )}
-                      isEditable={isEditable}
                     >
                       {link.text}
                     </FooterLink>
@@ -174,9 +173,8 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
                         link.href || "",
                         siteUser,
                         pathname,
-                        isEditable
+                        false
                       )}
-                      isEditable={isEditable}
                     >
                       {link.text}
                     </FooterLink>
@@ -196,7 +194,7 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
                 {data.newsletter.description ||
                   "Let's transform your vision into results and discuss your vision with us."}
               </p>
-              <NewsletterForm isEditable={isEditable} theme={theme} />
+              <NewsletterForm theme={theme} />
             </div>
           )}
         </div>
@@ -227,10 +225,9 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
                       link.href || "",
                       siteUser,
                       pathname,
-                      isEditable
+                      false
                     )}
                     className="text-xs opacity-60 transition-colors hover:opacity-100"
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>
@@ -272,20 +269,7 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
 const FooterLink: React.FC<{
   href: string;
   children: React.ReactNode;
-  isEditable?: boolean;
-}> = ({ href, children, isEditable }) => {
-  if (isEditable) {
-    return (
-      <button
-        type="button"
-        className="w-fit text-sm opacity-80 transition-colors hover:opacity-100"
-        onClick={e => e.preventDefault()}
-      >
-        {children}
-      </button>
-    );
-  }
-
+}> = ({ href, children }) => {
   return (
     <Link
       href={href || "#"}
@@ -295,3 +279,4 @@ const FooterLink: React.FC<{
     </Link>
   );
 };
+

@@ -12,7 +12,6 @@ import {
 import { FooterData } from "@/types/owner-site/components/footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { NewsletterForm } from "./shared/newsletter-form";
-import { EditableText } from "@/components/ui/editable-text";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
@@ -55,10 +54,7 @@ export function FooterStyle3({
     },
   };
 
-  const { data, getImageUrl, handleTextUpdate } = useBuilderLogic(
-    footerData,
-    onUpdate
-  );
+  const { data, getImageUrl } = useBuilderLogic(footerData, onUpdate);
 
   const pathname = usePathname();
 
@@ -138,14 +134,7 @@ export function FooterStyle3({
               </svg>
             </div>
             <h3 className="md:text-md text-base leading-tight font-bold whitespace-pre-line sm:text-lg lg:text-xl">
-              <EditableText
-                value={ctaText1}
-                onChange={handleTextUpdate("ctaText1" as any)}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Need Any Support For\nTour And Visa?"
-                multiline={true}
-              />
+              <span>{ctaText1}</span>
             </h3>
           </div>
 
@@ -180,14 +169,7 @@ export function FooterStyle3({
               </svg>
             </div>
             <h3 className="text-base leading-tight font-bold whitespace-pre-line sm:text-lg md:text-xl lg:text-2xl">
-              <EditableText
-                value={ctaText2}
-                onChange={handleTextUpdate("ctaText2" as any)}
-                as="span"
-                isEditable={isEditable}
-                placeholder="Are You Ready For Get\nStarted Travelling?"
-                multiline={true}
-              />
+              <span>{ctaText2}</span>
             </h3>
           </div>
         </div>
@@ -246,7 +228,7 @@ export function FooterStyle3({
                         link.href || "",
                         siteUser,
                         pathname,
-                        isEditable
+                        false
                       )}
                       className="transition-colors hover:text-inherit"
                       style={
@@ -266,7 +248,6 @@ export function FooterStyle3({
                           ? "noopener noreferrer"
                           : undefined
                       }
-                      onClick={isEditable ? e => e.preventDefault() : undefined}
                     >
                       {link.text}
                     </Link>
@@ -294,7 +275,7 @@ export function FooterStyle3({
                         link.href || "",
                         siteUser,
                         pathname,
-                        isEditable
+                        false
                       )}
                       className="transition-colors hover:text-inherit"
                       style={
@@ -314,7 +295,6 @@ export function FooterStyle3({
                           ? "noopener noreferrer"
                           : undefined
                       }
-                      onClick={isEditable ? e => e.preventDefault() : undefined}
                     >
                       {link.text}
                     </Link>
@@ -333,7 +313,7 @@ export function FooterStyle3({
               <p className="mb-3 text-xs leading-relaxed opacity-80 sm:mb-4 sm:text-sm">
                 {data.newsletter.description}
               </p>
-              <NewsletterForm isEditable={isEditable} theme={theme} />
+              <NewsletterForm theme={theme} />
             </div>
           )}
         </div>
@@ -367,7 +347,7 @@ export function FooterStyle3({
                   link.href || "",
                   siteUser,
                   pathname,
-                  isEditable
+                  false
                 )}
                 className="transition-colors hover:text-white"
                 style={{ color: "inherit" }}
@@ -383,7 +363,6 @@ export function FooterStyle3({
                     ? "noopener noreferrer"
                     : undefined
                 }
-                onClick={isEditable ? e => e.preventDefault() : undefined}
               >
                 {link.text}
               </Link>

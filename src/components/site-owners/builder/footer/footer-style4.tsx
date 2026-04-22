@@ -79,7 +79,7 @@ export function FooterStyle4({
                 <p className="mb-6 text-sm leading-relaxed opacity-70">
                   {data.newsletter.description}
                 </p>
-                <NewsletterForm isEditable={isEditable} theme={theme} />
+                <NewsletterForm theme={theme} />
               </div>
             )}
           </div>
@@ -104,35 +104,29 @@ export function FooterStyle4({
                   <ul className="space-y-4 text-center sm:text-left">
                     {section1.links.map(link => (
                       <li key={link.id}>
-                        {isEditable ? (
-                          <span className="cursor-pointer text-sm font-medium opacity-70 transition-colors hover:opacity-100">
-                            {link.text}
-                          </span>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="text-sm font-medium opacity-70 transition-colors hover:opacity-100"
-                            target={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
-                          >
-                            {link.text}
-                          </Link>
-                        )}
+                        <Link
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            false
+                          )}
+                          className="text-sm font-medium opacity-70 transition-colors hover:opacity-100"
+                          target={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "_blank"
+                              : undefined
+                          }
+                          rel={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "noopener noreferrer"
+                              : undefined
+                          }
+                        >
+                          {link.text}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -148,41 +142,36 @@ export function FooterStyle4({
                   <ul className="space-y-4 text-center sm:text-left">
                     {section2.links.map(link => (
                       <li key={link.id}>
-                        {isEditable ? (
-                          <span className="cursor-pointer text-sm font-medium opacity-70 transition-colors hover:opacity-100">
-                            {link.text}
-                          </span>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="text-sm font-medium opacity-70 transition-colors hover:opacity-100"
-                            target={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
-                          >
-                            {link.text}
-                          </Link>
-                        )}
+                        <Link
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            false
+                          )}
+                          className="text-sm font-medium opacity-70 transition-colors hover:opacity-100"
+                          target={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "_blank"
+                              : undefined
+                          }
+                          rel={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "noopener noreferrer"
+                              : undefined
+                          }
+                        >
+                          {link.text}
+                        </Link>
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
             </div>
+
 
             {/* Contact Column */}
             <div className="flex flex-1 flex-col items-center justify-start gap-8 p-8 md:items-start lg:p-16">
@@ -282,7 +271,7 @@ export function FooterStyle4({
                       link.href || "",
                       siteUser,
                       pathname,
-                      isEditable
+                      false
                     )}
                     className="cursor-pointer text-sm opacity-70 transition-colors hover:opacity-100"
                     target={
@@ -297,7 +286,6 @@ export function FooterStyle4({
                         ? "noopener noreferrer"
                         : undefined
                     }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>

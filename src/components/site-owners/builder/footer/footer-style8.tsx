@@ -119,7 +119,6 @@ export const FooterStyle8 = ({
             <ServicesSection
               title="Our Services"
               services={dynamicServices}
-              isEditable={isEditable}
               siteUser={siteUser}
               pathname={pathname}
               isLoading={servicesLoading}
@@ -134,7 +133,6 @@ export const FooterStyle8 = ({
                 key={section.id}
                 title={section.title}
                 services={section.links}
-                isEditable={isEditable}
                 siteUser={siteUser}
                 pathname={pathname}
               />
@@ -192,7 +190,7 @@ export const FooterStyle8 = ({
                   "Join our subscribers list to get latest news and special offers."}
               </p>
               {data.newsletter?.enabled ? (
-                <NewsletterForm isEditable={isEditable} theme={theme} />
+                <NewsletterForm theme={theme} />
               ) : (
                 <p className="text-sm text-slate-500 italic">
                   Newsletter is currently disabled.
@@ -226,7 +224,7 @@ export const FooterStyle8 = ({
                   link.href || "#",
                   siteUser,
                   pathname,
-                  isEditable
+                  false
                 )}
                 className="cursor-pointer transition-colors hover:opacity-100"
               >
@@ -254,37 +252,28 @@ export const FooterStyle8 = ({
 const FooterLink: React.FC<{
   href: string;
   children: React.ReactNode;
-  isEditable?: boolean;
   siteUser?: string;
   pathname: string;
-}> = ({ href, children, isEditable, siteUser, pathname }) => (
+}> = ({ href, children, siteUser, pathname }) => (
   <li>
-    {isEditable ? (
-      <span className="block cursor-pointer transition-colors duration-200 hover:opacity-100">
-        {children}
-      </span>
-    ) : (
-      <Link
-        href={generateLinkHref(href, siteUser, pathname, isEditable)}
-        className="block cursor-pointer transition-colors duration-200 hover:opacity-100"
-      >
-        {children}
-      </Link>
-    )}
+    <Link
+      href={generateLinkHref(href, siteUser, pathname, false)}
+      className="block cursor-pointer transition-colors duration-200 hover:opacity-100"
+    >
+      {children}
+    </Link>
   </li>
 );
 
 const ServicesSection = ({
   title,
   services,
-  isEditable,
   siteUser,
   pathname,
   isLoading,
 }: {
   title: string;
   services: FooterLinkType[];
-  isEditable?: boolean;
   siteUser?: string;
   pathname: string;
   isLoading?: boolean;
@@ -308,7 +297,6 @@ const ServicesSection = ({
             <FooterLink
               key={service.id}
               href={service.href || "#"}
-              isEditable={isEditable}
               siteUser={siteUser}
               pathname={pathname}
             >

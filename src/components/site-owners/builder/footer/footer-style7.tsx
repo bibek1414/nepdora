@@ -94,7 +94,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
                 </p>
 
                 <div className="mt-2 w-full max-w-[320px]">
-                  <NewsletterForm isEditable={isEditable} theme={theme} />
+                  <NewsletterForm theme={theme} />
                 </div>
               </>
             )}
@@ -132,7 +132,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
                       `/collections?category=${category.slug}`,
                       siteUser,
                       pathname,
-                      isEditable
+                      false
                     )}
                     className="text-sm opacity-80 transition-colors hover:opacity-100"
                   >
@@ -161,9 +161,8 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
                           link.href || "",
                           siteUser,
                           pathname,
-                          isEditable
+                          false
                         )}
-                        isEditable={isEditable}
                       >
                         {link.text}
                       </FooterLink>
@@ -189,9 +188,8 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
                           link.href || "",
                           siteUser,
                           pathname,
-                          isEditable
+                          false
                         )}
-                        isEditable={isEditable}
                       >
                         {link.text}
                       </FooterLink>
@@ -201,6 +199,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
               </>
             )}
           </div>
+
 
           {/* Column 5: Exclusive Services */}
           <div className="lg:col-span-2">
@@ -248,9 +247,8 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
                     link.href || "",
                     siteUser,
                     pathname,
-                    isEditable
+                    false
                   )}
-                  isEditable={isEditable}
                 >
                   {link.text}
                 </FooterLink>
@@ -270,20 +268,7 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
 const FooterLink: React.FC<{
   href: string;
   children: React.ReactNode;
-  isEditable?: boolean;
-}> = ({ href, children, isEditable }) => {
-  if (isEditable) {
-    return (
-      <button
-        type="button"
-        className="w-fit text-sm opacity-80 transition-colors hover:opacity-100"
-        onClick={e => e.preventDefault()}
-      >
-        {children}
-      </button>
-    );
-  }
-
+}> = ({ href, children }) => {
   return (
     <Link
       href={href || "#"}

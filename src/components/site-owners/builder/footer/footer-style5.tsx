@@ -33,36 +33,26 @@ const ColumnHeader: React.FC<{ children: React.ReactNode }> = ({
 const LinkItem: React.FC<{
   label: string;
   href: string;
-  isEditable?: boolean;
   siteUser?: string;
-}> = ({ label, href, isEditable, siteUser }) => {
+}> = ({ label, href, siteUser }) => {
   const pathname = usePathname();
 
   return (
     <li className="mb-3">
-      {isEditable ? (
-        <span className="group flex cursor-pointer items-center text-[15px] font-medium opacity-80 transition-colors duration-200 hover:opacity-100">
-          <ChevronRight
-            size={16}
-            className="mr-2 opacity-70 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-          />
-          {label}
-        </span>
-      ) : (
-        <Link
-          href={generateLinkHref(href, siteUser, pathname, isEditable)}
-          className="group flex cursor-pointer items-center text-[15px] font-medium opacity-80 transition-colors duration-200 hover:opacity-100"
-        >
-          <ChevronRight
-            size={16}
-            className="mr-2 opacity-70 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-          />
-          {label}
-        </Link>
-      )}
+      <Link
+        href={generateLinkHref(href, siteUser, pathname, false)}
+        className="group flex cursor-pointer items-center text-[15px] font-medium opacity-80 transition-colors duration-200 hover:opacity-100"
+      >
+        <ChevronRight
+          size={16}
+          className="mr-2 opacity-70 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+        />
+        {label}
+      </Link>
     </li>
   );
 };
+
 
 export function FooterStyle5({
   footerData,
@@ -136,7 +126,6 @@ export function FooterStyle5({
                       key={link.id}
                       label={link.text}
                       href={link.href || "#"}
-                      isEditable={isEditable}
                       siteUser={siteUser}
                     />
                   ))}
@@ -156,7 +145,6 @@ export function FooterStyle5({
                       key={link.id}
                       label={link.text}
                       href={link.href || "#"}
-                      isEditable={isEditable}
                       siteUser={siteUser}
                     />
                   ))}
@@ -176,7 +164,6 @@ export function FooterStyle5({
                       key={link.id}
                       label={link.text}
                       href={link.href || "#"}
-                      isEditable={isEditable}
                       siteUser={siteUser}
                     />
                   ))}
@@ -225,7 +212,7 @@ export function FooterStyle5({
               <p className="mb-6 text-sm opacity-70">
                 {data.newsletter.description}
               </p>
-              <NewsletterForm isEditable={isEditable} theme={theme} />
+              <NewsletterForm theme={theme} />
             </div>
           </div>
         )}
@@ -268,7 +255,7 @@ export function FooterStyle5({
                   link.href || "",
                   siteUser,
                   pathname,
-                  isEditable
+                  false
                 )}
                 className="cursor-pointer transition-colors hover:opacity-100"
                 target={
@@ -283,7 +270,6 @@ export function FooterStyle5({
                     ? "noopener noreferrer"
                     : undefined
                 }
-                onClick={isEditable ? e => e.preventDefault() : undefined}
               >
                 {link.text}
               </Link>

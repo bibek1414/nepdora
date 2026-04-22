@@ -93,11 +93,11 @@ export const FooterStyle9 = ({
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
-                  disabled={isEditable || mutation.isPending}
+                  disabled={mutation.isPending}
                 />
                 <button
                   type="submit"
-                  disabled={isEditable || mutation.isPending}
+                  disabled={mutation.isPending}
                   className="bg-primary text-primary-foreground flex w-full items-center justify-center rounded-2xl px-8 py-4 text-base font-bold whitespace-nowrap transition-all hover:opacity-90 active:scale-95 sm:w-auto sm:rounded-full sm:text-lg"
                   style={{
                     backgroundColor: theme?.colors?.primary || "#ccff00",
@@ -133,13 +133,14 @@ export const FooterStyle9 = ({
                         link.href || "#",
                         siteUser,
                         pathname,
-                        isEditable
+                        false
                       )}
                       className="text-lg opacity-70 transition-colors hover:opacity-100"
                     >
                       {link.text}
                     </Link>
                   ))}
+
                 </div>
               ))}
           </div>

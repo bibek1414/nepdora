@@ -161,40 +161,29 @@ export function FooterStyle2({
                   <ul className="space-y-3">
                     {section.links.map(link => (
                       <li key={link.id}>
-                        {isEditable ? (
-                          <button
-                            className="text-left opacity-80 transition-colors hover:opacity-100"
-                            onClick={
-                              isEditable ? e => e.preventDefault() : undefined
-                            }
-                          >
-                            {link.text}
-                          </button>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white"
-                            target={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
-                          >
-                            {link.text}
-                          </Link>
-                        )}
+                        <Link
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            false
+                          )}
+                          className="text-text-light dark:text-text-dark hover:text-primary block text-left transition-colors dark:hover:text-white"
+                          target={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "_blank"
+                              : undefined
+                          }
+                          rel={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "noopener noreferrer"
+                              : undefined
+                          }
+                        >
+                          {link.text}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -217,7 +206,7 @@ export function FooterStyle2({
                   <p className="mb-4 text-sm opacity-80">
                     {data.newsletter.description}
                   </p>
-                  <NewsletterForm isEditable={isEditable} theme={theme} />
+                  <NewsletterForm theme={theme} />
                 </div>
               </div>
             )}
@@ -249,7 +238,7 @@ export function FooterStyle2({
                       link.href || "",
                       siteUser,
                       pathname,
-                      isEditable
+                      false
                     )}
                     className="text-sm opacity-80 transition-colors hover:opacity-100"
                     target={
@@ -264,7 +253,6 @@ export function FooterStyle2({
                         ? "noopener noreferrer"
                         : undefined
                     }
-                    onClick={isEditable ? e => e.preventDefault() : undefined}
                   >
                     {link.text}
                   </Link>
@@ -272,6 +260,7 @@ export function FooterStyle2({
               </div>
             )}
           </div>
+
 
           <div className="mt-8">
             <MadeWithLove textColor={footerData.textColor} />

@@ -380,7 +380,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "experience-1",
         name: "Experience Style 1",
-        image: "/images/site-owners/others/others10.png",
+        image: "/images/site-owners/experience/experience1.png",
       },
       {
         id: "experience-2",
@@ -390,14 +390,14 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "experience-3",
         name: "Experience Style 3 (Resume)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/experience/experience3.png",
       },
     ],
     education: [
       {
         id: "education-1",
         name: "Education Style 1 (Resume)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/education/education1.png",
       },
     ],
     recognition: [
@@ -1379,6 +1379,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Footer Style 9",
         image: "/images/site-owners/footers/footer9.png",
         description: "Footer with social media links",
+      },
+      {
+        id: "footer-10",
+        name: "Footer Style 10 (Editorial)",
+        image: "/images/site-owners/placeholder.png",
+        description: "Premium editorial footer with branding and social links",
       },
     ],
     login_form: [

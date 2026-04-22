@@ -74,40 +74,29 @@ export function FooterStyle1({
                   <ul className="space-y-3">
                     {section.links.map(link => (
                       <li key={link.id}>
-                        {isEditable ? (
-                          <button
-                            className="text-left text-sm opacity-80 transition-colors hover:opacity-100"
-                            onClick={
-                              isEditable ? e => e.preventDefault() : undefined
-                            }
-                          >
-                            {link.text}
-                          </button>
-                        ) : (
-                          <Link
-                            href={generateLinkHref(
-                              link.href || "",
-                              siteUser,
-                              pathname,
-                              isEditable
-                            )}
-                            target={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              link.href?.startsWith("http") ||
-                              link.href?.startsWith("mailto:")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
-                            className="block text-sm opacity-80 transition-colors hover:opacity-100"
-                          >
-                            {link.text}
-                          </Link>
-                        )}
+                        <Link
+                          href={generateLinkHref(
+                            link.href || "",
+                            siteUser,
+                            pathname,
+                            false // Don't disable links in builder
+                          )}
+                          target={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "_blank"
+                              : undefined
+                          }
+                          rel={
+                            link.href?.startsWith("http") ||
+                            link.href?.startsWith("mailto:")
+                              ? "noopener noreferrer"
+                              : undefined
+                          }
+                          className="block text-sm opacity-80 transition-colors hover:opacity-100"
+                        >
+                          {link.text}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -124,9 +113,7 @@ export function FooterStyle1({
                   {data.newsletter.description}
                 </p>
 
-                {data.newsletter.enabled && (
-                  <NewsletterForm isEditable={isEditable} theme={theme} />
-                )}
+                {data.newsletter.enabled && <NewsletterForm theme={theme} />}
               </div>
             )}
           </div>
@@ -156,7 +143,7 @@ export function FooterStyle1({
                         link.href || "",
                         siteUser,
                         pathname,
-                        isEditable
+                        false
                       )}
                       className="opacity-80 transition-colors hover:opacity-100"
                       target={
@@ -171,7 +158,6 @@ export function FooterStyle1({
                           ? "noopener noreferrer"
                           : undefined
                       }
-                      onClick={isEditable ? e => e.preventDefault() : undefined}
                     >
                       {link.text}
                     </Link>
@@ -179,6 +165,7 @@ export function FooterStyle1({
                 </div>
               )}
             </div>
+
 
             {/* Social links */}
             <div className="flex items-center space-x-4">

@@ -5,10 +5,6 @@ import { ContactData } from "@/types/owner-site/components/contact";
 import { EditableText } from "@/components/ui/editable-text";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { ContactForm5 } from "../contact-card/contact-form-5";
 
 interface ContactStyleProps {
@@ -35,14 +31,14 @@ export const ContactStyle5: React.FC<ContactStyleProps> = ({
           value={data.subtitle || "Contact"}
           onChange={(val: string) => handleTextUpdate("subtitle")(val)}
           isEditable={isEditable}
-          className="text-primary text-xs font-bold tracking-[0.2em] uppercase"
+          className="text-xs font-bold tracking-[0.2em] uppercase"
           style={{ fontFamily: theme?.fonts?.body }}
         />
         <EditableText
           value={data.title}
           onChange={(val: string) => handleTextUpdate("title")(val)}
           isEditable={isEditable}
-          as="h1"
+          as="title"
           className="text-foreground mt-4 font-serif text-5xl leading-tight sm:text-6xl"
           style={{ fontFamily: "Georgia, serif" }}
         />
@@ -50,22 +46,17 @@ export const ContactStyle5: React.FC<ContactStyleProps> = ({
           value={data.description || ""}
           onChange={(val: string) => handleTextUpdate("description")(val)}
           isEditable={isEditable}
-          className="text-muted-foreground mt-6 max-w-xl text-base leading-relaxed"
+          className="mt-6 max-w-xl text-base leading-relaxed"
           style={{ fontFamily: theme?.fonts?.body }}
         />
       </section>
 
-      {/* Main Content Section */}
-        {/* Form Part */}
-
-        {/* Aside Part */}
-        <ContactForm5
-          data={data}
-          isEditable={isEditable}
-          onUpdate={onUpdate}
-          theme={theme}
-        />
-
+      <ContactForm5
+        data={data}
+        isEditable={isEditable}
+        onUpdate={onUpdate}
+        theme={theme}
+      />
     </div>
   );
 };
