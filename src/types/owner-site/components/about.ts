@@ -808,11 +808,14 @@ export interface AboutUs22Data {
   template: "about-22";
   eyebrow: string;
   title: string;
-  description1: string;
-  description2: string;
-  description3: string;
-  imageUrl: string;
-  imageAlt: string;
+  description: string;
+  portraitImageUrl: string;
+  portraitImageAlt: string;
+  aboutImageUrl: string;
+  aboutImageAlt: string;
+  bioParagraph1: string;
+  bioParagraph2: string;
+  bioParagraph3: string;
 }
 
 export const defaultAboutUs21Data: AboutUs21Data = {
@@ -853,16 +856,20 @@ export const defaultAboutUs21Data: AboutUs21Data = {
 
 export const defaultAboutUs22Data: AboutUs22Data = {
   template: "about-22",
-  eyebrow: "About me",
-  title: "I'm Daniel — an independent designer and engineer.",
-  description1:
-    "I work with small teams from first sketch to shipped product, mostly in fintech, health, and tools for thinking.",
-  description2:
-    "I believe that the best work comes from small, focused teams who care deeply about the details. I help those teams find clarity in their vision and bring it to life through calm, considered design and engineering.",
-  description3:
-    "Currently living in Lisbon, Portugal, but working with people all over the world.",
-  imageUrl: "/images/site-owners/placeholder.png",
-  imageAlt: "Daniel Hart",
+  eyebrow: "About",
+  title: "Hello, I'm Daniel.",
+  description:
+    "A designer and engineer based in Lisbon, Portugal. I work with small, ambitious teams to turn fuzzy ideas into calm, useful products — sketching one minute, writing TypeScript the next.",
+  portraitImageUrl: "/images/site-owners/hero/hero-style-21/hero-21.jpg",
+  portraitImageAlt: "Portrait of Daniel",
+  aboutImageUrl: "/images/site-owners/about/about-22/about-22.jpg",
+  aboutImageAlt: "At the desk",
+  bioParagraph1:
+    "I started out as a graphic designer in 2013, fell into frontend engineering by accident, and never quite went back. The two disciplines feel like the same thing to me — careful arrangement of small parts in service of a person trying to do something.",
+  bioParagraph2:
+    "These days I split my time between long client engagements (three to nine months) and small, sharp consulting work. I lead with research, prefer to write things down, and try to leave teams a little more confident than I found them.",
+  bioParagraph3:
+    "Outside work I read a lot, run slowly, and keep a small garden that mostly grows tomatoes.",
 };
 
 // Union type for all about us templates

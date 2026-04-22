@@ -8,7 +8,9 @@ export interface ServicesData {
     | "services-4"
     | "services-5"
     | "services-6"
-    | "services-7";
+    | "services-7"
+    | "services-8";
+  eyebrow?: string;
   title: string;
   subtitle?: string;
   order?: number;
@@ -63,4 +65,10 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
       buttonLink: "/services",
     },
     "services-7": { ...defaultServicesData, style: "services-7" },
+    "services-8": {
+      ...defaultServicesData,
+      style: "services-8",
+      eyebrow: "Services",
+      title: "What I help with.",
+    },
   };

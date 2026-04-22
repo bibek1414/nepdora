@@ -16,4 +16,8 @@ export const DEFAULT_BLOG_DETAILS_MAP: Record<
     style: "style-3",
     showRelatedBlogs: true,
   },
+  "blog-details-style-4": {
+    style: "style-4",
+    showRelatedBlogs: true,
+  },
 };

@@ -5,7 +5,8 @@ import { TestimonialsData } from "@/types/owner-site/components/testimonials";
 import { useTestimonials } from "@/hooks/owner-site/admin/use-testimonials";
 import { EditableText } from "@/components/ui/editable-text";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Quote, MessageSquare } from "lucide-react";
+import { Quote, MessageSquare, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { Testimonial } from "@/types/owner-site/admin/testimonial";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
@@ -22,7 +23,7 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
   onUpdate,
 }) => {
   const { title: eyebrow = "Kind words", subtitle: mainHeading } = data || {};
-  const { data: testimonialsData, isLoading } = useTestimonials();
+  const { data: testimonialsData, isLoading, error, refetch } = useTestimonials();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
 
@@ -74,6 +75,16 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
               </div>
             ))}
           </div>
+        ) : error ? (
+          <Alert variant="destructive" className="my-8">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error Loading Testimonials</AlertTitle>
+            <AlertDescription>
+              {error instanceof Error
+                ? error.message
+                : "Failed to load testimonials."}
+            </AlertDescription>
+          </Alert>
         ) : (
           <>
             <div
@@ -128,7 +139,8 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
               actionLabel="Add New Testimonial"
               actionLink="/admin/testimonials"
               isEditable={isEditable}
-              isEmpty={!isLoading && testimonials.length === 0}
+              isEmpty={!isLoading && !error && testimonials.length === 0}
+              onRefresh={refetch}
             />
           </>
         )}

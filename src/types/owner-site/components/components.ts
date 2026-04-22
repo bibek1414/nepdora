@@ -34,6 +34,7 @@ import { CollectionsData } from "./collections";
 import { SocialsData } from "./socials";
 import { ToursData } from "./tours";
 import { CountriesData, CountryDetailsData } from "./countries";
+import { RecognitionData } from "./recognition";
 
 export interface ComponentTypeMap {
   hero: HeroData;
@@ -74,6 +75,7 @@ export interface ComponentTypeMap {
   tours: ToursData;
   countries: CountriesData;
   country_details: CountryDetailsData;
+  recognition: RecognitionData;
 }
 
 // Generic interfaces

@@ -35,6 +35,7 @@ import {
   Database,
   MapPin,
   Globe,
+  Award,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavbarData } from "@/types/owner-site/components/navbar";
@@ -373,6 +374,14 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "experience-2",
         name: "Experience Style 2",
         image: "/images/site-owners/experience/experience2.png",
+      },
+    ],
+    recognition: [
+      {
+        id: "recognition-1",
+        name: "Recognition Style 1",
+        image: "/images/site-owners/placeholder.png",
+        description: "List of awards and recognition from collections",
       },
     ],
     our_clients: [
@@ -826,6 +835,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/services/services-7.png",
         description: "Modern paginated grid with 4 columns and premium cards",
       },
+      {
+        id: "services-8",
+        name: "Services Style 8 (2-Column Grid)",
+        image: "/images/site-owners/placeholder.png",
+        description: "Minimalist two-column grid with editorial typography",
+      },
     ],
     contact: [
       {
@@ -1039,6 +1054,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Blog Style 8 (Editorial List)",
         image: "/images/site-owners/blogs/blog8.png",
         description: "Premium minimalist editorial list interface",
+      },
+      {
+        id: "blog-9",
+        name: "Blog Style 9 (Editorial Grid)",
+        image: "/images/site-owners/blogs/blog9.png",
+        description: "Sophisticated editorial blog list with interactive hover states",
       },
     ],
     faq: [
@@ -1446,6 +1467,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.experience,
       type: "section",
       isSpecialized: true,
+    },
+    {
+      id: "recognition-sections",
+      label: "Recognition",
+      icon: Award,
+      keywords: ["awards", "recognition", "press", "certificates"],
+      hasTemplates: true,
+      templates: templates.recognition,
+      type: "section",
     },
     {
       id: "tours-sections",

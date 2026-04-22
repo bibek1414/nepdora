@@ -13,6 +13,11 @@ import {
 } from "lucide-react";
 import { useDynamicFonts } from "@/providers/dynamic-font-provider";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { 
+  getDefaultLineHeight, 
+  getDefaultFontSize, 
+  getDefaultFontWeight 
+} from "@/utils/text-styles";
 
 interface EditableTextProps {
   value: string;
@@ -27,12 +32,14 @@ interface EditableTextProps {
   useHeadingFont?: boolean; // New prop to determine if this should use heading font
   currentTextColor?: string;
   currentFontFamily?: string;
+  currentLineHeight?: string;
 }
 
 interface TextStyle {
   color?: string;
   fontFamily?: string;
   fontSize?: string;
+  lineHeight?: string;
 }
 
 interface TextSelection {
@@ -63,6 +70,8 @@ const cleanFontSizeSpans = (root: HTMLElement) => {
   });
 };
 
+// Removed local styling helpers - moved to @/utils/text-styles
+
 export const EditableText: React.FC<EditableTextProps> = ({
   value,
   onChange,
@@ -76,6 +85,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   useHeadingFont = false, // Default to body font
   currentTextColor,
   currentFontFamily,
+  currentLineHeight,
 }) => {
   // Get dynamic fonts from context
   const { bodyFont, headingFont } = useDynamicFonts();
@@ -93,7 +103,14 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const [selectedFont, setSelectedFont] = useState(
     currentFontFamily || style?.fontFamily || defaultFont
   );
-  const [selectedFontSize, setSelectedFontSize] = useState("16px");
+  const [selectedFontSize, setSelectedFontSize] = useState(
+    style?.fontSize?.toString() || "16px"
+  );
+  const [selectedLineHeight, setSelectedLineHeight] = useState<string>(
+    currentLineHeight || 
+    (style?.lineHeight !== undefined ? String(style.lineHeight) : undefined) || 
+    getDefaultLineHeight(Tag, selectedFontSize)
+  );
   const [customColor, setCustomColor] = useState("");
   const [customFontSize, setCustomFontSize] = useState("16px");
   const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
@@ -119,6 +136,17 @@ export const EditableText: React.FC<EditableTextProps> = ({
     }
   }, [defaultFont, currentFontFamily, style?.fontFamily]);
 
+  // Update line height when tag or font size changes
+  useEffect(() => {
+    if (!currentLineHeight && !style?.lineHeight) {
+      setSelectedLineHeight(getDefaultLineHeight(Tag, selectedFontSize));
+    } else if (currentLineHeight) {
+      setSelectedLineHeight(currentLineHeight);
+    } else if (style?.lineHeight !== undefined) {
+      setSelectedLineHeight(String(style.lineHeight));
+    }
+  }, [Tag, selectedFontSize, currentLineHeight, style?.lineHeight]);
+
   // Update color when theme changes
   useEffect(() => {
     if (!currentTextColor && !style?.color && theme?.colors?.text) {
@@ -141,6 +169,29 @@ export const EditableText: React.FC<EditableTextProps> = ({
       onChange(newValue);
     }
   };
+
+  // Sniff font size from initial HTML content to ensure persistence across reloads
+  useEffect(() => {
+    if (!textRef.current || !value) return;
+
+    const checkNestedStyle = () => {
+      const children = textRef.current?.children;
+      if (children && children.length === 1) {
+        const firstChild = children[0] as HTMLElement;
+        if (firstChild.tagName === "SPAN" && firstChild.style.fontSize) {
+          const fontSize = firstChild.style.fontSize;
+          setSelectedFontSize(fontSize);
+          
+          if (!currentLineHeight && !style?.lineHeight) {
+            setSelectedLineHeight(getDefaultLineHeight(Tag, fontSize));
+          }
+        }
+      }
+    };
+
+    const timer = setTimeout(checkNestedStyle, 50);
+    return () => clearTimeout(timer);
+  }, [value, Tag]);
 
   // Apply formatting command
   const applyFormatting = (command: string, value?: string) => {
@@ -197,7 +248,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
             if (rangeText === ancestorText && rangeText.length > 0) {
               // Update the existing span
               fontAncestor.style.fontSize = fontSize;
-              fontAncestor.style.lineHeight = "1.15";
+              fontAncestor.style.lineHeight = getDefaultLineHeight(Tag, fontSize);
 
               // Reselect
               const newRange = document.createRange();
@@ -224,7 +275,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
             const wrapper = document.createElement("span");
             wrapper.style.fontSize = fontSize;
-            wrapper.style.lineHeight = "1.15";
+            wrapper.style.lineHeight = getDefaultLineHeight(Tag, fontSize);
 
             // Move cleaned children into the wrapper
             while (tempDiv.firstChild) {
@@ -289,6 +340,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         onStyleChange({
           fontFamily: selectedFont,
           fontSize: fontSize,
+          lineHeight: selectedLineHeight,
         });
       }
 
@@ -380,6 +432,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         color: color,
         fontFamily: selectedFont,
         fontSize: selectedFontSize,
+        lineHeight: selectedLineHeight,
       });
     }
   };
@@ -510,6 +563,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
       // Use CSS variables with fallback to selected font
       fontFamily: `var(${isHeading || useHeadingFont ? "--font-heading" : "--font-body"}, ${selectedFont})`,
       fontSize: selectedFontSize,
+      lineHeight: selectedLineHeight,
       ...style,
     },
   };
@@ -574,6 +628,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                       color: color,
                       fontFamily: selectedFont,
                       fontSize: selectedFontSize,
+                      lineHeight: selectedLineHeight,
                     });
                   }
                 }}
@@ -593,6 +648,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
                       color: color,
                       fontFamily: selectedFont,
                       fontSize: selectedFontSize,
+                      lineHeight: selectedLineHeight,
                     });
                   }
                 }}

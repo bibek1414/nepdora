@@ -31,9 +31,9 @@ export const PortfolioDetail5: React.FC<PortfolioDetailProps> = ({
   if (isLoading) {
     return (
       <div className="container mx-auto max-w-4xl px-6 py-24">
-        <Skeleton className="h-12 w-3/4 mb-8" />
-        <Skeleton className="h-6 w-1/4 mb-12" />
-        <Skeleton className="aspect-video w-full rounded-2xl mb-12" />
+        <Skeleton className="mb-8 h-12 w-3/4" />
+        <Skeleton className="mb-12 h-6 w-1/4" />
+        <Skeleton className="mb-12 aspect-video w-full rounded-2xl" />
         <div className="space-y-4">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-full" />
@@ -72,9 +72,10 @@ export const PortfolioDetail5: React.FC<PortfolioDetailProps> = ({
   return (
     <article className="bg-background pb-32">
       {/* Immersive Hero Header */}
-      <header className="relative h-[70vh] w-full overflow-hidden mb-20">
+      <header className="relative mb-20 h-[70vh] w-full overflow-hidden">
         {portfolio.thumbnail_image && (
-          <Image unoptimized
+          <Image
+            unoptimized
             src={portfolio.thumbnail_image}
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
             fill
@@ -83,33 +84,23 @@ export const PortfolioDetail5: React.FC<PortfolioDetailProps> = ({
           />
         )}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-        
+
         <div className="absolute inset-0 flex items-end">
           <div className="container mx-auto max-w-5xl px-6 pb-20 text-white">
-            <div className="flex flex-wrap gap-3 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              {portfolio.category && (
-                <Badge variant="secondary" className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-md border-none px-4 py-1">
-                  {portfolio.category.name}
-                </Badge>
-              )}
-              {portfolio.tags?.slice(0, 3).map((tag: any) => (
-                <Badge key={tag.id} variant="outline" className="text-white border-white/30 px-4 py-1">
-                  {tag.name}
-                </Badge>
-              ))}
-            </div>
-            
-            <h1 
-              className="text-5xl md:text-7xl font-light tracking-tight mb-8 leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-1000"
+            <h1
+              className="animate-in fade-in slide-in-from-bottom-6 mb-8 text-5xl leading-[1.1] font-light tracking-tight duration-1000 md:text-7xl"
               style={{ fontFamily: theme?.fonts?.heading }}
             >
               {portfolio.title}
             </h1>
 
-            <div className="flex items-center gap-6 text-white/70 font-medium tracking-wide animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <div className="animate-in fade-in slide-in-from-bottom-8 flex items-center gap-6 font-medium tracking-wide text-white/70 duration-1000">
               <span className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                {new Date(portfolio.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+                {new Date(portfolio.created_at).toLocaleDateString(undefined, {
+                  month: "long",
+                  year: "numeric",
+                })}
               </span>
             </div>
           </div>
@@ -117,55 +108,78 @@ export const PortfolioDetail5: React.FC<PortfolioDetailProps> = ({
       </header>
 
       <div className="container mx-auto max-w-5xl px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
+        <div className="grid grid-cols-1 gap-16 md:gap-24 lg:grid-cols-12">
           {/* Main Content */}
           <div className="lg:col-span-8">
-            <div 
-              className="prose prose-xl prose-stone max-w-none dark:prose-invert prose-headings:font-light prose-p:leading-relaxed prose-img:rounded-3xl"
+            <div
+              className="prose prose-xl prose-stone dark:prose-invert prose-headings:font-light prose-p:leading-relaxed prose-img:rounded-3xl max-w-none"
               style={{ fontFamily: theme?.fonts?.body }}
-              dangerouslySetInnerHTML={{ __html: sanitizeContent(portfolio.content || "") }}
+              dangerouslySetInnerHTML={{
+                __html: sanitizeContent(portfolio.content || ""),
+              }}
             />
           </div>
 
           {/* Side Info */}
-          <div className="lg:col-span-4 space-y-12">
+          <div className="space-y-12 lg:col-span-4">
             <div className="sticky top-12 space-y-12">
               {/* Project Metadata */}
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-700 delay-300">
-                <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Project Details</h3>
-                <div className="space-y-4">
-                  {(portfolio.project_url || portfolio.github_url) && (
+              {(portfolio.project_url || portfolio.github_url) && (
+                <div className="animate-in fade-in slide-in-from-right-4 space-y-6 delay-300 duration-700">
+                  <div className="space-y-4">
+                    <h3 className="text-muted-foreground text-sm font-semibold tracking-widest uppercase">
+                      Project Details
+                    </h3>
                     <div className="flex flex-col gap-3">
                       {portfolio.project_url && (
-                        <Button asChild size="lg" className="w-full rounded-full gap-2">
-                          <a href={portfolio.project_url} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          asChild
+                          size="lg"
+                          className="w-full gap-2 rounded-full"
+                        >
+                          <a
+                            href={portfolio.project_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <ExternalLink className="h-4 w-4" />
                             Live Project
                           </a>
                         </Button>
                       )}
                       {portfolio.github_url && (
-                        <Button asChild variant="outline" size="lg" className="rounded-full gap-2 border-2">
-                          <a href={portfolio.github_url} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="lg"
+                          className="gap-2 rounded-full border-2"
+                        >
+                          <a
+                            href={portfolio.github_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <Github className="h-4 w-4" />
                             Source Code
                           </a>
                         </Button>
                       )}
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Tags Cloud */}
               {portfolio.tags && portfolio.tags.length > 0 && (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-700 delay-500">
-                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Technologies</h3>
+                <div className="animate-in fade-in slide-in-from-right-4 space-y-6 delay-500 duration-700">
+                  <h3 className="text-muted-foreground text-sm font-semibold tracking-widest uppercase">
+                    Tags
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {portfolio.tags.map((tag: any) => (
-                      <span 
+                      <span
                         key={tag.id}
-                        className="px-4 py-2 bg-muted rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-default"
+                        className="bg-muted hover:bg-primary cursor-default rounded-full px-4 py-2 text-sm font-medium transition-colors hover:text-white"
                       >
                         {tag.name}
                       </span>

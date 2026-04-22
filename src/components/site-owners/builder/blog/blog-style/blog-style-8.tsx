@@ -102,9 +102,9 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
   const theme = themeResponse?.data?.[0]?.data?.theme;
   const pathname = usePathname();
 
-  const { data: blogsData, isLoading } = useBlogs({
+  const { data: blogsData, isLoading,refetch } = useBlogs({
     page: 1,
-    page_size: 3,
+    page_size: 6,
   });
   const posts = blogsData?.results || [];
 
@@ -148,7 +148,9 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
           </div>
         ) : (
           <>
-            <div className={`divide-border flex flex-col divide-y overflow-hidden border-t border-b ${posts.length === 0 ? "hidden" : ""}`}>
+            <div
+              className={`divide-border flex flex-col divide-y overflow-hidden border-t border-b ${posts.length === 0 ? "hidden" : ""}`}
+            >
               {posts.map(post => (
                 <BlogPostItem
                   key={post.id}
@@ -166,6 +168,7 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
               actionLabel="Add New Blog"
               actionLink="/admin/blogs"
               isEditable={isEditable}
+              onRefresh={refetch}
               isEmpty={!isLoading && posts.length === 0}
             />
           </>

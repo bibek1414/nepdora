@@ -48,7 +48,7 @@ export const CTATemplate6: React.FC<CTATemplate6Props> = ({
             value={data.eyebrow}
             onChange={(val: string) => handleTextUpdate("eyebrow")(val)}
             isEditable={isEditable}
-            as="h2"
+            as="title"
             multiline
             style={{ fontFamily: theme?.fonts?.body }}
           />
@@ -75,14 +75,14 @@ export const CTATemplate6: React.FC<CTATemplate6Props> = ({
                 siteUser={siteUser}
                 className={
                   index === 0
-                    ? "group bg-background text-foreground hover:bg-background/90 inline-flex h-auto items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
-                    : "border-background/30 text-background hover:border-background inline-flex h-auto items-center gap-2 rounded-full border px-5 py-2.5 text-sm transition-colors"
+                    ? "group inline-flex h-auto items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors"
+                    : "border-background/30 inline-flex h-auto items-center gap-2 rounded-full border px-5 py-2.5 text-sm text-white transition-colors"
                 }
                 style={{ fontFamily: theme?.fonts?.body }}
               >
                 <span>{button.text}</span>
                 {index === 0 && (
-                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  <ChevronRight className="h-4 w-4 transition-transform" />
                 )}
               </EditableLink>
             ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback } from "react";
+import { getDefaultLineHeight } from "@/utils/text-styles";
 
 interface TextSelection {
   text: string;
@@ -144,7 +145,9 @@ export const TextSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
           if (rangeText === ancestorText && rangeText.length > 0) {
             // Update the existing span instead of wrapping
             fontAncestor.style.fontSize = fontSize;
-            fontAncestor.style.lineHeight = "1.15"; // Ensure consistent line height
+            // Get tag from ancestor or default to p
+            const tag = (fontAncestor.tagName.toLowerCase() || "p");
+            fontAncestor.style.lineHeight = getDefaultLineHeight(tag, fontSize);
 
             // Update selection to cover the updated ancestor
             const newRange = document.createRange();
@@ -168,7 +171,9 @@ export const TextSelectionProvider: React.FC<{ children: React.ReactNode }> = ({
 
           const wrapper = document.createElement("span");
           wrapper.style.fontSize = fontSize;
-          wrapper.style.lineHeight = "1.15";
+          // Try to get tag from common ancestor or default to p
+          const tag = (common.nodeType === 1 ? (common as HTMLElement).tagName.toLowerCase() : common.parentElement?.tagName.toLowerCase() || "p");
+          wrapper.style.lineHeight = getDefaultLineHeight(tag, fontSize);
 
           // Move cleaned children into the wrapper
           while (tempDiv.firstChild) {

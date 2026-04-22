@@ -27,6 +27,7 @@ import { BlogStyle5 } from "./blog-style/blog-style-5";
 import { BlogStyle6 } from "./blog-style/blog-style-6";
 import { BlogStyle7 } from "./blog-style/blog-style-7";
 import { BlogStyle8 } from "./blog-style/blog-style-8";
+import { BlogStyle9 } from "./blog-style/blog-style-9";
 
 interface BlogComponentProps {
   component: BlogComponentData;
@@ -119,6 +120,8 @@ export const BlogComponent: React.FC<BlogComponentProps> = ({
         return <BlogStyle7 {...commonProps} />;
       case "blog-8":
         return <BlogStyle8 {...commonProps} />;
+      case "blog-9":
+        return <BlogStyle9 {...commonProps} />;
       case "blog-1":
       default:
         return <BlogStyle1 {...commonProps} />;

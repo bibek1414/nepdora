@@ -12,7 +12,7 @@ import { UpdateBlogPost } from "@/types/owner-site/admin/blog";
 interface BlogFormData {
   title: string;
   content: string;
-  thumbnail_image?: File | null;
+  thumbnail_image?: File | string | null;
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;
@@ -35,11 +35,16 @@ export default function EditBlogClient() {
       title: data.title,
       content: data.content,
       tag_ids: data.tag_ids,
-      thumbnail_image: data.thumbnail_image,
       thumbnail_image_alt_description: data.thumbnail_image_alt_description,
       meta_title: data.meta_title,
       meta_description: data.meta_description,
     };
+
+    // Only include thumbnail_image if it's a File (newly uploaded)
+    // If it's a string (URL), it means the image hasn't changed, so we don't send it
+    if (data.thumbnail_image instanceof File) {
+      blogData.thumbnail_image = data.thumbnail_image;
+    }
 
     updateBlogMutation.mutate(
       {

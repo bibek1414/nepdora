@@ -15,7 +15,7 @@ import { UpdateBlogPost } from "@/types/super-admin/blog";
 interface BlogFormData {
   title: string;
   content: string;
-  thumbnail_image?: File | null;
+  thumbnail_image?: File | string | null;
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;
@@ -45,12 +45,15 @@ export default function EditBlogClient() {
       content: data.content,
       category_id: data.category_id,
       tag_ids: data.tag_ids,
-      thumbnail_image: data.thumbnail_image,
       thumbnail_image_alt_description: data.thumbnail_image_alt_description,
       meta_title: data.meta_title,
       meta_description: data.meta_description,
       time_to_read: data.time_to_read,
     };
+
+    if (data.thumbnail_image instanceof File) {
+      blogData.thumbnail_image = data.thumbnail_image;
+    }
 
     updateBlogMutation.mutate(
       {

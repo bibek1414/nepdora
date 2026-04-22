@@ -39,6 +39,7 @@ import {
   DEFAULT_COUNTRIES_MAP,
   DEFAULT_COUNTRY_DETAILS_MAP,
 } from "./countries";
+import { DEFAULT_RECOGNITION_MAP } from "./recognition";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -79,6 +80,7 @@ import { SocialsComponent } from "@/components/site-owners/builder/socials/socia
 import { ToursComponent } from "@/components/site-owners/builder/tours/tours-component";
 import { CountriesComponent } from "@/components/site-owners/builder/countries/countries-component";
 import { CountryDetailsComponent } from "@/components/site-owners/builder/countries/country-details-component";
+import { RecognitionComponent } from "@/components/site-owners/builder/recognition/recognition-component";
 
 export type ComponentCategory =
   | "basic"
@@ -466,5 +468,15 @@ export const COMPONENT_REGISTRY: {
         variant as keyof typeof DEFAULT_COUNTRY_DETAILS_MAP
       ] || DEFAULT_COUNTRY_DETAILS_MAP["country-details-style-1"],
     component: CountryDetailsComponent,
+  },
+  recognition: {
+    type: "recognition",
+    displayName: "Recognition",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_RECOGNITION_MAP[
+        variant as keyof typeof DEFAULT_RECOGNITION_MAP
+      ] || DEFAULT_RECOGNITION_MAP["recognition-1"],
+    component: RecognitionComponent,
   },
 };

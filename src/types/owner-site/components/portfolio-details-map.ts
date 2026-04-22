@@ -20,4 +20,8 @@ export const DEFAULT_PORTFOLIO_DETAILS_MAP: Record<
     style: "style-4",
     showRelatedPortfolio: true,
   },
+  "portfolio-details-style-5": {
+    style: "style-5",
+    showRelatedPortfolio: true,
+  },
 };

@@ -1229,6 +1229,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
       "tours-sections": "tours",
       "countries-sections": "countries",
       "country-details-sections": "country_details",
+      "recognition-sections": "recognition",
     };
 
     const type = sectionToType[sectionId];

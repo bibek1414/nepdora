@@ -389,8 +389,74 @@ Never default to `system-ui` or `Arial`. Always load from Google Fonts or Fontso
 - **Design Notes**: Cards use `rounded-[2.5rem]`, `p-10`. Hover effects (scaling the image container) managed via React state (`isHovered`) to avoid `group-hover` issues.
 - **Variant Note**: Registered as `others-22` in `add-section-dialog.tsx` and the component dispatcher.
 
+
+---
+
+## @beautifulMention Dynamic Component Patterns
+
+For components that fetch data from the server (Services, Portfolio, Testimonials, Blog, Recognition), a standard state-handling pattern MUST be followed to ensure a professional, resilient user experience.
+
+### 1. Loading State (Skeletons)
+Always provide a `Skeleton` screen that matches the grid or list layout of the final content. This prevents layout shift and signals to the user that content is on the way.
+
+### 2. Error State
+Handle fetch errors gracefully using the `Alert` component. Include the error message and, if possible, a way to retry.
+
+### 3. Empty State (BuilderEmptyState)
+When the data array is empty, you MUST display the `BuilderEmptyState` component. This guide the user to the admin dashboard where they can add content.
+
+**Required Props**:
+- `isEmpty`: Boolean check (e.g., `services.length === 0`).
+- `onRefresh`: Pass the `refetch` function from the data hook.
+- `isEditable`: Pass the `isEditable` prop from the parent.
+- `icon`: Relevant Lucide icon (e.g., `Briefcase` for Services, `Trophy` for Recognition).
+- `title` & `description`: Clear, actionable text.
+- `actionLink`: Path to the relevant admin section (e.g., `/admin/services`).
+
+### Standard Implementation Example:
+
+```tsx
+const { data, isLoading, error, refetch } = useServices();
+const services = data?.results || [];
+
+return (
+  <section>
+    {isLoading && <ServicesSkeleton />}
+    
+    {error && (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error Loading Services</AlertTitle>
+        <AlertDescription>{error.message}</AlertDescription>
+      </Alert>
+    )}
+
+    {!isLoading && !error && services.length > 0 && (
+      <div className="grid">
+        {services.map(service => <ServicesCard key={service.id} ... />)}
+      </div>
+    )}
+
+    {/* Always include at the end of the section content wrapper */}
+    {!isLoading && !error && (
+      <BuilderEmptyState
+        icon={Briefcase}
+        title="No Services Found"
+        description="Add services from your dashboard."
+        actionLabel="Add New Services"
+        actionLink="/admin/services"
+        isEditable={isEditable}
+        isEmpty={services.length === 0}
+        onRefresh={refetch}
+      />
+    )}
+  </section>
+);
+```
+
 ---
 
 ## Next Steps
+...
 
 Share this rulebook inside the `@beautifulMention` wrapper for each new component so reviewers and builders can quickly verify layout, typography, links, images, theme usage, design system tokens, and variant registration before the code lands.

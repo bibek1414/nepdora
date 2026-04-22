@@ -110,7 +110,7 @@ export const CTATemplate5: React.FC<CTATemplate5Props> = ({
               <EditableText
                 value={data.title}
                 onChange={handleTextUpdate("title")}
-                as="h2"
+                as="title"
                 className="mb-6 font-serif text-4xl leading-tight font-medium text-white md:text-6xl"
                 isEditable={isEditable}
                 useHeadingFont

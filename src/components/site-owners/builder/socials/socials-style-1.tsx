@@ -138,7 +138,7 @@ export const SocialsStyle1: React.FC<SocialsStyle1Props> = ({
                       e.preventDefault();
                     }
                   }}
-                  className="hover:border-primary/50 dark:hover:border-primary/50 flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white transition-all duration-300 dark:border-zinc-800 dark:bg-zinc-900"
                 >
                   <SocialIcon
                     platform={s.platform}

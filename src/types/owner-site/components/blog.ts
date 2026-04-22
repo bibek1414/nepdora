@@ -8,7 +8,8 @@ export interface BlogData {
     | "blog-5"
     | "blog-6"
     | "blog-7"
-    | "blog-8";
+    | "blog-8"
+    | "blog-9";
   title: string;
   subtitle?: string;
   badge?: string;
@@ -42,4 +43,5 @@ export const DEFAULT_BLOG_MAP: Record<BlogData["style"], BlogData> = {
   "blog-6": { ...defaultBlogData, style: "blog-6" },
   "blog-7": { ...defaultBlogData, style: "blog-7" },
   "blog-8": { ...defaultBlogData, style: "blog-8" },
+  "blog-9": { ...defaultBlogData, style: "blog-9" },
 };
