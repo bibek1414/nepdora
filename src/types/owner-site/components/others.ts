@@ -156,7 +156,9 @@ export type OthersData =
   | OthersTemplate20Data
   | OthersTemplate21Data
   | OthersTemplate22Data
-  | OthersTemplate23Data;
+  | OthersTemplate23Data
+  | OthersTemplate24Data
+  | OthersTemplate25Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -351,6 +353,35 @@ export interface OthersTemplate23Data {
   eyebrow: string;
   title: string;
   items: OthersTemplate23Item[];
+}
+
+export interface OthersTemplate24Social {
+  id: string;
+  label: string;
+  href: string;
+}
+export interface OthersTemplate24Data {
+  template: "others-24";
+  label: string;
+  name: string;
+  title: string;
+  location: string;
+  bioTitle: string;
+  bio: string;
+  socials?: OthersTemplate24Social[];
+}
+
+export interface OthersTemplate25Data {
+  template: "others-25";
+  label: string;
+  name: string;
+  title: string;
+  location: string;
+  bioTitle: string;
+  bio: string;
+  languageTitle: string;
+  languages: string;
+  socials?: OthersTemplate24Social[];
 }
 
 // Component and API interfaces
@@ -1396,6 +1427,28 @@ export const defaultOthersTemplate23Data: OthersTemplate23Data = {
   ],
 };
 
+export const defaultOthersTemplate24Data: OthersTemplate24Data = {
+  template: "others-24",
+  label: "Resume",
+  name: "Daniel Hart",
+  title: "Independent designer & engineer",
+  location: "Lisbon, Portugal",
+  bioTitle: "Profile",
+  bio: "I help small, ambitious teams turn fuzzy ideas into calm, considered products. Twelve years in, mostly working at the seam between design and engineering.",
+};
+
+export const defaultOthersTemplate25Data: OthersTemplate25Data = {
+  template: "others-25",
+  label: "Resume",
+  name: "Daniel Hart",
+  title: "Independent designer & engineer",
+  location: "Lisbon, Portugal",
+  bioTitle: "Profile",
+  bio: "I help small, ambitious teams turn fuzzy ideas into calm, considered products. Twelve years in, mostly working at the seam between design and engineering.",
+  languageTitle: "Languages",
+  languages: "English (native), Portuguese (fluent), Spanish (conversational).",
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -1421,6 +1474,8 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-21": defaultOthersTemplate21Data,
   "others-22": defaultOthersTemplate22Data,
   "others-23": defaultOthersTemplate23Data,
+  "others-24": defaultOthersTemplate24Data,
+  "others-25": defaultOthersTemplate25Data,
 };
 
 // Type guards
@@ -1494,3 +1549,11 @@ export const isOthersTemplate22 = (
 export const isOthersTemplate23 = (
   data: OthersData
 ): data is OthersTemplate23Data => data.template === "others-23";
+
+export const isOthersTemplate24 = (
+  data: OthersData
+): data is OthersTemplate24Data => data.template === "others-24";
+
+export const isOthersTemplate25 = (
+  data: OthersData
+): data is OthersTemplate25Data => data.template === "others-25";

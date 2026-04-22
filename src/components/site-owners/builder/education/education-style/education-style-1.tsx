@@ -52,14 +52,14 @@ export const EducationStyle1: React.FC<EducationStyle1Props> = ({
 
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:py-20">
+      <div className="mx-auto max-w-5xl px-4 pt-20 pb-8 md:px-6 md:pt-28 lg:px-8">
         <section className="border-t border-gray-200 py-10 first:border-t-0 first:pt-0">
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
             as="p"
-            className="text-xs uppercase tracking-[0.2em]"
+            className="text-xs tracking-[0.2em] uppercase"
             style={{ color: theme.colors.primary }}
           />
 
@@ -82,9 +82,7 @@ export const EducationStyle1: React.FC<EducationStyle1Props> = ({
             )}
 
             {error && (
-              <div className="text-red-500">
-                Failed to load education data.
-              </div>
+              <div className="text-red-500">Failed to load education data.</div>
             )}
 
             {!isLoading && !error && (
@@ -99,7 +97,7 @@ export const EducationStyle1: React.FC<EducationStyle1Props> = ({
                       key={exp.id || index}
                       className="grid gap-2 md:grid-cols-[160px_1fr] md:gap-8"
                     >
-                      <p className="font-mono text-xs uppercase tracking-widest text-gray-500">
+                      <p className="font-mono text-xs tracking-widest text-gray-500 uppercase">
                         {period}
                       </p>
                       <div>

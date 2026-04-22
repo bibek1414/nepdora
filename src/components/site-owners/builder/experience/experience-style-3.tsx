@@ -52,7 +52,7 @@ export const ExperienceStyle3: React.FC<ExperienceStyle3Props> = ({
 
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:py-20">
+      <div className="mx-auto max-w-5xl px-4 pt-20 pb-8 md:px-6 md:pt-28 lg:px-8">
         <section className="border-t border-gray-200 py-10 first:border-t-0 first:pt-0">
           <EditableText
             value={data.title}

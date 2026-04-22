@@ -38,6 +38,8 @@ import {
   isOthersTemplate21,
   isOthersTemplate22,
   isOthersTemplate23,
+  isOthersTemplate24,
+  isOthersTemplate25,
 } from "@/types/owner-site/components/others";
 import { OthersTemplate1 } from "./others-style-1";
 import { OthersTemplate2 } from "./others-style-2";
@@ -62,6 +64,8 @@ import { OthersTemplate20 } from "./others-style-20";
 import { OthersTemplate21 } from "./others-style-21";
 import { OthersTemplate22 } from "./others-style-22";
 import { OthersTemplate23 } from "./others-style-23";
+import { OthersStyle24 } from "./others-style-24";
+import { OthersStyle25 } from "./others-style-25";
 
 import {
   useDeleteComponentMutation,
@@ -205,6 +209,12 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
     }
     if (isOthersTemplate23(component.data)) {
       return <OthersTemplate23 othersData={component.data} {...commonProps} />;
+    }
+    if (isOthersTemplate24(component.data)) {
+      return <OthersStyle24 othersData={component.data} {...commonProps} />;
+    }
+    if (isOthersTemplate25(component.data)) {
+      return <OthersStyle25 othersData={component.data} {...commonProps} />;
     }
 
     // Fallback for unknown templates

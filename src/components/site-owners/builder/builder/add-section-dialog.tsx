@@ -363,6 +363,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/others/others23.png",
         description: "Premium minimalist editorial list",
       },
+      {
+        id: "others-24",
+        name: "Others Style 24 (Resume Profile)",
+        image: "/images/site-owners/placeholder.png",
+        description: "Resume profile and header section",
+      },
+      {
+        id: "others-25",
+        name: "Others Style 25 (Resume with Languages)",
+        image: "/images/site-owners/placeholder.png",
+        description: "Resume profile with a dedicated languages section",
+      },
     ],
     experience: [
       {
@@ -1493,7 +1505,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.education,
       type: "section",
-      isSpecialized: true,
     },
     {
       id: "recognition-sections",
