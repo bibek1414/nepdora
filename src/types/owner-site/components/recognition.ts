@@ -18,7 +18,7 @@ export const DEFAULT_RECOGNITION_MAP: Record<
     eyebrow: "Recognition",
     title: "A few nice things.",
     buttonText: "Get in touch",
-    buttonHref: "/contact",
+    buttonHref: "#",
     collectionSlug: "recognition",
   },
 };

@@ -88,7 +88,7 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
                 isEditable={isEditable}
                 siteUser={siteUser}
                 className={cn(
-                  "h-16 rounded-full border px-8 py-4 text-sm transition-all duration-300"
+                  "h-12 rounded-full border px-8 py-4 text-sm transition-all duration-300"
                 )}
                 style={{
                   backgroundColor:

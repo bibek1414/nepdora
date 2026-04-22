@@ -16,7 +16,17 @@ export interface ExperienceTemplate2Data {
   collectionSlug?: string;
 }
 
-export type ExperienceData = ExperienceTemplate1Data | ExperienceTemplate2Data;
+export interface ExperienceTemplate3Data {
+  template: "experience-3";
+  title: string;
+  collectionId?: number;
+  collectionSlug?: string;
+}
+
+export type ExperienceData =
+  | ExperienceTemplate1Data
+  | ExperienceTemplate2Data
+  | ExperienceTemplate3Data;
 
 export const DEFAULT_EXPERIENCE_MAP: Record<
   ExperienceData["template"],
@@ -35,6 +45,11 @@ export const DEFAULT_EXPERIENCE_MAP: Record<
     sub_title: "Where I've worked",
     collectionSlug: "experience",
   },
+  "experience-3": {
+    template: "experience-3",
+    title: "Experience",
+    collectionSlug: "experience",
+  },
 };
 
 export const isExperienceTemplate1 = (
@@ -44,3 +59,7 @@ export const isExperienceTemplate1 = (
 export const isExperienceTemplate2 = (
   data: ExperienceData
 ): data is ExperienceTemplate2Data => data.template === "experience-2";
+
+export const isExperienceTemplate3 = (
+  data: ExperienceData
+): data is ExperienceTemplate3Data => data.template === "experience-3";

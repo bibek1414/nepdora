@@ -208,7 +208,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                               onEditLink({ ...link, text, href });
                             }
                           }}
-                          isEditable={isEditable}
+                          isEditable={false}
                           siteUser={siteUser}
                           className="flex cursor-pointer items-center gap-1.5 font-medium transition-colors hover:opacity-80"
                           textPlaceholder="Link text..."

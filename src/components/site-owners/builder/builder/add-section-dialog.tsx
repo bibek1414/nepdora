@@ -375,12 +375,24 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Experience Style 2",
         image: "/images/site-owners/experience/experience2.png",
       },
+      {
+        id: "experience-3",
+        name: "Experience Style 3 (Resume)",
+        image: "/images/site-owners/placeholder.png",
+      },
+    ],
+    education: [
+      {
+        id: "education-1",
+        name: "Education Style 1 (Resume)",
+        image: "/images/site-owners/placeholder.png",
+      },
     ],
     recognition: [
       {
         id: "recognition-1",
         name: "Recognition Style 1",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/recognition/recognition1.png",
         description: "List of awards and recognition from collections",
       },
     ],
@@ -1058,7 +1070,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "blog-9",
         name: "Blog Style 9 (Editorial Grid)",
-        image: "/images/site-owners/blogs/blog9.png",
+        image: "/images/site-owners/placeholder.png",
         description: "Sophisticated editorial blog list with interactive hover states",
       },
     ],
@@ -1162,6 +1174,11 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "skills-style-2",
         name: "Skills Style 2",
         image: "/images/site-owners/skills/skills-2.png",
+      },
+      {
+        id: "skills-style-3",
+        name: "Skills Style 3 (Resume)",
+        image: "/images/site-owners/placeholder.png",
       },
     ],
     videos: [
@@ -1465,6 +1482,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       keywords: ["experience", "work", "history", "career"],
       hasTemplates: true,
       templates: templates.experience,
+      type: "section",
+      isSpecialized: true,
+    },
+    {
+      id: "education-sections",
+      label: "Education",
+      icon: Award,
+      keywords: ["education", "degree", "school", "university", "resume"],
+      hasTemplates: true,
+      templates: templates.education,
       type: "section",
       isSpecialized: true,
     },

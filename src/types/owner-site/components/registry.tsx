@@ -40,6 +40,7 @@ import {
   DEFAULT_COUNTRY_DETAILS_MAP,
 } from "./countries";
 import { DEFAULT_RECOGNITION_MAP } from "./recognition";
+import { DEFAULT_EDUCATION_MAP } from "./education";
 
 // Component Imports
 import { HeroComponent } from "@/components/site-owners/builder/hero/hero-component";
@@ -81,6 +82,7 @@ import { ToursComponent } from "@/components/site-owners/builder/tours/tours-com
 import { CountriesComponent } from "@/components/site-owners/builder/countries/countries-component";
 import { CountryDetailsComponent } from "@/components/site-owners/builder/countries/country-details-component";
 import { RecognitionComponent } from "@/components/site-owners/builder/recognition/recognition-component";
+import { EducationComponent } from "@/components/site-owners/builder/education/education-component";
 
 export type ComponentCategory =
   | "basic"
@@ -478,5 +480,15 @@ export const COMPONENT_REGISTRY: {
         variant as keyof typeof DEFAULT_RECOGNITION_MAP
       ] || DEFAULT_RECOGNITION_MAP["recognition-1"],
     component: RecognitionComponent,
+  },
+  education: {
+    type: "education",
+    displayName: "Education",
+    category: "dynamic",
+    getDefaultData: variant =>
+      DEFAULT_EDUCATION_MAP[
+        variant as keyof typeof DEFAULT_EDUCATION_MAP
+      ] || DEFAULT_EDUCATION_MAP["education-1"],
+    component: EducationComponent,
   },
 };

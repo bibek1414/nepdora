@@ -62,28 +62,22 @@ const BlogPostItem = ({
   const content = (
     <div className="grid gap-3 py-8 md:grid-cols-[140px_1fr_auto] md:items-baseline md:gap-8">
       {/* Date */}
-      <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+      <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
         {formatDate(post.created_at)}
       </p>
 
       {/* Main Info */}
       <div className="min-w-0">
         <p
-          className={`text-2xl transition-colors duration-200 ${
-            isHovered ? "text-primary" : "text-foreground"
-          }`}
-          style={{ 
+          className={`text-2xl transition-colors duration-200`}
+          style={{
             fontFamily: theme?.fonts?.heading,
-            color: isHovered ? theme?.colors?.primary : undefined
           }}
         >
           {post.title}
         </p>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed">
           {excerpt}
-        </p>
-        <p className="mt-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
-          {tag} · {readTime}
         </p>
       </div>
 
@@ -93,7 +87,7 @@ const BlogPostItem = ({
           className={`h-5 w-5 transition-all duration-300 ${
             isHovered ? "translate-x-1" : ""
           }`}
-          style={{ color: isHovered ? theme?.colors?.primary : 'currentColor' }}
+          style={{ color: isHovered ? theme?.colors?.primary : "currentColor" }}
         />
       </div>
     </div>
@@ -102,11 +96,7 @@ const BlogPostItem = ({
   const containerClass = "block border-b border-border first:border-t";
 
   if (isEditable) {
-    return (
-      <div className={`${containerClass} cursor-default`}>
-        {content}
-      </div>
-    );
+    return <div className={`${containerClass} cursor-default`}>{content}</div>;
   }
 
   return (
@@ -127,17 +117,21 @@ export const BlogStyle9: React.FC<BlogStyleProps> = ({
   siteUser,
   onUpdate,
 }) => {
-  const { 
-    title = "Notes on design, engineering, and the work in between.", 
+  const {
+    title = "Notes on design, engineering, and the work in between.",
     subtitle = "A small collection of essays I revisit often. New posts arrive roughly once a month — never on a strict schedule.",
-    badge = "Blog"
+    badge = "Blog",
   } = data || {};
-  
+
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
   const pathname = usePathname();
 
-  const { data: blogsData, isLoading, refetch } = useBlogs({
+  const {
+    data: blogsData,
+    isLoading,
+    refetch,
+  } = useBlogs({
     page: 1,
     page_size: 10,
   });
@@ -150,8 +144,8 @@ export const BlogStyle9: React.FC<BlogStyleProps> = ({
   };
 
   return (
-    <section className="bg-background py-20 md:py-32">
-      <div className="mx-auto max-w-7xl px-8">
+    <section className="bg-background py-20">
+      <div className="mx-auto max-w-5xl px-8">
         {/* Header Section */}
         <div className="mb-16 max-w-3xl">
           <EditableText
@@ -159,12 +153,12 @@ export const BlogStyle9: React.FC<BlogStyleProps> = ({
             as="p"
             onChange={val => onUpdate?.({ badge: val })}
             isEditable={isEditable}
-            className="text-[10px] uppercase tracking-[0.3em] text-primary"
+            className="text-primary text-[10px] tracking-[0.3em] uppercase"
             style={{ color: theme?.colors?.primary }}
           />
           <EditableText
             value={title}
-            as="h1"
+            as="title"
             onChange={val => onUpdate?.({ title: val })}
             isEditable={isEditable}
             className="mt-6 text-4xl leading-[1.1] md:text-6xl"
@@ -175,14 +169,14 @@ export const BlogStyle9: React.FC<BlogStyleProps> = ({
             as="p"
             onChange={val => onUpdate?.({ subtitle: val })}
             isEditable={isEditable}
-            className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground"
+            className="text-muted-foreground mt-8 max-w-xl text-lg leading-relaxed"
             style={{ fontFamily: theme?.fonts?.body }}
           />
         </div>
 
         {/* Blog items list */}
         {isLoading ? (
-          <div className="divide-y border-y border-border">
+          <div className="border-border divide-y border-y">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="py-12">
                 <Skeleton className="h-24 w-full" />
