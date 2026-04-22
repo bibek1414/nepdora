@@ -47,7 +47,7 @@ export interface BlogFilters {
 export interface CreateBlogPost {
   title: string;
   content: string;
-  thumbnail_image?: File | null;
+  thumbnail_image?: File | Blob | null;
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;

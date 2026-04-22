@@ -217,6 +217,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/hero/hero21.png",
         description: "Premium minimalist hero with portrait reveal",
       },
+      {
+        id: "hero-22",
+        name: "Hero Style 22 (Modern Editorial)",
+        image: "/images/site-owners/hero/hero22.png",
+        description: "Premium editorial hero with featured grid",
+      },
     ],
     tours: [
       {
@@ -864,6 +870,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Services Style 8 (2-Column Grid)",
         image: "/images/site-owners/placeholder.png",
         description: "Minimalist two-column grid with editorial typography",
+      },
+      {
+        id: "services-9",
+        name: "Services Style 9 (Hairline Grid)",
+        image: "/images/site-owners/placeholder.png",
+        description: "Premium editorial layout with a border-grid design",
       },
     ],
     contact: [

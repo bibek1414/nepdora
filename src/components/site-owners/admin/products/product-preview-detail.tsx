@@ -14,7 +14,7 @@ import {
 import { PackageCheck, ShieldCheck, Star, Truck } from "lucide-react";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 
-type PreviewImage = string | File | null | undefined;
+type PreviewImage = string | File | Blob | null | undefined;
 
 // Minimal product shape needed by the preview UI
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

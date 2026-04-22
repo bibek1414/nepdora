@@ -16,8 +16,8 @@ interface PortfolioFormData {
   title: string;
   content: string;
   category: number;
-  thumbnail_image?: File | null;
-  images?: (File | string)[];
+  thumbnail_image?: File | Blob | null;
+  images?: (File | Blob | string)[];
   thumbnail_image_alt_description?: string;
   meta_title?: string;
   meta_description?: string;
@@ -59,7 +59,7 @@ export default function EditPortfolioClient() {
       portfolioData.tags = data.tags;
     }
 
-    if (data.thumbnail_image instanceof File) {
+    if (data.thumbnail_image instanceof File || data.thumbnail_image instanceof Blob) {
       portfolioData.thumbnail_image = data.thumbnail_image;
     } else if (
       data.thumbnail_image === null &&

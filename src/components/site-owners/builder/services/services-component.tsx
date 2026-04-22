@@ -26,6 +26,7 @@ import { ServicesStyle5 } from "./services-style/services-style-5";
 import { ServicesStyle6 } from "./services-style/services-style-6";
 import { ServicesStyle7 } from "./services-style/services-style-7";
 import { ServicesStyle8 } from "./services-style/services-style-8";
+import { ServicesStyle9 } from "./services-style/services-style-9";
 
 interface ServicesComponentProps {
   component: ServicesComponentData;
@@ -165,6 +166,14 @@ export const ServicesComponent: React.FC<ServicesComponentProps> = ({
       case "services-8":
         return (
           <ServicesStyle8
+            data={component.data}
+            {...commonProps}
+            onUpdate={handleUpdate}
+          />
+        );
+      case "services-9":
+        return (
+          <ServicesStyle9
             data={component.data}
             {...commonProps}
             onUpdate={handleUpdate}

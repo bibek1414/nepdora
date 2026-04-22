@@ -48,7 +48,7 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
             <EditableText
               value={data.status}
               as="p"
-              onChange={(val: string) => handleTextUpdate("status")(val)}
+              onChange={handleTextUpdate("status")}
               isEditable={isEditable}
               className="text-sm"
             />
@@ -57,7 +57,7 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
           {/* Heading */}
           <EditableText
             value={data.title}
-            onChange={(val: string) => handleTextUpdate("title")(val)}
+            onChange={handleTextUpdate("title")}
             isEditable={isEditable}
             as="h2"
             className="text-4xl md:text-5xl lg:text-6xl"
@@ -69,7 +69,7 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
           <EditableText
             value={data.description}
             as="p"
-            onChange={(val: string) => handleTextUpdate("description")(val)}
+            onChange={handleTextUpdate("description")}
             isEditable={isEditable}
             className="max-w-[480px] text-lg leading-relaxed"
             style={{ fontFamily: theme?.fonts?.body }}
@@ -92,11 +92,11 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
                 )}
                 style={{
                   backgroundColor:
-                    button.variant === "primary" ? theme?.colors?.primary : "",
+                    button.variant === "primary" ? theme?.colors?.primary : theme?.colors?.secondary,
                   color:
                     button.variant === "primary"
                       ? theme?.colors?.primaryForeground
-                      : "",
+                      : theme?.colors?.secondaryForeground,
                 }}
               >
                 {button.text}
@@ -111,9 +111,7 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
           <EditableImage
             src={data.portraitUrl}
             alt={data.portraitAlt}
-            onImageChange={(val: string) =>
-              setData({ ...data, portraitUrl: val })
-            }
+            onImageChange={handleTextUpdate("portraitUrl")}
             isEditable={isEditable}
             className="h-full w-full rounded-2xl object-cover"
           />
@@ -123,7 +121,7 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
             <MapPin className="h-4 w-4" />
             <EditableText
               value={data.location}
-              onChange={(val: string) => handleTextUpdate("location")(val)}
+              onChange={handleTextUpdate("location")}
               isEditable={isEditable}
               as="p"
               className="z-40! text-xs"

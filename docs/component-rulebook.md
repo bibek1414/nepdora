@@ -150,7 +150,10 @@ These rules apply to every component, without exception.
 - **Never wrap `EditableText` in a semantic tag for styling.** Pass styling directly to `className` and use the `as` prop for semantics.
   - **Bad**: `<h2 className="text-2xl"><EditableText ... /></h2>`
   - **Good**: `<EditableText as="h2" className="text-2xl" ... />`
-- Supported `as` values: `"p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span"`.
+- supported `as` values: `"p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span"`.
+- **Cleaner Handler Pattern**: Always use the curried handler returned by `handleTextUpdate` directly. Avoid wrapping it in an unnecessary inline arrow function.
+  - ❌ **Bad**: `onChange={(val) => handleTextUpdate("title")(val)}`
+  - ✅ **Good**: `onChange={handleTextUpdate("title")}`
 - Keep typography tight: headline classes bold, subheadings sized proportionally, everything within `max-w-7xl`.
 - Inject theme tokens via `style` or `className`: colors from `theme.colors.secondary`, fonts from `theme.fonts.heading`.
 - All text elements must have sufficient contrast - primary data labels should be high-contrast (near-black on white), never muted grey.
@@ -164,7 +167,7 @@ These rules apply to every component, without exception.
 - Always set `href`, `aria-label` when link text is ambiguous, and `rel="noreferrer"` for external destinations.
 - Check `link.target`: default to `_self`; only use `_blank` when the UX explicitly requires it - cite the decision in the `@beautifulMention` note.
 - Link containers stay within the `max-w-7xl` grid and share the same vertical rhythm as surrounding text.
-- When links act as buttons: use `theme.colors.primary` for background/border and `theme.colors.primaryForeground` for the label.
+- When links act as buttons: use `theme.colors.primary` for background/border and `theme.colors.primaryForeground` for the label. For secondary variants, use `theme.colors.secondary` and `theme.colors.secondaryForeground`.
 - Keep link styling tight: `padding: 10px 20px`, `font-weight: 500`, `border-radius: var(--radius-md)`. Never uppercase.
 - **EditableLink Z-Index & Overflow Clipping**: Because `EditableLink` opens a floating popover for link configuration within the builder, **ALWAYS** wrap it in a container with a high z-index (e.g., `className="relative z-30"`). Additionally, ensure parent `<section>` wrappers do NOT use `overflow-hidden`, or else the link configuration interface will be clipped and inaccessible.
 - For `EditableLink` with inline icons (e.g., `<ChevronRight />`), embed the icon inside the link body as children:
@@ -217,7 +220,7 @@ These rules apply to every component, without exception.
 
 - **Shadcn UI**: Always use the `Button` component from `@/components/ui/button` instead of the raw `<button>` tag.
 - **Primary**: solid accent background via `style={{ background: theme.colors.primary, color: theme.colors.primaryForeground }}`, `rounded-lg px-5 py-2.5 font-medium text-sm`.
-- **Secondary**: `bg-white border border-gray-200 text-gray-700 rounded-lg px-5 py-2.5 font-medium text-sm`.
+- **Secondary**: theme-aware background via `style={{ background: theme.colors.secondary, color: theme.colors.secondaryForeground }}`, or `bg-white border border-gray-200 text-gray-700` if the theme calls for a neutral secondary. Always prefer `theme.colors.secondary` if it provides better brand alignment.
 - **Ghost**: `bg-transparent text-gray-600 hover:text-gray-900 px-5 py-2.5 font-medium text-sm`.
 - All hover states: `transition-colors duration-150`. Focus: `focus-visible:ring-2 focus-visible:ring-offset-2`.
 
@@ -278,7 +281,8 @@ Before shipping, verify every item:
 - [ ] Mobile considered - layout stacks, type scales, touch targets accessible
 - [ ] `EditableText` never wrapped in a semantic tag - uses `as` prop instead
 - [ ] `EditableLink` wrapper has `relative z-30` and avoids `overflow-hidden` parents to prevent popup clipping
-- [ ] `EditableLink` buttons use `theme.colors.primary` / `primaryForeground`
+- [ ] `EditableLink` buttons use `theme.colors.primary` / `primaryForeground` (and `secondary` counterparts for secondary variants)
+- [ ] `EditableText` uses the clean `onChange={handleTextUpdate("field")}` pattern without inline wrappers
 - [ ] `EditableImage` has sensible `alt` text
 - [ ] `useThemeQuery()` called at top; no hardcoded color/font values in JSX
 - [ ] All colors/fonts from `useThemeQuery()` only where builder control is needed - rest is Tailwind

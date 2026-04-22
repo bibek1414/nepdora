@@ -833,6 +833,41 @@ export const defaultHeroTemplate21Data: HeroTemplate21Data = {
   location: "Lisbon, Portugal",
 };
 
+export interface HeroFeature22 {
+  id: string;
+  title: string;
+  subtitle: string;
+}
+
+export interface HeroTemplate22Data {
+  template: "hero-22";
+  eyebrow: string;
+  title: string;
+  description: string;
+  buttons: HeroButton[];
+  mainImageUrl: string;
+  mainImageAlt: string;
+  features: HeroFeature22[];
+}
+
+export const defaultHeroTemplate22Data: HeroTemplate22Data = {
+  template: "hero-22",
+  eyebrow: "Independent studio · Est. 2014",
+  title: "Strategy and design for brands that intend to last.",
+  description:
+    "We help ambitious teams clarify what they stand for and build the brand, product and growth systems to prove it — quietly, carefully, and to a standard you can defend.",
+  buttons: [
+    { id: "1", text: "Start a project", variant: "primary", href: "#" },
+    { id: "2", text: "See selected work", variant: "outline", href: "#" },
+  ],
+  mainImageUrl: "/images/site-owners/hero/hero-style-22/hero-workspace.jpg",
+  mainImageAlt: "A quiet workspace with laptop and notebook",
+  features: [
+    { id: "1", title: "Clarity", subtitle: "over cleverness" },
+    { id: "2", title: "Craft", subtitle: "over speed" },
+  ],
+};
+
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data
@@ -855,7 +890,8 @@ export type HeroData =
   | HeroTemplate18Data
   | HeroTemplate19Data
   | HeroTemplate20Data
-  | HeroTemplate21Data;
+  | HeroTemplate21Data
+  | HeroTemplate22Data;
 
 // Component and API interfaces
 export interface HeroComponentData {
@@ -938,6 +974,7 @@ export const DEFAULT_HERO_MAP: Record<HeroData["template"], HeroData> = {
   "hero-19": defaultHeroTemplate19Data,
   "hero-20": defaultHeroTemplate20Data,
   "hero-21": defaultHeroTemplate21Data,
+  "hero-22": defaultHeroTemplate22Data,
 };
 
 // Type guards for each template
@@ -1003,3 +1040,6 @@ export const isHeroTemplate20 = (data: HeroData): data is HeroTemplate20Data =>
 
 export const isHeroTemplate21 = (data: HeroData): data is HeroTemplate21Data =>
   data.template === "hero-21";
+
+export const isHeroTemplate22 = (data: HeroData): data is HeroTemplate22Data =>
+  data.template === "hero-22";

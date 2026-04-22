@@ -26,7 +26,12 @@ const buildPortfolioFormData = (
   const formData = new FormData();
 
   Object.entries(data).forEach(([key, value]) => {
-    if (value === null || value === undefined) {
+    if (value === undefined) {
+      return; // Skip undefined values, keep null for removal
+    }
+
+    if (value === null) {
+      formData.append(key, "");
       return;
     }
 

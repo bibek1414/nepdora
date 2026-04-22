@@ -9,7 +9,8 @@ export interface ServicesData {
     | "services-5"
     | "services-6"
     | "services-7"
-    | "services-8";
+    | "services-8"
+    | "services-9";
   eyebrow?: string;
   title: string;
   subtitle?: string;
@@ -70,5 +71,15 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
       style: "services-8",
       eyebrow: "Services",
       title: "What I help with.",
+    },
+    "services-9": {
+      ...defaultServicesData,
+      style: "services-9",
+      eyebrow: "What we do",
+      title: "Six practices, one studio, working as a single team.",
+      subtitle:
+        "We move between strategy, design, engineering and growth as the work demands. No handoffs between agencies, no diluted thinking — just a small senior team accountable from the first conversation to the last shipped detail.",
+      buttonText: "Explore all services",
+      buttonLink: "/services",
     },
   };

@@ -47,8 +47,8 @@ export interface PortfolioFilters {
 export interface CreatePortfolio {
   title: string;
   content: string;
-  thumbnail_image?: File | null;
-  images?: (File | string)[];
+  thumbnail_image?: File | Blob | null;
+  images?: (File | Blob | string)[];
   thumbnail_image_alt_description?: string;
   category: number;
   tags?: number[];

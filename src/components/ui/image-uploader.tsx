@@ -159,10 +159,24 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             file.size > DEFAULT_MAX_IMAGE_SIZE &&
             file.type.startsWith("image/")
           ) {
-            return await compressImage(file, {
-              maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024),
-              useWebWorker: true,
-            });
+            const originalSize = (file.size / 1024).toFixed(2);
+            console.log(`[ImageUploader] Compressing ${file.name} (${originalSize} KB)...`);
+            
+            try {
+              const compressedFile = await compressImage(file, {
+                maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024),
+                useWebWorker: true,
+              });
+              
+              const compressedSize = (compressedFile.size / 1024).toFixed(2);
+              const reduction = (((file.size - compressedFile.size) / file.size) * 100).toFixed(1);
+              console.log(`[ImageUploader] Compressed ${file.name}: ${compressedSize} KB (-${reduction}%)`);
+              
+              return compressedFile;
+            } catch (err) {
+              console.error(`[ImageUploader] Compression failed for ${file.name}:`, err);
+              return file;
+            }
           }
           return file;
         })
@@ -214,7 +228,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       "image/jpeg": [".jpg", ".jpeg"],
       "image/png": [".png"],
       "image/webp": [".webp"],
+      "image/avif": [".avif"],
       "image/gif": [".gif"],
+      "image/svg+xml": [".svg"],
+      "image/bmp": [".bmp"],
+      "image/tiff": [".tiff", ".tif"],
+      "image/heic": [".heic"],
+      "image/heif": [".heif"],
     },
     multiple,
     disabled,
@@ -309,7 +329,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             <p className="text-muted-foreground text-xs">
               {isCompressing
                 ? "Optimizing for web (max 500KB)..."
-                : `Max ${formatFileSize(maxFileSize)} • JPG, PNG, WebP, GIF ${multiple && ` • Up to ${maxFiles} files`}`}
+                : `Max ${formatFileSize(maxFileSize)} • All image formats supported (JPG, PNG, WebP, AVIF, SVG, etc.) ${multiple && ` • Up to ${maxFiles} files`}`}
             </p>
           </div>
         </div>

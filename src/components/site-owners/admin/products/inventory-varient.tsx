@@ -39,7 +39,7 @@ interface Variant {
   options: Record<string, string>;
   price: string;
   stock: number;
-  image: File | string | null;
+  image: File | Blob | string | null;
 }
 
 interface InventoryVariantsProps {
@@ -78,7 +78,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [groupBy, setGroupBy] = useState<string>("");
   const [groupImages, setGroupImages] = useState<
-    Record<string, File | string | null>
+    Record<string, File | Blob | string | null>
   >({});
 
   useEffect(() => {
@@ -255,7 +255,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     );
   };
 
-  const handleVariantImageChange = (variantId: string, file: File | null) => {
+  const handleVariantImageChange = (variantId: string, file: File | Blob | null) => {
     onVariantsChange(
       variants.map(v => {
         if (v.id === variantId) {
@@ -273,7 +273,7 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     );
   };
 
-  const handleGroupImageChange = (groupName: string, file: File | null) => {
+  const handleGroupImageChange = (groupName: string, file: File | Blob | null) => {
     // Update group image state
     setGroupImages(prev => ({
       ...prev,

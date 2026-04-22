@@ -73,7 +73,7 @@ interface Variant {
   options: Record<string, string>;
   price: string;
   stock: number;
-  image: File | string | null;
+  image: File | Blob | string | null;
 }
 
 // Component for individual thumbnail selector
@@ -142,7 +142,7 @@ const ThumbnailSelector: React.FC<{
             variant="destructive"
             size="sm"
             onClick={() => onRemove(index)}
-            className="absolute -top-1.5 -right-1.5 z-[100] h-6 w-6 rounded-full p-0 opacity-0 shadow-md transition-all duration-200 group-hover:opacity-100 hover:scale-110"
+            className="absolute -top-1.5 -right-1.5 z-100 h-6 w-6 rounded-full p-0 opacity-0 shadow-md transition-all duration-200 group-hover:opacity-100 hover:scale-110"
             aria-label={`Remove image ${index + 1}`}
           >
             <X className="h-3 w-3" />
@@ -424,8 +424,8 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
             options: v.options,
           };
 
-          if (v.image instanceof File) {
-            variantData.image = v.image;
+          if (v.image instanceof File || v.image instanceof Blob) {
+            variantData.image = v.image as any;
           } else if (typeof v.image === "string" && v.image.trim()) {
             variantData.image = v.image;
           } else if (v.image === null) {
@@ -444,8 +444,8 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
           category_id: data.category_id || undefined,
           sub_category_id: data.sub_category_id || undefined,
           thumbnail_image:
-            data.thumbnail_image instanceof File
-              ? data.thumbnail_image
+            (data.thumbnail_image instanceof File || data.thumbnail_image instanceof Blob)
+              ? (data.thumbnail_image as any)
               : typeof data.thumbnail_image === "string"
                 ? data.thumbnail_image
                 : null,

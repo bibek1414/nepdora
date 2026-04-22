@@ -128,7 +128,7 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
     }
   };
 
-  const handleImageChange = (files: File | File[] | null) => {
+  const handleImageChange = (files: File | File[] | string | null) => {
     setImageError("");
 
     if (files === null) {
@@ -136,11 +136,17 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
       return;
     }
 
+    if (typeof files === "string") {
+      setSelectedImage(files);
+      return;
+    }
+
     const fileToValidate =
       files instanceof File ? files : Array.isArray(files) ? files[0] : null;
 
     if (!fileToValidate) {
-      setSelectedImage(null);
+      // If it's not a file and not a string, and not null, something is wrong
+      // but let's be safe and not clear it if we don't have a valid replacement
       return;
     }
 
@@ -178,8 +184,8 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
     }
 
     // Validate image if it's a new file
-    if (selectedImage instanceof File) {
-      const validation = validateFile(selectedImage);
+    if (selectedImage instanceof Blob) {
+      const validation = validateFile(selectedImage as File);
       if (!validation.valid) {
         setImageError(validation.error || "Invalid file");
         toast.error(validation.error);
@@ -188,12 +194,34 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
     }
 
     const submitData = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      submitData.append(key, value.toString());
-    });
 
-    if (selectedImage instanceof File) {
-      submitData.append("photo", selectedImage);
+    if (editingMember) {
+      // For PATCH, only send fields that have changed
+      Object.entries(formData).forEach(([key, value]) => {
+        const oldValue = (editingMember as any)[key] ?? "";
+        if (value.toString() !== oldValue.toString()) {
+          submitData.append(key, value.toString());
+        }
+      });
+
+      // Handle image change
+      if (selectedImage instanceof Blob) {
+        // New image uploaded
+        submitData.append("photo", selectedImage);
+      } else if (selectedImage === null && editingMember.photo) {
+        // Image was cleared
+        submitData.append("photo", "");
+      }
+      // If selectedImage is string, it's the old one, so don't send it
+    } else {
+      // For POST (create), send everything
+      Object.entries(formData).forEach(([key, value]) => {
+        submitData.append(key, value.toString());
+      });
+
+      if (selectedImage instanceof Blob) {
+        submitData.append("photo", selectedImage);
+      }
     }
 
     try {
