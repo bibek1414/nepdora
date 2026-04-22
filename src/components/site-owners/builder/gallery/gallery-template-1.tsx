@@ -118,7 +118,8 @@ export const GalleryTemplate1: React.FC<GalleryTemplateProps> = ({
                   label="Change Image"
                 />
                 <div className="relative w-full">
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src={getImageUrl(image.image)}
                     alt={image.image_alt_description || "Gallery image"}
                     width={800}

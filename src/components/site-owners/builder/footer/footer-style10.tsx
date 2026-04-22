@@ -61,7 +61,7 @@ export const FooterStyle10 = ({
             <FooterLogo footerData={data} getImageUrl={getImageUrl} />
           </div>
           <div className="mt-2 max-w-xs">
-            <p 
+            <p
               className="text-sm leading-relaxed opacity-70"
               style={{ color: footerData.textColor || "inherit" }}
             >
@@ -73,7 +73,7 @@ export const FooterStyle10 = ({
         {/* Dynamic Link Sections */}
         {data.sections.map(section => (
           <div key={section.id}>
-            <p 
+            <p
               className="text-xs font-semibold tracking-widest uppercase opacity-60"
               style={{ color: footerData.textColor || "inherit" }}
             >
@@ -89,7 +89,7 @@ export const FooterStyle10 = ({
                       pathname,
                       false // Don't disable links even in builder
                     )}
-                    className="inline-block transition-all hover:translate-x-1 hover:opacity-100 opacity-70"
+                    className="inline-block opacity-70 transition-all hover:translate-x-1 hover:opacity-100"
                     style={{ color: footerData.textColor || "inherit" }}
                   >
                     {link.text}
@@ -117,7 +117,7 @@ export const FooterStyle10 = ({
                   href={s.href || "#"}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-block transition-all hover:translate-x-1 hover:opacity-100 opacity-70"
+                  className="inline-block opacity-70 transition-all hover:translate-x-1 hover:opacity-100"
                   style={{ color: footerData.textColor || "inherit" }}
                 >
                   {s.platform}
@@ -128,7 +128,7 @@ export const FooterStyle10 = ({
               <li>
                 <a
                   href={`mailto:${data.contactInfo.email}`}
-                  className="inline-block transition-all hover:translate-x-1 hover:opacity-100 opacity-70"
+                  className="inline-block opacity-70 transition-all hover:translate-x-1 hover:opacity-100"
                   style={{ color: footerData.textColor || "inherit" }}
                 >
                   {data.contactInfo.email}
@@ -141,7 +141,7 @@ export const FooterStyle10 = ({
         {/* Newsletter Column */}
         {data.newsletter?.enabled && (
           <div className="lg:col-span-2 xl:col-span-1">
-            <p 
+            <p
               className="text-xs font-semibold tracking-widest uppercase opacity-60"
               style={{ color: footerData.textColor || "inherit" }}
             >
@@ -149,7 +149,7 @@ export const FooterStyle10 = ({
             </p>
             <div className="mt-6">
               <div className="mb-4">
-                <p 
+                <p
                   className="text-sm leading-relaxed opacity-70"
                   style={{ color: footerData.textColor || "inherit" }}
                 >
@@ -163,7 +163,7 @@ export const FooterStyle10 = ({
       </div>
 
       {/* Bottom Bar */}
-      <div 
+      <div
         className="border-t"
         style={{
           borderColor: footerData.textColor
@@ -171,8 +171,8 @@ export const FooterStyle10 = ({
             : "rgba(0,0,0,0.1)",
         }}
       >
-        <div 
-          className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 py-10 text-[11px] font-medium sm:flex-row sm:items-center opacity-60"
+        <div
+          className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 py-10 text-[11px] font-medium opacity-60 sm:flex-row sm:items-center"
           style={{ color: footerData.textColor || "inherit" }}
         >
           <p className="tracking-tight">
@@ -188,8 +188,6 @@ export const FooterStyle10 = ({
       </div>
     </footer>
   );
-
 };
 
 export default FooterStyle10;
-

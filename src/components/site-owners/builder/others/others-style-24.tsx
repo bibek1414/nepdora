@@ -80,7 +80,7 @@ export const OthersStyle24: React.FC<OthersStyle24Props> = ({
           value={othersData.bioTitle}
           onChange={(val: string) => onUpdate?.({ bioTitle: val })}
           isEditable={isEditable}
-          className="text-xs tracking-[0.2em] uppercase mb-2"
+          className="mb-2 text-xs tracking-[0.2em] uppercase"
           style={{ color: theme.colors.primary }}
         />
         <EditableText

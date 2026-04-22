@@ -21,7 +21,9 @@ export const useAddSMSCredit = () => {
     mutationFn: (payload: AddSMSCreditPayload) => addSMSCredit(payload),
     onSuccess: () => {
       toast.success("SMS credits added successfully");
-      queryClient.invalidateQueries({ queryKey: ["superadmin", "sms-settings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["superadmin", "sms-settings"],
+      });
     },
     onError: (error: any) => {
       const errorMessage =

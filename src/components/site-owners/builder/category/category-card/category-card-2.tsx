@@ -52,7 +52,8 @@ export const CategoryCard2: React.FC<CategoryCard2Props> = ({
   return (
     <CardWrapper>
       <div className="group relative h-80 cursor-pointer overflow-hidden rounded-xl shadow-lg">
-        <Image unoptimized
+        <Image
+          unoptimized
           src={categoryImage}
           alt={category.name}
           fill

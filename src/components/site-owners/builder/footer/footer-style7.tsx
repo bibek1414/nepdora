@@ -200,7 +200,6 @@ export const FooterStyle7: React.FC<FooterStyle7Props> = ({
             )}
           </div>
 
-
           {/* Column 5: Exclusive Services */}
           <div className="lg:col-span-2">
             <h3 className="mb-6 text-base font-semibold">Exclusive Services</h3>

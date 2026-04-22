@@ -203,7 +203,8 @@ export default function POSProductList() {
                 >
                   {/* Image */}
                   <div className="bg-muted relative aspect-square overflow-hidden">
-                    <Image unoptimized
+                    <Image
+                      unoptimized
                       src={
                         product.thumbnail_image ||
                         "/fallback/image-not-found.png"

@@ -353,7 +353,8 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
             className="flex gap-4 border-b border-gray-100 pb-4 last:border-b-0"
           >
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border">
-              <Image unoptimized
+              <Image
+                unoptimized
                 src={
                   item.product.thumbnail_image ||
                   "/fallback/image-not-found.png"
@@ -859,7 +860,8 @@ const CheckoutStyle1 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
                               >
                                 <div className="relative z-10 flex items-center gap-3">
                                   <div className="relative h-8 w-8 shrink-0">
-                                    <Image unoptimized
+                                    <Image
+                                      unoptimized
                                       src={getPaymentImage(type)}
                                       alt={getPaymentLabel(type)}
                                       fill

@@ -22,7 +22,8 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ post }) => {
   return (
     <div className="mx-auto max-w-7xl">
       <div className="mb-8">
-        <Image unoptimized
+        <Image
+          unoptimized
           src={post.thumbnail_image || "/fallback/image-not-found.png"}
           alt={post.thumbnail_image_alt_description || post.title}
           width={1000}

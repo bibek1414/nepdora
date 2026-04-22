@@ -32,7 +32,6 @@ export const FeaturedProductsButton: React.FC<FeaturedProductsButtonProps> = ({
         </Button>
       </div>
       <ManageFeaturedProductsDialog open={isOpen} onOpenChange={setIsOpen} />
-
     </>
   );
 };

@@ -20,7 +20,6 @@ export const ContactStyle5: React.FC<ContactStyleProps> = ({
   onUpdate,
   siteUser,
 }) => {
-
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
 
@@ -61,7 +60,6 @@ export const ContactStyle5: React.FC<ContactStyleProps> = ({
         theme={theme}
         siteUser={siteUser}
       />
-
     </div>
   );
 };

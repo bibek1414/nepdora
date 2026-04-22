@@ -285,8 +285,10 @@ export async function addCoolifyDnsRecords(
       return { success: false, error: "Cloudflare API Token not configured." };
     }
 
-    console.log(`[DNS] Adding A record for ${domainName} in zone ${zoneId} pointing to 172.188.98.151`);
-    
+    console.log(
+      `[DNS] Adding A record for ${domainName} in zone ${zoneId} pointing to 172.188.98.151`
+    );
+
     // root domain A record
     const aRecordRes = await fetch(
       `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`,
@@ -307,7 +309,9 @@ export async function addCoolifyDnsRecords(
     );
 
     const aRecordData = await aRecordRes.json();
-    console.log(`[DNS] Cloudflare A record API response status: ${aRecordRes.status}`);
+    console.log(
+      `[DNS] Cloudflare A record API response status: ${aRecordRes.status}`
+    );
 
     if (!aRecordData.success) {
       // 81058: The record already exists.

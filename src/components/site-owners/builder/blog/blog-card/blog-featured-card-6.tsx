@@ -57,7 +57,8 @@ export const BlogFeaturedCard6: React.FC<BlogFeaturedCard6Props> = ({
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="relative h-full w-full"
         >
-          <Image unoptimized
+          <Image
+            unoptimized
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
             fill

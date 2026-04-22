@@ -21,7 +21,8 @@ export const TestimonialCard4: React.FC<TestimonialCard4Props> = ({
       <CardContent className="p-8 text-center sm:p-12">
         <div className="mb-6 flex justify-center">
           <div className="relative h-32 w-32 overflow-hidden rounded-full">
-            <Image unoptimized
+            <Image
+              unoptimized
               src={testimonial.image || "/images/default-avatar.png"}
               alt={testimonial.name}
               fill

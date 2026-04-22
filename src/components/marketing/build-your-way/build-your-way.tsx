@@ -76,7 +76,8 @@ export default function BuildYourWay() {
             {/* Image Container - FIXED SIZING */}
             <div className="mx-auto mb-4 flex h-28 w-28 items-center justify-center rounded-2xl p-3 transition-colors duration-300">
               <div className="relative h-24 w-24">
-                <Image unoptimized
+                <Image
+                  unoptimized
                   src={feature.image}
                   alt={`${feature.title} - Nepdora feature illustration`}
                   width={feature.width}

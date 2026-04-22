@@ -73,7 +73,8 @@ const StaggeredCard: React.FC<StaggeredCardProps> = ({
 
       {/* Profile Image */}
       <div className="relative mb-4 h-12 w-12 overflow-hidden sm:h-14 sm:w-12">
-        <Image unoptimized
+        <Image
+          unoptimized
           src={testimonial.image || "/images/default-avatar.png"}
           alt={testimonial.name}
           fill

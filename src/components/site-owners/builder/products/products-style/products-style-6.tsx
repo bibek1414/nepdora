@@ -142,7 +142,10 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
           />
         )}
 
-        <FeaturedProductsButton isEditable={isEditable} productsCount={products.length} />
+        <FeaturedProductsButton
+          isEditable={isEditable}
+          productsCount={products.length}
+        />
       </div>
     </section>
   );

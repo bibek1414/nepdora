@@ -156,7 +156,8 @@ const ProcessSection = () => {
               {/* Dynamic Image Display */}
               <div className="bg-card relative z-10 rounded-xl border p-4">
                 <div className="bg-muted relative aspect-video overflow-hidden rounded-lg">
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src={activeStepData?.image || "/images/placeholder.jpg"}
                     alt={`Step ${activeStep}: ${activeStepData?.title}  In Nepdora`}
                     fill

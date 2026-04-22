@@ -93,7 +93,8 @@ export const CategoryCard3: React.FC<CategoryCard3Props> = ({
       >
         {/* Image */}
         <div className="relative h-64 overflow-hidden">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={categoryImage}
             alt={category.name}
             width={400}

@@ -332,7 +332,8 @@ export const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({
                       >
                         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border bg-white">
                           {displayImage ? (
-                            <Image unoptimized
+                            <Image
+                              unoptimized
                               src={displayImage}
                               alt={product.name || "Product"}
                               fill

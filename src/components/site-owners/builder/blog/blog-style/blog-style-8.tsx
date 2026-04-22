@@ -102,7 +102,11 @@ export const BlogStyle8: React.FC<BlogStyleProps> = ({
   const theme = themeResponse?.data?.[0]?.data?.theme;
   const pathname = usePathname();
 
-  const { data: blogsData, isLoading,refetch } = useBlogs({
+  const {
+    data: blogsData,
+    isLoading,
+    refetch,
+  } = useBlogs({
     page: 1,
     page_size: 6,
   });

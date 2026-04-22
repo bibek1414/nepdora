@@ -53,7 +53,6 @@ const LinkItem: React.FC<{
   );
 };
 
-
 export function FooterStyle5({
   footerData,
   isEditable,

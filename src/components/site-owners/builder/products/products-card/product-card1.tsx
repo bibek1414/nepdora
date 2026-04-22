@@ -190,7 +190,8 @@ export const ProductCard1: React.FC<ProductCard1Props> = ({
           {/* Header with gradient */}
           <div className="relative overflow-hidden">
             <div className="relative aspect-square">
-              <Image unoptimized
+              <Image
+                unoptimized
                 src={productImage}
                 alt={product.thumbnail_alt_description || product.name}
                 fill

@@ -211,7 +211,8 @@ export function MediaLibraryDialog({
                         : "border-transparent hover:border-[#D4C5B0]"
                     )}
                   >
-                    <Image unoptimized
+                    <Image
+                      unoptimized
                       src={file.url}
                       alt={file.name}
                       fill

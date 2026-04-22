@@ -118,7 +118,8 @@ export const BlogDetail: React.FC<BlogDetailProps> = ({
         </div>
 
         <div className="mx-auto mb-10 aspect-[16/9] h-[300px] overflow-hidden rounded-xl md:h-[450px]">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={blogImage}
             alt={blog.thumbnail_image_alt_description ?? blog.title}
             width={1200}

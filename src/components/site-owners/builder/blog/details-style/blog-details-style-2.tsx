@@ -144,7 +144,8 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({
 
         {/* Big Hero Image */}
         <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm md:h-[550px] lg:mb-20">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={blogImage}
             alt={blog.title}
             fill
@@ -171,7 +172,8 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({
             {blog.author && (
               <div className="bg-muted/30 flex flex-col items-center rounded-2xl border p-8 text-center shadow-sm">
                 <div className="border-background relative mb-4 h-24 w-24 overflow-hidden rounded-full border-4 shadow-md">
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src={`https://ui-avatars.com/api/?name=${blog.author.username}&background=random&color=fff&size=128`}
                     alt={blog.author.username}
                     fill

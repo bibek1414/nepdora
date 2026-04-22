@@ -137,7 +137,8 @@ export const PortfolioDetail2: React.FC<{
 
         {/* Big Hero Image */}
         <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm md:h-[550px] lg:mb-20">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={portfolioImage}
             alt={portfolio.title}
             fill

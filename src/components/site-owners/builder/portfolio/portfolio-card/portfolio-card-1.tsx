@@ -75,7 +75,8 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
       <article className="group border-border bg-card relative overflow-hidden rounded-lg border transition-all duration-300">
         {/* Image Container */}
         <div className="relative aspect-video w-full overflow-hidden">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={portfolioImage}
             alt={portfolio.thumbnail_image_alt_description || portfolio.title}
             fill

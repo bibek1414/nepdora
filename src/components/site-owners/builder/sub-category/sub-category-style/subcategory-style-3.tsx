@@ -156,7 +156,8 @@ export const SubCategoryStyle3: React.FC<SubCategoryStyleProps> = ({
     return (
       <CardWrapper>
         <div className="relative h-[340px] w-[260px] overflow-hidden bg-gray-100 sm:h-[400px] sm:w-[300px]">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={subcategoryImage}
             alt={subcategory.name}
             fill

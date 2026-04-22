@@ -23,7 +23,12 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
   onUpdate,
 }) => {
   const { title: eyebrow = "Kind words", subtitle: mainHeading } = data || {};
-  const { data: testimonialsData, isLoading, error, refetch } = useTestimonials();
+  const {
+    data: testimonialsData,
+    isLoading,
+    error,
+    refetch,
+  } = useTestimonials();
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
 

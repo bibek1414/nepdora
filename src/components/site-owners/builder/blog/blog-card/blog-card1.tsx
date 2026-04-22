@@ -96,7 +96,8 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
       {/* Image */}
       <div className="flex-shrink-0">
         <div className="relative h-64 w-full overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
             fill

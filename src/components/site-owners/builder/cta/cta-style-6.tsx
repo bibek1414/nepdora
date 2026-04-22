@@ -75,8 +75,8 @@ export const CTATemplate6: React.FC<CTATemplate6Props> = ({
                 siteUser={siteUser}
                 className={
                   index === 0
-                    ? "group inline-flex h-auto items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors"
-                    : "border-background/30 inline-flex h-auto items-center gap-2 rounded-full border px-5 py-2.5 text-sm text-white transition-colors"
+                    ? "border-background/30 inline-flex h-auto items-center gap-2 rounded-full border bg-white px-5 py-2.5 text-sm text-black"
+                    : "border-background/30 inline-flex h-auto items-center gap-2 rounded-full border px-5 py-2.5 text-sm text-white"
                 }
                 style={{ fontFamily: theme?.fonts?.body }}
               >

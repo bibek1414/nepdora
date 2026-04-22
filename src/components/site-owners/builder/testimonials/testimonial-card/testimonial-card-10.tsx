@@ -95,7 +95,8 @@ export const TestimonialCard10: React.FC<TestimonialCard10Props> = ({
               }}
             />
           ) : backgroundImage ? (
-            <Image unoptimized
+            <Image
+              unoptimized
               src={backgroundSrc}
               alt="Testimonials background"
               width={550}
@@ -133,7 +134,8 @@ export const TestimonialCard10: React.FC<TestimonialCard10Props> = ({
             {/* User Info */}
             <div className="flex items-center gap-4">
               <div className="relative h-[60px] w-[60px] flex-shrink-0 overflow-hidden rounded-full bg-[#D9D9D9]">
-                <Image unoptimized
+                <Image
+                  unoptimized
                   src={activeTestimonial.image || "/images/default-avatar.png"}
                   alt={activeTestimonial.name || "Testimonial avatar"}
                   fill

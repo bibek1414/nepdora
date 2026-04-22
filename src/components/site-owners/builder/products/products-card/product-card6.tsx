@@ -113,7 +113,8 @@ export const ProductCard6 = ({
               animate={{ scale: isHovered ? 1.05 : 1 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <Image unoptimized
+              <Image
+                unoptimized
                 src={product.thumbnail_image || "/fallback/image-not-found.png"}
                 alt={product.thumbnail_alt_description || product.name}
                 fill

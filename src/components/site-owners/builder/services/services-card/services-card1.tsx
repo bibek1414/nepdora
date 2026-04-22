@@ -53,7 +53,8 @@ export const ServicesCard1: React.FC<ServicesCard1Props> = ({
     <CardWrapper>
       <div className="bg-background-light h-full overflow-hidden rounded-lg border dark:bg-zinc-800">
         <div className="relative h-56 w-full">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={servicesImage}
             alt={services.thumbnail_image_alt_description || services.title}
             fill

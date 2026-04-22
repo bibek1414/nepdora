@@ -19,10 +19,13 @@ interface OnboardingPageProps {
 export default function OnboardingPage({ user }: OnboardingPageProps) {
   // Initialize based on user's existing website_type if available
   // The API uses "ecommerce" and "service", but internal slugs are "ecoomerce" and "services"
-  const initialType = 
-    user.website_type === "ecommerce" ? "ecoomerce" as const : 
-    user.website_type === "service" ? "services" as const : "";
-    
+  const initialType =
+    user.website_type === "ecommerce"
+      ? ("ecoomerce" as const)
+      : user.website_type === "service"
+        ? ("services" as const)
+        : "";
+
   const [currentStep, setCurrentStep] = useState<OnboardingStep>(1);
   const [websiteData, setWebsiteData] = useState<WebsiteData>({
     type: initialType,
@@ -47,7 +50,6 @@ export default function OnboardingPage({ user }: OnboardingPageProps) {
           currentStep={currentStep}
           totalSteps={2}
           user={user}
-          
         />
       )}
       {currentStep === 2 && (

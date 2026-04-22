@@ -192,7 +192,8 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
       {/* Image */}
       <div className="relative flex h-56 items-center justify-center overflow-hidden bg-white p-6">
         <div className="relative block h-full w-full">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={image}
             alt={title}
             fill

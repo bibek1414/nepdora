@@ -31,7 +31,8 @@ export const TeamCard6: React.FC<TeamCard6Props> = ({ member, onClick }) => {
       onClick={onClick}
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
-        <Image unoptimized
+        <Image
+          unoptimized
           src={member.photo || FALLBACK_IMAGE}
           alt={member.name}
           fill

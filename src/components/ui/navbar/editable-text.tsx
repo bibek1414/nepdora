@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 import { useDynamicFonts } from "@/providers/dynamic-font-provider";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
-import { 
-  getDefaultLineHeight, 
-  getDefaultFontSize, 
-  getDefaultFontWeight 
+import {
+  getDefaultLineHeight,
+  getDefaultFontSize,
+  getDefaultFontWeight,
 } from "@/utils/text-styles";
 
 interface EditableTextProps {
@@ -107,9 +107,11 @@ export const EditableText: React.FC<EditableTextProps> = ({
     style?.fontSize?.toString() || "16px"
   );
   const [selectedLineHeight, setSelectedLineHeight] = useState<string>(
-    currentLineHeight || 
-    (style?.lineHeight !== undefined ? String(style.lineHeight) : undefined) || 
-    getDefaultLineHeight(Tag, selectedFontSize)
+    currentLineHeight ||
+      (style?.lineHeight !== undefined
+        ? String(style.lineHeight)
+        : undefined) ||
+      getDefaultLineHeight(Tag, selectedFontSize)
   );
   const [customColor, setCustomColor] = useState("");
   const [customFontSize, setCustomFontSize] = useState("16px");
@@ -181,7 +183,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         if (firstChild.tagName === "SPAN" && firstChild.style.fontSize) {
           const fontSize = firstChild.style.fontSize;
           setSelectedFontSize(fontSize);
-          
+
           if (!currentLineHeight && !style?.lineHeight) {
             setSelectedLineHeight(getDefaultLineHeight(Tag, fontSize));
           }
@@ -248,7 +250,10 @@ export const EditableText: React.FC<EditableTextProps> = ({
             if (rangeText === ancestorText && rangeText.length > 0) {
               // Update the existing span
               fontAncestor.style.fontSize = fontSize;
-              fontAncestor.style.lineHeight = getDefaultLineHeight(Tag, fontSize);
+              fontAncestor.style.lineHeight = getDefaultLineHeight(
+                Tag,
+                fontSize
+              );
 
               // Reselect
               const newRange = document.createRange();

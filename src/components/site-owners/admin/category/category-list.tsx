@@ -197,7 +197,8 @@ export const CategoryList: React.FC = () => {
                         >
                           <TableCell className="px-6 py-4">
                             {category.image ? (
-                              <Image unoptimized
+                              <Image
+                                unoptimized
                                 src={category.image}
                                 alt={category.name}
                                 width={48}

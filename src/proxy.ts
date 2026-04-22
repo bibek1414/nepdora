@@ -298,7 +298,9 @@ function setCached(key: string, entry: Omit<DomainCacheEntry, "timestamp">) {
 export async function proxy(request: NextRequest) {
   const hostHeader = request.headers.get("host");
   const forwardedHost = request.headers.get("x-forwarded-host");
-  console.log(`[Proxy Log] Host: ${hostHeader}, X-Forwarded-Host: ${forwardedHost}`);
+  console.log(
+    `[Proxy Log] Host: ${hostHeader}, X-Forwarded-Host: ${forwardedHost}`
+  );
 
   if (!siteConfig.apiBaseUrl) {
     console.error("[Proxy] API base URL is not configured");

@@ -87,7 +87,8 @@ export const PortfolioDetail3: React.FC<{
     <div className="bg-muted/10 min-h-screen pt-0 pb-0">
       {/* Immersive Hero Header */}
       <div className="relative flex h-[70vh] min-h-[500px] w-full items-center justify-center pt-20">
-        <Image unoptimized
+        <Image
+          unoptimized
           src={portfolioImage}
           alt={portfolio.title}
           fill

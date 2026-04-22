@@ -83,7 +83,8 @@ export const SubCategoryCard3: React.FC<SubCategoryCard2Props> = ({
       >
         {/* Image */}
         <div className="relative h-52 overflow-hidden sm:h-56 md:h-64">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={subcategoryImage}
             alt={subcategory.name}
             width={400}

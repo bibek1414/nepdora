@@ -102,7 +102,8 @@ export const FooterStyle6: React.FC<FooterStyle6Props> = ({
 
           <div className="flex flex-col items-center space-y-6 pr-0 text-center md:items-start md:text-left lg:col-span-4 lg:pr-12">
             {data.logoType === "image" || data.logoType === "both" ? (
-              <Image unoptimized
+              <Image
+                unoptimized
                 src={getImageUrl(data.logoImage)}
                 alt={
                   !isPlaceholder(data.logoText)
@@ -279,4 +280,3 @@ const FooterLink: React.FC<{
     </Link>
   );
 };
-

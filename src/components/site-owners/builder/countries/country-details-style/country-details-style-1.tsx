@@ -125,7 +125,8 @@ export const CountryDetailsStyle1: React.FC<CountryDetailsStyle1Props> = ({
         viewport={{ once: true }}
       >
         {country.Image && (
-          <Image unoptimized
+          <Image
+            unoptimized
             src={country.Image}
             alt={`Study in ${country.name}`}
             fill

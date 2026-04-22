@@ -173,7 +173,8 @@ export default function IntegrationsMarketplace({
                 >
                   {/* Logo */}
                   <div className="-sm group-hover:-md mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-100 bg-white p-3 transition-all">
-                    <Image unoptimized
+                    <Image
+                      unoptimized
                       src={app.logo}
                       alt={app.name}
                       width={56}

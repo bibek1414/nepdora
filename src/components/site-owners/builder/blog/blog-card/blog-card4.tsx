@@ -70,7 +70,8 @@ export const BlogCard4: React.FC<BlogCard4Props> = ({
       <div className="flex gap-6 rounded-lg bg-gray-100 p-8 dark:bg-zinc-800">
         {/* Image */}
         <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-lg">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
             fill

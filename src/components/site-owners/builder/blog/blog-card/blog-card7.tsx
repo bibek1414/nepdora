@@ -104,7 +104,8 @@ export const BlogCard7: React.FC<BlogCard7Props> = ({
         <Card className="group h-full cursor-pointer overflow-hidden border-0 bg-white">
           {/* Image Container - Smaller to match right side */}
           <div className="relative h-64 w-full overflow-hidden rounded-2xl bg-gray-200 sm:h-72">
-            <Image unoptimized
+            <Image
+              unoptimized
               src={blogImage}
               alt={blog.thumbnail_image_alt_description || blog.title}
               fill
@@ -168,7 +169,8 @@ export const BlogCard7: React.FC<BlogCard7Props> = ({
         <div className="flex h-full flex-col gap-6 sm:flex-row">
           {/* Image */}
           <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-2xl bg-gray-200 sm:h-auto sm:w-5/12">
-            <Image unoptimized
+            <Image
+              unoptimized
               src={blogImage}
               alt={blog.thumbnail_image_alt_description || blog.title}
               fill

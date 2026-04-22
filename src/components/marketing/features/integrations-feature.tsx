@@ -73,7 +73,8 @@ export default function IntegrationsFeature() {
                       }`}
                     >
                       <div className="-sm mb-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-slate-100 bg-white p-2">
-                        <Image unoptimized
+                        <Image
+                          unoptimized
                           src={app.logo}
                           alt={app.name}
                           width={48}

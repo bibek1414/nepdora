@@ -3,7 +3,16 @@
 import React from "react";
 import { useSiteConfig } from "@/hooks/owner-site/admin/use-site-config";
 import { ContactData } from "@/types/owner-site/components/contact";
-import { Facebook, Instagram, Linkedin, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  Twitter,
+  Youtube,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -37,27 +46,33 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
     e.preventDefault();
     if (!name || !emailValue || !message || submitMutation.isPending) return;
 
-    const finalMessage = company 
+    const finalMessage = company
       ? `Company: ${company}\n\n${message}`
       : message;
 
-    submitMutation.mutate({
-      name,
-      email: emailValue,
-      message: finalMessage,
-    }, {
-      onSuccess: () => {
-        setName("");
-        setEmailValue("");
-        setCompany("");
-        setMessage("");
+    submitMutation.mutate(
+      {
+        name,
+        email: emailValue,
+        message: finalMessage,
+      },
+      {
+        onSuccess: () => {
+          setName("");
+          setEmailValue("");
+          setCompany("");
+          setMessage("");
+        },
       }
-    });
+    );
   };
 
-  const email = siteConfig?.email || data.contact_info?.email || "hello@example.com";
-  const phone = siteConfig?.phone || data.contact_info?.phone || "+1 234 567 890";
-  const address = siteConfig?.address || data.contact_info?.address || "New York, NY";
+  const email =
+    siteConfig?.email || data.contact_info?.email || "hello@example.com";
+  const phone =
+    siteConfig?.phone || data.contact_info?.phone || "+1 234 567 890";
+  const address =
+    siteConfig?.address || data.contact_info?.address || "New York, NY";
 
   const socialLinks = [
     { name: "Twitter", url: siteConfig?.twitter_url, icon: Twitter },
@@ -65,69 +80,79 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
     { name: "Instagram", url: siteConfig?.instagram_url, icon: Instagram },
     { name: "Facebook", url: siteConfig?.facebook_url, icon: Facebook },
     { name: "YouTube", url: siteConfig?.youtube_url, icon: Youtube },
-  ].filter((s) => s.url);
+  ].filter(s => s.url);
 
   if (isLoading) {
     return (
-      <aside className="space-y-8 border-t border-border pt-8 md:border-l md:border-t-0 md:pl-10 md:pt-0 animate-pulse">
-        <div className="h-20 bg-muted rounded-lg" />
-        <div className="h-20 bg-muted rounded-lg" />
-        <div className="h-20 bg-muted rounded-lg" />
+      <aside className="border-border animate-pulse space-y-8 border-t pt-8 md:border-t-0 md:border-l md:pt-0 md:pl-10">
+        <div className="bg-muted h-20 rounded-lg" />
+        <div className="bg-muted h-20 rounded-lg" />
+        <div className="bg-muted h-20 rounded-lg" />
       </aside>
     );
   }
 
   return (
-    <aside className="space-y-8 border-t border-border pt-8 md:border-l md:border-t-0 md:pl-10 md:pt-0 animate-in fade-in slide-in-from-right-8 duration-1000 delay-200">
+    <aside className="border-border animate-in fade-in slide-in-from-right-8 space-y-8 border-t pt-8 delay-200 duration-1000 md:border-t-0 md:border-l md:pt-0 md:pl-10">
       <section className="container mx-auto grid max-w-4xl gap-12 px-6 py-12 md:grid-cols-[1fr_280px]">
-
-        <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <form
+          onSubmit={handleSubmit}
+          className="animate-in fade-in slide-in-from-bottom-8 space-y-6 duration-700"
+        >
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Your name</label>
-              <Input 
-                placeholder="Name" 
-                className="h-12 rounded-lg border-border bg-background px-4 text-sm focus:border-primary"
+              <label className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+                Your name
+              </label>
+              <Input
+                placeholder="Name"
+                className="border-border bg-background focus:border-primary h-12 rounded-lg px-4 text-sm"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 required
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Email</label>
-              <Input 
-                placeholder="Email" 
+              <label className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+                Email
+              </label>
+              <Input
+                placeholder="Email"
                 type="email"
-                className="h-12 rounded-lg border-border bg-background px-4 text-sm focus:border-primary"
+                className="border-border bg-background focus:border-primary h-12 rounded-lg px-4 text-sm"
                 value={emailValue}
-                onChange={(e) => setEmailValue(e.target.value)}
+                onChange={e => setEmailValue(e.target.value)}
                 required
               />
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Company (optional)</label>
-            <Input 
-              placeholder="Company" 
-              className="h-12 rounded-lg border-border bg-background px-4 text-sm focus:border-primary"
+            <label className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+              Company (optional)
+            </label>
+            <Input
+              placeholder="Company"
+              className="border-border bg-background focus:border-primary h-12 rounded-lg px-4 text-sm"
               value={company}
-              onChange={(e) => setCompany(e.target.value)}
+              onChange={e => setCompany(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Message</label>
-            <Textarea 
-              placeholder="Tell me a bit about your project." 
-              className="min-h-[160px] resize-none rounded-lg border-border bg-background p-4 text-sm focus:border-primary"
+            <label className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+              Message
+            </label>
+            <Textarea
+              placeholder="Tell me a bit about your project."
+              className="border-border bg-background focus:border-primary min-h-[160px] resize-none rounded-lg p-4 text-sm"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={e => setMessage(e.target.value)}
               required
             />
           </div>
-          <Button 
+          <Button
             type="submit"
             disabled={submitMutation.isPending}
-            className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-foreground/90 h-auto disabled:opacity-50"
+            className="group bg-foreground text-background hover:bg-foreground/90 inline-flex h-auto items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
           >
             {submitMutation.isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -139,51 +164,57 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
             )}
           </Button>
         </form>
-      <div className="space-y-8">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Email</p>
-          <a 
-            href={`mailto:${email}`}
-            className="mt-2 block text-sm text-foreground hover:text-primary transition-colors underline decoration-foreground/20"
-          >
-            {email}
-          </a>
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Phone</p>
-          <a 
-            href={`tel:${phone}`}
-            className="mt-2 block text-sm text-foreground hover:text-primary transition-colors"
-          >
-            {phone}
-          </a>
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Based in</p>
-          <p className="mt-2 text-sm text-foreground">
-            {address}
-          </p>
-        </div>
-        
-        {socialLinks.length > 0 && (
+        <div className="space-y-8">
           <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Elsewhere</p>
-            <div className="mt-2 space-y-1.5 text-sm">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-foreground hover:text-primary transition-colors group w-fit"
-                >
-                  <span>{social.name}</span>
-                </a>
-              ))}
-            </div>
+            <p className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+              Email
+            </p>
+            <a
+              href={`mailto:${email}`}
+              className="text-foreground hover:text-primary decoration-foreground/20 mt-2 block text-sm underline transition-colors"
+            >
+              {email}
+            </a>
           </div>
-        )}
-      </div>
+          <div>
+            <p className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+              Phone
+            </p>
+            <a
+              href={`tel:${phone}`}
+              className="text-foreground hover:text-primary mt-2 block text-sm transition-colors"
+            >
+              {phone}
+            </a>
+          </div>
+          <div>
+            <p className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+              Based in
+            </p>
+            <p className="text-foreground mt-2 text-sm">{address}</p>
+          </div>
+
+          {socialLinks.length > 0 && (
+            <div>
+              <p className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+                Elsewhere
+              </p>
+              <div className="mt-2 space-y-1.5 text-sm">
+                {socialLinks.map(social => (
+                  <a
+                    key={social.name}
+                    href={social.url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground hover:text-primary group flex w-fit items-center gap-2 transition-colors"
+                  >
+                    <span>{social.name}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </section>
     </aside>
   );

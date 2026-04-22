@@ -184,7 +184,8 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({
             {imagePreview ? (
               <div className="relative">
                 <div className="flex justify-center">
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src={imagePreview}
                     alt="Preview"
                     width={80}

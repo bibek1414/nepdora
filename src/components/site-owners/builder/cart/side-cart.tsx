@@ -109,7 +109,8 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
                     >
                       {/* Product Image */}
                       <div className="shrink-0">
-                        <Image unoptimized
+                        <Image
+                          unoptimized
                           src={
                             item.product.thumbnail_image ||
                             "/fallback/image-not-found.png"

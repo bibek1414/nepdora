@@ -172,7 +172,6 @@ export function FooterStyle4({
               )}
             </div>
 
-
             {/* Contact Column */}
             <div className="flex flex-1 flex-col items-center justify-start gap-8 p-8 md:items-start lg:p-16">
               {data.contactInfo.address && (

@@ -200,7 +200,7 @@ export function NepdoraPopup() {
                         setFormData({ ...formData, message: e.target.value })
                       }
                       rows={3}
-                      className="focus:border-primary/5 focus-visible:ring-0 focus-visible:outline-none shadow-none"
+                      className="focus:border-primary/5 shadow-none focus-visible:ring-0 focus-visible:outline-none"
                     />
                   </div>
 

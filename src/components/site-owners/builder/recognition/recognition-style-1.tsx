@@ -100,7 +100,7 @@ export const RecognitionStyle1: React.FC<RecognitionStyle1Props> = ({
                 buttonHref: href,
               })
             }
-            className="group inline-flex items-center gap-2 h-10 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200 hover:opacity-90"
+            className="group inline-flex h-10 items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200 hover:opacity-90"
             style={{
               backgroundColor: theme?.colors?.primary || "#000",
               color: theme?.colors?.primaryForeground || "#fff",

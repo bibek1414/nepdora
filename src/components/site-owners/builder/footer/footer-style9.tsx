@@ -140,7 +140,6 @@ export const FooterStyle9 = ({
                       {link.text}
                     </Link>
                   ))}
-
                 </div>
               ))}
           </div>

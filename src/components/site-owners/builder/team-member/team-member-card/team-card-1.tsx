@@ -39,7 +39,8 @@ export const TeamCard1: React.FC<TeamCard1Props> = ({ member, onClick }) => {
     >
       <CardContent className="p-0">
         <div className="relative aspect-square overflow-hidden">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={member.photo}
             alt={member.name}
             fill

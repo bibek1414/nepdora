@@ -4,17 +4,16 @@ import {
   checkDomainVerificationStatus,
   addCoolifyDnsRecords,
 } from "./cloudflare-actions";
-import {
-  addDomainToCoolify,
-  removeDomainFromCoolify,
-} from "./coolify-actions";
+import { addDomainToCoolify, removeDomainFromCoolify } from "./coolify-actions";
 
 export async function provisionDomain(domainName: string, schemaName: string) {
   try {
     console.log(`Starting automated provisioning for domain: ${domainName}`);
 
     // 1. Check Cloudflare status
-    console.log(`[Provisioning] Step 1: Checking Cloudflare verification status for ${domainName}...`);
+    console.log(
+      `[Provisioning] Step 1: Checking Cloudflare verification status for ${domainName}...`
+    );
     const cfStatus = await checkDomainVerificationStatus(domainName);
 
     if (!cfStatus.success) {
@@ -45,9 +44,11 @@ export async function provisionDomain(domainName: string, schemaName: string) {
         `Domain ${domainName} is active in Cloudflare. Proceeding with Coolify and DNS setup...`
       );
     }
-    
+
     // 2. Add to Coolify
-    console.log(`[Provisioning] Step 2: Registering ${domainName} with Coolify...`);
+    console.log(
+      `[Provisioning] Step 2: Registering ${domainName} with Coolify...`
+    );
     const coolifyResult = await addDomainToCoolify(domainName);
     if (!coolifyResult.success) {
       console.error(
@@ -60,10 +61,16 @@ export async function provisionDomain(domainName: string, schemaName: string) {
       };
     }
     console.log(`Successfully added ${domainName} to Coolify.`);
-    
+
     // 3. Add DNS Records to Cloudflare
-    console.log(`[Provisioning] Step 3: Provisioning DNS A record in Cloudflare for ${domainName}...`);
-    const dnsResult = await addCoolifyDnsRecords(zoneId, domainName, schemaName);
+    console.log(
+      `[Provisioning] Step 3: Provisioning DNS A record in Cloudflare for ${domainName}...`
+    );
+    const dnsResult = await addCoolifyDnsRecords(
+      zoneId,
+      domainName,
+      schemaName
+    );
     if (!dnsResult.success) {
       console.error(
         `Cloudflare DNS record creation failed for ${domainName}:`,
@@ -80,7 +87,9 @@ export async function provisionDomain(domainName: string, schemaName: string) {
 
     return {
       success: true,
-      message: coolifyResult.message || `Domain ${domainName} successfully provisioned on Coolify and Cloudflare.`,
+      message:
+        coolifyResult.message ||
+        `Domain ${domainName} successfully provisioned on Coolify and Cloudflare.`,
     };
   } catch (error: any) {
     console.error(`Provisioning exception for ${domainName}:`, error);
@@ -103,7 +112,9 @@ export async function deprovisionDomain(id: number, domainName: string) {
     );
 
     // 1. Remove from Coolify
-    console.log(`[Deprovisioning] Step 1: Removing ${domainName} from Coolify config...`);
+    console.log(
+      `[Deprovisioning] Step 1: Removing ${domainName} from Coolify config...`
+    );
     const coolifyRes = await removeDomainFromCoolify(domainName);
     if (!coolifyRes.success) {
       console.warn(
@@ -112,7 +123,9 @@ export async function deprovisionDomain(id: number, domainName: string) {
     }
 
     // 2. Remove from Cloudflare
-    console.log(`[Deprovisioning] Step 2: Deleting Cloudflare zone for ${domainName}...`);
+    console.log(
+      `[Deprovisioning] Step 2: Deleting Cloudflare zone for ${domainName}...`
+    );
     const cfRes = await deleteDomainFromCloudflare(domainName);
     if (!cfRes.success) {
       console.warn(
@@ -121,7 +134,9 @@ export async function deprovisionDomain(id: number, domainName: string) {
     }
 
     // 3. Remove from Backend
-    console.log(`[Deprovisioning] Step 3: Deleting custom domain entry ${id} from database...`);
+    console.log(
+      `[Deprovisioning] Step 3: Deleting custom domain entry ${id} from database...`
+    );
     const backendRes = await deleteCustomDomain(id);
     if (!backendRes.success) {
       console.error(

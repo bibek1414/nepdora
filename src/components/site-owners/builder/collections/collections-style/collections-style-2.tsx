@@ -86,7 +86,8 @@ export const CollectionsStyle2: React.FC<CollectionsStyleProps> = ({
                 >
                   {!!image && (
                     <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-2xl shadow-sm md:w-64">
-                      <Image unoptimized
+                      <Image
+                        unoptimized
                         src={String(image)}
                         alt={String(name)}
                         fill

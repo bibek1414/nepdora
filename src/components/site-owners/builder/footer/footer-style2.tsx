@@ -261,7 +261,6 @@ export function FooterStyle2({
             )}
           </div>
 
-
           <div className="mt-8">
             <MadeWithLove textColor={footerData.textColor} />
           </div>

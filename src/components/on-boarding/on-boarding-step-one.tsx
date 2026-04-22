@@ -32,7 +32,9 @@ export const OnboardingStepOne = ({
   user,
 }: OnboardingStepOneProps) => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
-  const [selectedType, setSelectedType] = useState<"ecoomerce" | "services" | null>(null);
+  const [selectedType, setSelectedType] = useState<
+    "ecoomerce" | "services" | null
+  >(null);
   const router = useRouter();
 
   const handleTypeSelect = (type: "ecoomerce" | "services") => {
@@ -113,15 +115,15 @@ export const OnboardingStepOne = ({
               {(!user.website_type || user.website_type === "ecommerce") && (
                 <Card
                   className={cn(
-                    "group relative cursor-pointer border-2 bg-white transition-all hover:-translate-y-1 focus-within:ring-2 focus-within:ring-primary/20",
+                    "group focus-within:ring-primary/20 relative cursor-pointer border-2 bg-white transition-all focus-within:ring-2 hover:-translate-y-1",
                     selectedType === "ecoomerce"
-                      ? "border-primary shadow-lg shadow-primary/5"
-                      : "border-slate-200 hover:border-primary/30"
+                      ? "border-primary shadow-primary/5 shadow-lg"
+                      : "hover:border-primary/30 border-slate-200"
                   )}
                   onClick={() => handleTypeSelect("ecoomerce")}
                 >
                   {selectedType === "ecoomerce" && (
-                    <div className="absolute top-4 right-4 text-primary animate-in zoom-in duration-300">
+                    <div className="text-primary animate-in zoom-in absolute top-4 right-4 duration-300">
                       <CheckCircle2 className="h-6 w-6" />
                     </div>
                   )}
@@ -150,15 +152,15 @@ export const OnboardingStepOne = ({
               {(!user.website_type || user.website_type === "service") && (
                 <Card
                   className={cn(
-                    "group relative cursor-pointer border-2 bg-white transition-all hover:-translate-y-1 focus-within:ring-2 focus-within:ring-primary/20",
+                    "group focus-within:ring-primary/20 relative cursor-pointer border-2 bg-white transition-all focus-within:ring-2 hover:-translate-y-1",
                     selectedType === "services"
-                      ? "border-primary shadow-lg shadow-primary/5"
-                      : "border-slate-200 hover:border-primary/30"
+                      ? "border-primary shadow-primary/5 shadow-lg"
+                      : "hover:border-primary/30 border-slate-200"
                   )}
                   onClick={() => handleTypeSelect("services")}
                 >
                   {selectedType === "services" && (
-                    <div className="absolute top-4 right-4 text-primary animate-in zoom-in duration-300">
+                    <div className="text-primary animate-in zoom-in absolute top-4 right-4 duration-300">
                       <CheckCircle2 className="h-6 w-6" />
                     </div>
                   )}

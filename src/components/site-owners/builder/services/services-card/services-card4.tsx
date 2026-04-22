@@ -61,7 +61,8 @@ export const ServicesCard4: React.FC<ServicesCard4Props> = ({
       >
         {service.thumbnail_image && (
           <div className="relative mb-6 h-48 w-full overflow-hidden rounded-t-xl">
-            <Image unoptimized
+            <Image
+              unoptimized
               src={service.thumbnail_image}
               alt={service.thumbnail_image_alt_description || service.title}
               fill

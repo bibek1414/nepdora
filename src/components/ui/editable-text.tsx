@@ -75,10 +75,10 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
   const [selectedLineHeight, setSelectedLineHeight] = useState<string>(
     currentLineHeight ||
-      (typeof style?.lineHeight === "string" 
-        ? style.lineHeight 
-        : typeof style?.lineHeight === "number" 
-          ? String(style.lineHeight) 
+      (typeof style?.lineHeight === "string"
+        ? style.lineHeight
+        : typeof style?.lineHeight === "number"
+          ? String(style.lineHeight)
           : undefined) ||
       getDefaultLineHeight(Tag, selectedFontSize)
   );
@@ -160,7 +160,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         if (firstChild.tagName === "SPAN" && firstChild.style.fontSize) {
           const fontSize = firstChild.style.fontSize;
           setSelectedFontSize(fontSize);
-          
+
           if (!currentLineHeight && !style?.lineHeight) {
             setSelectedLineHeight(getDefaultLineHeight(Tag, fontSize));
           }

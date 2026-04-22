@@ -984,7 +984,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
         enableLogin: currentData.enableLogin ?? navbarData.enableLogin,
         bannerText: currentData.bannerText || navbarData.bannerText,
         topBarItems: currentData.topBarItems ?? navbarData.topBarItems,
-        backgroundColor: currentData.backgroundColor || navbarData.backgroundColor,
+        backgroundColor:
+          currentData.backgroundColor || navbarData.backgroundColor,
         textColor: currentData.textColor || navbarData.textColor,
       };
     }
@@ -1103,7 +1104,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({ params }) => {
           ...currentData.newsletter,
         },
         copyright: currentData.copyright || footerData.copyright,
-        backgroundColor: currentData.backgroundColor || footerData.backgroundColor,
+        backgroundColor:
+          currentData.backgroundColor || footerData.backgroundColor,
         textColor: currentData.textColor || footerData.textColor,
         policyLinks: currentData.policyLinks ?? footerData.policyLinks,
       };

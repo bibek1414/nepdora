@@ -53,7 +53,8 @@ export const TestimonialCard9: React.FC<TestimonialCard9Props> = ({
     <div className="mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-8 px-4 py-12 lg:grid-cols-12 lg:px-8">
       <div className="h-[400px] overflow-hidden rounded-[40px] bg-gray-200 lg:col-span-4 lg:h-auto">
         <div className="relative h-full w-full">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={activeTestimonial.image || "/fallback/image-not-found.png"}
             alt={activeTestimonial.name}
             fill
@@ -86,7 +87,8 @@ export const TestimonialCard9: React.FC<TestimonialCard9Props> = ({
         <div className="relative z-10 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative h-14 w-14 overflow-hidden rounded-full bg-white">
-              <Image unoptimized
+              <Image
+                unoptimized
                 src={activeTestimonial.image || "/images/default-avatar.png"}
                 alt={activeTestimonial.name}
                 fill

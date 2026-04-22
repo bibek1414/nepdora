@@ -184,9 +184,7 @@ export const EducationComponent: React.FC<EducationComponentProps> = ({
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   disabled={deleteEducationMutation.isPending}
                 >
-                  {deleteEducationMutation.isPending
-                    ? "Deleting..."
-                    : "Delete"}
+                  {deleteEducationMutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

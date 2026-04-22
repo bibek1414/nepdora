@@ -90,7 +90,8 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
               onClick={() => onEdit(portfolio)}
             >
               <TableCell className="px-6 py-4">
-                <Image unoptimized
+                <Image
+                  unoptimized
                   src={
                     portfolio.thumbnail_image || "/fallback/image-not-found.png"
                   }

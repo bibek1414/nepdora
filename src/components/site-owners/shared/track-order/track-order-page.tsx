@@ -388,7 +388,8 @@ export default function TrackOrderPage() {
                         <td className="px-6 py-6">
                           <div className="flex items-center gap-4">
                             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-slate-100 bg-slate-100">
-                              <Image unoptimized
+                              <Image
+                                unoptimized
                                 src={
                                   item.variant?.image ||
                                   item.product?.thumbnail_image ||

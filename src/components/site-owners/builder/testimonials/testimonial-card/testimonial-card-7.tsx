@@ -19,7 +19,8 @@ export const TestimonialCard7: React.FC<TestimonialCard7Props> = ({
       <p className="text-base text-slate-500">{testimonial.comment}</p>
       <div className="mt-8 flex items-center gap-3">
         <div className="relative size-12 flex-shrink-0 overflow-hidden rounded-full">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={testimonial.image || "/images/default-avatar.png"}
             alt={testimonial.name}
             fill

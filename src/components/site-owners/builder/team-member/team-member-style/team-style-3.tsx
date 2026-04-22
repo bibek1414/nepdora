@@ -136,7 +136,8 @@ export const TeamStyle3: React.FC<TeamStyleProps> = ({
             <div className="relative">
               <div className="relative h-[500px] w-full overflow-hidden rounded-[40px] bg-gray-200">
                 {activeMember ? (
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src={activeMember.photo}
                     alt={activeMember.name}
                     fill

@@ -129,7 +129,8 @@ const Popup: React.FC<PopupProps> = ({ open, onClose }) => {
         {/* Image Section - Only show if image exists */}
         {popupData.image && (
           <div className="relative order-1 h-48 w-full md:order-none md:h-full">
-            <Image unoptimized
+            <Image
+              unoptimized
               src={typeof popupData.image === "string" ? popupData.image : ""}
               alt={popupData.title}
               fill

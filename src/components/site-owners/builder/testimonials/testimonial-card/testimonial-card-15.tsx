@@ -23,7 +23,8 @@ export const TestimonialCard15: React.FC<TestimonialCard15Props> = ({
         <div className="from-primary/40 via-primary/20 absolute inset-0 rounded-full bg-linear-to-br to-transparent opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
         <div className="bg-secondary ring-background relative h-24 w-24 overflow-hidden rounded-full ring-2">
           {testimonial.image ? (
-            <Image unoptimized
+            <Image
+              unoptimized
               src={testimonial.image}
               alt={testimonial.name}
               fill

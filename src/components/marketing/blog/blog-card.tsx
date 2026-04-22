@@ -23,7 +23,8 @@ export default function BlogCard({ post, className = "" }: BlogCardProps) {
       {/* Post Image Section - Separate */}
       <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-xl">
         <Link href={`/blog/${post.slug}`}>
-          <Image unoptimized
+          <Image
+            unoptimized
             src={post.thumbnail_image || "/fallback/image-not-found.png"}
             alt={post.thumbnail_image_alt_description || post.title}
             fill
@@ -49,7 +50,8 @@ export default function BlogCard({ post, className = "" }: BlogCardProps) {
         {/* Author Footer */}
         <div className="mt-auto flex items-center gap-3">
           <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
-            <Image unoptimized
+            <Image
+              unoptimized
               src={authorAvatar}
               alt={authorName}
               fill

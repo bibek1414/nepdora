@@ -182,7 +182,8 @@ export const RecentPosts = ({ initialData }: { initialData?: BlogPost[] }) => {
             className="group flex cursor-pointer gap-4"
           >
             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
-              <Image unoptimized
+              <Image
+                unoptimized
                 src={post.thumbnail_image || "/fallback/image-not-found.png"}
                 alt={
                   post.thumbnail_image

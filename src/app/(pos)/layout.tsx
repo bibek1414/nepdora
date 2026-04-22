@@ -31,7 +31,8 @@ export default async function POSLayout({
               </div>
             </Link>
             <div className="relative">
-              <Image unoptimized
+              <Image
+                unoptimized
                 src="/nepdora-logo.png"
                 alt="Logo"
                 width={100}

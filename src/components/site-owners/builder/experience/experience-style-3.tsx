@@ -59,7 +59,7 @@ export const ExperienceStyle3: React.FC<ExperienceStyle3Props> = ({
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
             as="p"
-            className="text-xs uppercase tracking-[0.2em]"
+            className="text-xs tracking-[0.2em] uppercase"
             style={{ color: theme.colors.primary }}
           />
 
@@ -103,7 +103,7 @@ export const ExperienceStyle3: React.FC<ExperienceStyle3Props> = ({
                       key={exp.id || index}
                       className="grid gap-2 md:grid-cols-[160px_1fr] md:gap-8"
                     >
-                      <p className="font-mono text-xs uppercase tracking-widest text-gray-500">
+                      <p className="font-mono text-xs tracking-widest text-gray-500 uppercase">
                         {period}
                       </p>
                       <div>

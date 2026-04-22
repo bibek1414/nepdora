@@ -30,8 +30,8 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
   if (isLoading) {
     return (
       <div className="container mx-auto max-w-4xl px-6 py-24">
-        <Skeleton className="mx-auto h-12 w-3/4 mb-12" />
-        <Skeleton className="aspect-video w-full rounded-3xl mb-16" />
+        <Skeleton className="mx-auto mb-12 h-12 w-3/4" />
+        <Skeleton className="mb-16 aspect-video w-full rounded-3xl" />
         <div className="space-y-4">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-full" />
@@ -71,15 +71,15 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
   return (
     <article className="bg-background pb-20">
       {/* Header */}
-      <header className="container mx-auto max-w-4xl px-6 pt-16 pb-12 md:pt-24 md:pb-16 text-center">
-        <div className="flex flex-col items-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="flex items-center gap-4 text-sm font-medium uppercase tracking-widest text-muted-foreground">
+      <header className="container mx-auto max-w-4xl px-6 pt-16 pb-12 text-center md:pt-24 md:pb-16">
+        <div className="animate-in fade-in slide-in-from-bottom-4 flex flex-col items-center gap-6 duration-700">
+          <div className="text-muted-foreground flex items-center gap-4 text-sm font-medium tracking-widest uppercase">
             <span>{formatDate(blog.created_at)}</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
+            <span className="bg-border h-1 w-1 rounded-full" />
             <span>{blog.tags?.[0]?.name || "Uncategorized"}</span>
           </div>
-          <h1 
-            className="text-4xl font-normal leading-[1.1] tracking-tight md:text-5xl lg:text-6xl"
+          <h1
+            className="text-4xl leading-[1.1] font-normal tracking-tight md:text-5xl lg:text-6xl"
             style={{ fontFamily: theme?.fonts?.heading }}
           >
             {blog.title}
@@ -89,9 +89,10 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
 
       {/* Featured Image */}
       {blog.thumbnail_image && (
-        <div className="container mx-auto max-w-6xl px-6 mb-16 md:mb-24 animate-in fade-in zoom-in-95 duration-1000">
-          <div className="relative aspect-video overflow-hidden rounded-3xl bg-muted shadow-2xl">
-            <Image unoptimized
+        <div className="animate-in fade-in zoom-in-95 container mx-auto mb-16 max-w-6xl px-6 duration-1000 md:mb-24">
+          <div className="bg-muted relative aspect-video overflow-hidden rounded-3xl shadow-2xl">
+            <Image
+              unoptimized
               src={blog.thumbnail_image}
               alt={blog.thumbnail_image_alt_description || blog.title}
               fill
@@ -103,8 +104,8 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
 
       {/* Content */}
       <div className="container mx-auto max-w-3xl px-6">
-        <div 
-          className="prose prose-xl prose-stone max-w-none dark:prose-invert prose-headings:font-normal prose-headings:tracking-tight prose-p:leading-relaxed prose-img:rounded-2xl"
+        <div
+          className="prose prose-xl prose-stone dark:prose-invert prose-headings:font-normal prose-headings:tracking-tight prose-p:leading-relaxed prose-img:rounded-2xl max-w-none"
           style={{ fontFamily: theme?.fonts?.body }}
           dangerouslySetInnerHTML={{ __html: sanitizeContent(blog.content) }}
         />

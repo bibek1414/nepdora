@@ -72,12 +72,12 @@ const SkillsStyle3: React.FC<SkillsStyle3Props> = ({
             icon={Hammer}
             title="No Skills Added Yet"
             description="Showcase your expertise to your visitors. Manage your skills in the admin panel to display them here."
-                actionLabel="Add New Skills"
-                actionLink="/admin/portfolio/skills"
-                isEditable={isEditable}
-                isEmpty={skills.length === 0}
-                onRefresh={refetch}
-              />
+            actionLabel="Add New Skills"
+            actionLink="/admin/portfolio/skills"
+            isEditable={isEditable}
+            isEmpty={skills.length === 0}
+            onRefresh={refetch}
+          />
         </section>
       </div>
     </section>

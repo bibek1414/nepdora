@@ -158,7 +158,8 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
           {/* Right Side - Image Preview */}
           <div className="relative w-full lg:w-1/2">
             <div className="relative aspect-video overflow-hidden rounded-lg">
-              <Image unoptimized
+              <Image
+                unoptimized
                 src={portfolioImage}
                 alt={
                   portfolio.thumbnail_image_alt_description || portfolio.title

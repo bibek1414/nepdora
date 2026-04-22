@@ -1083,7 +1083,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "blog-9",
         name: "Blog Style 9 (Editorial Grid)",
         image: "/images/site-owners/placeholder.png",
-        description: "Sophisticated editorial blog list with interactive hover states",
+        description:
+          "Sophisticated editorial blog list with interactive hover states",
       },
     ],
     faq: [

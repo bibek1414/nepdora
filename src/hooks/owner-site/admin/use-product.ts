@@ -143,7 +143,9 @@ export const useUpdateProduct = () => {
       // Invalidate all product queries and specific product
       if (!variables.skipInvalidate) {
         queryClient.invalidateQueries({ queryKey: ["products"] });
-        queryClient.invalidateQueries({ queryKey: ["product", variables.slug] });
+        queryClient.invalidateQueries({
+          queryKey: ["product", variables.slug],
+        });
       }
       toast.success(response.message);
     },

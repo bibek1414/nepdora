@@ -264,7 +264,8 @@ const OrderConfirmationStyle1 = ({
                       <div className="flex flex-1 items-center space-x-4">
                         {/* Product/Variant Image */}
                         {displayImage && (
-                          <Image unoptimized
+                          <Image
+                            unoptimized
                             src={displayImage}
                             alt={displayName}
                             width={60}

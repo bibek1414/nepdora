@@ -324,7 +324,7 @@ function DomainStatusItem({
 
       {/* Display Success/Warning Message */}
       {successMessage && (
-        <div className="mt-2 rounded-md bg-yellow-50 p-2 text-xs font-medium text-yellow-800 border border-yellow-200">
+        <div className="mt-2 rounded-md border border-yellow-200 bg-yellow-50 p-2 text-xs font-medium text-yellow-800">
           {successMessage}
         </div>
       )}
@@ -548,7 +548,7 @@ export default function CloudflareDomainForm({
                 Domains list above to complete verification.
               </h3>
               {warning && (
-                <p className="mt-2 text-xs font-medium text-orange-700 bg-orange-50 p-2 border border-orange-100 rounded">
+                <p className="mt-2 rounded border border-orange-100 bg-orange-50 p-2 text-xs font-medium text-orange-700">
                   {warning}
                 </p>
               )}

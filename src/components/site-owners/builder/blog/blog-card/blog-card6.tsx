@@ -119,7 +119,8 @@ const BlogPostCard6: React.FC<{
       <article className="w-full border-b border-gray-100 pb-10 last:mb-0 last:border-0 last:pb-0">
         {/* Image Placeholder - exact sizing */}
         <div className="mb-5 h-[200px] w-full overflow-hidden rounded-[15px] bg-[#D9D9D9] md:h-[260px]">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
             width={1000}

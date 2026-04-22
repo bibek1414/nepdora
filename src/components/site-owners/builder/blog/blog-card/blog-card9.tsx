@@ -88,7 +88,8 @@ export const BlogCard9: React.FC<BlogCard9Props> = ({
       <ContentLink>
         {/* Image - flush to top, no padding */}
         <div className="relative aspect-16/10 overflow-hidden bg-gray-100">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={blogImage}
             alt={blog.thumbnail_image_alt_description || blog.title}
             fill

@@ -12,7 +12,8 @@ export default function AISection() {
           {/* Left side - Image FIXED */}
           <AISectionImageWrapper>
             <div className="relative aspect-3/2 w-full">
-              <Image unoptimized
+              <Image
+                unoptimized
                 src="/images/image3.avif"
                 alt="AI Website Builder Interface with automated design tools"
                 fill

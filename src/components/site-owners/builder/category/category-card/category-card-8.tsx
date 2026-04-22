@@ -82,7 +82,8 @@ export const CategoryCard8: React.FC<CategoryCard8Props> = ({
 
       {/* Image Container */}
       <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-white/40 transition-transform duration-500 group-hover:rotate-3">
-        <Image unoptimized
+        <Image
+          unoptimized
           src={categoryImage}
           alt={category.name}
           fill

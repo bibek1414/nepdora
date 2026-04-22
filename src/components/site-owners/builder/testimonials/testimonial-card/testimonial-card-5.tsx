@@ -68,7 +68,8 @@ export const TestimonialCard5: React.FC<TestimonialCard5Props> = ({
               >
                 {/* Profile Image */}
                 <div className="relative mb-4 h-24 w-24">
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src={testimonial.image || "/images/default-avatar.png"}
                     alt={testimonial.name}
                     fill

@@ -486,9 +486,8 @@ export const COMPONENT_REGISTRY: {
     displayName: "Education",
     category: "dynamic",
     getDefaultData: variant =>
-      DEFAULT_EDUCATION_MAP[
-        variant as keyof typeof DEFAULT_EDUCATION_MAP
-      ] || DEFAULT_EDUCATION_MAP["education-1"],
+      DEFAULT_EDUCATION_MAP[variant as keyof typeof DEFAULT_EDUCATION_MAP] ||
+      DEFAULT_EDUCATION_MAP["education-1"],
     component: EducationComponent,
   },
 };

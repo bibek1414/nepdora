@@ -236,7 +236,8 @@ const ProductItem = ({
               {discountPercentage}% OFF
             </div>
           )}
-          <Image unoptimized
+          <Image
+            unoptimized
             src={productImage}
             alt={product.thumbnail_alt_description || product.name}
             fill

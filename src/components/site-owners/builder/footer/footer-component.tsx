@@ -11,7 +11,6 @@ import { FooterStyle8 } from "./footer-style8";
 import { FooterStyle9 } from "./footer-style9";
 import { FooterStyle10 } from "./footer-style10";
 
-
 import { FooterEditorDialog } from "./footer-editor-dialog";
 import {
   Footer as FooterType,

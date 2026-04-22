@@ -84,16 +84,26 @@ export const PortfolioDetailsComponent: React.FC<
   const renderContent = () => {
     switch (style) {
       case "style-5":
-        return <Style5 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
+        return (
+          <Style5 slug={slug} siteUser={siteUser} isEditable={isEditable} />
+        );
       case "style-4":
-        return <Style4 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
+        return (
+          <Style4 slug={slug} siteUser={siteUser} isEditable={isEditable} />
+        );
       case "style-3":
-        return <Style3 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
+        return (
+          <Style3 slug={slug} siteUser={siteUser} isEditable={isEditable} />
+        );
       case "style-2":
-        return <Style2 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
+        return (
+          <Style2 slug={slug} siteUser={siteUser} isEditable={isEditable} />
+        );
       case "style-1":
       default:
-        return <Style1 slug={slug} siteUser={siteUser} isEditable={isEditable} />;
+        return (
+          <Style1 slug={slug} siteUser={siteUser} isEditable={isEditable} />
+        );
     }
   };
 

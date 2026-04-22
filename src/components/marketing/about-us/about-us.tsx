@@ -34,7 +34,8 @@ export default function AboutUs() {
               {/* Right Visual */}
               <div className="relative">
                 <div className="relative z-10">
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src="/images/about2.avif"
                     alt="Online success illustration"
                     width={600}
@@ -54,7 +55,8 @@ export default function AboutUs() {
               {/* Left Visual */}
               <div className="relative order-2 lg:order-1">
                 <div className="relative z-10">
-                  <Image unoptimized
+                  <Image
+                    unoptimized
                     src="/images/about3.avif"
                     alt="Global recognition illustration"
                     width={600}

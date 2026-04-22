@@ -414,7 +414,8 @@ const PhotoCard = ({
           />
         )}
         <div className="relative h-full w-full">
-          <Image unoptimized
+          <Image
+            unoptimized
             src={getImageUrl(image.image)}
             alt={image.image_alt_description || "Gallery image"}
             fill

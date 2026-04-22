@@ -22,7 +22,8 @@ export function HeroScrollDemo() {
           </>
         }
       >
-        <Image unoptimized
+        <Image
+          unoptimized
           src="/images/image3.avif"
           alt="hero"
           height={720}

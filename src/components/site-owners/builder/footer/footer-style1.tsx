@@ -166,7 +166,6 @@ export function FooterStyle1({
               )}
             </div>
 
-
             {/* Social links */}
             <div className="flex items-center space-x-4">
               {data.socialLinks.map(social => (

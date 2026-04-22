@@ -160,7 +160,8 @@ export const EditableImage: React.FC<EditableImageProps> = ({
           </div>
         ) : (
           // Actual Image
-          <Image unoptimized
+          <Image
+            unoptimized
             src={
               optimizedSrc ||
               "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80"
