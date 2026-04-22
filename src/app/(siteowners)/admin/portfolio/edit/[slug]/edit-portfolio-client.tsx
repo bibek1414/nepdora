@@ -50,7 +50,7 @@ export default function EditPortfolioClient() {
     if (data.title !== portfolio.title) portfolioData.title = data.title;
     if (data.content !== portfolio.content)
       portfolioData.content = data.content;
-    if (data.category !== portfolio.category.id)
+    if (data.category !== portfolio.category?.id)
       portfolioData.category = data.category;
 
     const currentTagIds = portfolio.tags.map(t => t.id).sort();
