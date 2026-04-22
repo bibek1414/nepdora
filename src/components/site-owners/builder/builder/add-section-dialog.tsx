@@ -917,6 +917,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/contact/contact5.png",
         description: "Premium detailed contact layout",
       },
+      {
+        id: "contact-6",
+        name: "Contact Form 6 (Editorial CTA)",
+        image: "/images/site-owners/contact/contact6.png",
+        description: "Modern editorial contact layout with CTA info",
+      },
     ],
     testimonials: [
       {
@@ -969,7 +975,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "testimonial-10",
         name: "Testimonial Style 10 (High Contrast Grid)",
         image: "/images/site-owners/testimonial/testimonial-10.png",
-        description: "Premium high-contrast grid with eyebrow-line and glass cards",
+        description:
+          "Premium high-contrast grid with eyebrow-line and glass cards",
       },
     ],
     team: [
@@ -1149,9 +1156,15 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/faq/faq-6.png", // Using placeholder pattern
       },
       {
+        id: "faq-7",
+        name: "FAQ Style 7 (Editorial Grid)",
+        image: "/images/site-owners/faq/faq-7.png",
+        description: "Premium two-column editorial FAQ layout",
+      },
+      {
         id: "faq-12",
-        name: "FAQ Style 12 (Premium Accordion)",
-        image: "/images/site-owners/faq/faq-12.png",
+        name: "FAQ Style 8 (Premium Accordion)",
+        image: "/images/site-owners/faq/faq-8.png",
         description:
           "Modern two-column FAQ with editorial typography and animated accordion",
       },
@@ -1193,7 +1206,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "portfolio-7",
         name: "Portfolio Style 7 (Editorial Grid)",
         image: "/images/site-owners/portfolio/portfolio7.png",
-        description: "Premium editorial grid with gradient fallbacks and card hovers",
+        description:
+          "Premium editorial grid with gradient fallbacks and card hovers",
       },
     ],
     newsletter: [

@@ -17,6 +17,7 @@ export interface FAQData {
 
   title: string;
   subtitle?: string;
+  description?: string;
   order?: number;
 
   // Additional props for FAQ Card 6 & 9
@@ -65,6 +66,14 @@ export const defaultFAQData6: FAQData = {
   titleItalic: "The Most",
 };
 
+export const defaultFAQData7: FAQData = {
+  component_type: "faq",
+  style: "faq-7",
+  title: "Honest answers to the questions we hear most.",
+  subtitle: "Common questions",
+  description: "Don’t see what you’re looking for? Send a note — we reply to everything.",
+};
+
 export const defaultFAQData12: FAQData = {
   component_type: "faq",
   style: "faq-12",
@@ -81,7 +90,7 @@ export const DEFAULT_FAQ_MAP: Record<FAQData["style"], FAQData> = {
   "faq-4": { ...defaultFAQData, style: "faq-4" },
   "faq-5": { ...defaultFAQData, style: "faq-5" },
   "faq-6": { ...defaultFAQData6, style: "faq-6" },
-  "faq-7": { ...defaultFAQData, style: "faq-7" },
+  "faq-7": { ...defaultFAQData7, style: "faq-7" },
   "faq-8": { ...defaultFAQData, style: "faq-8" },
   "faq-9": { ...defaultFAQData, style: "faq-9" },
   "faq-10": { ...defaultFAQData, style: "faq-10" },

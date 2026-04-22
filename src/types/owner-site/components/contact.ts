@@ -14,7 +14,13 @@ export interface ContactLocationGalleryItem {
 export interface ContactData {
   component_id?: string;
   component_type: "contact";
-  style: "contact-1" | "contact-2" | "contact-3" | "contact-4" | "contact-5";
+  style:
+    | "contact-1"
+    | "contact-2"
+    | "contact-3"
+    | "contact-4"
+    | "contact-5"
+    | "contact-6";
   title: string;
   subtitle?: string;
   description?: string;
@@ -178,4 +184,12 @@ export const DEFAULT_CONTACT_MAP: Record<ContactData["style"], ContactData> = {
   "contact-3": defaultContactData3,
   "contact-4": defaultContactData4,
   "contact-5": defaultContactData5,
+  "contact-6": {
+    ...defaultContactData5,
+    style: "contact-6",
+    title: "Have something worth getting right? Let’s talk.",
+    subtitle: "Get in touch",
+    description:
+      "A short note is the best way to start a conversation. We respond to every inquiry within two working days.",
+  },
 };
