@@ -125,7 +125,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
         </nav>
 
         <div className="mx-auto mb-8 max-w-4xl text-center">
-          {portfolio.category && (
+          {portfolio.category?.name && (
             <div className="text-primary mb-4 flex items-center justify-center text-sm font-semibold tracking-wider uppercase">
               <Folder className="mr-2 h-4 w-4" />
               {portfolio.category.name}

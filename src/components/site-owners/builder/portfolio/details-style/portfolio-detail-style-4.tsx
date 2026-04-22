@@ -149,7 +149,7 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
             className="flex flex-wrap items-center gap-6 text-gray-500"
             style={{ fontFamily: theme?.fonts?.body }}
           >
-            {portfolio.category && (
+            {portfolio.category?.name && (
               <span className="flex items-center text-base font-medium">
                 <Tag className="mr-2 h-4 w-4" />
                 {portfolio.category.name}

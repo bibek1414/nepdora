@@ -372,14 +372,26 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "others-24",
         name: "Others Style 24 (Resume Profile)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/others/others24.png",
         description: "Resume profile and header section",
       },
       {
         id: "others-25",
         name: "Others Style 25 (Resume with Languages)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/others/others25.png",
         description: "Resume profile with a dedicated languages section",
+      },
+      {
+        id: "others-26",
+        name: "Others Style 26 (Senior Team & Process)",
+        image: "/images/site-owners/how-it-works/team-collab.jpg",
+        description: "Premium editorial section for team and working process",
+      },
+      {
+        id: "others-27",
+        name: "Others Style 27 (Four-Step Rhythm)",
+        image: "/images/site-owners/others/others27.png",
+        description: "Premium process grid with card-based layout",
       },
     ],
     experience: [
@@ -868,13 +880,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "services-8",
         name: "Services Style 8 (2-Column Grid)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/services/services-8.png",
         description: "Minimalist two-column grid with editorial typography",
       },
       {
         id: "services-9",
         name: "Services Style 9 (Hairline Grid)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/services/services-9.png",
         description: "Premium editorial layout with a border-grid design",
       },
     ],
@@ -952,6 +964,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Testimonials Style 9 (Full-screen)",
         image: "/images/site-owners/testimonials/testimonial9.png",
         description: "Immersive full-screen testimonial experience",
+      },
+      {
+        id: "testimonial-10",
+        name: "Testimonial Style 10 (High Contrast Grid)",
+        image: "/images/site-owners/testimonial/testimonial-10.png",
+        description: "Premium high-contrast grid with eyebrow-line and glass cards",
       },
     ],
     team: [
@@ -1094,7 +1112,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "blog-9",
         name: "Blog Style 9 (Editorial Grid)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/blogs/blog9.png",
         description:
           "Sophisticated editorial blog list with interactive hover states",
       },
@@ -1171,6 +1189,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/portfolio/portfolio-6.png",
         description: "Clean, high-end minimalist project grid",
       },
+      {
+        id: "portfolio-7",
+        name: "Portfolio Style 7 (Editorial Grid)",
+        image: "/images/site-owners/portfolio/portfolio7.png",
+        description: "Premium editorial grid with gradient fallbacks and card hovers",
+      },
     ],
     newsletter: [
       {
@@ -1203,7 +1227,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "skills-style-3",
         name: "Skills Style 3 (Resume)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/skills/skills-3.png",
       },
     ],
     videos: [
@@ -1396,7 +1420,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "footer-10",
         name: "Footer Style 10 (Editorial)",
-        image: "/images/site-owners/placeholder.png",
+        image: "/images/site-owners/footers/footer10.png",
         description: "Premium editorial footer with branding and social links",
       },
     ],

@@ -149,22 +149,21 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
         {/* Header Section */}
         <div className="mb-20 grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-5">
-            <EditableText
-              value={data.eyebrow || "What we do"}
-              onChange={handleTextUpdate("eyebrow")}
-              isEditable={isEditable}
-              as="span"
-              className="text-primary/70 block text-sm font-semibold tracking-widest"
-              style={{
-                fontFamily: theme?.fonts?.body,
-                color: theme?.colors?.primary,
-              }}
-            />
+            <div className="flex items-center gap-4">
+              <div className="h-px w-10 bg-gray-300" />
+              <EditableText
+                value={data.eyebrow || "What we do"}
+                onChange={handleTextUpdate("eyebrow")}
+                isEditable={isEditable}
+                as="span"
+                className="text-sm font-semibold tracking-widest"
+              />
+            </div>
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
               isEditable={isEditable}
-              as="h2"
+              as="title"
               className="text-4xl leading-[1.1] font-bold tracking-tight text-balance md:text-6xl"
               style={{ fontFamily: theme?.fonts?.heading }}
             />
@@ -226,12 +225,7 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
                 onUpdate?.({ buttonText: newText, buttonLink: newHref })
               }
               isEditable={isEditable}
-              className="group inline-flex h-12 items-center gap-2 rounded-full px-8 py-4 text-sm font-semibold transition-all hover:gap-3"
-              style={{
-                backgroundColor: "white",
-                border: `1px solid ${theme?.colors?.primary || "#000"}`,
-                color: theme?.colors?.primary || "#000",
-              }}
+              className="group inline-flex h-12 items-center gap-2 rounded-full border px-8 py-4 text-sm font-semibold transition-all hover:gap-3"
             >
               {data.buttonText || "Explore all services"}
               <ChevronRight className="h-4 w-4 transition-transform" />

@@ -2,6 +2,8 @@ export const getDefaultFontSize = (tag: string): string => {
   switch (tag) {
     case "title":
       return "3rem"; // ~40px
+    case "label":
+      return "2rem"; // 16px
     case "h1":
       return "2.5rem"; // ~40px
     case "h2":

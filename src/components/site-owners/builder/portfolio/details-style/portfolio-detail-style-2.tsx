@@ -168,7 +168,7 @@ export const PortfolioDetail2: React.FC<{
               </h3>
 
               <div className="space-y-6">
-                {portfolio.category && (
+                {portfolio.category?.name && (
                   <div>
                     <p className="text-muted-foreground mb-1 text-xs font-bold tracking-widest uppercase">
                       Category

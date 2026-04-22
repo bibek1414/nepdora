@@ -6,7 +6,8 @@ export interface PortfolioData {
     | "portfolio-3"
     | "portfolio-4"
     | "portfolio-5"
-    | "portfolio-6";
+    | "portfolio-6"
+    | "portfolio-7";
   title: string;
   subtitle?: string;
   heading?: string;
@@ -53,5 +54,12 @@ export const DEFAULT_PORTFOLIO_MAP: Record<
       "Four recent projects I'm proud of. Each one started with a long conversation and ended with something quietly useful.",
     buttonText: "All work",
     buttonLink: "#",
+  },
+  "portfolio-7": {
+    style: "portfolio-7",
+    title: "Selected work",
+    heading: "Recent engagements we’re proud of.",
+    buttonText: "All work",
+    buttonLink: "/work",
   },
 };

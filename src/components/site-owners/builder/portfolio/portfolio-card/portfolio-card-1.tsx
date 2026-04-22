@@ -114,7 +114,7 @@ export const PortfolioCard1: React.FC<PortfolioCard1Props> = ({
         {/* Content */}
         <div className="p-6">
           {/* Category Badge */}
-          {portfolio.category && (
+          {portfolio.category?.name && (
             <Badge
               className="mb-3"
               style={{

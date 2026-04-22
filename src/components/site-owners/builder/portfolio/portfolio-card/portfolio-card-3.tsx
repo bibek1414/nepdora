@@ -182,7 +182,7 @@ export const PortfolioCard3: React.FC<PortfolioCard3Props> = ({
                       color: theme.colors.text,
                     }}
                   >
-                    {portfolio.category.name}
+                    {portfolio.category?.name}
                   </span>
                 </div>
               )}

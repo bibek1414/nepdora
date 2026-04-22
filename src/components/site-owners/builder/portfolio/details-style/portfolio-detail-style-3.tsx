@@ -98,7 +98,7 @@ export const PortfolioDetail3: React.FC<{
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
 
         <div className="relative z-10 container mx-auto mt-12 max-w-4xl px-4 text-center">
-          {portfolio.category && (
+          {portfolio.category?.name && (
             <div className="mb-6 flex justify-center gap-2">
               <Badge className="bg-primary hover:bg-primary border-none px-4 py-1.5 font-bold tracking-widest uppercase shadow-xl">
                 {portfolio.category.name}

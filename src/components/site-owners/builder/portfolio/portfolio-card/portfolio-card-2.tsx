@@ -90,7 +90,7 @@ export const PortfolioCard2: React.FC<PortfolioCard2Props> = ({
         <div className="flex flex-1 flex-col justify-between gap-3 sm:gap-4">
           <div>
             {/* Category */}
-            {portfolio.category && (
+            {portfolio.category?.name && (
               <Badge
                 className="mb-2 text-xs sm:mb-3 sm:text-sm"
                 style={{

@@ -158,7 +158,9 @@ export type OthersData =
   | OthersTemplate22Data
   | OthersTemplate23Data
   | OthersTemplate24Data
-  | OthersTemplate25Data;
+  | OthersTemplate25Data
+  | OthersTemplate26Data
+  | OthersTemplate27Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -382,6 +384,33 @@ export interface OthersTemplate25Data {
   languageTitle: string;
   languages: string;
   socials?: OthersTemplate24Social[];
+}
+
+export interface OthersTemplate26Data {
+  template: "others-26";
+  eyebrow: string;
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+  stats: OthersStatistic[];
+}
+
+export interface OthersTemplate27Item {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface OthersTemplate27Data {
+  template: "others-27";
+  eyebrow: string;
+  title: string;
+  description: string;
+  items: OthersTemplate27Item[];
 }
 
 // Component and API interfaces
@@ -1449,6 +1478,62 @@ export const defaultOthersTemplate25Data: OthersTemplate25Data = {
   languages: "English (native), Portuguese (fluent), Spanish (conversational).",
 };
 
+export const defaultOthersTemplate26Data: OthersTemplate26Data = {
+  template: "others-26",
+  eyebrow: "How we work",
+  title: "A small senior team, deeply involved from the first call.",
+  description:
+    "Every project is led by a partner and staffed by no more than four people. You will not meet a strategist who is later replaced by an account manager. The people who pitch the work are the people who do the work.",
+  image: {
+    url: "/images/site-owners/how-it-works/team-collab.jpg",
+    alt: "A team collaborating around a table",
+  },
+  stats: [
+    { id: "stat-1", value: "10+", label: "Years of experience" },
+    { id: "stat-2", value: "4", label: "Max team size" },
+    { id: "stat-3", value: "100%", label: "Partner involvement" },
+    { id: "stat-4", value: "24h", label: "Response time" },
+  ],
+};
+
+export const defaultOthersTemplate27Data: OthersTemplate27Data = {
+  template: "others-27",
+  eyebrow: "Our process",
+  title: "A four-step rhythm we’ve refined over twelve years.",
+  description:
+    "Every engagement is tailored, but the underlying rhythm is the same: listen carefully, frame the problem, design the solution, and ship something the team can run with — long after we’ve gone.",
+  items: [
+    {
+      id: "step-1",
+      number: "01",
+      title: "Discover",
+      description:
+        "Stakeholder and customer interviews, market scan and a thorough audit of what already exists.",
+    },
+    {
+      id: "step-2",
+      number: "02",
+      title: "Define",
+      description:
+        "We frame the opportunity, agree the strategy and write a brief that everyone can rally behind.",
+    },
+    {
+      id: "step-3",
+      number: "03",
+      title: "Design",
+      description:
+        "Concepts, systems and high-fidelity work, refined in weekly working sessions with your team.",
+    },
+    {
+      id: "step-4",
+      number: "04",
+      title: "Deliver",
+      description:
+        "We ship — with the engineering, training and post-launch support to make it stick.",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -1476,6 +1561,8 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-23": defaultOthersTemplate23Data,
   "others-24": defaultOthersTemplate24Data,
   "others-25": defaultOthersTemplate25Data,
+  "others-26": defaultOthersTemplate26Data,
+  "others-27": defaultOthersTemplate27Data,
 };
 
 // Type guards
@@ -1557,3 +1644,11 @@ export const isOthersTemplate24 = (
 export const isOthersTemplate25 = (
   data: OthersData
 ): data is OthersTemplate25Data => data.template === "others-25";
+
+export const isOthersTemplate26 = (
+  data: OthersData
+): data is OthersTemplate26Data => data.template === "others-26";
+
+export const isOthersTemplate27 = (
+  data: OthersData
+): data is OthersTemplate27Data => data.template === "others-27";

@@ -17,7 +17,7 @@ export interface Portfolio {
   content: string;
   thumbnail_image: string | null;
   thumbnail_image_alt_description: string | null;
-  category: PortfolioCategory;
+  category: PortfolioCategory | null;
   tags: PortfolioTag[];
   project_url: string | null;
   github_url: string | null;
