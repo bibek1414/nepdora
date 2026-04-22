@@ -11,13 +11,16 @@ interface ContactStyleProps {
   data: ContactData;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<ContactData>) => void;
+  siteUser?: string;
 }
 
 export const ContactStyle5: React.FC<ContactStyleProps> = ({
   data,
   isEditable = false,
   onUpdate,
+  siteUser,
 }) => {
+
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
 
@@ -56,7 +59,9 @@ export const ContactStyle5: React.FC<ContactStyleProps> = ({
         isEditable={isEditable}
         onUpdate={onUpdate}
         theme={theme}
+        siteUser={siteUser}
       />
+
     </div>
   );
 };

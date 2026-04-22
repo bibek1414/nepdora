@@ -7,13 +7,15 @@ import { Facebook, Instagram, Linkedin, Twitter, Youtube, Mail, Phone, MapPin } 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
+import { useSubmitContactForm } from "@/hooks/owner-site/admin/use-contact";
 
 interface ContactForm5Props {
   data: ContactData;
   isEditable?: boolean;
   onUpdate?: (updatedData: Partial<ContactData>) => void;
   theme?: any;
+  siteUser?: string;
 }
 
 export const ContactForm5: React.FC<ContactForm5Props> = ({
@@ -21,8 +23,37 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
   isEditable = false,
   onUpdate,
   theme,
+  siteUser,
 }) => {
   const { data: siteConfig, isLoading } = useSiteConfig();
+  const [name, setName] = React.useState("");
+  const [emailValue, setEmailValue] = React.useState("");
+  const [company, setCompany] = React.useState("");
+  const [message, setMessage] = React.useState("");
+
+  const submitMutation = useSubmitContactForm(siteUser || "");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !emailValue || !message || submitMutation.isPending) return;
+
+    const finalMessage = company 
+      ? `Company: ${company}\n\n${message}`
+      : message;
+
+    submitMutation.mutate({
+      name,
+      email: emailValue,
+      message: finalMessage,
+    }, {
+      onSuccess: () => {
+        setName("");
+        setEmailValue("");
+        setCompany("");
+        setMessage("");
+      }
+    });
+  };
 
   const email = siteConfig?.email || data.contact_info?.email || "hello@example.com";
   const phone = siteConfig?.phone || data.contact_info?.phone || "+1 234 567 890";
@@ -50,20 +81,27 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
     <aside className="space-y-8 border-t border-border pt-8 md:border-l md:border-t-0 md:pl-10 md:pt-0 animate-in fade-in slide-in-from-right-8 duration-1000 delay-200">
       <section className="container mx-auto grid max-w-4xl gap-12 px-6 py-12 md:grid-cols-[1fr_280px]">
 
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
               <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Your name</label>
               <Input 
                 placeholder="Name" 
                 className="h-12 rounded-lg border-border bg-background px-4 text-sm focus:border-primary"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
               />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Email</label>
               <Input 
                 placeholder="Email" 
+                type="email"
                 className="h-12 rounded-lg border-border bg-background px-4 text-sm focus:border-primary"
+                value={emailValue}
+                onChange={(e) => setEmailValue(e.target.value)}
+                required
               />
             </div>
           </div>
@@ -72,6 +110,8 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
             <Input 
               placeholder="Company" 
               className="h-12 rounded-lg border-border bg-background px-4 text-sm focus:border-primary"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -79,15 +119,26 @@ export const ContactForm5: React.FC<ContactForm5Props> = ({
             <Textarea 
               placeholder="Tell me a bit about your project." 
               className="min-h-[160px] resize-none rounded-lg border-border bg-background p-4 text-sm focus:border-primary"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
             />
           </div>
           <Button 
-            className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-foreground/90 h-auto"
+            type="submit"
+            disabled={submitMutation.isPending}
+            className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-foreground/90 h-auto disabled:opacity-50"
           >
-            Send message
-            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            {submitMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                Send message
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </>
+            )}
           </Button>
-        </div>
+        </form>
       <div className="space-y-8">
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Email</p>
