@@ -127,7 +127,19 @@ export const validateFile = (
 ): { valid: boolean; error?: string } => {
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
   const MIN_FILE_SIZE = 1 * 1024 * 1024; // 1MB in bytes
-  const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  const ALLOWED_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/avif",
+    "image/gif",
+    "image/svg+xml",
+    "image/bmp",
+    "image/tiff",
+    "image/heic",
+    "image/heif",
+  ];
 
   if (file.size > MAX_FILE_SIZE) {
     return {
@@ -139,7 +151,7 @@ export const validateFile = (
   if (!ALLOWED_TYPES.includes(file.type)) {
     return {
       valid: false,
-      error: "Invalid file type. Please upload a JPEG, PNG, or WebP image",
+      error: "Invalid file type. Please upload a valid image file (JPEG, PNG, WebP, AVIF, etc.)",
     };
   }
 

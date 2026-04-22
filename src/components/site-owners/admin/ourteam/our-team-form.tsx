@@ -142,7 +142,7 @@ export const TeamMemberDialog: React.FC<TeamMemberDialogProps> = ({
     }
 
     const fileToValidate =
-      files instanceof File ? files : Array.isArray(files) ? files[0] : null;
+      files instanceof Blob ? files : Array.isArray(files) ? files[0] : null;
 
     if (!fileToValidate) {
       // If it's not a file and not a string, and not null, something is wrong

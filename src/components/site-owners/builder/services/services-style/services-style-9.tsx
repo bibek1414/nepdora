@@ -5,7 +5,17 @@ import { motion } from "framer-motion";
 import { useServices } from "@/hooks/owner-site/admin/use-services";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Briefcase, ChevronRight, Layout, Palette, Code, BarChart, Rocket, Globe } from "lucide-react";
+import {
+  AlertCircle,
+  Briefcase,
+  ChevronRight,
+  Layout,
+  Palette,
+  Code,
+  BarChart,
+  Rocket,
+  Globe,
+} from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { EditableLink } from "@/components/ui/editable-link";
 import { ServicesData } from "@/types/owner-site/components/services";
@@ -39,8 +49,14 @@ const getIcon = (title: string) => {
   const lowerTitle = title.toLowerCase();
   if (lowerTitle.includes("strategy")) return ICON_MAP.strategy;
   if (lowerTitle.includes("design")) return ICON_MAP.design;
-  if (lowerTitle.includes("engineering") || lowerTitle.includes("development") || lowerTitle.includes("code")) return ICON_MAP.engineering;
-  if (lowerTitle.includes("growth") || lowerTitle.includes("marketing")) return ICON_MAP.growth;
+  if (
+    lowerTitle.includes("engineering") ||
+    lowerTitle.includes("development") ||
+    lowerTitle.includes("code")
+  )
+    return ICON_MAP.engineering;
+  if (lowerTitle.includes("growth") || lowerTitle.includes("marketing"))
+    return ICON_MAP.growth;
   if (lowerTitle.includes("branding")) return ICON_MAP.branding;
   if (lowerTitle.includes("web")) return ICON_MAP.web;
   return ICON_MAP.default;
@@ -59,7 +75,9 @@ const ServiceCard: React.FC<{
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");
-    const basePath = isPreviewMode ? "/service-details-draft" : "/service-details";
+    const basePath = isPreviewMode
+      ? "/service-details-draft"
+      : "/service-details";
     return generateLinkHref(`${basePath}/${service.slug}`, siteUser, pathname);
   };
 
@@ -77,32 +95,23 @@ const ServiceCard: React.FC<{
       onMouseEnter={() => !isEditable && setIsHovered(true)}
       onMouseLeave={() => !isEditable && setIsHovered(false)}
       onClick={handleActivate}
-      className={`group bg-white p-10 transition-colors duration-300 h-full flex flex-col ${isEditable ? "cursor-default" : "cursor-pointer"}`}
-      style={{
-        backgroundColor: isHovered ? hexToRgba(theme?.colors?.primary || "#000", 0.03) : "white",
-      }}
+      className={`group flex h-full flex-col bg-white p-10 transition-colors duration-300 ${isEditable ? "cursor-default" : "cursor-pointer hover:-translate-y-1"}`}
     >
-      <div className="mb-8 relative">
-         <span 
-          className="inline-flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300"
-          style={{
-            backgroundColor: isHovered ? theme?.colors?.primary : hexToRgba(theme?.colors?.secondary || "#f1f5f9", 0.1),
-            color: isHovered ? theme?.colors?.primaryForeground : theme?.colors?.primary,
-          }}
-        >
+      <div className="relative mb-8">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-300">
           <Icon className="h-6 w-6" />
         </span>
       </div>
-      
-      <h3 
-        className="text-2xl font-semibold tracking-tight mb-4"
+
+      <h3
+        className="mb-4 text-2xl font-semibold tracking-tight"
         style={{ fontFamily: theme?.fonts?.heading }}
       >
         {service.title}
       </h3>
-      
-      <p 
-        className="text-gray-600 leading-relaxed text-balance"
+
+      <p
+        className="leading-relaxed text-balance text-gray-600"
         style={{ fontFamily: theme?.fonts?.body }}
       >
         {service.description}
@@ -138,62 +147,67 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
     <section className="bg-white">
       <div className="mx-auto max-w-7xl px-8 py-24 md:py-32">
         {/* Header Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-end">
-          <div className="lg:col-span-5 space-y-6">
+        <div className="mb-20 grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
+          <div className="space-y-6 lg:col-span-5">
             <EditableText
               value={data.eyebrow || "What we do"}
               onChange={handleTextUpdate("eyebrow")}
               isEditable={isEditable}
               as="span"
-              className="text-sm font-semibold tracking-widest text-primary/70 block"
-              style={{ fontFamily: theme?.fonts?.body, color: theme?.colors?.primary }}
+              className="text-primary/70 block text-sm font-semibold tracking-widest"
+              style={{
+                fontFamily: theme?.fonts?.body,
+                color: theme?.colors?.primary,
+              }}
             />
             <EditableText
               value={data.title}
               onChange={handleTextUpdate("title")}
               isEditable={isEditable}
               as="h2"
-              className="text-4xl md:text-6xl font-bold leading-[1.1] tracking-tight text-balance"
+              className="text-4xl leading-[1.1] font-bold tracking-tight text-balance md:text-6xl"
               style={{ fontFamily: theme?.fonts?.heading }}
             />
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
-             <EditableText
+            <EditableText
               value={data.subtitle || ""}
               onChange={handleTextUpdate("subtitle")}
               isEditable={isEditable}
               as="p"
-              className="text-xl leading-relaxed text-gray-600 text-pretty"
+              className="text-xl leading-relaxed text-pretty text-gray-600"
               style={{ fontFamily: theme?.fonts?.body }}
             />
           </div>
         </div>
 
         {/* Grid Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-gray-200 bg-gray-200 md:grid-cols-2 lg:grid-cols-3">
           {isLoading ? (
             Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white p-10 h-[350px]">
-                <Skeleton className="h-12 w-12 rounded-full mb-8" />
-                <Skeleton className="h-8 w-3/4 mb-4" />
-                <Skeleton className="h-4 w-full mb-2" />
+              <div key={i} className="h-[350px] bg-white p-10">
+                <Skeleton className="mb-8 h-12 w-12 rounded-full" />
+                <Skeleton className="mb-4 h-8 w-3/4" />
+                <Skeleton className="mb-2 h-4 w-full" />
                 <Skeleton className="h-4 w-5/6" />
               </div>
             ))
           ) : error ? (
-            <div className="col-span-full p-12 bg-white">
+            <div className="col-span-full bg-white p-12">
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Error Loading Services</AlertTitle>
-                <AlertDescription>Failed to load services. Please try again.</AlertDescription>
+                <AlertDescription>
+                  Failed to load services. Please try again.
+                </AlertDescription>
               </Alert>
             </div>
           ) : (
-            services.map((service) => (
-              <ServiceCard 
-                key={service.id} 
-                service={service} 
-                theme={theme} 
+            services.map(service => (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                theme={theme}
                 isEditable={isEditable}
                 onServiceClick={onServiceClick}
                 siteUser={siteUser}
@@ -204,7 +218,7 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
 
         {/* Footer Action */}
         {!isLoading && !error && services.length > 0 && (
-          <div className="mt-16 flex justify-center relative z-30">
+          <div className="relative z-30 mt-16 flex justify-center">
             <EditableLink
               text={data.buttonText || "Explore all services"}
               href={data.buttonLink || "/services"}
@@ -212,7 +226,7 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
                 onUpdate?.({ buttonText: newText, buttonLink: newHref })
               }
               isEditable={isEditable}
-              className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-sm font-semibold transition-all hover:gap-3 group"
+              className="group inline-flex h-12 items-center gap-2 rounded-full px-8 py-4 text-sm font-semibold transition-all hover:gap-3"
               style={{
                 backgroundColor: "white",
                 border: `1px solid ${theme?.colors?.primary || "#000"}`,

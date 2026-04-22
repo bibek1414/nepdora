@@ -51,13 +51,13 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
                 as="span"
                 onChange={handleTextUpdate("eyebrow")}
                 isEditable={isEditable}
-                className="inline-block text-sm font-medium tracking-wider text-gray-500"
+                className="text-sm font-medium"
                 style={{ fontFamily: theme?.fonts?.body }}
               />
             </div>
             <EditableText
               value={data.title}
-              as="h1"
+              as="title"
               onChange={handleTextUpdate("title")}
               isEditable={isEditable}
               className="font-display text-5xl leading-[0.98] tracking-tight text-balance text-gray-950 sm:text-6xl md:text-7xl"
@@ -69,7 +69,7 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
               as="p"
               onChange={handleTextUpdate("description")}
               isEditable={isEditable}
-              className="mt-8 max-w-xl text-lg leading-relaxed text-pretty text-gray-600"
+              className="mt-4 max-w-xl"
               style={{ fontFamily: theme?.fonts?.body }}
               multiline
             />
@@ -86,20 +86,20 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
                     isEditable={isEditable}
                     siteUser={siteUser}
                     className={cn(
-                      "inline-flex h-12 cursor-pointer items-center justify-center rounded-lg px-6 py-3 text-sm font-medium transition-all duration-200",
+                      "inline-flex h-12 cursor-pointer items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-all duration-200",
                       button.variant === "primary"
                         ? "shadow-sm hover:shadow-md"
-                        : "border border-gray-100 hover:bg-gray-50/50"
+                        : "border border-gray-300 hover:bg-gray-50/50"
                     )}
                     style={{
                       backgroundColor:
                         button.variant === "primary"
                           ? theme?.colors?.primary
-                          : "black",
+                          : "white",
                       color:
                         button.variant === "primary"
                           ? theme?.colors?.primaryForeground
-                          : "white",
+                          : " black",
                     }}
                   >
                     {button.text}
@@ -125,10 +125,10 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
                 <div key={feature.id}>
                   <EditableText
                     value={feature.title}
-                    as="p"
+                    as="h4"
                     onChange={handleFeatureUpdate(feature.id, "title")}
                     isEditable={isEditable}
-                    className="font-display text-2xl"
+                    className="text-2xl"
                     style={{ fontFamily: theme?.fonts?.heading }}
                   />
                   <EditableText
