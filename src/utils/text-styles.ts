@@ -26,12 +26,14 @@ export const getDefaultFontSize = (tag: string): string => {
 
 export const getDefaultLineHeight = (
   tag: string,
-  fontSize?: string
+  fontSize?: string | number
 ): string => {
   // If fontSize is provided, calculate dynamic line height based on size
-  if (fontSize) {
+  if (fontSize !== undefined) {
     let sizePx = 16;
-    if (fontSize.includes("rem")) {
+    if (typeof fontSize === "number") {
+      sizePx = fontSize;
+    } else if (fontSize.includes("rem")) {
       sizePx = parseFloat(fontSize) * 16;
     } else if (fontSize.includes("px")) {
       sizePx = parseFloat(fontSize);
