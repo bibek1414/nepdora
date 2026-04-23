@@ -73,12 +73,13 @@ export const useBuilderLogic = <T extends Record<string, any>>(
   );
 
   const handleLinkUpdate = useCallback(
-    (textField: keyof T, hrefField: keyof T) => (text: string, href: string) => {
-      const update = { [textField]: text, [hrefField]: href } as Partial<T>;
-      const updatedData = { ...data, ...update };
-      setData(updatedData);
-      onUpdate?.(update);
-    },
+    (textField: keyof T, hrefField: keyof T) =>
+      (text: string, href: string) => {
+        const update = { [textField]: text, [hrefField]: href } as Partial<T>;
+        const updatedData = { ...data, ...update };
+        setData(updatedData);
+        onUpdate?.(update);
+      },
     [data, onUpdate]
   );
 

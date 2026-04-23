@@ -112,7 +112,7 @@ const PortfoliosTable: React.FC<PortfoliosTableProps> = ({
                 </div>
               </TableCell>
               <TableCell className="px-6 py-4">
-                  {portfolio.category?.name || "N/A"}
+                {portfolio.category?.name || "N/A"}
               </TableCell>
               <TableCell className="px-6 py-4 whitespace-nowrap">
                 <span className="text-xs text-black/40">

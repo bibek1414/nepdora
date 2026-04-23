@@ -85,7 +85,8 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         // 1. It's a new File (user uploaded a new image)
         // 2. It's null but original had an image (image was removed)
         // 3. It's a different string URL (shouldn't happen in normal flow, but handle it)
-        const isNewFile = data.image instanceof File || data.image instanceof Blob;
+        const isNewFile =
+          data.image instanceof File || data.image instanceof Blob;
         const isRemoved = data.image === null && originalValues.image !== null;
         const isDifferentUrl =
           typeof data.image === "string" &&
@@ -109,7 +110,9 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         }
 
         // Check if we have a file upload
-        const hasFileUpload = changedFields.image instanceof File || changedFields.image instanceof Blob;
+        const hasFileUpload =
+          changedFields.image instanceof File ||
+          changedFields.image instanceof Blob;
 
         if (hasFileUpload) {
           // Use FormData if there's a file upload
@@ -121,7 +124,10 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           if (changedFields.description) {
             formData.append("description", changedFields.description);
           }
-          if (changedFields.image instanceof File || changedFields.image instanceof Blob) {
+          if (
+            changedFields.image instanceof File ||
+            changedFields.image instanceof Blob
+          ) {
             formData.append("image", changedFields.image);
           } else if (changedFields.image === null) {
             formData.append("image", "");
@@ -141,7 +147,8 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         }
       } else {
         // Creating new category - send all fields
-        const hasFileUpload = data.image instanceof File || data.image instanceof Blob;
+        const hasFileUpload =
+          data.image instanceof File || data.image instanceof Blob;
 
         if (hasFileUpload) {
           const formData = new FormData();

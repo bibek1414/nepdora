@@ -255,7 +255,10 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     );
   };
 
-  const handleVariantImageChange = (variantId: string, file: File | Blob | null) => {
+  const handleVariantImageChange = (
+    variantId: string,
+    file: File | Blob | null
+  ) => {
     onVariantsChange(
       variants.map(v => {
         if (v.id === variantId) {
@@ -273,7 +276,10 @@ const InventoryVariants: React.FC<InventoryVariantsProps> = ({
     );
   };
 
-  const handleGroupImageChange = (groupName: string, file: File | Blob | null) => {
+  const handleGroupImageChange = (
+    groupName: string,
+    file: File | Blob | null
+  ) => {
     // Update group image state
     setGroupImages(prev => ({
       ...prev,

@@ -162,21 +162,31 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             file.type.startsWith("image/")
           ) {
             const originalSize = (file.size / 1024).toFixed(2);
-            console.log(`[ImageUploader] Compressing ${file.name} (${originalSize} KB)...`);
-            
+            console.log(
+              `[ImageUploader] Compressing ${file.name} (${originalSize} KB)...`
+            );
+
             try {
               const compressedFile = await compressImage(file, {
                 maxSizeMB: DEFAULT_MAX_IMAGE_SIZE / (1024 * 1024),
                 useWebWorker: true,
               });
-              
+
               const compressedSize = (compressedFile.size / 1024).toFixed(2);
-              const reduction = (((file.size - compressedFile.size) / file.size) * 100).toFixed(1);
-              console.log(`[ImageUploader] Compressed ${file.name}: ${compressedSize} KB (-${reduction}%)`);
-              
+              const reduction = (
+                ((file.size - compressedFile.size) / file.size) *
+                100
+              ).toFixed(1);
+              console.log(
+                `[ImageUploader] Compressed ${file.name}: ${compressedSize} KB (-${reduction}%)`
+              );
+
               return compressedFile;
             } catch (err) {
-              console.error(`[ImageUploader] Compression failed for ${file.name}:`, err);
+              console.error(
+                `[ImageUploader] Compression failed for ${file.name}:`,
+                err
+              );
               return file;
             }
           }

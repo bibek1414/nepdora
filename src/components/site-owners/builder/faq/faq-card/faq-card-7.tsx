@@ -125,7 +125,7 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                     placeholder="Enter button text..."
                   />
                   <button
-                    className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white -lg -blue-900/10 transition-colors hover:opacity-90"
+                    className="group -lg -blue-900/10 flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white transition-colors hover:opacity-90"
                     style={{
                       backgroundColor: theme.colors.primary,
                     }}
@@ -141,7 +141,7 @@ export const FaqCard7: React.FC<FaqCard7Props> = ({
                 </div>
               ) : (
                 <button
-                  className="group flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white -lg -blue-900/10 transition-colors hover:opacity-90"
+                  className="group -lg -blue-900/10 flex w-full items-center justify-between rounded-full py-2 pr-2 pl-6 text-[15px] font-medium text-white transition-colors hover:opacity-90"
                   style={{
                     backgroundColor: theme.colors.primary,
                   }}

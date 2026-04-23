@@ -279,7 +279,6 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
               )}
             </div>
           ))}
-
         </div>
 
         {/* Actions - Right Side */}

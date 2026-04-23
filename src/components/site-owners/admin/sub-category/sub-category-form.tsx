@@ -125,7 +125,8 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
         // 1. It's a new File (user uploaded a new image)
         // 2. It's null but original had an image (image was removed)
         // 3. It's a different string URL (shouldn't happen in normal flow, but handle it)
-        const isNewFile = data.image instanceof File || data.image instanceof Blob;
+        const isNewFile =
+          data.image instanceof File || data.image instanceof Blob;
         const isRemoved = data.image === null && originalValues.image !== null;
         const isDifferentUrl =
           typeof data.image === "string" &&
@@ -149,7 +150,9 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
         }
 
         // Check if we have a file upload
-        const hasFileUpload = changedFields.image instanceof File || changedFields.image instanceof Blob;
+        const hasFileUpload =
+          changedFields.image instanceof File ||
+          changedFields.image instanceof Blob;
 
         if (hasFileUpload) {
           // Use FormData if there's a file upload
@@ -164,7 +167,10 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
           if (changedFields.category) {
             formData.append("category", changedFields.category);
           }
-          if (changedFields.image instanceof File || changedFields.image instanceof Blob) {
+          if (
+            changedFields.image instanceof File ||
+            changedFields.image instanceof Blob
+          ) {
             formData.append("image", changedFields.image);
           } else if (changedFields.image === null) {
             formData.append("image", "");

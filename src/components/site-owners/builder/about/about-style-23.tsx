@@ -46,7 +46,7 @@ export const AboutUsTemplate23: React.FC<AboutUs23Props> = ({
           onChange={handleTextUpdate("title")}
           isEditable={isEditable}
           as="title"
-          className="font-display max-w-4xl mt-3 text-4xl leading-[1.1] font-bold tracking-tight text-balance text-gray-950 md:text-6xl"
+          className="font-display mt-3 max-w-4xl text-4xl leading-[1.1] font-bold tracking-tight text-balance text-gray-950 md:text-6xl"
           style={{
             fontFamily: theme?.fonts?.heading,
           }}

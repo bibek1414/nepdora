@@ -59,7 +59,10 @@ export default function EditPortfolioClient() {
       portfolioData.tags = data.tags;
     }
 
-    if (data.thumbnail_image instanceof File || data.thumbnail_image instanceof Blob) {
+    if (
+      data.thumbnail_image instanceof File ||
+      data.thumbnail_image instanceof Blob
+    ) {
       portfolioData.thumbnail_image = data.thumbnail_image;
     } else if (
       data.thumbnail_image === null &&

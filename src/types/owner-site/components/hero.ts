@@ -893,7 +893,12 @@ export const defaultHeroTemplate23Data: HeroTemplate23Data = {
     "We blend traditional Nepali craftsmanship with contemporary design to create timeless architectural masterpieces across the Himalayas.",
   buttons: [
     { id: "1", text: "View our work", variant: "primary", href: "/works" },
-    { id: "2", text: "Start your project", variant: "secondary", href: "/contact" },
+    {
+      id: "2",
+      text: "Start your project",
+      variant: "secondary",
+      href: "/contact",
+    },
   ],
   backgroundImageUrl: "/images/site-owners/hero/hero-23/hero-23.jpg",
   imageAlt: "Modern villa in Nepal",

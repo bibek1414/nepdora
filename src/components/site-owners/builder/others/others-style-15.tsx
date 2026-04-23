@@ -14,7 +14,7 @@ import {
   Layers,
   Leaf,
   ClipboardCheck,
-  Building2
+  Building2,
 } from "lucide-react";
 import {
   Card,
@@ -51,7 +51,7 @@ const iconMap: Record<string, any> = {
   Layers,
   Leaf,
   ClipboardCheck,
-  Building2
+  Building2,
 };
 
 export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({

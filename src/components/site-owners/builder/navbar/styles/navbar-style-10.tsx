@@ -257,7 +257,10 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             isEditable && onEditLink ? (
               <EditableItem key={link.id}>
                 <span
-                  className={linkClass(link.href, pathname === link.href) + " cursor-default"}
+                  className={
+                    linkClass(link.href, pathname === link.href) +
+                    " cursor-default"
+                  }
                   style={pathname === link.href ? { color: primaryColor } : {}}
                 >
                   {link.text}

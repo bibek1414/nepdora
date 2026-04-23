@@ -409,7 +409,8 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "others-29",
         name: "Others Style 29 (Sector Grid)",
         image: "/images/site-owners/others/others29.png",
-        description: "Premium grid with image-based cards and gradient overlays",
+        description:
+          "Premium grid with image-based cards and gradient overlays",
       },
     ],
     experience: [

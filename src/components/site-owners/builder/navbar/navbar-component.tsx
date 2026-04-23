@@ -68,7 +68,6 @@ const styleMap = {
   "style-14": NavbarStyle14,
 };
 
-
 const defaultNavbarData: NavbarData = {
   logoText: "Brand",
   logoType: "text",

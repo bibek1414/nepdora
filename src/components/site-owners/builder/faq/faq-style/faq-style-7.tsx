@@ -48,7 +48,7 @@ export const FAQStyle7: React.FC<FAQStyleProps> = ({
                 value={subtitle}
                 onChange={handleTextUpdate("subtitle")}
                 as="p"
-                className="block text-sm font-semibold tracking-wide px-1"
+                className="block px-1 text-sm font-semibold tracking-wide"
                 isEditable={isEditable}
                 style={{ fontFamily: theme?.fonts?.body }}
               />

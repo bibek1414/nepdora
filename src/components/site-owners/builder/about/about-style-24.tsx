@@ -56,7 +56,7 @@ export const AboutUsTemplate24: React.FC<AboutUs24Props> = ({
                 onChange={handleTextUpdate("eyebrow")}
                 isEditable={isEditable}
                 as="span"
-                className="text-sm font-semibold tracking-wide text-gray-500 "
+                className="text-sm font-semibold tracking-wide text-gray-500"
                 style={{
                   fontFamily: theme?.fonts?.body,
                 }}

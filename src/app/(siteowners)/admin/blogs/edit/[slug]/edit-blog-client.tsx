@@ -43,7 +43,10 @@ export default function EditBlogClient() {
     // Only include thumbnail_image if it's a File or Blob (newly uploaded or compressed)
     // If it's a string (URL), it means the image hasn't changed, so we don't send it
     // If it's null, it means the image was removed
-    if (data.thumbnail_image instanceof File || data.thumbnail_image instanceof Blob) {
+    if (
+      data.thumbnail_image instanceof File ||
+      data.thumbnail_image instanceof Blob
+    ) {
       blogData.thumbnail_image = data.thumbnail_image;
     } else if (data.thumbnail_image === null) {
       blogData.thumbnail_image = null;

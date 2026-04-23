@@ -67,7 +67,8 @@ export const DEFAULT_PORTFOLIO_MAP: Record<
     style: "portfolio-8",
     title: "Our work",
     heading: "Featured Projects",
-    subtitle: "We help brands and businesses grow through innovation and design.",
+    subtitle:
+      "We help brands and businesses grow through innovation and design.",
     buttonText: "View all work",
     buttonLink: "/portfolio",
   },

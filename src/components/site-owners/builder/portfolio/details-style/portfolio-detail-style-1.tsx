@@ -136,7 +136,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             {portfolio.project_url && (
-              <Button asChild size="lg" className="rounded-full px-8 -md">
+              <Button asChild size="lg" className="-md rounded-full px-8">
                 <a
                   href={portfolio.project_url}
                   target="_blank"
@@ -165,7 +165,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
           </div>
         </div>
 
-        <div className="mx-auto mb-12 aspect-[16/9] h-[300px] overflow-hidden rounded-2xl -xl md:h-[500px]">
+        <div className="-xl mx-auto mb-12 aspect-[16/9] h-[300px] overflow-hidden rounded-2xl md:h-[500px]">
           <Image
             unoptimized
             src={portfolioImage}

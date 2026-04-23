@@ -82,7 +82,7 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
             isEditable={isEditable}
             placeholder="Enter title..."
           />
-        <EditableText
+          <EditableText
             value={subtitle || ""}
             onChange={handleSubtitleChange}
             as="p"

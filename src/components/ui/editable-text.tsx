@@ -13,7 +13,18 @@ interface EditableTextProps {
   value: string;
   onChange: (value: string) => void;
   onStyleChange?: (style: TextStyle) => void;
-  as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span" | "title" |"label";
+  as?:
+    | "p"
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "h5"
+    | "h6"
+    | "div"
+    | "span"
+    | "title"
+    | "label";
   className?: string;
   style?: React.CSSProperties;
   isEditable?: boolean;
@@ -43,7 +54,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   onStyleChange,
   as: Tag = "p",
   className,
-  
+
   style,
   isEditable = false,
   placeholder = "Click to edit...",
@@ -62,7 +73,16 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const { setSelection } = useTextSelection();
 
   // Determine which font to use based on component type
-  const isHeading = ["h1", "h2", "h3", "h4", "h5", "h6", "title", "label"].includes(Tag);
+  const isHeading = [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "title",
+    "label",
+  ].includes(Tag);
   const defaultFont = useHeadingFont || isHeading ? headingFont : bodyFont;
 
   const [selectedFont, setSelectedFont] = useState(

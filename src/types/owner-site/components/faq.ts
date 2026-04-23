@@ -71,7 +71,8 @@ export const defaultFAQData7: FAQData = {
   style: "faq-7",
   title: "Honest answers to the questions we hear most.",
   subtitle: "Common questions",
-  description: "Don’t see what you’re looking for? Send a note — we reply to everything.",
+  description:
+    "Don’t see what you’re looking for? Send a note — we reply to everything.",
 };
 
 export const defaultFAQData12: FAQData = {

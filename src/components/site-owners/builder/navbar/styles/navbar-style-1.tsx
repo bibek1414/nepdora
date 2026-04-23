@@ -156,9 +156,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
           {leftLinks.map(link =>
             isEditable && onEditLink && onDeleteLink ? (
               <EditableItem key={link.id}>
-                <span
-                  className="cursor-default text-sm font-medium transition-colors hover:opacity-80"
-                >
+                <span className="cursor-default text-sm font-medium transition-colors hover:opacity-80">
                   {link.text}
                 </span>
               </EditableItem>
@@ -217,9 +215,7 @@ export const NavbarStyle1: React.FC<NavbarStyleProps> = ({
           {rightLinks.map(link =>
             isEditable && onEditLink && onDeleteLink ? (
               <EditableItem key={link.id}>
-                <span
-                  className="cursor-default text-sm font-medium transition-colors hover:opacity-80"
-                >
+                <span className="cursor-default text-sm font-medium transition-colors hover:opacity-80">
                   {link.text}
                 </span>
               </EditableItem>

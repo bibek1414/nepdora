@@ -132,7 +132,7 @@ export const PortfolioDetail2: React.FC<{
         </div>
 
         {/* Big Hero Image */}
-        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl -sm md:h-[550px] lg:mb-20">
+        <div className="-sm relative mb-12 aspect-video w-full overflow-hidden rounded-3xl md:h-[550px] lg:mb-20">
           <Image
             unoptimized
             src={portfolioImage}
@@ -158,7 +158,7 @@ export const PortfolioDetail2: React.FC<{
           {/* Sidebar */}
           <aside className="space-y-8 lg:col-span-4">
             {/* Project Details Card */}
-            <div className="bg-muted/30 rounded-2xl border p-8 -sm">
+            <div className="bg-muted/30 -sm rounded-2xl border p-8">
               <h3 className="mb-6 border-b pb-4 text-xl font-bold">
                 Project Info
               </h3>
@@ -192,7 +192,7 @@ export const PortfolioDetail2: React.FC<{
                   {portfolio.project_url && (
                     <Button
                       asChild
-                      className="w-full rounded-xl py-6 text-base -md"
+                      className="-md w-full rounded-xl py-6 text-base"
                     >
                       <a
                         href={portfolio.project_url}
@@ -225,7 +225,7 @@ export const PortfolioDetail2: React.FC<{
 
             {/* Technologies Card */}
             {portfolio.tags && portfolio.tags.length > 0 && (
-              <div className="bg-primary/5 border-primary/10 rounded-2xl border p-6 -sm">
+              <div className="bg-primary/5 border-primary/10 -sm rounded-2xl border p-6">
                 <h4 className="mb-4 flex items-center gap-2 text-lg font-bold">
                   <Tag className="text-primary h-5 w-5" />
                   Technologies Used

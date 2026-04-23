@@ -85,7 +85,8 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
     undefined
   );
 
-  const { links, buttons, showCart, bannerText, topBarItems, enableLogin } = data;
+  const { links, buttons, showCart, bannerText, topBarItems, enableLogin } =
+    data;
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -256,9 +257,7 @@ export const NavbarStyle8: React.FC<NavbarStyleProps> = ({
                 {links.slice(0, 3).map((link: NavbarLink) =>
                   isEditable && onEditLink ? (
                     <EditableItem key={link.id}>
-                      <span
-                        className="cursor-default text-sm font-medium transition-colors hover:opacity-80"
-                      >
+                      <span className="cursor-default text-sm font-medium transition-colors hover:opacity-80">
                         {link.text}
                       </span>
                     </EditableItem>

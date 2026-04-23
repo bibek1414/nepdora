@@ -92,7 +92,9 @@ export const HeroTemplate21: React.FC<HeroTemplate21Props> = ({
                 )}
                 style={{
                   backgroundColor:
-                    button.variant === "primary" ? theme?.colors?.primary : theme?.colors?.secondary,
+                    button.variant === "primary"
+                      ? theme?.colors?.primary
+                      : theme?.colors?.secondary,
                   color:
                     button.variant === "primary"
                       ? theme?.colors?.primaryForeground

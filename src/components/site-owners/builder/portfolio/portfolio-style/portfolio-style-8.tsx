@@ -60,7 +60,7 @@ export const PortfolioStyle8: React.FC<PortfolioStyleProps> = ({
                 onChange={handleTextUpdate("title")}
                 isEditable={isEditable}
                 as="span"
-                className="text-sm font-semibold tracking-widest px-2"
+                className="px-2 text-sm font-semibold tracking-widest"
               />
             </div>
             <EditableText

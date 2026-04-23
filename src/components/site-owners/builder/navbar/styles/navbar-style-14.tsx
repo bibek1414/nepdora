@@ -11,7 +11,15 @@ import {
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import { Menu, User, Heart, Package, LogOut, ChevronDown, ChevronRight } from "lucide-react";
+import {
+  Menu,
+  User,
+  Heart,
+  Package,
+  LogOut,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -220,7 +228,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                         backgroundColor: theme.colors.primary,
                         color: theme.colors.primaryForeground,
                       }}
-                      className="cursor-default transition-colors hover:opacity-90 rounded-full"
+                      className="cursor-default rounded-full transition-colors hover:opacity-90"
                     >
                       {button.text}
                     </Button>
@@ -233,7 +241,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                       backgroundColor: theme.colors.primary,
                       color: theme.colors.primaryForeground,
                     }}
-                    className={`transition-colors hover:opacity-90 rounded-full ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                    className={`rounded-full transition-colors hover:opacity-90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
                     asChild={!disableClicks}
                   >
                     {disableClicks ? (

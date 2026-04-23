@@ -97,7 +97,7 @@ Message: ${formData.message}
                 value={subtitle}
                 onChange={handleTextUpdate("subtitle")}
                 as="span"
-                className="block text-sm font-semibold tracking-wide mb-2"
+                className="mb-2 block text-sm font-semibold tracking-wide"
                 isEditable={isEditable}
                 style={{ fontFamily: theme?.fonts?.body }}
               />

@@ -151,7 +151,8 @@ export const validateFile = (
   if (!ALLOWED_TYPES.includes(file.type)) {
     return {
       valid: false,
-      error: "Invalid file type. Please upload a valid image file (JPEG, PNG, WebP, AVIF, etc.)",
+      error:
+        "Invalid file type. Please upload a valid image file (JPEG, PNG, WebP, AVIF, etc.)",
     };
   }
 

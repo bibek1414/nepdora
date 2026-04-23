@@ -444,7 +444,8 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
           category_id: data.category_id || undefined,
           sub_category_id: data.sub_category_id || undefined,
           thumbnail_image:
-            (data.thumbnail_image instanceof File || data.thumbnail_image instanceof Blob)
+            data.thumbnail_image instanceof File ||
+            data.thumbnail_image instanceof Blob
               ? (data.thumbnail_image as any)
               : typeof data.thumbnail_image === "string"
                 ? data.thumbnail_image
