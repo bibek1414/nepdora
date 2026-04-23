@@ -69,8 +69,8 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
   };
 
   return (
-    <section className="bg-white px-4 py-24 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <section className="bg-white px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-8">
         {/* Header Section */}
         <div className="mb-20 text-center">
           <EditableText

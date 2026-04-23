@@ -118,6 +118,10 @@ export const EditableImage: React.FC<EditableImageProps> = ({
     return src;
   }, [src, showPlaceholder]);
 
+  if (!isEditable && !src) {
+    return null;
+  }
+
   return (
     <div className="relative">
       {isEditable && (

@@ -9,7 +9,8 @@ export interface TeamData {
     | "team-5"
     | "team-6"
     | "team-7"
-    | "team-8";
+    | "team-8"
+    | "team-9";
 
   title: string;
   subtitle?: string;
@@ -65,5 +66,13 @@ export const DEFAULT_TEAM_MAP: Record<TeamData["style"], TeamData> = {
     subtitle: "Our Team",
     title_description:
       "Meet the talented architects and designers behind Neptecture, dedicated to creating innovative, functional, and visually inspiring spaces with precision and passion.",
+  },
+  "team-9": {
+    ...defaultTeamData,
+    style: "team-9",
+    title: "Fifteen people. One studio. No subcontractors.",
+    subtitle: "Team",
+    title_description:
+      "We hire slowly and stay together for a long time. The people you meet on your first call are the people who will be on your project months later.",
   },
 };

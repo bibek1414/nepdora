@@ -97,13 +97,15 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     });
 
     // Check total file count
-    const totalFiles = currentItems.length + validFiles.length;
-    if (totalFiles > maxFiles) {
-      const allowedCount = maxFiles - currentItems.length;
-      errors.push(
-        `Too many files. You can only upload ${allowedCount} more file(s)`
-      );
-      return { validFiles: validFiles.slice(0, allowedCount), errors };
+    if (multiple) {
+      const totalFiles = currentItems.length + validFiles.length;
+      if (totalFiles > maxFiles) {
+        const allowedCount = maxFiles - currentItems.length;
+        errors.push(
+          `Too many files. You can only upload ${allowedCount} more file(s)`
+        );
+        return { validFiles: validFiles.slice(0, allowedCount), errors };
+      }
     }
 
     return { validFiles, errors };

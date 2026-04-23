@@ -393,6 +393,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/others/others27.png",
         description: "Premium process grid with card-based layout",
       },
+      {
+        id: "others-28",
+        name: "Others Style 28 (Principles)",
+        image: "/images/site-owners/others/others28.png",
+        description: "Premium principles grid with numbered items",
+      },
     ],
     experience: [
       {
@@ -626,6 +632,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "About Style 22 (Editorial)",
         image: "/images/site-owners/about/about22.png",
         description: "Premium editorial layout with portrait",
+      },
+      {
+        id: "about-23",
+        name: "About Style 23 (Minimalist Header)",
+        image: "/images/site-owners/about/about23.png",
+        description: "Clean minimalist header with eyebrow line",
+      },
+      {
+        id: "about-24",
+        name: "About Style 24 (Our Story)",
+        image: "/images/site-owners/about/about24.png",
+        description: "Premium editorial 'Our story' layout with side image",
       },
     ],
     products: [
@@ -1019,6 +1037,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "team-8",
         name: "Team Style 8 (Premium Grid)",
         image: "/images/site-owners/team/team8.png",
+      },
+      {
+        id: "team-9",
+        name: "Team Style 9 (Premium Editorial)",
+        image: "/images/site-owners/team/team-9.png",
+        description: "Premium editorial layout with 4-column member grid",
       },
     ],
     gallery: [

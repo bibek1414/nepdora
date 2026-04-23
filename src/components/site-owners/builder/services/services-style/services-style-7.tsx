@@ -70,7 +70,7 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
   };
 
   return (
-    <section className="bg-white px-4 py-24 sm:px-6 lg:px-8">
+    <section className="bg-white px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl px-8">
         {/* Header Section */}
         <div className="mb-20 text-center">

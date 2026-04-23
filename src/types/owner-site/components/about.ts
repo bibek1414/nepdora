@@ -818,6 +818,23 @@ export interface AboutUs22Data {
   bioParagraph3: string;
 }
 
+export interface AboutUs23Data {
+  template: "about-23";
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+
+export interface AboutUs24Data {
+  template: "about-24";
+  eyebrow: string;
+  title: string;
+  description1: string;
+  description2: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
 export const defaultAboutUs21Data: AboutUs21Data = {
   template: "about-21",
   features: [
@@ -872,6 +889,27 @@ export const defaultAboutUs22Data: AboutUs22Data = {
     "Outside work I read a lot, run slowly, and keep a small garden that mostly grows tomatoes.",
 };
 
+export const defaultAboutUs23Data: AboutUs23Data = {
+  template: "about-23",
+  eyebrow: "About",
+  title: "A studio built for the work, not for the org chart.",
+  description:
+    "Northbound is a small, independent practice based in London and Lisbon. We have stayed deliberately small so the people who promise the work are the people who deliver it.",
+};
+
+export const defaultAboutUs24Data: AboutUs24Data = {
+  template: "about-24",
+  eyebrow: "Our story",
+  title:
+    "Founded in 2014 by a strategist and a designer who were tired of the agency model.",
+  description1:
+    "We started Northbound to do good work for a small number of people we respect. Twelve years later, the model still holds: a senior team of around fifteen, a deliberate ceiling on the number of clients we take on each year, and a refusal to let process dilute craft.",
+  description2:
+    "Our clients tend to be founders, marketing leaders and product teams somewhere between Series A and IPO — companies with something real to say and the appetite to say it well.",
+  imageUrl: "/images/site-owners/about/about-24/about-architecture.jpg",
+  imageAlt: "Architectural detail",
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -895,7 +933,9 @@ export type AboutUsData =
   | AboutUs19Data
   | AboutUs20Data
   | AboutUs21Data
-  | AboutUs22Data;
+  | AboutUs22Data
+  | AboutUs23Data
+  | AboutUs24Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -949,7 +989,9 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs19Data>
     | Partial<AboutUs20Data>
     | Partial<AboutUs21Data>
-    | Partial<AboutUs22Data>;
+    | Partial<AboutUs22Data>
+    | Partial<AboutUs23Data>
+    | Partial<AboutUs24Data>;
   order?: number;
 }
 
@@ -995,6 +1037,8 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-20": defaultAboutUs20Data,
   "about-21": defaultAboutUs21Data,
   "about-22": defaultAboutUs22Data,
+  "about-23": defaultAboutUs23Data,
+  "about-24": defaultAboutUs24Data,
 };
 
 // Type guards for each template
@@ -1063,3 +1107,9 @@ export const isAboutUsTemplate21 = (data: AboutUsData): data is AboutUs21Data =>
 
 export const isAboutUsTemplate22 = (data: AboutUsData): data is AboutUs22Data =>
   data.template === "about-22";
+
+export const isAboutUsTemplate23 = (data: AboutUsData): data is AboutUs23Data =>
+  data.template === "about-23";
+
+export const isAboutUsTemplate24 = (data: AboutUsData): data is AboutUs24Data =>
+  data.template === "about-24";

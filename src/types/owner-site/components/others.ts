@@ -160,7 +160,8 @@ export type OthersData =
   | OthersTemplate24Data
   | OthersTemplate25Data
   | OthersTemplate26Data
-  | OthersTemplate27Data;
+  | OthersTemplate27Data
+  | OthersTemplate28Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -411,6 +412,20 @@ export interface OthersTemplate27Data {
   title: string;
   description: string;
   items: OthersTemplate27Item[];
+}
+
+export interface OthersTemplate28Item {
+  id: string;
+  n: string;
+  title: string;
+  body: string;
+}
+
+export interface OthersTemplate28Data {
+  template: "others-28";
+  eyebrow: string;
+  title: string;
+  items: OthersTemplate28Item[];
 }
 
 // Component and API interfaces
@@ -1534,6 +1549,38 @@ export const defaultOthersTemplate27Data: OthersTemplate27Data = {
   ],
 };
 
+export const defaultOthersTemplate28Data: OthersTemplate28Data = {
+  template: "others-28",
+  eyebrow: "Principles",
+  title: "Four ideas that decide how we work, every day.",
+  items: [
+    {
+      id: "1",
+      n: "01",
+      title: "Clarity over cleverness",
+      body: "If the strategy can’t be explained in a sentence, it isn’t finished. Our work is judged by how easily it can be understood and acted on.",
+    },
+    {
+      id: "2",
+      n: "02",
+      title: "Craft as a discipline",
+      body: "Details compound. The thousand small decisions inside a project decide whether the work feels considered or thrown together.",
+    },
+    {
+      id: "3",
+      n: "03",
+      title: "Senior people, all the way down",
+      body: "Every engagement is led by a partner. There is no junior layer to apologise for, and no handoff to a separate delivery team.",
+    },
+    {
+      id: "4",
+      n: "04",
+      title: "Outcomes, not artefacts",
+      body: "Decks and mockups are tools, not the deliverable. We are measured on what changes in your business after the work ships.",
+    },
+  ],
+};
+
 // Default data map for all others templates
 export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-1": defaultOthersTemplate1Data,
@@ -1563,6 +1610,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-25": defaultOthersTemplate25Data,
   "others-26": defaultOthersTemplate26Data,
   "others-27": defaultOthersTemplate27Data,
+  "others-28": defaultOthersTemplate28Data,
 };
 
 // Type guards
@@ -1652,3 +1700,7 @@ export const isOthersTemplate26 = (
 export const isOthersTemplate27 = (
   data: OthersData
 ): data is OthersTemplate27Data => data.template === "others-27";
+
+export const isOthersTemplate28 = (
+  data: OthersData
+): data is OthersTemplate28Data => data.template === "others-28";

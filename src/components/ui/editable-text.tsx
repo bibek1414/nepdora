@@ -43,6 +43,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   onStyleChange,
   as: Tag = "p",
   className,
+  
   style,
   isEditable = false,
   placeholder = "Click to edit...",
@@ -294,6 +295,10 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const Wrapper = Tag === "p" || Tag === "span" ? "span" : "div";
   // Map "title" to a valid HTML tag for rendering in the body
   const RenderTag = Tag === "title" || Tag === "label" ? "h1" : Tag;
+
+  if (!isEditable && (!value || value.trim() === "")) {
+    return null;
+  }
 
   return (
     <Wrapper

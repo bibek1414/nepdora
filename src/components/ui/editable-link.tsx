@@ -256,7 +256,7 @@ const PageSelector: React.FC<PageSelectorProps> = ({
   return (
     <>
       <Card
-        className={`absolute ${positionClass} left-0 z-[9999] w-80 bg-white py-0 shadow-xl`}
+        className={`absolute ${positionClass} left-0 z-9999 w-80 bg-white py-0 shadow-xl`}
       >
         <CardContent className="flex max-h-[400px] flex-col p-0">
           {selectionType !== "page" ? (
@@ -495,6 +495,11 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
         document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showPageSelector, isEditing]);
+
+  // If not editable and no text/children, don't render anything
+  if (!isEditable && !text && !children) {
+    return null;
+  }
 
   // If in edit mode, show inline editing
   if (isEditing && isEditable) {
