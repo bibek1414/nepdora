@@ -45,13 +45,12 @@ export const TestimonialStyle10: React.FC<TestimonialStyleProps> = ({
         {/* Header Section */}
         <div className="mb-16">
           <div className="mb-6 flex items-center gap-2 text-xs font-medium opacity-70">
-            <span className="inline-block h-px w-6 bg-current opacity-40" />
             <EditableText
               value={subtitle}
               onChange={(val: string) => onUpdate?.({ subtitle: val })}
               isEditable={isEditable}
               as="p"
-              className="block text-sm font-semibold tracking-wide"
+              className="block px-1 text-sm font-semibold tracking-wide"
               style={{ fontFamily: theme?.fonts?.body }}
             />
           </div>

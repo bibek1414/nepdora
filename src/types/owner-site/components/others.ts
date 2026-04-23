@@ -161,7 +161,8 @@ export type OthersData =
   | OthersTemplate25Data
   | OthersTemplate26Data
   | OthersTemplate27Data
-  | OthersTemplate28Data;
+  | OthersTemplate28Data
+  | OthersTemplate29Data;
 
 export interface OthersProcessStep {
   id: string;
@@ -426,6 +427,21 @@ export interface OthersTemplate28Data {
   eyebrow: string;
   title: string;
   items: OthersTemplate28Item[];
+}
+
+export interface OthersTemplate29Item {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
+export interface OthersTemplate29Data {
+  template: "others-29";
+  eyebrow: string;
+  title: string;
+  description: string;
+  items: OthersTemplate29Item[];
 }
 
 // Component and API interfaces
@@ -1548,7 +1564,6 @@ export const defaultOthersTemplate27Data: OthersTemplate27Data = {
     },
   ],
 };
-
 export const defaultOthersTemplate28Data: OthersTemplate28Data = {
   template: "others-28",
   eyebrow: "Principles",
@@ -1577,6 +1592,48 @@ export const defaultOthersTemplate28Data: OthersTemplate28Data = {
       n: "04",
       title: "Outcomes, not artefacts",
       body: "Decks and mockups are tools, not the deliverable. We are measured on what changes in your business after the work ships.",
+    },
+  ],
+};
+
+export const defaultOthersTemplate29Data: OthersTemplate29Data = {
+  template: "others-29",
+  eyebrow: "What we build",
+  title: "Sectors we serve",
+  description:
+    "From private residences to large-scale commercial developments, our expertise spans diverse sectors.",
+  items: [
+    {
+      id: "1",
+      title: "Residential",
+      description:
+        "Custom homes, villas, and apartments designed for modern Nepali families.",
+      image:
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
+    },
+    {
+      id: "2",
+      title: "Commercial",
+      description:
+        "Office towers, retail spaces, and business parks built for productivity.",
+      image:
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800",
+    },
+    {
+      id: "3",
+      title: "Hospitality",
+      description:
+        "Hotels, resorts, and restaurants that create unforgettable guest experiences.",
+      image:
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800",
+    },
+    {
+      id: "4",
+      title: "Institutional",
+      description:
+        "Schools, hospitals, and cultural centers that serve communities.",
+      image:
+        "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
     },
   ],
 };
@@ -1611,6 +1668,7 @@ export const DEFAULT_OTHERS_MAP: Record<OthersData["template"], OthersData> = {
   "others-26": defaultOthersTemplate26Data,
   "others-27": defaultOthersTemplate27Data,
   "others-28": defaultOthersTemplate28Data,
+  "others-29": defaultOthersTemplate29Data,
 };
 
 // Type guards
@@ -1704,3 +1762,7 @@ export const isOthersTemplate27 = (
 export const isOthersTemplate28 = (
   data: OthersData
 ): data is OthersTemplate28Data => data.template === "others-28";
+
+export const isOthersTemplate29 = (
+  data: OthersData
+): data is OthersTemplate29Data => data.template === "others-29";

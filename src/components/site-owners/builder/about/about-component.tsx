@@ -40,6 +40,7 @@ import {
   isAboutUsTemplate22,
   isAboutUsTemplate23,
   isAboutUsTemplate24,
+  isAboutUsTemplate25,
 } from "@/types/owner-site/components/about";
 import { AboutUsTemplate1 } from "./about-style-1";
 import { AboutUsTemplate2 } from "./about-style-2";
@@ -65,6 +66,7 @@ import { AboutUsTemplate21 } from "./about-style-21";
 import { AboutUsTemplate22 } from "./about-style-22";
 import { AboutUsTemplate23 } from "./about-style-23";
 import { AboutUsTemplate24 } from "./about-style-24";
+import { AboutUsTemplate25 } from "./about-style-25";
 import {
   useDeleteComponentMutation,
   useUpdateComponentMutation,
@@ -220,6 +222,11 @@ export const AboutUsComponent: React.FC<AboutUsComponentProps> = ({
     if (isAboutUsTemplate24(component.data)) {
       return (
         <AboutUsTemplate24 aboutUsData={component.data} {...commonProps} />
+      );
+    }
+    if (isAboutUsTemplate25(component.data)) {
+      return (
+        <AboutUsTemplate25 aboutUsData={component.data} {...commonProps} />
       );
     }
 

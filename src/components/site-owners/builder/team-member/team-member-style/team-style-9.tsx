@@ -43,7 +43,6 @@ export function TeamStyle9({
         <div className="mb-16 grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <div className="mb-6 flex items-center gap-4">
-              <div className="h-px w-6 bg-gray-400" />
               <EditableText
                 value={data.subtitle || "Team"}
                 onChange={handleTextUpdate("subtitle")}

@@ -223,6 +223,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/hero/hero22.png",
         description: "Premium editorial hero with featured grid",
       },
+      {
+        id: "hero-23",
+        name: "Hero Style 23 (Full-screen Architecture)",
+        image: "/images/site-owners/hero/hero23.png",
+        description: "Full-screen background image with integrated stats bar",
+      },
     ],
     tours: [
       {
@@ -399,6 +405,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/others/others28.png",
         description: "Premium principles grid with numbered items",
       },
+      {
+        id: "others-29",
+        name: "Others Style 29 (Sector Grid)",
+        image: "/images/site-owners/others/others29.png",
+        description: "Premium grid with image-based cards and gradient overlays",
+      },
     ],
     experience: [
       {
@@ -507,6 +519,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "CTA Style 7 (Discovery Sprint)",
         image: "/images/site-owners/cta/cta7.png",
         description: "Premium editorial CTA with side-aligned button",
+      },
+      {
+        id: "cta-8",
+        name: "CTA Style 8 (Architectural)",
+        image: "/images/site-owners/cta/cta8.png",
+        description: "Premium high-impact CTA with primary background",
       },
     ],
     appointment: [
@@ -644,6 +662,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "About Style 24 (Our Story)",
         image: "/images/site-owners/about/about24.png",
         description: "Premium editorial 'Our story' layout with side image",
+      },
+      {
+        id: "about-25",
+        name: "About Style 25 (Architectural)",
+        image: "/images/site-owners/about/about25.png",
+        description: "Premium architectural layout with floating stat badge",
       },
     ],
     products: [
@@ -1233,6 +1257,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         description:
           "Premium editorial grid with gradient fallbacks and card hovers",
       },
+      {
+        id: "portfolio-8",
+        name: "Portfolio Style 8 (Hairline Grid)",
+        image: "/images/site-owners/portfolio/portfolio-8.png",
+        description: "Premium editorial layout with a border-grid design",
+      },
     ],
     newsletter: [
       {
@@ -1600,6 +1630,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       hasTemplates: true,
       templates: templates.education,
       type: "section",
+      isSpecialized: true,
     },
     {
       id: "recognition-sections",

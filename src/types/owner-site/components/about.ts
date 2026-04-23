@@ -835,6 +835,20 @@ export interface AboutUs24Data {
   imageAlt: string;
 }
 
+export interface AboutUs25Data {
+  template: "about-25";
+  eyebrow: string;
+  title: string;
+  description1: string;
+  description2: string;
+  imageUrl: string;
+  imageAlt: string;
+  statValue: string;
+  statLabel: string;
+  ctaText: string;
+  ctaLink: string;
+}
+
 export const defaultAboutUs21Data: AboutUs21Data = {
   template: "about-21",
   features: [
@@ -910,6 +924,22 @@ export const defaultAboutUs24Data: AboutUs24Data = {
   imageAlt: "Architectural detail",
 };
 
+export const defaultAboutUs25Data: AboutUs25Data = {
+  template: "about-25",
+  eyebrow: "Who we are",
+  title: "Architecture rooted in culture, designed for the future",
+  description1:
+    "Founded in 2009, Mantra Architects has grown from a small Kathmandu studio to one of Nepal's most respected design firms. We believe great architecture tells a story, one that honours heritage while embracing innovation.",
+  description2:
+    "Our multidisciplinary team of architects, engineers, and designers collaborate to deliver projects that are environmentally conscious, culturally sensitive, and visually stunning.",
+  imageUrl: "/images/site-owners/about/interior-1.jpg",
+  imageAlt: "Interior design",
+  statValue: "15+",
+  statLabel: "Years of excellence",
+  ctaText: "Learn more about us",
+  ctaLink: "/about",
+};
+
 // Union type for all about us templates
 export type AboutUsData =
   | AboutUs1Data
@@ -935,7 +965,8 @@ export type AboutUsData =
   | AboutUs21Data
   | AboutUs22Data
   | AboutUs23Data
-  | AboutUs24Data;
+  | AboutUs24Data
+  | AboutUs25Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -991,7 +1022,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs21Data>
     | Partial<AboutUs22Data>
     | Partial<AboutUs23Data>
-    | Partial<AboutUs24Data>;
+    | Partial<AboutUs24Data>
+    | Partial<AboutUs25Data>;
   order?: number;
 }
 
@@ -1039,6 +1071,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-22": defaultAboutUs22Data,
   "about-23": defaultAboutUs23Data,
   "about-24": defaultAboutUs24Data,
+  "about-25": defaultAboutUs25Data,
 };
 
 // Type guards for each template
@@ -1113,3 +1146,6 @@ export const isAboutUsTemplate23 = (data: AboutUsData): data is AboutUs23Data =>
 
 export const isAboutUsTemplate24 = (data: AboutUsData): data is AboutUs24Data =>
   data.template === "about-24";
+
+export const isAboutUsTemplate25 = (data: AboutUsData): data is AboutUs25Data =>
+  data.template === "about-25";

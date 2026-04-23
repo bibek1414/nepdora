@@ -43,6 +43,7 @@ import {
   isOthersTemplate26,
   isOthersTemplate27,
   isOthersTemplate28,
+  isOthersTemplate29,
 } from "@/types/owner-site/components/others";
 import { OthersTemplate1 } from "./others-style-1";
 import { OthersTemplate2 } from "./others-style-2";
@@ -72,6 +73,7 @@ import { OthersStyle25 } from "./others-style-25";
 import { OthersStyle26 } from "./others-style-26";
 import { OthersStyle27 } from "./others-style-27";
 import { OthersStyle28 } from "./others-style-28";
+import { OthersStyle29 } from "./others-style-29";
 
 import {
   useDeleteComponentMutation,
@@ -231,7 +233,9 @@ export const OthersComponent: React.FC<OthersComponentProps> = ({
     if (isOthersTemplate28(component.data)) {
       return <OthersStyle28 othersData={component.data} {...commonProps} />;
     }
-
+    if (isOthersTemplate29(component.data)) {
+      return <OthersStyle29 othersData={component.data} {...commonProps} />;
+    }
     // Fallback for unknown templates
     return (
       <div className="flex min-h-[20vh] items-center justify-center border border-yellow-200 bg-yellow-50 px-4 py-10">

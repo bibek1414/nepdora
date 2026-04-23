@@ -51,13 +51,12 @@ export const AboutUsTemplate24: React.FC<AboutUs24Props> = ({
           {/* Content Column */}
           <div className="lg:col-span-6">
             <div className="mb-6 flex items-center gap-4">
-              <div className="h-px w-6 bg-gray-400" />
               <EditableText
                 value={data.eyebrow}
                 onChange={handleTextUpdate("eyebrow")}
                 isEditable={isEditable}
                 as="span"
-                className="text-sm font-semibold tracking-wide text-gray-500"
+                className="text-sm font-semibold tracking-wide text-gray-500 "
                 style={{
                   fontFamily: theme?.fonts?.body,
                 }}

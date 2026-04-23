@@ -38,19 +38,17 @@ export const FAQStyle7: React.FC<FAQStyleProps> = ({
     };
 
   return (
-    <section className=" py-24 md:py-32">
+    <section className="py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           {/* Left Column */}
           <div className="lg:col-span-5">
             <div className="mb-6 flex items-center gap-2">
-              <span className="bg-muted-foreground h-px w-6"></span>
-
               <EditableText
                 value={subtitle}
                 onChange={handleTextUpdate("subtitle")}
                 as="p"
-                className="block text-sm font-semibold tracking-wide"
+                className="block text-sm font-semibold tracking-wide px-1"
                 isEditable={isEditable}
                 style={{ fontFamily: theme?.fonts?.body }}
               />

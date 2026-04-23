@@ -44,14 +44,13 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 lg:col-span-7 lg:pt-12">
             <div className="mb-8 flex items-center gap-2">
-              <span className="h-px w-10 bg-gray-400"></span>
 
               <EditableText
                 value={data.eyebrow}
                 as="span"
                 onChange={handleTextUpdate("eyebrow")}
                 isEditable={isEditable}
-                className="text-sm font-medium"
+                className="text-sm font-medium px-2"
                 style={{ fontFamily: theme?.fonts?.body }}
               />
             </div>

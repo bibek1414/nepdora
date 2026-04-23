@@ -93,13 +93,11 @@ Message: ${formData.message}
           {/* Info Column */}
           <div className="lg:col-span-5">
             <div className="flex items-center gap-2">
-              <span className="bg-muted-foreground h-px w-6"></span>
-
               <EditableText
                 value={subtitle}
                 onChange={handleTextUpdate("subtitle")}
                 as="span"
-                className="block text-sm font-semibold tracking-wide"
+                className="block text-sm font-semibold tracking-wide mb-2"
                 isEditable={isEditable}
                 style={{ fontFamily: theme?.fonts?.body }}
               />

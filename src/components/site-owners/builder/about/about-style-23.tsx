@@ -30,26 +30,23 @@ export const AboutUsTemplate23: React.FC<AboutUs23Props> = ({
   return (
     <section className="border-b border-gray-200 bg-gray-50/50">
       <div className="mx-auto max-w-7xl px-8 py-20 md:py-32">
-        <div className="mb-8 flex items-center gap-4">
-          <div className="h-px w-6 bg-gray-400" />
-          <EditableText
-            value={data.eyebrow}
-            onChange={handleTextUpdate("eyebrow")}
-            isEditable={isEditable}
-            as="span"
-            className="text-sm font-medium tracking-widest text-gray-500"
-            style={{
-              fontFamily: theme?.fonts?.body,
-            }}
-          />
-        </div>
+        <EditableText
+          value={data.eyebrow}
+          onChange={handleTextUpdate("eyebrow")}
+          isEditable={isEditable}
+          as="span"
+          className="px-2 text-sm font-medium tracking-widest text-gray-500"
+          style={{
+            fontFamily: theme?.fonts?.body,
+          }}
+        />
 
         <EditableText
           value={data.title}
           onChange={handleTextUpdate("title")}
           isEditable={isEditable}
           as="title"
-          className="font-display max-w-4xl text-4xl leading-[1.1] font-bold tracking-tight text-balance text-gray-950 md:text-6xl"
+          className="font-display max-w-4xl mt-3 text-4xl leading-[1.1] font-bold tracking-tight text-balance text-gray-950 md:text-6xl"
           style={{
             fontFamily: theme?.fonts?.heading,
           }}

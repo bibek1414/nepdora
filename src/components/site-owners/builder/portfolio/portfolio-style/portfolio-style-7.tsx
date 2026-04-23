@@ -52,13 +52,12 @@ export const PortfolioStyle7: React.FC<PortfolioStyleProps> = ({
         <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
-              <span className="h-px w-10 bg-gray-400"></span>
               <EditableText
                 value={title}
                 onChange={(val: string) => onUpdate?.({ title: val })}
                 isEditable={isEditable}
                 as="p"
-                className="block text-sm font-semibold tracking-wide"
+                className="block px-1 text-sm font-semibold tracking-wide"
                 style={{ fontFamily: theme?.fonts?.body }}
               />
             </div>

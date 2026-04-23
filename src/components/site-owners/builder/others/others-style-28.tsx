@@ -38,8 +38,6 @@ export const OthersStyle28: React.FC<OthersStyle28Props> = ({
       <div className="mx-auto max-w-7xl px-8 py-24 md:py-32">
         <div className="mb-16">
           <div className="mb-6 flex items-center gap-3">
-            <span className="bg-muted-foreground h-px w-6"></span>
-
             <EditableText
               value={data.eyebrow}
               onChange={handleTextUpdate("eyebrow")}

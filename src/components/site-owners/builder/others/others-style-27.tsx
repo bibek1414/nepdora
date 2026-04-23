@@ -42,13 +42,12 @@ export const OthersStyle27: React.FC<OthersStyle27Props> = ({
           <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-12">
             <div className="lg:col-span-5">
               <div className="mb-6 flex items-center gap-4">
-                <span className="h-px w-10 bg-gray-400"></span>
                 <EditableText
                   as="p"
                   value={othersData.eyebrow}
                   onChange={val => onUpdate?.({ eyebrow: val })}
                   isEditable={isEditable}
-                  className="block text-sm font-semibold tracking-wide"
+                  className="block px-2 text-sm font-semibold tracking-wide"
                   style={{ fontFamily: theme?.fonts?.body }}
                 />
               </div>

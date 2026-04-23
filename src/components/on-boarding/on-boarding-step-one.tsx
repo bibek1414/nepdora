@@ -148,7 +148,6 @@ export const OnboardingStepOne = ({
                 </Card>
               )}
 
-              {/* Services/Scratch Option */}
               {(!user.website_type || user.website_type === "service") && (
                 <Card
                   className={cn(
@@ -167,17 +166,17 @@ export const OnboardingStepOne = ({
                   <CardContent className="p-8">
                     <div className="flex flex-col items-center text-center">
                       <div className="bg-primary/10 text-primary group-hover:bg-primary/20 mb-5 flex h-14 w-14 items-center justify-center rounded-xl transition-all group-hover:scale-110">
-                        <Sparkles className="h-7 w-7" />
+                        <Store className="h-7 w-7" />
                       </div>
                       <h2 className="mb-2 text-xl font-bold text-slate-900">
-                        Start from scratch
+                        Start with a template
                       </h2>
                       <p className="text-sm text-slate-500">
-                        Build your website your way with our drag-and-drop
-                        builder. Perfect for service businesses and portfolios.
+                        Choose from professionally designed templates for
+                        selling products online. Perfect for e-commerce stores.
                       </p>
                       <div className="text-primary mt-5 flex items-center gap-1 text-sm font-medium opacity-0 transition-opacity group-hover:opacity-100">
-                        Start building
+                        Select template
                         <ChevronRight className="h-4 w-4" />
                       </div>
                     </div>

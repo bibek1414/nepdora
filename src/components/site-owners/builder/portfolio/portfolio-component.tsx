@@ -25,6 +25,7 @@ import { PortfolioStyle4 } from "./portfolio-style/portfolio-style-4";
 import { PortfolioStyle5 } from "./portfolio-style/portfolio-style-5";
 import { PortfolioStyle6 } from "./portfolio-style/portfolio-style-6";
 import { PortfolioStyle7 } from "./portfolio-style/portfolio-style-7";
+import { PortfolioStyle8 } from "./portfolio-style/portfolio-style-8";
 
 interface PortfolioComponentProps {
   component: PortfolioComponentData;
@@ -113,6 +114,8 @@ export const PortfolioComponent: React.FC<PortfolioComponentProps> = ({
         return <PortfolioStyle6 {...commonProps} />;
       case "portfolio-7":
         return <PortfolioStyle7 {...commonProps} />;
+      case "portfolio-8":
+        return <PortfolioStyle8 {...commonProps} />;
       case "portfolio-1":
       default:
         return <PortfolioStyle1 {...commonProps} />;

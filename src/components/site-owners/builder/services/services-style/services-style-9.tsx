@@ -150,13 +150,12 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
         <div className="mb-20 grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-5">
             <div className="flex items-center gap-4">
-              <div className="h-px w-10 bg-gray-300" />
               <EditableText
                 value={data.eyebrow || "What we do"}
                 onChange={handleTextUpdate("eyebrow")}
                 isEditable={isEditable}
                 as="span"
-                className="text-sm font-semibold tracking-widest"
+                className="text-sm font-semibold tracking-widest px-1"
               />
             </div>
             <EditableText
