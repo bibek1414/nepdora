@@ -76,17 +76,17 @@ export const PortfolioStyle5: React.FC<PortfolioStyle5Props> = ({
           <EditableText
             value={title}
             onChange={handleTitleChange}
-            as="h2"
-            className="mb-4 text-4xl font-bold tracking-tight text-gray-950 md:text-5xl"
+            as="label"
+            className="mb-2"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter title..."
           />
-          <EditableText
+        <EditableText
             value={subtitle || ""}
             onChange={handleSubtitleChange}
             as="p"
-            className="mx-auto max-w-2xl text-lg text-gray-600"
+            className="text-gray-600"
             style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."

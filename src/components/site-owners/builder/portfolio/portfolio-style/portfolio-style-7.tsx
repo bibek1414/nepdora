@@ -26,7 +26,12 @@ export const PortfolioStyle7: React.FC<PortfolioStyleProps> = ({
   onUpdate,
   onPortfolioClick,
 }) => {
-  const { title = "Selected work", heading, buttonText = "All work", buttonLink = "/work" } = data || {};
+  const {
+    title = "Selected work",
+    heading,
+    buttonText = "All work",
+    buttonLink = "/work",
+  } = data || {};
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
 
@@ -52,8 +57,8 @@ export const PortfolioStyle7: React.FC<PortfolioStyleProps> = ({
                 value={title}
                 onChange={(val: string) => onUpdate?.({ title: val })}
                 isEditable={isEditable}
-                as="span"
-                className="text-sm font-semibold tracking-wide uppercase text-gray-500"
+                as="p"
+                className="block text-sm font-semibold tracking-wide"
                 style={{ fontFamily: theme?.fonts?.body }}
               />
             </div>
@@ -63,18 +68,20 @@ export const PortfolioStyle7: React.FC<PortfolioStyleProps> = ({
                 onChange={(val: string) => onUpdate?.({ heading: val })}
                 isEditable={isEditable}
                 as="h2"
-                className="text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-5xl"
+                className="text-3xl leading-tight font-bold tracking-tight text-gray-900 md:text-5xl"
                 style={{ fontFamily: theme?.fonts?.heading }}
                 multiline
               />
             )}
           </div>
-          
+
           <div className="relative z-30">
             <EditableLink
               text={buttonText}
               href={buttonLink}
-              onChange={(text, href) => onUpdate?.({ buttonText: text, buttonLink: href })}
+              onChange={(text, href) =>
+                onUpdate?.({ buttonText: text, buttonLink: href })
+              }
               isEditable={isEditable}
               className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50"
             >

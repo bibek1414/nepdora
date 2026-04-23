@@ -51,7 +51,7 @@ export const TestimonialStyle10: React.FC<TestimonialStyleProps> = ({
               onChange={(val: string) => onUpdate?.({ subtitle: val })}
               isEditable={isEditable}
               as="p"
-              className="tracking-wider uppercase"
+              className="block text-sm font-semibold tracking-wide"
               style={{ fontFamily: theme?.fonts?.body }}
             />
           </div>

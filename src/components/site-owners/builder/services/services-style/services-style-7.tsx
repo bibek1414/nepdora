@@ -71,13 +71,13 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
 
   return (
     <section className="bg-white px-4 py-24 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl px-8">
         {/* Header Section */}
         <div className="mb-20 text-center">
           <EditableText
             value={title}
             onChange={handleTitleChange}
-            as="h2"
+            as="label"
             className="mb-4 text-4xl font-bold tracking-tight text-gray-950 md:text-5xl"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
@@ -87,7 +87,7 @@ export const ServicesStyle7: React.FC<ServicesStyle7Props> = ({
             value={subtitle || ""}
             onChange={handleSubtitleChange}
             as="p"
-            className="mx-auto max-w-2xl text-lg text-gray-600"
+            className="ml text-lg text-gray-600"
             style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."

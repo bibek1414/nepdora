@@ -457,12 +457,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Our Clients Style 6",
         image: "/images/site-owners/our-clients/ourclients6.png",
       },
-      {
-        id: "our-clients-7",
-        name: "Our Clients Style 7 (Immersive Slider)",
-        image: "/images/site-owners/our-clients/ourclients7.png",
-        description: "Full-width immersive logo slider",
-      },
     ],
 
     cta: [
@@ -501,6 +495,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "CTA Style 6 (Minimalist)",
         image: "/images/site-owners/cta/cta6.png",
         description: "Ultra-minimalist typography-focused CTA",
+      },
+      {
+        id: "cta-7",
+        name: "CTA Style 7 (Discovery Sprint)",
+        image: "/images/site-owners/cta/cta7.png",
+        description: "Premium editorial CTA with side-aligned button",
       },
     ],
     appointment: [
@@ -1193,13 +1193,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "portfolio-5",
         name: "Portfolio Style 5 (Paginated Grid)",
-        image: "/images/site-owners/portfolio/portfolio-5.png",
+        image: "/images/site-owners/portfolio/portfolio5.png",
         description: "Modern paginated grid with 4 columns and premium cards",
       },
       {
         id: "portfolio-6",
         name: "Portfolio Style 6 (Minimalist Grid)",
-        image: "/images/site-owners/portfolio/portfolio-6.png",
+        image: "/images/site-owners/portfolio/portfolio6.png",
         description: "Clean, high-end minimalist project grid",
       },
       {

@@ -44,7 +44,7 @@ export const OthersStyle27: React.FC<OthersStyle27Props> = ({
               <div className="mb-6 flex items-center gap-4">
                 <span className="h-px w-10 bg-gray-400"></span>
                 <EditableText
-                  as="span"
+                  as="p"
                   value={othersData.eyebrow}
                   onChange={val => onUpdate?.({ eyebrow: val })}
                   isEditable={isEditable}
@@ -57,18 +57,18 @@ export const OthersStyle27: React.FC<OthersStyle27Props> = ({
                 value={othersData.title}
                 onChange={val => onUpdate?.({ title: val })}
                 isEditable={isEditable}
-                className="font-display text-balance text-3xl leading-tight tracking-tight text-gray-900 md:text-5xl"
+                className="font-display text-3xl leading-tight tracking-tight text-balance text-gray-900 md:text-5xl"
                 style={{ fontFamily: theme?.fonts?.heading }}
                 multiline
               />
             </div>
-            <div className="lg:col-span-6 lg:col-start-7 self-end">
+            <div className="self-end lg:col-span-6 lg:col-start-7">
               <EditableText
                 as="p"
                 value={othersData.description}
                 onChange={val => onUpdate?.({ description: val })}
                 isEditable={isEditable}
-                className="text-muted-foreground text-pretty text-lg leading-relaxed font-medium"
+                className="text-muted-foreground text-lg leading-relaxed font-medium text-pretty"
                 style={{ fontFamily: theme?.fonts?.body }}
                 multiline
               />
@@ -104,9 +104,11 @@ export const OthersStyle27: React.FC<OthersStyle27Props> = ({
                 <EditableText
                   as="p"
                   value={item.description}
-                  onChange={val => handleItemUpdate(item.id, "description", val)}
+                  onChange={val =>
+                    handleItemUpdate(item.id, "description", val)
+                  }
                   isEditable={isEditable}
-                  className="text-muted-foreground text-pretty mt-4 text-sm leading-relaxed"
+                  className="text-muted-foreground mt-4 text-sm leading-relaxed text-pretty"
                   style={{ fontFamily: theme?.fonts?.body }}
                   multiline
                 />

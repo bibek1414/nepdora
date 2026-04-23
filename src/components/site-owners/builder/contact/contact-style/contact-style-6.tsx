@@ -87,47 +87,73 @@ Message: ${formData.message}
   };
 
   return (
-    <section className="border-border bg-background border-t">
+    <section className="bg-background">
       <div className="mx-auto max-w-7xl px-8 py-20 md:py-28">
-        <div className="mb-16 max-w-3xl">
-          <EditableText
-            value={subtitle}
-            onChange={handleTextUpdate("subtitle")}
-            as="span"
-            className="text-muted-foreground before:bg-muted-foreground mb-6 flex items-center gap-2 text-sm font-medium tracking-wider uppercase before:block before:h-px before:w-6 before:content-['']"
-            isEditable={isEditable}
-            style={{ fontFamily: theme?.fonts?.body }}
-          />
-          <EditableText
-            value={title}
-            onChange={handleTextUpdate("title")}
-            as="label"
-            className="font-display text-4xl leading-[1.05] tracking-tight text-balance md:text-6xl"
-            isEditable={isEditable}
-            style={{ fontFamily: theme?.fonts?.heading }}
-            multiline
-          />
-          <EditableText
-            value={description}
-            onChange={handleTextUpdate("description")}
-            as="p"
-            className="text-muted-foreground mt-8 max-w-2xl text-lg text-pretty"
-            isEditable={isEditable}
-            style={{ fontFamily: theme?.fonts?.body }}
-            multiline
-          />
-        </div>
-
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Info Column */}
+          <div className="lg:col-span-5">
+            <div className="flex items-center gap-2">
+              <span className="bg-muted-foreground h-px w-6"></span>
+
+              <EditableText
+                value={subtitle}
+                onChange={handleTextUpdate("subtitle")}
+                as="span"
+                className="block text-sm font-semibold tracking-wide"
+                isEditable={isEditable}
+                style={{ fontFamily: theme?.fonts?.body }}
+              />
+            </div>
+            <EditableText
+              value={title}
+              onChange={handleTextUpdate("title")}
+              as="label"
+              className="font-display text-3xl leading-[1.05] tracking-tight text-balance md:text-5xl"
+              isEditable={isEditable}
+              style={{ fontFamily: theme?.fonts?.heading }}
+              multiline
+            />
+            <EditableText
+              value={description}
+              onChange={handleTextUpdate("description")}
+              as="p"
+              className="text-muted-foreground mt-6 max-w-md text-pretty"
+              isEditable={isEditable}
+              style={{ fontFamily: theme?.fonts?.body }}
+              multiline
+            />
+
+            <div className="mt-12">
+              <ContactInfoCard6 data={data} theme={theme} />
+            </div>
+
+            {data.checklist && data.checklist.length > 0 && (
+              <ul className="mt-10 space-y-4">
+                {data.checklist.map((item, index) => (
+                  <li
+                    key={index}
+                    className="text-muted-foreground flex items-start gap-3 text-sm"
+                  >
+                    <div
+                      className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: theme?.colors?.primary }}
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           {/* Form Column */}
           <div className="lg:col-span-7">
             <form
               onSubmit={handleSubmit}
-              className="bg-card border-border space-y-6 rounded-2xl border p-8 shadow-sm md:p-10"
+              className="bg-card border-border -sm space-y-6 rounded-xl border p-8 md:p-10"
             >
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="cta-name" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your name</Label>
+                  <Label htmlFor="cta-name">Your name</Label>
                   <Input
                     id="cta-name"
                     name="name"
@@ -136,11 +162,11 @@ Message: ${formData.message}
                     value={formData.name}
                     onChange={handleInputChange}
                     disabled={isEditable || submitContactForm.isPending}
-                    className="h-12 bg-background/50 border-border focus:border-primary/50 transition-all"
+                    className="border-border bg-background focus:border-primary h-11"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cta-company" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Company</Label>
+                  <Label htmlFor="cta-company">Company</Label>
                   <Input
                     id="cta-company"
                     name="company"
@@ -148,13 +174,13 @@ Message: ${formData.message}
                     value={formData.company}
                     onChange={handleInputChange}
                     disabled={isEditable || submitContactForm.isPending}
-                    className="h-12 bg-background/50 border-border focus:border-primary/50 transition-all"
+                    className="border-border bg-background focus:border-primary h-11"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="cta-email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
+                  <Label htmlFor="cta-email">Email</Label>
                   <Input
                     id="cta-email"
                     name="email"
@@ -164,11 +190,11 @@ Message: ${formData.message}
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={isEditable || submitContactForm.isPending}
-                    className="h-12 bg-background/50 border-border focus:border-primary/50 transition-all"
+                    className="border-border bg-background focus:border-primary h-11"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cta-budget" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Approximate budget</Label>
+                  <Label htmlFor="cta-budget">Approximate budget</Label>
                   <Input
                     id="cta-budget"
                     name="budget"
@@ -176,12 +202,12 @@ Message: ${formData.message}
                     value={formData.budget}
                     onChange={handleInputChange}
                     disabled={isEditable || submitContactForm.isPending}
-                    className="h-12 bg-background/50 border-border focus:border-primary/50 transition-all"
+                    className="border-border bg-background focus:border-primary h-11"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cta-message" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">What are you working on?</Label>
+                <Label htmlFor="cta-message">What are you working on?</Label>
                 <Textarea
                   id="cta-message"
                   name="message"
@@ -191,18 +217,18 @@ Message: ${formData.message}
                   value={formData.message}
                   onChange={handleInputChange}
                   disabled={isEditable || submitContactForm.isPending}
-                  className="bg-background/50 border-border focus:border-primary/50 transition-all resize-none"
+                  className="border-border bg-background focus:border-primary min-h-[120px] resize-none"
                 />
               </div>
-              <div className="flex flex-col gap-6 pt-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-muted-foreground text-xs italic">
-                  * We treat every inquiry confidentially and aim to respond within 48 hours.
+              <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-muted-foreground text-xs">
+                  We treat every inquiry confidentially.
                 </p>
                 <Button
                   type="submit"
                   size="lg"
                   disabled={isEditable || submitContactForm.isPending}
-                  className="h-14 px-8 rounded-full font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
+                  className="h-12 px-6"
                   style={{
                     backgroundColor: theme?.colors?.primary,
                     color: theme?.colors?.primaryForeground,
@@ -213,11 +239,6 @@ Message: ${formData.message}
                 </Button>
               </div>
             </form>
-          </div>
-
-          {/* Info Column */}
-          <div className="lg:col-span-5">
-            <ContactInfoCard6 data={data} theme={theme} />
           </div>
         </div>
       </div>

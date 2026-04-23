@@ -293,7 +293,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   };
   const Wrapper = Tag === "p" || Tag === "span" ? "span" : "div";
   // Map "title" to a valid HTML tag for rendering in the body
-  const RenderTag = Tag === "title" ? "h1" : Tag;
+  const RenderTag = Tag === "title" || Tag === "label" ? "h1" : Tag;
 
   return (
     <Wrapper

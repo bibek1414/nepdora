@@ -82,6 +82,14 @@ export interface CTATemplate6Data {
   buttons: CTAButton[];
 }
 
+export interface CTATemplate7Data {
+  template: "cta-7";
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonHref: string;
+}
+
 // Union type for all CTA templates
 export type CTAData =
   | CTATemplate1Data
@@ -89,7 +97,8 @@ export type CTAData =
   | CTATemplate3Data
   | CTATemplate4Data
   | CTATemplate5Data
-  | CTATemplate6Data;
+  | CTATemplate6Data
+  | CTATemplate7Data;
 
 // Component and API interfaces
 export interface CTAComponentData {
@@ -194,6 +203,15 @@ export const defaultCTATemplate6Data: CTATemplate6Data = {
   ],
 };
 
+export const defaultCTATemplate7Data: CTATemplate7Data = {
+  template: "cta-7",
+  title: "Not sure where to start? Begin with a discovery sprint.",
+  description:
+    "A two-week engagement to map the opportunity, audit what exists and recommend the right path forward — with no obligation to continue.",
+  buttonText: "Talk to us",
+  buttonHref: "#",
+};
+
 // Default data map for all CTA templates
 export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-1": defaultCTATemplate1Data,
@@ -202,6 +220,7 @@ export const DEFAULT_CTA_MAP: Record<CTAData["template"], CTAData> = {
   "cta-4": defaultCTATemplate4Data,
   "cta-5": defaultCTATemplate5Data,
   "cta-6": defaultCTATemplate6Data,
+  "cta-7": defaultCTATemplate7Data,
 };
 
 // Type guards for each template
@@ -222,3 +241,6 @@ export const isCTATemplate5 = (data: CTAData): data is CTATemplate5Data =>
 
 export const isCTATemplate6 = (data: CTAData): data is CTATemplate6Data =>
   data.template === "cta-6";
+
+export const isCTATemplate7 = (data: CTAData): data is CTATemplate7Data =>
+  data.template === "cta-7";
