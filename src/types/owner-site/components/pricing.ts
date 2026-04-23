@@ -5,6 +5,8 @@ export interface PricingData {
   subtitle?: string;
   tag?: string;
   italicWord?: string;
+  ctaText?: string;
+  ctaHref?: string;
   order?: number;
 }
 
@@ -26,7 +28,14 @@ export const defaultPricingData: PricingData = {
 export const DEFAULT_PRICING_MAP: Record<PricingData["style"], PricingData> = {
   "pricing-1": { ...defaultPricingData, style: "pricing-1" },
   "pricing-2": { ...defaultPricingData, style: "pricing-2" },
-  "pricing-3": { ...defaultPricingData, style: "pricing-3" },
+  "pricing-3": {
+    ...defaultPricingData,
+    style: "pricing-3",
+    title: "Simple, Transparent Pricing",
+    subtitle: "Choose the perfect plan for your business needs.",
+    ctaText: "Get Started",
+    ctaHref: "#",
+  },
   "pricing-4": { ...defaultPricingData, style: "pricing-4" },
   "pricing-5": {
     ...defaultPricingData,

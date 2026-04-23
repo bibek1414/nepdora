@@ -1301,6 +1301,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Pricing Style 2",
         image: "/images/site-owners/pricing/pricing2.png",
       },
+      {
+        id: "pricing-3",
+        name: "Pricing Style 3 (Premium Editorial)",
+        image: "/images/site-owners/pricing/pricing3.png",
+        description: "Premium editorial pricing grid with featured highlights",
+      },
     ],
     text_editor: [
       {

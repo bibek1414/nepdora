@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PricingStyle1 } from "./pricing-style/pricing-style-1";
 import { PricingStyle2 } from "./pricing-style/pricing-style-2";
+import { PricingStyle3 } from "./pricing-style/pricing-style-3";
 
 interface PricingComponentProps {
   component: PricingComponentData;
@@ -91,6 +92,8 @@ export const PricingComponent: React.FC<PricingComponentProps> = ({
     };
 
     switch (style) {
+      case "pricing-3":
+        return <PricingStyle3 {...commonProps} />;
       case "pricing-2":
         return <PricingStyle2 {...commonProps} />;
       case "pricing-1":
