@@ -63,7 +63,7 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
       subtitle:
         "At Neptecture, we bring your ideas to life through innovative design, smart planning, and a commitment to quality and detail in every project.",
       buttonText: "Browse all services",
-      buttonLink: "/services",
+      buttonLink: "#",
     },
     "services-7": { ...defaultServicesData, style: "services-7" },
     "services-8": {
@@ -80,6 +80,6 @@ export const DEFAULT_SERVICES_MAP: Record<ServicesData["style"], ServicesData> =
       subtitle:
         "We move between strategy, design, engineering and growth as the work demands. No handoffs between agencies, no diluted thinking — just a small senior team accountable from the first conversation to the last shipped detail.",
       buttonText: "Explore all services",
-      buttonLink: "/services",
+      buttonLink: "#",
     },
   };

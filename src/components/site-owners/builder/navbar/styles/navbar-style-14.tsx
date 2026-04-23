@@ -11,14 +11,7 @@ import {
   NavbarLink,
   NavbarButton,
 } from "@/types/owner-site/components/navbar";
-import {
-  Menu,
-  User,
-  Heart,
-  Package,
-  LogOut,
-  ChevronDown,
-} from "lucide-react";
+import { Menu, User, Heart, Package, LogOut, ChevronDown, ChevronRight } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -119,7 +112,8 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
     <header
       className={`w-full border-b backdrop-blur-md ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
       style={{
-        backgroundColor: navbarData.backgroundColor || "rgba(255, 255, 255, 0.8)",
+        backgroundColor:
+          navbarData.backgroundColor || "rgba(255, 255, 255, 0.8)",
         color: navbarData.textColor || "inherit",
       }}
     >
@@ -154,7 +148,9 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                 />
               </EditableItem>
             ) : (
-              <div onClick={disableClicks ? e => e.preventDefault() : undefined}>
+              <div
+                onClick={disableClicks ? e => e.preventDefault() : undefined}
+              >
                 <NavbarLogo data={navbarData} siteUser={siteUser} />
               </div>
             )}
@@ -167,9 +163,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
             <div key={link.id}>
               {isEditable && onEditLink ? (
                 <EditableItem>
-                  <span
-                    className="cursor-default py-2 text-sm font-medium transition-colors hover:opacity-80"
-                  >
+                  <span className="cursor-default py-2 text-sm font-medium transition-colors hover:opacity-80">
                     {link.text}
                   </span>
                 </EditableItem>
@@ -226,7 +220,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                         backgroundColor: theme.colors.primary,
                         color: theme.colors.primaryForeground,
                       }}
-                      className="cursor-default transition-colors hover:opacity-90"
+                      className="cursor-default transition-colors hover:opacity-90 rounded-full"
                     >
                       {button.text}
                     </Button>
@@ -239,7 +233,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                       backgroundColor: theme.colors.primary,
                       color: theme.colors.primaryForeground,
                     }}
-                    className={`transition-colors hover:opacity-90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                    className={`transition-colors hover:opacity-90 rounded-full ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
                     asChild={!disableClicks}
                   >
                     {disableClicks ? (
@@ -267,6 +261,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                         }
                       >
                         {button.text}
+                        <ChevronRight />
                       </Link>
                     )}
                   </Button>
@@ -277,7 +272,9 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
 
           {/* User Auth - Desktop */}
           {enableLogin && (
-            <div className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}>
+            <div
+              className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}
+            >
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -384,9 +381,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                   {isEditable && onEditLink ? (
                     <EditableItem>
                       <div className="flow-root">
-                        <span
-                          className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80"
-                        >
+                        <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                           {link.text}
                         </span>
                       </div>
@@ -433,9 +428,7 @@ export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
                   {isEditable && onEditButton ? (
                     <EditableItem>
                       <div className="flow-root">
-                        <span
-                          className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80"
-                        >
+                        <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                           {button.text}
                         </span>
                       </div>
