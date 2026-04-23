@@ -36,6 +36,7 @@ import { useAuth } from "@/hooks/customer/use-auth";
 import { useWishlist } from "@/hooks/customer/use-wishlist";
 import { useRouter } from "next/navigation";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
+import { getButtonVariant } from "@/lib/utils";
 
 const EditableItem: React.FC<{
   children: React.ReactNode;
@@ -180,7 +181,10 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                 <EditableItem>
                   <Link
                     href={link.href}
-                    onClick={e => e.preventDefault()}
+                    onClick={e => {
+                      e.preventDefault();
+                      onEditLink(link);
+                    }}
                     className="group relative cursor-pointer py-2 text-sm font-medium transition-colors hover:opacity-80"
                   >
                     {link.text}
@@ -223,6 +227,68 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
               )}
             </div>
           ))}
+
+          {/* Desktop Buttons */}
+          {buttons.map(button => (
+            <div key={button.id}>
+              {isEditable && onEditButton && onDeleteButton ? (
+                <EditableItem>
+                  <Button
+                    variant={getButtonVariant(button.variant)}
+                    size="sm"
+                    onClick={() => onEditButton(button)}
+                    style={{
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
+                    }}
+                    className="cursor-pointer transition-colors hover:opacity-90"
+                  >
+                    {button.text}
+                  </Button>
+                </EditableItem>
+              ) : (
+                <Button
+                  variant={getButtonVariant(button.variant)}
+                  size="sm"
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    color: theme.colors.primaryForeground,
+                  }}
+                  className={`transition-colors hover:opacity-90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                  asChild={!disableClicks}
+                >
+                  {disableClicks ? (
+                    button.text
+                  ) : (
+                    <Link
+                      href={generateLinkHref(
+                        button.href,
+                        siteUser,
+                        pathname,
+                        isEditable,
+                        disableClicks
+                      )}
+                      target={
+                        button.href?.startsWith("http") ||
+                        button.href?.startsWith("mailto:")
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        button.href?.startsWith("http") ||
+                        button.href?.startsWith("mailto:")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                    >
+                      {button.text}
+                    </Link>
+                  )}
+                </Button>
+              )}
+            </div>
+          ))}
+
         </div>
 
         {/* Actions - Right Side */}
@@ -348,7 +414,10 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                       <div className="flow-root">
                         <Link
                           href={link.href}
-                          onClick={e => e.preventDefault()}
+                          onClick={e => {
+                            e.preventDefault();
+                            onEditLink(link);
+                          }}
                           className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
                         >
                           {link.text}
@@ -399,7 +468,10 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                       <div className="flow-root">
                         <Link
                           href={button.href}
-                          onClick={e => e.preventDefault()}
+                          onClick={e => {
+                            e.preventDefault();
+                            onEditButton(button);
+                          }}
                           className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
                         >
                           {button.text}

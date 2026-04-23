@@ -51,7 +51,7 @@ export const PricingStyle3: React.FC<PricingStyle3Props> = ({
   };
 
   return (
-    <section className="bg-white py-20 md:py-32">
+    <section className="bg-white py-20 md:py-20">
       <div className="mx-auto max-w-7xl px-8">
         <div className="mb-16 text-center">
           <EditableText
@@ -207,6 +207,7 @@ export const PricingStyle3: React.FC<PricingStyle3Props> = ({
                       onUpdate?.({ ctaText: newText, ctaHref: newHref })
                     }
                     isEditable={isEditable}
+                    fullWidth={true}
                     className={cn(
                       "w-full cursor-pointer items-center justify-center rounded-lg py-3 text-sm font-medium transition-transform duration-200 hover:scale-[1.02]",
                       plan.is_popular && "bg-white hover:bg-gray-100"

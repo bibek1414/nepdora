@@ -41,6 +41,7 @@ interface EditableLinkProps {
   target?: "_blank" | "_self";
   showExternalIcon?: boolean;
   dropdownPosition?: "top" | "bottom";
+  fullWidth?: boolean;
 }
 
 interface PageSelectorProps {
@@ -394,6 +395,7 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
   target = "_self",
   showExternalIcon = false,
   dropdownPosition = "top",
+  fullWidth = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPageSelector, setShowPageSelector] = useState(false);
@@ -553,19 +555,24 @@ export const EditableLink: React.FC<EditableLinkProps> = ({
     (href.startsWith("http") || href.startsWith("mailto:"));
 
   return (
-    <div className="group relative inline-block" ref={containerRef}>
+    <div
+      className={cn("group relative inline-block", fullWidth && "block w-full")}
+      ref={containerRef}
+    >
       <Link
         href={finalHref}
         target={isExternal ? "_blank" : target}
         style={style}
         className={cn(
-          "inline-flex items-center gap-1 transition-all duration-200",
+          fullWidth ? "flex" : "inline-flex",
+          "items-center gap-1 transition-all duration-200",
           // Default styles that apply to both modes unless overridden
           !className?.includes("h-") && "h-16",
           !className?.includes("cursor-") && "cursor-pointer",
           !className?.includes("px-") && "px-4",
           !className?.includes("py-") && "py-2",
           !className?.includes("rounded") && "rounded",
+          fullWidth && "w-full",
           className,
           isEditable && [
             "hover:bg-primary/10",

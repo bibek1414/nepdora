@@ -1387,15 +1387,16 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       },
       {
         id: "navbar-11",
-        name: "Navbar with Book Appointment",
+        name: "Navbar simple left logo ",
         image: "/images/site-owners/navbars/navbar11.png",
-        description: "Includes book appointment button",
+        description: "Navbar simple with left aligned logo",
       },
       {
         id: "navbar-12",
         name: "Navbar with top bar and categories",
         image: "/images/site-owners/navbars/navbar12.png",
         description: "Includes top bar and categories",
+        showForWebsiteTypes: ["ecommerce"],
       },
       {
         id: "navbar-13",
@@ -1403,6 +1404,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/navbars/navbar13.png",
         description:
           "Two-row premium header with integrated search and categories",
+        showForWebsiteTypes: ["ecommerce"],
       },
     ],
     // FOOTER TEMPLATES

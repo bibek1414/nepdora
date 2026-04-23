@@ -60,7 +60,7 @@ export const FAQCard12: React.FC<FAQCard12Props> = ({
               className="sticky top-32 max-w-md"
             >
               <EditableText
-                as="h2"
+                as="title"
                 value={title}
                 onChange={onTitleChange || (() => {})}
                 isEditable={isEditable}
