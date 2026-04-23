@@ -7,6 +7,7 @@ import { EditableLink } from "@/components/ui/editable-link";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 
 interface CTATemplate8Props {
   ctaData: CTATemplate8Data;
@@ -40,27 +41,27 @@ export const CTATemplate8: React.FC<CTATemplate8Props> = ({
   };
 
   return (
-    <section 
+    <section
       className="py-20 md:py-32"
       style={{ backgroundColor: theme?.colors?.primary }}
     >
-      <div className="container mx-auto px-6">
+      <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="max-w-2xl"
+          className="mx-auto max-w-2xl text-center"
         >
           <EditableText
             value={data.title}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
-            as="h2"
-            className="text-3xl md:text-4xl lg:text-5xl font-medium mb-6"
-            style={{ 
+            as="title"
+            className="mb-6 text-3xl font-medium md:text-4xl lg:text-5xl"
+            style={{
               fontFamily: theme?.fonts?.heading,
-              color: theme?.colors?.primaryForeground || "#FFFFFF"
+              color: theme?.colors?.primaryForeground || "#FFFFFF",
             }}
             multiline
           />
@@ -69,15 +70,17 @@ export const CTATemplate8: React.FC<CTATemplate8Props> = ({
             onChange={handleTextUpdate("description")}
             isEditable={isEditable}
             as="p"
-            className="text-lg mb-8"
-            style={{ 
+            className="mb-8 text-lg"
+            style={{
               fontFamily: theme?.fonts?.body,
-              color: theme?.colors?.primaryForeground ? `${theme.colors.primaryForeground}B3` : "rgba(255, 255, 255, 0.7)"
+              color: theme?.colors?.primaryForeground
+                ? `${theme.colors.primaryForeground}B3`
+                : "rgba(255, 255, 255, 0.7)",
             }}
             multiline
           />
-          
-          <div className="flex flex-wrap gap-4">
+
+          <div className="flex flex-wrap justify-center gap-4">
             {/* Primary Gold Button */}
             <div className="relative z-30">
               <EditableLink
@@ -86,33 +89,15 @@ export const CTATemplate8: React.FC<CTATemplate8Props> = ({
                 onChange={handleButton1Update}
                 isEditable={isEditable}
                 siteUser={siteUser}
-                className="px-8 py-3.5 font-semibold transition-colors hover:opacity-90 active:scale-95 inline-flex items-center justify-center rounded-sm"
+                className="inline-flex items-center justify-center rounded-sm px-8 py-3.5 font-semibold transition-colors hover:opacity-90 active:scale-95"
                 style={{
-                  backgroundColor: "#D4AF37", // Gold
-                  color: theme?.colors?.primary || "#000000",
+                  backgroundColor: theme?.colors?.secondary, // Gold
+                  color: theme?.colors?.secondaryForeground || "#000000",
                   fontFamily: theme?.fonts?.body,
                 }}
               >
                 {data.button1Text}
-              </EditableLink>
-            </div>
-
-            {/* Secondary Bordered Button */}
-            <div className="relative z-30">
-              <EditableLink
-                text={data.button2Text}
-                href={data.button2Href}
-                onChange={handleButton2Update}
-                isEditable={isEditable}
-                siteUser={siteUser}
-                className="px-8 py-3.5 border font-semibold transition-all hover:bg-white/10 active:scale-95 inline-flex items-center justify-center rounded-sm"
-                style={{
-                  borderColor: theme?.colors?.primaryForeground ? `${theme.colors.primaryForeground}4D` : "rgba(255, 255, 255, 0.3)",
-                  color: theme?.colors?.primaryForeground || "#FFFFFF",
-                  fontFamily: theme?.fonts?.body,
-                }}
-              >
-                {data.button2Text}
+                <ChevronRight className="ml-2" />
               </EditableLink>
             </div>
           </div>

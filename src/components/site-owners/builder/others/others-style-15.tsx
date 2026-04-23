@@ -10,6 +10,11 @@ import {
   HeartHandshake,
   Globe,
   HelpCircle,
+  Compass,
+  Layers,
+  Leaf,
+  ClipboardCheck,
+  Building2
 } from "lucide-react";
 import {
   Card,
@@ -41,6 +46,12 @@ const iconMap: Record<string, any> = {
   Award,
   HeartHandshake,
   Globe,
+  HelpCircle,
+  Compass,
+  Layers,
+  Leaf,
+  ClipboardCheck,
+  Building2
 };
 
 export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({
@@ -125,10 +136,7 @@ export const OthersTemplate15: React.FC<OthersTemplate15Props> = ({
             className="flex flex-wrap gap-4 lg:justify-end"
           >
             {data.trustBadges?.map((stat, index) => (
-              <Card
-                key={stat.id}
-                className="rounded-lg px-6 py-4 text-center shadow-sm"
-              >
+              <Card key={stat.id} className="rounded-lg px-6 py-4 text-center">
                 <div
                   className="text-2xl font-bold"
                   style={{ color: colors.primary }}

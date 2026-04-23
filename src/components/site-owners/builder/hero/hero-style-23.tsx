@@ -9,6 +9,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 
 interface HeroTemplate23Props {
   heroData: HeroTemplate23Data;
@@ -110,8 +111,8 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
                     isEditable={isEditable}
                     siteUser={siteUser}
                     className={cn(
-                      "inline-flex w-full cursor-pointer justify-center px-6 py-3 text-center font-semibold transition-all duration-200 sm:w-auto sm:px-8 sm:py-3.5",
-                      isEditable && "cursor-default"
+                      "inline-flex w-full cursor-pointer justify-center rounded-full px-6 py-3 text-center font-semibold transition-all duration-200 sm:w-auto sm:px-8 sm:py-3.5",
+                      isEditable && "cursor-pointer"
                     )}
                     style={{
                       backgroundColor:
@@ -126,6 +127,7 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
                     }}
                   >
                     {button.text}
+                    <ChevronRight className="ml-2 h-4 w-4" />
                   </EditableLink>
                 </div>
               ))}

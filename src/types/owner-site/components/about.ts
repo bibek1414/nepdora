@@ -825,6 +825,13 @@ export interface AboutUs23Data {
   description: string;
 }
 
+export interface AboutUs26Data {
+  template: "about-26";
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+
 export interface AboutUs24Data {
   template: "about-24";
   eyebrow: string;
@@ -911,6 +918,14 @@ export const defaultAboutUs23Data: AboutUs23Data = {
     "Northbound is a small, independent practice based in London and Lisbon. We have stayed deliberately small so the people who promise the work are the people who deliver it.",
 };
 
+export const defaultAboutUs26Data: AboutUs26Data = {
+  template: "about-26",
+  eyebrow: "About",
+  title: "Our story, our passion",
+  description:
+    "A journey of creativity, innovation, and commitment to architectural excellence in the heart of the Himalayas.",
+};
+
 export const defaultAboutUs24Data: AboutUs24Data = {
   template: "about-24",
   eyebrow: "Our story",
@@ -937,7 +952,7 @@ export const defaultAboutUs25Data: AboutUs25Data = {
   statValue: "15+",
   statLabel: "Years of excellence",
   ctaText: "Learn more about us",
-  ctaLink: "/about",
+  ctaLink: "#",
 };
 
 // Union type for all about us templates
@@ -966,7 +981,8 @@ export type AboutUsData =
   | AboutUs22Data
   | AboutUs23Data
   | AboutUs24Data
-  | AboutUs25Data;
+  | AboutUs25Data
+  | AboutUs26Data;
 
 export interface AboutUsComponentData {
   id: string | number;
@@ -1023,7 +1039,8 @@ export interface UpdateAboutUsRequest {
     | Partial<AboutUs22Data>
     | Partial<AboutUs23Data>
     | Partial<AboutUs24Data>
-    | Partial<AboutUs25Data>;
+    | Partial<AboutUs25Data>
+    | Partial<AboutUs26Data>;
   order?: number;
 }
 
@@ -1072,6 +1089,7 @@ export const DEFAULT_ABOUT_MAP: Record<AboutUsData["template"], AboutUsData> = {
   "about-23": defaultAboutUs23Data,
   "about-24": defaultAboutUs24Data,
   "about-25": defaultAboutUs25Data,
+  "about-26": defaultAboutUs26Data,
 };
 
 // Type guards for each template
@@ -1149,3 +1167,6 @@ export const isAboutUsTemplate24 = (data: AboutUsData): data is AboutUs24Data =>
 
 export const isAboutUsTemplate25 = (data: AboutUsData): data is AboutUs25Data =>
   data.template === "about-25";
+
+export const isAboutUsTemplate26 = (data: AboutUsData): data is AboutUs26Data =>
+  data.template === "about-26";
