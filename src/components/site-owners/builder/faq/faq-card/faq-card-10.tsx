@@ -19,7 +19,7 @@ export const FAQCard10: React.FC<FAQCard10Props> = ({ faqs }) => {
         <AccordionItem
           key={faq.id || index}
           value={`item-${index}`}
-          className="overflow-hidden rounded-xl border border-gray-200 bg-white px-6 shadow-sm"
+          className="overflow-hidden rounded-xl border border-gray-200 bg-white px-6 -sm"
         >
           <AccordionTrigger className="cursor-pointer py-5 text-left text-base font-medium text-gray-900 hover:no-underline sm:text-lg">
             {faq.question}

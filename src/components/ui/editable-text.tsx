@@ -264,12 +264,27 @@ export const EditableText: React.FC<EditableTextProps> = ({
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLElement>) => {
+    if (!isEditable) return;
+    e.preventDefault();
+    let text = e.clipboardData.getData("text/plain");
+
+    // If not multiline, remove any line breaks from pasted text
+    if (!multiline) {
+      text = text.replace(/\r?\n|\r/g, " ");
+    }
+
+    // Insert as plain text at current cursor position
+    document.execCommand("insertText", false, text);
+  };
+
   const commonProps = {
     ref: textRef,
     contentEditable: isEditable,
     onBlur: handleTextChange,
     onMouseUp: handleTextSelect,
     onKeyDown: handleKeyDown,
+    onPaste: handlePaste,
     onKeyUp: handleTextSelect,
     suppressContentEditableWarning: true,
     "data-placeholder": !value ? placeholder : undefined,

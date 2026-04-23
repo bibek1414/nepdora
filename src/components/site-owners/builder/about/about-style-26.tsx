@@ -40,8 +40,8 @@ export const AboutUsTemplate26: React.FC<AboutUs26Props> = ({
           value={data.eyebrow}
           onChange={handleTextUpdate("eyebrow")}
           isEditable={isEditable}
-          as="span"
-          className="px-3"
+          as="p"
+          className="px-1"
           style={{
             fontFamily: theme?.fonts?.body,
             color: theme?.colors?.primaryForeground,
@@ -65,7 +65,7 @@ export const AboutUsTemplate26: React.FC<AboutUs26Props> = ({
           onChange={handleTextUpdate("description")}
           isEditable={isEditable}
           as="p"
-          className="mt-8 max-w-2xl text-lg leading-relaxed md:text-xl"
+          className="mt-8 max-w-2xl px-1"
           style={{
             fontFamily: theme?.fonts?.body,
             color: theme?.colors?.primaryForeground,

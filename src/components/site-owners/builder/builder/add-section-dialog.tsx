@@ -1022,7 +1022,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       {
         id: "testimonial-10",
         name: "Testimonial Style 10 (High Contrast Grid)",
-        image: "/images/site-owners/testimonial/testimonial-10.png",
+        image: "/images/site-owners/testimonial/testimonial10.png",
         description:
           "Premium high-contrast grid with eyebrow-line and glass cards",
       },
