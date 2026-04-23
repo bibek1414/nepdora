@@ -257,7 +257,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
             isEditable && onEditLink ? (
               <EditableItem key={link.id}>
                 <span
-                  className={linkClass(link.href, pathname === link.href)}
+                  className={linkClass(link.href, pathname === link.href) + " cursor-default"}
                   style={pathname === link.href ? { color: primaryColor } : {}}
                 >
                   {link.text}
@@ -360,7 +360,7 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
           {buttons.map(button =>
             isEditable && onEditButton ? (
               <EditableItem key={button.id}>
-                <div className="flex items-center gap-3 rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-6">
+                <div className="flex cursor-default items-center gap-3 rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-6">
                   <span className="text-sm font-semibold">{button.text}</span>
                   <div
                     className="flex h-9 w-9 items-center justify-center rounded-full text-white"
@@ -499,13 +499,9 @@ export const NavbarStyle10: React.FC<NavbarStyleProps> = ({
                 isEditable && onEditLink ? (
                   <EditableItem key={link.id}>
                     <div className="flow-root">
-                      <Link
-                        href={link.href}
-                        onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
-                      >
+                      <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                         {link.text}
-                      </Link>
+                      </span>
                     </div>
                   </EditableItem>
                 ) : (

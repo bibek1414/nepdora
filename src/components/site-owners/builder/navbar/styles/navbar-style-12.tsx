@@ -476,7 +476,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                   {isEditable && onEditLink ? (
                     <EditableItem>
                       <span
-                        className="cursor-pointer text-sm font-bold opacity-80"
+                        className="cursor-default text-sm font-bold opacity-80"
                         style={{ color: navText }}
                       >
                         {link.text}
@@ -574,14 +574,12 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                 <div key={link.id} className="flow-root">
                   {isEditable && onEditLink && onDeleteLink ? (
                     <EditableItem>
-                      <Link
-                        href={link.href}
-                        onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 text-base font-bold transition-all hover:opacity-80"
+                      <span
+                        className="-m-2 block cursor-default p-2 text-base font-bold transition-all hover:opacity-80"
                         style={{ color: navText }}
                       >
                         {link.text}
-                      </Link>
+                      </span>
                     </EditableItem>
                   ) : (
                     <Link
@@ -672,9 +670,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                 <div key={btn.id}>
                   {isEditable && onEditButton && onDeleteButton ? (
                     <EditableItem>
-                      <Link
-                        href={btn.href}
-                        onClick={e => e.preventDefault()}
+                      <span
                         className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-center text-xs font-bold transition-all hover:opacity-80"
                         style={{
                           backgroundColor: theme.colors.primary,
@@ -682,7 +678,7 @@ export const NavbarStyle12: React.FC<NavbarStyleProps> = ({
                         }}
                       >
                         {btn.text}
-                      </Link>
+                      </span>
                     </EditableItem>
                   ) : (
                     <Button

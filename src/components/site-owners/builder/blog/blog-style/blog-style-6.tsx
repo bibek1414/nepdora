@@ -69,7 +69,7 @@ export const BlogStyle6: React.FC<BlogStyle6Props> = ({
 
   return (
     <section className="overflow-hidden bg-white px-6 py-24">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl px-8">
         {/* Header Section */}
         <div className="mb-20 text-center">
           <EditableText

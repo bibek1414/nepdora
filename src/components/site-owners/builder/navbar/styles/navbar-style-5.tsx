@@ -210,7 +210,7 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                           }}
                           isEditable={false}
                           siteUser={siteUser}
-                          className="flex cursor-pointer items-center gap-1.5 font-medium transition-colors hover:opacity-80"
+                          className="flex cursor-default items-center gap-1.5 font-medium transition-colors hover:opacity-80"
                           textPlaceholder="Link text..."
                           hrefPlaceholder="Enter URL..."
                         />
@@ -409,13 +409,9 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                 isEditable && onEditLink && onDeleteLink ? (
                   <EditableItem key={link.id}>
                     <div className="flow-root">
-                      <Link
-                        href={link.href}
-                        onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
-                      >
+                      <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                         {link.text}
-                      </Link>
+                      </span>
                     </div>
                   </EditableItem>
                 ) : (
@@ -457,13 +453,9 @@ export const NavbarStyle5: React.FC<NavbarStyleProps> = ({
                   isEditable && onEditButton && onDeleteButton ? (
                     <EditableItem key={button.id}>
                       <div className="flow-root">
-                        <Link
-                          href={button.href}
-                          onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
-                        >
+                        <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                           {button.text}
-                        </Link>
+                        </span>
                       </div>
                     </EditableItem>
                   ) : (

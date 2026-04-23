@@ -111,7 +111,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
                       : `/`
                     : "/"
                 }
-                className="hover:text-primary font-medium transition-colors"
+                className="font-medium transition-colors"
               >
                 Home
               </Link>
@@ -125,13 +125,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
         </nav>
 
         <div className="mx-auto mb-8 max-w-4xl text-center">
-          {portfolio.category?.name && (
-            <div className="text-primary mb-4 flex items-center justify-center text-sm font-semibold tracking-wider uppercase">
-              <Folder className="mr-2 h-4 w-4" />
-              {portfolio.category.name}
-            </div>
-          )}
-          <h1 className="text-foreground mb-6 text-3xl font-bold md:text-5xl lg:text-7xl">
+          <h1 className="text-foreground mb-6 text-3xl font-semibold md:text-5xl">
             {portfolio.title}
           </h1>
 

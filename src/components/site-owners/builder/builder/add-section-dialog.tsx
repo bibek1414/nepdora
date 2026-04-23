@@ -1406,6 +1406,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
           "Two-row premium header with integrated search and categories",
         showForWebsiteTypes: ["ecommerce"],
       },
+      {
+        id: "navbar-14",
+        name: "Navbar Center Navigation",
+        image: "/images/site-owners/navbars/navbar14.png",
+        description: "Logo left, centered navigation, buttons right",
+      },
     ],
     // FOOTER TEMPLATES
     footer: [

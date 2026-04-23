@@ -94,7 +94,7 @@ export const PortfolioDetail2: React.FC<{
 
   return (
     <div className="bg-background pt-20 pb-0">
-      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-16">
+      <div className="container mx-auto max-w-7xl px-8 py-8 md:py-16">
         {/* Header Section */}
         <div className="mb-8">
           <Breadcrumb className="mb-6">
@@ -126,17 +126,13 @@ export const PortfolioDetail2: React.FC<{
             </BreadcrumbList>
           </Breadcrumb>
 
-          <h1 className="text-foreground mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-7xl">
+          <h1 className="text-foreground mb-4 text-4xl font-normal tracking-tight md:text-5xl">
             {portfolio.title}
           </h1>
-          <p className="text-muted-foreground max-w-2xl text-lg md:text-xl">
-            A comprehensive look into the objectives, execution, and outcomes of
-            this creative endeavor.
-          </p>
         </div>
 
         {/* Big Hero Image */}
-        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm md:h-[550px] lg:mb-20">
+        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl -sm md:h-[550px] lg:mb-20">
           <Image
             unoptimized
             src={portfolioImage}
@@ -162,7 +158,7 @@ export const PortfolioDetail2: React.FC<{
           {/* Sidebar */}
           <aside className="space-y-8 lg:col-span-4">
             {/* Project Details Card */}
-            <div className="bg-muted/30 rounded-2xl border p-8 shadow-sm">
+            <div className="bg-muted/30 rounded-2xl border p-8 -sm">
               <h3 className="mb-6 border-b pb-4 text-xl font-bold">
                 Project Info
               </h3>
@@ -196,7 +192,7 @@ export const PortfolioDetail2: React.FC<{
                   {portfolio.project_url && (
                     <Button
                       asChild
-                      className="w-full rounded-xl py-6 text-base shadow-md"
+                      className="w-full rounded-xl py-6 text-base -md"
                     >
                       <a
                         href={portfolio.project_url}
@@ -229,7 +225,7 @@ export const PortfolioDetail2: React.FC<{
 
             {/* Technologies Card */}
             {portfolio.tags && portfolio.tags.length > 0 && (
-              <div className="bg-primary/5 border-primary/10 rounded-2xl border p-6 shadow-sm">
+              <div className="bg-primary/5 border-primary/10 rounded-2xl border p-6 -sm">
                 <h4 className="mb-4 flex items-center gap-2 text-lg font-bold">
                   <Tag className="text-primary h-5 w-5" />
                   Technologies Used

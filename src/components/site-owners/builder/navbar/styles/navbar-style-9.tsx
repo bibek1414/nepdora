@@ -284,6 +284,48 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   <div className="hidden h-8 w-px bg-gray-200 md:block"></div>
                 )}
 
+                {/* Desktop Buttons */}
+                <div className="hidden items-center gap-3 lg:flex">
+                  {buttons.map((button: NavbarButton) =>
+                    isEditable && onEditButton ? (
+                      <EditableItem key={button.id}>
+                        <button
+                          className="cursor-default rounded-full bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200"
+                          style={{
+                            backgroundColor: theme.colors.primary,
+                            color: theme.colors.primaryForeground,
+                          }}
+                        >
+                          {button.text}
+                        </button>
+                      </EditableItem>
+                    ) : (
+                      <Link
+                        key={button.id}
+                        href={generateLinkHref(
+                          button.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        className={`rounded-full px-4 py-2 text-sm font-medium transition-colors hover:opacity-90 ${
+                          disableClicks
+                            ? "cursor-default opacity-60"
+                            : "cursor-pointer"
+                        }`}
+                        style={{
+                          backgroundColor: theme.colors.primary,
+                          color: theme.colors.primaryForeground,
+                        }}
+                        onClick={e => handleLinkClick(e, button.href)}
+                      >
+                        {button.text}
+                      </Link>
+                    )
+                  )}
+                </div>
+
                 {/* Cart Icon */}
                 {showCart && (
                   <div className={disableClicks ? "pointer-events-auto" : ""}>
@@ -415,7 +457,7 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                 {links.map(link =>
                   isEditable && onEditLink && onDeleteLink ? (
                     <EditableItem key={link.id}>
-                      <span className="cursor-pointer text-sm font-medium whitespace-nowrap transition-colors hover:opacity-80">
+                      <span className="cursor-default text-sm font-medium whitespace-nowrap transition-colors hover:opacity-80">
                         {link.text}
                       </span>
                     </EditableItem>
@@ -491,13 +533,9 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   isEditable && onEditLink && onDeleteLink ? (
                     <EditableItem key={link.id}>
                       <div className="flow-root">
-                        <Link
-                          href={link.href}
-                          onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
-                        >
+                        <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                           {link.text}
-                        </Link>
+                        </span>
                       </div>
                     </EditableItem>
                   ) : (
@@ -534,29 +572,44 @@ export const NavbarStyle9: React.FC<NavbarStyleProps> = ({
                   )
                 )}
 
-                <div className="mt-8 mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
-                  Categories
-                </div>
-                {categories.map(category => (
-                  <div className="flow-root" key={category.id}>
-                    <Link
-                      href={generateLinkHref(
-                        `/collections?category=${category.slug}`,
-                        siteUser,
-                        pathname,
-                        isEditable,
-                        disableClicks
-                      )}
-                      className="-m-2 block cursor-pointer p-2 text-sm font-medium transition-colors hover:opacity-80"
-                      onClick={e => {
-                        handleLinkClick(e);
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      {category.name}
-                    </Link>
+                {/* Mobile Buttons */}
+                {buttons.length > 0 && (
+                  <div className="mt-8 space-y-4">
+                    <div className="mb-2 text-xs font-bold tracking-wider uppercase opacity-40">
+                      Actions
+                    </div>
+                    {buttons.map((button: NavbarButton) =>
+                      isEditable && onEditButton ? (
+                        <EditableItem key={button.id}>
+                          <div className="flow-root">
+                            <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
+                              {button.text}
+                            </span>
+                          </div>
+                        </EditableItem>
+                      ) : (
+                        <div className="flow-root" key={button.id}>
+                          <Link
+                            href={generateLinkHref(
+                              button.href,
+                              siteUser,
+                              pathname,
+                              isEditable,
+                              disableClicks
+                            )}
+                            onClick={e => {
+                              handleLinkClick(e, button.href);
+                              setIsMenuOpen(false);
+                            }}
+                            className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-100"
+                          >
+                            {button.text}
+                          </Link>
+                        </div>
+                      )
+                    )}
                   </div>
-                ))}
+                )}
               </div>
 
               <div className="space-y-6 border-t border-gray-200 px-4 py-6">

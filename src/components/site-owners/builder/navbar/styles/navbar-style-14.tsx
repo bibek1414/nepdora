@@ -5,7 +5,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetClose,
 } from "@/components/ui/sheet";
 import {
   NavbarData,
@@ -19,7 +18,6 @@ import {
   Package,
   LogOut,
   ChevronDown,
-  Languages,
 } from "lucide-react";
 import { NavbarLogo } from "../navbar-logo";
 import Link from "next/link";
@@ -57,7 +55,7 @@ interface NavbarStyleProps {
   disableClicks?: boolean;
 }
 
-export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
+export const NavbarStyle14: React.FC<NavbarStyleProps> = ({
   navbarData,
   isEditable,
   siteUser,
@@ -81,11 +79,6 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
       primary: "#000000",
       primaryForeground: "#FFFFFF",
     },
-  };
-
-  const toggleMobileMenu = () => {
-    if (disableClicks) return;
-    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLinkClick = (e: React.MouseEvent) => {
@@ -126,13 +119,13 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
     <header
       className={`w-full border-b backdrop-blur-md ${!isEditable ? "sticky top-0 z-50" : "relative"} ${disableClicks ? "pointer-events-none" : ""}`}
       style={{
-        backgroundColor:
-          navbarData.backgroundColor || "rgba(255, 255, 255, 0.8)",
+        backgroundColor: navbarData.backgroundColor || "rgba(255, 255, 255, 0.8)",
         color: navbarData.textColor || "inherit",
       }}
     >
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 lg:hidden">
+        {/* Left Side - Logo and Mobile Menu Toggle */}
+        <div className="flex shrink-0 items-center gap-4">
           <button
             type="button"
             onClick={() => {
@@ -140,7 +133,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                 setIsMobileMenuOpen(true);
               }
             }}
-            className={`relative rounded-md bg-transparent p-2 opacity-60 ${
+            className={`relative rounded-md bg-transparent p-2 opacity-60 lg:hidden ${
               disableClicks || isEditable
                 ? "cursor-default opacity-40"
                 : "hover:opacity-100"
@@ -150,10 +143,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
             <span className="sr-only">Open menu</span>
             <Menu className="h-6 w-6" />
           </button>
-        </div>
 
-        {/* Logo - Center for mobile, Left for desktop */}
-        <div className="flex shrink-0 items-center justify-center lg:justify-start">
           <div className={disableClicks ? "pointer-events-auto" : ""}>
             {isEditable && onEditLogo ? (
               <EditableItem>
@@ -164,22 +154,22 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                 />
               </EditableItem>
             ) : (
-              <div
-                onClick={disableClicks ? e => e.preventDefault() : undefined}
-              >
+              <div onClick={disableClicks ? e => e.preventDefault() : undefined}>
                 <NavbarLogo data={navbarData} siteUser={siteUser} />
               </div>
             )}
           </div>
         </div>
 
-        {/* Desktop Navigation - Right Aligned */}
-        <div className="hidden flex-1 items-center justify-end gap-x-8 lg:flex">
+        {/* Center - Desktop Navigation Links */}
+        <div className="hidden flex-1 items-center justify-center gap-x-8 lg:flex">
           {links.map(link => (
             <div key={link.id}>
-              {isEditable && onEditLink && onDeleteLink ? (
+              {isEditable && onEditLink ? (
                 <EditableItem>
-                  <span className="group relative cursor-default py-2 text-sm font-medium transition-colors hover:opacity-80">
+                  <span
+                    className="cursor-default py-2 text-sm font-medium transition-colors hover:opacity-80"
+                  >
                     {link.text}
                   </span>
                 </EditableItem>
@@ -219,12 +209,29 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
               )}
             </div>
           ))}
+        </div>
 
+        {/* Right Side - Buttons & User Actions */}
+        <div className="flex shrink-0 items-center gap-x-4">
           {/* Desktop Buttons */}
-          {buttons.map(button => (
-            <div key={button.id}>
-              {isEditable && onEditButton && onDeleteButton ? (
-                <EditableItem>
+          <div className="hidden items-center gap-x-3 lg:flex">
+            {buttons.map(button => (
+              <div key={button.id}>
+                {isEditable && onEditButton ? (
+                  <EditableItem>
+                    <Button
+                      variant={getButtonVariant(button.variant)}
+                      size="sm"
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        color: theme.colors.primaryForeground,
+                      }}
+                      className="cursor-default transition-colors hover:opacity-90"
+                    >
+                      {button.text}
+                    </Button>
+                  </EditableItem>
+                ) : (
                   <Button
                     variant={getButtonVariant(button.variant)}
                     size="sm"
@@ -232,66 +239,45 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                       backgroundColor: theme.colors.primary,
                       color: theme.colors.primaryForeground,
                     }}
-                    className="cursor-default transition-colors hover:opacity-90"
+                    className={`transition-colors hover:opacity-90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
+                    asChild={!disableClicks}
                   >
-                    {button.text}
+                    {disableClicks ? (
+                      button.text
+                    ) : (
+                      <Link
+                        href={generateLinkHref(
+                          button.href,
+                          siteUser,
+                          pathname,
+                          isEditable,
+                          disableClicks
+                        )}
+                        target={
+                          button.href?.startsWith("http") ||
+                          button.href?.startsWith("mailto:")
+                            ? "_blank"
+                            : undefined
+                        }
+                        rel={
+                          button.href?.startsWith("http") ||
+                          button.href?.startsWith("mailto:")
+                            ? "noopener noreferrer"
+                            : undefined
+                        }
+                      >
+                        {button.text}
+                      </Link>
+                    )}
                   </Button>
-                </EditableItem>
-              ) : (
-                <Button
-                  variant={getButtonVariant(button.variant)}
-                  size="sm"
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    color: theme.colors.primaryForeground,
-                  }}
-                  className={`transition-colors hover:opacity-90 ${disableClicks ? "pointer-events-auto cursor-default opacity-60" : ""}`}
-                  asChild={!disableClicks}
-                >
-                  {disableClicks ? (
-                    button.text
-                  ) : (
-                    <Link
-                      href={generateLinkHref(
-                        button.href,
-                        siteUser,
-                        pathname,
-                        isEditable,
-                        disableClicks
-                      )}
-                      target={
-                        button.href?.startsWith("http") ||
-                        button.href?.startsWith("mailto:")
-                          ? "_blank"
-                          : undefined
-                      }
-                      rel={
-                        button.href?.startsWith("http") ||
-                        button.href?.startsWith("mailto:")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                    >
-                      {button.text}
-                    </Link>
-                  )}
-                </Button>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            ))}
+          </div>
 
-        </div>
-
-        {/* Actions - Right Side */}
-        <div className="flex items-center gap-x-4">
-          {/* Desktop Search Placeholder or other tools can go here */}
-
-          {/* User Auth */}
           {/* User Auth - Desktop */}
           {enableLogin && (
-            <div
-              className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}
-            >
+            <div className={`hidden lg:block ${disableClicks ? "pointer-events-auto" : ""}`}>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -331,15 +317,13 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                           className="cursor-pointer"
                           onClick={() => handleProfileAction("profile")}
                         >
-                          <User className="mr-2 h-4 w-4" />
-                          Profile
+                          <User className="mr-2 h-4 w-4" /> Profile
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="cursor-pointer"
                           onClick={() => handleProfileAction("wishlist")}
                         >
-                          <Heart className="mr-2 h-4 w-4" />
-                          Wishlist
+                          <Heart className="mr-2 h-4 w-4" /> Wishlist
                           {wishlistCount > 0 && (
                             <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] text-white">
                               {wishlistCount}
@@ -350,16 +334,14 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                           className="cursor-pointer"
                           onClick={() => handleProfileAction("orders")}
                         >
-                          <Package className="mr-2 h-4 w-4" />
-                          Orders
+                          <Package className="mr-2 h-4 w-4" /> Orders
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className="cursor-pointer text-red-600 focus:bg-red-50 focus:text-red-600"
                           onClick={() => handleProfileAction("logout")}
                         >
-                          <LogOut className="mr-2 h-4 w-4" />
-                          Sign Out
+                          <LogOut className="mr-2 h-4 w-4" /> Sign Out
                         </DropdownMenuItem>
                       </>
                     ) : (
@@ -367,8 +349,7 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                         className="cursor-pointer"
                         onClick={handleLoginClick}
                       >
-                        <User className="mr-2 h-4 w-4" />
-                        Login / Register
+                        <User className="mr-2 h-4 w-4" /> Login / Register
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>
@@ -403,7 +384,9 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                   {isEditable && onEditLink ? (
                     <EditableItem>
                       <div className="flow-root">
-                        <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
+                        <span
+                          className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80"
+                        >
                           {link.text}
                         </span>
                       </div>
@@ -450,7 +433,9 @@ export const NavbarStyle11: React.FC<NavbarStyleProps> = ({
                   {isEditable && onEditButton ? (
                     <EditableItem>
                       <div className="flow-root">
-                        <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
+                        <span
+                          className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80"
+                        >
                           {button.text}
                         </span>
                       </div>

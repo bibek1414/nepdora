@@ -280,13 +280,11 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
             {links.map(link =>
               isEditable && onEditLink && onDeleteLink ? (
                 <EditableItem key={link.id}>
-                  <Link
-                    href={link.href}
-                    onClick={e => e.preventDefault()}
-                    className="cursor-pointer text-sm font-medium transition-colors hover:opacity-80"
+                  <span
+                    className="cursor-default text-sm font-medium transition-colors hover:opacity-80"
                   >
                     {link.text}
-                  </Link>
+                  </span>
                 </EditableItem>
               ) : (
                 <Link
@@ -432,7 +430,7 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                     backgroundColor: theme.colors.primary,
                     color: theme.colors.primaryForeground,
                   }}
-                  className="cursor-pointer transition-colors hover:opacity-90"
+                  className="cursor-default transition-colors hover:opacity-90"
                 >
                   {button.text}
                 </Button>
@@ -641,13 +639,9 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                 isEditable && onEditLink && onDeleteLink ? (
                   <EditableItem key={link.id}>
                     <div className="flow-root">
-                      <Link
-                        href={link.href}
-                        onClick={e => e.preventDefault()}
-                        className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
-                      >
+                      <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                         {link.text}
-                      </Link>
+                      </span>
                     </div>
                   </EditableItem>
                 ) : (
@@ -766,13 +760,9 @@ export const NavbarStyle2: React.FC<NavbarStyleProps> = ({
                   isEditable && onEditButton && onDeleteButton ? (
                     <EditableItem key={button.id}>
                       <div className="flow-root">
-                        <Link
-                          href={button.href}
-                          onClick={e => e.preventDefault()}
-                          className="-m-2 block cursor-pointer p-2 font-medium transition-colors hover:opacity-80"
-                        >
+                        <span className="-m-2 block cursor-default p-2 font-medium transition-colors hover:opacity-80">
                           {button.text}
-                        </Link>
+                        </span>
                       </div>
                     </EditableItem>
                   ) : (

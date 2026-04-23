@@ -90,7 +90,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
             <Input
               value={formData.meta_title || ""}
               onChange={e => handleChange("meta_title", e.target.value)}
-              className="h-10 border-slate-300 bg-slate-50 text-[13px] focus-visible:border-blue-600 focus-visible:ring-1 focus-visible:ring-blue-600"
+              className="focus-visible:border-primary h-10 border-slate-300 bg-slate-50 text-[13px]"
               placeholder="e.g. Home | VisionNepal"
             />
             <div className="flex items-center justify-between text-[11px]">
@@ -122,7 +122,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
             <Textarea
               value={formData.meta_description || ""}
               onChange={e => handleChange("meta_description", e.target.value)}
-              className="h-24 resize-none border-slate-300 bg-slate-50 text-[13px] focus-visible:border-blue-600 focus-visible:ring-1 focus-visible:ring-blue-600"
+              className="focus-visible:border-primary h-24 resize-none border-slate-300 bg-slate-50 text-[13px]"
               placeholder="A brief description of your page for search engines..."
             />
             <div className="flex items-center justify-between text-[11px]">
@@ -151,7 +151,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
             <Input
               value={formData.slug}
               onChange={e => handleChange("slug", e.target.value)}
-              className="h-10 border-slate-300 bg-slate-50 font-mono text-xs focus-visible:border-blue-600 focus-visible:ring-1 focus-visible:ring-blue-600"
+              className="focus-visible:border-primary h-10 border-slate-300 bg-slate-50 font-mono text-xs"
               placeholder="e.g. /about"
               disabled
             />
@@ -173,7 +173,7 @@ export const SEOModal: React.FC<SEOModalProps> = ({
             </Button>
             <button
               onClick={handleSave}
-              className="group flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-1 text-sm font-bold text-white transition-all hover:bg-blue-700"
+              className="group bg-primary flex cursor-pointer items-center gap-2 rounded-lg px-4 py-1 text-sm font-bold text-white transition-all hover:bg-blue-700"
             >
               <Check className="h-4 w-4 transition-transform group-hover:scale-110" />
               Save changes
