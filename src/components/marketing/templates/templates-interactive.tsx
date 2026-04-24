@@ -24,7 +24,7 @@ interface TemplatesInteractiveProps {
   initialTemplates: TemplatesData;
 }
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 16;
 
 const TemplatesInteractive = ({
   initialCategories,

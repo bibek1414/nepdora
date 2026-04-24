@@ -10,7 +10,7 @@ const TemplatesPage = async ({ asH1 = false }: TemplatesPageProps) => {
   const [categoriesData, initialTemplates] = await Promise.all([
     useTemplateCategoryApi.getCategories().catch(() => []),
     useTemplateApi
-      .getTemplates(1, 12)
+      .getTemplates(1, 16)
       .catch(() => ({ count: 0, next: null, previous: null, results: [] })),
   ]);
 
