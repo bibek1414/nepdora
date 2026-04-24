@@ -187,7 +187,8 @@ export async function checkDomainVerificationStatus(domainName: string) {
 
     const zone = data.result[0];
     const status = zone.status; // 'active', 'pending', etc.
-    const nameservers = zone.name_servers || zone.nameservers;
+    // Force fixed nameservers as requested by user
+    const nameservers = ["cleo.ns.cloudflare.com", "vivienne.ns.cloudflare.com"];
     const zoneId = zone.id;
 
     return {

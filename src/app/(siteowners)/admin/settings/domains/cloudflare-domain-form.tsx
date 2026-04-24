@@ -165,7 +165,7 @@ function DomainStatusItem({
   };
 
   return (
-    <div className="mb-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+    <div className="-sm hover:-md mb-4 rounded-xl border border-gray-200 bg-white p-5 transition-all">
       <div className="flex flex-col gap-4 sm:justify-between xl:flex-row xl:items-center">
         <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
@@ -346,7 +346,7 @@ function DomainStatusItem({
               {nameservers.map((ns, idx) => (
                 <li
                   key={idx}
-                  className="my-1 mr-2 inline-block rounded bg-white px-2 py-1 shadow-sm"
+                  className="-sm my-1 mr-2 inline-block rounded bg-white px-2 py-1"
                 >
                   {ns}
                 </li>
@@ -358,7 +358,7 @@ function DomainStatusItem({
                 <button
                   onClick={handleVerifyDns}
                   disabled={isVerifying}
-                  className="inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
+                  className="-sm inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
                 >
                   {isVerifying
                     ? "Verifying DNS..."
@@ -493,14 +493,66 @@ export default function CloudflareDomainForm({
 
       {/* Add New Domain Section */}
       {localDomains.length < 1 ? (
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="-sm rounded-lg border border-gray-200 bg-white p-6">
           <h3 className="mb-4 text-xl font-semibold text-gray-800">
             Register New Domain
           </h3>
-          <p className="mb-4 text-sm text-gray-600">
+          <p className="mb-6 text-sm text-gray-600">
             Enter your custom domain (e.g., example.com) to save it to your
-            account. You will then need to update the nameservers to verify it.
+            account.
           </p>
+
+          {/* New Nameserver Instruction Block */}
+          <div className="mb-6 rounded-lg border border-blue-100 bg-blue-50 p-4">
+            <h4 className="mb-2 flex items-center gap-2 font-semibold text-blue-900">
+              <AlertTriangle className="h-4 w-4 text-blue-600" />
+              Pre-Registration: Update Nameservers
+            </h4>
+
+            <p className="mb-3 text-sm text-blue-800">
+              Before adding your domain, update its nameservers at your domain
+              registrar. This helps us verify your domain quickly and avoid
+              setup delays.
+            </p>
+
+            <ol className="mb-3 list-decimal space-y-1 pl-5 text-sm text-blue-800">
+              <li>
+                Log in to your domain registrar (e.g., GoDaddy, Namecheap).
+              </li>
+              <li>Go to your domain’s DNS or Nameserver settings.</li>
+              <li>Replace the existing nameservers with the following:</li>
+            </ol>
+
+            <div className="flex flex-wrap gap-2">
+              {["cleo.ns.cloudflare.com", "vivienne.ns.cloudflare.com"].map(
+                ns => (
+                  <code
+                    key={ns}
+                    className="rounded border border-blue-200 bg-white px-2 py-1 text-xs font-bold text-blue-900"
+                  >
+                    {ns}
+                  </code>
+                )
+              )}
+            </div>
+
+            <ol
+              start={4}
+              className="mt-3 list-decimal space-y-1 pl-5 text-sm text-blue-800"
+            >
+              <li>Save your changes.</li>
+              <li>
+                Wait a few minutes (can take up to a few hours for full
+                propagation).
+              </li>
+            </ol>
+
+            <p className="mt-3 text-xs text-blue-700">
+              Once updated, return here and add your domain. Using these
+              nameservers in advance ensures faster verification with
+              Cloudflare.
+            </p>
+          </div>
 
           <form
             onSubmit={handleSubmit}
@@ -528,7 +580,7 @@ export default function CloudflareDomainForm({
             <button
               type="submit"
               disabled={isLoading || !domain}
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
+              className="-sm cursor-pointer inline-flex items-center justify-center gap-2 rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -565,7 +617,7 @@ export default function CloudflareDomainForm({
           )}
         </div>
       ) : (
-        <div className="rounded-lg border border-gray-200 bg-white p-6 text-center shadow-sm">
+        <div className="-sm rounded-lg border border-gray-200 bg-white p-6 text-center">
           <h3 className="text-xl font-semibold text-gray-800">
             Domain Limit Reached
           </h3>
