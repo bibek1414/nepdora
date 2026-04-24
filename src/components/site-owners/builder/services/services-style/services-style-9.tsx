@@ -155,7 +155,7 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
                 onChange={handleTextUpdate("eyebrow")}
                 isEditable={isEditable}
                 as="span"
-                className="px-1 text-sm font-semibold tracking-widest"
+                className="px-1 text-sm font-semibold "
               />
             </div>
             <EditableText
