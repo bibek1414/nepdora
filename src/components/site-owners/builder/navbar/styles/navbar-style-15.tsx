@@ -73,7 +73,6 @@ export const NavbarStyle15: React.FC<NavbarStyleProps> = ({
   const { itemCount, totalPrice } = useCart();
   const { user, logout, isAuthenticated } = useAuth();
   const { data: profile } = useProfile();
-  const { data: siteConfig } = useSiteConfig();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -400,7 +399,7 @@ export const NavbarStyle15: React.FC<NavbarStyleProps> = ({
           style={{ backgroundColor: "transparent" }}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="pointer-events-auto flex items-center justify-center">
+            <div className="pointer-events-auto">
               <nav className="no-scrollbar flex items-center gap-8 overflow-x-auto py-3">
                 {links.map(link =>
                   isEditable && onEditLink && onDeleteLink ? (

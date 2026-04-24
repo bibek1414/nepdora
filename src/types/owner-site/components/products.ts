@@ -10,7 +10,8 @@ export interface ProductsData {
     | "product-7"
     | "product-8"
     | "product-9"
-    | "product-10";
+    | "product-10"
+    | "product-11";
 
   title: string;
   subtitle?: string;
@@ -79,6 +80,11 @@ export const DEFAULT_PRODUCTS_MAP: Record<ProductsData["style"], ProductsData> =
     "product-10": {
       ...defaultProductsData,
       style: "product-10",
-      title: "Featured Carousel",
+      title: "Products Carousel",
+    },
+    "product-11": {
+      ...defaultProductsData,
+      style: "product-11",
+      title: "Best Selling Products",
     },
   };

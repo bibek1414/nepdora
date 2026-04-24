@@ -26,7 +26,7 @@ interface ProductsStyleProps {
   onProductClick?: (productslug: string) => void;
 }
 
-export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
+export const ProductsStyle11: React.FC<ProductsStyleProps> = ({
   data,
   isEditable = false,
   siteUser,
@@ -216,9 +216,6 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
         )}
         <FeaturedProductsButton
           isEditable={isEditable}
-          productsCount={products.length}
-          data={data}
-          onUpdate={onUpdate}
         />
       </div>
     </section>

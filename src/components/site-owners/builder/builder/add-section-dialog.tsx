@@ -730,6 +730,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/products/product8.png",
         description: "Carousel layout without prices and reviews",
       },
+      {
+        id: "product-11",
+        name: "Product Style 11 (Catalog Carousel)",
+        image: "/images/site-owners/products/product8.png",
+        description: "Carousel layout without prices and reviews",
+      },
     ],
     product_details: [
       {

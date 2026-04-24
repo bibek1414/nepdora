@@ -199,9 +199,6 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
 
         <FeaturedProductsButton
           isEditable={isEditable}
-          productsCount={products.length}
-          data={data}
-          onUpdate={onUpdate}
         />
       </div>
     </section>

@@ -8,20 +8,14 @@ import { ProductsData } from "@/types/owner-site/components/products";
 
 interface FeaturedProductsButtonProps {
   isEditable: boolean;
-  productsCount: number;
-  data?: ProductsData;
-  onUpdate?: (updatedData: Partial<ProductsData>) => void;
 }
 
 export const FeaturedProductsButton: React.FC<FeaturedProductsButtonProps> = ({
   isEditable,
-  productsCount,
-  data,
-  onUpdate,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  if (!isEditable || productsCount === 0) return null;
+  if (!isEditable) return null;
 
   return (
     <>
@@ -39,8 +33,6 @@ export const FeaturedProductsButton: React.FC<FeaturedProductsButtonProps> = ({
       <ManageFeaturedProductsDialog
         open={isOpen}
         onOpenChange={setIsOpen}
-        data={data}
-        onUpdate={onUpdate}
       />
     </>
   );
