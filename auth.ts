@@ -31,6 +31,16 @@ const GOOGLE_PHONE_NUMBER_COOKIE = "google_phone_number";
 const GOOGLE_WEBSITE_TYPE_COOKIE = "google_website_type";
 const GOOGLE_AUTH_ERROR_COOKIE = "google_auth_error";
 
+const getCookieDomain = () => {
+  // Extract just the domain part (without port)
+  const domain = siteConfig.baseDomain.split(":")[0];
+  if (domain === "localhost") return undefined;
+  return `.${domain}`;
+};
+
+const cookieDomain = getCookieDomain();
+const useSecureCookies = process.env.NODE_ENV === "production";
+
 const getPendingGoogleSignupMetadata = async () => {
   try {
     const cookieStore = await cookies();
@@ -61,10 +71,11 @@ const persistGoogleAuthError = async (
 
     cookieStore.set(GOOGLE_AUTH_ERROR_COOKIE, message, {
       httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
+      secure: useSecureCookies,
       sameSite: "lax",
       expires: new Date(Date.now() + 5 * 60 * 1000),
       path: "/",
+      domain: cookieDomain,
     });
   } catch (error) {
     console.error("Failed to persist Google auth error:", error);
@@ -76,10 +87,11 @@ const clearGoogleAuthError = async () => {
     const cookieStore = await cookies();
     cookieStore.set(GOOGLE_AUTH_ERROR_COOKIE, "", {
       httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
+      secure: useSecureCookies,
       sameSite: "lax",
       expires: new Date(0),
       path: "/",
+      domain: cookieDomain,
     });
   } catch (error) {
     console.error("Failed to clear Google auth error:", error);
@@ -154,6 +166,57 @@ declare module "next-auth/jwt" {
 }
 
 const nextAuthOptions: NextAuthOptions = {
+  cookies: {
+    sessionToken: {
+      name: `${useSecureCookies ? "__Secure-" : ""}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: cookieDomain,
+      },
+    },
+    callbackUrl: {
+      name: `${useSecureCookies ? "__Secure-" : ""}next-auth.callback-url`,
+      options: {
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: cookieDomain,
+      },
+    },
+    csrfToken: {
+      name: `${useSecureCookies ? "__Secure-" : ""}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: cookieDomain,
+      },
+    },
+    pkceCodeVerifier: {
+      name: `${useSecureCookies ? "__Secure-" : ""}next-auth.pkce.code_verifier`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: cookieDomain,
+      },
+    },
+    state: {
+      name: `${useSecureCookies ? "__Secure-" : ""}next-auth.state`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: cookieDomain,
+      },
+    },
+  },
   providers: [
     Google({
       clientId: oauth_google.client_id,
@@ -259,10 +322,11 @@ const nextAuthOptions: NextAuthOptions = {
                 decodedToken.sub_domain,
                 {
                   httpOnly: false,
-                  secure: process.env.NODE_ENV === "production",
+                  secure: useSecureCookies,
                   sameSite: "lax",
                   expires: expires,
                   path: "/",
+                  domain: cookieDomain,
                 }
               );
 
@@ -273,10 +337,11 @@ const nextAuthOptions: NextAuthOptions = {
                   data.data.user.access_token,
                   {
                     httpOnly: false,
-                    secure: process.env.NODE_ENV === "production",
+                    secure: useSecureCookies,
                     sameSite: "lax",
                     expires: expires,
                     path: "/",
+                    domain: cookieDomain,
                   }
                 );
               }
@@ -286,10 +351,11 @@ const nextAuthOptions: NextAuthOptions = {
                   data.data.user.refresh_token,
                   {
                     httpOnly: false,
-                    secure: process.env.NODE_ENV === "production",
+                    secure: useSecureCookies,
                     sameSite: "lax",
                     expires: expires,
                     path: "/",
+                    domain: cookieDomain,
                   }
                 );
               }
@@ -313,10 +379,11 @@ const nextAuthOptions: NextAuthOptions = {
                 JSON.stringify(persistedUser),
                 {
                   httpOnly: false,
-                  secure: process.env.NODE_ENV === "production",
+                  secure: useSecureCookies,
                   sameSite: "lax",
                   expires: expires,
                   path: "/",
+                  domain: cookieDomain,
                 }
               );
             }
