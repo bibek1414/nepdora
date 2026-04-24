@@ -11,7 +11,8 @@ export interface ProductsData {
     | "product-8"
     | "product-9"
     | "product-10"
-    | "product-11";
+    | "product-11"
+    | "product-12";
 
   title: string;
   subtitle?: string;
@@ -24,6 +25,7 @@ export interface ProductsData {
   buttonLink?: string;
   display_type?: "grid" | "carousel";
   carousel_style?: "style-5" | "style-10";
+  page_size?: number;
 }
 
 export interface ProductsComponentData {
@@ -86,5 +88,10 @@ export const DEFAULT_PRODUCTS_MAP: Record<ProductsData["style"], ProductsData> =
       ...defaultProductsData,
       style: "product-11",
       title: "Best Selling Products",
+    },
+    "product-12": {
+      ...defaultProductsData,
+      style: "product-12",
+      title: "Our Collection",
     },
   };

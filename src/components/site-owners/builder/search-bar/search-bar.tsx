@@ -269,7 +269,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               onKeyDown={handleSearchKeyPress}
               onFocus={handleSearchFocus}
               disabled={isEditable}
-              className={`h-11 w-full rounded-xl border-0 bg-transparent pr-10 pl-10 text-sm placeholder:text-gray-400 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ${
+              className={`-0 h-11 w-full rounded-xl bg-transparent pr-10 pl-10 text-sm placeholder:text-gray-400 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 ${
                 isEditable ? "cursor-not-allowed opacity-60" : ""
               }`}
               style={{
@@ -293,7 +293,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </form>
 
       {showDropdown && !isEditable && (
-        <Card className="absolute right-0 left-0 z-9999 mt-2 min-w-[320px] border-2">
+        <Card className="-2 absolute right-0 left-0 z-9999 mt-2 min-w-[320px]">
           <CardContent className="p-0">
             <ScrollArea className="max-h-[500px]">
               <div className="p-4">
@@ -312,13 +312,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
                     {isSuggestionsLoading ? (
                       <div className="flex items-center justify-center gap-2 py-8 text-gray-500">
-                        <div
-                          className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-                          style={{
-                            borderColor: theme.colors.primary + "33",
-                            borderTopColor: "transparent",
-                          }}
-                        ></div>
+                        <div className="-2 -t-transparent h-4 w-4 animate-spin rounded-full"></div>
                         <span className="text-sm">Loading suggestions…</span>
                       </div>
                     ) : page_sizeedProducts.length > 0 ? (
@@ -351,20 +345,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                               >
                                 {truncateText(product.name, 45)}
                               </div>
-                              <div className="mt-1 flex items-center gap-2">
-                                <span
-                                  className="text-sm font-bold"
-                                  style={{
-                                    color: theme.colors.primary,
-                                    fontFamily: theme.fonts.heading,
-                                  }}
-                                >
-                                  Rs.{" "}
-                                  {Number(product.price).toLocaleString(
-                                    "en-IN"
-                                  )}
-                                </span>
-                              </div>
+                              {Number(product.price) > 0 && (
+                                <div className="mt-1 flex items-center gap-2">
+                                  <span
+                                    className="text-sm font-bold"
+                                    style={{
+                                      color: theme.colors.primary,
+                                      fontFamily: theme.fonts.heading,
+                                    }}
+                                  >
+                                    Rs.{" "}
+                                    {Number(product.price).toLocaleString(
+                                      "en-IN"
+                                    )}
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -398,13 +394,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
                     {isSearchLoading ? (
                       <div className="flex items-center justify-center gap-2 py-8 text-gray-500">
-                        <div
-                          className="h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-                          style={{
-                            borderColor: theme.colors.primary + "33",
-                            borderTopColor: "transparent",
-                          }}
-                        ></div>
+                        <div className="-2 -t-transparent h-4 w-4 animate-spin rounded-full"></div>
                         <span className="text-sm">Searching…</span>
                       </div>
                     ) : (
@@ -454,20 +444,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                                     >
                                       {truncateText(product.name, 45)}
                                     </div>
-                                    <div className="mt-1 flex items-center gap-2">
-                                      <span
-                                        className="text-sm font-bold"
-                                        style={{
-                                          color: theme.colors.primary,
-                                          fontFamily: theme.fonts.heading,
-                                        }}
-                                      >
-                                        Rs.{" "}
-                                        {Number(product.price).toLocaleString(
-                                          "en-IN"
-                                        )}
-                                      </span>
-                                    </div>
+                                    {Number(product.price) > 0 && (
+                                      <div className="mt-1 flex items-center gap-2">
+                                        <span
+                                          className="text-sm font-bold"
+                                          style={{
+                                            color: theme.colors.primary,
+                                            fontFamily: theme.fonts.heading,
+                                          }}
+                                        >
+                                          Rs.{" "}
+                                          {Number(product.price).toLocaleString(
+                                            "en-IN"
+                                          )}
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               ))}

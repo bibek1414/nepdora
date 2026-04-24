@@ -23,7 +23,7 @@ export const ProductCard12: React.FC<ProductCard12Props> = ({
   siteUser,
   onClick,
   isEditable = false,
-  showPrice = false,
+  showPrice = true,
   showReview = false,
 }) => {
   const [isAdded, setIsAdded] = useState(false);
@@ -52,7 +52,6 @@ export const ProductCard12: React.FC<ProductCard12Props> = ({
   const marketPrice = product.market_price
     ? parseFloat(product.market_price)
     : null;
-  const rating = product.average_rating || 0;
 
   const getDetailsUrl = (): string => {
     const isPreviewMode = pathname?.includes("/preview/");
@@ -65,6 +64,7 @@ export const ProductCard12: React.FC<ProductCard12Props> = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isEditable) return;
 
     addToCart(product, 1);
     setIsAdded(true);
@@ -72,12 +72,15 @@ export const ProductCard12: React.FC<ProductCard12Props> = ({
     setTimeout(() => setIsAdded(false), 2000);
   };
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    if (isEditable) return;
+    const target = e.target as HTMLElement;
+    if (target.closest("button")) return;
+
     if (onClick) {
       onClick();
     } else {
       const detailsUrl = getDetailsUrl();
-      // Use router if available, but for now window.location works
       window.location.href = detailsUrl;
     }
   };
@@ -85,15 +88,17 @@ export const ProductCard12: React.FC<ProductCard12Props> = ({
   return (
     <div
       className={cn(
-        "flex flex-col",
-        isEditable ? "cursor-default" : "cursor-pointer"
+        "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300",
+        isEditable
+          ? "cursor-default"
+          : "hover:-xl hover:-blue-500/5 cursor-pointer hover:-translate-y-1"
       )}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container */}
-      <div className="relative mb-5 aspect-4/3 w-full overflow-hidden rounded-[1.25rem]">
+      <div className="relative aspect-square w-full overflow-hidden p-4">
         <div className="relative h-full w-full">
           <Image
             unoptimized
@@ -101,79 +106,79 @@ export const ProductCard12: React.FC<ProductCard12Props> = ({
             alt={product.thumbnail_alt_description || product.name}
             fill
             className={cn(
-              "object-cover transition-transform duration-500",
-              isHovered && !isEditable ? "scale-105" : ""
+              "object-contain mix-blend-multiply transition-transform duration-700 ease-out",
+              isHovered && !isEditable ? "scale-110" : ""
             )}
           />
         </div>
 
-        {/* Add to Cart Floating Button */}
-        <div
-          className={cn(
-            "absolute right-3 bottom-11 z-20 translate-y-0 cursor-pointer opacity-100 sm:translate-y-2 sm:opacity-0 sm:transition-all sm:duration-300",
-            isHovered && !isEditable ? "sm:translate-y-0 sm:opacity-100" : ""
-          )}
-        >
-          <button
-            onClick={handleAddToCart}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-full shadow-lg transition-all duration-300`}
-            style={
-              {
-                backgroundColor:
-                  isAdded || isHovered ? theme.colors.primary : "white",
-                color: isAdded || isHovered ? "white" : "black",
-              } as React.CSSProperties
-            }
-            title="Add to cart"
-            disabled={product.stock === 0}
-          >
-            {isAdded ? (
-              <Check className="h-5 w-5" />
-            ) : product.stock === 0 ? (
-              <span className="text-[10px] font-bold text-black">SO</span>
-            ) : (
-              <Plus className="h-5 w-5" />
-            )}
-          </button>
-        </div>
+        {/* Discount Badge */}
+        {marketPrice && marketPrice > price && (
+          <div className="-sm absolute top-3 left-3 z-10 rounded-full bg-red-500 px-2.5 py-1 text-[10px] font-bold text-white">
+            {Math.round(((marketPrice - price) / marketPrice) * 100)}% OFF
+          </div>
+        )}
       </div>
 
       {/* Details */}
-      <div className="flex flex-col gap-2 px-1">
-        <div className="flex items-start justify-between">
-          <h3
-            className="line-clamp-1 text-[22px] leading-tight font-bold text-black"
-            style={{ fontFamily: theme.fonts.heading }}
-          >
-            {product.name}
-          </h3>
-          {showReview && (
-            <div className="mt-1 flex shrink-0 items-center gap-1.5 font-medium">
-              <Star className="h-4 w-4 fill-[#FF9800] text-[#FF9800]" />
-              <span className="text-sm font-medium text-black">
-                ({rating.toFixed(1)})
-              </span>
-            </div>
-          )}
-        </div>
+      <div className="flex grow flex-col p-4">
+        <h3
+          className="line-clamp-2 min-h-[40px] text-[15px] leading-tight font-semibold text-gray-900 transition-colors"
+          style={{ fontFamily: theme.fonts.heading }}
+        >
+          {product.name}
+        </h3>
 
-        {showPrice && price > 0 && (
-          <div className="flex items-center gap-3">
-            <span
-              className="text-[17px] font-bold text-black"
-              style={{ fontFamily: theme.fonts.body }}
+        <div className="mt-auto pt-4">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              {showPrice && price > 0 && (
+                <div className="flex flex-col gap-0.5">
+                  <span
+                    className="text-[17px] font-bold text-gray-900"
+                    style={{ fontFamily: theme.fonts.body }}
+                  >
+                    Rs.{Number(price).toLocaleString("en-IN")}
+                  </span>
+                  {marketPrice && marketPrice > price && (
+                    <span className="text-xs font-medium text-gray-400 line-through">
+                      Rs.{Number(marketPrice).toLocaleString("en-IN")}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Add to Cart Action */}
+            <button
+              onClick={handleAddToCart}
+              disabled={product.stock === 0 || isEditable}
+              className={cn(
+                "flex h-9 cursor-pointer items-center gap-1.5 rounded-lg px-3 text-xs font-bold transition-all duration-300 border",
+                isAdded
+                  ? "bg-green-600 text-white"
+                  : "bg-white text-black hover:scale-105 hover:bg-gray-200 active:scale-95",
+                isEditable && "cursor-not-allowed opacity-50",
+                product.stock === 0 &&
+                  "cursor-not-allowed bg-gray-200 text-gray-500"
+              )}
             >
-              Rs.{Number(price).toLocaleString("en-IN")}
-            </span>
-            {marketPrice && marketPrice > price && (
-              <span className="text-[17px] font-medium text-gray-400 line-through">
-                Rs.{Number(marketPrice).toLocaleString("en-IN")}
-              </span>
-            )}
+              {isAdded ? (
+                <>
+                  <Check className="h-3.5 w-3.5" />
+                  ADDED
+                </>
+              ) : product.stock === 0 ? (
+                "OUT OF STOCK"
+              ) : (
+                <>
+                  <Plus className="h-3.5 w-3.5" />
+                  ADD
+                </>
+              )}
+            </button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

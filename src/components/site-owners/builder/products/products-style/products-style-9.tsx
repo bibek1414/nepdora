@@ -4,8 +4,9 @@ import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import { ProductCard12 } from "../products-card/product-card12";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, ShoppingBag } from "lucide-react";
+import { AlertCircle, ShoppingBag, ChevronRight } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
+import { EditableLink } from "@/components/ui/editable-link";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
@@ -38,6 +39,8 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
     subtitle,
     categoryId,
     subCategoryId,
+    buttonText = "View All Products",
+    buttonLink = "#",
     display_type = "grid",
     carousel_style = "style-10",
   } = data || {};
@@ -56,7 +59,7 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
   } = useProducts({
     category_id: categoryId,
     sub_category_id: subCategoryId,
-    page_size: 6,
+    page_size: 8,
     is_featured: true,
   });
   const products = productsData?.results || [];
@@ -67,6 +70,10 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
 
   const handleSubtitleChange = (newSubtitle: string) => {
     onUpdate?.({ subtitle: newSubtitle });
+  };
+
+  const handleLinkChange = (text: string, href: string) => {
+    onUpdate?.({ buttonText: text, buttonLink: href });
   };
 
   return (
@@ -102,7 +109,7 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex flex-col space-y-5">
                 <Skeleton className="aspect-4/3 w-full rounded-[1.25rem]" />
@@ -179,7 +186,8 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
               </Carousel>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            <>
+              <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((product: any) => (
                 <div
                   key={product.id}
@@ -200,7 +208,25 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
                 </div>
               ))}
             </div>
-          ))}
+
+            {/* View All Button (Optional) */}
+            {products.length >= 8 && (
+              <div className="mt-16 text-center">
+                <EditableLink
+                  text={buttonText}
+                  href={buttonLink}
+                  onChange={handleLinkChange}
+                  isEditable={isEditable}
+                  siteUser={siteUser}
+                  className="group border-primary/20 text-primary hover:border-primary/40 hover:bg-primary/5 inline-flex h-auto items-center gap-2 rounded-full border-2 bg-transparent px-8 py-3 text-base font-semibold transition-all hover:shadow-lg"
+                >
+                  {buttonText}
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </EditableLink>
+              </div>
+            )}
+          </>
+        ))}
 
         {!isLoading && !error && (
           <BuilderEmptyState
@@ -214,9 +240,7 @@ export const ProductsStyle9: React.FC<ProductsStyleProps> = ({
             onRefresh={refetch}
           />
         )}
-        <FeaturedProductsButton
-          isEditable={isEditable}
-        />
+        <FeaturedProductsButton isEditable={isEditable} />
       </div>
     </section>
   );

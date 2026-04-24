@@ -7,4 +7,7 @@ export const DEFAULT_CHECKOUT_MAP: Record<string, CheckoutData> = {
   "checkout-style-2": {
     style: "style-2",
   },
+  "checkout-style-3": {
+    style: "style-3",
+  },
 };

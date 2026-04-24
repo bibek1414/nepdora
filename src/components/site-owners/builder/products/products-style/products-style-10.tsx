@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
-import { ProductCard10 } from "../products-card/product-card10";
+import { ProductCard2 } from "../products-card/product-card2";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, ShoppingBag } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
@@ -119,13 +119,10 @@ export const ProductsStyle10: React.FC<ProductsStyleProps> = ({
                       key={product.id}
                       className="pl-6 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                     >
-                      <ProductCard10
+                      <ProductCard2
                         product={product}
                         siteUser={isEditable ? undefined : siteUser}
-                        showPrice={false}
-                        showReview={false}
                         onClick={() =>
-                        
                           !isEditable && onProductClick?.(product.slug || "")
                         }
                       />
@@ -150,11 +147,9 @@ export const ProductsStyle10: React.FC<ProductsStyleProps> = ({
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {products.map(product => (
                 <div key={product.id}>
-                  <ProductCard10
+                  <ProductCard2
                     product={product}
                     siteUser={isEditable ? undefined : siteUser}
-                    showPrice={false}
-                    showReview={false}
                     onClick={() =>
                       !isEditable && onProductClick?.(product.slug || "")
                     }
@@ -177,9 +172,7 @@ export const ProductsStyle10: React.FC<ProductsStyleProps> = ({
           />
         )}
 
-        <FeaturedProductsButton
-          isEditable={isEditable}
-        />
+        <FeaturedProductsButton isEditable={isEditable} />
       </div>
     </div>
   );

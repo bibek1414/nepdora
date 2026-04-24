@@ -27,7 +27,7 @@ export const OurClientsStyle2: React.FC<OurClientsStyleProps> = ({
 
   return (
     <section className="bg-background py-3 md:py-20">
-      <div className="container mx-auto max-w-7xl px-4">
+      <div className="container mx-auto max-w-7xl px-8">
         <div className="mb-12 text-center">
           <EditableText
             value={title}
@@ -43,7 +43,7 @@ export const OurClientsStyle2: React.FC<OurClientsStyleProps> = ({
                 value={subtitle}
                 onChange={handleSubtitleChange}
                 as="p"
-                className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase"
+                className="text-xs font-bold text-gray-500"
                 isEditable={isEditable}
                 placeholder="Enter subtitle..."
               />

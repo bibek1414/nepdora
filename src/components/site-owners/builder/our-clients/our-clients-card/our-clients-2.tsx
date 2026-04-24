@@ -36,7 +36,7 @@ export const OurClients2: React.FC<OurClients2Props> = ({
           {clients.map(client => (
             <Card
               key={client.id}
-              className="flex items-center justify-center border-none shadow-sm transition-shadow hover:shadow-md"
+              className="flex items-center justify-center border-none -sm transition- hover:-md"
             >
               <CardContent className="flex h-32 items-center justify-center p-6">
                 {client.url ? (

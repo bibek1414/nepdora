@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Mail, ChevronRight } from "lucide-react";
+import { MapPin, Mail, ChevronRight, Phone } from "lucide-react";
 import { FooterData } from "@/types/owner-site/components/footer";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -54,16 +54,13 @@ export function FooterStyle4({
       style={{
         backgroundColor: footerData.backgroundColor || "#1A1A1A",
         color: footerData.textColor || "white",
-        borderColor: footerData.textColor
-          ? footerData.textColor + "20"
-          : "rgba(255,255,255,0.1)",
       }}
     >
       <div className="mx-auto w-full max-w-[1440px]">
         {/* Top Section */}
         <div className="flex flex-col lg:flex-row">
           {/* Column 1: Brand Info */}
-          <div className="flex w-full flex-col items-center border-b border-gray-800 p-8 text-center lg:w-[40%] lg:items-start lg:border-r lg:border-b-0 lg:p-16 lg:text-left">
+          <div className="-b -gray-800 lg:-r lg:-b-0 flex w-full flex-col items-center p-8 text-center lg:w-[40%] lg:items-start lg:p-16 lg:text-left">
             <div className="mb-8 flex items-center gap-3">
               <FooterLogo footerData={data} getImageUrl={getImageUrl} />
             </div>
@@ -73,7 +70,7 @@ export function FooterStyle4({
 
             {data.newsletter?.enabled && (
               <div className="mt-12 w-full max-w-md">
-                <h3 className="mb-6 text-lg font-bold tracking-wider uppercase">
+                <h3 className="mb-6 text-lg font-semibold tracking-wider">
                   {data.newsletter.title}
                 </h3>
                 <p className="mb-6 text-sm leading-relaxed opacity-70">
@@ -87,18 +84,11 @@ export function FooterStyle4({
           {/* Column 2 & 3 & 4 Container */}
           <div className="flex w-full flex-col md:flex-row lg:w-[60%]">
             {/* Links Columns */}
-            <div
-              className="flex flex-1 flex-col gap-12 border-b p-8 sm:flex-row sm:gap-20 md:border-r md:border-b-0 lg:p-16"
-              style={{
-                borderColor: footerData.textColor
-                  ? footerData.textColor + "20"
-                  : "rgba(255,255,255,0.1)",
-              }}
-            >
+            <div className="-b md:-r md:-b-0 flex flex-1 flex-col gap-12 p-8 sm:flex-row sm:gap-20 lg:p-16">
               {/* Quick Links (Section 1) */}
               {section1 && section1.links.length > 0 && (
                 <div className="flex flex-col items-center gap-6 sm:items-start">
-                  <h3 className="text-lg font-bold tracking-wider uppercase">
+                  <h3 className="text-lg font-semibold tracking-wider">
                     {section1.title}
                   </h3>
                   <ul className="space-y-4 text-center sm:text-left">
@@ -111,7 +101,7 @@ export function FooterStyle4({
                             pathname,
                             false
                           )}
-                          className="text-sm font-medium opacity-70 transition-colors hover:opacity-100"
+                          className="text-sm font-normal opacity-70 transition-colors hover:opacity-100"
                           target={
                             link.href?.startsWith("http") ||
                             link.href?.startsWith("mailto:")
@@ -136,7 +126,7 @@ export function FooterStyle4({
               {/* Pages (Section 2) */}
               {section2 && section2.links.length > 0 && (
                 <div className="flex flex-col items-center gap-6 sm:items-start">
-                  <h3 className="text-lg font-bold tracking-wider uppercase">
+                  <h3 className="text-lg font-semibold tracking-wider">
                     {section2.title}
                   </h3>
                   <ul className="space-y-4 text-center sm:text-left">
@@ -149,7 +139,7 @@ export function FooterStyle4({
                             pathname,
                             false
                           )}
-                          className="text-sm font-medium opacity-70 transition-colors hover:opacity-100"
+                          className="text-sm font-normal opacity-70 transition-colors hover:opacity-100"
                           target={
                             link.href?.startsWith("http") ||
                             link.href?.startsWith("mailto:")
@@ -180,7 +170,7 @@ export function FooterStyle4({
                     <MapPin className="h-5 w-5 stroke-[1.5] sm:h-6 sm:w-6" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base leading-snug font-medium sm:text-lg">
+                    <span className="text-base leading-snug font-normal sm:text-lg">
                       {data.contactInfo.address}
                     </span>
                   </div>
@@ -195,36 +185,35 @@ export function FooterStyle4({
                   {data.contactInfo.email && (
                     <a
                       href={`mailto:${data.contactInfo.email}`}
-                      className="text-base font-medium transition-colors hover:opacity-80 sm:text-lg"
+                      className="text-base font-normal transition-colors hover:opacity-80 sm:text-lg"
                     >
                       {data.contactInfo.email}
                     </a>
                   )}
-                  {data.contactInfo.phone && (
+              
+                </div>
+              </div>
+              {data.contactInfo.phone && (
+                <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
+                  <div className="mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-white/5 sm:h-auto sm:w-auto sm:bg-transparent">
+                    <Phone className="h-5 w-5 stroke-[1.5] sm:h-6 sm:w-6" />
+                  </div>
                     <a
                       href={`tel:${data.contactInfo.phone}`}
-                      className="mt-1 text-base font-medium transition-colors hover:opacity-80 sm:text-lg"
+                      className="mt-1 text-base font-normal transition-colors hover:opacity-80 sm:text-lg"
                     >
                       {data.contactInfo.phone}
                     </a>
-                  )}
                 </div>
-              </div>
+                  )}
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div
-          className="flex flex-col items-start justify-between gap-6 border-t px-8 py-8 md:flex-row md:items-center lg:px-16"
-          style={{
-            borderColor: footerData.textColor
-              ? footerData.textColor + "20"
-              : "rgba(255,255,255,0.1)",
-          }}
-        >
+        <div className="-t flex flex-col items-start justify-between gap-6 px-8 py-8 md:flex-row md:items-center lg:px-16">
           {/* Social Links */}
-          <div className="flex items-center gap-6 font-medium">
+          <div className="flex items-center gap-6 font-normal">
             {data.socialLinks.map(social => (
               <a
                 key={social.id}
@@ -254,12 +243,6 @@ export function FooterStyle4({
                   siteConfig?.business_name
                 )}
               </p>
-              <div className="mt-2 text-left md:text-right">
-                <MadeWithLove
-                  textColor={footerData.textColor}
-                  className="justify-start! md:justify-end!"
-                />
-              </div>
             </div>
             {data.policyLinks && data.policyLinks.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center justify-center gap-4 md:justify-end">
@@ -293,6 +276,12 @@ export function FooterStyle4({
             )}
           </div>
         </div>
+      </div>
+      <div className="mt-2 py-2 text-center">
+        <MadeWithLove
+          textColor={footerData.textColor}
+          className="justify-center!"
+        />
       </div>
     </footer>
   );

@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
 import { useRecentlyViewed } from "@/hooks/customer/use-recently-viewed";
+import { ProductRecommendations } from "../product-recommendations";
 import { sanitizeContent } from "@/utils/html-sanitizer";
 import {
   Carousel,
@@ -89,6 +90,7 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
   const [selectedOptions, setSelectedOptions] = React.useState<
     Record<string, string>
   >({});
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedVariant, setSelectedVariant] = React.useState<any>(null);
 
   const { data: wishlistItems } = useWishlist();
@@ -107,7 +109,8 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
     if (product) {
       addRecentlyViewed(product);
     }
-  }, [product?.id, addRecentlyViewed]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
 
   React.useEffect(() => {
     if (product?.options && product.options.length > 0) {
@@ -169,6 +172,13 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
     }));
   };
 
+  const getCurrentPrice = () => {
+    if (selectedVariant?.price) {
+      return parseFloat(selectedVariant.price);
+    }
+    return parseFloat(product?.price || "0");
+  };
+
   const getCurrentStock = () => {
     if (
       selectedVariant?.stock !== null &&
@@ -202,9 +212,16 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
           <div className="grid gap-12 md:grid-cols-2">
             <div>
               <Skeleton className="aspect-square w-full rounded-2xl" />
+              <div className="mt-4 flex gap-4">
+                <Skeleton className="h-24 w-24 rounded-xl" />
+                <Skeleton className="h-24 w-24 rounded-xl" />
+                <Skeleton className="h-24 w-24 rounded-xl" />
+              </div>
             </div>
             <div className="space-y-6">
               <Skeleton className="h-10 w-3/4" />
+              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-12 w-1/2" />
               <Skeleton className="h-24 w-full" />
             </div>
           </div>
@@ -256,15 +273,57 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
         : null;
 
       addToCart(product, quantity, variantData);
-      toast.success(`${quantity} x ${product.name} added to cart!`);
+
+      const variantInfo = selectedVariant
+        ? ` (${Object.entries(selectedOptions)
+            .map(([k, v]) => `${k}: ${v}`)
+            .join(", ")})`
+        : "";
+
+      toast.success(
+        `${quantity} x ${product.name}${variantInfo} added to cart!`
+      );
     }
   };
 
+  const price = getCurrentPrice();
+  const marketPrice = product.market_price
+    ? parseFloat(product.market_price)
+    : null;
+
+  const discountPercentage =
+    marketPrice && marketPrice > price
+      ? Math.round(((marketPrice - price) / marketPrice) * 100)
+      : 0;
+
+  const discountedPrice = price.toFixed(2);
   const currentStock = getCurrentStock();
-  const productImages = [
+
+  const rating = product.average_rating || 0;
+  const reviewsCount = product.reviews_count || 0;
+
+  const allImages = [
     product.thumbnail_image,
     ...(product.images || []).map(img => img.image),
   ].filter((img): img is string => Boolean(img));
+
+  const uniqueImages: string[] = [];
+  allImages.forEach(img => {
+    const getBaseName = (url: string) => {
+      try {
+        return new URL(url, "http://dummy.com").pathname;
+      } catch {
+        return url.split("?")[0];
+      }
+    };
+
+    const imgBaseName = getBaseName(img);
+    if (!uniqueImages.some(existing => getBaseName(existing) === imgBaseName)) {
+      uniqueImages.push(img);
+    }
+  });
+
+  const productImages = uniqueImages;
 
   if (productImages.length === 0) {
     productImages.push(defaultImage);
@@ -279,7 +338,15 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={siteUser ? (pathname?.includes("/preview/") ? `/preview/${siteUser}` : "/") : "/"}
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}`
+                        : pathname?.includes("/publish/")
+                          ? ``
+                          : "/"
+                      : "/"
+                  }
                   className="text-muted-foreground hover:text-primary flex items-center gap-1.5 transition-colors"
                 >
                   <Home className="mb-0.5 h-4 w-4" />
@@ -291,13 +358,44 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={siteUser ? (pathname?.includes("/preview/") ? `/preview/${siteUser}/collections` : "/collections") : "/collections"}
+                  href={
+                    siteUser
+                      ? pathname?.includes("/preview/")
+                        ? `/preview/${siteUser}/collections`
+                        : pathname?.includes("/publish/")
+                          ? `/collections`
+                          : "/collections"
+                      : "/collections"
+                  }
                   className="transition-colors"
                 >
                   Collections
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
+            {product.category && (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href={
+                        siteUser
+                          ? pathname?.includes("/preview/")
+                            ? `/preview/${siteUser}/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                            : pathname?.includes("/publish/")
+                              ? `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                              : `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                          : `/collections?${product.category.slug ? `category=${product.category.slug}` : `category_id=${product.category.id}`}`
+                      }
+                      className="transition-colors"
+                    >
+                      {product.category.name}
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </>
+            )}
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage className="text-foreground">
@@ -308,81 +406,120 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
         </Breadcrumb>
 
         <div className="grid items-start gap-12 md:grid-cols-12 lg:gap-16">
-          {/* Left Column: Image Gallery */}
+          {/* Left Column: Traditional Image Gallery */}
           <div className="flex flex-col gap-6 md:col-span-6 lg:col-span-7">
             <div className="bg-card relative aspect-square max-h-[600px] w-full overflow-hidden rounded-2xl border">
               <Image
                 unoptimized
                 src={selectedImage || defaultImage}
-                alt={product.name}
+                alt={product.thumbnail_alt_description || product.name}
                 fill
                 className="object-contain"
+                onError={e => {
+                  const target = e.currentTarget as HTMLImageElement;
+                  target.src = defaultImage;
+                }}
                 priority
               />
             </div>
-            {productImages.length > 1 && (
-              <div className="relative px-2">
-                <Carousel opts={{ align: "start" }} className="w-full">
-                  <CarouselContent className="-ml-2">
-                    {productImages.map((img, idx) => (
-                      <CarouselItem key={idx} className="basis-1/4 pl-2">
-                        <button
-                          className={`relative aspect-square w-full overflow-hidden rounded-xl border-2 transition-all ${
-                            selectedImage === img ? "border-black shadow-sm" : "border-transparent opacity-70 hover:opacity-100"
-                          }`}
-                          onClick={() => setSelectedImage(img)}
-                        >
-                          <Image unoptimized src={img} alt={product.name} fill className="object-cover" />
-                        </button>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                </Carousel>
-              </div>
-            )}
           </div>
 
-          {/* Right Column: Details */}
+          {/* Right Column: Product details and actions */}
           <div className="flex flex-col md:sticky md:top-24 md:col-span-6 lg:col-span-5">
-            <div className="mb-4">
+            <div className="mb-4 flex flex-wrap items-center gap-2">
               {product.category && (
-                <Badge variant="secondary" className="capitalize">
+                <Badge
+                  variant="secondary"
+                  className="w-fit capitalize"
+                  style={{
+                    backgroundColor: `${theme.colors.primary}1A`,
+                    color: theme.colors.primary,
+                    borderColor: `${theme.colors.primary}33`,
+                  }}
+                >
                   {product.category.name}
+                </Badge>
+              )}
+              {product.is_featured && (
+                <Badge
+                  className="text-xs font-bold tracking-wider uppercase"
+                  style={{
+                    backgroundColor: theme.colors.secondary,
+                    color: theme.colors.text,
+                  }}
+                >
+                  Featured
+                </Badge>
+              )}
+              {currentStock === 0 && (
+                <Badge
+                  variant="secondary"
+                  className="text-xs font-bold tracking-wider uppercase"
+                >
+                  Sold Out
+                </Badge>
+              )}
+              {currentStock > 0 && currentStock <= 5 && (
+                <Badge className="bg-amber-500 text-xs font-bold tracking-wider text-white uppercase hover:bg-amber-600">
+                  Low Stock
                 </Badge>
               )}
             </div>
 
-            <h1 className="text-foreground mb-3 text-3xl font-extrabold tracking-tight md:text-4xl lg:text-5xl" style={{ fontFamily: theme.fonts.heading }}>
+            <h1
+              className="text-foreground mb-6 text-2xl font-normal md:text-4xl "
+              style={{ fontFamily: theme.fonts.heading }}
+            >
               {product.name}
             </h1>
 
             {product.description && (
               <div
                 className="text-foreground/80 prose prose-base dark:prose-invert mb-8 max-w-none leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: sanitizeContent(product.description) }}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeContent(product.description),
+                }}
               />
             )}
 
-            {/* Variant Selection */}
+            {/* Clean Variant Selection */}
             {product.options && product.options.length > 0 && (
               <div className="bg-muted/30 border-border/50 mb-8 space-y-6 rounded-2xl border p-6">
                 {product.options.map(option => (
                   <div key={option.id}>
                     <label className="text-foreground mb-3 block text-sm font-bold tracking-wider uppercase">
-                      {option.name}
+                      {option.name}{" "}
+                      <span className="text-muted-foreground ml-2 font-normal normal-case">
+                        - {selectedOptions[option.name] || "Select an option"}
+                      </span>
                     </label>
                     <div className="flex flex-wrap gap-2.5">
                       {option.values?.map(value => {
-                        const isSelected = selectedOptions[option.name] === value.value;
-                        const isAvailable = isOptionValueAvailable(option.name, value.value);
+                        const isSelected =
+                          selectedOptions[option.name] === value.value;
+                        const isAvailable = isOptionValueAvailable(
+                          option.name,
+                          value.value
+                        );
 
                         return (
                           <Button
                             key={value.id}
                             variant={isSelected ? "default" : "outline"}
-                            className="min-w-20 px-5 py-6 font-medium capitalize"
-                            style={isSelected ? primaryButtonStyle : outlineButtonStyle}
-                            onClick={() => isAvailable && handleOptionChange(option.name, value.value)}
+                            className={`relative min-w-[5rem] px-5 py-6 font-medium capitalize transition-all duration-200 ${
+                              !isAvailable
+                                ? "bg-muted cursor-not-allowed opacity-30 hover:opacity-30"
+                                : "-sm hover:-md"
+                            }`}
+                            style={
+                              isSelected
+                                ? primaryButtonStyle
+                                : outlineButtonStyle
+                            }
+                            onClick={() =>
+                              isAvailable &&
+                              handleOptionChange(option.name, value.value)
+                            }
                             disabled={!isAvailable}
                           >
                             {value.value}
@@ -398,22 +535,50 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
             {/* Action Area */}
             <div className="border-border border-t pt-6">
               <div className="mb-4 flex items-center gap-4">
-                <div className="bg-background flex items-center overflow-hidden rounded-full border p-1 shadow-sm">
-                  <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-full" onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={currentStock === 0}>
+                {/* Quantity Selector */}
+                <div className="bg-background -sm flex items-center overflow-hidden rounded-full border p-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:bg-muted h-10 w-10 shrink-0 rounded-full"
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    disabled={currentStock === 0}
+                  >
                     <Minus className="h-4 w-4" />
                   </Button>
-                  <Input type="text" value={quantity} readOnly className="h-10 w-14 border-0 px-0 text-center text-base font-semibold focus-visible:ring-0" />
-                  <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-full" onClick={() => setQuantity(q => Math.min(currentStock, q + 1))} disabled={currentStock === 0}>
+                  <Input
+                    type="text"
+                    value={quantity}
+                    onChange={e =>
+                      setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+                    }
+                    className="h-10 w-14 border-0 px-0 text-center text-base font-semibold focus-visible:ring-0"
+                    min="1"
+                    max={currentStock}
+                    disabled={currentStock === 0}
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:bg-muted h-10 w-10 shrink-0 rounded-full"
+                    onClick={() =>
+                      setQuantity(q => Math.min(currentStock, q + 1))
+                    }
+                    disabled={currentStock === 0}
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
 
-                <Button size="lg" className="h-14 flex-1 rounded-full text-lg font-bold shadow-lg" disabled={currentStock === 0} style={primaryButtonStyle} onClick={handleAddToCart}>
+                {/* Add to Cart */}
+                <Button
+                  size="lg"
+                  className="-lg h-14 flex-1 rounded-full text-lg font-bold transition-transform hover:scale-[1.02]"
+                  disabled={currentStock === 0}
+                  style={primaryButtonStyle}
+                  onClick={handleAddToCart}
+                >
                   {currentStock > 0 ? "Add to Cart" : "Out of Stock"}
-                </Button>
-
-                <Button variant="outline" size="icon" className="h-14 w-14 shrink-0 rounded-full border-2" style={isWishlisted ? { color: theme.colors.secondary } : { color: theme.colors.primary }} onClick={handleFavorite} disabled={isWishlistLoading}>
-                  <Heart className={`h-6 w-6 ${isWishlisted ? "fill-current" : ""}`} />
                 </Button>
               </div>
             </div>

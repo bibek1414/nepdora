@@ -221,17 +221,6 @@ const SideCart: React.FC<SideCartProps> = ({
           <div className="mt-auto">
             {cartItems.length > 0 && (
               <div className="space-y-3 border-t border-gray-200 bg-gray-50 p-4 pb-2 sm:space-y-4 sm:p-5 sm:pb-3">
-                {/* Free Delivery Badge */}
-                <div className="flex items-center justify-center gap-2 text-xs text-gray-600 sm:text-sm">
-                  <div className="flex h-4 w-4 items-center justify-center rounded-full bg-green-500">
-                    <span className="text-xs text-white">✓</span>
-                  </div>
-                  <span>
-                    <strong>Free Delivery</strong> &{" "}
-                    <strong>Easy Returns</strong>
-                  </span>
-                </div>
-
                 {/* Subtotal */}
                 {!hidePrices && totalPrice > 0 && (
                   <div className="flex items-center justify-between border-t border-gray-200 pt-3 sm:pt-4">
@@ -250,7 +239,8 @@ const SideCart: React.FC<SideCartProps> = ({
                     onClick={onClose}
                     className="w-full rounded-lg py-3 text-sm font-semibold text-white sm:py-4 sm:text-base"
                     style={{
-                      background: theme.colors.secondary,
+                      background: theme.colors.primary,
+                      color: theme.colors.primaryForeground,
                       fontFamily: theme.fonts.heading,
                     }}
                     size="lg"
@@ -276,4 +266,3 @@ const SideCart: React.FC<SideCartProps> = ({
 };
 
 export default SideCart;
-

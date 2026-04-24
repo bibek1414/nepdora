@@ -736,6 +736,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         image: "/images/site-owners/products/product8.png",
         description: "Carousel layout without prices and reviews",
       },
+      {
+        id: "product-12",
+        name: "Product Style 12 (Grid with Pagination)",
+        image: "/images/site-owners/products/product1.png",
+        description: "Premium grid layout with built-in pagination",
+      },
     ],
     product_details: [
       {
@@ -1962,7 +1968,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.checkout,
       type: "checkout" as any,
       showForWebsiteTypes: ["ecommerce"],
-      isSpecialized: true,
     },
     {
       id: "order-confirmation-sections",
@@ -1974,7 +1979,6 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
       templates: templates.order_confirmation,
       type: "order_confirmation" as any,
       showForWebsiteTypes: ["ecommerce"],
-      isSpecialized: true,
     },
     {
       id: "services-sections",

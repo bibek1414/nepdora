@@ -64,11 +64,14 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
   const { user, isAuthenticated } = useAuth();
   const { data: paymentGateways } = usePaymentGateways();
   const { data: themeResponse } = useThemeQuery();
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(null);
   const [openBillingCity, setOpenBillingCity] = useState(false);
   const siteUser = propSiteUser || (params?.siteUser as string);
   const isBuilder = pathname?.includes("/builder/");
-  const cartItems = realCartItems.length > 0 ? realCartItems : isBuilder ? MOCK_CART : [];
+  const cartItems =
+    realCartItems.length > 0 ? realCartItems : isBuilder ? MOCK_CART : [];
 
   const {
     register,
@@ -107,7 +110,9 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
     searchQuery,
     setSearchQuery,
   } = useDeliveryChargeCalculator({
-    selectedCityDistrict: sameAsCustomerAddress ? cityDistrict : shippingCityDistrict || cityDistrict,
+    selectedCityDistrict: sameAsCustomerAddress
+      ? cityDistrict
+      : shippingCityDistrict || cityDistrict,
     totalWeight,
   });
 
@@ -118,8 +123,11 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
 
   const totalAmount = subtotalAmount; // Delivery charge not shown in catalog mode
 
-  const enabledPaymentGateways = paymentGateways?.filter(gateway => gateway.is_enabled) || [];
-  const gatewayPaymentTypes = Array.from(new Set(enabledPaymentGateways.map(g => g.payment_type)));
+  const enabledPaymentGateways =
+    paymentGateways?.filter(gateway => gateway.is_enabled) || [];
+  const gatewayPaymentTypes = Array.from(
+    new Set(enabledPaymentGateways.map(g => g.payment_type))
+  );
   const uniquePaymentTypes = ["cod", ...gatewayPaymentTypes];
 
   useEffect(() => {
@@ -150,18 +158,25 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
 
   const getPaymentImage = (type: string) => {
     switch (type.toLowerCase()) {
-      case "esewa": return "/images/payment-gateway/esewa.png";
-      case "khalti": return "/images/payment-gateway/khalti.png";
-      default: return "/images/payment-gateway/cod.png";
+      case "esewa":
+        return "/images/payment-gateway/esewa.png";
+      case "khalti":
+        return "/images/payment-gateway/khalti.png";
+      default:
+        return "/images/payment-gateway/cod.png";
     }
   };
 
   const getPaymentLabel = (type: string) => {
     switch (type.toLowerCase()) {
-      case "cod": return "Cash on Delivery";
-      case "esewa": return "eSewa";
-      case "khalti": return "Khalti";
-      default: return type;
+      case "cod":
+        return "Cash on Delivery";
+      case "esewa":
+        return "eSewa";
+      case "khalti":
+        return "Khalti";
+      default:
+        return type;
     }
   };
 
@@ -177,7 +192,9 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
           return {
             variant_id: item.selectedVariant.id,
             quantity: item.quantity,
-            price: (item.selectedVariant.price || item.product.price).toString(),
+            price: (
+              item.selectedVariant.price || item.product.price
+            ).toString(),
           };
         } else {
           return {
@@ -194,8 +211,12 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
         customer_phone: data.customer_phone,
         customer_address: data.customer_address,
         city: data.city,
-        shipping_address: data.same_as_customer_address ? data.customer_address : data.shipping_address || "",
-        shipping_city: data.same_as_customer_address ? data.city : data.shipping_city || "",
+        shipping_address: data.same_as_customer_address
+          ? data.customer_address
+          : data.shipping_address || "",
+        shipping_city: data.same_as_customer_address
+          ? data.city
+          : data.shipping_city || "",
         total_amount: totalAmount.toFixed(2),
         delivery_charge: "0.00",
         items: orderItems,
@@ -207,8 +228,14 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
         includeToken: isAuthenticated && !!user,
       });
 
-      const prefix = pathname?.includes("/preview/") ? `/preview/${siteUser}` : pathname?.includes("/builder/") ? `/builder/${siteUser}` : "";
-      const orderConfirmUrl = prefix ? `${prefix}/order-confirmation-draft/${order.id}` : `/order-confirmation/${order.id}`;
+      const prefix = pathname?.includes("/preview/")
+        ? `/preview/${siteUser}`
+        : pathname?.includes("/builder/")
+          ? `/builder/${siteUser}`
+          : "";
+      const orderConfirmUrl = prefix
+        ? `${prefix}/order-confirmation-draft/${order.id}`
+        : `/order-confirmation/${order.id}`;
 
       toast.success("Order placed successfully!");
       clearCart();
@@ -223,7 +250,14 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
     return (
       <div className="container mx-auto max-w-5xl px-4 py-8 text-center">
         <h1 className="mb-4 text-2xl font-bold">Your cart is empty</h1>
-        <Button onClick={() => router.push(pathname?.includes("/preview/") ? `/preview/${siteUser}` : "/")} style={primaryButtonStyle}>
+        <Button
+          onClick={() =>
+            router.push(
+              pathname?.includes("/preview/") ? `/preview/${siteUser}` : "/"
+            )
+          }
+          style={primaryButtonStyle}
+        >
           Continue Shopping
         </Button>
       </div>
@@ -237,81 +271,219 @@ const CheckoutStyle3 = ({ siteUser: propSiteUser }: CheckoutStyleProps) => {
           <EditableText
             value="Order Request"
             onChange={() => {}}
-            as="h1"
+            as="title"
             className="text-4xl font-medium md:text-5xl"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isBuilder}
           />
-          <p className="mt-3 italic opacity-70">Please fill in your details to submit your order request</p>
         </div>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
           <div className="space-y-10">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
               <section>
-                <h2 className="mb-6 text-2xl font-medium" style={{ fontFamily: theme.fonts.heading }}>Shipping Information</h2>
+                <h2
+                  className="mb-6 text-2xl font-medium"
+                  style={{ fontFamily: theme.fonts.heading }}
+                >
+                  Customer Information
+                </h2>
                 <div className="space-y-5">
-                  <Input {...register("customer_name")} className="rounded-2xl border-transparent px-5 py-4" style={{ backgroundColor: `${theme.colors.primary}0A` }} placeholder="Full Name" />
-                  {errors.customer_name && <p className="text-xs text-red-500">{errors.customer_name.message}</p>}
-                  
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    <Input {...register("customer_email")} type="email" className="rounded-2xl border-transparent px-5 py-4" style={{ backgroundColor: `${theme.colors.primary}0A` }} placeholder="Email" />
-                    <Input {...register("customer_phone")} type="tel" className="rounded-2xl border-transparent px-5 py-4" style={{ backgroundColor: `${theme.colors.primary}0A` }} placeholder="Phone Number" />
+                  <div>
+                    <Input
+                      {...register("customer_name")}
+                      className="rounded-2xl border-transparent px-5 py-4 placeholder:text-gray-500"
+                      style={{ backgroundColor: `${theme.colors.primary}0A` }}
+                      placeholder="Full Name"
+                      disabled={isSubmitting}
+                    />
+                    {errors.customer_name && (
+                      <p className="mt-1 px-2 text-xs text-red-500">
+                        {errors.customer_name.message}
+                      </p>
+                    )}
                   </div>
 
-                  <Popover open={openBillingCity} onOpenChange={setOpenBillingCity}>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-between rounded-2xl border-transparent px-5 py-4" style={{ backgroundColor: `${theme.colors.primary}0A`, color: "gray" }}>
-                        {cityDistrict || "Select city/district"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command>
-                        <CommandInput placeholder="Search..." onValueChange={setSearchQuery} />
-                        <CommandEmpty>No city found.</CommandEmpty>
-                        <CommandGroup className="max-h-64 overflow-auto">
-                          {citiesDistricts.map(city => (
-                            <CommandItem key={city} value={city} onSelect={() => { setValue("city", city); setOpenBillingCity(false); }}>
-                              <Check className={cn("mr-2 h-4 w-4", cityDistrict === city ? "opacity-100" : "opacity-0")} />
-                              {city}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div>
+                      <Input
+                        {...register("customer_email")}
+                        type="email"
+                        className="rounded-2xl border-transparent px-5 py-4 placeholder:text-gray-500"
+                        style={{ backgroundColor: `${theme.colors.primary}0A` }}
+                        placeholder="Email"
+                        disabled={isSubmitting}
+                      />
+                      {errors.customer_email && (
+                        <p className="mt-1 px-2 text-xs text-red-500">
+                          {errors.customer_email.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Input
+                        {...register("customer_phone")}
+                        type="tel"
+                        className="rounded-2xl border-transparent px-5 py-4 placeholder:text-gray-500"
+                        style={{ backgroundColor: `${theme.colors.primary}0A` }}
+                        placeholder="Phone Number"
+                        disabled={isSubmitting}
+                      />
+                      {errors.customer_phone && (
+                        <p className="mt-1 px-2 text-xs text-red-500">
+                          {errors.customer_phone.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-                  <Input {...register("customer_address")} className="rounded-2xl border-transparent px-5 py-4" style={{ backgroundColor: `${theme.colors.primary}0A` }} placeholder="Address" />
-                  
-                  <Textarea {...register("note")} rows={3} className="rounded-2xl border-transparent px-5 py-4" style={{ backgroundColor: `${theme.colors.primary}0A` }} placeholder="Any special instructions..." />
+                  <div>
+                    <Popover
+                      open={openBillingCity}
+                      onOpenChange={setOpenBillingCity}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between rounded-2xl border-transparent px-5 py-4"
+                          style={{
+                            backgroundColor: `${theme.colors.primary}0A`,
+                            color: "gray",
+                          }}
+                          disabled={isSubmitting || isLoadingDeliveryCharges}
+                        >
+                          {cityDistrict || "Select city/district"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search..."
+                            value={searchQuery}
+                            onValueChange={setSearchQuery}
+                          />
+                          <CommandEmpty>No city found.</CommandEmpty>
+                          <CommandGroup className="max-h-64 overflow-auto">
+                            {citiesDistricts.map(city => (
+                              <CommandItem
+                                key={city}
+                                value={city}
+                                onSelect={() => {
+                                  setValue("city", city);
+                                  setOpenBillingCity(false);
+                                  setSearchQuery("");
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    cityDistrict === city
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {city}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    {errors.city && (
+                      <p className="mt-1 px-2 text-xs text-red-500">
+                        {errors.city.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Input
+                      {...register("customer_address")}
+                      className="rounded-2xl border-transparent px-5 py-4 placeholder:text-gray-500"
+                      style={{ backgroundColor: `${theme.colors.primary}0A` }}
+                      placeholder="Address"
+                      disabled={isSubmitting}
+                    />
+                    {errors.customer_address && (
+                      <p className="mt-1 px-2 text-xs text-red-500">
+                        {errors.customer_address.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <Textarea
+                    {...register("note")}
+                    rows={3}
+                    className="rounded-2xl border-transparent px-5 py-4"
+                    style={{ backgroundColor: `${theme.colors.primary}0A` }}
+                    placeholder="Any special instructions..."
+                    disabled={isSubmitting}
+                  />
                 </div>
               </section>
 
-              <Button type="submit" className="w-full rounded-full py-6 text-lg font-medium" style={primaryButtonStyle} disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full rounded-full py-6 text-lg font-medium"
+                style={primaryButtonStyle}
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Processing..." : "Submit Order Request"}
               </Button>
             </form>
           </div>
 
-          <div className="sticky top-24 h-fit rounded-[24px] border p-8" style={{ borderColor: `${theme.colors.primary}20`, backgroundColor: `${theme.colors.primary}03` }}>
-            <h2 className="mb-2 text-2xl font-medium" style={{ fontFamily: theme.fonts.heading }}>Items</h2>
-            <p className="mb-8 opacity-50">{cartItems.length} {cartItems.length === 1 ? "item" : "items"}</p>
+          <div
+            className="sticky top-24 h-fit rounded-[24px] border p-8"
+            style={{
+              borderColor: `${theme.colors.primary}20`,
+              backgroundColor: `${theme.colors.primary}03`,
+            }}
+          >
+            <h2
+              className="mb-2 text-2xl font-medium"
+              style={{ fontFamily: theme.fonts.heading }}
+            >
+              Items
+            </h2>
+            <p className="mb-8 opacity-50">
+              {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+            </p>
 
-            <div className="space-y-6 overflow-auto max-h-[400px] pr-2">
+            <div className="max-h-[400px] space-y-6 overflow-auto pr-2">
               {cartItems.map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
                   <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border">
-                    <Image unoptimized src={item.product.thumbnail_image || ""} alt={item.product.name} fill className="object-cover" />
+                    <Image
+                      unoptimized
+                      src={item.product.thumbnail_image || ""}
+                      alt={item.product.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   <div className="flex-1">
-                    <h4 className="line-clamp-1 text-sm font-medium">{item.product.name}</h4>
+                    <h4 className="line-clamp-1 text-sm font-medium">
+                      {item.product.name}
+                    </h4>
                     <p className="text-xs opacity-50">Qty: {item.quantity}</p>
                     {item.selectedVariant && (
                       <div className="mt-1 flex flex-wrap gap-1">
-                        {Object.entries(item.selectedVariant.option_values).map(([k, v]) => (
-                          <span key={k} className="rounded-full px-1.5 py-0.5 text-[10px]" style={{ backgroundColor: `${theme.colors.primary}10`, color: theme.colors.primary }}>{v}</span>
-                        ))}
+                        {Object.entries(item.selectedVariant.option_values).map(
+                          ([k, v]) => (
+                            <span
+                              key={k}
+                              className="rounded-full px-1.5 py-0.5 text-[10px]"
+                              style={{
+                                backgroundColor: `${theme.colors.primary}10`,
+                                color: theme.colors.primary,
+                              }}
+                            >
+                              {v}
+                            </span>
+                          )
+                        )}
                       </div>
                     )}
                   </div>
