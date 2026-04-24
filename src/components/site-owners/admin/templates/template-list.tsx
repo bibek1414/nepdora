@@ -37,8 +37,9 @@ const TemplateList = () => {
     isFetching,
     error,
   } = useGetTemplates({
-    ...filters,
+    page: 1, // Always fetch first page when doing frontend filtering/pagination
     page_size: 100, // Fetch more to allow frontend filtering
+    search: debouncedSearchTerm || undefined,
   });
 
   const filteredTemplates = (templatesData?.results || []).filter(template => {
@@ -60,16 +61,25 @@ const TemplateList = () => {
 
   const handlePageChange = useCallback((newPage: number) => {
     setFilters(prev => ({ ...prev, page: newPage }));
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const clearSearch = () => {
     setSearchTerm("");
+    setFilters(prev => ({ ...prev, page: 1 }));
   };
 
-  const totalPages = Math.ceil(
-    (templatesData?.count || 0) / (filters.page_size || 12)
-  );
   const currentPage = filters.page || 1;
+  const totalPages = Math.ceil(
+    (filteredTemplates?.length || 0) / filters.page_size
+  );
+
+  // Paginate the filtered templates for display
+  const paginatedTemplates = filteredTemplates.slice(
+    (currentPage - 1) * filters.page_size,
+    currentPage * filters.page_size
+  );
 
   const LoadingSkeleton = () => (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -137,7 +147,7 @@ const TemplateList = () => {
           </Alert>
         ) : isLoading ? (
           <LoadingSkeleton />
-        ) : !filteredTemplates || filteredTemplates.length === 0 ? (
+        ) : !paginatedTemplates || paginatedTemplates.length === 0 ? (
           <div className="py-16 text-center">
             <div className="mb-4 text-6xl">📋</div>
             <h2 className="mb-2 text-2xl font-semibold text-gray-900">
@@ -159,7 +169,7 @@ const TemplateList = () => {
         ) : (
           <>
             <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredTemplates.map(template => (
+              {paginatedTemplates.map(template => (
                 <TemplateCard
                   key={template.id}
                   template={template}
