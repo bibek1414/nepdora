@@ -194,7 +194,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
                 height: 1080,
                 text: `Slide ${heroIndex + 1}`,
               }}
-              disableImageChange={true}
+              buttonPosition="top-left"
             />
 
             <ImageEditOverlay
@@ -206,7 +206,7 @@ export const HeroTemplate12: React.FC<HeroTemplate12Props> = ({
               isEditable={isEditable}
               label="Change Background"
               folder="hero-slides"
-              className="absolute inset-0 z-40 flex items-center justify-center"
+              className="absolute top-10 left-10 z-40 flex items-center justify-center"
             />
           </div>
 

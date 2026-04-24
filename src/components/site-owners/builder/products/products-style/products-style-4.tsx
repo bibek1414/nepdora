@@ -11,6 +11,13 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { FeaturedProductsButton } from "../featured-products-button";
 import { EditableLink } from "@/components/ui/editable-link";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
@@ -33,6 +40,8 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
     categoryId,
     buttonText = "View All",
     buttonLink = "/products",
+    display_type = "grid",
+    carousel_style = "style-10",
   } = data || {};
 
   const { data: themeResponse } = useThemeQuery();
@@ -75,28 +84,35 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex flex-col items-center justify-center text-center">
-          <div className="mb-6 inline-block">
+        <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div className="flex flex-col items-center justify-center text-center md:items-start md:text-left">
+            <div className="mb-6 inline-block">
+              <EditableText
+                value={subtitle || "Top sale on this week"}
+                onChange={handleSubtitleChange}
+                as="span"
+                isEditable={isEditable}
+                className="rounded-full px-4 py-1.5 text-sm font-medium text-black"
+                style={{ backgroundColor: theme.colors.primary || "#B9FF66" }}
+                placeholder="Enter subtitle..."
+              />
+            </div>
+
             <EditableText
-              value={subtitle || "Top sale on this week"}
-              onChange={handleSubtitleChange}
-              as="span"
+              value={title}
+              onChange={handleTitleChange}
+              as="h2"
+              className="text-4xl font-semibold tracking-tight text-gray-900 md:text-5xl"
+              style={{ fontFamily: theme.fonts.heading }}
               isEditable={isEditable}
-              className="rounded-full px-4 py-1.5 text-sm font-medium text-black"
-              style={{ backgroundColor: theme.colors.primary || "#B9FF66" }}
-              placeholder="Enter subtitle..."
+              placeholder="Enter title..."
             />
           </div>
-
-          <EditableText
-            value={title}
-            onChange={handleTitleChange}
-            as="h2"
-            className="text-4xl font-semibold tracking-tight text-gray-900 md:text-5xl"
-            style={{ fontFamily: theme.fonts.heading }}
-            isEditable={isEditable}
-            placeholder="Enter title..."
-          />
+          {display_type === "carousel" && carousel_style === "style-5" && (
+            <div className="flex gap-3 self-center md:self-end">
+              {/* Navigation will be rendered inside the Carousel component below */}
+            </div>
+          )}
         </div>
 
         {isLoading && (
@@ -130,22 +146,66 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
 
         {!isLoading && !error && products.length > 0 && (
           <>
-            <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map(product => (
-                <div
-                  key={product.id}
-                  onClick={() =>
-                    !isEditable && onProductClick?.(product.slug || "")
-                  }
-                  className={isEditable ? "" : "cursor-pointer"}
+            {display_type === "carousel" ? (
+              <div className={`relative ${carousel_style === "style-10" ? "px-12" : ""}`}>
+                <Carousel
+                  opts={{
+                    align: "start",
+                    loop: true,
+                  }}
+                  className="w-full"
                 >
-                  <ProductCard9
-                    product={product}
-                    siteUser={isEditable ? undefined : siteUser}
-                  />
-                </div>
-              ))}
-            </div>
+                  <CarouselContent className="-ml-8">
+                    {products.map(product => (
+                      <CarouselItem
+                        key={product.id}
+                        className="pl-8 sm:basis-1/2 lg:basis-1/3"
+                      >
+                        <div
+                          onClick={() =>
+                            !isEditable && onProductClick?.(product.slug || "")
+                          }
+                          className={isEditable ? "" : "cursor-pointer"}
+                        >
+                          <ProductCard9
+                            product={product}
+                            siteUser={isEditable ? undefined : siteUser}
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  {carousel_style === "style-10" ? (
+                    <>
+                      <CarouselPrevious className="hidden md:flex -left-4" />
+                      <CarouselNext className="hidden md:flex -right-4" />
+                    </>
+                  ) : (
+                    <div className="mt-8 flex justify-end gap-3 md:absolute md:-top-24 md:right-0">
+                      <CarouselPrevious className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white" />
+                      <CarouselNext className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white" />
+                    </div>
+                  )}
+                </Carousel>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+                {products.map(product => (
+                  <div
+                    key={product.id}
+                    onClick={() =>
+                      !isEditable && onProductClick?.(product.slug || "")
+                    }
+                    className={isEditable ? "" : "cursor-pointer"}
+                  >
+                    <ProductCard9
+                      product={product}
+                      siteUser={isEditable ? undefined : siteUser}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="mt-16 flex justify-center">
               <EditableLink
@@ -177,6 +237,8 @@ export const ProductsStyle4: React.FC<ProductsStyleProps> = ({
         <FeaturedProductsButton
           isEditable={isEditable}
           productsCount={products.length}
+          data={data}
+          onUpdate={onUpdate}
         />
       </div>
     </section>

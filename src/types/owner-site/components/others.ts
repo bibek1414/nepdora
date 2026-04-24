@@ -652,24 +652,38 @@ export const defaultOthersTemplate6Data: OthersTemplate6Data = {
 
 export const defaultOthersTemplate7Data: OthersTemplate7Data = {
   template: "others-7",
-  title: "The New Standard",
+  subtitle: "Modi Industech Pvt. Ltd.",
+  title: "Reliable Steam Engineering Solutions",
+  description:
+    "We specialize in industrial equipment, steam boilers, and complete steam system solutions. From valves and fittings to advanced control systems, we deliver efficiency, reliability, and performance for your operations.",
+  buttonText: "Get Technical Guidance",
   images: [
     {
       id: 1,
       image:
-        "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.pexels.com/photos/162523/graffiti-abandoned-factory-abandoned-factory-162523.jpeg",
+      image_alt_description: "Industrial Steam Boiler System",
+      link: "#contact",
+      is_active: true,
     },
   ],
 };
 
 export const defaultOthersTemplate8Data: OthersTemplate8Data = {
   template: "others-8",
-  title: "Power for Professionals",
+  subtitle: "Steam Systems Division (SSD)",
+  title: "Complete Steamline Solutions",
+  description:
+    "From steam boilers to precision-engineered valves, traps, and pipeline accessories, we deliver end-to-end solutions tailored to your industrial requirements with maximum efficiency and safety.",
+  buttonText: "Explore Our Solutions",
   images: [
     {
       id: 1,
       image:
-        "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.pexels.com/photos/5503874/pexels-photo-5503874.jpeg",
+      image_alt_description: "Steam Pipeline and Valve Systems",
+      link: "#services",
+      is_active: true,
     },
   ],
 };

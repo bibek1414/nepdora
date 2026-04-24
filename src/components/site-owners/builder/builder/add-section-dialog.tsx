@@ -718,6 +718,18 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Product Style 8 (Premium Grid)",
         image: "/images/site-owners/products/product8.png", // Using product1 as placeholder image
       },
+      {
+        id: "product-9",
+        name: "Product Style 9 (Catalog Grid)",
+        image: "/images/site-owners/products/product8.png",
+        description: "Grid layout without prices and reviews",
+      },
+      {
+        id: "product-10",
+        name: "Product Style 10 (Catalog Carousel)",
+        image: "/images/site-owners/products/product8.png",
+        description: "Carousel layout without prices and reviews",
+      },
     ],
     product_details: [
       {
@@ -730,6 +742,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Product Details Style 2",
         image: "/images/site-owners/product-details/product-details-2.png",
       },
+      {
+        id: "product-details-style-3",
+        name: "Product Details Style 3 (Catalog)",
+        image: "/images/site-owners/product-details/product-details-1.png",
+        description: "Product details without price display",
+      },
     ],
     checkout: [
       {
@@ -741,6 +759,12 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         id: "checkout-style-2",
         name: "Checkout Style 2",
         image: "/images/site-owners/checkout/checkout-2.png", // Using placeholder image for now
+      },
+      {
+        id: "checkout-style-3",
+        name: "Checkout Style 3 (Catalog)",
+        image: "/images/site-owners/checkout/checkout-1.png",
+        description: "Order request checkout without price display",
       },
     ],
     order_confirmation: [
@@ -755,6 +779,13 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Order Confirmation Style 2",
         image:
           "/images/site-owners/order-confirmation/order-confirmation-2.png", // Using placeholder image for now
+      },
+      {
+        id: "order-confirmation-style-3",
+        name: "Order Confirmation Style 3 (Catalog)",
+        image:
+          "/images/site-owners/order-confirmation/order-confirmation-1.png",
+        description: "Order confirmation without price display",
       },
     ],
     blog_details: [
@@ -1427,6 +1458,7 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Navbar simple left logo ",
         image: "/images/site-owners/navbars/navbar11.png",
         description: "Navbar simple with left aligned logo",
+        showForWebsiteTypes: ["service"],
       },
       {
         id: "navbar-12",
@@ -1448,6 +1480,14 @@ export const AddSectionDialog: React.FC<AddSectionDialogProps> = ({
         name: "Navbar Center Navigation",
         image: "/images/site-owners/navbars/navbar14.png",
         description: "Logo left, centered navigation, buttons right",
+        showForWebsiteTypes: ["service"],
+      },
+      {
+        id: "navbar-15",
+        name: "Catalog Navbar",
+        image: "/images/site-owners/navbars/navbar9.png",
+        description: "Simple navbar without categories, hides 0 prices",
+        showForWebsiteTypes: ["ecommerce"],
       },
     ],
     // FOOTER TEMPLATES

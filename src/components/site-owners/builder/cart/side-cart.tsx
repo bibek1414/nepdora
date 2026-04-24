@@ -13,9 +13,15 @@ interface SideCartProps {
   isOpen: boolean;
   onClose: () => void;
   siteUser: string;
+  hidePrices?: boolean;
 }
 
-const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
+const SideCart: React.FC<SideCartProps> = ({
+  isOpen,
+  onClose,
+  siteUser,
+  hidePrices = false,
+}) => {
   const pathname = usePathname();
   const { cartItems, removeFromCart, updateQuantity, itemCount } = useCart();
   const { data: themeResponse } = useThemeQuery();
@@ -161,9 +167,13 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
 
                         {/* Price & Quantity Controls */}
                         <div className="flex items-center justify-between pt-2">
-                          <p className="text-base font-semibold text-gray-900 sm:text-lg">
-                            Rs.{displayPrice.toLocaleString("en-IN")}
-                          </p>
+                          {!hidePrices && displayPrice > 0 ? (
+                            <p className="text-base font-semibold text-gray-900 sm:text-lg">
+                              Rs.{displayPrice.toLocaleString("en-IN")}
+                            </p>
+                          ) : (
+                            <div />
+                          )}
 
                           <div className="flex items-center gap-2">
                             <Button
@@ -223,14 +233,16 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
                 </div>
 
                 {/* Subtotal */}
-                <div className="flex items-center justify-between border-t border-gray-200 pt-3 sm:pt-4">
-                  <span className="text-base font-semibold text-gray-900 sm:text-lg">
-                    SUBTOTAL:
-                  </span>
-                  <span className="text-lg font-bold text-gray-900 sm:text-xl">
-                    Rs.{totalPrice.toLocaleString("en-IN")}
-                  </span>
-                </div>
+                {!hidePrices && totalPrice > 0 && (
+                  <div className="flex items-center justify-between border-t border-gray-200 pt-3 sm:pt-4">
+                    <span className="text-base font-semibold text-gray-900 sm:text-lg">
+                      SUBTOTAL:
+                    </span>
+                    <span className="text-lg font-bold text-gray-900 sm:text-xl">
+                      Rs.{totalPrice.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                )}
 
                 {/* Checkout Button */}
                 <Link href={checkoutUrl} className="w-full">
@@ -264,3 +276,4 @@ const SideCart: React.FC<SideCartProps> = ({ isOpen, onClose, siteUser }) => {
 };
 
 export default SideCart;
+

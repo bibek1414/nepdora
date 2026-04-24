@@ -11,4 +11,9 @@ export const DEFAULT_PRODUCT_DETAILS_MAP: Record<string, ProductDetailsData> = {
     showRelatedProducts: true,
     showRecentlyViewed: true,
   },
+  "product-details-style-3": {
+    style: "style-3",
+    showRelatedProducts: false,
+    showRecentlyViewed: false,
+  },
 };

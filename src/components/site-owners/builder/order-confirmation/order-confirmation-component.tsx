@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { OrderConfirmationData } from "@/types/owner-site/components/order-confirmation";
 import OrderConfirmationStyle1 from "./details-style/order-confirmation-style-1";
 import OrderConfirmationStyle2 from "./details-style/order-confirmation-style-2";
+import OrderConfirmationStyle3 from "./details-style/order-confirmation-style-3";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
@@ -50,6 +51,10 @@ export const OrderConfirmationComponent: React.FC<
       case "style-2":
         return (
           <OrderConfirmationStyle2 siteUser={siteUser} orderId={orderId} />
+        );
+      case "style-3":
+        return (
+          <OrderConfirmationStyle3 siteUser={siteUser} orderId={orderId} />
         );
       case "style-1":
       default:

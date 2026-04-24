@@ -59,7 +59,7 @@ export const OthersTemplate7: React.FC<OthersTemplate7Props> = ({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
           className={`relative overflow-hidden rounded-3xl ${currentBgClass} group flex min-h-[360px] items-center text-white shadow-2xl md:min-h-[420px]`}
-          style={{ backgroundColor: "#1e1b4b" }}
+          style={{ backgroundColor: theme?.colors.background }}
         >
           <div className="pointer-events-none absolute inset-0 opacity-20">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-50"></div>
@@ -140,7 +140,7 @@ export const OthersTemplate7: React.FC<OthersTemplate7Props> = ({
                       handleImageUpdateLocal(imageUrl, altText)
                     }
                     isEditable={isEditable}
-                    className="w-full max-w-sm object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:translate-x-4 group-hover:-rotate-2 md:max-w-md"
+                    className="w-full max-w-sm rounded-2xl object-contain drop-shadow-2xl transition-transform duration-700 ease-out group-hover:translate-x-4 group-hover:-rotate-2 md:max-w-md"
                     s3Options={{
                       folder: "banner-images",
                     }}

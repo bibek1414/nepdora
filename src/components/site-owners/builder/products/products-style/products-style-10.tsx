@@ -4,10 +4,7 @@ import React from "react";
 import { useProducts } from "@/hooks/owner-site/admin/use-product";
 import { ProductCard10 } from "../products-card/product-card10";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  AlertCircle,
-  ShoppingBag,
-} from "lucide-react";
+import { AlertCircle, ShoppingBag } from "lucide-react";
 import { EditableText } from "@/components/ui/editable-text";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
@@ -28,18 +25,18 @@ interface ProductsStyleProps {
   onProductClick?: (productslug: string) => void;
 }
 
-export const ProductsStyle5: React.FC<ProductsStyleProps> = ({
+export const ProductsStyle10: React.FC<ProductsStyleProps> = ({
   data,
   isEditable = false,
   siteUser,
   onUpdate,
   onProductClick,
 }) => {
-  const { 
-    title = "Featured Products", 
+  const {
+    title = "Featured Products",
     categoryId,
     display_type = "carousel",
-    carousel_style = "style-5"
+    carousel_style = "style-5",
   } = data || {};
 
   const {
@@ -49,7 +46,7 @@ export const ProductsStyle5: React.FC<ProductsStyleProps> = ({
     refetch,
   } = useProducts({
     category_id: categoryId,
-    page_size: 12,
+    page_size: 20,
   });
 
   const products = productsData?.results || [];
@@ -102,9 +99,13 @@ export const ProductsStyle5: React.FC<ProductsStyleProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && products.length > 0 && (
-          display_type === "carousel" ? (
-            <div className={`relative ${carousel_style === "style-10" ? "px-12" : ""}`}>
+        {!isLoading &&
+          !error &&
+          products.length > 0 &&
+          (display_type === "carousel" ? (
+            <div
+              className={`relative ${carousel_style === "style-10" ? "px-12" : ""}`}
+            >
               <Carousel
                 opts={{
                   align: "start",
@@ -121,23 +122,26 @@ export const ProductsStyle5: React.FC<ProductsStyleProps> = ({
                       <ProductCard10
                         product={product}
                         siteUser={isEditable ? undefined : siteUser}
+                        showPrice={false}
+                        showReview={false}
                         onClick={() =>
+                        
                           !isEditable && onProductClick?.(product.slug || "")
                         }
                       />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                
+
                 {carousel_style === "style-10" ? (
                   <>
-                    <CarouselPrevious className="hidden md:flex -left-4" />
-                    <CarouselNext className="hidden md:flex -right-4" />
+                    <CarouselPrevious className="-left-4 hidden md:flex" />
+                    <CarouselNext className="-right-4 hidden md:flex" />
                   </>
                 ) : (
                   <div className="mt-8 flex justify-end gap-3 md:absolute md:-top-24 md:right-0">
-                    <CarouselPrevious className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white shadow-sm hover:bg-gray-50 transition-colors" />
-                    <CarouselNext className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white shadow-sm hover:bg-gray-50 transition-colors" />
+                    <CarouselPrevious className="static h-14 w-14 translate-y-0 rounded-2xl border-gray-100 bg-white shadow-sm transition-colors hover:bg-gray-50" />
+                    <CarouselNext className="static h-14 w-14 translate-y-0 rounded-2xl border-gray-100 bg-white shadow-sm transition-colors hover:bg-gray-50" />
                   </div>
                 )}
               </Carousel>
@@ -149,6 +153,8 @@ export const ProductsStyle5: React.FC<ProductsStyleProps> = ({
                   <ProductCard10
                     product={product}
                     siteUser={isEditable ? undefined : siteUser}
+                    showPrice={false}
+                    showReview={false}
                     onClick={() =>
                       !isEditable && onProductClick?.(product.slug || "")
                     }
@@ -156,8 +162,7 @@ export const ProductsStyle5: React.FC<ProductsStyleProps> = ({
                 </div>
               ))}
             </div>
-          )
-        )}
+          ))}
 
         {!isLoading && !error && (
           <BuilderEmptyState
@@ -183,4 +188,4 @@ export const ProductsStyle5: React.FC<ProductsStyleProps> = ({
   );
 };
 
-export default ProductsStyle5;
+export default ProductsStyle10;

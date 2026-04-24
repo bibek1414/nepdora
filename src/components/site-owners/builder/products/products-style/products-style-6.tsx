@@ -13,6 +13,13 @@ import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { ProductsComponentData } from "@/types/owner-site/components/products";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
 import { FeaturedProductsButton } from "../featured-products-button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductsStyleProps {
   data: ProductsComponentData["data"];
@@ -40,6 +47,8 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
     categoryId,
     buttonText = "View All",
     buttonLink = "/products",
+    display_type = "grid",
+    carousel_style = "style-10",
   } = editableData || {};
 
   const {
@@ -83,20 +92,27 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
               multiline
             />
           </div>
-          <EditableLink
-            text={buttonText}
-            href={buttonLink}
-            onChange={(text, href) => {
-              const update = { buttonText: text, buttonLink: href };
-              setData({ ...editableData, ...update });
-              onUpdate?.(update);
-            }}
-            isEditable={isEditable}
-            siteUser={siteUser}
-          >
-            {buttonText}
-            <ChevronRight className="ml-2 h-4 w-4 transition-transform" />
-          </EditableLink>
+          <div className="flex flex-col items-end gap-6">
+            {display_type === "carousel" && carousel_style === "style-5" && (
+              <div className="hidden gap-3 md:flex">
+                {/* Navigation will be rendered inside the Carousel component below */}
+              </div>
+            )}
+            <EditableLink
+              text={buttonText}
+              href={buttonLink}
+              onChange={(text, href) => {
+                const update = { buttonText: text, buttonLink: href };
+                setData({ ...editableData, ...update });
+                onUpdate?.(update);
+              }}
+              isEditable={isEditable}
+              siteUser={siteUser}
+            >
+              {buttonText}
+              <ChevronRight className="ml-2 h-4 w-4 transition-transform" />
+            </EditableLink>
+          </div>
         </motion.div>
 
         {/* Products Grid */}
@@ -117,17 +133,56 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
           </div>
         )}
         {!isLoading && !error && products.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
-            {products.map((product, index) => (
-              <ProductCard6
-                key={product.id}
-                product={product}
-                index={index}
-                siteUser={siteUser}
-                isEditable={isEditable}
-              />
-            ))}
-          </div>
+          display_type === "carousel" ? (
+            <div className={`relative ${carousel_style === "style-10" ? "px-12" : ""}`}>
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-6">
+                  {products.map((product, index) => (
+                    <CarouselItem
+                      key={product.id}
+                      className="pl-6 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                    >
+                      <ProductCard6
+                        product={product}
+                        index={index}
+                        siteUser={siteUser}
+                        isEditable={isEditable}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {carousel_style === "style-10" ? (
+                  <>
+                    <CarouselPrevious className="hidden md:flex -left-4" />
+                    <CarouselNext className="hidden md:flex -right-4" />
+                  </>
+                ) : (
+                  <div className="mt-8 flex justify-end gap-3 md:absolute md:-top-24 md:right-0">
+                    <CarouselPrevious className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white" />
+                    <CarouselNext className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white" />
+                  </div>
+                )}
+              </Carousel>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+              {products.map((product, index) => (
+                <ProductCard6
+                  key={product.id}
+                  product={product}
+                  index={index}
+                  siteUser={siteUser}
+                  isEditable={isEditable}
+                />
+              ))}
+            </div>
+          )
         )}
         {!isLoading && !error && (
           <BuilderEmptyState
@@ -145,6 +200,8 @@ export const ProductsStyle6: React.FC<ProductsStyleProps> = ({
         <FeaturedProductsButton
           isEditable={isEditable}
           productsCount={products.length}
+          data={data}
+          onUpdate={onUpdate}
         />
       </div>
     </section>

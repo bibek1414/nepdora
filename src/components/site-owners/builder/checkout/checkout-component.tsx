@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { CheckoutData } from "@/types/owner-site/components/checkout";
 import CheckoutStyle1 from "./details-style/checkout-style-1";
 import CheckoutStyle2 from "./details-style/checkout-style-2";
+import CheckoutStyle3 from "./details-style/checkout-style-3";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
@@ -43,6 +44,8 @@ export const CheckoutComponent: React.FC<CheckoutComponentProps> = ({
     switch (style) {
       case "style-2":
         return <CheckoutStyle2 siteUser={siteUser} />;
+      case "style-3":
+        return <CheckoutStyle3 siteUser={siteUser} />;
       case "style-1":
       default:
         return <CheckoutStyle1 siteUser={siteUser} />;

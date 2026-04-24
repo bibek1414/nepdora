@@ -37,6 +37,8 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
     title = "Best Selling",
     subtitle = "Our most popular items this week",
     categoryId,
+    display_type = "carousel",
+    carousel_style = "style-10",
   } = data || {};
 
   const { data: themeResponse } = useThemeQuery();
@@ -93,6 +95,11 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
               multiline={true}
             />
           </div>
+          {display_type === "carousel" && carousel_style === "style-5" && (
+            <div className="mt-8 flex justify-end gap-3 md:absolute md:top-20 md:right-4 xl:right-12">
+              {/* Carousel controls will be rendered below */}
+            </div>
+          )}
           <div className="mt-8 h-[2px] w-24 bg-black/10" />
         </div>
 
@@ -124,35 +131,66 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
         )}
 
         {!isLoading && !error && products.length > 0 && (
-          <div className="relative">
-            <Carousel opts={{ align: "start", loop: true }} className="w-full">
-              <CarouselContent className="-ml-4">
-                {products.map(product => (
-                  <CarouselItem
-                    key={product.id}
-                    className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
-                  >
-                    <div
-                      className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
-                      onClick={() =>
-                        !isEditable && onProductClick?.(product.slug || "")
-                      }
+          display_type === "carousel" ? (
+            <div className="relative">
+              <Carousel opts={{ align: "start", loop: true }} className="w-full">
+                <CarouselContent className="-ml-4">
+                  {products.map(product => (
+                    <CarouselItem
+                      key={product.id}
+                      className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                     >
-                      {isEditable && (
-                        <div className="absolute inset-0 z-10 bg-transparent" />
-                      )}
-                      <ProductCard6
-                        product={product}
-                        siteUser={isEditable ? undefined : siteUser}
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="-left-4 border-black bg-white/80 text-black shadow-md ring-black hover:bg-white md:-left-12" />
-              <CarouselNext className="-right-4 border-black bg-white/80 text-black shadow-md ring-black hover:bg-white md:-right-12" />
-            </Carousel>
-          </div>
+                      <div
+                        className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
+                        onClick={() =>
+                          !isEditable && onProductClick?.(product.slug || "")
+                        }
+                      >
+                        {isEditable && (
+                          <div className="absolute inset-0 z-10 bg-transparent" />
+                        )}
+                        <ProductCard6
+                          product={product}
+                          siteUser={isEditable ? undefined : siteUser}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {carousel_style === "style-10" ? (
+                  <>
+                    <CarouselPrevious className="-left-4 border-black bg-white/80 text-black shadow-md ring-black hover:bg-white md:-left-12" />
+                    <CarouselNext className="-right-4 border-black bg-white/80 text-black shadow-md ring-black hover:bg-white md:-right-12" />
+                  </>
+                ) : (
+                  <div className="mt-8 flex justify-end gap-3 md:absolute md:-top-24 md:right-0">
+                    <CarouselPrevious className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white" />
+                    <CarouselNext className="static translate-y-0 h-14 w-14 rounded-2xl border-gray-100 bg-white" />
+                  </div>
+                )}
+              </Carousel>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {products.map(product => (
+                <div
+                  key={product.id}
+                  className="relative transform cursor-pointer transition-transform duration-200 hover:scale-105"
+                  onClick={() =>
+                    !isEditable && onProductClick?.(product.slug || "")
+                  }
+                >
+                  {isEditable && (
+                    <div className="absolute inset-0 z-10 bg-transparent" />
+                  )}
+                  <ProductCard6
+                    product={product}
+                    siteUser={isEditable ? undefined : siteUser}
+                  />
+                </div>
+              ))}
+            </div>
+          )
         )}
 
         {!isLoading && !error && (
@@ -171,6 +209,8 @@ export const ProductsStyle3: React.FC<ProductsStyleProps> = ({
         <FeaturedProductsButton
           isEditable={isEditable}
           productsCount={products.length}
+          data={data}
+          onUpdate={onUpdate}
         />
       </div>
     </section>

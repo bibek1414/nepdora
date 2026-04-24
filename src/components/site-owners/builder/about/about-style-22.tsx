@@ -21,7 +21,7 @@ export const AboutUsTemplate22: React.FC<AboutUs22Props> = ({
   const { data: themeResponse } = useThemeQuery();
   const theme = themeResponse?.data?.[0]?.data?.theme;
 
-  const { data, handleTextUpdate, setData } = useBuilderLogic(
+  const { data, handleTextUpdate, handleImageUpdate } = useBuilderLogic(
     aboutUsData,
     onUpdate
   );
@@ -60,7 +60,7 @@ export const AboutUsTemplate22: React.FC<AboutUs22Props> = ({
           <EditableImage
             src={data.portraitImageUrl}
             alt={data.portraitImageAlt}
-            onImageChange={val => setData({ ...data, portraitImageUrl: val })}
+            onImageChange={handleImageUpdate("portraitImageUrl", "portraitImageAlt")}
             isEditable={isEditable}
             className="h-full w-full object-cover"
           />
@@ -73,7 +73,7 @@ export const AboutUsTemplate22: React.FC<AboutUs22Props> = ({
           <EditableImage
             src={data.aboutImageUrl}
             alt={data.aboutImageAlt}
-            onImageChange={val => setData({ ...data, aboutImageUrl: val })}
+            onImageChange={handleImageUpdate("aboutImageUrl", "aboutImageAlt")}
             isEditable={isEditable}
             className="h-150 w-full object-cover"
           />

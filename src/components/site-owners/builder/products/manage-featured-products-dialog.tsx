@@ -85,7 +85,7 @@ const ProductCard = ({
     </div>
     <div className="min-w-0 flex-1">
       <p className="truncate text-sm font-medium">{product.name}</p>
-      <p className="text-xs text-gray-500">${product.price}</p>
+      <p className="text-xs text-gray-500">Rs.{product.price}</p>
     </div>
     {isActive && !isPending && (
       <Badge

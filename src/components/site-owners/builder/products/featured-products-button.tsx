@@ -4,15 +4,20 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/site-owners/button";
 import { Star } from "lucide-react";
 import { ManageFeaturedProductsDialog } from "./manage-featured-products-dialog";
+import { ProductsData } from "@/types/owner-site/components/products";
 
 interface FeaturedProductsButtonProps {
   isEditable: boolean;
   productsCount: number;
+  data?: ProductsData;
+  onUpdate?: (updatedData: Partial<ProductsData>) => void;
 }
 
 export const FeaturedProductsButton: React.FC<FeaturedProductsButtonProps> = ({
   isEditable,
   productsCount,
+  data,
+  onUpdate,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +36,12 @@ export const FeaturedProductsButton: React.FC<FeaturedProductsButtonProps> = ({
           Manage Featured & Best Selling
         </Button>
       </div>
-      <ManageFeaturedProductsDialog open={isOpen} onOpenChange={setIsOpen} />
+      <ManageFeaturedProductsDialog
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        data={data}
+        onUpdate={onUpdate}
+      />
     </>
   );
 };

@@ -22,6 +22,8 @@ interface ProductCard10Props {
   onClick?: () => void;
   onWishlistToggle?: (productId: number, isWishlisted: boolean) => void;
   isEditable?: boolean;
+  showPrice?: boolean;
+  showReview?: boolean;
 }
 
 export const ProductCard10: React.FC<ProductCard10Props> = ({
@@ -30,6 +32,8 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
   onClick,
   onWishlistToggle,
   isEditable = false,
+  showPrice = true,
+  showReview = true,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const pathname = usePathname();
@@ -158,12 +162,12 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
       {/* Badges container */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
         {discountPercentage > 0 && (
-          <span className="rounded bg-green-600 px-2 py-1 text-[10px] font-bold text-white shadow-sm">
+          <span className="rounded bg-green-600 px-2 py-1 text-[10px] font-bold text-white -sm">
             {discountPercentage}% OFF
           </span>
         )}
         {product.is_featured && (
-          <span className="rounded bg-red-500 px-2 py-1 text-[10px] font-bold text-white uppercase shadow-sm">
+          <span className="rounded bg-red-500 px-2 py-1 text-[10px] font-bold text-white uppercase -sm">
             Featured
           </span>
         )}
@@ -182,7 +186,7 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
           onClick={handleWishlist}
           data-wishlist="true"
           disabled={isWishlistLoading}
-          className={`rounded-full p-2 shadow-md transition-all duration-200 ${isInWishlist ? "bg-red-500 text-white" : "bg-white text-gray-400 hover:text-red-500"} ${isWishlistLoading ? "cursor-not-allowed opacity-50" : ""}`}
+          className={`rounded-full p-2 -md transition-all duration-200 ${isInWishlist ? "bg-red-500 text-white" : "bg-white text-gray-400 hover:text-red-500"} ${isWishlistLoading ? "cursor-not-allowed opacity-50" : ""}`}
           title={isInWishlist ? "In Wishlist" : "Add to Wishlist"}
         >
           <Heart size={16} className={isInWishlist ? "fill-current" : ""} />
@@ -224,53 +228,57 @@ export const ProductCard10: React.FC<ProductCard10Props> = ({
         </div>
 
         {/* Rating */}
-        <div className="mb-3 flex items-center gap-1">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`h-3 w-3 ${i < Math.round(rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-100 text-gray-100"}`}
-              />
-            ))}
-          </div>
-          <span className="text-[10px] text-gray-400">({ratingCount})</span>
-        </div>
-
-        <div className="mt-auto flex items-center justify-between gap-2">
-          <div>
-            <div className="text-lg font-bold text-gray-900">
-              Rs.{price.toLocaleString("en-IN")}
+        {showReview && (
+          <div className="mb-3 flex items-center gap-1">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`h-3 w-3 ${i < Math.round(rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-100 text-gray-100"}`}
+                />
+              ))}
             </div>
-            {originalPrice && originalPrice > price && (
-              <div className="text-xs text-gray-400 line-through decoration-gray-300">
-                Rs.{originalPrice.toLocaleString("en-IN")}
-              </div>
-            )}
+            <span className="text-[10px] text-gray-400">({ratingCount})</span>
           </div>
+        )}
 
-          <button
-            onClick={handleAddToCart}
-            data-cart-action="true"
-            className={`flex shrink-0 items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-bold transition-all duration-300 ${
-              isAdded
-                ? "border-green-600 bg-green-600 text-white"
-                : "bg-white hover:bg-gray-50"
-            } ${isEditable ? "cursor-not-allowed opacity-50" : ""}`}
-            disabled={isEditable || product.stock === 0}
-          >
-            {isAdded ? (
-              <>
-                <Check size={14} /> ADDED
-              </>
-            ) : product.stock > 0 ? (
-              <>
-                <Plus size={14} /> ADD
-              </>
-            ) : (
-              "OUT OF STOCK"
-            )}
-          </button>
-        </div>
+        {showPrice && (
+          <div className="mt-auto flex items-center justify-between gap-2">
+            <div>
+              <div className="text-lg font-bold text-gray-900">
+                Rs.{price.toLocaleString("en-IN")}
+              </div>
+              {originalPrice && originalPrice > price && (
+                <div className="text-xs text-gray-400 line-through decoration-gray-300">
+                  Rs.{originalPrice.toLocaleString("en-IN")}
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={handleAddToCart}
+              data-cart-action="true"
+              className={`flex shrink-0 items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-bold transition-all duration-300 ${
+                isAdded
+                  ? "border-green-600 bg-green-600 text-white"
+                  : "bg-white hover:bg-gray-50"
+              } ${isEditable ? "cursor-not-allowed opacity-50" : ""}`}
+              disabled={isEditable || product.stock === 0}
+            >
+              {isAdded ? (
+                <>
+                  <Check size={14} /> ADDED
+                </>
+              ) : product.stock > 0 ? (
+                <>
+                  <Plus size={14} /> ADD
+                </>
+              ) : (
+                "OUT OF STOCK"
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
