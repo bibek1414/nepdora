@@ -159,23 +159,7 @@ const OrderConfirmationStyle3 = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              <div className="rounded-3xl border border-gray-100 p-8 -sm">
-                <h3 className="mb-4 flex items-center gap-2 text-lg font-medium" style={{ fontFamily: theme.fonts.heading }}><Mail className="h-5 w-5 opacity-70" /> Contact</h3>
-                <div className="space-y-2 text-sm opacity-70">
-                  <p><span className="font-medium">Name:</span> {order.customer_name}</p>
-                  <p><span className="font-medium">Email:</span> {order.customer_email}</p>
-                  <p><span className="font-medium">Phone:</span> {order.customer_phone}</p>
-                </div>
-              </div>
-              <div className="rounded-3xl border border-gray-100 p-8 -sm">
-                <h3 className="mb-4 flex items-center gap-2 text-lg font-medium" style={{ fontFamily: theme.fonts.heading }}><Truck className="h-5 w-5 opacity-70" /> Delivery</h3>
-                <div className="space-y-2 text-sm opacity-70">
-                  <p className="whitespace-pre-line">{order.shipping_address}</p>
-                  <p>{order.city}</p>
-                </div>
-              </div>
-            </div>
+            
           </div>
 
           <div className="space-y-8">
@@ -191,7 +175,25 @@ const OrderConfirmationStyle3 = ({
                 </Button>
               </div>
             </div>
+            <div className="">
+              <div className="rounded-3xl border border-gray-100 p-8 -sm">
+                <h3 className="mb-4 flex items-center gap-2 text-lg font-medium" style={{ fontFamily: theme.fonts.heading }}><Mail className="h-5 w-5 opacity-70" /> Contact</h3>
+                <div className="space-y-2 text-sm opacity-70">
+                  <p><span className="font-medium">Name:</span> {order.customer_name}</p>
+                  <p><span className="font-medium">Email:</span> {order.customer_email}</p>
+                  <p><span className="font-medium">Phone:</span> {order.customer_phone}</p>
+                </div>
+              </div>
+              <div className="rounded-3xl border border-gray-100 p-8 mt-4 -sm">
+                <h3 className="mb-4 flex items-center gap-2 text-lg font-medium" style={{ fontFamily: theme.fonts.heading }}><Truck className="h-5 w-5 opacity-70" /> Delivery</h3>
+                <div className="space-y-2 text-sm opacity-70">
+                  <p className="whitespace-pre-line">{order.shipping_address}</p>
+                  <p>{order.city}</p>
+                </div>
+              </div>
+            </div>
           </div>
+          
         </div>
       </div>
     </div>
