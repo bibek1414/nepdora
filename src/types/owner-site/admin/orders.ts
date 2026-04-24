@@ -76,6 +76,7 @@ export interface Order {
   transaction_id?: string;
   is_paid?: boolean;
   is_manual?: boolean;
+  pos_order?: boolean;
   latitude?: number | null;
   longitude?: number | null;
   location_accuracy?: number | null;

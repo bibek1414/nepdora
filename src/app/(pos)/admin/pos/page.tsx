@@ -6,6 +6,7 @@ import POSCart from "@/components/site-owners/admin/pos/pos-cart";
 import POSCustomerSelector from "@/components/site-owners/admin/pos/pos-customer-selector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OrderList from "@/components/site-owners/admin/orders/order-list";
+import { ManualOrderDialog } from "@/components/site-owners/admin/orders/manual-order-dialog";
 
 export default function POSPage() {
   return (
@@ -29,6 +30,8 @@ export default function POSPage() {
                   Orders
                 </TabsTrigger>
               </TabsList>
+
+              <ManualOrderDialog />
             </div>
 
             <TabsContent
