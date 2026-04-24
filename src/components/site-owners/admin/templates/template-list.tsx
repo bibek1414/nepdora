@@ -11,17 +11,15 @@ import { TemplateCard } from "./template-card";
 import { Search, X, Layout } from "lucide-react";
 import useDebouncer from "@/hooks/use-debouncer";
 import { LoadingScreen } from "@/components/on-boarding/loading-screen/loading-screen";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/hooks/use-auth";
 
 const TemplateList = () => {
+  const { user } = useAuth();
   const [filters, setFilters] = useState({
     page: 1,
     page_size: 12,
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedType, setSelectedType] = useState<
-    "all" | "ecoomerce" | "services"
-  >("all");
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const debouncedSearchTerm = useDebouncer(searchTerm, 300);
 
@@ -44,10 +42,17 @@ const TemplateList = () => {
   });
 
   const filteredTemplates = (templatesData?.results || []).filter(template => {
-    if (selectedType === "ecoomerce") {
+    const websiteType = user?.website_type;
+    // Handle both spellings just in case, based on inconsistencies in onboarding code
+    const isEcommerce =
+      websiteType === "ecoomerce" || websiteType === "ecommerce";
+    const isService = websiteType === "services" || websiteType === "service";
+
+    if (isEcommerce) {
       return template.template_category?.slug === "ecoomerce";
     }
-    if (selectedType === "services") {
+    if (isService) {
+      // Show everything EXCEPT ecommerce for services
       return template.template_category?.slug !== "ecoomerce";
     }
     return true;
@@ -93,9 +98,15 @@ const TemplateList = () => {
         {/* Header Section */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Templates</h1>
+          <p className="mt-2 text-slate-500">
+            {user?.website_type === "ecoomerce" ||
+            user?.website_type === "ecommerce"
+              ? "Choose an e-commerce template to power your online store."
+              : "Choose a template that fits your business needs."}
+          </p>
         </div>
 
-        {/* Search Bar and Type Filter */}
+        {/* Search Bar */}
         <div className="mt-5 mb-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative max-w-md flex-1">
             <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400" />
@@ -115,18 +126,6 @@ const TemplateList = () => {
               </button>
             )}
           </div>
-
-          <Tabs
-            value={selectedType}
-            onValueChange={v => setSelectedType(v as any)}
-            className="w-full sm:w-auto"
-          >
-            <TabsList className="grid w-full grid-cols-3 sm:w-[400px]">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="ecoomerce">Ecommerce</TabsTrigger>
-              <TabsTrigger value="services">Services</TabsTrigger>
-            </TabsList>
-          </Tabs>
         </div>
 
         {/* Content Area */}
@@ -142,24 +141,18 @@ const TemplateList = () => {
           <div className="py-16 text-center">
             <div className="mb-4 text-6xl">📋</div>
             <h2 className="mb-2 text-2xl font-semibold text-gray-900">
-              {searchTerm || selectedType !== "all"
+              {searchTerm
                 ? "No matching templates found"
                 : "No templates available"}
             </h2>
             <p className="mb-6 text-gray-600">
-              {searchTerm || selectedType !== "all"
-                ? "Try adjusting your filters or search."
+              {searchTerm
+                ? `We couldn't find any templates matching "${searchTerm}".`
                 : "Templates will appear here when available."}
             </p>
-            {(searchTerm || selectedType !== "all") && (
-              <Button
-                onClick={() => {
-                  clearSearch();
-                  setSelectedType("all");
-                }}
-                variant="outline"
-              >
-                Clear Filters
+            {searchTerm && (
+              <Button onClick={clearSearch} variant="outline">
+                Clear Search
               </Button>
             )}
           </div>
@@ -193,3 +186,4 @@ const TemplateList = () => {
 };
 
 export default TemplateList;
+

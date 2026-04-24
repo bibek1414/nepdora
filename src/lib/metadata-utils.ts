@@ -28,17 +28,31 @@ interface PublishContentMetadata {
   image?: string | null;
 }
 
-const DEFAULT_ICONS: NonNullable<Metadata["icons"]> = {
-  icon: "https://nepdora.com/favicon.ico",
-  shortcut: "https://nepdora.com/favicon-16x16.png",
-  apple: "https://nepdora.com/apple-touch-icon.png",
+const getFallbackFavicon = (businessName?: string | null): string => {
+  const letter = (businessName || "N").trim().charAt(0).toUpperCase();
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+      <rect width="128" height="128" rx="24" fill="#111827"/>
+      <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="80" font-weight="bold">${letter}</text>
+    </svg>
+  `.trim();
+  
+  // Use Buffer for base64 encoding to be compatible with Node.js environment
+  const base64Svg = Buffer.from(svg).toString("base64");
+  return `data:image/svg+xml;base64,${base64Svg}`;
 };
 
 const buildIconsMetadata = (
-  favicon: string | null | undefined
+  favicon: string | null | undefined,
+  businessName?: string | null
 ): NonNullable<Metadata["icons"]> => {
   if (!favicon) {
-    return DEFAULT_ICONS;
+    const fallbackFavicon = getFallbackFavicon(businessName);
+    return {
+      icon: fallbackFavicon,
+      shortcut: fallbackFavicon,
+      apple: fallbackFavicon,
+    };
   }
 
   return {
@@ -293,7 +307,7 @@ export async function generateAdminPageMetadata({
   return {
     title,
     description,
-    icons: buildIconsMetadata(siteMetadata?.favicon),
+    icons: buildIconsMetadata(siteMetadata?.favicon, storeName),
     openGraph: {
       title,
       description,
@@ -334,7 +348,7 @@ export async function generatePreviewPageMetadata({
   return {
     title,
     description,
-    icons: buildIconsMetadata(siteMetadata?.favicon),
+    icons: buildIconsMetadata(siteMetadata?.favicon, storeName),
     robots: { index: false, follow: false },
     openGraph: {
       title,
@@ -408,7 +422,7 @@ export async function generatePublishPageMetadata({
   return {
     title,
     description,
-    icons: buildIconsMetadata(siteMetadata?.favicon),
+    icons: buildIconsMetadata(siteMetadata?.favicon, storeName),
     openGraph: {
       title,
       description,

@@ -26,6 +26,7 @@ import { hexToRgba } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
 import { ServicesPost } from "@/types/owner-site/admin/services";
+import { ServicesCard9 } from "../services-card/services-card-9";
 
 interface ServicesStyle9Props {
   data: ServicesData;
@@ -62,63 +63,6 @@ const getIcon = (title: string) => {
   return ICON_MAP.default;
 };
 
-const ServiceCard: React.FC<{
-  service: ServicesPost;
-  theme: any;
-  isEditable: boolean;
-  onServiceClick?: (slug: string) => void;
-  siteUser?: string;
-}> = ({ service, theme, isEditable, onServiceClick, siteUser }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const pathname = usePathname();
-  const Icon = getIcon(service.title);
-
-  const getDetailsUrl = (): string => {
-    const isPreviewMode = pathname?.includes("/preview/");
-    const basePath = isPreviewMode
-      ? "/service-details-draft"
-      : "/service-details";
-    return generateLinkHref(`${basePath}/${service.slug}`, siteUser, pathname);
-  };
-
-  const handleActivate = () => {
-    if (isEditable) return;
-    if (onServiceClick) {
-      onServiceClick(service.slug);
-      return;
-    }
-    window.location.href = getDetailsUrl();
-  };
-
-  return (
-    <div
-      onMouseEnter={() => !isEditable && setIsHovered(true)}
-      onMouseLeave={() => !isEditable && setIsHovered(false)}
-      onClick={handleActivate}
-      className={`group flex h-full flex-col bg-white p-10 transition-colors duration-300 ${isEditable ? "cursor-default" : "cursor-pointer hover:-translate-y-1"}`}
-    >
-      <div className="relative mb-8">
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-300">
-          <Icon className="h-6 w-6" />
-        </span>
-      </div>
-
-      <h3
-        className="mb-4 text-2xl font-semibold tracking-tight"
-        style={{ fontFamily: theme?.fonts?.heading }}
-      >
-        {service.title}
-      </h3>
-
-      <p
-        className="leading-relaxed text-balance text-gray-600"
-        style={{ fontFamily: theme?.fonts?.body }}
-      >
-        {service.description}
-      </p>
-    </div>
-  );
-};
 
 export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
   data: initialData,
@@ -202,7 +146,7 @@ export const ServicesStyle9: React.FC<ServicesStyle9Props> = ({
             </div>
           ) : (
             services.map(service => (
-              <ServiceCard
+              <ServicesCard9
                 key={service.id}
                 service={service}
                 theme={theme}

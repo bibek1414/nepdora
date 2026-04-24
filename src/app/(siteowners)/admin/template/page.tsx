@@ -1,11 +1,16 @@
 import TemplateList from "@/components/site-owners/admin/templates/template-list";
+import { generateAdminPageMetadata } from "@/lib/metadata-utils";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Templates | Choose Your Design",
-  description:
-    "Browse and choose from our collection of professionally designed templates. Preview and import templates to get started quickly.",
-};
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generateAdminPageMetadata({
+    pageName: "Template",
+    pageDescription:
+      "Manage your team efficiently in {storeName}. Add, edit, and organize team members directly from the admin dashboard.",
+    pageRoute: "/admin/template",
+  });
+}
 
 const TemplatesPage = () => {
   return (

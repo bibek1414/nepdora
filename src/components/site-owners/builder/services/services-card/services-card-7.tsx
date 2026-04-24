@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { generateLinkHref } from "@/lib/link-utils";
+import { sanitizeContent } from "@/utils/html-sanitizer";
 import { ServicesPost } from "@/types/owner-site/admin/services";
 
 interface ServicesCard7Props {
@@ -15,7 +16,6 @@ interface ServicesCard7Props {
   onServiceClick?: (serviceSlug: string) => void;
 }
 
-const stripHtml = (html: string) => html.replace(/<[^>]*>/g, "");
 
 /**
  * @beautifulMention: Services Card 7
@@ -30,7 +30,6 @@ export const ServicesCard7: React.FC<ServicesCard7Props> = ({
   onServiceClick,
 }) => {
   const pathname = usePathname();
-  const plainDescription = stripHtml(service.description || "");
   const serviceImage =
     service.thumbnail_image || "/fallback/image-not-found.png";
 
@@ -91,9 +90,12 @@ export const ServicesCard7: React.FC<ServicesCard7Props> = ({
           <h3 className="mb-2 cursor-pointer text-xl font-bold text-gray-900 transition-colors">
             {service.title}
           </h3>
-          <p className="line-clamp-3 text-sm leading-relaxed text-gray-500">
-            {plainDescription}
-          </p>
+          <div
+            className="line-clamp-3 text-sm leading-relaxed text-gray-500"
+            dangerouslySetInnerHTML={{
+              __html: sanitizeContent(service.description || ""),
+            }}
+          />
         </div>
       </motion.div>
     </div>

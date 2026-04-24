@@ -8,6 +8,7 @@ import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { useBuilderLogic } from "@/hooks/use-builder-logic";
 import { ServicesData } from "@/types/owner-site/components/services";
 import { BuilderEmptyState } from "@/components/ui/site-owners/builder-empty-state";
+import { ServicesCard8 } from "../services-card/services-card-8";
 import { Briefcase } from "lucide-react";
 
 interface ServicesStyle8Props {
@@ -75,26 +76,13 @@ export const ServicesStyle8: React.FC<ServicesStyle8Props> = ({
             <li className="py-6 text-red-500">Failed to load services.</li>
           ) : (
             services.map(service => (
-              <li
+              <ServicesCard8
                 key={service.id}
-                className="group cursor-pointer border-t border-gray-100 pt-6"
-                onClick={() => !isEditable && onServiceClick?.(service.slug)}
-              >
-                <h3
-                  className="font-serif text-xl text-gray-950 transition-colors"
-                  style={{
-                    fontFamily: theme?.fonts?.heading,
-                  }}
-                >
-                  {service.title}
-                </h3>
-                <p
-                  className="mt-2 text-sm leading-relaxed text-gray-600"
-                  style={{ fontFamily: theme?.fonts?.body }}
-                >
-                  {service.description}
-                </p>
-              </li>
+                service={service}
+                theme={theme}
+                isEditable={isEditable}
+                onServiceClick={onServiceClick}
+              />
             ))
           )}
         </ul>
