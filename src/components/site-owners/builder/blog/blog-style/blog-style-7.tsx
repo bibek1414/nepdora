@@ -69,15 +69,15 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
   };
 
   return (
-    <section className="bg-white px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl px-8">
+    <section className="bg-white px-4 py-10 md:py-20">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
         {/* Header Section */}
-        <div className="mb-20 text-center">
+        <div className="mb-10 md:mb-16 text-center">
           <EditableText
             value={title}
             onChange={handleTitleChange}
             as="h2"
-            className="mb-4 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl"
+            className="mb-4 text-3xl font-bold tracking-tight text-gray-900 md:text-5xl"
             style={{ fontFamily: theme.fonts.heading }}
             isEditable={isEditable}
             placeholder="Enter title..."
@@ -86,7 +86,7 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
             value={subtitle || ""}
             onChange={handleSubtitleChange}
             as="p"
-            className="text-gray-500"
+            className="text-gray-500 text-sm md:text-base"
             style={{ fontFamily: theme.fonts.body }}
             isEditable={isEditable}
             placeholder="Enter subtitle..."
@@ -96,10 +96,10 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
 
         {/* Loading State */}
         {isLoading && (
-          <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="space-y-6">
-                <Skeleton className="h-64 w-full rounded-lg" />
+                <Skeleton className="h-48 md:h-64 w-full rounded-lg" />
                 <div className="space-y-3">
                   <Skeleton className="h-4 w-1/4" />
                   <Skeleton className="h-8 w-3/4" />
@@ -124,7 +124,7 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
         {/* Content Section */}
         {!isLoading && !error && blogs.length > 0 && (
           <>
-            <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 md:gap-y-16">
               {blogs.map(blog => (
                 <div key={blog.id} className="relative">
                   {isEditable && <div className="absolute inset-0 z-10" />}
@@ -143,7 +143,7 @@ export const BlogStyle7: React.FC<BlogStyle7Props> = ({
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-20">
+              <div className="mt-12 md:mt-20">
                 <Pagination
                   currentPage={page}
                   totalPages={totalPages}

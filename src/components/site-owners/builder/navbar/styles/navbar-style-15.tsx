@@ -559,26 +559,45 @@ export const NavbarStyle15: React.FC<NavbarStyleProps> = ({
                 )}
               </div>
 
-              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                <div
-                  onClick={() => handleProfileAction("profile")}
-                  className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
-                >
-                  My Profile
+              {enableLogin && (
+                <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                  {isAuthenticated && !disableClicks && !isEditable ? (
+                    <>
+                      <div
+                        onClick={() => handleProfileAction("profile")}
+                        className="flex cursor-pointer items-center gap-3 text-sm font-medium opacity-70 hover:opacity-100"
+                      >
+                        <User size={18} /> My Profile
+                      </div>
+                      <div
+                        onClick={() => handleProfileAction("orders")}
+                        className="flex cursor-pointer items-center gap-3 text-sm font-medium opacity-70 hover:opacity-100"
+                      >
+                        <Package size={18} /> My Orders
+                      </div>
+                      <div
+                        onClick={() => handleProfileAction("wishlist")}
+                        className="flex cursor-pointer items-center gap-3 text-sm font-medium opacity-70 hover:opacity-100"
+                      >
+                        <Heart size={18} /> Wishlist
+                      </div>
+                      <div
+                        onClick={() => handleProfileAction("logout")}
+                        className="flex cursor-pointer items-center gap-3 text-sm font-medium text-red-600 opacity-70 hover:opacity-100"
+                      >
+                        <LogOut size={18} /> Sign Out
+                      </div>
+                    </>
+                  ) : (
+                    <div
+                      onClick={handleLoginClick}
+                      className="flex cursor-pointer items-center gap-3 text-sm font-medium opacity-70 hover:opacity-100"
+                    >
+                      <User size={18} /> Sign In
+                    </div>
+                  )}
                 </div>
-                <div
-                  onClick={() => handleProfileAction("orders")}
-                  className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
-                >
-                  My Orders
-                </div>
-                <div
-                  onClick={() => handleProfileAction("wishlist")}
-                  className="block cursor-pointer text-sm font-medium opacity-70 hover:opacity-100"
-                >
-                  Wishlist
-                </div>
-              </div>
+              )}
             </div>
           </SheetContent>
         </Sheet>

@@ -35,15 +35,15 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
   const testimonials = testimonialsData || [];
 
   return (
-    <section className="bg-background py-16 md:py-32">
-      <div className="container mx-auto max-w-7xl px-12">
-        <div className="mb-14">
+    <section className="bg-background py-12 md:py-24">
+      <div className="container mx-auto max-w-7xl px-6 md:px-8">
+        <div className="mb-8 md:mb-14">
           <EditableText
             value={eyebrow}
             onChange={(val: string) => onUpdate?.({ title: val })}
             isEditable={isEditable}
             as="title"
-            className="text-xs"
+            className="text-[10px] md:text-xs"
             style={{ fontFamily: theme?.fonts?.body }}
           />
           {mainHeading && (
@@ -52,7 +52,7 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
               onChange={(val: string) => onUpdate?.({ subtitle: val })}
               isEditable={isEditable}
               as="p"
-              className="mt-3"
+              className="mt-2 text-2xl md:text-4xl"
               style={{ fontFamily: theme?.fonts?.heading }}
             />
           )}
@@ -63,14 +63,14 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="border-border bg-card flex h-full flex-col justify-between rounded-xl border p-7"
+                className="border-border bg-card flex h-full flex-col justify-between rounded-xl border p-5 md:p-7"
               >
                 <div className="space-y-3">
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-2/3" />
                 </div>
-                <div className="border-border mt-8 flex items-center gap-3 border-t pt-5">
+                <div className="border-border mt-6 md:mt-8 flex items-center gap-3 border-t pt-5">
                   <Skeleton className="h-10 w-10 rounded-full" />
                   <div className="space-y-1.5">
                     <Skeleton className="h-3 w-24" />
@@ -100,17 +100,17 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
               {testimonials.slice(0, 3).map((testimonial: Testimonial) => (
                 <figure
                   key={testimonial.id}
-                  className="border-border bg-card animate-in fade-in slide-in-from-bottom-8 flex h-full flex-col justify-between rounded-xl border p-7 transition-all duration-300"
+                  className="border-border bg-card animate-in fade-in slide-in-from-bottom-8 flex h-full flex-col justify-between rounded-xl border p-5 md:p-7 transition-all duration-300"
                 >
                   <blockquote
-                    className="text-foreground font-serif text-lg leading-relaxed"
+                    className="text-foreground font-serif text-base md:text-lg leading-relaxed"
                     style={{ fontFamily: "Georgia, serif" }}
                   >
                     <span className="text-primary">"</span>
                     {testimonial.comment}
                     <span className="text-primary">"</span>
                   </blockquote>
-                  <figcaption className="border-border mt-8 flex items-center gap-3 border-t pt-5">
+                  <figcaption className="border-border mt-6 md:mt-8 flex items-center gap-3 border-t pt-5">
                     <img
                       src={testimonial.image || "/fallback/image-not-found.png"}
                       alt={testimonial.name}
@@ -127,7 +127,7 @@ export const TestimonialStyle9: React.FC<TestimonialStyleProps> = ({
                         {testimonial.name}
                       </p>
                       <p
-                        className="mt-0.5 text-xs"
+                        className="mt-0.5 text-[10px] md:text-xs"
                         style={{ fontFamily: theme?.fonts?.body }}
                       >
                         {testimonial.designation}

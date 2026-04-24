@@ -42,7 +42,7 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
     useBuilderLogic(aboutUsData, onUpdate);
 
   return (
-    <section className="relative h-[600px] w-full overflow-hidden">
+    <section className="relative min-h-[400px] h-[500px] md:h-[600px] w-full overflow-hidden">
       <div className="absolute inset-0 h-full w-full">
         <EditableImage
           src={data.backgroundImage}
@@ -66,7 +66,7 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
         />
       </div>
 
-      <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6 md:px-20 lg:px-8">
+      <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-4 sm:px-8 md:px-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
             as="span"
             isEditable={isEditable}
             placeholder="● About us"
-            className="rounded-full bg-white/20 px-4 py-1 text-xs font-semibold text-white uppercase backdrop-blur-sm"
+            className="rounded-full bg-white/20 px-3 py-1 text-[10px] sm:text-xs font-semibold text-white uppercase backdrop-blur-sm"
           />
         </motion.div>
 
@@ -96,7 +96,7 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
             style={{
               fontFamily: theme.fonts.heading,
             }}
-            className="max-w-2xl text-5xl font-bold text-white md:text-7xl"
+            className="max-w-3xl text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1]"
             isEditable={isEditable}
             placeholder="About Care-hands"
           />

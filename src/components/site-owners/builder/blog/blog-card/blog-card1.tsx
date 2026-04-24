@@ -94,7 +94,7 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
   return (
     <article className="flex flex-col">
       {/* Image */}
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <div className="relative h-64 w-full overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
           <Image
             unoptimized
@@ -123,7 +123,7 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
 
           {/* Title and Description */}
           <ContentLink>
-            <p className="line-clamp-2 text-xl font-semibold text-slate-900 dark:text-white">
+            <p className="line-clamp-2 text-lg font-semibold text-slate-900 md:text-xl dark:text-white">
               {blog.title}
             </p>
           </ContentLink>
@@ -132,7 +132,7 @@ export const BlogCard1: React.FC<BlogCard1Props> = ({
         {/* Author Section */}
         {blog.author && (
           <div className="mt-6 flex items-center">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <span className="sr-only">
                 {blog.author.first_name && blog.author.last_name
                   ? `${blog.author.first_name} ${blog.author.last_name}`
