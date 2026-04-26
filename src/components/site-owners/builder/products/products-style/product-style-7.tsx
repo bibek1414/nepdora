@@ -197,7 +197,7 @@ export const ProductsStyle7: React.FC<ProductsStyleProps> = ({
                     ? "Showcase your products to your customers. Add products from the admin dashboard."
                     : "No products match your current filters."
                 }
-                actionLabel={isEditable ? "Manage Products" : undefined}
+                actionLabel={isEditable ? "Add New Products" : undefined}
                 actionLink={isEditable ? "/admin/products" : undefined}
                 isEditable={isEditable}
                 isEmpty={products.length === 0}

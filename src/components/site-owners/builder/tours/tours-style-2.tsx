@@ -238,18 +238,6 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
             Failed to load tours.
           </div>
         )}
-        {!isLoading && !error && (
-          <BuilderEmptyState
-            icon={Compass}
-            title="No Tours Found"
-            description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
-            actionLabel={tours.length > 0 ? "Manage Tours" : "Add New Tours"}
-            actionLink="/admin/collections/tours"
-            isEditable={isEditable}
-            isEmpty={tours.length === 0}
-            onRefresh={refetch}
-          />
-        )}
         {!isLoading && !error && tours.length > 0 && (
           <div className="flex flex-col gap-6">
             {/* Top row: first 2 tours as horizontal cards */}
@@ -270,6 +258,19 @@ export const ToursStyle2: React.FC<ToursStyle2Props> = ({
               </div>
             )}
           </div>
+        )}
+
+        {!isLoading && !error && (
+          <BuilderEmptyState
+            icon={Compass}
+            title="No Tours Found"
+            description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
+            actionLabel="Add New Tours"
+            actionLink="/admin/collections/tours"
+            isEditable={isEditable}
+            isEmpty={tours.length === 0}
+            onRefresh={refetch}
+          />
         )}
       </div>
     </section>

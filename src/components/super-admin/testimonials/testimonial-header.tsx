@@ -14,7 +14,7 @@ export const TestimonialsHeader = ({
           Testimonials
         </h1>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <Link href="/superadmin/video-testimonial">
           <Button
             variant="outline"

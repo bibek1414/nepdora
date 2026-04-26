@@ -27,7 +27,7 @@ export const FeaturedProductsButton: React.FC<FeaturedProductsButtonProps> = ({
           className="gap-2"
         >
           <Star className="h-4 w-4" />
-          Manage Featured & Best Selling
+          Add Featured & Best Selling
         </Button>
       </div>
       <ManageFeaturedProductsDialog

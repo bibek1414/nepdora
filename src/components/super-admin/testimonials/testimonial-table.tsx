@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { toast } from "sonner";
 import {
   Testimonial,
@@ -51,10 +50,7 @@ export const TestimonialsTable = ({
     });
   };
 
-  const truncateText = (text: string, maxLength: number = 60): string => {
-    if (text.length <= maxLength) return text;
-    return text.substr(0, maxLength) + "...";
-  };
+
 
   if (isLoading) {
     return (
@@ -82,11 +78,11 @@ export const TestimonialsTable = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Profile</TableHead>
+            <TableHead className="hidden md:table-cell">Profile</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Designation</TableHead>
+            <TableHead className="hidden lg:table-cell">Designation</TableHead>
             <TableHead>Comment</TableHead>
-            <TableHead>Date Added</TableHead>
+            <TableHead className="hidden sm:table-cell">Date Added</TableHead>
             <TableHead className="pr-6 text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -97,8 +93,8 @@ export const TestimonialsTable = ({
               className="cursor-pointer transition-colors hover:bg-gray-50"
               onClick={() => handleRowClick(testimonial)}
             >
-              <TableCell>
-                <div className="mb-2 flex-shrink-0">
+              <TableCell className="hidden md:table-cell">
+                <div className="mb-2 shrink-0">
                   {testimonial.image ? (
                     <Image
                       unoptimized
@@ -122,19 +118,19 @@ export const TestimonialsTable = ({
                   {testimonial.name}
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden lg:table-cell">
                 {testimonial.designation && (
                   <div className="text-sm font-medium text-gray-900">
                     {testimonial.designation}
                   </div>
                 )}
               </TableCell>
-              <TableCell>
-                <div className="max-w-xs text-sm leading-relaxed text-gray-900 xl:max-w-md">
-                  {truncateText(testimonial.comment, 80)}
+              <TableCell className="whitespace-normal">
+                <div className="max-w-[200px] text-sm leading-relaxed text-gray-900 sm:max-w-xs xl:max-w-md">
+                  {testimonial.comment}
                 </div>
               </TableCell>
-              <TableCell className="text-sm text-gray-500">
+              <TableCell className="hidden text-sm text-gray-500 sm:table-cell">
                 {formatDate(testimonial.created_at)}
               </TableCell>
               <TableCell className="text-right">

@@ -297,7 +297,7 @@ export const ToursStyle1: React.FC<ToursStyle1Props> = ({
             icon={Compass}
             title="No Tours Found"
             description="Showcase your adventures and tour packages. Add tours in the admin dashboard."
-            actionLabel={tours.length > 0 ? "Manage Tours" : "Add New Tours"}
+            actionLabel="Add New Tours"
             actionLink="/admin/collections/tours"
             isEditable={isEditable}
             isEmpty={tours.length === 0}

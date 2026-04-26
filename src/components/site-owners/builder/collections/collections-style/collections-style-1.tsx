@@ -152,9 +152,7 @@ export const CollectionsStyle1: React.FC<CollectionsStyleProps> = ({
             icon={Database}
             title="No Items Found"
             description="Manage your dynamic collections. Add items from the admin dashboard."
-            actionLabel={
-              items.length > 0 ? "Manage Collection" : "Add New Item"
-            }
+            actionLabel="Add New Item"
             actionLink={`/admin/collections/${data.collectionSlug}`}
             isEditable={isEditable}
             isEmpty={items.length === 0}

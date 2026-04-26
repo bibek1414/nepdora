@@ -71,9 +71,9 @@ export function VideoTestimonialTable({
       <Table>
         <TableHeader className="bg-slate-50/50">
           <TableRow>
-            <TableHead className="w-[300px]">Video Info</TableHead>
-            <TableHead>URL</TableHead>
-            <TableHead>Added Date</TableHead>
+            <TableHead className="w-[200px] sm:w-[300px]">Video Info</TableHead>
+            <TableHead className="hidden md:table-cell">URL</TableHead>
+            <TableHead className="hidden sm:table-cell">Added Date</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -115,9 +115,9 @@ export function VideoTestimonialTable({
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="hidden md:table-cell">
                   <div className="group/link flex items-center gap-2">
-                    <p className="max-w-[200px] truncate text-sm text-slate-600">
+                    <p className="max-w-[150px] truncate text-sm text-slate-600 xl:max-w-[200px]">
                       {testimonial.video_url}
                     </p>
                     <a
@@ -130,7 +130,7 @@ export function VideoTestimonialTable({
                     </a>
                   </div>
                 </TableCell>
-                <TableCell className="text-sm text-slate-600">
+                <TableCell className="hidden text-sm text-slate-600 sm:table-cell">
                   {formatDate(testimonial.created_at)}
                 </TableCell>
                 <TableCell className="text-right">

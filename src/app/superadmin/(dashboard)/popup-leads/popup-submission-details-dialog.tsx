@@ -98,7 +98,7 @@ export default function PopupSubmissionDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl overflow-visible border-none bg-transparent p-0 shadow-none">
+      <DialogContent className="-none max-w-3xl overflow-visible border-none bg-transparent p-0">
         {/* Navigation Arrows */}
         {submissions.length > 1 && (
           <>
@@ -107,7 +107,7 @@ export default function PopupSubmissionDetailsDialog({
               size="icon"
               onClick={handlePrevious}
               disabled={currentIndex === 0}
-              className="absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg transition-all hover:bg-white disabled:opacity-0"
+              className="-lg absolute top-1/2 -left-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 transition-all hover:bg-white disabled:opacity-0"
             >
               <ChevronLeft className="h-6 w-6 text-gray-900" />
             </Button>
@@ -117,14 +117,14 @@ export default function PopupSubmissionDetailsDialog({
               size="icon"
               onClick={handleNext}
               disabled={currentIndex === submissions.length - 1}
-              className="absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 shadow-lg transition-all hover:bg-white disabled:opacity-0"
+              className="-lg absolute top-1/2 -right-16 z-50 h-12 w-12 -translate-y-1/2 rounded-full bg-white/90 p-0 transition-all hover:bg-white disabled:opacity-0"
             >
               <ChevronRight className="h-6 w-6 text-gray-900" />
             </Button>
           </>
         )}
 
-        <div className="relative flex max-h-[90vh] w-full flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+        <div className="-2xl relative flex max-h-[90vh] w-full flex-col overflow-hidden rounded-3xl bg-white">
           {/* Header */}
           <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-gray-50/50 px-8 py-6 backdrop-blur-md">
             <div className="flex items-center gap-4">
@@ -138,13 +138,6 @@ export default function PopupSubmissionDetailsDialog({
                   {format(new Date(currentSubmission.created_at), "PPP p")}
                 </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
-              {submissions.length > 1 && (
-                <div className="rounded-full border border-gray-100 bg-white px-3 py-1 text-xs font-semibold text-gray-500 shadow-sm">
-                  {currentIndex + 1} of {submissions.length}
-                </div>
-              )}
             </div>
           </div>
 
