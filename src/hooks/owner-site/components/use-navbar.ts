@@ -14,7 +14,17 @@ export const useNavbarQuery = (enabled: boolean = true) => {
   return useQuery({
     queryKey: NAVBAR_QUERY_KEY,
     queryFn: () => {
+      // If we are in published mode or sockets are disabled, fetch appropriately
       if (!socket.enabled) {
+        // If the path is not preview/builder, it's a published page
+        const isPreview =
+          typeof window !== "undefined" &&
+          (window.location.pathname.startsWith("/preview") ||
+            window.location.pathname.startsWith("/builder"));
+
+        if (!isPreview) {
+          return useNavbarApi.getNavbarPublished();
+        }
         return useNavbarApi.getNavbar();
       }
       return new Promise<any>((resolve, reject) => {

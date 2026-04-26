@@ -6,8 +6,9 @@ import { useNavbarQuery } from "@/hooks/owner-site/components/use-navbar";
 import { useFooterQuery } from "@/hooks/owner-site/components/use-footer";
 import { useThemeQuery } from "@/hooks/owner-site/components/use-theme";
 import { usePathname } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { InnerPageHeader } from "@/components/site-owners/builder/navbar/inner-page-header";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { GetNavbarResponse } from "@/types/owner-site/components/navbar";
 import { GetFooterResponse } from "@/types/owner-site/components/footer";
 import { GetThemeResponse } from "@/types/owner-site/components/theme";
@@ -28,7 +29,27 @@ export function SiteLayoutWrapper({
   initialThemeResponse,
 }: SiteLayoutWrapperProps) {
   const pathname = usePathname();
+  const queryClient = useQueryClient();
   const isPreview = pathname?.startsWith("/preview") || false;
+
+  // Seed React Query cache with initial server-side data for published pages
+  useMemo(() => {
+    if (!isPreview && initialThemeResponse) {
+      queryClient.setQueryData(["themes", "published"], initialThemeResponse);
+    }
+    if (!isPreview && initialNavbarResponse) {
+      queryClient.setQueryData(["navbar"], initialNavbarResponse);
+    }
+    if (!isPreview && initialFooterResponse) {
+      queryClient.setQueryData(["footer"], initialFooterResponse);
+    }
+  }, [
+    isPreview,
+    initialThemeResponse,
+    initialNavbarResponse,
+    initialFooterResponse,
+    queryClient,
+  ]);
 
   const { data: previewNavbarResponse, isLoading: isNavbarLoading } =
     useNavbarQuery(isPreview);

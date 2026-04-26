@@ -11,13 +11,17 @@ import {
 } from "@/types/owner-site/components/theme";
 
 export const useThemeApi = {
-  getThemes: async (status: string = "preview"): Promise<GetThemeResponse> => {
+  getThemes: async (
+    status: string = "preview",
+    options?: RequestInit
+  ): Promise<GetThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(
       `${API_BASE_URL}/api/theme/?status=${status}`,
       {
         method: "GET",
         headers: createHeaders(),
+        ...options,
       }
     );
 
@@ -30,11 +34,12 @@ export const useThemeApi = {
         data?.length > 0 ? "Themes retrieved successfully" : "No themes found",
     };
   },
-  getThemesPublished: async (): Promise<GetThemeResponse> => {
+  getThemesPublished: async (options?: RequestInit): Promise<GetThemeResponse> => {
     const API_BASE_URL = getApiBaseUrl();
     const response = await apiFetch(`${API_BASE_URL}/api/theme/`, {
       method: "GET",
       headers: createHeaders(),
+      ...options,
     });
 
     await handleApiError(response);

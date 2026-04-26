@@ -14,7 +14,17 @@ export const useFooterQuery = (enabled: boolean = true) => {
   return useQuery({
     queryKey: FOOTER_QUERY_KEY,
     queryFn: () => {
+      // If we are in published mode or sockets are disabled, fetch appropriately
       if (!socket.enabled) {
+        // If the path is not preview/builder, it's a published page
+        const isPreview =
+          typeof window !== "undefined" &&
+          (window.location.pathname.startsWith("/preview") ||
+            window.location.pathname.startsWith("/builder"));
+
+        if (!isPreview) {
+          return useFooterApi.getFooterPublished();
+        }
         return useFooterApi.getFooter();
       }
       return new Promise<any>((resolve, reject) => {

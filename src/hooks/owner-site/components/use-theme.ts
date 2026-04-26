@@ -34,7 +34,7 @@ export const useThemeQuery = (
     queryFn: () => {
       // If we are in published mode, we should NOT use sockets or preview APIs
       if (effectiveStatus === "published") {
-        return useThemeApi.getThemes("published");
+        return useThemeApi.getThemesPublished();
       }
 
       if (!socket || !socket.enabled || !enabled) {
