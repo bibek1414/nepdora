@@ -182,7 +182,7 @@ export const LoginStyle1: React.FC<LoginStyle1Props> = ({
               Don&apos;t have an account?{" "}
               <Link
                 href={generateLinkHref(
-                  "/admin/signup",
+                  "/signup",
                   siteUser,
                   pathname,
                   isEditable,

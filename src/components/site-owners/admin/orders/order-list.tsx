@@ -353,14 +353,6 @@ export default function OrdersPage({ isPOS = false }: { isPOS?: boolean }) {
             <h3 className="mb-1 text-sm font-medium text-gray-900">
               No orders found
             </h3>
-
-            <Button
-              variant="link"
-              onClick={handleClearFilters}
-              className="mt-2 cursor-pointer text-sm text-blue-600"
-            >
-              Clear all filters
-            </Button>
           </div>
         ) : (
           <div className="overflow-hidden rounded-[28px] border border-gray-100 bg-white">

@@ -388,30 +388,32 @@ export const defaultHeroTemplate10Data: HeroTemplate10Data = {
   buttons: [],
   collections: [
     {
-      id: "men",
-      title: "Men's\nCollection",
-      subtitle: "",
-      badge: "",
+      id: "kitchen",
+      title: "Eco Kitchen\nEssentials",
+      subtitle: "Plastic-free cooking & storage",
+      badge: "Zero Waste",
       imageUrl:
-        "https://images.unsplash.com/photo-1516257984-b1b4d707412e?q=80&w=774&auto=format&fit=crop",
-      imageAlt: "Men's collection",
-      buttonText: "Shop Now",
+        "https://images.pexels.com/photos/7656128/pexels-photo-7656128.jpeg",
+      imageAlt:
+        "Sustainable kitchen products - glass containers and bamboo utensils",
+      buttonText: "Shop Kitchen",
       buttonHref: "#",
     },
     {
-      id: "women",
-      title: "Women's\nCollection",
-      subtitle: "",
-      badge: "",
+      id: "personal-care",
+      title: "Natural\nPersonal Care",
+      subtitle: "Bamboo toothbrushes & shampoo bars",
+      badge: "Plastic Free",
       imageUrl:
-        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1020&auto=format&fit=crop",
-      imageAlt: "Women's collection",
-      buttonText: "Shop Now",
+        "https://images.pexels.com/photos/8842708/pexels-photo-8842708.jpeg",
+      imageAlt:
+        "Eco-friendly personal care products - bamboo and natural materials",
+      buttonText: "Shop Personal Care",
       buttonHref: "#",
     },
   ],
   backgroundType: "color",
-  backgroundColor: "#FFFFFF",
+  backgroundColor: "#F5F5DC", // Soft natural beige color for eco-brand
 };
 
 export interface HeroTemplate11Data {
@@ -887,29 +889,33 @@ export interface HeroTemplate23Data {
 
 export const defaultHeroTemplate23Data: HeroTemplate23Data = {
   template: "hero-23",
-  eyebrow: "Award-winning architecture firm in Nepal",
-  title: "Designing spaces that inspire life",
+  eyebrow: "Eco-luxury retreat in the heart of nature",
+  title: "Stillness, grown from the forest",
   description:
-    "We blend traditional Nepali craftsmanship with contemporary design to create timeless architectural masterpieces across the Himalayas.",
+    "An eco-luxury retreat where canopy and craft meet — built with reclaimed timber, sourced from our gardens, and designed to disappear into the landscape.",
   buttons: [
-    { id: "1", text: "View our work", variant: "primary", href: "/works" },
+    {
+      id: "1",
+      text: "Explore the retreat",
+      variant: "primary",
+      href: "/explore",
+    },
     {
       id: "2",
-      text: "Start your project",
+      text: "Book your stay",
       variant: "secondary",
-      href: "/contact",
+      href: "/booking",
     },
   ],
-  backgroundImageUrl: "/images/site-owners/hero/hero-23/hero-23.jpg",
-  imageAlt: "Modern villa in Nepal",
+  backgroundImageUrl: "/images/site-owners/hero/hero-23/hero-retreat.jpg",
+  imageAlt: "Eco luxury forest retreat",
   stats: [
-    { id: "1", number: "200+", label: "Projects completed" },
-    { id: "2", number: "15+", label: "Years experience" },
-    { id: "3", number: "50+", label: "Team members" },
-    { id: "4", number: "12", label: "Awards won" },
+    { id: "1", number: "25+", label: "Private villas" },
+    { id: "2", number: "100%", label: "Sustainably built" },
+    { id: "3", number: "10+", label: "Years preserving nature" },
+    { id: "4", number: "5★", label: "Guest experience" },
   ],
 };
-
 // Union type for all hero templates
 export type HeroData =
   | HeroTemplate1Data

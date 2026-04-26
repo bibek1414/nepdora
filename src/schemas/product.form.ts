@@ -159,37 +159,37 @@ export const CreateProductOptionSchema = z.object({
 });
 
 // Create Product Schema with NEW FIELDS
-export const CreateProductSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
-  price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid price format"),
-  market_price: z.string().optional(),
-  stock: z.number().min(0, "Stock cannot be negative"),
-  thumbnail_image: imageSchema,
-  image_files: z.array(z.any()).optional(),
-  thumbnail_alt_description: z.string().optional(),
-  category_id: z.string().optional(),
-  sub_category_id: z.string().optional(),
-  track_stock: z.boolean(),
-  is_popular: z.boolean(),
-  is_featured: z.boolean(),
-  // NEW FIELDS - make them optional in the schema but provide defaults in the form
-  fast_shipping: z.boolean(),
-  warranty: z
-    .string()
-    .max(200, "Warranty must be 200 characters or less")
-    .optional(),
-  weight: z
-    .string()
-    .max(100, "Weight must be 100 characters or less")
-    .optional(),
-  status: z.enum(STATUS_CHOICES),
-  meta_title: z.string().optional(),
-  meta_description: z.string().optional(),
-  // Variant-related fields
-  options: z.array(CreateProductOptionSchema).optional(),
-  variants: z.array(CreateVariantSchema).optional(),
-});
+  export const CreateProductSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    description: z.string().optional(),
+    price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid price format"),
+    market_price: z.string().optional(),
+    stock: z.number().min(0, "Stock cannot be negative"),
+    thumbnail_image: imageSchema,
+    image_files: z.array(z.any()).optional(),
+    thumbnail_alt_description: z.string().optional(),
+    category_id: z.string().optional(),
+    sub_category_id: z.string().optional(),
+    track_stock: z.boolean(),
+    is_popular: z.boolean(),
+    is_featured: z.boolean(),
+    // NEW FIELDS - make them optional in the schema but provide defaults in the form
+    fast_shipping: z.boolean(),
+    warranty: z
+      .string()
+      .max(200, "Warranty must be 200 characters or less")
+      .optional(),
+    weight: z
+      .string()
+      .max(100, "Weight must be 100 characters or less")
+      .optional(),
+    status: z.enum(STATUS_CHOICES),
+    meta_title: z.string().optional(),
+    meta_description: z.string().optional(),
+    // Variant-related fields
+    options: z.array(CreateProductOptionSchema).optional(),
+    variants: z.array(CreateVariantSchema).optional(),
+  });
 
 // Update Product Schema
 export const UpdateProductSchema = CreateProductSchema.partial();

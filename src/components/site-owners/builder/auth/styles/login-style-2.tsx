@@ -224,7 +224,7 @@ export const LoginStyle2: React.FC<LoginStyle2Props> = ({
                   New here?{" "}
                   <Link
                     href={generateLinkHref(
-                      "/admin/signup",
+                      "/signup",
                       siteUser,
                       pathname,
                       isEditable,

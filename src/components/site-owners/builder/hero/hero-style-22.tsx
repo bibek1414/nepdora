@@ -55,7 +55,7 @@ export const HeroTemplate22: React.FC<HeroTemplate22Props> = ({
             </div>
             <EditableText
               value={data.title}
-              as="title"
+              as="h1"
               onChange={handleTextUpdate("title")}
               isEditable={isEditable}
               className="font-display text-5xl leading-[0.98] tracking-tight text-balance text-gray-950 sm:text-6xl md:text-7xl"

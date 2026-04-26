@@ -87,7 +87,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
             <EditableText
               value={data.title || "Waves Puffer<br />Coat Black"}
               onChange={handleTextUpdate("title")}
-              as="h1"
+              as="title"
               className="mb-6 text-4xl leading-[1.1] font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl"
               isEditable={isEditable}
               placeholder="Main Headline"
@@ -123,8 +123,8 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
             <div className="relative flex aspect-4/5 w-full items-end justify-center lg:aspect-auto lg:h-[600px]">
               {/* Decorative Green Starburst behind image */}
 
-              <div className="pointer-events-none relative z-10 mx-auto h-full w-full max-w-[500px] overflow-visible">
-                <div className="pointer-events-auto absolute bottom-0 h-full w-full">
+              <div className="pointer-events-none absolute bottom-0 mx-auto h-full w-full max-w-[500px] overflow-visible">
+                <div className="pointer-events-auto absolute bottom-0 h-full w-full overflow-hidden rounded-2xl">
                   <EditableImage
                     src={rightImageUrl}
                     alt={data.rightImageAlt || "Model"}
@@ -143,7 +143,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                       onUpdate?.(updatedData);
                     }}
                     isEditable={isEditable}
-                    className="h-full w-full bg-transparent"
+                    className="h-full w-full"
                     width={500}
                     height={600}
                     priority
@@ -152,7 +152,6 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                       height: 1080,
                       text: "Upload hero image",
                     }}
-                    showAltEditor={true}
                     disableImageChange={!isEditable}
                   />
                 </div>
@@ -344,7 +343,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                             feature.id
                           )({ text: `${newTitle}|${subtitle || ""}` })
                         }
-                        as="span"
+                        as="p"
                         isEditable={isEditable}
                       />
                     </h3>
@@ -360,7 +359,7 @@ export const HeroTemplate9: React.FC<HeroTemplate9Props> = ({
                             feature.id
                           )({ text: `${title || ""}|${newSubtitle}` })
                         }
-                        as="span"
+                        as="p"
                         isEditable={isEditable}
                         multiline
                       />

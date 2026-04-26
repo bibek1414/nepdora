@@ -154,7 +154,7 @@ export const HeroTemplate23: React.FC<HeroTemplate23Props> = ({
               >
                 <EditableText
                   value={s.number}
-                  as="title"
+                  as="h3"
                   onChange={handleStatUpdate(s.id, "number")}
                   isEditable={isEditable}
                   className="mb-2 text-2xl font-medium text-white md:mb-2 md:text-3xl lg:text-4xl"
