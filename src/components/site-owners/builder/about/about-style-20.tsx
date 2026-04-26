@@ -68,12 +68,12 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
             />
           </div>
           <EditableText
-            as="h2"
+            as="label"
             value={data.title}
             onChange={handleTextUpdate("title")}
             isEditable={isEditable}
             style={{ fontFamily: theme.fonts.heading }}
-            className="mx-auto max-w-3xl text-center text-4xl leading-tight font-bold tracking-tight text-gray-950 md:text-6xl"
+            className="mx-auto max-w-3xl text-center text-3xl leading-tight font-bold tracking-tight text-gray-950 md:text-6xl"
           />
         </div>
 
@@ -84,18 +84,19 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
               key={item.id}
               className="sticky"
               style={{
-                top: `${120}px`, // stacking offset
+                top: `${100}px`, // stacking offset
                 zIndex: 2, // proper layering
-                height: `${60}vh`,
+                height: `auto`,
+                minHeight: `50vh`,
               }}
             >
-              <div className="cursor-default rounded-[40px] bg-gray-100 transition-all duration-300">
-                <div className="flex min-h-[500px] flex-col md:flex-row">
+              <div className="cursor-default rounded-[30px] md:rounded-[40px] bg-gray-100 transition-all duration-300">
+                <div className="flex min-h-[400px] md:min-h-[500px] flex-col md:flex-row">
                   {/* Text Content */}
-                  <div className="flex flex-1 flex-col justify-between p-10 md:p-16 lg:p-20">
+                  <div className="flex flex-1 flex-col justify-between p-6 md:p-16 lg:p-20">
                     <div>
                       <EditableText
-                        as="span"
+                        as="p"
                         value={item.number}
                         onChange={val =>
                           handleArrayItemUpdate(
@@ -106,11 +107,11 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
                           })
                         }
                         isEditable={isEditable}
-                        className="mb-12 block text-4xl font-bold tracking-tight text-gray-950 opacity-20"
+                        className="mb-6 md:mb-12 block text-2xl md:text-4xl font-bold tracking-tight text-gray-950 opacity-20"
                         style={{ fontFamily: theme.fonts.heading }}
                       />
                       <EditableText
-                        as="h3"
+                        as="label"
                         value={item.title}
                         onChange={val =>
                           handleArrayItemUpdate(
@@ -122,7 +123,7 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
                         }
                         isEditable={isEditable}
                         style={{ fontFamily: theme.fonts.heading }}
-                        className="mb-8 text-3xl leading-tight font-bold text-gray-950 md:text-4xl"
+                        className="mb-4 md:mb-8 text-2xl leading-tight font-bold text-gray-950 md:text-4xl"
                       />
                       <EditableText
                         as="p"
@@ -136,7 +137,7 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
                           })
                         }
                         isEditable={isEditable}
-                        className="max-w-md text-[17px] leading-relaxed text-gray-600"
+                        className="max-w-md text-sm md:text-[17px] leading-relaxed text-gray-600"
                       />
                     </div>
 
@@ -151,7 +152,7 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
                             item.id
                           )({ buttonText: text, buttonLink: href })
                         }
-                        className="group inline-flex cursor-pointer items-center gap-3 rounded-full px-8 py-4 text-[15px] font-bold transition-all duration-200"
+                        className="group inline-flex cursor-pointer items-center gap-3 rounded-full px-6 py-3 md:px-8 md:py-4 text-sm md:text-[15px] font-bold transition-all duration-200"
                         style={{
                           backgroundColor: theme.colors.primary,
                           color: theme.colors.primaryForeground,
@@ -164,8 +165,8 @@ export const AboutUsTemplate20: React.FC<AboutUsTemplate20Props> = ({
                   </div>
 
                   {/* Image Content */}
-                  <div className="relative mt-24 min-h-[350px] flex-1 p-6 md:p-8 lg:p-10">
-                    <div className="-hidden relative h-full w-full rounded-[30px]">
+                  <div className="relative mt-4 md:mt-24 min-h-[250px] md:min-h-[350px] flex-1 p-4 md:p-8 lg:p-10">
+                    <div className="overflow-hidden relative h-full w-full rounded-[30px]">
                       <EditableImage
                         src={item.image}
                         alt={item.title}

@@ -36,8 +36,9 @@ const buildProductFormData = (
     if (value === undefined) return;
 
     if (key === "image_files" && Array.isArray(value)) {
-      value.forEach(imageFile => {
-        if (imageFile instanceof File) {
+      value.forEach((imageFile, index) => {
+        if (imageFile instanceof Blob) {
+          // Blobs and Files are handled here
           formData.append("image_files", imageFile);
         } else if (typeof imageFile === "string" && imageFile.trim()) {
           // Include existing image URLs so the backend knows to keep them
@@ -45,7 +46,7 @@ const buildProductFormData = (
         }
       });
     } else if (key === "thumbnail_image") {
-      if (value instanceof File) {
+      if (value instanceof Blob) {
         formData.append("thumbnail_image", value);
       } else if (value === null) {
         // Explicitly send an empty string or 'null' for removal
@@ -64,10 +65,10 @@ const buildProductFormData = (
         };
 
         // Handle variant image properly:
-        // - If it's a File, append to FormData and reference it
+        // - If it's a Blob/File, append to FormData and reference it
         // - If it's a string URL, keep the URL (existing image)
         // - If it's null, set to "" to indicate removal
-        if (variant.image instanceof File) {
+        if (variant.image instanceof Blob) {
           const variantImageKey = `variant_image_${index}`;
           formData.append(variantImageKey, variant.image);
           variantData.image = variantImageKey;
@@ -99,16 +100,21 @@ const buildProductFormData = (
   });
 
   // Debug log
-  console.log("FormData contents:");
+  console.log("--- FormData Payload ---");
   for (const [key, value] of formData.entries()) {
     if (value instanceof File) {
       console.log(
-        `${key}: File(${value.name}, ${value.size} bytes, ${value.type})`
+        `[FILE] ${key}: ${value.name} (${(value.size / 1024).toFixed(2)} KB, ${value.type})`
+      );
+    } else if ((value as any) instanceof Blob) {
+      console.log(
+        `[BLOB] ${key}: [${((value as any).size / 1024).toFixed(2)} KB, ${(value as any).type}]`
       );
     } else {
-      console.log(`${key}: ${value}`);
+      console.log(`[TEXT] ${key}: ${value}`);
     }
   }
+  console.log("------------------------");
 
   return formData;
 };

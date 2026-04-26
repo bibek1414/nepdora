@@ -161,15 +161,15 @@ export const CreateProductOptionSchema = z.object({
 // Create Product Schema with NEW FIELDS
   export const CreateProductSchema = z.object({
     name: z.string().min(1, "Name is required"),
-    description: z.string().optional(),
+    description: z.string().nullable().optional(),
     price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid price format"),
-    market_price: z.string().optional(),
+    market_price: z.string().nullable().optional(),
     stock: z.number().min(0, "Stock cannot be negative"),
     thumbnail_image: imageSchema,
     image_files: z.array(z.any()).optional(),
-    thumbnail_alt_description: z.string().optional(),
-    category_id: z.string().optional(),
-    sub_category_id: z.string().optional(),
+    thumbnail_alt_description: z.string().nullable().optional(),
+    category_id: z.string().nullable().optional(),
+    sub_category_id: z.string().nullable().optional(),
     track_stock: z.boolean(),
     is_popular: z.boolean(),
     is_featured: z.boolean(),
@@ -178,14 +178,16 @@ export const CreateProductOptionSchema = z.object({
     warranty: z
       .string()
       .max(200, "Warranty must be 200 characters or less")
+      .nullable()
       .optional(),
     weight: z
       .string()
       .max(100, "Weight must be 100 characters or less")
+      .nullable()
       .optional(),
     status: z.enum(STATUS_CHOICES),
-    meta_title: z.string().optional(),
-    meta_description: z.string().optional(),
+    meta_title: z.string().nullable().optional(),
+    meta_description: z.string().nullable().optional(),
     // Variant-related fields
     options: z.array(CreateProductOptionSchema).optional(),
     variants: z.array(CreateVariantSchema).optional(),

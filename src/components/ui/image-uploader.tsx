@@ -17,6 +17,7 @@ interface ImageUploaderProps {
   maxFileSize?: number; // in bytes
   maxFiles?: number;
   hidePreview?: boolean;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -27,6 +28,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   maxFileSize = DEFAULT_MAX_IMAGE_SIZE,
   maxFiles = multiple ? 10 : 1,
   hidePreview = false,
+  onLoadingChange,
 }) => {
   const [previews, setPreviews] = useState<{ url: string; isFile: boolean }[]>(
     []
@@ -34,6 +36,12 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentItems, setCurrentItems] = useState<(File | string)[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
+
+  useEffect(() => {
+    if (onLoadingChange) {
+      onLoadingChange(isCompressing);
+    }
+  }, [isCompressing, onLoadingChange]);
 
   // Initialize previews from existing value
   useEffect(() => {

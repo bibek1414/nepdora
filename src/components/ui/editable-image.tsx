@@ -82,7 +82,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   // Extract object-fit and object-position classes from className
   const imageStyles = className
     ?.split(" ")
-    .filter(c => c.startsWith("object-"))
+    .filter(c => c.startsWith("object-") || c.startsWith("rounded"))
     .join(" ");
 
   // Calculate aspect ratio
@@ -149,7 +149,8 @@ export const EditableImage: React.FC<EditableImageProps> = ({
       <div
         className={cn(
           "relative flex-1 w-full overflow-hidden",
-          isEditable && "group cursor-pointer"
+          isEditable && "group cursor-pointer",
+          imageStyles
         )}
       >
         {showPlaceholder ? (

@@ -180,6 +180,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
     );
     const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
     const [isSubCategoryFormOpen, setIsSubCategoryFormOpen] = useState(false);
+    const [imageLoading, setImageLoading] = useState(false);
 
     // Initialize thumbnail index from product if editing
     const getInitialThumbnailIndex = (): number | null => {
@@ -241,7 +242,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
         thumbnail_alt_description: product?.thumbnail_alt_description || "",
         category_id: product?.category?.id?.toString() || "",
         sub_category_id: product?.sub_category?.id?.toString() || "",
-        track_stock: product?.track_stock ?? false,
+        track_stock: product?.track_stock ?? true,
         is_popular: product?.is_popular ?? false,
         is_featured: product?.is_featured ?? false,
         fast_shipping: product?.fast_shipping ?? false,
@@ -327,7 +328,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
         thumbnail_alt_description: product.thumbnail_alt_description || "",
         category_id: product.category?.id?.toString() || "",
         sub_category_id: product.sub_category?.id?.toString() || "",
-        track_stock: product.track_stock ?? false,
+        track_stock: product.track_stock ?? true,
         is_popular: product.is_popular ?? false,
         is_featured: product.is_featured ?? false,
         fast_shipping: product.fast_shipping ?? false,
@@ -438,13 +439,12 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
         const productData: CreateProductRequest = {
           ...data,
           track_stock: trackStock,
-          market_price: data.market_price || undefined,
+          market_price: data.market_price || null,
           thumbnail_alt_description:
-            data.thumbnail_alt_description || undefined,
-          category_id: data.category_id || undefined,
-          sub_category_id: data.sub_category_id || undefined,
+            data.thumbnail_alt_description || null,
+          category_id: data.category_id || null,
+          sub_category_id: data.sub_category_id || null,
           thumbnail_image:
-            data.thumbnail_image instanceof File ||
             data.thumbnail_image instanceof Blob
               ? (data.thumbnail_image as any)
               : typeof data.thumbnail_image === "string"
@@ -456,11 +456,11 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
           variants:
             transformedVariants.length > 0 ? transformedVariants : undefined,
           fast_shipping: data.fast_shipping,
-          warranty: data.warranty || undefined,
-          weight: data.weight || undefined,
+          warranty: data.warranty || null,
+          weight: data.weight || null,
           status: data.status,
-          meta_title: data.meta_title || undefined,
-          meta_description: data.meta_description || undefined,
+          meta_title: data.meta_title || null,
+          meta_description: data.meta_description || null,
         };
 
         if (isEditing && product) {
@@ -494,7 +494,9 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
     };
 
     const isLoading =
-      createProductMutation.isPending || updateProductMutation.isPending;
+      createProductMutation.isPending || 
+      updateProductMutation.isPending ||
+      imageLoading;
 
     useEffect(() => {
       if (onLoadingChange) {
@@ -526,12 +528,12 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
         const preview: PreviewProductData = {
           id: "preview",
           name: values.name,
-          description: values.description,
+          description: values.description ?? undefined,
           price: values.price || "0.00",
-          market_price: values.market_price || undefined,
+          market_price: values.market_price ?? null,
           stock: trackStock ? (values.stock ?? 0) : (productStock ?? 0),
           thumbnail_image: values.thumbnail_image ?? null,
-          thumbnail_alt_description: values.thumbnail_alt_description || "",
+          thumbnail_alt_description: values.thumbnail_alt_description ?? "",
           images: (values.image_files || []).map((img: unknown) =>
             typeof img === "string" ? img : { image: img as File }
           ),
@@ -667,6 +669,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                     min="0"
                                     placeholder=""
                                     {...field}
+                                    value={field.value ?? ""}
                                     className="h-10 rounded-xl"
                                   />
                                 </FormControl>
@@ -690,6 +693,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                     min="0"
                                     placeholder=""
                                     {...field}
+                                    value={field.value ?? ""}
                                     className="h-10 rounded-xl"
                                   />
                                 </FormControl>
@@ -718,6 +722,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                     multiple={true}
                                     maxFiles={8}
                                     hidePreview={true}
+                                    onLoadingChange={setImageLoading}
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -798,7 +803,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                               thumbnailImageIndex === index
                                                 ? form.watch(
                                                     "thumbnail_alt_description"
-                                                  )
+                                                  ) ?? ""
                                                 : undefined
                                             }
                                             onAltDescriptionChange={
@@ -862,6 +867,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                 <Input
                                   placeholder=""
                                   {...field}
+                                  value={field.value ?? ""}
                                   className="h-10 rounded-xl"
                                 />
                               </FormControl>
@@ -892,6 +898,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                   rows={4}
                                   className="h-28 resize-none rounded-xl"
                                   {...field}
+                                  value={field.value ?? ""}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -913,7 +920,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                             <FormItem>
                               <Select
                                 onValueChange={field.onChange}
-                                value={field.value}
+                                value={field.value ?? ""}
                               >
                                 <FormControl>
                                   <SelectTrigger className="h-9 min-w-[16rem] text-sm shadow-none">
@@ -984,7 +991,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                   field.onChange(value);
                                   handleCategoryChange(value);
                                 }}
-                                value={field.value}
+                                value={field.value ?? ""}
                               >
                                 <FormControl>
                                   <SelectTrigger className="h-9 min-w-[16rem] text-sm shadow-none">
@@ -1030,7 +1037,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                             <FormItem>
                               <Select
                                 onValueChange={field.onChange}
-                                value={field.value}
+                                value={field.value ?? ""}
                               >
                                 <FormControl>
                                   <SelectTrigger className="h-9 min-w-[16rem] text-sm shadow-none">
