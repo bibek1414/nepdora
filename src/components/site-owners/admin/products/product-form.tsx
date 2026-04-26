@@ -45,6 +45,9 @@ import { Switch } from "@/components/ui/switch";
 import type { PreviewProductData } from "./product-preview-detail";
 import { CategoryForm } from "@/components/site-owners/admin/category/category-form";
 import { SubCategoryForm } from "@/components/site-owners/admin/sub-category/sub-category-form";
+import { usePricingMetrics } from "@/hooks/owner-site/admin/use-pricing-metric";
+import { PlusCircle, MinusCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface ProductFormRefApi {
   getPreviewProduct: () => PreviewProductData;
@@ -178,6 +181,14 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
     const [productStock, setProductStock] = useState<number>(
       product?.stock ?? 0
     );
+    const [useDynamicPricing, setUseDynamicPricing] = useState<boolean>(
+      product?.use_dynamic_pricing ?? false
+    );
+    const [compositions, setCompositions] = useState<
+      { metric: number; quantity: string }[]
+    >(product?.compositions || []);
+    const { data: metricsData } = usePricingMetrics();
+    const metrics = metricsData?.results || [];
     const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
     const [isSubCategoryFormOpen, setIsSubCategoryFormOpen] = useState(false);
     const [imageLoading, setImageLoading] = useState(false);
@@ -228,7 +239,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
           ? initialImageFiles[0]
           : null;
 
-    const form = useForm<z.infer<typeof CreateProductSchema>>({
+    const form = useForm<any>({
       resolver: zodResolver(CreateProductSchema),
       defaultValues: {
         name: product?.name || "",
@@ -251,6 +262,9 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
         status: product?.status || "active",
         meta_title: product?.meta_title || "",
         meta_description: product?.meta_description || "",
+        use_dynamic_pricing: product?.use_dynamic_pricing ?? false,
+        base_making_charge: product?.base_making_charge?.toString() || "0.00",
+        compositions: product?.compositions || [],
       },
     });
 
@@ -337,10 +351,15 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
         status: product.status || "active",
         meta_title: product.meta_title || "",
         meta_description: product.meta_description || "",
+        use_dynamic_pricing: product.use_dynamic_pricing ?? false,
+        base_making_charge: product.base_making_charge?.toString() || "0.00",
+        compositions: product.compositions || [],
       });
 
       setTrackStock(product.track_stock ?? true);
       setProductStock(product.stock ?? 0);
+      setUseDynamicPricing(product.use_dynamic_pricing ?? false);
+      setCompositions(product.compositions || []);
       setSelectedCategory(
         product.category?.id ? product.category.id.toString() : null
       );
@@ -438,10 +457,13 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
 
         const productData: CreateProductRequest = {
           ...data,
+          price: useDynamicPricing ? "0" : data.price,
+          market_price: useDynamicPricing ? "0" : data.market_price || null,
+          use_dynamic_pricing: useDynamicPricing,
+          compositions: useDynamicPricing ? compositions : [],
+          base_making_charge: data.base_making_charge || "0.00",
           track_stock: trackStock,
-          market_price: data.market_price || null,
-          thumbnail_alt_description:
-            data.thumbnail_alt_description || null,
+          thumbnail_alt_description: data.thumbnail_alt_description || null,
           category_id: data.category_id || null,
           sub_category_id: data.sub_category_id || null,
           thumbnail_image:
@@ -494,7 +516,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
     };
 
     const isLoading =
-      createProductMutation.isPending || 
+      createProductMutation.isPending ||
       updateProductMutation.isPending ||
       imageLoading;
 
@@ -651,8 +673,156 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                         />
                       </div>
 
-                      {/* Pricing */}
+                      {/* Dynamic Pricing Toggle */}
                       <div className="space-y-3 rounded-2xl border bg-white p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <FormLabel className="text-base font-semibold">
+                              Use Dynamic Pricing
+                            </FormLabel>
+                            <FormDescription className="text-xs">
+                              Toggle this to use metric-based pricing (Gold,
+                              Silver, etc.)
+                            </FormDescription>
+                          </div>
+                          <Switch
+                            checked={useDynamicPricing}
+                            onCheckedChange={checked => {
+                              setUseDynamicPricing(checked);
+                              form.setValue("use_dynamic_pricing", checked, {
+                                shouldDirty: true,
+                              });
+                            }}
+                          />
+                        </div>
+
+                        {useDynamicPricing && (
+                          <div className="mt-4 space-y-4">
+                            <FormField
+                              control={form.control}
+                              name="base_making_charge"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-xs font-medium">
+                                    Base Making Charge
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      step="0.01"
+                                      min="0"
+                                      placeholder="0.00"
+                                      {...field}
+                                      className="h-10 rounded-xl"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <div className="space-y-2">
+                              <FormLabel className="text-xs font-medium">
+                                Compositions
+                              </FormLabel>
+                              {compositions.map((comp, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center gap-2"
+                                >
+                                  <Select
+                                    value={comp.metric.toString()}
+                                    onValueChange={val => {
+                                      const newComps = [...compositions];
+                                      newComps[index].metric = parseInt(val);
+                                      setCompositions(newComps);
+                                      form.setValue("compositions", newComps, {
+                                        shouldDirty: true,
+                                      });
+                                    }}
+                                  >
+                                    <SelectTrigger className="h-10 flex-1 rounded-xl">
+                                      <SelectValue placeholder="Select Metric" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {metrics.map(m => (
+                                        <SelectItem
+                                          key={m.id}
+                                          value={m.id.toString()}
+                                        >
+                                          {m.name} ({m.unit})
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <Input
+                                    type="number"
+                                    step="0.001"
+                                    min="0"
+                                    className="h-10 w-24 rounded-xl placeholder:text-gray-400"
+                                    placeholder="Qty"
+                                    value={comp.quantity}
+                                    onChange={e => {
+                                      const newComps = [...compositions];
+                                      newComps[index].quantity = e.target.value;
+                                      setCompositions(newComps);
+                                      form.setValue("compositions", newComps, {
+                                        shouldDirty: true,
+                                      });
+                                    }}
+                                  />
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => {
+                                      const newComps = compositions.filter(
+                                        (_, i) => i !== index
+                                      );
+                                      setCompositions(newComps);
+                                      form.setValue("compositions", newComps, {
+                                        shouldDirty: true,
+                                      });
+                                    }}
+                                  >
+                                    <MinusCircle className="h-4 w-4 text-red-500" />
+                                  </Button>
+                                </div>
+                              ))}
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="mt-2 text-xs"
+                                onClick={() => {
+                                  const newComps = [
+                                    ...compositions,
+                                    {
+                                      metric: metrics[0]?.id || 0,
+                                      quantity: "0",
+                                    },
+                                  ];
+                                  setCompositions(newComps);
+                                  form.setValue("compositions", newComps, {
+                                    shouldDirty: true,
+                                  });
+                                }}
+                              >
+                                <PlusCircle className="mr-1 h-3 w-3" />
+                                Add Composition
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Pricing */}
+                      <div
+                        className={cn(
+                          "space-y-3 rounded-2xl border bg-white p-4",
+                          useDynamicPricing && "pointer-events-none opacity-50"
+                        )}
+                      >
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                           <FormField
                             control={form.control}
@@ -669,7 +839,12 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                     min="0"
                                     placeholder=""
                                     {...field}
-                                    value={field.value ?? ""}
+                                    value={
+                                      useDynamicPricing
+                                        ? "0"
+                                        : (field.value ?? "")
+                                    }
+                                    disabled={useDynamicPricing}
                                     className="h-10 rounded-xl"
                                   />
                                 </FormControl>
@@ -693,7 +868,12 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                     min="0"
                                     placeholder=""
                                     {...field}
-                                    value={field.value ?? ""}
+                                    value={
+                                      useDynamicPricing
+                                        ? "0"
+                                        : (field.value ?? "")
+                                    }
+                                    disabled={useDynamicPricing}
                                     className="h-10 rounded-xl"
                                   />
                                 </FormControl>
@@ -801,9 +981,9 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                             }}
                                             altDescription={
                                               thumbnailImageIndex === index
-                                                ? form.watch(
+                                                ? (form.watch(
                                                     "thumbnail_alt_description"
-                                                  ) ?? ""
+                                                  ) ?? "")
                                                 : undefined
                                             }
                                             onAltDescriptionChange={

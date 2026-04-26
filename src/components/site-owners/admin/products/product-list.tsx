@@ -154,6 +154,15 @@ const ProductList = () => {
                 Promo Codes
               </Button>
             </Link>
+            <Link href="/admin/pricing-metrics">
+              <Button
+                variant="ghost"
+                className="h-9 px-3 text-xs font-normal text-black/60 hover:bg-black/2 hover:text-black"
+              >
+                <Banknote className="mr-2 h-4 w-4" />
+                Manage Pricing
+              </Button>
+            </Link>
             <Link href="/admin/categories">
               <Button
                 variant="ghost"
@@ -296,7 +305,7 @@ const ProductList = () => {
                       <TableCell className="px-6 py-4">
                         <div className="flex items-center gap-2 font-medium text-gray-900">
                           <Banknote className="h-4 w-4 text-black/20" />
-                          NPR {product.price}
+                          NPR {product.use_dynamic_pricing ? (product.final_price || "0") : product.price}
                         </div>
                       </TableCell>
 

@@ -84,6 +84,12 @@ export const ProductImageSchema = z.object({
 // Status choices
 export const STATUS_CHOICES = ["active", "draft", "archived"] as const;
 
+// Composition Schema
+export const CompositionSchema = z.object({
+  metric: z.number(),
+  quantity: z.string().regex(/^\d+(\.\d{1,3})?$/, "Invalid quantity format"),
+});
+
 // Base Product Schema with NEW FIELDS
 export const ProductSchema = z.object({
   id: z.number(),
@@ -117,6 +123,10 @@ export const ProductSchema = z.object({
   options: z.array(ProductOptionSchema).optional(),
   variants: z.array(ProductVariantSchema).optional(),
   variants_read: z.array(ProductVariantReadSchema).optional(),
+  use_dynamic_pricing: z.boolean().default(false),
+  base_making_charge: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid charge format").default("0.00"),
+  compositions: z.array(CompositionSchema).optional().default([]),
+  final_price: z.string().optional(),
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -191,6 +201,10 @@ export const CreateProductOptionSchema = z.object({
     // Variant-related fields
     options: z.array(CreateProductOptionSchema).optional(),
     variants: z.array(CreateVariantSchema).optional(),
+    // Dynamic Pricing Fields
+    use_dynamic_pricing: z.boolean().default(false),
+    base_making_charge: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid charge format").optional().default("0.00"),
+    compositions: z.array(CompositionSchema).optional().default([]),
   });
 
 // Update Product Schema

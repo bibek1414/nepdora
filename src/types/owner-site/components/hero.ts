@@ -907,7 +907,7 @@ export const defaultHeroTemplate23Data: HeroTemplate23Data = {
       href: "@",
     },
   ],
-  backgroundImageUrl: "/images/site-owners/hero/hero-23/hero-retreat.jpg",
+  backgroundImageUrl: "/images/site-owners/hero/hero-23/hero-resort.jpg",
   imageAlt: "Eco luxury forest retreat",
   stats: [
     { id: "1", number: "25+", label: "Private villas" },

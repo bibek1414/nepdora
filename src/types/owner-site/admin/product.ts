@@ -179,6 +179,10 @@ export const normalizeProductForCart = (product: ProductLike): Product => {
     options: productData.options || [],
     variants: productData.variants || [],
     variants_read: productData.variants_read || [],
+    use_dynamic_pricing: productData.use_dynamic_pricing ?? false,
+    base_making_charge: productData.base_making_charge || "0.00",
+    compositions: productData.compositions || [],
+    final_price: productData.final_price || null,
     created_at: productData.created_at || new Date().toISOString(),
     updated_at: productData.updated_at || new Date().toISOString(),
   };
