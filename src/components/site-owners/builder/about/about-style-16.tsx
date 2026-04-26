@@ -42,7 +42,7 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
     useBuilderLogic(aboutUsData, onUpdate);
 
   return (
-    <section className="relative min-h-[400px] h-[500px] md:h-[600px] w-full overflow-hidden">
+    <section className="relative h-[500px] min-h-[400px] w-full overflow-hidden md:h-[600px]">
       <div className="absolute inset-0 h-full w-full">
         <EditableImage
           src={data.backgroundImage}
@@ -57,7 +57,6 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
             folder: "about-us-images",
           }}
           buttonPosition="top-right"
-          showAltEditor={isEditable}
           placeholder={{
             width: 1920,
             height: 1080,
@@ -79,7 +78,7 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
             as="span"
             isEditable={isEditable}
             placeholder="● About us"
-            className="rounded-full bg-white/20 px-3 py-1 text-[10px] sm:text-xs font-semibold text-white uppercase backdrop-blur-sm"
+            className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-semibold text-white uppercase backdrop-blur-sm sm:text-xs"
           />
         </motion.div>
 
@@ -96,7 +95,7 @@ export const AboutUsTemplate16: React.FC<AboutUsTemplate16Props> = ({
             style={{
               fontFamily: theme.fonts.heading,
             }}
-            className="max-w-3xl text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1]"
+            className="max-w-3xl text-3xl leading-[1.1] font-bold text-white sm:text-5xl md:text-6xl lg:text-7xl"
             isEditable={isEditable}
             placeholder="About Care-hands"
           />

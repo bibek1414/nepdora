@@ -354,25 +354,6 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link
-                  href={
-                    siteUser
-                      ? pathname?.includes("/preview/")
-                        ? `/preview/${siteUser}/collections`
-                        : pathname?.includes("/publish/")
-                          ? `/collections`
-                          : "/collections"
-                      : "/collections"
-                  }
-                  className="transition-colors"
-                >
-                  Collections
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
             {product.category && (
               <>
                 <BreadcrumbSeparator />
@@ -467,7 +448,7 @@ export const ProductDetailStyle3: React.FC<ProductDetailProps> = ({
             </div>
 
             <h1
-              className="text-foreground mb-6 text-2xl font-normal md:text-4xl "
+              className="text-foreground mb-6 text-2xl font-normal md:text-4xl"
               style={{ fontFamily: theme.fonts.heading }}
             >
               {product.name}
