@@ -59,7 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/glossary", priority: 0.8 },
     { path: "/switch", priority: 0.8 },
     { path: "/website-builder-nepal", priority: 0.9 },
-    { path: "/insights", priority: 0.8 },
+    { path: "/learn", priority: 0.8 },
     { path: "/experts", priority: 0.8 },
   ];
 
@@ -155,7 +155,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "best-payment-gateways-nepal",
     "seo-guide-for-nepali-businesses",
   ].map(slug => ({
-    url: `${baseUrl}/insights/${slug}`,
+    url: `${baseUrl}/learn/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,

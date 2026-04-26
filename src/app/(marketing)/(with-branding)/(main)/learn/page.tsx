@@ -22,11 +22,11 @@ import CityCTA from "@/components/marketing/cta-section/cta-section";
 import { Breadcrumbs } from "@/components/marketing/layout/breadcrumbs";
 
 export const metadata = buildMarketingMetadata({
-  title: "Nepdora Insights | Startup & Online Business Guides for Nepal",
+  title: "Nepdora learn | Startup & Online Business Guides for Nepal",
   description:
     "Free step-by-step guides to start and grow your online business in Nepal. Master website building, SEO, payment gateways, company registration, and digital growth strategies.",
-  path: "/insights",
-  ogLabel: "Nepdora Insights Academy",
+  path: "/learn",
+  ogLabel: "Nepdora learn Academy",
 });
 
 const GUIDES = [
@@ -90,7 +90,7 @@ const insightsSchema = {
       "@type": "HowTo",
       name: guide.title,
       description: guide.description,
-      url: `${absoluteUrl()}/insights/${guide.slug}`,
+      url: `${absoluteUrl()}/learn/${guide.slug}`,
     },
   })),
 };
@@ -237,7 +237,7 @@ export default function InsightsHubPage() {
             {GUIDES.map(guide => (
               <Link
                 key={guide.slug}
-                href={`/insights/${guide.slug}`}
+                href={`/learn/${guide.slug}`}
                 className="group max-w-[350px] rounded-3xl bg-white p-8 transition-all hover:-translate-y-1"
               >
                 <h3 className="mb-2 text-xl font-semibold text-slate-900 transition-colors">

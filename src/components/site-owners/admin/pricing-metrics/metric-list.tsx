@@ -244,7 +244,11 @@ export const MetricList = () => {
                 </TableRow>
               ) : (
                 metrics.map(metric => (
-                  <TableRow key={metric.id} className="group hover:bg-black/1">
+                  <TableRow
+                    key={metric.id}
+                    className="group cursor-pointer hover:bg-black/1"
+                    onClick={() => handleEdit(metric)}
+                  >
                     <TableCell className="font-medium text-black">
                       {metric.name}
                     </TableCell>
@@ -262,7 +266,10 @@ export const MetricList = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleEdit(metric)}
+                          onClick={e => {
+                            e.stopPropagation();
+                            handleEdit(metric);
+                          }}
                           className="h-8 w-8 text-gray-500 hover:bg-black/5 hover:text-black"
                         >
                           <Edit className="h-4 w-4" />
@@ -270,7 +277,10 @@ export const MetricList = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleDelete(metric)}
+                          onClick={e => {
+                            e.stopPropagation();
+                            handleDelete(metric);
+                          }}
                           className="h-8 w-8 text-gray-500 hover:bg-red-50 hover:text-red-600"
                         >
                           <Trash2 className="h-4 w-4" />

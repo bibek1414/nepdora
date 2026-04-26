@@ -55,6 +55,10 @@ const buildProductFormData = (
         // Existing thumbnail URL
         formData.append("thumbnail_image", value);
       }
+    } else if (key === "compositions" && Array.isArray(value)) {
+      formData.append("compositions", JSON.stringify(value));
+    } else if (key === "options" && Array.isArray(value)) {
+      formData.append("options", JSON.stringify(value));
     } else if (key === "variants" && Array.isArray(value)) {
       // Handle variants
       const variantsData = value.map((variant, index) => {

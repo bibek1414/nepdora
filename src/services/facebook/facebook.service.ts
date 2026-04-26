@@ -574,7 +574,7 @@ export const facebookService = {
   ) {
     try {
       const response = await axios.get(
-        `${FACEBOOK_GRAPH_URL}/${pageId}/insights/${metric}`,
+        `${FACEBOOK_GRAPH_URL}/${pageId}/learn/${metric}`,
         {
           params: {
             access_token: accessToken,

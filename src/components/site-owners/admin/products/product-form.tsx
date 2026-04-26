@@ -185,7 +185,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
       product?.use_dynamic_pricing ?? false
     );
     const [compositions, setCompositions] = useState<
-      { metric: number; quantity: string }[]
+      { metric: number; quantity: string | number }[]
     >(product?.compositions || []);
     const { data: metricsData } = usePricingMetrics();
     const metrics = metricsData?.results || [];
@@ -460,7 +460,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
           price: useDynamicPricing ? "0" : data.price,
           market_price: useDynamicPricing ? "0" : data.market_price || null,
           use_dynamic_pricing: useDynamicPricing,
-          compositions: useDynamicPricing ? compositions : [],
+          compositions: useDynamicPricing ? data.compositions : [],
           base_making_charge: data.base_making_charge || "0.00",
           track_stock: trackStock,
           thumbnail_alt_description: data.thumbnail_alt_description || null,
@@ -799,7 +799,7 @@ const ProductForm = React.forwardRef<ProductFormRefApi, ProductFormProps>(
                                     ...compositions,
                                     {
                                       metric: metrics[0]?.id || 0,
-                                      quantity: "0",
+                                      quantity: 0,
                                     },
                                   ];
                                   setCompositions(newComps);

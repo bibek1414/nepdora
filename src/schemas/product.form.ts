@@ -87,7 +87,7 @@ export const STATUS_CHOICES = ["active", "draft", "archived"] as const;
 // Composition Schema
 export const CompositionSchema = z.object({
   metric: z.number(),
-  quantity: z.string().regex(/^\d+(\.\d{1,3})?$/, "Invalid quantity format"),
+  quantity: z.coerce.number(),
 });
 
 // Base Product Schema with NEW FIELDS

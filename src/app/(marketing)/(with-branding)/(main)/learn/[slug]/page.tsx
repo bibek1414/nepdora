@@ -220,7 +220,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMarketingMetadata({
     title,
     description,
-    path: `/insights/${slug}`,
+    path: `/learn/${slug}`,
   });
 }
 
@@ -231,7 +231,7 @@ export default async function InsightPage({ params }: Props) {
   }
 
   const title = capitalizeWords(slug.replace(/-/g, " "));
-  const url = absoluteUrl(`/insights/${slug}`);
+  const url = absoluteUrl(`/learn/${slug}`);
   const content = GUIDE_CONTENT[slug];
 
   const schema = {
@@ -252,8 +252,8 @@ export default async function InsightPage({ params }: Props) {
   };
 
   const breadcrumbItems = [
-    { label: "Insights", href: "/insights" },
-    { label: title, href: `/insights/${slug}` },
+    { label: "Learn", href: "/learn" },
+    { label: title, href: `/learn/${slug}` },
   ];
 
   return (
