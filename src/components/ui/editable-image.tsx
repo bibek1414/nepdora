@@ -79,6 +79,12 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [localAlt, setLocalAlt] = useState(alt);
 
+  // Extract object-fit and object-position classes from className
+  const imageStyles = className
+    ?.split(" ")
+    .filter(c => c.startsWith("object-"))
+    .join(" ");
+
   // Calculate aspect ratio
   const aspectRatio = (width / height).toFixed(2);
   const dimensionText = dimensionGuideText || `Size: ${width} × ${height}px`;
@@ -123,7 +129,13 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   }
 
   return (
-    <div className="relative">
+    <div
+      className={cn("relative flex flex-col", className)}
+      style={style}
+      onClick={handleImageClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {isEditable && (
         <MediaLibraryDialog
           open={isLibraryOpen}
@@ -136,30 +148,26 @@ export const EditableImage: React.FC<EditableImageProps> = ({
       {/* Image Container */}
       <div
         className={cn(
-          "relative overflow-hidden",
-          isEditable && "group cursor-pointer",
-          className
+          "relative flex-1 w-full overflow-hidden",
+          isEditable && "group cursor-pointer"
         )}
-        style={style}
-        onClick={handleImageClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {showPlaceholder ? (
           // Placeholder
           <div
-            className="flex items-center justify-center border-2 border-dashed border-gray-300 bg-gray-100"
+            className="flex min-h-[200px] w-full items-center justify-center border-2 border-dashed border-gray-300 bg-gray-100"
             style={{
-              width: placeholder.width,
-              height: placeholder.height,
+              aspectRatio: `${placeholder.width} / ${placeholder.height}`,
             }}
           >
             <div className="text-center text-gray-500">
               <ImagePlus className="mx-auto mb-2 h-12 w-12" />
-              <p className="text-xs text-red-200">
+              <p className="text-xs text-gray-400">
                 {placeholder.text || "Click to add image"}
               </p>
-              {showDimensionGuide && <p className="mt">{dimensionText}</p>}
+              {showDimensionGuide && (
+                <p className="mt-1 text-[10px] opacity-70">{dimensionText}</p>
+              )}
             </div>
           </div>
         ) : (
@@ -173,7 +181,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
             alt={localAlt}
             width={width}
             height={height}
-            className="h-full w-full object-cover"
+            className={cn("h-full w-full object-cover", imageStyles)}
             priority={priority}
           />
         )}
