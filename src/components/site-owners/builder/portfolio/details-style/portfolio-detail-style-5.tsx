@@ -72,7 +72,7 @@ export const PortfolioDetail5: React.FC<PortfolioDetailProps> = ({
   return (
     <article className="bg-background pb-32">
       {/* Immersive Hero Header */}
-      <header className="relative mb-20 h-[70vh] w-full overflow-hidden">
+      <header className="relative mb-12 h-[50vh] w-full overflow-hidden sm:mb-20 sm:h-[60vh] md:h-[70vh]">
         {portfolio.thumbnail_image && (
           <Image
             unoptimized
@@ -88,7 +88,7 @@ export const PortfolioDetail5: React.FC<PortfolioDetailProps> = ({
         <div className="absolute inset-0 flex items-end">
           <div className="container mx-auto max-w-5xl px-6 pb-20 text-white">
             <h1
-              className="animate-in fade-in slide-in-from-bottom-6 mb-8 text-5xl leading-[1.1] font-light tracking-tight duration-1000 md:text-7xl"
+              className="animate-in fade-in slide-in-from-bottom-6 mb-8 text-3xl leading-[1.1] font-light tracking-tight duration-1000 sm:text-5xl md:text-7xl"
               style={{ fontFamily: theme?.fonts?.heading }}
             >
               {portfolio.title}
@@ -112,7 +112,7 @@ export const PortfolioDetail5: React.FC<PortfolioDetailProps> = ({
           {/* Main Content */}
           <div className="lg:col-span-8">
             <div
-              className="prose prose-xl prose-stone dark:prose-invert prose-headings:font-light prose-p:leading-relaxed prose-img:rounded-3xl max-w-none"
+              className="prose prose-base sm:prose-lg md:prose-xl prose-stone dark:prose-invert prose-headings:font-light prose-p:leading-relaxed prose-img:rounded-3xl max-w-none"
               style={{ fontFamily: theme?.fonts?.body }}
               dangerouslySetInnerHTML={{
                 __html: sanitizeContent(portfolio.content || ""),

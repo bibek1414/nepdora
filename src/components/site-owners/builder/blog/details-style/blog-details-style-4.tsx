@@ -71,7 +71,7 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
   return (
     <article className="bg-background pb-20">
       {/* Header */}
-      <header className="container mx-auto max-w-4xl px-6 pt-16 pb-12 text-center md:pt-24 md:pb-16">
+      <header className="container mx-auto max-w-4xl px-6 pt-10 pb-10 text-center md:pt-24 md:pb-16">
         <div className="animate-in fade-in slide-in-from-bottom-4 flex flex-col items-center gap-6 duration-700">
           <div className="text-muted-foreground flex items-center gap-4 text-sm font-medium tracking-widest uppercase">
             <span>{formatDate(blog.created_at)}</span>
@@ -79,7 +79,7 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
             <span>{blog.tags?.[0]?.name || "Uncategorized"}</span>
           </div>
           <h1
-            className="text-4xl leading-[1.1] font-normal tracking-tight md:text-5xl lg:text-6xl"
+            className="text-2xl leading-[1.1] font-normal tracking-tight sm:text-3xl md:text-5xl lg:text-6xl"
             style={{ fontFamily: theme?.fonts?.heading }}
           >
             {blog.title}
@@ -89,7 +89,7 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
 
       {/* Featured Image */}
       {blog.thumbnail_image && (
-        <div className="animate-in fade-in zoom-in-95 container mx-auto mb-16 max-w-6xl px-6 duration-1000 md:mb-24">
+        <div className="animate-in fade-in zoom-in-95 container mx-auto mb-10 max-w-6xl px-6 duration-1000 md:mb-24">
           <div className="bg-muted relative aspect-video overflow-hidden rounded-3xl shadow-2xl">
             <Image
               unoptimized
@@ -105,7 +105,7 @@ export const BlogDetail4: React.FC<BlogDetailProps> = ({
       {/* Content */}
       <div className="container mx-auto max-w-3xl px-6">
         <div
-          className="prose prose-xl prose-stone dark:prose-invert prose-headings:font-normal prose-headings:tracking-tight prose-p:leading-relaxed prose-img:rounded-2xl max-w-none"
+          className="prose prose-base sm:prose-lg md:prose-xl prose-stone dark:prose-invert prose-headings:font-normal prose-headings:tracking-tight prose-p:leading-relaxed prose-img:rounded-2xl max-w-none"
           style={{ fontFamily: theme?.fonts?.body }}
           dangerouslySetInnerHTML={{ __html: sanitizeContent(blog.content) }}
         />

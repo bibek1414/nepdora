@@ -46,7 +46,7 @@ export const PortfolioDetail2: React.FC<{
         <div className="container mx-auto max-w-7xl px-4 py-8">
           <Skeleton className="mb-6 h-5 w-64" />
           <Skeleton className="mb-4 h-12 w-2/3" />
-          <Skeleton className="mb-12 h-[450px] w-full rounded-2xl" />
+          <Skeleton className="mb-12 h-[250px] w-full rounded-2xl sm:h-[350px] md:h-[450px]" />
           <div className="grid gap-12 lg:grid-cols-3">
             <div className="space-y-4 lg:col-span-2">
               <Skeleton className="h-6 w-full" />
@@ -126,13 +126,13 @@ export const PortfolioDetail2: React.FC<{
             </BreadcrumbList>
           </Breadcrumb>
 
-          <h1 className="text-foreground mb-4 text-4xl font-normal tracking-tight md:text-5xl">
+          <h1 className="text-foreground mb-4 text-3xl font-normal tracking-tight sm:text-4xl md:text-5xl">
             {portfolio.title}
           </h1>
         </div>
 
         {/* Big Hero Image */}
-        <div className="-sm relative mb-12 aspect-video w-full overflow-hidden rounded-3xl md:h-[550px] lg:mb-20">
+        <div className="-sm relative mb-12 aspect-video w-full overflow-hidden rounded-3xl h-[250px] sm:h-[350px] md:h-[550px] lg:mb-20">
           <Image
             unoptimized
             src={portfolioImage}
@@ -148,7 +148,7 @@ export const PortfolioDetail2: React.FC<{
           {/* Main Content Area */}
           <div className="lg:col-span-8">
             <div
-              className="prose prose-xl dark:prose-invert rich-text max-w-none break-words"
+              className="prose prose-base sm:prose-lg md:prose-xl dark:prose-invert rich-text max-w-none wrap-break-word"
               dangerouslySetInnerHTML={{
                 __html: sanitizeContent(portfolio.content),
               }}

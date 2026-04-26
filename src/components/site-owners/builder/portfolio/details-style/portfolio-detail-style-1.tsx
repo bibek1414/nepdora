@@ -56,7 +56,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
           <div className="mx-auto mb-8 max-w-4xl space-y-4 text-center">
             <Skeleton className="mx-auto h-12 w-3/4" />
           </div>
-          <Skeleton className="mx-auto mb-10 aspect-[16/9] h-[300px] w-full rounded-xl md:h-[450px]" />
+          <Skeleton className="mx-auto mb-10 aspect-[16/9] h-[200px] w-full rounded-xl sm:h-[300px] md:h-[450px]" />
           <div className="mx-auto max-w-3xl space-y-4">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
@@ -125,7 +125,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
         </nav>
 
         <div className="mx-auto mb-8 max-w-4xl text-center">
-          <h1 className="text-foreground mb-6 text-3xl font-semibold md:text-5xl">
+          <h1 className="text-foreground mb-6 text-2xl font-semibold sm:text-3xl md:text-5xl">
             {portfolio.title}
           </h1>
 
@@ -165,7 +165,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
           </div>
         </div>
 
-        <div className="-xl mx-auto mb-12 aspect-[16/9] h-[300px] overflow-hidden rounded-2xl md:h-[500px]">
+        <div className="-xl mx-auto mb-12 aspect-[16/9] h-[200px] overflow-hidden rounded-2xl sm:h-[300px] md:h-[500px]">
           <Image
             unoptimized
             src={portfolioImage}
@@ -177,7 +177,7 @@ export const PortfolioDetail: React.FC<PortfolioDetailProps> = ({
           />
         </div>
 
-        <div className="prose prose-xl dark:prose-invert rich-text mx-auto mb-16 max-w-3xl space-y-8 leading-8">
+        <div className="prose prose-base sm:prose-lg md:prose-xl dark:prose-invert rich-text mx-auto mb-16 max-w-3xl space-y-8 leading-8">
           <div
             dangerouslySetInnerHTML={{
               __html: sanitizeContent(portfolio.content),

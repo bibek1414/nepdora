@@ -33,7 +33,7 @@ export const ServiceDetail2: React.FC<{ slug: string; siteUser?: string }> = ({
         <div className="container mx-auto max-w-7xl px-4 py-8">
           <Skeleton className="mb-6 h-5 w-64" />
           <Skeleton className="mb-4 h-12 w-2/3" />
-          <Skeleton className="mb-12 h-[450px] w-full rounded-2xl" />
+          <Skeleton className="mb-12 h-[250px] w-full rounded-2xl sm:h-[350px] md:h-[450px]" />
           <div className="grid gap-12 lg:grid-cols-3">
             <div className="space-y-4 lg:col-span-2">
               <Skeleton className="h-6 w-full" />
@@ -102,13 +102,13 @@ export const ServiceDetail2: React.FC<{ slug: string; siteUser?: string }> = ({
             </BreadcrumbList>
           </Breadcrumb>
 
-          <h1 className="text-foreground mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-7xl">
+          <h1 className="text-foreground mb-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-7xl">
             {service.title}
           </h1>
         </div>
 
         {/* Big Hero Image */}
-        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm md:h-[550px] lg:mb-20">
+        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm h-[200px] sm:h-[300px] md:h-[450px] lg:h-[550px] lg:mb-20">
           <Image
             unoptimized
             src={serviceImage}
@@ -124,7 +124,7 @@ export const ServiceDetail2: React.FC<{ slug: string; siteUser?: string }> = ({
           {/* Main Content Area */}
           <div className="lg:col-span-8">
             <div
-              className="prose prose-xl dark:prose-invert rich-text max-w-none break-words"
+              className="prose prose-base sm:prose-lg md:prose-xl dark:prose-invert rich-text max-w-none wrap-break-word"
               dangerouslySetInnerHTML={{
                 __html: sanitizeContent(service.description),
               }}

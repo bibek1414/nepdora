@@ -104,7 +104,7 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
 
   return (
     <article className="min-h-screen bg-[#fdfcf9] pb-24">
-      <div className="mx-auto max-w-7xl px-6 pt-12 md:pt-24 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 pt-10 md:pt-24 lg:px-8">
         {/* Navigation / Breadcrumb */}
         <div className="mb-10 flex justify-start">
           <Breadcrumb>
@@ -139,7 +139,7 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
         {/* Header */}
         <header className="mb-16 max-w-4xl">
           <h1
-            className="l mb-6 text-4xl font-bold text-gray-950 md:text-6xl lg:text-5xl"
+            className="l mb-6 text-2xl font-bold text-gray-950 sm:text-4xl md:text-6xl lg:text-5xl"
             style={{ fontFamily: theme?.fonts?.heading }}
           >
             {portfolio.title}
@@ -168,7 +168,7 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
 
         {/* Main Image */}
         {portfolio.thumbnail_image && (
-          <div className="relative mb-16 aspect-video w-full overflow-hidden rounded-3xl border border-gray-100 shadow-sm">
+          <div className="relative mb-10 aspect-video w-full overflow-hidden rounded-3xl border border-gray-100 shadow-sm sm:mb-16">
             <Image
               unoptimized
               src={portfolio.thumbnail_image}
@@ -184,7 +184,7 @@ export const PortfolioDetail4: React.FC<PortfolioDetailProps> = ({
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-24">
           {/* Main Body */}
           <div
-            className="prose prose-lg prose-gray max-w-none lg:col-span-8"
+            className="prose prose-base sm:prose-lg prose-gray max-w-none lg:col-span-8"
             style={{ fontFamily: theme?.fonts?.body }}
           >
             {portfolio.content ? (

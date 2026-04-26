@@ -41,7 +41,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
           <div className="mx-auto mb-8 max-w-4xl space-y-4 text-center">
             <Skeleton className="mx-auto h-12 w-3/4" />
           </div>
-          <Skeleton className="mx-auto mb-10 aspect-[16/9] h-[300px] w-full rounded-xl md:h-[450px]" />
+          <Skeleton className="mx-auto mb-10 aspect-video h-[200px] w-full rounded-xl sm:h-[300px] md:h-[450px]" />
           <div className="mx-auto max-w-3xl space-y-4">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
@@ -98,12 +98,12 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
         </nav>
 
         <div className="mx-auto mb-8 max-w-4xl text-center">
-          <h1 className="text-foreground mb-4 text-3xl leading-[1.15] font-semibold md:text-5xl lg:text-6xl">
+          <h1 className="text-foreground mb-4 text-2xl leading-[1.15] font-semibold sm:text-3xl md:text-5xl lg:text-6xl">
             {service.title}
           </h1>
         </div>
 
-        <div className="mx-auto mb-10 aspect-[16/9] h-[300px] overflow-hidden rounded-xl shadow-lg md:h-[450px]">
+        <div className="mx-auto mb-10 aspect-video h-[200px] overflow-hidden rounded-xl shadow-lg sm:h-[300px] md:h-[450px]">
           <Image
             unoptimized
             src={serviceImage}
@@ -115,7 +115,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
           />
         </div>
 
-        <div className="prose prose-xl dark:prose-invert rich-text mx-auto mb-20 max-w-3xl space-y-8 leading-8">
+        <div className="prose prose-base sm:prose-lg md:prose-xl dark:prose-invert rich-text mx-auto mb-20 max-w-3xl space-y-8 leading-8">
           <div
             dangerouslySetInnerHTML={{
               __html: sanitizeContent(service.description),

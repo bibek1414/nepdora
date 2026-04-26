@@ -40,9 +40,9 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({
   if (isLoading) {
     return (
       <div className="bg-background pt-0 pb-0">
-        <Skeleton className="h-[60vh] min-h-[500px] w-full" />
+        <Skeleton className="h-[40vh] min-h-[300px] w-full sm:h-[50vh] sm:min-h-[400px] md:h-[60vh] md:min-h-[500px]" />
         <div className="relative z-20 container mx-auto -mt-32 max-w-4xl px-4 pb-16">
-          <div className="bg-card rounded-2xl border p-8 shadow-xl">
+          <div className="bg-card rounded-2xl border p-4 sm:p-8 shadow-xl">
             <Skeleton className="mx-auto h-40 w-full" />
             <Skeleton className="mx-auto mt-8 h-8 w-3/4" />
             <Skeleton className="mx-auto mt-4 h-8 w-1/2" />
@@ -85,7 +85,7 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({
   return (
     <div className="bg-muted/10 min-h-screen pt-0 pb-0">
       {/* Immersive Hero Header */}
-      <div className="relative flex h-[70vh] min-h-[500px] w-full items-center justify-center pt-20">
+      <div className="relative flex h-[50vh] min-h-[350px] w-full items-center justify-center pt-20 sm:h-[60vh] sm:min-h-[450px] md:h-[70vh] md:min-h-[500px]">
         <Image
           unoptimized
           src={blogImage}
@@ -94,7 +94,7 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-black/30" />
 
         <div className="relative z-10 container mx-auto mt-12 max-w-4xl px-4 text-center">
           {blog.tags && blog.tags.length > 0 && (
@@ -104,10 +104,10 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({
               </Badge>
             </div>
           )}
-          <h1 className="mb-8 text-4xl leading-tight font-black text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="mb-8 text-2xl leading-tight font-black text-white drop-shadow-lg sm:text-4xl md:text-6xl lg:text-7xl">
             {blog.title}
           </h1>
-          <div className="flex flex-wrap items-center justify-center gap-6 text-lg font-medium text-white/90 drop-shadow-md">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-white/90 drop-shadow-md sm:gap-6 sm:text-lg">
             {blog.author && (
               <div className="flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
                 <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/50">
@@ -132,7 +132,7 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({
 
       {/* Floating Card Content Container */}
       <div className="relative z-20 container mx-auto -mt-24 max-w-4xl px-4 pb-24 md:-mt-32">
-        <div className="bg-background rounded-3xl border p-8 shadow-[0_20px_50px_rgba(8,_112,_184,_0.07)] md:p-12 lg:p-16">
+        <div className="bg-background rounded-3xl border p-6 shadow-[0_20px_50px_rgba(8,112,184,0.07)] sm:p-8 md:p-12 lg:p-16">
           <div className="border-border/60 mb-10 flex justify-center border-b pb-8">
             <Breadcrumb>
               <BreadcrumbList>
@@ -164,7 +164,7 @@ export const BlogDetail3: React.FC<BlogDetailProps> = ({
           </div>
 
           <div
-            className="prose prose-xl dark:prose-invert rich-text text-foreground mx-auto max-w-none leading-relaxed break-words"
+            className="prose prose-base sm:prose-lg md:prose-xl dark:prose-invert rich-text text-foreground mx-auto max-w-none leading-relaxed wrap-break-word"
             dangerouslySetInnerHTML={{ __html: sanitizeContent(blog.content) }}
           />
         </div>

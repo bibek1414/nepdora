@@ -44,7 +44,7 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({
           <Skeleton className="mb-6 h-5 w-64" />
           <Skeleton className="mb-4 h-12 w-2/3" />
           <Skeleton className="mb-8 h-6 w-1/4" />
-          <Skeleton className="mb-12 h-[450px] w-full rounded-2xl" />
+          <Skeleton className="mb-12 h-[250px] w-full rounded-2xl sm:h-[350px] md:h-[450px]" />
           <div className="grid gap-12 lg:grid-cols-3">
             <div className="space-y-4 lg:col-span-2">
               <Skeleton className="h-6 w-full" />
@@ -92,7 +92,7 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({
 
   return (
     <div className="bg-background pt-20 pb-0">
-      <div className="container mx-auto max-w-7xl px-4 py-8 md:py-16">
+      <div className="container mx-auto max-w-7xl px-4 py-6 md:py-16">
         {/* Header Section */}
         <div className="mb-8">
           <Breadcrumb className="mb-6">
@@ -124,7 +124,7 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({
             </BreadcrumbList>
           </Breadcrumb>
 
-          <h1 className="text-foreground mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-7xl">
+          <h1 className="text-foreground mb-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-7xl">
             {blog.title}
           </h1>
 
@@ -143,7 +143,7 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({
         </div>
 
         {/* Big Hero Image */}
-        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm md:h-[550px] lg:mb-20">
+        <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-3xl shadow-sm h-[250px] sm:h-[350px] md:h-[550px] lg:mb-20">
           <Image
             unoptimized
             src={blogImage}
@@ -158,8 +158,8 @@ export const BlogDetail2: React.FC<BlogDetailProps> = ({
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Main Content Area */}
           <div className="lg:col-span-8">
-            <div
-              className="prose prose-xl dark:prose-invert rich-text max-w-none break-words"
+              <div
+                className="prose prose-base sm:prose-lg md:prose-xl dark:prose-invert rich-text max-w-none wrap-break-word"
               dangerouslySetInnerHTML={{
                 __html: sanitizeContent(blog.content),
               }}
